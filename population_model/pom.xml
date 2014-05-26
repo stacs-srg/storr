@@ -98,8 +98,8 @@
         </dependency>
 
         <dependency>
-            <groupId>uk.ac.standrews.cs</groupId>
-            <artifactId>digitising_scotland_util</artifactId>
+            <groupId>uk.ac.standrews.cs.digitising_scotland</groupId>
+            <artifactId>util</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
 
