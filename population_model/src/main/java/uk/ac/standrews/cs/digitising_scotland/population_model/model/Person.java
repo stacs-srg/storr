@@ -1,0 +1,165 @@
+package uk.ac.standrews.cs.digitising_scotland.population_model.model;
+
+import java.sql.Date;
+
+/*
+ * An intermediate representation of a person.
+ *
+ * Has date of birth and date of death encoded fully but does not include family members etc.
+ *
+ * @author Alan Dearle (alan.dearle@st-andrews.ac.uk)
+ */
+public class Person {
+
+    private int id;
+    private char gender;
+    private String first_name;
+    protected String surname;
+    private Date birth_date;
+    private Date death_date;
+    private String occupation;
+    private String cause_of_death;
+    private String address;
+    private String maiden_name;
+
+    //----------------------------------------------- Constructors -----------------------------------------------
+
+    public Person() {
+
+    }
+
+    public Person(final int id, final char gender, final Date birthdate, final Date death_date, final String occupation, final String cause_of_death, final String address) {
+
+        this(id, null, null, gender, birthdate, death_date, occupation, cause_of_death, address);
+    }
+
+    public Person(final int id, final String first_name, final String surname, final char gender, final Date birth_date, final Date death_date, final String occupation, final String cause_of_death, final String address) {
+
+        this.gender = gender;
+        this.first_name = first_name;
+        this.surname = surname;
+        this.id = id;
+        this.birth_date = birth_date;
+        this.death_date = death_date;
+        this.occupation = occupation;
+        this.cause_of_death = cause_of_death;
+        this.address = address;
+    }
+
+    //----------------------------------------------- Setters and Getters -----------------------------------------------
+
+    public char getGender() {
+
+        return gender;
+    }
+
+    public void setGender(final char gender) {
+
+        this.gender = gender;
+    }
+
+    public String getFirstName() {
+
+        return first_name;
+    }
+
+    public String getSurname() {
+
+        return surname;
+    }
+
+    public void setSurname(final String surname) {
+
+        this.surname = surname;
+    }
+
+    public void setFirstName(final String firstName) {
+
+        this.first_name = firstName;
+    }
+
+    public Date getBirthDate() {
+
+        return birth_date;
+    }
+
+    public void setBirthDate(final Date birth_date) {
+
+        this.birth_date = birth_date;
+    }
+
+    public Date getDeathDate() {
+
+        return death_date;
+    }
+
+    public void setDeathDate(final Date death_date) {
+
+        this.death_date = death_date;
+    }
+
+    public String getOccupation() {
+
+        return occupation;
+    }
+
+    public void setOccupation(final String occupation) {
+
+        this.occupation = occupation;
+    }
+
+    public String getCauseOfDeath() {
+
+        return cause_of_death;
+    }
+
+    public void setCauseOfDeath(final String cause_of_death) {
+
+        this.cause_of_death = cause_of_death;
+    }
+
+    public String getAddress() {
+
+        return address;
+    }
+
+    public void setAddress(final String address) {
+
+        this.address = address;
+    }
+
+    public void setID(final int id) {
+
+        this.id = id;
+    }
+
+    public int getID() {
+
+        return id;
+    }
+
+    /**
+     *  Sets the Surname to be the new surname and the maiden name to be their old surname
+     */
+    public void setMarriedName(final String newSurname) {
+
+        maiden_name = surname;
+        surname = newSurname;
+    }
+
+    /**
+     * @return the maiden name of a person.
+     */
+    public String getMaidenName() {
+
+        return maiden_name;
+    }
+
+    public DBBackedPartnership getParentsFamily() {
+        throw new RuntimeException("unimplemented");
+    }
+
+    public DBBackedPartnership getFamily() {
+        throw new RuntimeException("unimplemented");
+    }
+}

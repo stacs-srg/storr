@@ -1,0 +1,97 @@
+digraph familyTree {
+node [shape=box style=solid color=blue]
+28 [label="b: 15/03/1780\nd: 06/11/1853"]
+{ rank = same; 28 00000035; }
+21 [label="b: 14/01/1788\nd: 26/01/1838"]
+{ rank = same; 21 00000035; }
+16 [label="b: 29/09/1793\nd: 30/04/1860"]
+2 -> 51 [color=red arrowhead=none]
+4 -> 51 [color=red arrowhead=none]
+51 [shape=box color=red label="m: 14/01/1810"]
+{ rank = same; 2 4 51; }
+51 -> 7
+51 -> 9
+{ rank = same; 16 00000035; }
+35 [label="b: 29/10/1815\nd: 30/04/1860"]
+23 [label="b: 16/01/1821\nd: 07/02/1899"]
+50 [label="b: 24/12/1793\nd: 21/07/1872"]
+{ rank = same; 50 00000035; }
+41 [label="b: 11/03/1796\nd: 16/07/1842"]
+{ rank = same; 41 00000035; }
+32 [label="b: 30/07/1803\nd: 09/08/1870"]
+{ rank = same; 32 00000035; }
+9 [label="b: 12/10/1805\nd: 03/09/1872"]
+{ rank = same; 9 00000023; }
+29 [label="b: 03/02/1820\nd: 17/06/1842"]
+{ rank = same; 29 00000031; }
+40 [label="b: 31/01/1826\nd: 10/07/1891"]
+{ rank = same; 40 00000031; }
+18 [label="b: 23/03/1829\nd: 06/09/1895"]
+11 -> 52 [color=red arrowhead=none]
+13 -> 52 [color=red arrowhead=none]
+52 [shape=box color=red label="m: 30/07/1845"]
+{ rank = same; 11 13 52; }
+52 -> 15
+{ rank = same; 18 00000031; }
+1 [label="b: 13/06/1830\nd: 15/12/1923"]
+{ rank = same; 1 00000031; }
+36 [label="b: 06/05/1831\nd: 29/03/1898"]
+{ rank = same; 36 00000031; }
+31 [label="b: 06/04/1849\nd: 21/05/1906"]
+25 [label="b: 07/08/1838\nd: 21/07/1898"]
+{ rank = same; 25 00000046; }
+7 [label="b: 26/11/1849\nd: 28/11/1910"]
+{ rank = same; 7 00000046; }
+43 [label="b: 08/06/1852\nd: 10/06/1902"]
+{ rank = same; 43 00000046; }
+13 [label="b: 17/11/1861\nd: 07/09/1917"]
+18 -> 53 [color=red arrowhead=none]
+20 -> 53 [color=red arrowhead=none]
+53 [shape=box color=red label="m: 06/05/1878"]
+{ rank = same; 18 20 53; }
+53 -> 24
+{ rank = same; 13 00000046; }
+38 [label="b: 10/03/1862\nd: 12/11/1930"]
+{ rank = same; 38 00000046; }
+44 [label="b: 12/06/1863\nd: 28/01/1952"]
+{ rank = same; 44 00000046; }
+46 [label="b: 04/12/1880\nd: 15/12/1948"]
+12 [label="b: 17/12/1863\nd: 18/08/1936"]
+{ rank = same; 12 00000046; }
+24 [label="b: 18/06/1869\nd: 26/05/1951"]
+{ rank = same; 24 00000046; }
+45 [label="b: 29/01/1874\nd: 19/07/1963"]
+10 [label="b: 22/10/1895\nd: 05/10/1951"]
+14 [label="b: 10/07/1908\nd: 20/05/1983"]
+47 [label="b: 14/05/1910\nd: 09/06/1991"]
+3 [label="b: 12/02/1913\nd: 24/04/1991"]
+26 [label="b: 26/05/1916\nd: 21/04/2000"]
+15 [label="b: 09/07/1924\nd: 03/08/2012"]
+6 [label="b: 13/04/1930\nd: 15/03/1996"]
+11 [label="b: 08/05/1933\nd: 18/04/2010"]
+2 [label="b: 27/12/1937\nd: 18/12/2009"]
+42 [label="b: 08/04/1949"]
+49 [label="b: 06/06/1952"]
+35 -> 54 [color=red arrowhead=none]
+37 -> 54 [color=red arrowhead=none]
+54 [shape=box color=red label="m: 09/08/1971"]
+{ rank = same; 35 37 54; }
+4 [label="b: 26/11/1952"]
+8 [label="b: 06/08/1955"]
+48 [label="b: 10/12/1961\nd: 04/06/2010"]
+22 [label="b: 03/12/1964"]
+33 [label="b: 01/08/1973"]
+40 -> 55 [color=red arrowhead=none]
+42 -> 55 [color=red arrowhead=none]
+55 [shape=box color=red label="m: 12/11/1993"]
+{ rank = same; 40 42 55; }
+39 [label="b: 18/10/1977"]
+5 [label="b: 06/02/1978"]
+17 [label="b: 17/08/1978"]
+19 [label="b: 10/07/1979"]
+27 [label="b: 13/11/1989"]
+20 [label="b: 02/07/1995"]
+34 [label="b: 11/08/1995"]
+37 [label="b: 17/06/2003"]
+30 [label="b: 08/05/2009"]
+}

@@ -1,0 +1,9 @@
+syntax: glob
+.DS_Store
+*.iml
+.idea
+target
+**/*_test.dot
+**/*_test.ged
+**/*.pdf
+**/population_config.txt

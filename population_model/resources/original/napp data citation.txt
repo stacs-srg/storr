@@ -1,0 +1,19 @@
+Your NAPP extract is ready.
+To retrieve your data, codebook, and command files, go to the link below.
+
+Account: alan.dearle@st-andrews.ac.uk
+Extract: 2
+Link: http://www.nappdata.org/napp-action/extract_requests/download
+
+Research based on the NAPP database should cite it as follows:
+
+Minnesota Population Center. North Atlantic Population Project: Complete Count Microdata. Version 2.0 [Machine-readable database]. Minneapolis, MN: Minnesota Population Center, 2008.
+
+Users should also cite the original producers of the data:
+
+- Great Britain 1851: K. Schürer and M. Woollard, National Sample from the 1851 Census of Great Britain [computer file], Colchester, Essex: History Data Service, UK Data Archive [distributor], 2008.
+
+Thank you for your support.
+
+Sincerely,
+The NAPP Team

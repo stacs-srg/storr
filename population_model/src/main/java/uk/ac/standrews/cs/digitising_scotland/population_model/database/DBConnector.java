@@ -1,0 +1,86 @@
+package uk.ac.standrews.cs.digitising_scotland.population_model.database;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
+/**
+ * Defines parameters for JDBC connection to a database.
+ *
+ * @author Ilia Shumailov (is33@st-andrews.ac.uk)
+ * @author Alan Dearle (alan.dearle@st-andrews.ac.uk)
+ * @author Graham Kirby (graham.kirby@st-andrews.ac.uk)
+ */
+public class DBConnector {
+
+    private static final String CONNECTION_STRING_PREFIX = "jdbc:mysql://";
+    private final static String DEFAULT_ADDRESS = "localhost";
+    private final static String DEFAULT_USERNAME = "root";
+    private final static String DEFAULT_PASSWORD = "";
+
+    private final String username;
+    private final String password;
+    private String connection_string;
+
+    // -------------------------------------------------------------------------------------------------------
+
+    /**
+     * Initialises the connector to access the server running on "localhost" with default port, username "root" and an empty password.
+     */
+    public DBConnector() {
+
+        this("");
+    }
+
+    /**
+     * Initialises the connector with a specific database and default values for the other details.
+     * 
+     * @param database_name the name of the database to be accessed, or the empty string to connect to the server without a specific database
+     */
+    public DBConnector(final String database_name) {
+
+        this(DEFAULT_ADDRESS, 0, DEFAULT_USERNAME, DEFAULT_PASSWORD, database_name);
+    }
+
+    /**
+     * Initialises the connector with the specified server/database details.
+     * 
+     * @param address the network address of the server, or "localhost"
+     * @param port the port on which the server is listening, or 0 for the default port
+     * @param username the username for accessing the server
+     * @param password the password for accessing the server
+     * @param database_name the name of the database to be accessed, or the empty string to connect to the server without a specific database
+     */
+    public DBConnector(final String address, final int port, final String username, final String password, final String database_name) {
+
+        this.username = username;
+        this.password = password;
+
+        // Construct connection string of form:
+        // "jdbc:mysql://localhost"                  - connect to DB generally rather than a specific database, assuming default port of 3306
+        // "jdbc:mysql://localhost:3971"             - connect to DB generally rather than a specific database, using a specific port
+        // "jdbc:mysql://localhost:5182/population"  - connect to a specific database using a specific port
+
+        connection_string = CONNECTION_STRING_PREFIX + address;
+
+        if (port > 0) {
+            connection_string += ":" + port;
+        }
+        if (database_name.length() > 0) {
+            connection_string += "/" + database_name;
+        }
+    }
+
+    // -------------------------------------------------------------------------------------------------------
+
+    /**
+     * Creates a connection to the MariaDB server or database specified via the constructor.
+     * 
+     * @return the connection
+     * @throws SQLException if a database access error occurs
+     */
+    public Connection createConnection() throws SQLException {
+
+        return DriverManager.getConnection(connection_string, username, password); // Create a connection to the database
+    }
+}

@@ -1,0 +1,1000 @@
+1|WILSON|Cath |F|0|0|0|0|1952|null|null|null|6|6|null|null|null|null|Helen |WILLIAMSON|null|3|7|1971|null|null|null|false|0|0|0|
+2|TICKELL|Helen |F|0|0|0|0|2010|null|null|null|7|5|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+3|KENT|Sarah |F|0|0|0|0|1828|KENT|null|null|4|11|null|Alex |LLOYD|bookkeeper|Sarah |LLOYD|null|6|8|1842|null|null|null|false|0|0|0|
+4|WAINWRIGHT|Dorothy |F|0|0|0|0|1981|WAINWRIGHT|null|null|7|10|null|Duncan |HARRISON|wholesale merchant and exporter|Dorothy |HARRISON|null|7|10|1997|null|null|null|false|0|0|0|
+5|WARTH|Donald |M|0|0|0|0|1903|CUTTER|null|null|6|9|null|Donald |WARTH|seamstress|Janet |WARTH|null|2|2|1920|null|null|null|false|0|0|0|
+6|WELCH|Catherine |F|0|0|0|0|1909|WELCH|null|null|6|9|null|George |KEEP|carpet sewer|Catherine |KEEP|null|1|7|1931|null|null|null|false|0|0|0|
+7|GONTHWICK|Annie |F|0|0|0|0|1945|GONTHWICK|null|null|2|5|null|David |SEAMOR|butcher|Annie |SEAMOR|null|2|0|1962|null|null|null|false|0|0|0|
+8|SHAW|Wm |M|0|0|0|0|1875|PARKER|null|null|7|0|null|Wm |SHAW|general lab|Isabella |SHAW|null|3|2|1899|null|null|null|false|0|0|0|
+9|THOMAS|Jessie |F|0|0|0|0|1833|THOMAS|null|null|4|0|null|William |GONTHWICK|baker|Jessie |GONTHWICK|null|7|5|1848|null|null|null|false|0|0|0|
+10|BOARING|David |M|0|0|0|0|1942|BURNS|null|null|4|0|null|David |BOARING|domestic servant|Jeanie |BOARING|null|5|3|1961|null|null|null|false|0|0|0|
+11|NAPPER|Janet |F|0|0|0|0|1871|NAPPER|null|null|4|3|null|Dugald |COLLIER|building department foreman|Janet |COLLIER|null|7|2|1890|null|null|null|false|0|0|0|
+12|ADAMS|William |M|0|0|0|0|1799|null|null|null|6|5|null|William |STEWART|officer of customs and excise|null|null|null|6|9|1818|null|null|null|false|0|0|0|
+13|BOWMAN|David |M|0|0|0|0|1858|GONTHWICK|null|null|2|9|null|David |BOWMAN|servant|Agnes |BOWMAN|null|6|1|1877|null|null|null|false|0|0|0|
+14|SALE|Pat |M|0|0|0|0|1862|LAMB|null|null|5|2|null|Pat |SALE|farmer|Isabella |SALE|null|6|7|1881|null|null|null|false|0|0|0|
+15|CHAMBERS|William |M|0|0|0|0|1905|BATEMAN|null|null|2|10|null|William |CHAMBERS|confectioner|Bridgt |CHAMBERS|null|1|10|1924|null|null|null|false|0|0|0|
+16|MARTIN|William |M|0|0|0|0|1975|null|null|null|7|3|null|Kenneth |OAFF|blacksmith|null|null|null|2|9|1993|null|null|null|false|0|0|0|
+17|GONTHWICK|Alfred |M|0|0|0|0|1811|null|null|null|6|4|null|William |JONES|coal miner|null|null|null|5|8|1825|null|null|null|false|0|0|0|
+18|SPARK|Alexr |M|0|0|0|0|1872|null|null|null|7|5|null|Francis |FULLER|night porter|null|null|null|7|10|1890|null|null|null|false|0|0|0|
+19|HANNAH|Andrew |M|0|0|0|0|1916|null|null|null|3|7|null|Frances |CARCEY|stuff slinger|null|null|null|2|11|1937|null|null|null|false|0|0|0|
+20|MITCHELL|5 Margaret |F|0|0|0|0|1831|null|null|null|1|2|null|null|null|null|Mina |REDFORD|null|1|3|1850|null|null|null|false|0|0|0|
+21|BRIGHT|Bernard |M|0|0|0|0|1845|GARLINGTON|null|null|4|0|null|Bernard |BRIGHT|railway labourer|Eliza |BRIGHT|null|1|0|1875|null|null|null|false|0|0|0|
+22|CONLLY|Alexander |M|0|0|0|0|1947|null|null|null|1|5|null|Alexander |CONLLY|second lieutenant|null|null|null|3|0|1963|null|null|null|false|0|0|0|
+23|KAY|Alexander |M|0|0|0|0|1836|ABRAM|null|null|6|10|null|Alexander |KAY|labourer|8 Mary |KAY|null|3|4|1848|null|null|null|false|0|0|0|
+24|TUCKER|Peter |M|0|0|0|0|2006|null|null|null|7|4|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+25|BOOTH|Agnes |F|0|0|0|0|1941|null|null|null|6|2|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+26|AITKEN|Hellen |F|0|0|0|0|1781|AITKEN|null|null|1|9|null|William |EAGLES|clerk of woorks|Hellen |EAGLES|null|3|9|1799|null|null|null|false|0|0|0|
+27|ROWE|Charles |M|0|0|0|0|2012|null|null|null|1|2|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+28|BEST|Sarah |F|0|0|0|0|1827|null|null|null|3|10|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+29|ROBERTSON|Agnes |F|0|0|0|0|1821|ROBERTSON|null|null|6|4|null|David |SMITH|ironmonger|Agnes |SMITH|null|1|5|1842|null|null|null|false|0|0|0|
+30|BURTON|Agness |F|0|0|0|0|1963|BURTON|null|null|1|2|null|David |DO JUNR|wesleyan minister|Agness |DO JUNR|null|4|8|1981|null|null|null|false|0|0|0|
+31|WILLIAMS|William |M|0|0|0|0|1855|DONALDSON|null|null|1|8|null|William |WILLIAMS|hammerman|Janet |WILLIAMS|null|3|7|1876|null|null|null|false|0|0|0|
+32|CHADWICK|Ann |F|0|0|0|0|1844|null|null|null|2|9|null|null|null|null|Ann |CHADWICK|null|2|5|1864|null|null|null|false|0|0|0|
+33|MANNING|Thomas |M|0|0|0|0|1971|COLLINS|null|null|4|8|null|Thomas |MANNING|tanner|Ann |MANNING|null|4|8|1986|null|null|null|false|0|0|0|
+34|HAMBLEY|Ann |F|0|0|0|0|2008|null|null|null|3|8|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+35|BARBER|William |M|0|0|0|0|1804|null|null|null|6|5|null|David |BINGHAM|coal merchant|null|null|null|5|9|1822|null|null|null|false|0|0|0|
+36|CORKER|Bridget |F|0|0|0|0|1786|CORKER|null|null|2|4|null|Alfred |HAWLEY|blacksmith|Bridget |HAWLEY|null|5|5|1805|null|null|null|false|0|0|0|
+37|DAVIS|David |M|0|0|0|0|1809|null|null|null|7|3|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+38|DARLING|Thomas |M|0|0|0|0|1921|PARKER|null|null|5|5|null|Thomas |DARLING|carter|Agnes |DARLING|null|3|3|1940|null|null|null|false|0|0|0|
+39|WHITAKER|Thomas |M|0|0|0|0|1844|GEDDES|null|null|6|6|null|Thomas |WHITAKER|ironmongers porter|Catherine |WHITAKER|null|1|0|1857|null|null|null|false|0|0|0|
+40|YORK|William |M|0|0|0|0|1999|null|null|null|3|5|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+41|GARLINGTON|Eliza |F|0|0|0|0|1844|GARLINGTON|null|null|1|1|null|Thomas |WHITAKER|ironmongers porter|Eliza |WHITAKER|null|6|11|1866|null|null|null|false|0|0|0|
+42|SALE|Janet |F|0|0|0|0|1938|null|null|null|5|4|null|null|null|null|Janet |SALE|null|3|0|1955|null|null|null|false|0|0|0|
+43|KAY|Christina |F|0|0|0|0|1898|KAY|null|null|7|9|null|Will |GONTHWICK|govt contractor|Christina |GONTHWICK|null|1|4|1909|null|null|null|false|0|0|0|
+44|BEDFORD|Sarah |F|0|0|0|0|1915|BEDFORD|null|null|3|4|null|Frances |CARCEY|stuff slinger|Sarah |CARCEY|null|4|1|1932|null|null|null|false|0|0|0|
+45|WHITAKER|Janet |F|0|0|0|0|1892|null|null|null|2|7|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+46|STOREY|Robina |F|0|0|0|0|1789|null|null|null|6|2|null|null|null|null|Robina |STOREY|null|5|4|1811|null|null|null|false|0|0|0|
+47|THOMAS|Samuel |M|0|0|0|0|1892|null|null|null|5|3|null|8 John |SHEARER|fisherman|null|null|null|6|8|1912|null|null|null|false|0|0|0|
+48|GILPIN|Alexander |M|0|0|0|0|1964|null|null|null|7|7|null|William |SIMPSON|farmers son|null|null|null|5|10|1984|null|null|null|false|0|0|0|
+49|MORRIS|Thomas |M|0|0|0|0|1785|MCCARTHY|null|null|2|3|null|Thomas |MORRIS|head gardener|Janet |MORRIS|null|7|3|1803|null|null|null|false|0|0|0|
+50|DUNSCOMBE|Peter |M|0|0|0|0|1998|null|null|null|1|5|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+51|CUTTER|William |M|0|0|0|0|1959|null|null|null|1|2|null|George |DUNN|farm labourer|null|null|null|6|4|1980|null|null|null|false|0|0|0|
+52|DARLING|Catherine |F|0|0|0|0|1962|DARLING|null|null|6|10|null|Alexr |HENDERSON|master builder|Catherine |HENDERSON|null|2|0|1976|null|null|null|false|0|0|0|
+53|HEWERDINE|C |M|0|0|0|0|1793|RICHARDS|null|null|6|7|null|C |HEWERDINE|bobbin winder|Eliza |HEWERDINE|null|2|6|1803|null|null|null|false|0|0|0|
+54|WINSOR|Marjory |F|0|0|0|0|1945|WINSOR|null|null|4|3|null|David |LYLE|"manager, aerated water manufactory (retired)"|Marjory |LYLE|null|2|11|1967|null|null|null|false|0|0|0|
+55|MATCHES|Elis |F|0|0|0|0|1988|MATCHES|null|null|2|5|null|Wallace |SWIFT|engineers turner at ordnance works|Elis |SWIFT|null|6|2|2007|null|null|null|false|0|0|0|
+56|PORTLOCK|Wm |M|0|0|0|0|1983|null|null|null|5|1|null|Wm |PORTLOCK|analytical chemist|null|null|null|2|0|1994|null|null|null|false|0|0|0|
+57|STEWART|Angus |M|0|0|0|0|2005|null|null|null|6|9|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+58|MCRAW|Agnes |F|0|0|0|0|1794|MCRAW|null|null|4|0|null|David |SMITH|butcher|Agnes |SMITH|null|2|5|1807|null|null|null|false|0|0|0|
+59|TIMEWELL|Martin |M|0|0|0|0|1884|SLIM|null|null|5|0|null|Martin |TIMEWELL|labourer|Jessie |TIMEWELL|null|6|11|1899|null|null|null|false|0|0|0|
+60|WINSOR|George |M|0|0|0|0|1895|POPPLETON|null|null|3|5|null|George |WINSOR|weaver|Jessie |WINSOR|null|4|6|1933|null|null|null|false|0|0|0|
+61|MARTIN|Archibald |M|0|0|0|0|1987|null|null|null|6|10|null|Kenneth |JENKINSON|civil engineer|null|null|null|3|3|2005|null|null|null|false|0|0|0|
+62|TOP|George |M|0|0|0|0|1972|null|null|null|4|8|null|Thomas |CHAMBERLAIN|musical instrument maker (brass)|null|null|null|5|7|1991|null|null|null|false|0|0|0|
+63|HUGHS|Janet |F|0|0|0|0|1924|null|null|null|5|3|null|null|null|null|Janet |HUGHS|null|7|3|1944|null|null|null|false|0|0|0|
+64|NAPPER|William |M|0|0|0|0|1864|null|null|null|2|1|null|William |NAPPER|groom|null|null|null|7|6|1879|null|null|null|false|0|0|0|
+65|MITCHLY|Helen |F|0|0|0|0|1893|MITCHLY|null|null|7|1|null|Hugh |CHAPMAN|book keeper|Helen |CHAPMAN|null|7|2|1907|null|null|null|false|0|0|0|
+66|PARKER|George |M|0|0|0|0|1845|IGO|null|null|6|0|null|George |PARKER|butcher|5 Margaret |PARKER|null|5|5|1867|null|null|null|false|0|0|0|
+67|COLQUHOUN|Jessie |F|0|0|0|0|1915|COLQUHOUN|null|null|7|1|null|Andrew |HARDMAN|shoemaker|Jessie |HARDMAN|null|5|5|1936|null|null|null|false|0|0|0|
+68|NESTIN|Christina |F|0|0|0|0|1832|null|null|null|3|6|null|null|null|null|Christina |NESTIN|null|2|6|1852|null|null|null|false|0|0|0|
+69|ADKINS|Janet |F|0|0|0|0|1804|null|null|null|6|5|null|null|null|null|Emily |TREGEA|null|7|6|1825|null|null|null|false|0|0|0|
+70|WHIPP|Wilhimina |F|0|0|0|0|1796|null|null|null|7|6|null|null|null|null|Sarah |HOWARD|null|6|0|1822|null|null|null|false|0|0|0|
+71|OAFF|Kenneth |M|0|0|0|0|1975|null|null|null|3|5|null|William |MARTIN|miner|null|null|null|2|9|1993|null|null|null|false|0|0|0|
+72|COOPER|Barbara |F|0|0|0|0|1810|null|null|null|4|4|null|null|null|null|Jannet |SMITH|null|7|3|1829|null|null|null|false|0|0|0|
+73|FELL|Michael |M|0|0|0|0|1885|WESTHEAD|null|null|2|4|null|Michael |FELL|currier and leather dealer|Emily |FELL|null|4|10|1901|null|null|null|false|0|0|0|
+74|CONWAY|Donald |M|0|0|0|0|1920|null|null|null|4|11|null|Donald |MATHEWSON|farm servant|null|null|null|3|1|1941|null|null|null|false|0|0|0|
+75|LEATHERBARROW|9 Jane |F|0|0|0|0|1862|LEATHERBARROW|null|null|6|5|null|George |CHAMBERS|engineer|9 Jane |CHAMBERS|null|4|9|1879|null|null|null|false|0|0|0|
+76|HANNAH|Elenora |F|0|0|0|0|1919|HANNAH|null|null|1|9|null|William |HENDERSON|land agent|Elenora |HENDERSON|null|2|5|1928|null|null|null|false|0|0|0|
+77|BOOTH|7 Elizabeth |F|0|0|0|0|1937|null|null|null|3|8|null|null|null|null|May |NAPPER|null|5|1|1952|null|null|null|false|0|0|0|
+78|HENDERSON|Alexr |M|0|0|0|0|1961|null|null|null|2|4|null|Alexr |HENDERSON|master builder|null|null|null|2|10|1981|null|null|null|false|0|0|0|
+79|GONTHWICK|Dougald |M|0|0|0|0|1832|null|null|null|7|8|null|Archibald |NAPPER|salvation army major|null|null|null|6|10|1844|null|null|null|false|0|0|0|
+80|ENGLISH|Minna |F|0|0|0|0|1873|ENGLISH|null|null|2|5|null|William |WELCH|labourer|Minna |WELCH|null|2|3|1890|null|null|null|false|0|0|0|
+81|HANNAH|David |M|0|0|0|0|1837|HOPKINS|null|null|6|6|null|David |HANNAH|cotton mill worker|Ann |HANNAH|null|3|4|1855|null|null|null|false|0|0|0|
+82|CONLLY|4 Robert |M|0|0|0|0|1868|null|null|null|2|6|null|4 Robert |CONLLY|wheelwright|null|null|null|1|4|1887|null|null|null|false|0|0|0|
+83|MCGOWAN|Philip |M|0|0|0|0|1802|null|null|null|4|9|null|Alexr |JONES|bankerman at colliery|null|null|null|7|2|1815|null|null|null|false|0|0|0|
+84|COLLINS|Ann |F|0|0|0|0|1972|COLLINS|null|null|5|7|null|Thomas |MANNING|tanner|Ann |MANNING|null|4|8|1986|null|null|null|false|0|0|0|
+85|DICKINSON|Cathrine |F|0|0|0|0|1868|DICKINSON|null|null|6|7|null|Andrew |WILSON|lab|Cathrine |WILSON|null|6|2|1886|null|null|null|false|0|0|0|
+86|BASSELLE|Alexander |M|0|0|0|0|1980|PETRIE|null|null|1|8|null|Alexander |BASSELLE|carpenter|Isabella |BASSELLE|null|7|6|2002|null|null|null|false|0|0|0|
+87|LEE|Chales |M|0|0|0|0|1872|null|null|null|5|9|null|Archibald |HAUR|farm labourer|null|null|null|3|5|1893|null|null|null|false|0|0|0|
+88|BRIGHT|8 James |M|0|0|0|0|1876|null|null|null|1|4|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+89|HARRIS|Sarah |F|0|0|0|0|1897|HARRIS|null|null|5|1|null|George |WINSOR|weaver|Sarah |WINSOR|null|3|5|1924|null|null|null|false|0|0|0|
+90|HENDERSON|George |M|0|0|0|0|1928|null|null|null|2|1|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+91|HERNAGE|Elspet |F|0|0|0|0|1879|HERNAGE|null|null|6|1|null|Charles |GONTHWICK|greengrocer|Elspet |GONTHWICK|null|5|11|1893|null|null|null|false|0|0|0|
+92|HANNAH|Simon |M|0|0|0|0|1831|null|null|null|5|0|null|Simon |HANNAH|wheelwright|null|null|null|1|8|1844|null|null|null|false|0|0|0|
+93|LUXTOR|Norman |M|0|0|0|0|1796|HOWARD|null|null|2|1|null|Norman |LUXTOR|labourer|Sarah |LUXTOR|null|5|10|1814|null|null|null|false|0|0|0|
+94|SPARK|Alexander |M|0|0|0|0|1862|null|null|null|4|4|null|Alexander |SPARK|railway goods guard|null|null|null|4|0|1877|null|null|null|false|0|0|0|
+95|BISSET|Euphemia |F|0|0|0|0|1983|null|null|null|4|2|null|null|null|null|Euphemia |BISSET|null|6|1|2000|null|null|null|false|0|0|0|
+96|HARWOOD|Andrew |M|0|0|0|0|1926|LOVELL|null|null|1|0|null|Andrew |HARWOOD|artist|Kate |HARWOOD|null|2|7|1945|null|null|null|false|0|0|0|
+97|CHAMBERS|Hugh |M|0|0|0|0|1831|null|null|null|6|6|null|Simon |HANNAH|wheelwright|null|null|null|1|8|1844|null|null|null|false|0|0|0|
+98|CONLLY|Alexander |M|0|0|0|0|1907|null|null|null|7|9|null|4 Robert |HARDMAN|ornamental engraver|null|null|null|5|4|1924|null|null|null|false|0|0|0|
+99|PUGH|Thos |M|0|0|0|0|2010|null|null|null|5|6|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+100|ROBERTS|Joseph |M|0|0|0|0|1828|null|null|null|6|4|null|4 Robert |CLARK|farmer|null|null|null|2|11|1845|null|null|null|false|0|0|0|
+101|GODDARD|Maggie |F|0|0|0|0|1799|GODDARD|null|null|3|6|null|Alexander |WESTLAKE|dressmaker|Maggie |WESTLAKE|null|4|6|1835|null|null|null|false|0|0|0|
+102|JICE|Janet |F|0|0|0|0|1986|JICE|null|null|7|10|null|William |OAKLEY|carriage proprietor|Janet |OAKLEY|null|4|11|1997|null|null|null|false|0|0|0|
+103|DAVIS|Marg |F|0|0|0|0|1805|DAVIS|null|null|6|8|null|Andrew |CLARK|spoon and fork dresser|Marg |CLARK|null|6|11|1828|null|null|null|false|0|0|0|
+104|JEFFERY|Agnes |F|0|0|0|0|1994|null|null|null|7|10|null|null|null|null|Agnes |JEFFERY|null|3|6|2012|null|null|null|false|0|0|0|
+105|ROLLANDS|Isabella |F|0|0|0|0|1805|ROLLANDS|null|null|7|9|null|Francis |PUGH|ag lab|Isabella |PUGH|null|2|5|1825|null|null|null|false|0|0|0|
+106|IGO|David |M|0|0|0|0|1817|LONDON|null|null|2|2|null|David |IGO|nurse|9 Jane |IGO|null|5|0|1841|null|null|null|false|0|0|0|
+107|WHITE|Alexina |F|0|0|0|0|1923|WHITE|null|null|6|6|null|Archibald |FELL|civil servant (youth welfare )|Alexina |FELL|null|5|8|1940|null|null|null|false|0|0|0|
+108|THOMAS|8 Mary |F|0|0|0|0|1934|THOMAS|null|null|1|3|null|George |CHAMBERLIN|master builder|8 Mary |CHAMBERLIN|null|5|9|1951|null|null|null|false|0|0|0|
+109|GONTHWICK|Will |M|0|0|0|0|1896|KAY|null|null|5|4|null|Will |GONTHWICK|govt contractor|Christina |GONTHWICK|null|1|4|1909|null|null|null|false|0|0|0|
+110|HENDERSON|Peter |M|0|0|0|0|1962|null|null|null|5|4|null|William |CHURCHILL|dressmaker|null|null|null|6|9|1976|null|null|null|false|0|0|0|
+111|ROWBOTHEM|Alfred |M|0|0|0|0|1800|DAVIS|null|null|2|11|null|Alfred |ROWBOTHEM|brewer|Ann |ROWBOTHEM|null|6|0|1814|null|null|null|false|0|0|0|
+112|TAAFFE|Marion |F|0|0|0|0|1868|null|null|null|5|0|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+113|BURNS|8 Mary |F|0|0|0|0|1886|BURNS|null|null|5|1|null|Alexander |GRANT|labourer|8 Mary |GRANT|null|1|8|1905|null|null|null|false|0|0|0|
+114|JOHNSON|Isabella |F|0|0|0|0|1823|null|null|null|6|7|null|null|null|null|Janet |JAMES|null|4|1|1845|null|null|null|false|0|0|0|
+115|COLLINS|David |M|0|0|0|0|1927|HISLOP|null|null|6|6|null|David |COLLINS|joiner|Easter |COLLINS|null|2|1|1944|null|null|null|false|0|0|0|
+116|GONTHWICK|Agnes |F|0|0|0|0|1871|null|null|null|2|4|null|null|null|null|Agnes |GONTHWICK|null|7|10|1891|null|null|null|false|0|0|0|
+117|LIDLE|Francis |M|0|0|0|0|1855|JAMES|null|null|1|11|null|Francis |LIDLE|labourer|Agnes |LIDLE|null|4|9|1862|null|null|null|false|0|0|0|
+118|KILLINGBECK|Eliza |F|0|0|0|0|1856|null|null|null|2|2|null|null|null|null|Eliza |KILLINGBECK|null|2|6|1871|null|null|null|false|0|0|0|
+119|PRESTON|George |M|0|0|0|0|1970|HARWOOD|null|null|4|7|null|George |PRESTON|labourer|Viliot |PRESTON|null|1|7|1982|null|null|null|false|0|0|0|
+120|AKERS|Jeanie |F|0|0|0|0|1989|AKERS|null|null|3|9|null|George |NICHOL|carpenter|Jeanie |NICHOL|null|6|1|2008|null|null|null|false|0|0|0|
+121|CHAMBERLIN|George |M|0|0|0|0|1933|THOMAS|null|null|3|2|null|George |CHAMBERLIN|master builder|8 Mary |CHAMBERLIN|null|5|9|1951|null|null|null|false|0|0|0|
+122|LOWES|Janet |F|0|0|0|0|1866|null|null|null|5|4|null|null|null|null|Sarah |GONTHWICK|null|4|11|1884|null|null|null|false|0|0|0|
+123|COLLINS|Agnes |F|0|0|0|0|1914|COLLINS|null|null|4|0|null|William |WILLIAMSON|lab|Agnes |WILLIAMSON|null|4|0|1932|null|null|null|false|0|0|0|
+124|MONIS|Thomas |M|0|0|0|0|1957|KAY|null|null|3|6|null|Thomas |MONIS|bootmaker|Grace |MONIS|null|3|10|1974|null|null|null|false|0|0|0|
+125|BESWETHERICK|George |M|0|0|0|0|1928|null|null|null|7|5|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+126|LAWSON|Margret |F|0|0|0|0|1963|LAWSON|null|null|3|1|null|Willia |BAXTER|book-keeper (carting agents)|Margret |BAXTER|null|1|7|1981|null|null|null|false|0|0|0|
+127|BIRKETT|Ann |F|0|0|0|0|1908|null|null|null|5|0|null|null|null|null|Ann |BIRKETT|null|7|4|1925|null|null|null|false|0|0|0|
+128|GONTHWICK|Ann |F|0|0|0|0|1880|GONTHWICK|null|null|3|3|null|Andrew |ENGLISH|master mariner|Ann |ENGLISH|null|1|10|1892|null|null|null|false|0|0|0|
+129|HARWOOD|Catheren |F|0|0|0|0|1884|null|null|null|2|2|null|null|null|null|Catheren |HARWOOD|null|1|4|1901|null|null|null|false|0|0|0|
+130|NAPPER|William |M|0|0|0|0|1933|null|null|null|4|3|null|William |HISLOP|bricklayer|null|null|null|5|3|1953|null|null|null|false|0|0|0|
+131|J|Ann |F|0|0|0|0|1810|null|null|null|6|3|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+132|GIBSON|Patrick |M|0|0|0|0|1971|null|null|null|2|11|null|William |HASELDINE|sawyer|null|null|null|1|7|1986|null|null|null|false|0|0|0|
+133|BOGG|Atholston |M|0|0|0|0|1783|MARLOW|null|null|3|8|null|Atholston |BOGG|cotton worker|Helen |BOGG|null|5|7|1802|null|null|null|false|0|0|0|
+134|GRANBERRY|Ronald |M|0|0|0|0|1971|CHAMBERLIN|null|null|6|6|null|Ronald |GRANBERRY|corn merchant|Isabella |GRANBERRY|null|2|2|1987|null|null|null|false|0|0|0|
+135|HARDMAN|William |M|0|0|0|0|1905|null|null|null|5|11|null|William |WILSON|gardener|null|null|null|5|6|1927|null|null|null|false|0|0|0|
+136|MOORE|Helen |F|0|0|0|0|2012|null|null|null|5|1|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+137|CHAMBERLAIN|Thomas |M|0|0|0|0|1973|null|null|null|5|3|null|George |TOP|miller|null|null|null|5|7|1991|null|null|null|false|0|0|0|
+138|GARBUTT|Francis |M|0|0|0|0|1811|null|null|null|5|7|null|Francis |GARBUTT|labourer|null|null|null|2|2|1828|null|null|null|false|0|0|0|
+139|SEAMOR|Ann |F|0|0|0|0|1927|SEAMOR|null|null|7|0|null|George |CROOK|miner|Ann |CROOK|null|7|10|1944|null|null|null|false|0|0|0|
+140|FOGGO|Henrietta |F|0|0|0|0|1817|null|null|null|7|10|null|null|null|null|Agnes |EDGELEY|null|1|2|1837|null|null|null|false|0|0|0|
+141|WOODMANSEY|Henry |M|0|0|0|0|1914|HARDMAN|null|null|6|3|null|Henry |WOODMANSEY|"warrant officer, rga"|Isabella |WOODMANSEY|null|7|6|1932|null|null|null|false|0|0|0|
+142|CONLLY|Hugh |M|0|0|0|0|1904|null|null|null|7|1|null|David |WOODMANSEY|teacher of domestic science|null|null|null|3|10|1918|null|null|null|false|0|0|0|
+143|SYKES|William |M|0|0|0|0|1951|null|null|null|2|3|null|William |SYKES|milliner|null|null|null|7|5|1963|null|null|null|false|0|0|0|
+144|TAYLOR|William |M|0|0|0|0|2007|null|null|null|3|2|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+145|HULL|Rose |F|0|0|0|0|1836|null|null|null|7|0|null|null|null|null|Rose |HULL|null|6|5|1854|null|null|null|false|0|0|0|
+146|CHAMBERLIN|Isabella |F|0|0|0|0|1969|CHAMBERLIN|null|null|2|11|null|Ronald |GRANBERRY|corn merchant|Isabella |GRANBERRY|null|2|2|1987|null|null|null|false|0|0|0|
+147|GONTHWICK|4 Robert |M|0|0|0|0|1842|IGO|null|null|5|11|null|4 Robert |GONTHWICK|tailor|9 Jane |GONTHWICK|null|1|10|1862|null|null|null|false|0|0|0|
+148|STEPHENS|Janet |F|0|0|0|0|1907|null|null|null|6|9|null|null|null|null|Janet |STEPHENS|null|7|4|1925|null|null|null|false|0|0|0|
+149|COLLIER|Dugald |M|0|0|0|0|1871|NAPPER|null|null|3|6|null|Dugald |COLLIER|building department foreman|Janet |COLLIER|null|7|2|1890|null|null|null|false|0|0|0|
+150|BENNETT|Ellen |F|0|0|0|0|1947|BENNETT|null|null|7|2|null|David |REENEY|farmer|Ellen |REENEY|null|3|10|1960|null|null|null|false|0|0|0|
+151|MEALING|Peter |M|0|0|0|0|1996|null|null|null|7|1|null|Peter |MEALING|porter|null|null|null|1|1|2010|null|null|null|false|0|0|0|
+152|THOMAS|William |M|0|0|0|0|1937|null|null|null|3|6|null|William |THOMAS|farmer|null|null|null|5|9|1955|null|null|null|false|0|0|0|
+153|SEAMOR|Dugald |M|0|0|0|0|1973|CHAMBERLIN|null|null|7|10|null|Dugald |SEAMOR|builder|Catherine |SEAMOR|null|7|9|1992|null|null|null|false|0|0|0|
+154|STEWART|William |M|0|0|0|0|1798|null|null|null|6|7|null|William |ADAMS|boot and shoe maker|null|null|null|6|9|1818|null|null|null|false|0|0|0|
+155|SMITH|Jessie |F|0|0|0|0|1960|SMITH|null|null|7|0|null|Alexander |WHITAKER|director of cloth manufacturers|Jessie |WHITAKER|null|5|2|1978|null|null|null|false|0|0|0|
+156|BARBER|8 John |M|0|0|0|0|1827|null|null|null|6|11|null|8 John |BARBER|needlewoman|null|null|null|6|3|1848|null|null|null|false|0|0|0|
+157|ROBINSON|Lizzie |F|0|0|0|0|1987|null|null|null|7|0|null|null|null|null|Lizzie |ROBINSON|null|7|11|2005|null|null|null|false|0|0|0|
+158|COWLISHAM|Catherine |F|0|0|0|0|2002|null|null|null|1|1|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+159|FOURACRE|Duncan |M|0|0|0|0|1883|WESTHEAD|null|null|1|9|null|Duncan |FOURACRE|boarding house keeper|Euphemia |FOURACRE|null|4|8|1897|null|null|null|false|0|0|0|
+160|GONTHWICK|George |M|0|0|0|0|1814|JARRETT|null|null|3|4|null|George |GONTHWICK|collier|Ann |GONTHWICK|null|2|3|1829|null|null|null|false|0|0|0|
+161|GREEN|William |M|0|0|0|0|1814|null|null|null|7|8|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+162|EAGLES|May |F|0|0|0|0|1800|EAGLES|null|null|7|10|null|David |MELTON|coppersmith|May |MELTON|null|6|7|1819|null|null|null|false|0|0|0|
+163|HARWOOD|Viliot |F|0|0|0|0|1968|HARWOOD|null|null|6|6|null|George |PRESTON|labourer|Viliot |PRESTON|null|1|7|1982|null|null|null|false|0|0|0|
+164|CHAPMAN|Hugh |M|0|0|0|0|1892|MITCHLY|null|null|4|9|null|Hugh |CHAPMAN|book keeper|Helen |CHAPMAN|null|7|2|1907|null|null|null|false|0|0|0|
+165|CONLLY|Janet |F|0|0|0|0|1953|null|null|null|6|11|null|null|null|null|Janet |CONLLY|null|1|3|1967|null|null|null|false|0|0|0|
+166|WILLIAMS|Helen |F|0|0|0|0|1984|null|null|null|1|2|null|null|null|null|Sarah |WHITE|null|7|7|2007|null|null|null|false|0|0|0|
+167|BRADLEY|Robt |M|0|0|0|0|1786|null|null|null|7|4|null|Alexander |KAY|grazier|null|null|null|3|10|1817|null|null|null|false|0|0|0|
+168|HENDERSON|George |M|0|0|0|0|1925|MOORE|null|null|5|0|null|George |HENDERSON|railway engine driver|Janet |HENDERSON|null|2|11|1941|null|null|null|false|0|0|0|
+169|HAVERS|David |M|0|0|0|0|2007|null|null|null|6|7|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+170|GRANT|Alexander |M|0|0|0|0|1886|BURNS|null|null|7|4|null|Alexander |GRANT|labourer|8 Mary |GRANT|null|1|8|1905|null|null|null|false|0|0|0|
+171|COLLIER|Ann |F|0|0|0|0|1862|COLLIER|null|null|6|8|null|David |KAY|sawyer|Ann |KAY|null|6|6|1883|null|null|null|false|0|0|0|
+172|MCFAYDEN|Jassie |F|0|0|0|0|2004|null|null|null|7|4|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+173|LIDLE|Philip |M|0|0|0|0|1885|GULLIVER|null|null|2|3|null|Philip |LIDLE|gardener|Susan |LIDLE|null|2|3|1902|null|null|null|false|0|0|0|
+174|FEILDING|Christina |F|0|0|0|0|1917|null|null|null|5|9|null|null|null|null|Ellen |PARKER|null|1|2|1935|null|null|null|false|0|0|0|
+175|SCRINGLEY|Isabella |F|0|0|0|0|1994|SCRINGLEY|null|null|2|2|null|Wm |CLIFF|distillery worker|Isabella |CLIFF|null|2|5|2012|null|null|null|false|0|0|0|
+176|RUSTON|Bridget |F|0|0|0|0|1960|null|null|null|3|3|null|null|null|null|Bridget |RUSTON|null|7|3|1977|null|null|null|false|0|0|0|
+177|JONES|Isabella |F|0|0|0|0|1936|null|null|null|7|1|null|null|null|null|Isabella |JONES|null|3|3|1952|null|null|null|false|0|0|0|
+178|WESTLAKE|Ann |F|0|0|0|0|1836|null|null|null|7|8|null|null|null|null|Sarah |TEMLETT|null|1|7|1847|null|null|null|false|0|0|0|
+179|CHAPMAN|Agnes |F|0|0|0|0|1935|null|null|null|1|5|null|null|null|null|Agnes |CHAPMAN|null|3|3|1952|null|null|null|false|0|0|0|
+180|BAXTER|Eliz |F|0|0|0|0|1964|null|null|null|1|6|null|null|null|null|Eliz |BAXTER|null|2|9|1979|null|null|null|false|0|0|0|
+181|GARBUTT|Janet |F|0|0|0|0|1835|null|null|null|3|9|null|null|null|null|Rose |HULL|null|6|5|1854|null|null|null|false|0|0|0|
+182|MAYS|Agnes |F|0|0|0|0|1999|null|null|null|7|1|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+183|HARWOOD|William |M|0|0|0|0|1964|null|null|null|3|5|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+184|BUNCE|Donald |M|0|0|0|0|1790|CHATTERLEY|null|null|3|5|null|Donald |BUNCE|engineers blacksmith|Janet |BUNCE|null|6|0|1809|null|null|null|false|0|0|0|
+185|COOK|8 James |M|0|0|0|0|1839|null|null|null|1|4|null|Will |HANNAH|farmer|null|null|null|2|3|1858|null|null|null|false|0|0|0|
+186|GONTHWICK|Annie |F|0|0|0|0|1885|null|null|null|3|2|null|null|null|null|Annie |GONTHWICK|null|3|11|1905|null|null|null|false|0|0|0|
+187|SEAMOR|Phillip |M|0|0|0|0|1894|null|null|null|6|5|null|Phillip |SEAMOR|district nurse|null|null|null|1|10|1908|null|null|null|false|0|0|0|
+188|WHITAKER|Ellen |F|0|0|0|0|1926|null|null|null|2|1|null|null|null|null|Ellen |WHITAKER|null|3|7|1942|null|null|null|false|0|0|0|
+189|HAWTHORN|Thomasina |F|0|0|0|0|1918|HAWTHORN|null|null|3|3|null|Thomas |RUSTON|solicitor|Thomasina |RUSTON|null|1|9|1934|null|null|null|false|0|0|0|
+190|PEARSE|Elizth |F|0|0|0|0|1872|null|null|null|4|8|null|null|null|null|Agness |COOK|null|6|1|1897|null|null|null|false|0|0|0|
+191|DAVIES|Christina |F|0|0|0|0|1819|DAVIES|null|null|5|9|null|Willia |GONTHWICK|engine fitter|Christina |GONTHWICK|null|5|2|1836|null|null|null|false|0|0|0|
+192|HENDERSON|Laurence |M|0|0|0|0|1964|STILES|null|null|3|5|null|Laurence |HENDERSON|moulder|Jessie |HENDERSON|null|7|11|1982|null|null|null|false|0|0|0|
+193|GONTHWICK|Alley |M|0|0|0|0|1861|null|null|null|6|4|null|Will |NAPPER|gardener|null|null|null|5|4|1877|null|null|null|false|0|0|0|
+194|ROXBURGH|Helen |F|0|0|0|0|1911|null|null|null|1|3|null|null|null|null|Helen |ROXBURGH|null|4|10|1931|null|null|null|false|0|0|0|
+195|WATSON|David |M|0|0|0|0|1978|HISLOP|null|null|6|6|null|David |WATSON|labourer|Martha |WATSON|null|1|2|1996|null|null|null|false|0|0|0|
+196|DAVIS|Hamilton |M|0|0|0|0|1783|null|null|null|3|7|null|Hamilton |DAVIS|warehouseman|null|null|null|6|8|1797|null|null|null|false|0|0|0|
+197|CUTTER|Ellen |F|0|0|0|0|1910|null|null|null|6|3|null|null|null|null|Janet |HANNAH|null|7|2|1926|null|null|null|false|0|0|0|
+198|EKINS|Janet |F|0|0|0|0|1922|null|null|null|2|5|null|null|null|null|Janet |EKINS|null|4|3|1942|null|null|null|false|0|0|0|
+199|HARDMAN|Fanny |F|0|0|0|0|1950|null|null|null|6|11|null|null|null|null|Fanny |HARDMAN|null|2|3|1967|null|null|null|false|0|0|0|
+200|BOUCHER|Hannah |F|0|0|0|0|1992|null|null|null|7|5|null|null|null|null|Hannah |BOUCHER|null|5|3|2011|null|null|null|false|0|0|0|
+201|CONLLY|Grace |F|0|0|0|0|1949|CONLLY|null|null|7|7|null|Hugh |WILLIAMS|currier|Grace |WILLIAMS|null|5|4|1966|null|null|null|false|0|0|0|
+202|RENDALL|Julia |F|0|0|0|0|1787|null|null|null|7|6|null|null|null|null|Julia |RENDALL|null|4|3|1804|null|null|null|false|0|0|0|
+203|GONTHWICK|Sarah |F|0|0|0|0|1873|GONTHWICK|null|null|1|4|null|George |WHITAKER|husbandman|Sarah |WHITAKER|null|6|6|1891|null|null|null|false|0|0|0|
+204|GONTHWICK|Georgina |F|0|0|0|0|1849|null|null|null|5|8|null|null|null|null|Georgina |GONTHWICK|null|3|3|1871|null|null|null|false|0|0|0|
+205|FLACK|Frederick |M|0|0|0|0|1850|null|null|null|3|7|null|Frederick |FLACK|telephonist|null|null|null|2|2|1873|null|null|null|false|0|0|0|
+206|CARCEY|Alexander |M|0|0|0|0|1958|NASH|null|null|6|10|null|Alexander |CARCEY|publican & innkeeper|Willhelmina |CARCEY|null|4|9|1978|null|null|null|false|0|0|0|
+207|HOWELLS|Flora |F|0|0|0|0|2002|null|null|null|7|4|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+208|BLUNDELL|David |M|0|0|0|0|1841|null|null|null|3|2|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+209|DAVIES|Willia |M|0|0|0|0|2013|null|null|null|4|11|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+210|MAYNARD|Alexr |M|0|0|0|0|1894|null|null|null|7|9|null|Alexr |MAYNARD|labourer|null|null|null|2|5|1921|null|null|null|false|0|0|0|
+211|MORRISON|Jacobina |F|0|0|0|0|1903|null|null|null|5|11|null|null|null|null|Janet |CUTTER|null|5|2|1927|null|null|null|false|0|0|0|
+212|THOMAS|Janet |F|0|0|0|0|1926|null|null|null|2|10|null|null|null|null|Janet |THOMAS|null|5|6|1947|null|null|null|false|0|0|0|
+213|GEDDES|Catherine |F|0|0|0|0|1842|GEDDES|null|null|4|6|null|Thomas |WHITAKER|ironmongers porter|Catherine |WHITAKER|null|1|0|1857|null|null|null|false|0|0|0|
+214|MUISHAM|Jannet |F|0|0|0|0|1816|MUISHAM|null|null|1|1|null|William |ABRAM|shipsmith|Jannet |ABRAM|null|1|4|1828|null|null|null|false|0|0|0|
+215|GREENWELL|Dennis |M|0|0|0|0|1845|null|null|null|2|1|null|Dennis |GREENWELL|master mariner|null|null|null|5|11|1863|null|null|null|false|0|0|0|
+216|SYKES|David |M|0|0|0|0|1905|BODEN|null|null|3|1|null|David |SYKES|miner|Charlotte |SYKES|null|6|2|1922|null|null|null|false|0|0|0|
+217|ROBERTS|Maggie |F|0|0|0|0|1858|null|null|null|4|6|null|null|null|null|Isabella |LLOYD|null|6|3|1874|null|null|null|false|0|0|0|
+218|MORRIS|William |M|0|0|0|0|1819|null|null|null|5|6|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+219|DUNCAN|William |M|0|0|0|0|2012|null|null|null|6|5|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+220|NAPPER|May |F|0|0|0|0|1936|null|null|null|1|8|null|null|null|null|7 Elizabeth |BOOTH|null|5|1|1952|null|null|null|false|0|0|0|
+221|COLLINSON|Cessie |F|0|0|0|0|1899|null|null|null|7|6|null|null|null|null|Elizbeth |WINSOR|null|5|9|1920|null|null|null|false|0|0|0|
+222|AXTON|Albert |M|0|0|0|0|1927|CHALMERS|null|null|4|0|null|Albert |AXTON|baker|Emma |AXTON|null|6|8|1940|null|null|null|false|0|0|0|
+223|HORNE|George |M|0|0|0|0|1784|ANDRUES|null|null|1|0|null|George |HORNE|draughtsman|Charlotte |HORNE|null|2|6|1801|null|null|null|false|0|0|0|
+224|NORTH|Barbra |F|0|0|0|0|2004|null|null|null|1|0|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+225|JONES|Janet |F|0|0|0|0|1805|null|null|null|6|9|null|null|null|null|Janet |JONES|null|5|3|1821|null|null|null|false|0|0|0|
+226|SMITH|4 Robert |M|0|0|0|0|1837|CLARK|null|null|1|2|null|4 Robert |SMITH|warehouseman|Agnes |SMITH|null|3|3|1859|null|null|null|false|0|0|0|
+227|ROBERTS|Julia |F|0|0|0|0|2009|null|null|null|1|10|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+228|HAWLEY|Alfred |M|0|0|0|0|1787|CORKER|null|null|3|0|null|Alfred |HAWLEY|blacksmith|Bridget |HAWLEY|null|5|5|1805|null|null|null|false|0|0|0|
+229|JARVIS|Donald |M|0|0|0|0|2008|null|null|null|4|7|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+230|SEAMOR|David |M|0|0|0|0|1942|GONTHWICK|null|null|7|9|null|David |SEAMOR|butcher|Annie |SEAMOR|null|2|0|1962|null|null|null|false|0|0|0|
+231|BURNS|Francis |M|0|0|0|0|1897|null|null|null|4|0|null|William |BASTON|sergeant ra|null|null|null|4|6|1916|null|null|null|false|0|0|0|
+232|HAUR|Archibald |M|0|0|0|0|1872|null|null|null|1|7|null|Chales |LEE|waterman|null|null|null|3|5|1893|null|null|null|false|0|0|0|
+233|CATTERAL|Isabella |F|0|0|0|0|1985|CATTERAL|null|null|1|5|null|Andrew |SLUGGETT|traveller|Isabella |SLUGGETT|null|2|5|1996|null|null|null|false|0|0|0|
+234|SMITH|Hugh |M|0|0|0|0|1866|null|null|null|4|2|null|Hugh |SMITH|farmer|null|null|null|1|9|1881|null|null|null|false|0|0|0|
+235|SCOTT|Eliza |F|0|0|0|0|1786|null|null|null|2|0|null|null|null|null|Eliza |SCOTT|null|1|9|1806|null|null|null|false|0|0|0|
+236|ADAM|Rebecca |F|0|0|0|0|2008|null|null|null|7|4|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+237|PROBART|Christina |F|0|0|0|0|1994|null|null|null|7|4|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+238|WALKER|William |M|0|0|0|0|1788|null|null|null|3|11|null|William |WALKER|lab|null|null|null|6|9|1804|null|null|null|false|0|0|0|
+239|LAMB|Isabella |F|0|0|0|0|1863|LAMB|null|null|5|7|null|Pat |SALE|farmer|Isabella |SALE|null|6|7|1881|null|null|null|false|0|0|0|
+240|BUSSLE|Isabella |F|0|0|0|0|2012|null|null|null|3|11|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+241|PUGH|Cathrine |F|0|0|0|0|1809|PUGH|null|null|2|11|null|George |ALLEN|indoor servant|Cathrine |ALLEN|null|1|9|1822|null|null|null|false|0|0|0|
+242|COLMAN|Alexander |M|0|0|0|0|2005|null|null|null|1|10|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+243|DUNN|George |M|0|0|0|0|1959|null|null|null|2|11|null|William |CUTTER|carpenter|null|null|null|6|4|1980|null|null|null|false|0|0|0|
+244|HISLOP|Helan |F|0|0|0|0|1976|null|null|null|1|10|null|null|null|null|Johan |GAFFREY|null|5|9|2012|null|null|null|false|0|0|0|
+245|WILSON|William |M|0|0|0|0|1905|null|null|null|1|11|null|William |WILSON|gardener|null|null|null|5|6|1927|null|null|null|false|0|0|0|
+246|CRABTREE|Susan |F|0|0|0|0|1858|null|null|null|6|11|null|null|null|null|Susan |CRABTREE|null|7|11|1875|null|null|null|false|0|0|0|
+247|WILKINSON|8 John |M|0|0|0|0|2013|null|null|null|7|8|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+248|FELL|Eliza |F|0|0|0|0|1925|FELL|null|null|5|7|null|Peter |MCKIRDY|ladys maid|Eliza |MCKIRDY|null|1|4|1936|null|null|null|false|0|0|0|
+249|KNIGHT|Cath |F|0|0|0|0|1861|null|null|null|5|1|null|null|null|null|Cath |KNIGHT|null|3|10|1891|null|null|null|false|0|0|0|
+250|SKIMMING|Peter |M|0|0|0|0|1781|null|null|null|6|5|null|Peter |SKIMMING|coal miner|null|null|null|6|8|1797|null|null|null|false|0|0|0|
+251|FULLER|Francis |M|0|0|0|0|1871|null|null|null|2|11|null|Alexr |SPARK|farmer|null|null|null|7|10|1890|null|null|null|false|0|0|0|
+252|J|Archibald |M|0|0|0|0|1813|null|null|null|5|6|null|Thomas |JONES|waitress|null|null|null|5|2|1833|null|null|null|false|0|0|0|
+253|GALE|Grace |F|0|0|0|0|1821|null|null|null|3|7|null|null|null|null|Grace |GALE|null|1|1|1845|null|null|null|false|0|0|0|
+254|BOYLE|7 Elizabeth |F|0|0|0|0|1851|BOYLE|null|null|4|5|null|Thomas |GONTHWICK|inland revenue officer|7 Elizabeth |GONTHWICK|null|7|2|1871|null|null|null|false|0|0|0|
+255|HASELDINE|William |M|0|0|0|0|1972|null|null|null|7|1|null|William |HASELDINE|sawyer|null|null|null|1|7|1986|null|null|null|false|0|0|0|
+256|TREGEA|Emily |F|0|0|0|0|1803|null|null|null|2|10|null|null|null|null|Janet |ADKINS|null|7|6|1825|null|null|null|false|0|0|0|
+257|JAMES|Agnes |F|0|0|0|0|1851|JAMES|null|null|2|9|null|Francis |LIDLE|labourer|Agnes |LIDLE|null|4|9|1862|null|null|null|false|0|0|0|
+258|CLESE|Janet |F|0|0|0|0|1861|null|null|null|5|3|null|null|null|null|Jessie |BOWYER|null|5|10|1881|null|null|null|false|0|0|0|
+259|BRIGHT|Robt |M|0|0|0|0|1880|null|null|null|5|0|null|David |CONWAY|railway platelayer|null|null|null|4|4|1904|null|null|null|false|0|0|0|
+260|HOWARD|Sarah |F|0|0|0|0|1793|HOWARD|null|null|1|8|null|Norman |LUXTOR|labourer|Sarah |LUXTOR|null|5|10|1814|null|null|null|false|0|0|0|
+261|GONTHWICK|8 James |M|0|0|0|0|1941|null|null|null|4|4|null|David |HISLOP|lab|null|null|null|4|10|1967|null|null|null|false|0|0|0|
+262|JONES|Robt |M|0|0|0|0|1783|MARSHALL|null|null|2|9|null|Robt |JONES|miller|Charolette |JONES|null|6|1|1801|null|null|null|false|0|0|0|
+263|MCGREGOR|Samuel |M|0|0|0|0|1849|null|null|null|5|5|null|Willi |HARWOOD|labourer|null|null|null|7|1|1861|null|null|null|false|0|0|0|
+264|TAILOR|Jeanie |F|0|0|0|0|1782|TAILOR|null|null|1|7|null|William |BINGHAM|leading aircraftman raf|Jeanie |BINGHAM|null|7|10|1804|null|null|null|false|0|0|0|
+265|JONES|8 John |M|0|0|0|0|1999|null|null|null|7|8|null|8 John |JONES|farmer|null|null|null|3|6|2012|null|null|null|false|0|0|0|
+266|JACKSON|William |M|0|0|0|0|1820|WILLIAMS|null|null|2|7|null|William |JACKSON|iron forger|Margt |JACKSON|null|4|3|1846|null|null|null|false|0|0|0|
+267|LIDLE|William |M|0|0|0|0|1892|null|null|null|4|9|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+268|JONES|Marion |F|0|0|0|0|1915|JONES|null|null|1|4|null|Richard |CUTTER|labourer|Marion |CUTTER|null|6|9|1929|null|null|null|false|0|0|0|
+269|KAY|William |M|0|0|0|0|1895|null|null|null|5|3|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+270|HOLDEN|Barbara |F|0|0|0|0|1803|HOLDEN|null|null|3|4|null|David |GONTHWICK|lithographic printer|Barbara |GONTHWICK|null|6|11|1820|null|null|null|false|0|0|0|
+271|FOURACRE|Francis |M|0|0|0|0|1875|null|null|null|1|10|null|Francis |FOURACRE|grinder|null|null|null|6|1|1893|null|null|null|false|0|0|0|
+272|HARVEY|Barbara |F|0|0|0|0|1963|null|null|null|2|2|null|null|null|null|Eliz |BAXTER|null|2|9|1979|null|null|null|false|0|0|0|
+273|FULLER|Thomas |M|0|0|0|0|1905|HANNAH|null|null|2|1|null|Thomas |FULLER|boot & shoemaker|Janet |FULLER|null|4|10|1925|null|null|null|false|0|0|0|
+274|WESTLAKE|Bridget |F|0|0|0|0|1825|WESTLAKE|null|null|2|11|null|David |BROWN|servant|Bridget |BROWN|null|1|7|1840|null|null|null|false|0|0|0|
+275|WALTSON|Jas |M|0|0|0|0|1987|STEVENS|null|null|4|10|null|Jas |WALTSON|dairyman|Mrgaret |WALTSON|null|3|4|2011|null|null|null|false|0|0|0|
+276|FOURACRE|William |M|0|0|0|0|1846|null|null|null|5|5|null|William |FOURACRE|carpenter|null|null|null|5|11|1863|null|null|null|false|0|0|0|
+277|GONTHWICK|Agnes |F|0|0|0|0|1883|null|null|null|2|7|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+278|CONWAY|Marion |F|0|0|0|0|1914|CONWAY|null|null|6|9|null|Gilbert |HENDERSON|shopfitter|Marion |HENDERSON|null|5|4|1929|null|null|null|false|0|0|0|
+279|CROOK|Annie |F|0|0|0|0|1975|CROOK|null|null|2|10|null|Ebenezer |DYER|corn and coal merchant|Annie |DYER|null|5|5|1994|null|null|null|false|0|0|0|
+280|MACDONALD|Wm |M|0|0|0|0|1929|null|null|null|3|11|null|Wm |MACDONALD|insurance agent|null|null|null|3|4|1952|null|null|null|false|0|0|0|
+281|BURNS|William |M|0|0|0|0|1857|SLATER|null|null|3|2|null|William |BURNS|sailmaker|Esther |BURNS|null|1|3|1871|null|null|null|false|0|0|0|
+282|ROWBOTHEM|Agnes |F|0|0|0|0|1820|null|null|null|4|5|null|null|null|null|Laura |GALLOWAY|null|3|9|1838|null|null|null|false|0|0|0|
+283|GONTHWICK|Andrew |M|0|0|0|0|1873|null|null|null|5|3|null|Andrew |GONTHWICK|servant|null|null|null|3|3|1896|null|null|null|false|0|0|0|
+284|HARDY|8 John |M|0|0|0|0|1944|null|null|null|4|9|null|William |CONLLY|"seaman, royal navy"|null|null|null|5|0|1959|null|null|null|false|0|0|0|
+285|WALKER|Wm |M|0|0|0|0|1931|MCKIRDY|null|null|5|8|null|Wm |WALKER|dock labourer|Jessie |WALKER|null|6|10|1950|null|null|null|false|0|0|0|
+286|PARKER|Maggie |F|0|0|0|0|1885|null|null|null|3|9|null|null|null|null|Maggie |PARKER|null|3|11|1905|null|null|null|false|0|0|0|
+287|SHARROCK|George |M|0|0|0|0|2010|null|null|null|4|1|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+288|MCGETTRICK|Violet |F|0|0|0|0|1977|null|null|null|6|6|null|null|null|null|Janet |HENDERSON|null|6|8|1994|null|null|null|false|0|0|0|
+289|DARLING|Thomas |M|0|0|0|0|1966|null|null|null|5|2|null|Samuel |COLLINS|wine merchant|null|null|null|4|10|1982|null|null|null|false|0|0|0|
+290|CHAMBERLIN|Henry |M|0|0|0|0|1979|null|null|null|7|10|null|Henry |CHAMBERLIN|labourer|null|null|null|1|0|1994|null|null|null|false|0|0|0|
+291|SOMERFIELD|Jessie |F|0|0|0|0|1792|null|null|null|5|0|null|null|null|null|Jessie |SOMERFIELD|null|3|6|1809|null|null|null|false|0|0|0|
+292|RUSSELL|Wm |M|0|0|0|0|1787|ELMS|null|null|7|8|null|Wm |RUSSELL|iron foundry mechanic|Agnes |RUSSELL|null|6|3|1807|null|null|null|false|0|0|0|
+293|HANNAH|Isabella |F|0|0|0|0|1878|HANNAH|null|null|6|3|null|Arthur |HENDERSON|labourer|Isabella |HENDERSON|null|5|1|1897|null|null|null|false|0|0|0|
+294|POULTER|Janet |F|0|0|0|0|2009|null|null|null|7|0|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+295|WOODMANSEY|Helen |F|0|0|0|0|1907|WOODMANSEY|null|null|4|6|null|8 James |KAY|iron moulder|Helen |KAY|null|5|9|1921|null|null|null|false|0|0|0|
+296|HANNAH|Thomas |M|0|0|0|0|1913|null|null|null|7|4|null|Thomas |HANNAH|commercial traveller|null|null|null|1|5|1923|null|null|null|false|0|0|0|
+297|GONTHWICK|William |M|0|0|0|0|1870|null|null|null|4|3|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+298|CHEARAN|Cathrine |F|0|0|0|0|1890|null|null|null|4|0|null|null|null|null|Catharine |GONTHWICK|null|1|0|1904|null|null|null|false|0|0|0|
+299|COLLINS|Daniel |M|0|0|0|0|1975|null|null|null|6|7|null|Daniel |COLLINS|wheelwright|null|null|null|5|9|1995|null|null|null|false|0|0|0|
+300|LOMAS|Sarah |F|0|0|0|0|1793|null|null|null|5|5|null|null|null|null|Sarah |LOMAS|null|1|6|1810|null|null|null|false|0|0|0|
+301|WINSOR|Stewart |M|0|0|0|0|1935|null|null|null|4|6|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+302|WELCH|Janet |F|0|0|0|0|1913|null|null|null|5|4|null|null|null|null|Euphemia |WOODMANSEY|null|7|6|1938|null|null|null|false|0|0|0|
+303|JONES|Alexr |M|0|0|0|0|1802|null|null|null|7|3|null|Alexr |JONES|bankerman at colliery|null|null|null|7|2|1815|null|null|null|false|0|0|0|
+304|EDGELEY|Agnes |F|0|0|0|0|1817|null|null|null|1|6|null|null|null|null|Henrietta |FOGGO|null|1|2|1837|null|null|null|false|0|0|0|
+305|MOWAT|Cecilia |F|0|0|0|0|1971|null|null|null|5|6|null|null|null|null|Barbara |DAWSON|null|2|9|1991|null|null|null|false|0|0|0|
+306|PARKER|Christina |F|0|0|0|0|1882|PARKER|null|null|5|3|null|Alexander |GONTHWICK|domestic servant|Christina |GONTHWICK|null|2|6|1899|null|null|null|false|0|0|0|
+307|WILLIAMS|Margt |F|0|0|0|0|1818|WILLIAMS|null|null|1|0|null|Joseph |GONTHWICK|tailor|Margt |GONTHWICK|null|4|0|1829|null|null|null|false|0|0|0|
+308|HENDERSON|Janet |F|0|0|0|0|1977|null|null|null|1|0|null|null|null|null|Janet |HENDERSON|null|6|8|1994|null|null|null|false|0|0|0|
+309|IGO|9 Jane |F|0|0|0|0|1842|IGO|null|null|4|4|null|4 Robert |GONTHWICK|tailor|9 Jane |GONTHWICK|null|1|10|1862|null|null|null|false|0|0|0|
+310|PEGLAR|William |M|0|0|0|0|1826|null|null|null|7|3|null|David |FLACK|farm bailiff|null|null|null|4|6|1843|null|null|null|false|0|0|0|
+311|CHAMBERLIN|Agnes |F|0|0|0|0|1966|CHAMBERLIN|null|null|3|10|null|Alexander |HENDERSON|railway engine driver|Agnes |HENDERSON|null|5|1|1982|null|null|null|false|0|0|0|
+312|GONTHWICK|William |M|0|0|0|0|1893|BASTON|null|null|5|4|null|William |GONTHWICK|medical and ordained missionary|Alexanderina |GONTHWICK|null|1|4|1912|null|null|null|false|0|0|0|
+313|CROCKATT|Thomas |M|0|0|0|0|1786|null|null|null|7|2|null|Alexander |KAY|grazier|null|null|null|1|11|1812|null|null|null|false|0|0|0|
+314|JENKINS|Janet |F|0|0|0|0|1802|JENKINS|null|null|2|8|null|Alfred |ROWBOTHEM|brewer|Janet |ROWBOTHEM|null|7|3|1821|null|null|null|false|0|0|0|
+315|SALE|Alexander |M|0|0|0|0|1895|null|null|null|7|5|null|Joseph |BOOTH|farmer|null|null|null|2|8|1913|null|null|null|false|0|0|0|
+316|ENGLISH|William |M|0|0|0|0|1842|MORLEY|null|null|6|8|null|William |ENGLISH|baker|Beatrice |ENGLISH|null|2|4|1858|null|null|null|false|0|0|0|
+317|CONWAY|David |M|0|0|0|0|1917|HARDMAN|null|null|3|11|null|David |CONWAY|bailiff|Jessie |CONWAY|null|4|10|1932|null|null|null|false|0|0|0|
+318|WINSOR|Willia |M|0|0|0|0|1942|BASTON|null|null|4|2|null|Willia |WINSOR|wool weaver|Agnes |WINSOR|null|4|7|1957|null|null|null|false|0|0|0|
+319|COOKSHAW|Jas |M|0|0|0|0|1789|null|null|null|4|3|null|William |WALKER|lab|null|null|null|6|9|1804|null|null|null|false|0|0|0|
+320|HARRISON|Duncan |M|0|0|0|0|1980|WAINWRIGHT|null|null|7|9|null|Duncan |HARRISON|wholesale merchant and exporter|Dorothy |HARRISON|null|7|10|1997|null|null|null|false|0|0|0|
+321|HARDMAN|4 Robert |M|0|0|0|0|1908|null|null|null|4|9|null|4 Robert |HARDMAN|ornamental engraver|null|null|null|5|4|1924|null|null|null|false|0|0|0|
+322|NUTTALL|Catherine |F|0|0|0|0|1841|NUTTALL|null|null|4|10|null|Chas |GONTHWICK|coachman|Catherine |GONTHWICK|null|3|2|1855|null|null|null|false|0|0|0|
+323|WILLIAMS|Isabella |F|0|0|0|0|1986|null|null|null|5|0|null|null|null|null|Rachel |FENTON|null|6|3|2004|null|null|null|false|0|0|0|
+324|FINCH|Helen |F|0|0|0|0|1839|FINCH|null|null|4|10|null|Thomas |TOWERS|carpenter|Helen |TOWERS|null|5|9|1860|null|null|null|false|0|0|0|
+325|GONTHWICK|Joseph |M|0|0|0|0|1819|WILLIAMS|null|null|4|2|null|Joseph |GONTHWICK|tailor|Margt |GONTHWICK|null|4|0|1829|null|null|null|false|0|0|0|
+326|SYKES|Hellen |F|0|0|0|0|1948|SYKES|null|null|5|2|null|Edward |CHAMBERS|weaver|Hellen |CHAMBERS|null|2|6|1970|null|null|null|false|0|0|0|
+327|TEMLETT|Sarah |F|0|0|0|0|1836|null|null|null|1|3|null|null|null|null|Ann |WESTLAKE|null|1|7|1847|null|null|null|false|0|0|0|
+328|TEMLETT|Agnes |F|0|0|0|0|1848|TEMLETT|null|null|3|7|null|Archd |WESTHEAD|tailor|Agnes |WESTHEAD|null|1|2|1867|null|null|null|false|0|0|0|
+329|JENKINS|Jessie |F|0|0|0|0|2012|null|null|null|4|3|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+330|SHERMAN|Robina |F|0|0|0|0|1820|null|null|null|7|9|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+331|SHEARER|8 John |M|0|0|0|0|1891|null|null|null|3|10|null|8 John |SHEARER|fisherman|null|null|null|6|8|1912|null|null|null|false|0|0|0|
+332|WHITE|Sarah |F|0|0|0|0|1984|null|null|null|5|9|null|null|null|null|Sarah |WHITE|null|7|7|2007|null|null|null|false|0|0|0|
+333|COLLAR|Alexander |M|0|0|0|0|2013|null|null|null|2|11|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+334|NAPPER|Edwin |M|0|0|0|0|1835|MARSHALL|null|null|2|0|null|Edwin |NAPPER|publican|Catherine |NAPPER|null|7|5|1851|null|null|null|false|0|0|0|
+335|BOOTH|Joseph |M|0|0|0|0|1895|null|null|null|7|7|null|Alexander |SALE|coal miner|null|null|null|2|8|1913|null|null|null|false|0|0|0|
+336|SYKES|Jessie |F|0|0|0|0|1955|null|null|null|5|0|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+337|DAVIS|Ann |F|0|0|0|0|1802|DAVIS|null|null|2|3|null|Alfred |ROWBOTHEM|brewer|Ann |ROWBOTHEM|null|6|0|1814|null|null|null|false|0|0|0|
+338|HARRE|Sarah |F|0|0|0|0|1958|null|null|null|3|1|null|null|null|null|Agnes |WILLIAMSON|null|5|5|1980|null|null|null|false|0|0|0|
+339|CROSBIE|Lilly |F|0|0|0|0|1939|null|null|null|2|3|null|null|null|null|Lilly |CROSBIE|null|3|11|1960|null|null|null|false|0|0|0|
+340|SPOONER|Grace |F|0|0|0|0|1814|null|null|null|6|0|null|null|null|null|Grace |SPOONER|null|2|7|1835|null|null|null|false|0|0|0|
+341|HANNAH|Thomas |M|0|0|0|0|1862|null|null|null|1|9|null|Thomas |HANNAH|overlooker of spinners|null|null|null|2|10|1881|null|null|null|false|0|0|0|
+342|COOK|8 James |M|0|0|0|0|1869|GILKES|null|null|4|10|null|8 James |COOK|railway servant|Isabella |COOK|null|5|2|1889|null|null|null|false|0|0|0|
+343|GONTHWICK|Laurence |M|0|0|0|0|1838|null|null|null|4|9|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+344|CROSBIE|William |M|0|0|0|0|1780|null|null|null|1|2|null|William |CROSBIE|laundry woman|null|null|null|7|4|1796|null|null|null|false|0|0|0|
+345|WYMERS|8 John |M|0|0|0|0|1971|CROOK|null|null|1|4|null|8 John |WYMERS|gardener|Amelia |WYMERS|null|5|11|1989|null|null|null|false|0|0|0|
+346|KAY|Agnes |F|0|0|0|0|1909|null|null|null|2|2|null|null|null|null|Janet |STEPHENS|null|3|4|1934|null|null|null|false|0|0|0|
+347|CLARK|Agnes |F|0|0|0|0|1837|CLARK|null|null|4|0|null|4 Robert |SMITH|warehouseman|Agnes |SMITH|null|3|3|1859|null|null|null|false|0|0|0|
+348|HAWKIN|Donald |M|0|0|0|0|1814|null|null|null|6|11|null|Donald |HAWKIN|labourer|null|null|null|3|11|1826|null|null|null|false|0|0|0|
+349|BROWN|Willia |M|0|0|0|0|1966|null|null|null|6|5|null|Willia |BROWN|shoemaker|null|null|null|3|1|1985|null|null|null|false|0|0|0|
+350|GONTHWICK|David |M|0|0|0|0|1801|HOLDEN|null|null|7|8|null|David |GONTHWICK|lithographic printer|Barbara |GONTHWICK|null|6|11|1820|null|null|null|false|0|0|0|
+351|THOMAS|Peter |M|0|0|0|0|2009|null|null|null|1|0|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+352|KENT|George |M|0|0|0|0|1804|DOBSON|null|null|4|3|null|George |KENT|lacemaker|Ann |KENT|null|3|11|1827|null|null|null|false|0|0|0|
+353|WHITAKER|Maggie |F|0|0|0|0|1874|null|null|null|5|3|null|null|null|null|Ellen |GONTHWICK|null|5|4|1892|null|null|null|false|0|0|0|
+354|ARTIS|Catherine |F|0|0|0|0|1787|null|null|null|2|0|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+355|JACKSON|Wm |M|0|0|0|0|1986|null|null|null|3|3|null|William |SMITH|cloth weaver|null|null|null|1|8|2003|null|null|null|false|0|0|0|
+356|COOKSHAW|Janet |F|0|0|0|0|1806|null|null|null|6|1|null|null|null|null|Janet |COOKSHAW|null|5|3|1821|null|null|null|false|0|0|0|
+357|NICHOL|George |M|0|0|0|0|1995|AKERS|null|null|1|2|null|George |NICHOL|carpenter|Jeanie |NICHOL|null|6|1|2008|null|null|null|false|0|0|0|
+358|SMITH|William |M|0|0|0|0|1869|null|null|null|6|4|null|William |SMITH|lab|null|null|null|6|10|1891|null|null|null|false|0|0|0|
+359|MARLOW|Helen |F|0|0|0|0|1781|MARLOW|null|null|2|6|null|Atholston |BOGG|cotton worker|Helen |BOGG|null|5|7|1802|null|null|null|false|0|0|0|
+360|HANNAH|Janet |F|0|0|0|0|1906|HANNAH|null|null|4|8|null|Thomas |FULLER|boot & shoemaker|Janet |FULLER|null|4|10|1925|null|null|null|false|0|0|0|
+361|SMITH|David |M|0|0|0|0|1822|ROBERTSON|null|null|5|10|null|David |SMITH|ironmonger|Agnes |SMITH|null|1|5|1842|null|null|null|false|0|0|0|
+362|BROWN|Henry |M|0|0|0|0|1788|null|null|null|6|4|null|Henry |BROWN|copper miner|null|null|null|3|2|1805|null|null|null|false|0|0|0|
+363|RITCHIE|Janet |F|0|0|0|0|1948|RITCHIE|null|null|5|0|null|Andrew |GONTHWICK|engineer|Janet |GONTHWICK|null|4|0|1973|null|null|null|false|0|0|0|
+364|CROWNEY|Susannah |F|0|0|0|0|1785|null|null|null|1|3|null|null|null|null|Susannah |CROWNEY|null|7|6|1801|null|null|null|false|0|0|0|
+365|GONTHWICK|William |M|0|0|0|0|1900|null|null|null|5|6|null|William |GONTHWICK|limeburner|null|null|null|1|10|1913|null|null|null|false|0|0|0|
+366|MCBRIDE|Helen |F|0|0|0|0|1882|null|null|null|5|4|null|null|null|null|Helen |MCBRIDE|null|1|0|1900|null|null|null|false|0|0|0|
+367|NAPPER|Ann |F|0|0|0|0|1867|NAPPER|null|null|4|4|null|George |SPARK|engineer|Ann |SPARK|null|4|5|1884|null|null|null|false|0|0|0|
+368|GARBUTT|Isa |F|0|0|0|0|1832|GARBUTT|null|null|2|4|null|William |BRIGHT|barrister|Isa |BRIGHT|null|5|8|1849|null|null|null|false|0|0|0|
+369|NAPPER|Thomas |M|0|0|0|0|1940|null|null|null|5|10|null|David |HISLOP|lab|null|null|null|4|0|1961|null|null|null|false|0|0|0|
+370|COULTER|Annie |F|0|0|0|0|1848|COULTER|null|null|5|10|null|Francis |WHITAKER|barber|Annie |WHITAKER|null|5|4|1867|null|null|null|false|0|0|0|
+371|KAY|8 James |M|0|0|0|0|1906|WOODMANSEY|null|null|2|0|null|8 James |KAY|iron moulder|Helen |KAY|null|5|9|1921|null|null|null|false|0|0|0|
+372|BOWATER|Annie |F|0|0|0|0|1799|null|null|null|1|11|null|null|null|null|Annie |BOWATER|null|1|11|1816|null|null|null|false|0|0|0|
+373|PARKER|Flora |F|0|0|0|0|1959|PARKER|null|null|5|3|null|Francis |DAVIS|labourer|Flora |DAVIS|null|3|5|1974|null|null|null|false|0|0|0|
+374|RICHARDS|Eliza |F|0|0|0|0|1792|RICHARDS|null|null|3|7|null|C |HEWERDINE|bobbin winder|Eliza |HEWERDINE|null|2|6|1803|null|null|null|false|0|0|0|
+375|WILSON|Christina |F|0|0|0|0|2012|null|null|null|3|3|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+376|COX|Margret |F|0|0|0|0|1811|null|null|null|2|11|null|null|null|null|Margret |COX|null|7|0|1834|null|null|null|false|0|0|0|
+377|GONTHWICK|Catharine |F|0|0|0|0|1891|null|null|null|2|10|null|null|null|null|Cathrine |CHEARAN|null|1|0|1904|null|null|null|false|0|0|0|
+378|WILLIAMSON|Helen |F|0|0|0|0|1951|null|null|null|7|7|null|null|null|null|Helen |WILLIAMSON|null|3|7|1971|null|null|null|false|0|0|0|
+379|WILD|Thomas |M|0|0|0|0|1804|GONTHWICK|null|null|1|2|null|Thomas |WILD|lab|Sarah |WILD|null|2|11|1823|null|null|null|false|0|0|0|
+380|FRYER|William |M|0|0|0|0|1988|null|null|null|2|0|null|Thomas |TERRITEY|lab|null|null|null|4|2|2004|null|null|null|false|0|0|0|
+381|GULLIVER|Susan |F|0|0|0|0|1884|GULLIVER|null|null|7|3|null|Philip |LIDLE|gardener|Susan |LIDLE|null|2|3|1902|null|null|null|false|0|0|0|
+382|BINGHAM|William |M|0|0|0|0|1784|TAILOR|null|null|1|9|null|William |BINGHAM|leading aircraftman raf|Jeanie |BINGHAM|null|7|10|1804|null|null|null|false|0|0|0|
+383|WAY|Christina |F|0|0|0|0|1822|null|null|null|6|7|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+384|HISLOP|Annie |F|0|0|0|0|1984|HISLOP|null|null|5|1|null|William |MARSH|fell monger|Annie |MARSH|null|7|6|2000|null|null|null|false|0|0|0|
+385|MARSHALL|Charolette |F|0|0|0|0|1781|MARSHALL|null|null|4|6|null|Robt |JONES|miller|Charolette |JONES|null|6|1|1801|null|null|null|false|0|0|0|
+386|FLACK|David |M|0|0|0|0|1826|null|null|null|1|11|null|William |PEGLAR|coal miner|null|null|null|4|6|1843|null|null|null|false|0|0|0|
+387|HARDMAN|Andrew |M|0|0|0|0|1912|COLQUHOUN|null|null|6|10|null|Andrew |HARDMAN|shoemaker|Jessie |HARDMAN|null|5|5|1936|null|null|null|false|0|0|0|
+388|ROUTLEDGE|Maggie |F|0|0|0|0|1968|null|null|null|4|0|null|null|null|null|Ann |PEYTON|null|2|8|1987|null|null|null|false|0|0|0|
+389|JOHNSON|Thomas |M|0|0|0|0|1791|null|null|null|3|5|null|Thomas |JOHNSON|farmer|null|null|null|3|8|1810|null|null|null|false|0|0|0|
+390|CAMLOT|Annie |F|0|0|0|0|1786|null|null|null|2|4|null|null|null|null|Annie |CAMLOT|null|1|9|1806|null|null|null|false|0|0|0|
+391|CUTTER|Richard |M|0|0|0|0|1913|null|null|null|1|3|null|Thomas |HANNAH|commercial traveller|null|null|null|1|5|1923|null|null|null|false|0|0|0|
+392|DUTTON|Helen |F|0|0|0|0|1850|null|null|null|3|4|null|null|null|null|Ellen |LWEIS|null|7|9|1868|null|null|null|false|0|0|0|
+393|COUTTS|Timothy |M|0|0|0|0|1982|null|null|null|4|5|null|Timothy |COUTTS|lithographic printer|null|null|null|5|10|1997|null|null|null|false|0|0|0|
+394|WOODMANSEY|William |M|0|0|0|0|1917|null|null|null|1|7|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+395|HISLOP|William |M|0|0|0|0|1934|null|null|null|6|3|null|William |NAPPER|frame work knitter|null|null|null|5|3|1953|null|null|null|false|0|0|0|
+396|PYNE|5 Margaret |F|0|0|0|0|1807|null|null|null|5|10|null|null|null|null|Robina |HAWLEY|null|1|0|1824|null|null|null|false|0|0|0|
+397|CONWAY|Alexander |M|0|0|0|0|1924|null|null|null|7|0|null|Alexander |CONWAY|labourer|null|null|null|7|0|1944|null|null|null|false|0|0|0|
+398|CAMERON|Minnie |F|0|0|0|0|1829|null|null|null|1|9|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+399|SLAGG|Helen |F|0|0|0|0|1872|null|null|null|1|10|null|null|null|null|Elizth |PEARSE|null|6|1|1889|null|null|null|false|0|0|0|
+400|GONTHWICK|Sarah |F|0|0|0|0|1805|GONTHWICK|null|null|2|1|null|Thomas |WILD|lab|Sarah |WILD|null|2|11|1823|null|null|null|false|0|0|0|
+401|KNEWSTUBB|Maggie |F|0|0|0|0|1957|null|null|null|4|7|null|null|null|null|Maggie |KNEWSTUBB|null|6|1|1975|null|null|null|false|0|0|0|
+402|MCKIRDY|Thomas |M|0|0|0|0|1891|GONTHWICK|null|null|2|2|null|Thomas |MCKIRDY|bedstead maker|Jessie |MCKIRDY|null|1|2|1903|null|null|null|false|0|0|0|
+403|HARVEY|Alexander |M|0|0|0|0|1887|FOURACRE|null|null|7|4|null|Alexander |HARVEY|house painter|Catherine |HARVEY|null|7|0|1908|null|null|null|false|0|0|0|
+404|ANDERSON|Maggie |F|0|0|0|0|1973|null|null|null|1|5|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+405|CRABB|Helen |F|0|0|0|0|1785|null|null|null|7|5|null|null|null|null|Susannah |CROWNEY|null|7|6|1801|null|null|null|false|0|0|0|
+406|JACKSON|Williamina |F|0|0|0|0|1853|null|null|null|5|8|null|null|null|null|Betsy |WHITAKER|null|7|2|1877|null|null|null|false|0|0|0|
+407|HISLOP|Margt |F|0|0|0|0|1966|HISLOP|null|null|6|11|null|David |BAXTER|servant|Margt |BAXTER|null|1|1|1982|null|null|null|false|0|0|0|
+408|NAPPER|William |M|0|0|0|0|1895|PILCHER|null|null|5|2|null|William |NAPPER|mariner|Alyis |NAPPER|null|1|6|1912|null|null|null|false|0|0|0|
+409|BASTON|Agnes |F|0|0|0|0|1941|null|null|null|3|7|null|null|null|null|Bridget |NEWTON|null|7|8|1962|null|null|null|false|0|0|0|
+410|JONES|Janet |F|0|0|0|0|1816|JONES|null|null|5|4|null|8 John |SMITH|stonemason and bricklayer|Janet |SMITH|null|5|2|1832|null|null|null|false|0|0|0|
+411|REENEY|David |M|0|0|0|0|1942|BENNETT|null|null|6|11|null|David |REENEY|farmer|Ellen |REENEY|null|3|10|1960|null|null|null|false|0|0|0|
+412|DYER|Ebenezer |M|0|0|0|0|1975|CROOK|null|null|7|6|null|Ebenezer |DYER|corn and coal merchant|Annie |DYER|null|5|5|1994|null|null|null|false|0|0|0|
+413|JONES|Richd |M|0|0|0|0|1883|GONTHWICK|null|null|1|7|null|Richd |JONES|dressmaker|Helen |JONES|null|2|9|1897|null|null|null|false|0|0|0|
+414|FOURACRE|Alexander |M|0|0|0|0|1912|null|null|null|6|4|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+415|BROWN|Jeminia |F|0|0|0|0|1835|null|null|null|7|4|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+416|ANDREW|Donald |M|0|0|0|0|1947|null|null|null|5|5|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+417|WHITAKER|Thomas |M|0|0|0|0|1877|ENGLISH|null|null|5|4|null|Thomas |WHITAKER|clogger|Christina |WHITAKER|null|3|0|1897|null|null|null|false|0|0|0|
+418|WADDINGTON|Colin |M|0|0|0|0|2003|null|null|null|5|11|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+419|WHISTLER|David |M|0|0|0|0|1879|null|null|null|1|7|null|David |WHISTLER|surgeon|null|null|null|4|3|1908|null|null|null|false|0|0|0|
+420|JOHNSTON|David |M|0|0|0|0|1974|null|null|null|7|4|null|David |JOHNSTON|master baker|null|null|null|5|3|1989|null|null|null|false|0|0|0|
+421|HANNAH|Will |M|0|0|0|0|1840|null|null|null|7|7|null|Will |HANNAH|farmer|null|null|null|2|3|1858|null|null|null|false|0|0|0|
+422|HANOLD|Marrion |F|0|0|0|0|1905|null|null|null|3|11|null|null|null|null|Isabella |COOK|null|7|3|1927|null|null|null|false|0|0|0|
+423|WHITAKER|Christina |F|0|0|0|0|1884|null|null|null|6|2|null|null|null|null|Christina |WHITAKER|null|1|0|1905|null|null|null|false|0|0|0|
+424|EDWARD|Joan |F|0|0|0|0|1783|null|null|null|5|7|null|null|null|null|Joan |EDWARD|null|5|7|1804|null|null|null|false|0|0|0|
+425|LLOYD|Alex |M|0|0|0|0|1828|KENT|null|null|2|2|null|Alex |LLOYD|bookkeeper|Sarah |LLOYD|null|6|8|1842|null|null|null|false|0|0|0|
+426|DENNYS|Ellen |F|0|0|0|0|1806|null|null|null|6|10|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+427|JACKSON|Anthony |M|0|0|0|0|1847|null|null|null|7|6|null|Anthony |JACKSON|baker|null|null|null|2|9|1867|null|null|null|false|0|0|0|
+428|MATHEWS|Agnes |F|0|0|0|0|1984|MATHEWS|null|null|6|1|null|Henry |JONES|crofter|Agnes |JONES|null|6|9|2003|null|null|null|false|0|0|0|
+429|PATTERSON|Ann |F|0|0|0|0|1790|null|null|null|3|11|null|null|null|null|Jessie |SOMERFIELD|null|3|6|1809|null|null|null|false|0|0|0|
+430|BRIERLEY|Adam |M|0|0|0|0|1977|null|null|null|2|2|null|George |CHAMBERLIN|carpenter|null|null|null|2|7|1994|null|null|null|false|0|0|0|
+431|CAMPSON|Alexander |M|0|0|0|0|1987|STEVENS|null|null|7|6|null|Alexander |CAMPSON|warehouseman|Mrgaret |CAMPSON|null|4|11|2000|null|null|null|false|0|0|0|
+432|SHAW|Joseph |M|0|0|0|0|1928|CHAMBERLIN|null|null|5|7|null|Joseph |SHAW|labourer|Isabella |SHAW|null|6|8|1945|null|null|null|false|0|0|0|
+433|WHITAKER|Francis |M|0|0|0|0|1851|COULTER|null|null|5|4|null|Francis |WHITAKER|barber|Annie |WHITAKER|null|5|4|1867|null|null|null|false|0|0|0|
+434|DAVIES|Martha |F|0|0|0|0|1840|DAVIES|null|null|3|11|null|George |NAPPER|shuttle maker|Martha |NAPPER|null|2|8|1854|null|null|null|false|0|0|0|
+435|BRIGHT|David |M|0|0|0|0|1814|WILTON|null|null|2|7|null|David |BRIGHT|dressmaker|Betsy |BRIGHT|null|7|7|1833|null|null|null|false|0|0|0|
+436|NEWTON|Bridget |F|0|0|0|0|1943|null|null|null|7|0|null|null|null|null|Agnes |BASTON|null|7|8|1962|null|null|null|false|0|0|0|
+437|HOPKINS|Robina |F|0|0|0|0|1855|null|null|null|3|2|null|null|null|null|Eliza |KILLINGBECK|null|2|6|1871|null|null|null|false|0|0|0|
+438|WADE|Margret |F|0|0|0|0|1790|WADE|null|null|1|10|null|Bernard |J|cordwainer|Margret |J|null|5|10|1804|null|null|null|false|0|0|0|
+439|GONTHWICK|Donald |M|0|0|0|0|1808|BINGHAM|null|null|6|1|null|Donald |GONTHWICK|gun smith|Christina |GONTHWICK|null|4|8|1824|null|null|null|false|0|0|0|
+440|HEMIGUIES|Isabella |F|0|0|0|0|1819|null|null|null|5|7|null|null|null|null|Margt |WILLIAMS|null|4|1|1837|null|null|null|false|0|0|0|
+441|MOORE|Charles |M|0|0|0|0|1880|null|null|null|2|4|null|Charles |MOORE|embroidery teacher|null|null|null|7|11|1894|null|null|null|false|0|0|0|
+442|GONTHWICK|Peter |M|0|0|0|0|1847|BRACE|null|null|7|1|null|Peter |GONTHWICK|brush maker|Ann |GONTHWICK|null|7|11|1864|null|null|null|false|0|0|0|
+443|HENDERSON|Donald |M|0|0|0|0|1963|null|null|null|5|10|null|Alexander |PARSHOUSE|solicitor|null|null|null|2|2|1980|null|null|null|false|0|0|0|
+444|GALLOWAY|Ann |F|0|0|0|0|1827|null|null|null|4|4|null|null|null|null|Ann |GALLOWAY|null|4|10|1843|null|null|null|false|0|0|0|
+445|JONES|William |M|0|0|0|0|1977|HISLOP|null|null|3|7|null|William |JONES|collier|Helan |JONES|null|2|2|2007|null|null|null|false|0|0|0|
+446|WILD|Isabella |F|0|0|0|0|1849|null|null|null|6|2|null|null|null|null|Georgina |GONTHWICK|null|3|3|1871|null|null|null|false|0|0|0|
+447|WILSON|Andrew |M|0|0|0|0|1868|DICKINSON|null|null|5|6|null|Andrew |WILSON|lab|Cathrine |WILSON|null|6|2|1886|null|null|null|false|0|0|0|
+448|COLLINS|Samuel |M|0|0|0|0|1965|null|null|null|5|6|null|Thomas |DARLING|tailor|null|null|null|4|10|1982|null|null|null|false|0|0|0|
+449|HEY|8 Mary |F|0|0|0|0|1846|HEY|null|null|4|5|null|Willi |MOORE|master porter|8 Mary |MOORE|null|7|6|1862|null|null|null|false|0|0|0|
+450|WARNABY|Isabella |F|0|0|0|0|1785|null|null|null|2|0|null|null|null|null|Isabella |WARNABY|null|2|6|1798|null|null|null|false|0|0|0|
+451|HENDERSON|Arthur |M|0|0|0|0|1876|HANNAH|null|null|6|2|null|Arthur |HENDERSON|labourer|Isabella |HENDERSON|null|5|1|1897|null|null|null|false|0|0|0|
+452|CLARK|Alexanderina |F|0|0|0|0|1972|null|null|null|5|10|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+453|GONTHWICK|Allice |F|0|0|0|0|1846|null|null|null|3|7|null|null|null|null|Allice |GONTHWICK|null|1|3|1865|null|null|null|false|0|0|0|
+454|HEUCHEN|David |M|0|0|0|0|1848|null|null|null|7|8|null|Joseph |IGO|weaver|null|null|null|6|10|1864|null|null|null|false|0|0|0|
+455|AITKEN|Sarah |F|0|0|0|0|1822|AITKEN|null|null|5|11|null|William |BARBER|sawyer|Sarah |BARBER|null|4|0|1834|null|null|null|false|0|0|0|
+456|SLATER|Esther |F|0|0|0|0|1851|SLATER|null|null|2|11|null|Alexander |BROWN|lace maker|Esther |BROWN|null|4|8|1866|null|null|null|false|0|0|0|
+457|SALE|William |M|0|0|0|0|1899|null|null|null|4|0|null|8 James |CHAMBERS|leather worker|null|null|null|3|2|1921|null|null|null|false|0|0|0|
+458|GORDON|Alexander |M|0|0|0|0|1914|null|null|null|5|4|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+459|DO JUNR|David |M|0|0|0|0|1964|BURTON|null|null|1|2|null|David |DO JUNR|wesleyan minister|Agness |DO JUNR|null|4|8|1981|null|null|null|false|0|0|0|
+460|WILD|William |M|0|0|0|0|1859|WHITAKER|null|null|1|6|null|William |WILD|shoemaker|Maggie |WILD|null|7|10|1876|null|null|null|false|0|0|0|
+461|WILLIAMS|Hugh |M|0|0|0|0|1949|CONLLY|null|null|6|8|null|Hugh |WILLIAMS|currier|Grace |WILLIAMS|null|5|4|1966|null|null|null|false|0|0|0|
+462|DORE|Jessie |F|0|0|0|0|1817|null|null|null|4|1|null|null|null|null|8 Mary |NOBLETT|null|5|9|1831|null|null|null|false|0|0|0|
+463|HOLDEN|Janet |F|0|0|0|0|1858|HOLDEN|null|null|1|6|null|George |BASTON|carpenter|Janet |BASTON|null|6|7|1879|null|null|null|false|0|0|0|
+464|PAUL|Edward |M|0|0|0|0|1994|GRAINGER|null|null|2|6|null|Edward |PAUL|coal miner|Christina |PAUL|null|4|0|2004|null|null|null|false|0|0|0|
+465|PAYCE|Thomas |M|0|0|0|0|1893|null|null|null|7|5|null|Phillip |SEAMOR|district nurse|null|null|null|1|10|1908|null|null|null|false|0|0|0|
+466|DAVIES|Martin |M|0|0|0|0|1799|QUAIGLAY|null|null|3|8|null|Martin |DAVIES|office clerk|Joan |DAVIES|null|1|6|1818|null|null|null|false|0|0|0|
+467|GATT|Alexander |M|0|0|0|0|2001|null|null|null|1|0|null|Alexander |GATT|platelayer|null|null|null|3|6|2012|null|null|null|false|0|0|0|
+468|LEEK|Jessie |F|0|0|0|0|1848|null|null|null|6|7|null|null|null|null|Jessie |LEEK|null|1|6|1868|null|null|null|false|0|0|0|
+469|THOMAS|Susan |F|0|0|0|0|1931|null|null|null|5|0|null|null|null|null|Cecila |CHAPMAN|null|3|5|1944|null|null|null|false|0|0|0|
+470|VAUGHAN|Agnes |F|0|0|0|0|2009|null|null|null|4|4|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+471|COOPER|Stephen |M|0|0|0|0|1795|HOWARD|null|null|6|8|null|Stephen |COOPER|labourer|Sarah |COOPER|null|4|1|1808|null|null|null|false|0|0|0|
+472|NEWBERY|Eliza |F|0|0|0|0|1817|null|null|null|5|1|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+473|TURNER|Catherine |F|0|0|0|0|1820|TURNER|null|null|4|9|null|David |SMITH|ironmonger|Catherine |SMITH|null|6|4|1834|null|null|null|false|0|0|0|
+474|PILCHER|Alex |M|0|0|0|0|1862|null|null|null|4|11|null|Alex |PILCHER|woodman|null|null|null|2|10|1881|null|null|null|false|0|0|0|
+475|GALLOWAY|Andrew |M|0|0|0|0|1823|GALE|null|null|5|8|null|Andrew |GALLOWAY|bank manager|Grace |GALLOWAY|null|2|4|1839|null|null|null|false|0|0|0|
+476|SEAMOR|Sarah |F|0|0|0|0|1970|null|null|null|6|8|null|null|null|null|Sarah |SEAMOR|null|5|8|1987|null|null|null|false|0|0|0|
+477|WINSOR|Elizbeth |F|0|0|0|0|1898|null|null|null|5|10|null|null|null|null|Elizbeth |WINSOR|null|5|9|1920|null|null|null|false|0|0|0|
+478|GONTHWICK|Robina |F|0|0|0|0|1913|null|null|null|6|8|null|null|null|null|Robina |GONTHWICK|null|4|10|1931|null|null|null|false|0|0|0|
+479|HANNAH|Daniel |M|0|0|0|0|1874|NAPPER|null|null|7|7|null|Daniel |HANNAH|farmer|Agnes |HANNAH|null|6|10|1888|null|null|null|false|0|0|0|
+480|PARKER|Joseph |M|0|0|0|0|1913|null|null|null|2|6|null|Joseph |PARKER|relief stationmaster|null|null|null|6|1|1935|null|null|null|false|0|0|0|
+481|SMITH|Jessie |F|0|0|0|0|1905|null|null|null|5|0|null|null|null|null|Jessie |SMITH|null|7|10|1921|null|null|null|false|0|0|0|
+482|SPARK|Isabella |F|0|0|0|0|1895|null|null|null|4|6|null|null|null|null|Isabella |SPARK|null|7|6|1916|null|null|null|false|0|0|0|
+483|NASH|Willhelmina |F|0|0|0|0|1954|NASH|null|null|4|5|null|Donald |WILLIAMSON|sailmaker|Willhelmina |WILLIAMSON|null|7|9|1971|null|null|null|false|0|0|0|
+484|LAMB|Janet |F|0|0|0|0|1903|null|null|null|3|8|null|null|null|null|Janet |LAMB|null|7|8|1923|null|null|null|false|0|0|0|
+485|LOWE|Eliza |F|0|0|0|0|1812|null|null|null|1|4|null|null|null|null|Eliza |LOWE|null|3|2|1845|null|null|null|false|0|0|0|
+486|BURNS|William |M|0|0|0|0|1901|ROBERTS|null|null|2|2|null|William |BURNS|nurse|7 Elizabeth |BURNS|null|5|4|1924|null|null|null|false|0|0|0|
+487|PARKER|Isabella |F|0|0|0|0|1878|PARKER|null|null|6|8|null|Wm |SHAW|general lab|Isabella |SHAW|null|3|2|1899|null|null|null|false|0|0|0|
+488|MCKIRDY|Jessie |F|0|0|0|0|1930|MCKIRDY|null|null|3|6|null|Wm |WALKER|dock labourer|Jessie |WALKER|null|6|10|1950|null|null|null|false|0|0|0|
+489|DAVIS|Peter |M|0|0|0|0|1816|null|null|null|6|1|null|Norman |WHITAKER|solicitor|null|null|null|5|6|1842|null|null|null|false|0|0|0|
+490|CONLLY|Patrick |M|0|0|0|0|1950|null|null|null|6|8|null|Charles |RIDSDALE|mechanic|null|null|null|5|11|1968|null|null|null|false|0|0|0|
+491|GONTHWICK|8 James |M|0|0|0|0|1887|null|null|null|3|5|null|8 James |GONTHWICK|mason|null|null|null|6|1|1911|null|null|null|false|0|0|0|
+492|CHALMERS|Emma |F|0|0|0|0|1925|CHALMERS|null|null|5|8|null|Albert |AXTON|baker|Emma |AXTON|null|6|8|1940|null|null|null|false|0|0|0|
+493|WINSOR|George |M|0|0|0|0|1903|KAY|null|null|5|1|null|George |WINSOR|gardener|Emily |WINSOR|null|1|11|1918|null|null|null|false|0|0|0|
+494|COOK|Isabella |F|0|0|0|0|1904|null|null|null|2|6|null|null|null|null|Isabella |COOK|null|7|10|1921|null|null|null|false|0|0|0|
+495|BEESLEY|Hay |F|0|0|0|0|2013|null|null|null|4|10|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+496|GONTHWICK|Janet |F|0|0|0|0|1834|null|null|null|6|9|null|null|null|null|Janet |GONTHWICK|null|2|3|1852|null|null|null|false|0|0|0|
+497|HART|Martha |F|0|0|0|0|1868|null|null|null|1|8|null|null|null|null|Martha |HART|null|1|0|1888|null|null|null|false|0|0|0|
+498|NOBLETT|8 Mary |F|0|0|0|0|1816|null|null|null|5|9|null|null|null|null|8 Mary |NOBLETT|null|5|9|1831|null|null|null|false|0|0|0|
+499|WONNACOTT|William |M|0|0|0|0|1939|null|null|null|3|10|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+500|CONLLY|Willi |M|0|0|0|0|1953|null|null|null|4|7|null|Jas |CROLL|packer|null|null|null|3|5|1969|null|null|null|false|0|0|0|
+501|SYKES|Thos |M|0|0|0|0|1799|null|null|null|1|8|null|Thos |SYKES|farm lab|null|null|null|4|9|1816|null|null|null|false|0|0|0|
+502|KAY|Alexr |M|0|0|0|0|1949|null|null|null|2|3|null|Alexr |KAY|labourer|null|null|null|3|8|1961|null|null|null|false|0|0|0|
+503|LESTE|Agnes |F|0|0|0|0|1969|null|null|null|5|0|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+504|JENKINS|William |M|0|0|0|0|1785|null|null|null|1|5|null|William |JENKINS|farmer|null|null|null|3|4|1801|null|null|null|false|0|0|0|
+505|GONTHWICK|Chas |M|0|0|0|0|1842|TEMLETT|null|null|3|7|null|Chas |GONTHWICK|coachman|Isabella |GONTHWICK|null|5|8|1864|null|null|null|false|0|0|0|
+506|NAPPER|Andrew |M|0|0|0|0|1877|null|null|null|2|6|null|David |WHISTLER|surgeon|null|null|null|4|3|1908|null|null|null|false|0|0|0|
+507|ADAMS|Flora |F|0|0|0|0|1820|ADAMS|null|null|3|5|null|Willia |GONTHWICK|engine fitter|Flora |GONTHWICK|null|3|10|1845|null|null|null|false|0|0|0|
+508|HARDMAN|Andrew |M|0|0|0|0|1922|null|null|null|7|3|null|Kenneth |LAWSON|engineer|null|null|null|3|4|1941|null|null|null|false|0|0|0|
+509|SLUGGETT|Andrew |M|0|0|0|0|1985|CATTERAL|null|null|4|10|null|Andrew |SLUGGETT|traveller|Isabella |SLUGGETT|null|2|5|1996|null|null|null|false|0|0|0|
+510|BURNET|Isabella |F|0|0|0|0|1813|null|null|null|3|3|null|null|null|null|Eliza |LOWE|null|6|4|1829|null|null|null|false|0|0|0|
+511|KAY|David |M|0|0|0|0|1861|COLLIER|null|null|1|5|null|David |KAY|sawyer|Ann |KAY|null|6|6|1883|null|null|null|false|0|0|0|
+512|DYER|8 John |M|0|0|0|0|1998|null|null|null|2|2|null|Peter |MEALING|porter|null|null|null|1|1|2010|null|null|null|false|0|0|0|
+513|PETRIE|Isabella |F|0|0|0|0|1981|PETRIE|null|null|6|7|null|Joseph |KENNEDY|coachman (domestic)|Isabella |KENNEDY|null|3|11|1991|null|null|null|false|0|0|0|
+514|HARDMAN|8 John |M|0|0|0|0|1911|COLLINS|null|null|1|11|null|8 John |HARDMAN|house builder|Agnes |HARDMAN|null|1|5|1924|null|null|null|false|0|0|0|
+515|TOWERS|Thomas |M|0|0|0|0|1837|FINCH|null|null|1|9|null|Thomas |TOWERS|carpenter|Helen |TOWERS|null|5|9|1860|null|null|null|false|0|0|0|
+516|SMITH|Elizth |F|0|0|0|0|1842|null|null|null|7|11|null|null|null|null|Elizth |SMITH|null|3|4|1859|null|null|null|false|0|0|0|
+517|HAIN|Alexina |F|0|0|0|0|1991|HAIN|null|null|3|11|null|Henry |BARTLETT|army captain|Alexina |BARTLETT|null|4|5|2009|null|null|null|false|0|0|0|
+518|COLE|Richard |M|0|0|0|0|2008|null|null|null|1|7|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+519|FRASER|Janet |F|0|0|0|0|1817|FRASER|null|null|3|1|null|Charles |TEMLETT|farm lab|Janet |TEMLETT|null|5|6|1832|null|null|null|false|0|0|0|
+520|LAMB|David |M|0|0|0|0|1830|GONTHWICK|null|null|3|11|null|David |LAMB|domestic servant & collar starcher|Helen |LAMB|null|3|6|1848|null|null|null|false|0|0|0|
+521|BIRD|Annie |F|0|0|0|0|1788|null|null|null|2|5|null|null|null|null|Annie |BIRD|null|3|5|1804|null|null|null|false|0|0|0|
+522|SPARK|Alexander |M|0|0|0|0|1835|MARSHALL|null|null|2|6|null|Alexander |SPARK|clothier|Catherine |SPARK|null|7|6|1860|null|null|null|false|0|0|0|
+523|JENKYN|Janet |F|0|0|0|0|1795|null|null|null|3|10|null|null|null|null|Alison |TAYLOR|null|1|1|1813|null|null|null|false|0|0|0|
+524|ELMS|Agnes |F|0|0|0|0|1787|ELMS|null|null|4|5|null|Wm |RUSSELL|iron foundry mechanic|Agnes |RUSSELL|null|6|3|1807|null|null|null|false|0|0|0|
+525|MORRIS|Alexander |M|0|0|0|0|1800|null|null|null|1|1|null|Alexander |MORRIS|surgeon|null|null|null|4|9|1816|null|null|null|false|0|0|0|
+526|CROOK|Amelia |F|0|0|0|0|1969|CROOK|null|null|4|6|null|8 John |WYMERS|gardener|Amelia |WYMERS|null|5|11|1989|null|null|null|false|0|0|0|
+527|LIDLE|George |M|0|0|0|0|1899|null|null|null|7|2|null|George |LIDLE|lace hand|null|null|null|1|10|1913|null|null|null|false|0|0|0|
+528|DONALDSON|Janet |F|0|0|0|0|1851|DONALDSON|null|null|5|8|null|William |WILLIAMS|hammerman|Janet |WILLIAMS|null|3|7|1876|null|null|null|false|0|0|0|
+529|JACKSON|Elizth |F|0|0|0|0|1817|JACKSON|null|null|2|5|null|Charles |TEMLETT|farm lab|Elizth |TEMLETT|null|5|2|1841|null|null|null|false|0|0|0|
+530|WAY|Ann |F|0|0|0|0|1825|WAY|null|null|4|8|null|Malcolm |WILD|cabinet maker|Ann |WILD|null|6|4|1847|null|null|null|false|0|0|0|
+531|HUGHES|Elinor |F|0|0|0|0|1789|null|null|null|5|5|null|null|null|null|Janet |CHATTERLEY|null|7|2|1801|null|null|null|false|0|0|0|
+532|GATE|Alice |F|0|0|0|0|1990|null|null|null|5|7|null|null|null|null|Ellen |WILLOUGHBY|null|5|10|2008|null|null|null|false|0|0|0|
+533|GONTHWICK|Andrew |M|0|0|0|0|1836|THOMAS|null|null|3|6|null|Andrew |GONTHWICK|watch maker|Jessie |GONTHWICK|null|5|0|1853|null|null|null|false|0|0|0|
+534|COLQUHOUN|Malcolm |M|0|0|0|0|1998|null|null|null|5|4|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+535|HENDERSON|Agnes |F|0|0|0|0|1915|HENDERSON|null|null|5|6|null|Richard |CUTTER|labourer|Agnes |CUTTER|null|4|7|1936|null|null|null|false|0|0|0|
+536|KENNEDY|Joseph |M|0|0|0|0|1978|PETRIE|null|null|2|10|null|Joseph |KENNEDY|coachman (domestic)|Isabella |KENNEDY|null|3|11|1991|null|null|null|false|0|0|0|
+537|KEEP|George |M|0|0|0|0|1909|WELCH|null|null|1|2|null|George |KEEP|carpet sewer|Catherine |KEEP|null|1|7|1931|null|null|null|false|0|0|0|
+538|PERCY|Nancy |F|0|0|0|0|1994|null|null|null|5|10|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+539|LOWRY|Agnes |F|0|0|0|0|1800|LOWRY|null|null|1|9|null|Alex |GONTHWICK|ag lab|Agnes |GONTHWICK|null|7|0|1818|null|null|null|false|0|0|0|
+540|WHITAKER|William |M|0|0|0|0|1889|null|null|null|2|1|null|William |WHITAKER|government officer (GPO)|null|null|null|6|6|1903|null|null|null|false|0|0|0|
+541|HENDERSON|Augusta |F|0|0|0|0|1921|null|null|null|6|10|null|null|null|null|Isabella |GONTHWICK|null|4|0|1938|null|null|null|false|0|0|0|
+542|AMOS|Alexander |M|0|0|0|0|1785|null|null|null|5|7|null|Alexander |KAY|grazier|null|null|null|7|5|1806|null|null|null|false|0|0|0|
+543|BARBER|Martha |F|0|0|0|0|1848|null|null|null|4|10|null|null|null|null|Martha |BARBER|null|1|6|1868|null|null|null|false|0|0|0|
+544|GRIEVESON|Samuel |M|0|0|0|0|1790|null|null|null|7|5|null|Samuel |GRIEVESON|"merchant navy, mariner"|null|null|null|2|5|1810|null|null|null|false|0|0|0|
+545|SMITH|Ann |F|0|0|0|0|1868|null|null|null|7|7|null|null|null|null|Janet |GONTHWICK|null|3|2|1886|null|null|null|false|0|0|0|
+546|PICKLES|Marjory |F|0|0|0|0|2008|null|null|null|3|7|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+547|WINSOR|Janet |F|0|0|0|0|1941|WINSOR|null|null|1|7|null|Gilbert |NIEL|stonecutter|Janet |NIEL|null|3|1|1961|null|null|null|false|0|0|0|
+548|DAVIES|Joanna |F|0|0|0|0|1786|null|null|null|7|9|null|null|null|null|Bridget |CORKER|null|6|7|1799|null|null|null|false|0|0|0|
+549|BLACKBURN|William |M|0|0|0|0|1974|CANNON|null|null|4|1|null|William |BLACKBURN|hotel proprietor|Isabella |BLACKBURN|null|1|1|1995|null|null|null|false|0|0|0|
+550|CUSHION|Isabella |F|0|0|0|0|1818|null|null|null|5|11|null|null|null|null|Isabella |CUSHION|null|5|11|1839|null|null|null|false|0|0|0|
+551|PARSHOUSE|Alexander |M|0|0|0|0|1962|null|null|null|7|7|null|Donald |HENDERSON|carpenter|null|null|null|2|2|1980|null|null|null|false|0|0|0|
+552|CARD|Lizzie |F|0|0|0|0|1995|null|null|null|2|11|null|null|null|null|Agnes |JEFFERY|null|3|6|2012|null|null|null|false|0|0|0|
+553|BATEMAN|Bridgt |F|0|0|0|0|1907|BATEMAN|null|null|2|6|null|William |CHAMBERS|confectioner|Bridgt |CHAMBERS|null|1|10|1924|null|null|null|false|0|0|0|
+554|SMITH|8 John |M|0|0|0|0|1814|JONES|null|null|4|7|null|8 John |SMITH|stonemason and bricklayer|Janet |SMITH|null|5|2|1832|null|null|null|false|0|0|0|
+555|SCOTT|Agnes |F|0|0|0|0|1904|null|null|null|5|2|null|null|null|null|Janet |CUTTER|null|4|9|1935|null|null|null|false|0|0|0|
+556|BASTON|George |M|0|0|0|0|1859|HOLDEN|null|null|3|10|null|George |BASTON|carpenter|Janet |BASTON|null|6|7|1879|null|null|null|false|0|0|0|
+557|GONTHWICK|Helen |F|0|0|0|0|1831|GONTHWICK|null|null|1|6|null|David |LAMB|domestic servant & collar starcher|Helen |LAMB|null|3|6|1848|null|null|null|false|0|0|0|
+558|MATHEWSON|Donald |M|0|0|0|0|1921|null|null|null|5|2|null|Donald |CONWAY|pawnbroker|null|null|null|3|1|1941|null|null|null|false|0|0|0|
+559|CLARK|Ann |F|0|0|0|0|1833|CLARK|null|null|7|11|null|4 Robert |SMITH|warehouseman|Ann |SMITH|null|1|8|1849|null|null|null|false|0|0|0|
+560|BRINLEY|Catherine |F|0|0|0|0|1815|BRINLEY|null|null|1|6|null|Will |JACKSON|general labourer|Catherine |JACKSON|null|2|7|1835|null|null|null|false|0|0|0|
+561|ADAMS|Eliza |F|0|0|0|0|1875|null|null|null|2|9|null|null|null|null|Isabella |GONTHWICK|null|2|11|1890|null|null|null|false|0|0|0|
+562|MIDDLETON|Janet |F|0|0|0|0|1833|null|null|null|4|0|null|null|null|null|Janet |MIDDLETON|null|2|6|1852|null|null|null|false|0|0|0|
+563|CROOK|George |M|0|0|0|0|1927|SEAMOR|null|null|1|11|null|George |CROOK|miner|Ann |CROOK|null|7|10|1944|null|null|null|false|0|0|0|
+564|ADAMS|Tomima |F|0|0|0|0|1792|ADAMS|null|null|6|11|null|Archibald |JACKSON|musician|Tomima |JACKSON|null|4|0|1808|null|null|null|false|0|0|0|
+565|WALTON|Thos |M|0|0|0|0|1995|FINDLAY|null|null|3|10|null|Thos |WALTON|cabinet maker|Jeramia |WALTON|null|3|11|2010|null|null|null|false|0|0|0|
+566|CHAMBERLIN|Isabella |F|0|0|0|0|1930|CHAMBERLIN|null|null|4|2|null|Joseph |SHAW|labourer|Isabella |SHAW|null|6|8|1945|null|null|null|false|0|0|0|
+567|VINEY|David |M|0|0|0|0|1918|null|null|null|1|1|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+568|HOPKINS|Ann |F|0|0|0|0|1834|HOPKINS|null|null|4|0|null|David |HANNAH|cotton mill worker|Ann |HANNAH|null|3|4|1855|null|null|null|false|0|0|0|
+569|ARNOLD|Christina |F|0|0|0|0|1943|ARNOLD|null|null|5|5|null|David |LYLE|"manager, aerated water manufactory (retired)"|Christina |LYLE|null|1|3|1960|null|null|null|false|0|0|0|
+570|WILLIAMS|Eliza |F|0|0|0|0|2000|null|null|null|5|11|null|null|null|null|Eliza |WILLIAMS|null|5|0|2011|null|null|null|false|0|0|0|
+571|BASTON|Alexander |M|0|0|0|0|1886|null|null|null|4|5|null|Alexander |BASTON|shoemaker|null|null|null|2|5|1907|null|null|null|false|0|0|0|
+572|PULLEY|Hellen |F|0|0|0|0|1987|null|null|null|5|6|null|null|null|null|Lizzie |ROBINSON|null|7|11|2005|null|null|null|false|0|0|0|
+573|HARWOOD|Willi |M|0|0|0|0|1848|null|null|null|5|9|null|Frederick |FLACK|telephonist|null|null|null|2|2|1873|null|null|null|false|0|0|0|
+574|NEWTON|William |M|0|0|0|0|1904|null|null|null|1|5|null|William |NEWTON|baker|null|null|null|1|1|1925|null|null|null|false|0|0|0|
+575|HOPKINS|Jas |M|0|0|0|0|1815|null|null|null|2|6|null|Donald |HAWKIN|labourer|null|null|null|3|11|1826|null|null|null|false|0|0|0|
+576|MALCOM|George |M|0|0|0|0|1976|null|null|null|4|0|null|George |MALCOM|plumber|null|null|null|5|9|1995|null|null|null|false|0|0|0|
+577|GRAHAM|Esther |F|0|0|0|0|1921|GRAHAM|null|null|4|8|null|Donald |CONWAY|pawnbroker|Esther |CONWAY|null|7|6|1948|null|null|null|false|0|0|0|
+578|DALTON|Janet |F|0|0|0|0|1790|DALTON|null|null|4|10|null|William |DYMOND|goods reciever|Janet |DYMOND|null|7|8|1804|null|null|null|false|0|0|0|
+579|HISLOP|Marion |F|0|0|0|0|1930|HISLOP|null|null|3|9|null|8 John |SEAMOR|farmer|Marion |SEAMOR|null|2|6|1948|null|null|null|false|0|0|0|
+580|SMITH|Alexander |M|0|0|0|0|1862|null|null|null|1|7|null|Alexander |SMITH|mason|null|null|null|4|0|1877|null|null|null|false|0|0|0|
+581|HESP|Agnes |F|0|0|0|0|1999|null|null|null|2|7|null|null|null|null|Eliza |WILLIAMS|null|5|0|2011|null|null|null|false|0|0|0|
+582|TEMPLE|Allan |M|0|0|0|0|1977|HISLOP|null|null|6|4|null|Allan |TEMPLE|gardener|Helan |TEMPLE|null|2|9|2001|null|null|null|false|0|0|0|
+583|RALPH|Hughina |F|0|0|0|0|1787|null|null|null|1|4|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+584|HARWOOD|Alexander |M|0|0|0|0|1888|null|null|null|6|9|null|Alexander |HARWOOD|lace maker|null|null|null|6|1|1911|null|null|null|false|0|0|0|
+585|INGRAM|8 John |M|0|0|0|0|1803|null|null|null|7|4|null|8 John |INGRAM|bootmaker|null|null|null|4|7|1818|null|null|null|false|0|0|0|
+586|CHAPMAN|David |M|0|0|0|0|1941|null|null|null|7|11|null|David |CHAPMAN|baker|null|null|null|7|6|1975|null|null|null|false|0|0|0|
+587|CONLLY|William |M|0|0|0|0|1943|null|null|null|5|0|null|William |CONLLY|"seaman, royal navy"|null|null|null|5|0|1959|null|null|null|false|0|0|0|
+588|PARKER|Martha |F|0|0|0|0|1949|null|null|null|3|8|null|null|null|null|Catherine |KNEWSTUBB|null|1|11|1962|null|null|null|false|0|0|0|
+589|WESTHEAD|Archd |M|0|0|0|0|1847|TEMLETT|null|null|3|5|null|Archd |WESTHEAD|tailor|Agnes |WESTHEAD|null|1|2|1867|null|null|null|false|0|0|0|
+590|AXTON|Thomas |M|0|0|0|0|1887|WESTHEAD|null|null|4|4|null|Thomas |AXTON|collier|9 Jane |AXTON|null|5|0|1902|null|null|null|false|0|0|0|
+591|SMITH|Eliza |F|0|0|0|0|1837|null|null|null|1|1|null|null|null|null|Helen |FINCH|null|2|1|1852|null|null|null|false|0|0|0|
+592|COX|William |M|0|0|0|0|1792|null|null|null|4|0|null|Thomas |JOHNSON|farmer|null|null|null|3|8|1810|null|null|null|false|0|0|0|
+593|BASTON|Alice |F|0|0|0|0|1949|BASTON|null|null|3|7|null|Hugh |WILSON|engine fitter|Alice |WILSON|null|7|8|1964|null|null|null|false|0|0|0|
+594|BLUNDELL|Jessie |F|0|0|0|0|1844|null|null|null|5|6|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+595|CHAMBERS|Alexander |M|0|0|0|0|1902|null|null|null|2|8|null|Alexander |CHAMBERS|builder|null|null|null|2|9|1921|null|null|null|false|0|0|0|
+596|JONES|Euphemia |F|0|0|0|0|1832|JONES|null|null|7|2|null|8 John |COLLIER|farmer|Euphemia |COLLIER|null|4|0|1845|null|null|null|false|0|0|0|
+597|MCPHERSON|Betsy |F|0|0|0|0|1930|null|null|null|5|0|null|null|null|null|Robina |MAYNARD|null|5|11|1949|null|null|null|false|0|0|0|
+598|TEMLETT|Agnes |F|0|0|0|0|1842|null|null|null|7|6|null|null|null|null|Elizth |SMITH|null|3|4|1859|null|null|null|false|0|0|0|
+599|BAXTER|David |M|0|0|0|0|1967|HISLOP|null|null|4|11|null|David |BAXTER|servant|Margt |BAXTER|null|1|1|1982|null|null|null|false|0|0|0|
+600|BASTON|Joseph |M|0|0|0|0|1901|null|null|null|4|7|null|Joseph |BASTON|groom|null|null|null|2|9|1921|null|null|null|false|0|0|0|
+601|LAMB|Archd |M|0|0|0|0|1907|null|null|null|4|5|null|Archd |LAMB|cooper|null|null|null|3|6|1936|null|null|null|false|0|0|0|
+602|ANDRUES|Charlotte |F|0|0|0|0|1781|ANDRUES|null|null|6|9|null|George |HORNE|draughtsman|Charlotte |HORNE|null|2|6|1801|null|null|null|false|0|0|0|
+603|TEMLETT|Helen |F|0|0|0|0|1845|null|null|null|2|3|null|null|null|null|Helen |TEMLETT|null|2|5|1864|null|null|null|false|0|0|0|
+604|DONALDSON|Georgina |F|0|0|0|0|1856|null|null|null|2|6|null|null|null|null|Annie |WILD|null|6|8|1875|null|null|null|false|0|0|0|
+605|OWEN|Johanna |F|0|0|0|0|1987|null|null|null|2|11|null|null|null|null|Annie |HAND|null|2|9|2003|null|null|null|false|0|0|0|
+606|SIMPSON|William |M|0|0|0|0|1964|null|null|null|7|6|null|Alexander |GILPIN|joiner|null|null|null|5|10|1984|null|null|null|false|0|0|0|
+607|ENGLISH|Hugh |M|0|0|0|0|1976|null|null|null|2|2|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+608|WALKER|Willm |M|0|0|0|0|2006|null|null|null|3|1|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+609|HAND|Annie |F|0|0|0|0|1987|null|null|null|6|8|null|null|null|null|Johanna |OWEN|null|2|9|2003|null|null|null|false|0|0|0|
+610|BLACKMAN|Agnes |F|0|0|0|0|1862|BLACKMAN|null|null|5|10|null|Peter |WINSOR|coal miner|Agnes |WINSOR|null|2|1|1879|null|null|null|false|0|0|0|
+611|MCKIRDY|Alexander |M|0|0|0|0|1964|CUTTER|null|null|1|5|null|Alexander |MCKIRDY|van driver|Agnes |MCKIRDY|null|6|3|1983|null|null|null|false|0|0|0|
+612|MORLEY|Beatrice |F|0|0|0|0|1841|MORLEY|null|null|3|10|null|William |ENGLISH|baker|Beatrice |ENGLISH|null|2|4|1858|null|null|null|false|0|0|0|
+613|ABRAM|8 Mary |F|0|0|0|0|1833|ABRAM|null|null|3|3|null|Alexander |KAY|labourer|8 Mary |KAY|null|3|4|1848|null|null|null|false|0|0|0|
+614|CONWAY|Joseph |M|0|0|0|0|1961|CUTTER|null|null|2|1|null|Joseph |CONWAY|farmer|Marion |CONWAY|null|5|4|1980|null|null|null|false|0|0|0|
+615|LAWSON|Kenneth |M|0|0|0|0|1921|null|null|null|7|5|null|Kenneth |LAWSON|engineer|null|null|null|3|4|1941|null|null|null|false|0|0|0|
+616|WILLIAMSON|William |M|0|0|0|0|1912|COLLINS|null|null|2|3|null|William |WILLIAMSON|lab|Agnes |WILLIAMSON|null|4|0|1932|null|null|null|false|0|0|0|
+617|CUTTER|Alexander |M|0|0|0|0|1865|null|null|null|4|5|null|David |JONES|farmer|null|null|null|4|9|1880|null|null|null|false|0|0|0|
+618|LAKE|Betsy |F|0|0|0|0|1783|null|null|null|4|6|null|null|null|null|Betsy |LAKE|null|5|7|1804|null|null|null|false|0|0|0|
+619|CROLL|Jas |M|0|0|0|0|1952|null|null|null|6|4|null|Willi |CONLLY|puddler|null|null|null|3|5|1969|null|null|null|false|0|0|0|
+620|PASSITT|Jessie |F|0|0|0|0|2009|null|null|null|2|4|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+621|HANNAH|Willia |M|0|0|0|0|1807|J|null|null|3|6|null|Willia |HANNAH|farmer|Jemima |HANNAH|null|7|6|1823|null|null|null|false|0|0|0|
+622|CHURCHILL|William |M|0|0|0|0|1961|null|null|null|3|6|null|William |CHURCHILL|dressmaker|null|null|null|6|9|1976|null|null|null|false|0|0|0|
+623|GONTHWICK|Isabella |F|0|0|0|0|1874|null|null|null|2|7|null|null|null|null|Isabella |GONTHWICK|null|2|11|1890|null|null|null|false|0|0|0|
+624|CUTTER|Marion |F|0|0|0|0|1962|CUTTER|null|null|3|7|null|Joseph |CONWAY|farmer|Marion |CONWAY|null|5|4|1980|null|null|null|false|0|0|0|
+625|PENGILLY|William |M|0|0|0|0|1828|null|null|null|7|0|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+626|HARVEY|William |M|0|0|0|0|1922|null|null|null|5|10|null|William |HARVEY|cabinet maker|null|null|null|7|0|1944|null|null|null|false|0|0|0|
+627|BRAITHWAITE|Jeanie |F|0|0|0|0|1818|BRAITHWAITE|null|null|4|8|null|Joseph |GONTHWICK|tailor|Jeanie |GONTHWICK|null|5|0|1840|null|null|null|false|0|0|0|
+628|CHAPMAN|Thomas |M|0|0|0|0|1938|null|null|null|2|10|null|William |THOMAS|farmer|null|null|null|3|8|1961|null|null|null|false|0|0|0|
+629|DAVIS|Alexander |M|0|0|0|0|1812|null|null|null|1|11|null|Francis |GARBUTT|labourer|null|null|null|2|2|1828|null|null|null|false|0|0|0|
+630|WAY|George |M|0|0|0|0|1803|null|null|null|4|10|null|Chas |ARMSTRONG|spinner (cotton)|null|null|null|6|9|1820|null|null|null|false|0|0|0|
+631|CUTTER|Agnes |F|0|0|0|0|1965|CUTTER|null|null|4|9|null|Alexander |MCKIRDY|van driver|Agnes |MCKIRDY|null|6|3|1983|null|null|null|false|0|0|0|
+632|PUGH|Francis |M|0|0|0|0|1806|ROLLANDS|null|null|2|3|null|Francis |PUGH|ag lab|Isabella |PUGH|null|2|5|1825|null|null|null|false|0|0|0|
+633|YULE|8 James |M|0|0|0|0|1949|null|null|null|3|4|null|Alexr |KAY|labourer|null|null|null|3|8|1961|null|null|null|false|0|0|0|
+634|MCKIRDY|Isabella |F|0|0|0|0|1933|null|null|null|6|11|null|null|null|null|Isabella |MCKIRDY|null|5|1|1948|null|null|null|false|0|0|0|
+635|SMITH|Alexander |M|0|0|0|0|2012|null|null|null|7|9|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+636|FOURACRE|Willhemina |F|0|0|0|0|1880|null|null|null|7|3|null|null|null|null|Jessie |NORFOLK|null|6|3|1894|null|null|null|false|0|0|0|
+637|TAYLOR|Alison |F|0|0|0|0|1795|null|null|null|1|1|null|null|null|null|Janet |JENKYN|null|1|1|1813|null|null|null|false|0|0|0|
+638|FOURACRE|Henry |M|0|0|0|0|1918|null|null|null|7|6|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+639|SEAMOR|Gustav |M|0|0|0|0|1939|null|null|null|4|7|null|Gustav |SEAMOR|shoe fitter|null|null|null|5|8|1955|null|null|null|false|0|0|0|
+640|BROWN|David |M|0|0|0|0|1825|WESTLAKE|null|null|1|4|null|David |BROWN|servant|Bridget |BROWN|null|1|7|1840|null|null|null|false|0|0|0|
+641|DAWSON|Barbara |F|0|0|0|0|1972|null|null|null|7|0|null|null|null|null|Barbara |DAWSON|null|2|9|1991|null|null|null|false|0|0|0|
+642|SMITH|Anne |F|0|0|0|0|1810|null|null|null|2|11|null|null|null|null|Margret |COX|null|7|0|1834|null|null|null|false|0|0|0|
+643|LAMB|Agnes |F|0|0|0|0|1949|null|null|null|7|4|null|null|null|null|Agnes |LAMB|null|5|9|1963|null|null|null|false|0|0|0|
+644|ALLEN|George |M|0|0|0|0|1809|PUGH|null|null|1|2|null|George |ALLEN|indoor servant|Cathrine |ALLEN|null|1|9|1822|null|null|null|false|0|0|0|
+645|STATHAM|Hellen |F|0|0|0|0|1918|STATHAM|null|null|2|4|null|Alfred |WHITAKER|hawker|Hellen |WHITAKER|null|5|7|1933|null|null|null|false|0|0|0|
+646|GONTHWICK|William |M|0|0|0|0|1835|THOMAS|null|null|1|11|null|William |GONTHWICK|baker|Jessie |GONTHWICK|null|7|5|1848|null|null|null|false|0|0|0|
+647|ROWBOTHEM|Charlotte |F|0|0|0|0|1815|null|null|null|4|4|null|null|null|null|Eliza |LOWE|null|3|2|1845|null|null|null|false|0|0|0|
+648|GIBSON|7 Elizabeth |F|0|0|0|0|1884|null|null|null|6|8|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+649|JARRETT|Ann |F|0|0|0|0|1815|JARRETT|null|null|2|5|null|George |GONTHWICK|collier|Ann |GONTHWICK|null|2|3|1829|null|null|null|false|0|0|0|
+650|PEYTON|Ann |F|0|0|0|0|1967|null|null|null|2|0|null|null|null|null|Maggie |ROUTLEDGE|null|2|8|1987|null|null|null|false|0|0|0|
+651|HIRST|Isabella |F|0|0|0|0|1784|null|null|null|2|5|null|null|null|null|Isabella |HIRST|null|2|6|1798|null|null|null|false|0|0|0|
+652|GREGORY|Alexander |M|0|0|0|0|1987|BRADWOOD|null|null|6|10|null|Alexander |GREGORY|postman|Isabella |GREGORY|null|4|2|2009|null|null|null|false|0|0|0|
+653|BASTON|William |M|0|0|0|0|1904|null|null|null|5|8|null|William |NEWTON|baker|null|null|null|1|1|1925|null|null|null|false|0|0|0|
+654|GONTHWICK|Charles |M|0|0|0|0|1877|HERNAGE|null|null|5|0|null|Charles |GONTHWICK|greengrocer|Elspet |GONTHWICK|null|5|11|1893|null|null|null|false|0|0|0|
+655|WARREN|George |M|0|0|0|0|1893|null|null|null|7|3|null|George |WARREN|ironmonger|null|null|null|7|4|1917|null|null|null|false|0|0|0|
+656|BOWYER|Jessie |F|0|0|0|0|1859|null|null|null|3|0|null|null|null|null|Janet |CLESE|null|5|10|1881|null|null|null|false|0|0|0|
+657|PARKER|Charlotte |F|0|0|0|0|1956|null|null|null|4|6|null|null|null|null|Charlotte |PARKER|null|6|1|1975|null|null|null|false|0|0|0|
+658|HALLS|Isabel |F|0|0|0|0|1793|null|null|null|4|7|null|null|null|null|Sarah |LOMAS|null|1|6|1810|null|null|null|false|0|0|0|
+659|JACKSON|Isabella |F|0|0|0|0|1810|null|null|null|7|3|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+660|KNEWSTUBB|Thomas |M|0|0|0|0|1911|null|null|null|7|5|null|Thomas |SCRIMGEOUR|builder|null|null|null|4|1|1924|null|null|null|false|0|0|0|
+661|BISHOP|Isabella |F|0|0|0|0|1920|null|null|null|5|11|null|null|null|null|Susan |PARKER|null|6|6|1936|null|null|null|false|0|0|0|
+662|KAY|Alexander |M|0|0|0|0|1785|null|null|null|2|5|null|Alexander |AMOS|coal leader|null|null|null|7|5|1806|null|null|null|false|0|0|0|
+663|WHITELOCK|Henry |M|0|0|0|0|1930|null|null|null|3|6|null|Henry |WHITELOCK|bell foundry foreman|null|null|null|3|4|1952|null|null|null|false|0|0|0|
+664|MCFARLINE|Christina |F|0|0|0|0|1966|MCFARLINE|null|null|6|11|null|Joseph |HISLOP|office worker|Christina |HISLOP|null|2|4|1987|null|null|null|false|0|0|0|
+665|GALLOWAY|Andrew |M|0|0|0|0|1803|null|null|null|6|5|null|8 John |INGRAM|bootmaker|null|null|null|4|7|1818|null|null|null|false|0|0|0|
+666|WESTHEAD|Emily |F|0|0|0|0|1884|WESTHEAD|null|null|1|7|null|Michael |FELL|currier and leather dealer|Emily |FELL|null|4|10|1901|null|null|null|false|0|0|0|
+667|WINSOR|Norman |M|0|0|0|0|1939|null|null|null|3|1|null|Norman |WINSOR|map drawer|null|null|null|5|8|1955|null|null|null|false|0|0|0|
+668|SMITH|Jannet |F|0|0|0|0|1810|null|null|null|7|10|null|null|null|null|Barbara |COOPER|null|7|3|1829|null|null|null|false|0|0|0|
+669|LAMB|Walter |M|0|0|0|0|1866|null|null|null|6|8|null|Hugh |SMITH|farmer|null|null|null|1|9|1881|null|null|null|false|0|0|0|
+670|MITCHELL|Michael |M|0|0|0|0|1784|null|null|null|4|9|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+671|BROTHERTON|Henrietta |F|0|0|0|0|1867|null|null|null|6|5|null|null|null|null|Agnes |COLLIER|null|6|4|1885|null|null|null|false|0|0|0|
+672|OWEN|Ernest |M|0|0|0|0|1901|null|null|null|1|3|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+673|SMITH|Jessie |F|0|0|0|0|1834|SMITH|null|null|2|0|null|8 John |COLLIER|farmer|Jessie |COLLIER|null|6|7|1854|null|null|null|false|0|0|0|
+674|GONTHWICK|William |M|0|0|0|0|1886|null|null|null|5|8|null|Alexander |BASTON|shoemaker|null|null|null|2|5|1907|null|null|null|false|0|0|0|
+675|KAY|Emily |F|0|0|0|0|1903|KAY|null|null|1|0|null|George |WINSOR|gardener|Emily |WINSOR|null|1|11|1918|null|null|null|false|0|0|0|
+676|ENGLISH|Maggie |F|0|0|0|0|1886|null|null|null|7|4|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+677|HARVEY|Georgina |F|0|0|0|0|1975|null|null|null|5|3|null|null|null|null|Georgina |HARVEY|null|7|8|1995|null|null|null|false|0|0|0|
+678|COLLINS|Agnes |F|0|0|0|0|1969|COLLINS|null|null|6|5|null|Chausson |FELLOWS|advertising agent|Agnes |FELLOWS|null|3|5|1985|null|null|null|false|0|0|0|
+679|WESTHEAD|Euphemia |F|0|0|0|0|1881|WESTHEAD|null|null|6|5|null|Duncan |FOURACRE|boarding house keeper|Euphemia |FOURACRE|null|4|8|1897|null|null|null|false|0|0|0|
+680|PARKER|Susan |F|0|0|0|0|1920|null|null|null|3|5|null|null|null|null|Susan |PARKER|null|6|6|1936|null|null|null|false|0|0|0|
+681|PROFFIT|Agnes |F|0|0|0|0|1950|null|null|null|3|3|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+682|HISLOP|Easter |F|0|0|0|0|1926|HISLOP|null|null|2|7|null|David |COLLINS|joiner|Easter |COLLINS|null|2|1|1944|null|null|null|false|0|0|0|
+683|PATTERSON|William |M|0|0|0|0|1858|GONTHWICK|null|null|4|5|null|William |PATTERSON|works chemist|Agnes |PATTERSON|null|4|0|1871|null|null|null|false|0|0|0|
+684|ENGLISH|Patrick |M|0|0|0|0|1876|null|null|null|7|7|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+685|ANSTEY|Willi |M|0|0|0|0|2009|null|null|null|6|3|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+686|BERREY|Isabella |F|0|0|0|0|1979|BERREY|null|null|4|1|null|William |WHISTLER|blacksmith|Isabella |WHISTLER|null|7|1|1995|null|null|null|false|0|0|0|
+687|FELL|Archibald |M|0|0|0|0|1921|WHITE|null|null|7|3|null|Archibald |FELL|civil servant (youth welfare )|Alexina |FELL|null|5|8|1940|null|null|null|false|0|0|0|
+688|BONLTON|Agnes |F|0|0|0|0|1969|null|null|null|1|6|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+689|GONTHWICK|William |M|0|0|0|0|1890|null|null|null|2|0|null|William |WHITAKER|government officer (GPO)|null|null|null|6|6|1903|null|null|null|false|0|0|0|
+690|BURNS|Francis |M|0|0|0|0|1892|null|null|null|7|11|null|George |WARREN|ironmonger|null|null|null|7|4|1917|null|null|null|false|0|0|0|
+691|FELLOWS|Chausson |M|0|0|0|0|1971|COLLINS|null|null|1|3|null|Chausson |FELLOWS|advertising agent|Agnes |FELLOWS|null|3|5|1985|null|null|null|false|0|0|0|
+692|RICE|Edward |M|0|0|0|0|2005|null|null|null|3|10|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+693|WESTHEAD|9 Jane |F|0|0|0|0|1888|WESTHEAD|null|null|2|7|null|Thomas |AXTON|collier|9 Jane |AXTON|null|5|0|1902|null|null|null|false|0|0|0|
+694|WINSOR|Peter |M|0|0|0|0|1862|BLACKMAN|null|null|5|0|null|Peter |WINSOR|coal miner|Agnes |WINSOR|null|2|1|1879|null|null|null|false|0|0|0|
+695|GONTHWICK|Alexander |M|0|0|0|0|1847|null|null|null|7|11|null|Alexander |GONTHWICK|draper|null|null|null|2|9|1867|null|null|null|false|0|0|0|
+696|JACKSON|Ann |F|0|0|0|0|1986|null|null|null|4|3|null|null|null|null|Ann |JACKSON|null|4|2|2010|null|null|null|false|0|0|0|
+697|DAVIS|Francis |M|0|0|0|0|1959|PARKER|null|null|3|0|null|Francis |DAVIS|labourer|Flora |DAVIS|null|3|5|1974|null|null|null|false|0|0|0|
+698|BOOTH|Henry |M|0|0|0|0|1944|null|null|null|1|11|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+699|STEVENS|Mrgaret |F|0|0|0|0|1986|STEVENS|null|null|7|11|null|Jas |WALTSON|dairyman|Mrgaret |WALTSON|null|3|4|2011|null|null|null|false|0|0|0|
+700|CHAMBERS|William |M|0|0|0|0|1952|null|null|null|6|1|null|William |SYKES|milliner|null|null|null|7|5|1963|null|null|null|false|0|0|0|
+701|BARTLETT|Henry |M|0|0|0|0|1995|HAIN|null|null|1|7|null|Henry |BARTLETT|army captain|Alexina |BARTLETT|null|4|5|2009|null|null|null|false|0|0|0|
+702|SEAMOR|Janet |F|0|0|0|0|1936|SEAMOR|null|null|1|6|null|David |HISLOP|lab|Janet |HISLOP|null|5|11|1960|null|null|null|false|0|0|0|
+703|LAMB|Annie |F|0|0|0|0|1953|null|null|null|5|1|null|null|null|null|Janet |CONLLY|null|1|3|1967|null|null|null|false|0|0|0|
+704|TERRY|William |M|0|0|0|0|1964|HARVEY|null|null|1|11|null|William |TERRY|dyer|Christina |TERRY|null|3|4|1990|null|null|null|false|0|0|0|
+705|NATT|Ann |F|0|0|0|0|1991|null|null|null|6|4|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+706|NAPPER|Andrew |M|0|0|0|0|1811|null|null|null|6|0|null|Andrew |NAPPER|miller|null|null|null|6|2|1829|null|null|null|false|0|0|0|
+707|J|Jemima |F|0|0|0|0|1806|J|null|null|3|4|null|Willia |HANNAH|farmer|Jemima |HANNAH|null|7|6|1823|null|null|null|false|0|0|0|
+708|COLLIER|8 John |M|0|0|0|0|1834|JONES|null|null|7|4|null|8 John |COLLIER|farmer|Euphemia |COLLIER|null|4|0|1845|null|null|null|false|0|0|0|
+709|WHITAKER|Alexander |M|0|0|0|0|1961|SMITH|null|null|7|0|null|Alexander |WHITAKER|director of cloth manufacturers|Jessie |WHITAKER|null|5|2|1978|null|null|null|false|0|0|0|
+710|NAPPER|Archibald |M|0|0|0|0|1831|null|null|null|6|10|null|Archibald |NAPPER|salvation army major|null|null|null|6|10|1844|null|null|null|false|0|0|0|
+711|CARCEY|Frances |M|0|0|0|0|1912|BEDFORD|null|null|7|10|null|Frances |CARCEY|stuff slinger|Sarah |CARCEY|null|4|1|1932|null|null|null|false|0|0|0|
+712|HENDERSON|Gilbert |M|0|0|0|0|1912|CONWAY|null|null|6|6|null|Gilbert |HENDERSON|shopfitter|Marion |HENDERSON|null|5|4|1929|null|null|null|false|0|0|0|
+713|HEADFORD|Catherine |F|0|0|0|0|1894|null|null|null|6|10|null|null|null|null|Catherine |HEADFORD|null|7|6|1916|null|null|null|false|0|0|0|
+714|CONWAY|David |M|0|0|0|0|1882|null|null|null|4|4|null|Robt |BRIGHT|shop assistant|null|null|null|4|4|1904|null|null|null|false|0|0|0|
+715|CHAMBERLIN|Alexander |M|0|0|0|0|1922|null|null|null|3|8|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+716|CHAMBERLIN|Catherine |F|0|0|0|0|1973|CHAMBERLIN|null|null|2|6|null|Dugald |SEAMOR|builder|Catherine |SEAMOR|null|7|9|1992|null|null|null|false|0|0|0|
+717|JENKINSON|Kenneth |M|0|0|0|0|1987|null|null|null|7|11|null|Kenneth |JENKINSON|civil engineer|null|null|null|3|3|2005|null|null|null|false|0|0|0|
+718|WICKERMAN|David |M|0|0|0|0|1876|null|null|null|4|1|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+719|WELCH|David |M|0|0|0|0|1906|null|null|null|5|5|null|Archibald |WHITAKER|farmer|null|null|null|4|2|1930|null|null|null|false|0|0|0|
+720|WHITAKER|Maggie |F|0|0|0|0|1857|WHITAKER|null|null|1|8|null|William |WILD|shoemaker|Maggie |WILD|null|7|10|1876|null|null|null|false|0|0|0|
+721|CHATTERLEY|Janet |F|0|0|0|0|1790|null|null|null|3|7|null|null|null|null|Elinor |HUGHES|null|7|2|1801|null|null|null|false|0|0|0|
+722|WHITAKER|Archibald |M|0|0|0|0|1906|null|null|null|6|3|null|Archibald |WHITAKER|farmer|null|null|null|4|2|1930|null|null|null|false|0|0|0|
+723|GONTHWICK|Helen |F|0|0|0|0|1880|GONTHWICK|null|null|4|9|null|Richd |JONES|dressmaker|Helen |JONES|null|2|9|1897|null|null|null|false|0|0|0|
+724|GONTHWICK|Alexander |M|0|0|0|0|1884|PARKER|null|null|7|1|null|Alexander |GONTHWICK|domestic servant|Christina |GONTHWICK|null|2|6|1899|null|null|null|false|0|0|0|
+725|READ|George |M|0|0|0|0|1982|null|null|null|5|2|null|George |READ|"coal cleaner, colliery"|null|null|null|1|0|1994|null|null|null|false|0|0|0|
+726|STILES|Jessie |F|0|0|0|0|1964|STILES|null|null|6|8|null|Laurence |HENDERSON|moulder|Jessie |HENDERSON|null|7|11|1982|null|null|null|false|0|0|0|
+727|CLARK|Christina |F|0|0|0|0|1840|CLARK|null|null|3|5|null|Alex |HARDMAN|royal marine|Christina |HARDMAN|null|2|10|1859|null|null|null|false|0|0|0|
+728|WOOLEY|Helen |F|0|0|0|0|1864|WOOLEY|null|null|5|5|null|Alexr |MITCHILL|labourer|Helen |MITCHILL|null|3|10|1877|null|null|null|false|0|0|0|
+729|BAXTER|Willia |M|0|0|0|0|1961|LAWSON|null|null|7|6|null|Willia |BAXTER|book-keeper (carting agents)|Margret |BAXTER|null|1|7|1981|null|null|null|false|0|0|0|
+730|WOODMANSEY|David |M|0|0|0|0|1903|null|null|null|5|11|null|Hugh |CONLLY|spirit salesman and publican|null|null|null|3|10|1918|null|null|null|false|0|0|0|
+731|LEATHWAITE|Duncan |M|0|0|0|0|1862|null|null|null|7|9|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+732|BASTON|Wm |M|0|0|0|0|1946|null|null|null|5|6|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+733|RUSSELL|Helen |F|0|0|0|0|1961|null|null|null|2|8|null|null|null|null|Bridget |RUSTON|null|7|3|1977|null|null|null|false|0|0|0|
+734|MCKIRDY|Peter |M|0|0|0|0|1926|FELL|null|null|6|6|null|Peter |MCKIRDY|ladys maid|Eliza |MCKIRDY|null|1|4|1936|null|null|null|false|0|0|0|
+735|HANNAH|Alexander |M|0|0|0|0|1871|SMITH|null|null|3|6|null|Alexander |HANNAH|cabinet maker|Annie |HANNAH|null|6|3|1893|null|null|null|false|0|0|0|
+736|HISLOP|David |M|0|0|0|0|1937|SEAMOR|null|null|1|4|null|David |HISLOP|lab|Janet |HISLOP|null|5|11|1960|null|null|null|false|0|0|0|
+737|MEDLEY|Samuel |M|0|0|0|0|1981|null|null|null|1|5|null|Samuel |MEDLEY|farmer|null|null|null|1|0|1994|null|null|null|false|0|0|0|
+738|BAXTER|Henry |M|0|0|0|0|1918|null|null|null|7|11|null|Henry |BAXTER|public assistance officer|null|null|null|3|7|1932|null|null|null|false|0|0|0|
+739|BRIGHT|William |M|0|0|0|0|1835|GARBUTT|null|null|3|7|null|William |BRIGHT|barrister|Isa |BRIGHT|null|5|8|1849|null|null|null|false|0|0|0|
+740|CHAMBERS|Hay |F|0|0|0|0|1796|null|null|null|3|10|null|null|null|null|Hay |CHAMBERS|null|1|11|1816|null|null|null|false|0|0|0|
+741|PARKER|Barbara |F|0|0|0|0|1892|PARKER|null|null|2|3|null|George |HISLOP|servant|Barbara |HISLOP|null|5|7|1908|null|null|null|false|0|0|0|
+742|ROBERTS|7 Elizabeth |F|0|0|0|0|1902|ROBERTS|null|null|4|0|null|William |BURNS|nurse|7 Elizabeth |BURNS|null|5|4|1924|null|null|null|false|0|0|0|
+743|MOORE|Janet |F|0|0|0|0|1923|MOORE|null|null|7|8|null|George |HENDERSON|railway engine driver|Janet |HENDERSON|null|2|11|1941|null|null|null|false|0|0|0|
+744|GONTHWICK|Isabella |F|0|0|0|0|1938|null|null|null|5|2|null|null|null|null|Isabella |GONTHWICK|null|3|0|1955|null|null|null|false|0|0|0|
+745|BATTYE|Janet |F|0|0|0|0|1822|null|null|null|6|3|null|null|null|null|Janet |BATTYE|null|7|1|1840|null|null|null|false|0|0|0|
+746|HENDERSON|William |M|0|0|0|0|1918|HANNAH|null|null|3|9|null|William |HENDERSON|land agent|Elenora |HENDERSON|null|2|5|1928|null|null|null|false|0|0|0|
+747|MARSHALL|Catherine |F|0|0|0|0|1832|MARSHALL|null|null|5|2|null|Alexander |SPARK|clothier|Catherine |SPARK|null|7|6|1860|null|null|null|false|0|0|0|
+748|NAPPER|Agnes |F|0|0|0|0|1874|NAPPER|null|null|7|5|null|Daniel |HANNAH|farmer|Agnes |HANNAH|null|6|10|1888|null|null|null|false|0|0|0|
+749|BRADFIELD|Anne |F|0|0|0|0|1872|null|null|null|1|2|null|null|null|null|Anne |BRADFIELD|null|7|10|1891|null|null|null|false|0|0|0|
+750|KNEWSTUBB|Catherine |F|0|0|0|0|1949|null|null|null|4|9|null|null|null|null|Martha |PARKER|null|1|11|1962|null|null|null|false|0|0|0|
+751|CHAMBERS|Bella |F|0|0|0|0|1886|null|null|null|6|10|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+752|BARBER|David |M|0|0|0|0|2012|null|null|null|3|4|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+753|CLIFF|Wm |M|0|0|0|0|1995|SCRINGLEY|null|null|5|11|null|Wm |CLIFF|distillery worker|Isabella |CLIFF|null|2|5|2012|null|null|null|false|0|0|0|
+754|GONTHWICK|Helen |F|0|0|0|0|1822|null|null|null|4|7|null|null|null|null|Helen |GONTHWICK|null|7|1|1840|null|null|null|false|0|0|0|
+755|ENGLISH|Andrew |M|0|0|0|0|1883|GONTHWICK|null|null|6|3|null|Andrew |ENGLISH|master mariner|Ann |ENGLISH|null|1|10|1892|null|null|null|false|0|0|0|
+756|BARBER|Thomas |M|0|0|0|0|1860|null|null|null|2|3|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+757|HOZIER|Hugh |M|0|0|0|0|1817|null|null|null|4|0|null|William |BEESLEY|shipwright|null|null|null|6|8|1835|null|null|null|false|0|0|0|
+758|GAFFREY|Johan |F|0|0|0|0|1979|null|null|null|4|0|null|null|null|null|Johan |GAFFREY|null|5|9|2012|null|null|null|false|0|0|0|
+759|WHISTLER|William |M|0|0|0|0|1977|BERREY|null|null|3|10|null|William |WHISTLER|blacksmith|Isabella |WHISTLER|null|7|1|1995|null|null|null|false|0|0|0|
+760|DAVIS|Ellen |F|0|0|0|0|1799|DAVIS|null|null|1|1|null|Alexander |WESTLAKE|dressmaker|Ellen |WESTLAKE|null|3|10|1824|null|null|null|false|0|0|0|
+761|PARKER|Martha |F|0|0|0|0|1962|PARKER|null|null|7|9|null|8 John |HARRUP|labourer|Martha |HARRUP|null|7|11|1981|null|null|null|false|0|0|0|
+762|TUCKER|Peter |M|0|0|0|0|1796|null|null|null|1|5|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+763|HOLMES|8 James |M|0|0|0|0|1801|null|null|null|6|9|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+764|PROBERT|Annie |F|0|0|0|0|2012|null|null|null|2|10|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+765|EDDEN|Bridget |F|0|0|0|0|1998|null|null|null|7|0|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+766|CHAMBERLIN|May |F|0|0|0|0|1936|null|null|null|4|5|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+767|BINGHAM|Christina |F|0|0|0|0|1809|BINGHAM|null|null|3|10|null|George |WILLIAMS|dyer|Christina |WILLIAMS|null|4|1|1832|null|null|null|false|0|0|0|
+768|BRADWOOD|Isabella |F|0|0|0|0|1988|BRADWOOD|null|null|3|1|null|Alexander |GREGORY|postman|Isabella |GREGORY|null|4|2|2009|null|null|null|false|0|0|0|
+769|WILD|Annie |F|0|0|0|0|1856|null|null|null|4|5|null|null|null|null|Annie |WILD|null|6|8|1875|null|null|null|false|0|0|0|
+770|CHAMBERS|George |M|0|0|0|0|1860|LEATHERBARROW|null|null|6|8|null|George |CHAMBERS|engineer|9 Jane |CHAMBERS|null|4|9|1879|null|null|null|false|0|0|0|
+771|SCRIMGEOUR|Thomas |M|0|0|0|0|1910|null|null|null|2|6|null|Thomas |SCRIMGEOUR|builder|null|null|null|4|1|1924|null|null|null|false|0|0|0|
+772|PILCHER|Alyis |F|0|0|0|0|1895|PILCHER|null|null|3|7|null|William |NAPPER|mariner|Alyis |NAPPER|null|1|6|1912|null|null|null|false|0|0|0|
+773|REDFORD|Mina |F|0|0|0|0|1830|null|null|null|3|3|null|null|null|null|Mina |REDFORD|null|1|3|1850|null|null|null|false|0|0|0|
+774|TERRITEY|Thomas |M|0|0|0|0|1990|null|null|null|1|7|null|Thomas |TERRITEY|lab|null|null|null|4|2|2004|null|null|null|false|0|0|0|
+775|ELAM|Richard |M|0|0|0|0|1978|MCPHEE|null|null|3|8|null|Richard |ELAM|carpenter|Charlotte |ELAM|null|5|6|1994|null|null|null|false|0|0|0|
+776|GONTHWICK|Francis |M|0|0|0|0|1825|null|null|null|6|4|null|Alexander |DAVIES|machine tenter|null|null|null|3|10|1839|null|null|null|false|0|0|0|
+777|GONTHWICK|Willia |M|0|0|0|0|1822|ADAMS|null|null|1|3|null|Willia |GONTHWICK|engine fitter|Flora |GONTHWICK|null|3|10|1845|null|null|null|false|0|0|0|
+778|ARMSTRONG|Chas |M|0|0|0|0|1803|null|null|null|6|6|null|George |WAY|master tailor|null|null|null|6|9|1820|null|null|null|false|0|0|0|
+779|NIEL|Gilbert |M|0|0|0|0|1942|WINSOR|null|null|5|3|null|Gilbert |NIEL|stonecutter|Janet |NIEL|null|3|1|1961|null|null|null|false|0|0|0|
+780|RYE|Maggie |F|0|0|0|0|1933|null|null|null|3|0|null|null|null|null|Isabella |MCKIRDY|null|5|1|1948|null|null|null|false|0|0|0|
+781|POLLEY|William |M|0|0|0|0|1828|KENT|null|null|7|2|null|William |POLLEY|mason|Sarah |POLLEY|null|7|10|1850|null|null|null|false|0|0|0|
+782|BOYLE|Archibald |M|0|0|0|0|1827|null|null|null|7|6|null|8 John |BARBER|needlewoman|null|null|null|6|3|1848|null|null|null|false|0|0|0|
+783|MOORE|William |M|0|0|0|0|1884|HEUCHEN|null|null|3|0|null|William |MOORE|carpenter|Christina |MOORE|null|7|11|1894|null|null|null|false|0|0|0|
+784|HISLOP|David |M|0|0|0|0|1940|null|null|null|1|6|null|David |HISLOP|lab|null|null|null|4|0|1961|null|null|null|false|0|0|0|
+785|JACKSON|Archibald |M|0|0|0|0|1795|ADAMS|null|null|1|6|null|Archibald |JACKSON|musician|Tomima |JACKSON|null|4|0|1808|null|null|null|false|0|0|0|
+786|WHITAKER|Betsy |F|0|0|0|0|1854|null|null|null|5|5|null|null|null|null|Williamina |JACKSON|null|7|2|1877|null|null|null|false|0|0|0|
+787|RIDSDALE|Charles |M|0|0|0|0|1951|null|null|null|5|0|null|Patrick |CONLLY|sawyer|null|null|null|5|11|1968|null|null|null|false|0|0|0|
+788|CUTTER|Janet |F|0|0|0|0|1903|null|null|null|3|8|null|null|null|null|Janet |CUTTER|null|4|9|1935|null|null|null|false|0|0|0|
+789|HENDERSON|Catherine |F|0|0|0|0|1951|null|null|null|7|0|null|null|null|null|Fanny |HARDMAN|null|2|3|1967|null|null|null|false|0|0|0|
+790|BROWN|Daniel |M|0|0|0|0|1850|null|null|null|6|3|null|Willi |HARWOOD|labourer|null|null|null|5|9|1867|null|null|null|false|0|0|0|
+791|GONTHWICK|Christie |F|0|0|0|0|1876|GONTHWICK|null|null|3|6|null|William |PARKER|major|Christie |PARKER|null|7|9|1890|null|null|null|false|0|0|0|
+792|GRAINGER|Christina |F|0|0|0|0|1988|GRAINGER|null|null|1|6|null|Edward |PAUL|coal miner|Christina |PAUL|null|4|0|2004|null|null|null|false|0|0|0|
+793|PILCHER|Marion |F|0|0|0|0|1903|null|null|null|4|5|null|null|null|null|Marion |PILCHER|null|3|2|1922|null|null|null|false|0|0|0|
+794|AXTON|Margt |F|0|0|0|0|1923|null|null|null|2|11|null|null|null|null|Janet |HUGHS|null|7|3|1944|null|null|null|false|0|0|0|
+795|DAVIES|Jessie |F|0|0|0|0|1822|null|null|null|4|10|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+796|TALLY|7 Elizabeth |F|0|0|0|0|1787|null|null|null|1|9|null|null|null|null|Julia |RENDALL|null|4|3|1804|null|null|null|false|0|0|0|
+797|HARVEY|Christina |F|0|0|0|0|1966|HARVEY|null|null|5|3|null|William |TERRY|dyer|Christina |TERRY|null|3|4|1990|null|null|null|false|0|0|0|
+798|PUGH|May |F|0|0|0|0|1828|PUGH|null|null|7|7|null|Angus |DONALDSON|weaver|May |DONALDSON|null|1|5|1847|null|null|null|false|0|0|0|
+799|BAXTER|Thomas |M|0|0|0|0|2003|null|null|null|3|10|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+800|LONDON|9 Jane |F|0|0|0|0|1817|LONDON|null|null|5|1|null|David |IGO|nurse|9 Jane |IGO|null|5|0|1841|null|null|null|false|0|0|0|
+801|GOFF|5 Margaret |F|0|0|0|0|1835|null|null|null|5|0|null|null|null|null|Janet |GONTHWICK|null|2|3|1852|null|null|null|false|0|0|0|
+802|CANNON|Isabella |F|0|0|0|0|1974|null|null|null|4|5|null|null|null|null|Catherine |HISLOP|null|7|11|1983|null|null|null|false|0|0|0|
+803|MCPHEE|Charlotte |F|0|0|0|0|1980|MCPHEE|null|null|6|5|null|Richard |ELAM|carpenter|Charlotte |ELAM|null|5|6|1994|null|null|null|false|0|0|0|
+804|BODEN|Charlotte |F|0|0|0|0|1906|BODEN|null|null|3|4|null|David |SYKES|miner|Charlotte |SYKES|null|6|2|1922|null|null|null|false|0|0|0|
+805|HANNAH|Thomas |M|0|0|0|0|1867|null|null|null|4|5|null|Garrick |WOODMANSEY|railway clerk|null|null|null|5|8|1882|null|null|null|false|0|0|0|
+806|SMITH|Janet |F|0|0|0|0|1844|null|null|null|1|8|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+807|JAMES|Janet |F|0|0|0|0|1824|null|null|null|3|2|null|null|null|null|Janet |JAMES|null|4|1|1845|null|null|null|false|0|0|0|
+808|QUAIGLAY|Joan |F|0|0|0|0|1802|QUAIGLAY|null|null|6|0|null|Martin |DAVIES|office clerk|Joan |DAVIES|null|1|6|1818|null|null|null|false|0|0|0|
+809|LEISH|Agnes |F|0|0|0|0|1788|null|null|null|4|0|null|null|null|null|Annie |BIRD|null|3|5|1804|null|null|null|false|0|0|0|
+810|BROWNHILL|Catherine |F|0|0|0|0|2008|null|null|null|2|5|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+811|COURCHA|David |M|0|0|0|0|2004|null|null|null|5|6|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+812|DYMOND|William |M|0|0|0|0|1790|DALTON|null|null|1|2|null|William |DYMOND|goods reciever|Janet |DYMOND|null|7|8|1804|null|null|null|false|0|0|0|
+813|BOOTH|Adam |M|0|0|0|0|1863|null|null|null|7|7|null|Adam |BOOTH|mechanical engineer|null|null|null|7|6|1879|null|null|null|false|0|0|0|
+814|GONTHWICK|Thomas |M|0|0|0|0|1854|BOYLE|null|null|3|2|null|Thomas |GONTHWICK|inland revenue officer|7 Elizabeth |GONTHWICK|null|7|2|1871|null|null|null|false|0|0|0|
+815|BASTON|Alexanderina |F|0|0|0|0|1894|BASTON|null|null|1|0|null|William |GONTHWICK|medical and ordained missionary|Alexanderina |GONTHWICK|null|1|4|1912|null|null|null|false|0|0|0|
+816|TEBBOTTS|Margt |F|0|0|0|0|1979|TEBBOTTS|null|null|2|4|null|Alexr |FANNYHOUGH|lab|Margt |FANNYHOUGH|null|6|8|1995|null|null|null|false|0|0|0|
+817|HISLOP|Joseph |M|0|0|0|0|1970|MCFARLINE|null|null|6|5|null|Joseph |HISLOP|office worker|Christina |HISLOP|null|2|4|1987|null|null|null|false|0|0|0|
+818|EAGLES|William |M|0|0|0|0|1784|AITKEN|null|null|2|0|null|William |EAGLES|clerk of woorks|Hellen |EAGLES|null|3|9|1799|null|null|null|false|0|0|0|
+819|ENGLISH|Christina |F|0|0|0|0|1879|ENGLISH|null|null|6|10|null|Thomas |WHITAKER|clogger|Christina |WHITAKER|null|3|0|1897|null|null|null|false|0|0|0|
+820|SMITH|Duncan |M|0|0|0|0|1878|null|null|null|2|8|null|Andrew |NAPPER|shopkeeper|null|null|null|6|5|1898|null|null|null|false|0|0|0|
+821|ABRAM|William |M|0|0|0|0|1814|MUISHAM|null|null|7|6|null|William |ABRAM|shipsmith|Jannet |ABRAM|null|1|4|1828|null|null|null|false|0|0|0|
+822|GASKINS|Janet |F|0|0|0|0|1970|null|null|null|1|3|null|null|null|null|Sarah |SEAMOR|null|5|8|1987|null|null|null|false|0|0|0|
+823|HISLOP|George |M|0|0|0|0|1891|PARKER|null|null|7|4|null|George |HISLOP|servant|Barbara |HISLOP|null|5|7|1908|null|null|null|false|0|0|0|
+824|TROUBRIDGE|Bessie |F|0|0|0|0|2002|null|null|null|4|3|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+825|HARDMAN|Alex |M|0|0|0|0|1839|CLARK|null|null|4|0|null|Alex |HARDMAN|royal marine|Christina |HARDMAN|null|2|10|1859|null|null|null|false|0|0|0|
+826|GALLOWAY|Laura |F|0|0|0|0|1820|null|null|null|4|8|null|null|null|null|Agnes |ROWBOTHEM|null|3|9|1838|null|null|null|false|0|0|0|
+827|MOORE|Willi |M|0|0|0|0|1846|HEY|null|null|6|9|null|Willi |MOORE|master porter|8 Mary |MOORE|null|7|6|1862|null|null|null|false|0|0|0|
+828|GONTHWICK|Janet |F|0|0|0|0|1868|null|null|null|3|3|null|null|null|null|Janet |GONTHWICK|null|3|2|1886|null|null|null|false|0|0|0|
+829|LOVELL|Kate |F|0|0|0|0|1925|LOVELL|null|null|6|2|null|Andrew |HARWOOD|artist|Kate |HARWOOD|null|2|7|1945|null|null|null|false|0|0|0|
+830|SEAMOR|8 John |M|0|0|0|0|1932|HISLOP|null|null|4|10|null|8 John |SEAMOR|farmer|Marion |SEAMOR|null|2|6|1948|null|null|null|false|0|0|0|
+831|BRIGHT|Archibald |M|0|0|0|0|1841|null|null|null|1|9|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+832|GONTHWICK|Ellen |F|0|0|0|0|1873|null|null|null|5|6|null|null|null|null|Maggie |WHITAKER|null|5|4|1892|null|null|null|false|0|0|0|
+833|JONES|David |M|0|0|0|0|1864|null|null|null|3|5|null|Alexander |CUTTER|lab|null|null|null|4|9|1880|null|null|null|false|0|0|0|
+834|RUSTON|Thomas |M|0|0|0|0|1916|HAWTHORN|null|null|6|8|null|Thomas |RUSTON|solicitor|Thomasina |RUSTON|null|1|9|1934|null|null|null|false|0|0|0|
+835|SMITH|William |M|0|0|0|0|1986|null|null|null|4|4|null|William |SMITH|cloth weaver|null|null|null|1|8|2003|null|null|null|false|0|0|0|
+836|TURNER|Agnes |F|0|0|0|0|1999|null|null|null|4|0|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+837|PARKER|Ellen |F|0|0|0|0|1916|null|null|null|1|8|null|null|null|null|Christina |FEILDING|null|1|2|1935|null|null|null|false|0|0|0|
+838|WILLOUGHBY|Ellen |F|0|0|0|0|1990|null|null|null|1|2|null|null|null|null|Alice |GATE|null|5|10|2008|null|null|null|false|0|0|0|
+839|LWEIS|Ellen |F|0|0|0|0|1849|null|null|null|4|10|null|null|null|null|Helen |DUTTON|null|7|9|1868|null|null|null|false|0|0|0|
+840|BIRTANS|Ann |F|0|0|0|0|2007|null|null|null|4|7|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+841|SWIFT|Wallace |M|0|0|0|0|1992|MATCHES|null|null|3|5|null|Wallace |SWIFT|engineers turner at ordnance works|Elis |SWIFT|null|6|2|2007|null|null|null|false|0|0|0|
+842|JACKSON|Harriet |F|0|0|0|0|1819|null|null|null|3|8|null|null|null|null|Isabella |CUSHION|null|5|11|1839|null|null|null|false|0|0|0|
+843|SHEPPARD|Catherine |F|0|0|0|0|2005|null|null|null|5|7|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+844|SMITH|Annie |F|0|0|0|0|1872|SMITH|null|null|2|6|null|Alexander |HANNAH|cabinet maker|Annie |HANNAH|null|6|3|1893|null|null|null|false|0|0|0|
+845|SHACKLETON|Donald |M|0|0|0|0|1992|MATCHES|null|null|2|8|null|Donald |SHACKLETON|farmer|Elis |SHACKLETON|null|7|1|2013|null|null|null|false|0|0|0|
+846|HARRUP|8 John |M|0|0|0|0|1961|PARKER|null|null|5|4|null|8 John |HARRUP|labourer|Martha |HARRUP|null|7|11|1981|null|null|null|false|0|0|0|
+847|WOODMANSEY|Alexander |M|0|0|0|0|1959|HARRE|null|null|1|7|null|Alexander |WOODMANSEY|fisherman|Sarah |WOODMANSEY|null|7|7|1987|null|null|null|false|0|0|0|
+848|WILLIAMSON|Agnes |F|0|0|0|0|1959|null|null|null|2|3|null|null|null|null|Sarah |HARRE|null|5|5|1980|null|null|null|false|0|0|0|
+849|IGO|5 Margaret |F|0|0|0|0|1845|IGO|null|null|5|6|null|George |PARKER|butcher|5 Margaret |PARKER|null|5|5|1867|null|null|null|false|0|0|0|
+850|GONTHWICK|Agnes |F|0|0|0|0|1857|GONTHWICK|null|null|4|5|null|William |PATTERSON|works chemist|Agnes |PATTERSON|null|4|0|1871|null|null|null|false|0|0|0|
+851|NAPPER|Will |M|0|0|0|0|1860|null|null|null|5|11|null|Will |NAPPER|gardener|null|null|null|5|4|1877|null|null|null|false|0|0|0|
+852|BOGG|Agnes |F|0|0|0|0|1803|null|null|null|3|9|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+853|WILD|Malcolm |M|0|0|0|0|1825|WAY|null|null|6|2|null|Malcolm |WILD|cabinet maker|Ann |WILD|null|6|4|1847|null|null|null|false|0|0|0|
+854|FINDLAY|Jeramia |F|0|0|0|0|1993|FINDLAY|null|null|1|9|null|Thos |WALTON|cabinet maker|Jeramia |WALTON|null|3|11|2010|null|null|null|false|0|0|0|
+855|LYLE|David |M|0|0|0|0|1942|null|null|null|6|5|null|Albert |GREGORY|trade union clerk|null|null|null|3|7|1972|null|null|null|false|0|0|0|
+856|WILLIAMS|George |M|0|0|0|0|1808|BINGHAM|null|null|2|11|null|George |WILLIAMS|dyer|Christina |WILLIAMS|null|4|1|1832|null|null|null|false|0|0|0|
+857|MCCARTHY|Janet |F|0|0|0|0|1785|MCCARTHY|null|null|4|6|null|Thomas |MORRIS|head gardener|Janet |MORRIS|null|7|3|1803|null|null|null|false|0|0|0|
+858|MCINTOSH|Sarah |F|0|0|0|0|1983|null|null|null|7|0|null|null|null|null|Sarah |MCINTOSH|null|6|1|2000|null|null|null|false|0|0|0|
+859|BURNS|Jeanie |F|0|0|0|0|1941|BURNS|null|null|4|5|null|David |BOARING|domestic servant|Jeanie |BOARING|null|5|3|1961|null|null|null|false|0|0|0|
+860|LIDLE|Catherine |F|0|0|0|0|1896|LIDLE|null|null|3|2|null|George |WINSOR|weaver|Catherine |WINSOR|null|2|1|1917|null|null|null|false|0|0|0|
+861|GONTHWICK|Isabella |F|0|0|0|0|1921|null|null|null|2|1|null|null|null|null|Janet |EKINS|null|4|3|1942|null|null|null|false|0|0|0|
+862|JONES|William |M|0|0|0|0|1809|null|null|null|3|3|null|William |JONES|coal miner|null|null|null|5|8|1825|null|null|null|false|0|0|0|
+863|HARDMAN|Ann |F|0|0|0|0|1904|null|null|null|3|3|null|null|null|null|Ann |HARDMAN|null|7|8|1923|null|null|null|false|0|0|0|
+864|BASTON|William |M|0|0|0|0|1897|null|null|null|7|5|null|Francis |BURNS|bricklayer|null|null|null|4|6|1916|null|null|null|false|0|0|0|
+865|DAVIES|Alexander |M|0|0|0|0|1826|null|null|null|5|1|null|Francis |GONTHWICK|farmer|null|null|null|3|10|1839|null|null|null|false|0|0|0|
+866|LEE|Margret |F|0|0|0|0|1948|null|null|null|3|4|null|null|null|null|Margret |LEE|null|5|9|1963|null|null|null|false|0|0|0|
+867|BLACKWELL|Willm |M|0|0|0|0|1967|null|null|null|6|2|null|Willm |BLACKWELL|governess|null|null|null|1|11|1991|null|null|null|false|0|0|0|
+868|CUTTER|Jessie |F|0|0|0|0|1906|CUTTER|null|null|3|11|null|David |LEE|handloom weaver|Jessie |LEE|null|1|6|1923|null|null|null|false|0|0|0|
+869|HANNAH|Janet |F|0|0|0|0|1909|null|null|null|2|9|null|null|null|null|Janet |HANNAH|null|7|2|1926|null|null|null|false|0|0|0|
+870|BEESLEY|William |M|0|0|0|0|1817|null|null|null|6|1|null|Hugh |HOZIER|plasterer|null|null|null|6|8|1835|null|null|null|false|0|0|0|
+871|BINGHAM|David |M|0|0|0|0|1805|null|null|null|3|10|null|William |BARBER|joiner|null|null|null|5|9|1822|null|null|null|false|0|0|0|
+872|BRUN|Niel |M|0|0|0|0|1978|null|null|null|6|11|null|Niel |BRUN|stone masons labourer|null|null|null|1|0|1994|null|null|null|false|0|0|0|
+873|JONES|Henry |M|0|0|0|0|1985|MATHEWS|null|null|3|2|null|Henry |JONES|crofter|Agnes |JONES|null|6|9|2003|null|null|null|false|0|0|0|
+874|TEMLETT|Charles |M|0|0|0|0|1817|JACKSON|null|null|1|7|null|Charles |TEMLETT|farm lab|Elizth |TEMLETT|null|5|2|1841|null|null|null|false|0|0|0|
+875|WOODMANSEY|Garrick |M|0|0|0|0|1868|null|null|null|3|6|null|Garrick |WOODMANSEY|railway clerk|null|null|null|5|8|1882|null|null|null|false|0|0|0|
+876|HAWLEY|Robina |F|0|0|0|0|1806|null|null|null|3|11|null|null|null|null|Robina |HAWLEY|null|1|0|1824|null|null|null|false|0|0|0|
+877|HARDMAN|William |M|0|0|0|0|1872|null|null|null|1|11|null|Andrew |GONTHWICK|servant|null|null|null|3|3|1896|null|null|null|false|0|0|0|
+878|GREENWAY|Annie |F|0|0|0|0|1882|null|null|null|1|9|null|null|null|null|Annie |GREENWAY|null|1|0|1900|null|null|null|false|0|0|0|
+879|WHITAKER|George |M|0|0|0|0|1873|GONTHWICK|null|null|3|7|null|George |WHITAKER|husbandman|Sarah |WHITAKER|null|6|6|1891|null|null|null|false|0|0|0|
+880|MCGILLVIRIE|Janet |F|0|0|0|0|1993|null|null|null|5|2|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+881|FOURACRE|Adam |M|0|0|0|0|1915|null|null|null|3|6|null|Adam |FOURACRE|game keeper|null|null|null|1|8|1934|null|null|null|false|0|0|0|
+882|MARSH|William |M|0|0|0|0|1983|HISLOP|null|null|6|0|null|William |MARSH|fell monger|Annie |MARSH|null|7|6|2000|null|null|null|false|0|0|0|
+883|CHAMBERS|Edward |M|0|0|0|0|1948|SYKES|null|null|1|8|null|Edward |CHAMBERS|weaver|Hellen |CHAMBERS|null|2|6|1970|null|null|null|false|0|0|0|
+884|AGAR|Elspet |F|0|0|0|0|1989|null|null|null|6|2|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+885|PARKER|Helen |F|0|0|0|0|1889|null|null|null|2|0|null|null|null|null|Agnes |RUSSEL|null|1|3|1907|null|null|null|false|0|0|0|
+886|SMITH|David |M|0|0|0|0|1796|MCRAW|null|null|7|2|null|David |SMITH|butcher|Agnes |SMITH|null|2|5|1807|null|null|null|false|0|0|0|
+887|TEMLETT|Isabella |F|0|0|0|0|1841|TEMLETT|null|null|4|10|null|Chas |GONTHWICK|coachman|Isabella |GONTHWICK|null|5|8|1864|null|null|null|false|0|0|0|
+888|WEBBER|Marjan |F|0|0|0|0|1903|null|null|null|3|0|null|null|null|null|Marion |PILCHER|null|3|2|1922|null|null|null|false|0|0|0|
+889|STANWAY|Agnes |F|0|0|0|0|1975|null|null|null|4|2|null|null|null|null|Agnes |STANWAY|null|3|7|1988|null|null|null|false|0|0|0|
+890|JONES|Thomas |M|0|0|0|0|1813|null|null|null|2|1|null|Archibald |J|farmer|null|null|null|5|2|1833|null|null|null|false|0|0|0|
+891|SPARK|Edward |M|0|0|0|0|1869|null|null|null|7|1|null|Edward |SPARK|tradesman|null|null|null|1|4|1887|null|null|null|false|0|0|0|
+892|WESTLAKE|Alexander |M|0|0|0|0|1796|DAVIS|null|null|3|8|null|Alexander |WESTLAKE|dressmaker|Ellen |WESTLAKE|null|3|10|1824|null|null|null|false|0|0|0|
+893|PARKER|William |M|0|0|0|0|1909|null|null|null|5|10|null|William |PARKER|razor smith|null|null|null|2|11|1927|null|null|null|false|0|0|0|
+894|HARDMAN|Isabella |F|0|0|0|0|1916|HARDMAN|null|null|1|1|null|Henry |WOODMANSEY|"warrant officer, rga"|Isabella |WOODMANSEY|null|7|6|1932|null|null|null|false|0|0|0|
+895|DONALDSON|Angus |M|0|0|0|0|1828|PUGH|null|null|2|1|null|Angus |DONALDSON|weaver|May |DONALDSON|null|1|5|1847|null|null|null|false|0|0|0|
+896|POPPLETON|Jessie |F|0|0|0|0|1897|POPPLETON|null|null|6|11|null|George |WINSOR|weaver|Jessie |WINSOR|null|4|6|1933|null|null|null|false|0|0|0|
+897|WOLFENDEN|Duddingston |M|0|0|0|0|1886|null|null|null|4|5|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+898|BOTTOMLEY|Beatrice |F|0|0|0|0|2011|null|null|null|3|1|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+899|BOND|Agnes |F|0|0|0|0|1858|null|null|null|2|7|null|null|null|null|Agnes |BOND|null|7|11|1875|null|null|null|false|0|0|0|
+900|PURTIE|4 Robert |M|0|0|0|0|1785|null|null|null|4|4|null|4 Robert |PURTIE|letter press printer|null|null|null|3|4|1801|null|null|null|false|0|0|0|
+901|PARKER|William |M|0|0|0|0|1874|GONTHWICK|null|null|3|9|null|William |PARKER|major|Christie |PARKER|null|7|9|1890|null|null|null|false|0|0|0|
+902|HISLOP|Catherine |F|0|0|0|0|1973|null|null|null|5|9|null|null|null|null|Catherine |HISLOP|null|3|7|1988|null|null|null|false|0|0|0|
+903|COLLIER|Agnes |F|0|0|0|0|1867|null|null|null|6|5|null|null|null|null|Henrietta |BROTHERTON|null|6|4|1885|null|null|null|false|0|0|0|
+904|LAMB|Marion |F|0|0|0|0|1886|null|null|null|3|6|null|null|null|null|8 Mary |BURNS|null|6|0|1913|null|null|null|false|0|0|0|
+905|BRACE|Ann |F|0|0|0|0|1848|BRACE|null|null|6|6|null|Peter |GONTHWICK|brush maker|Ann |GONTHWICK|null|7|11|1864|null|null|null|false|0|0|0|
+906|CHAPMAN|Cecila |F|0|0|0|0|1931|null|null|null|6|11|null|null|null|null|Cecila |CHAPMAN|null|3|5|1944|null|null|null|false|0|0|0|
+907|HARPER|Catherine |F|0|0|0|0|1781|null|null|null|3|3|null|null|null|null|Catherine |HOWES|null|2|1|1796|null|null|null|false|0|0|0|
+908|THOMAS|E |F|0|0|0|0|1940|null|null|null|5|7|null|null|null|null|Lilly |CROSBIE|null|3|11|1960|null|null|null|false|0|0|0|
+909|CHAMBERLIN|George |M|0|0|0|0|1976|null|null|null|1|6|null|Adam |BRIERLEY|butcher|null|null|null|2|7|1994|null|null|null|false|0|0|0|
+910|LEE|David |M|0|0|0|0|1905|CUTTER|null|null|3|5|null|David |LEE|handloom weaver|Jessie |LEE|null|1|6|1923|null|null|null|false|0|0|0|
+911|SLIM|Jessie |F|0|0|0|0|1882|SLIM|null|null|7|1|null|Martin |TIMEWELL|labourer|Jessie |TIMEWELL|null|6|11|1899|null|null|null|false|0|0|0|
+912|NORFOLK|Jessie |F|0|0|0|0|1880|null|null|null|3|7|null|null|null|null|Jessie |NORFOLK|null|6|3|1894|null|null|null|false|0|0|0|
+913|CHAMBERLIN|Mungo |M|0|0|0|0|1887|null|null|null|4|2|null|David |ELRICK|lab|null|null|null|6|5|1906|null|null|null|false|0|0|0|
+914|HARDMAN|4 Robert |M|0|0|0|0|1869|null|null|null|1|9|null|William |SMITH|lab|null|null|null|6|10|1891|null|null|null|false|0|0|0|
+915|MITCHILL|Alexr |M|0|0|0|0|1862|WOOLEY|null|null|2|11|null|Alexr |MITCHILL|labourer|Helen |MITCHILL|null|3|10|1877|null|null|null|false|0|0|0|
+916|TOWERS|Christina |F|0|0|0|0|1869|null|null|null|7|7|null|null|null|null|Christina |TOWERS|null|1|0|1888|null|null|null|false|0|0|0|
+917|BENBOW|Peter |M|0|0|0|0|2008|null|null|null|2|10|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+918|GONTHWICK|George |M|0|0|0|0|1780|null|null|null|6|5|null|George |GONTHWICK|scissor fitter|null|null|null|7|4|1796|null|null|null|false|0|0|0|
+919|RUSSEL|Agnes |F|0|0|0|0|1889|null|null|null|2|7|null|null|null|null|Helen |PARKER|null|1|3|1907|null|null|null|false|0|0|0|
+920|BASTON|Charles |M|0|0|0|0|1938|null|null|null|7|2|null|William |THOMAS|farmer|null|null|null|5|9|1955|null|null|null|false|0|0|0|
+921|PUGH|Thomas |M|0|0|0|0|1788|null|null|null|2|6|null|Henry |BROWN|copper miner|null|null|null|3|2|1805|null|null|null|false|0|0|0|
+922|FOURACRE|Catherine |F|0|0|0|0|1886|FOURACRE|null|null|6|10|null|Alexander |HARVEY|house painter|Catherine |HARVEY|null|7|0|1908|null|null|null|false|0|0|0|
+923|ELRICK|David |M|0|0|0|0|1886|null|null|null|1|8|null|David |ELRICK|lab|null|null|null|6|5|1906|null|null|null|false|0|0|0|
+924|KERRY|Beatrice |F|0|0|0|0|1789|null|null|null|7|3|null|null|null|null|Beatrice |KERRY|null|5|4|1811|null|null|null|false|0|0|0|
+925|VIGURS|Marion |F|0|0|0|0|1991|null|null|null|5|11|null|null|null|null|Marion |VIGURS|null|5|3|2011|null|null|null|false|0|0|0|
+926|SMITH|Sarah |F|0|0|0|0|1834|null|null|null|7|8|null|null|null|null|Sarah |SMITH|null|1|8|1848|null|null|null|false|0|0|0|
+927|NAPPER|George |M|0|0|0|0|1839|DAVIES|null|null|4|3|null|George |NAPPER|shuttle maker|Martha |NAPPER|null|2|8|1854|null|null|null|false|0|0|0|
+928|GILKES|Isabella |F|0|0|0|0|1871|GILKES|null|null|5|3|null|8 James |COOK|railway servant|Isabella |COOK|null|5|2|1889|null|null|null|false|0|0|0|
+929|LAMONT|Peter |M|0|0|0|0|1975|null|null|null|6|1|null|David |JOHNSTON|master baker|null|null|null|5|3|1989|null|null|null|false|0|0|0|
+930|WRIGHT|7 Elizabeth |F|0|0|0|0|2006|null|null|null|5|4|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+931|HISLOP|Martha |F|0|0|0|0|1980|HISLOP|null|null|7|5|null|David |WATSON|labourer|Martha |WATSON|null|1|2|1996|null|null|null|false|0|0|0|
+932|GONTHWICK|Andrew |M|0|0|0|0|1948|RITCHIE|null|null|5|6|null|Andrew |GONTHWICK|engineer|Janet |GONTHWICK|null|4|0|1973|null|null|null|false|0|0|0|
+933|JACKSON|Will |M|0|0|0|0|1814|BRINLEY|null|null|6|4|null|Will |JACKSON|general labourer|Catherine |JACKSON|null|2|7|1835|null|null|null|false|0|0|0|
+934|CARR|8 Mary |F|0|0|0|0|1836|null|null|null|4|3|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+935|HANNAH|Isabella |F|0|0|0|0|1826|null|null|null|2|3|null|null|null|null|Ann |GALLOWAY|null|4|10|1843|null|null|null|false|0|0|0|
+936|BROWN|Alexander |M|0|0|0|0|1856|SLATER|null|null|7|6|null|Alexander |BROWN|lace maker|Esther |BROWN|null|4|8|1866|null|null|null|false|0|0|0|
+937|CHAPMAN|Janet |F|0|0|0|0|1927|null|null|null|5|0|null|null|null|null|Janet |CHAPMAN|null|5|6|1947|null|null|null|false|0|0|0|
+938|DAVIES|Walter |M|0|0|0|0|1995|GAMMON|null|null|1|3|null|Walter |DAVIES|carter|Alison |DAVIES|null|5|9|2005|null|null|null|false|0|0|0|
+939|GONTHWICK|Alex |M|0|0|0|0|1798|LOWRY|null|null|6|6|null|Alex |GONTHWICK|ag lab|Agnes |GONTHWICK|null|7|0|1818|null|null|null|false|0|0|0|
+940|BLUNDELL|William |M|0|0|0|0|1810|null|null|null|7|9|null|George |WILLIAMS|dyer|null|null|null|1|11|1838|null|null|null|false|0|0|0|
+941|HARDMAN|Alexander |M|0|0|0|0|1909|null|null|null|5|7|null|Alexander |HARDMAN|labourer|null|null|null|2|11|1927|null|null|null|false|0|0|0|
+942|HOWES|Catherine |F|0|0|0|0|1780|null|null|null|7|4|null|null|null|null|Catherine |HARPER|null|2|1|1796|null|null|null|false|0|0|0|
+943|HEUCHEN|Christina |F|0|0|0|0|1881|HEUCHEN|null|null|4|5|null|William |MOORE|carpenter|Christina |MOORE|null|7|11|1894|null|null|null|false|0|0|0|
+944|LLOYD|Isabella |F|0|0|0|0|1858|null|null|null|2|2|null|null|null|null|Maggie |ROBERTS|null|6|3|1874|null|null|null|false|0|0|0|
+945|CROOK|Peter |M|0|0|0|0|1972|NORWELL|null|null|6|8|null|Peter |CROOK|tin plate worker|Jessie |CROOK|null|2|3|1992|null|null|null|false|0|0|0|
+946|SMITH|Janet |F|0|0|0|0|2010|null|null|null|3|9|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+947|PIPER|Ann |F|0|0|0|0|1992|PIPER|null|null|6|10|null|Edward |PAUL|coal miner|Ann |PAUL|null|2|8|2012|null|null|null|false|0|0|0|
+948|SPARK|George |M|0|0|0|0|1865|NAPPER|null|null|3|11|null|George |SPARK|engineer|Ann |SPARK|null|4|5|1884|null|null|null|false|0|0|0|
+949|GARBUTT|Alexander |M|0|0|0|0|1791|null|null|null|1|1|null|Samuel |GRIEVESON|"merchant navy, mariner"|null|null|null|2|5|1810|null|null|null|false|0|0|0|
+950|KAY|Grace |F|0|0|0|0|1952|KAY|null|null|3|11|null|Thomas |MONIS|bootmaker|Grace |MONIS|null|3|10|1974|null|null|null|false|0|0|0|
+951|CLARK|Andrew |M|0|0|0|0|1806|DAVIS|null|null|1|0|null|Andrew |CLARK|spoon and fork dresser|Marg |CLARK|null|6|11|1828|null|null|null|false|0|0|0|
+952|FENTON|Rachel |F|0|0|0|0|1985|null|null|null|5|9|null|null|null|null|Ann |JACKSON|null|4|2|2010|null|null|null|false|0|0|0|
+953|SPARK|Thomas |M|0|0|0|0|1875|null|null|null|4|7|null|Thomas |SPARK|master mariner|null|null|null|6|1|1893|null|null|null|false|0|0|0|
+954|HENDERSON|Alexander |M|0|0|0|0|1967|CHAMBERLIN|null|null|6|9|null|Alexander |HENDERSON|railway engine driver|Agnes |HENDERSON|null|5|1|1982|null|null|null|false|0|0|0|
+955|SHAW|Wm |M|0|0|0|0|1911|WOODMANSEY|null|null|4|5|null|Wm |SHAW|domestic servant|Euphemia |SHAW|null|1|11|1928|null|null|null|false|0|0|0|
+956|WILSON|Hugh |M|0|0|0|0|1949|BASTON|null|null|4|3|null|Hugh |WILSON|engine fitter|Alice |WILSON|null|7|8|1964|null|null|null|false|0|0|0|
+957|COOK|Agness |F|0|0|0|0|1873|null|null|null|3|2|null|null|null|null|Elizth |PEARSE|null|6|1|1897|null|null|null|false|0|0|0|
+958|J|Bernard |M|0|0|0|0|1789|WADE|null|null|1|8|null|Bernard |J|cordwainer|Margret |J|null|5|10|1804|null|null|null|false|0|0|0|
+959|CROOK|Andrew |M|0|0|0|0|1966|null|null|null|5|2|null|Andrew |CROOK|iron moulder|null|null|null|3|1|1985|null|null|null|false|0|0|0|
+960|MOLYNEUX|Dugald |M|0|0|0|0|2006|null|null|null|2|9|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+961|CHAMBERS|Michael |M|0|0|0|0|1895|null|null|null|1|2|null|Alexr |MAYNARD|labourer|null|null|null|2|5|1921|null|null|null|false|0|0|0|
+962|CLARK|4 Robert |M|0|0|0|0|1830|null|null|null|3|7|null|4 Robert |CLARK|farmer|null|null|null|2|11|1845|null|null|null|false|0|0|0|
+963|DAWKINS|George |M|0|0|0|0|1986|null|null|null|6|4|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+964|WILLIAMSON|Donald |M|0|0|0|0|1958|NASH|null|null|4|5|null|Donald |WILLIAMSON|sailmaker|Willhelmina |WILLIAMSON|null|7|9|1971|null|null|null|false|0|0|0|
+965|FANNYHOUGH|Alexr |M|0|0|0|0|1978|TEBBOTTS|null|null|2|2|null|Alexr |FANNYHOUGH|lab|Margt |FANNYHOUGH|null|6|8|1995|null|null|null|false|0|0|0|
+966|NORWELL|Jessie |F|0|0|0|0|1972|NORWELL|null|null|3|9|null|Peter |CROOK|tin plate worker|Jessie |CROOK|null|2|3|1992|null|null|null|false|0|0|0|
+967|CHAMBERS|8 James |M|0|0|0|0|1898|null|null|null|4|7|null|8 James |CHAMBERS|leather worker|null|null|null|3|2|1921|null|null|null|false|0|0|0|
+968|WELCH|William |M|0|0|0|0|1873|ENGLISH|null|null|2|11|null|William |WELCH|labourer|Minna |WELCH|null|2|3|1890|null|null|null|false|0|0|0|
+969|PARKER|Agnes |F|0|0|0|0|1923|PARKER|null|null|6|7|null|Thomas |DARLING|carter|Agnes |DARLING|null|3|3|1940|null|null|null|false|0|0|0|
+970|HANNAH|Isabella |F|0|0|0|0|1834|null|null|null|1|2|null|null|null|null|Sarah |SMITH|null|1|8|1848|null|null|null|false|0|0|0|
+971|GAMMON|Alison |F|0|0|0|0|1991|GAMMON|null|null|3|5|null|Walter |DAVIES|carter|Alison |DAVIES|null|5|9|2005|null|null|null|false|0|0|0|
+972|MOORE|Austin |M|0|0|0|0|1876|null|null|null|7|0|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+973|WHITAKER|Alfred |M|0|0|0|0|1917|STATHAM|null|null|6|1|null|Alfred |WHITAKER|hawker|Hellen |WHITAKER|null|5|7|1933|null|null|null|false|0|0|0|
+974|HARDMAN|Jessie |F|0|0|0|0|1919|HARDMAN|null|null|1|2|null|David |CONWAY|bailiff|Jessie |CONWAY|null|4|10|1932|null|null|null|false|0|0|0|
+975|CHAMBERLIN|Margt |F|0|0|0|0|1925|null|null|null|3|9|null|null|null|null|Margt |CHAMBERLIN|null|3|7|1942|null|null|null|false|0|0|0|
+976|ALLEN|Jessie |F|0|0|0|0|1824|null|null|null|6|2|null|null|null|null|Jessie |ALLEN|null|1|1|1845|null|null|null|false|0|0|0|
+977|GONTHWICK|Jessie |F|0|0|0|0|1889|GONTHWICK|null|null|7|11|null|Thomas |MCKIRDY|bedstead maker|Jessie |MCKIRDY|null|1|2|1903|null|null|null|false|0|0|0|
+978|WOODMANSEY|Euphemia |F|0|0|0|0|1911|WOODMANSEY|null|null|6|0|null|Wm |SHAW|domestic servant|Euphemia |SHAW|null|1|11|1928|null|null|null|false|0|0|0|
+979|WHITAKER|Norman |M|0|0|0|0|1816|null|null|null|3|9|null|Norman |WHITAKER|solicitor|null|null|null|5|6|1842|null|null|null|false|0|0|0|
+980|HENDERSON|Magdalene |F|0|0|0|0|1958|null|null|null|4|9|null|null|null|null|Sarah |HARRE|null|6|1|1978|null|null|null|false|0|0|0|
+981|MOORE|Thomas |M|0|0|0|0|1920|null|null|null|2|7|null|Henry |BAXTER|public assistance officer|null|null|null|3|7|1932|null|null|null|false|0|0|0|
+982|GONTHWICK|Sarah |F|0|0|0|0|1865|null|null|null|6|0|null|null|null|null|Sarah |GONTHWICK|null|4|11|1884|null|null|null|false|0|0|0|
+983|MAYNARD|Robina |F|0|0|0|0|1927|null|null|null|7|2|null|null|null|null|Robina |MAYNARD|null|5|11|1949|null|null|null|false|0|0|0|
+984|MELTON|David |M|0|0|0|0|1799|EAGLES|null|null|6|7|null|David |MELTON|coppersmith|May |MELTON|null|6|7|1819|null|null|null|false|0|0|0|
+985|WHITAKER|Janet |F|0|0|0|0|1847|null|null|null|4|8|null|null|null|null|Allice |GONTHWICK|null|1|3|1865|null|null|null|false|0|0|0|
+986|SIMSON|Annie |F|0|0|0|0|1941|null|null|null|6|9|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+987|CURRANT|Thomas |M|0|0|0|0|1984|MCINTOSH|null|null|3|6|null|Thomas |CURRANT|printer|Sarah |CURRANT|null|2|7|2005|null|null|null|false|0|0|0|
+988|JONES|Edward |M|0|0|0|0|1789|null|null|null|7|7|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+989|WALKER|Alex |M|0|0|0|0|2013|null|null|null|4|6|null|null|null|null|null|null|null|0|0|0|null|null|null|false|0|0|0|
+990|WILTON|Betsy |F|0|0|0|0|1816|WILTON|null|null|7|4|null|David |BRIGHT|dressmaker|Betsy |BRIGHT|null|7|7|1833|null|null|null|false|0|0|0|
+991|IGO|Joseph |M|0|0|0|0|1848|null|null|null|1|7|null|Joseph |IGO|weaver|null|null|null|6|10|1864|null|null|null|false|0|0|0|
+992|DOBSON|Ann |F|0|0|0|0|1805|DOBSON|null|null|5|3|null|George |KENT|lacemaker|Ann |KENT|null|3|11|1827|null|null|null|false|0|0|0|
+993|BARBER|William |M|0|0|0|0|1823|AITKEN|null|null|6|11|null|William |BARBER|sawyer|Sarah |BARBER|null|4|0|1834|null|null|null|false|0|0|0|
+994|WHITAKER|Benjamin |M|0|0|0|0|1913|null|null|null|6|10|null|Joseph |PARKER|relief stationmaster|null|null|null|6|1|1935|null|null|null|false|0|0|0|
+995|BERISFORD|Kenneth |M|0|0|0|0|1983|null|null|null|2|0|null|Timothy |COUTTS|lithographic printer|null|null|null|5|10|1997|null|null|null|false|0|0|0|
+996|GREGORY|Albert |M|0|0|0|0|1945|null|null|null|4|7|null|David |LYLE|"manager, aerated water manufactory (retired)"|null|null|null|3|7|1972|null|null|null|false|0|0|0|
+997|LAMB|Andrew |M|0|0|0|0|1860|BOND|null|null|4|2|null|Andrew |LAMB|policeman|Agnes |LAMB|null|5|4|1883|null|null|null|false|0|0|0|
+998|RUSTON|George |M|0|0|0|0|1963|null|null|null|1|5|null|Alexr |HENDERSON|master builder|null|null|null|2|10|1981|null|null|null|false|0|0|0|
+999|OAKLEY|William |M|0|0|0|0|1987|JICE|null|null|6|4|null|William |OAKLEY|carriage proprietor|Janet |OAKLEY|null|4|11|1997|null|null|null|false|0|0|0|
+1000|NOBLETT|George |M|0|0|0|0|1796|null|null|null|2|10|null|Alexander |WESTLAKE|dressmaker|null|null|null|2|6|1815|null|null|null|false|0|0|0|
