@@ -1,5 +1,5 @@
 #Properties File
-#Sun May 25 18:32:15 BST 2014
+#Mon May 26 20:19:04 BST 2014
 jdbc_default_password=
 surname_distribution_filename=resources/surname_probabilities.tsv
 occupation_distribution_filename=resources/occupation_probabilities.tsv
@@ -7,6 +7,6 @@ female_first_name_distribution_filename=resources/female_first_name_probabilitie
 deterministic=true
 male_first_name_distribution_filename=resources/male_first_name_probabilities.tsv
 batch_size=500
-uuid_count=1479
+uuid_count=264
 cod_distribution_filename=resources/cause_of_death_probabilities.tsv
 num_batches=1

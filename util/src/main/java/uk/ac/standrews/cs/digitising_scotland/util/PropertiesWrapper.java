@@ -3,10 +3,11 @@ package uk.ac.standrews.cs.digitising_scotland.util;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
-import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -18,16 +19,16 @@ import java.util.Properties;
 public class PropertiesWrapper extends Properties {
 
     private final Path properties_path;
-    private static final Charset CHARSET = Charset.forName("UTF-8");
 
-    private static final String POPULATION_PROPERTIES_PATH = "config/config.txt";
+    private static Map<String, Properties> properties_map = new HashMap<>();
 
-    private static PropertiesWrapper wrapper = null;
+    public static synchronized Properties getProperties(String properties_path_string) {
 
-    public static synchronized Properties getProperties() {
+        Properties wrapper = properties_map.get(properties_path_string);
 
         if (wrapper == null) {
-            wrapper = new PropertiesWrapper(Paths.get(POPULATION_PROPERTIES_PATH));
+            wrapper = new PropertiesWrapper(Paths.get(properties_path_string));
+            properties_map.put(properties_path_string, wrapper);
         }
         return wrapper;
     }
@@ -61,7 +62,7 @@ public class PropertiesWrapper extends Properties {
         this.properties_path = properties_path;
 
         try {
-            createFileIfNecessary(properties_path);
+            FileManipulation.createFileIfDoesNotExist(properties_path);
             loadProperties();
 
         } catch (IOException e) {
@@ -69,27 +70,16 @@ public class PropertiesWrapper extends Properties {
         }
     }
 
-    private void createFileIfNecessary(final Path properties_path) throws IOException {
-
-        if (!Files.exists(properties_path)) {
-
-            Path parent_dir = properties_path.getParent();
-            if (parent_dir != null) Files.createDirectories(parent_dir);
-
-            Files.createFile(properties_path);
-        }
-    }
-
     private void loadProperties() throws IOException {
 
-        try (Reader reader = Files.newBufferedReader(properties_path, CHARSET)) {
+        try (Reader reader = Files.newBufferedReader(properties_path, FileManipulation.FILE_CHARSET)) {
             load(reader);
         }
     }
 
     private void save() throws IOException {
 
-        try (Writer writer = Files.newBufferedWriter(properties_path, CHARSET)) {
+        try (Writer writer = Files.newBufferedWriter(properties_path, FileManipulation.FILE_CHARSET)) {
             store(writer, "Properties File");
         }
     }

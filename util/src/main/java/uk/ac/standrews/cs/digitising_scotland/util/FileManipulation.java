@@ -101,6 +101,15 @@ public class FileManipulation {
         Files.delete(directory_path);
     }
 
+    public static void createFileIfDoesNotExist(final Path path) throws IOException {
+
+        if (!Files.exists(path)) {
+
+            createParentDirectoryIfDoesNotExist(path);
+            Files.createFile(path);
+        }
+    }
+
     public static void createDirectoryIfDoesNotExist(String directory_path) throws IOException {
 
         createDirectoryIfDoesNotExist(new File(directory_path));

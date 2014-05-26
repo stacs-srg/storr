@@ -14,9 +14,11 @@ public class PopulationProperties {
 
     private static final String DETERMINISTIC_KEY = "deterministic";
 
+    private static final String PROPERTIES_PATH = "population_model/config/config.txt";
+
     public static Properties getProperties() {
 
-        return PropertiesWrapper.getProperties();
+        return PropertiesWrapper.getProperties(PROPERTIES_PATH);
     }
 
     public static boolean getDeterministic() {
