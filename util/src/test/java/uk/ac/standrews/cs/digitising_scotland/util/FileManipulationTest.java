@@ -19,7 +19,7 @@ import static org.junit.Assert.assertEquals;
  */
 public class FileManipulationTest {
 
-    private static final int DIRECTORY_COUNT = 1000;
+    private static final int DIRECTORY_COUNT = 10;
     private static final int FILE_PER_DIRECTORY_COUNT = 50;
     public static final String TEMP_FILE_TREE_ROOT = "src/test/resources/temp_file_tree";
     private static final Random RANDOM = new Random(42);
