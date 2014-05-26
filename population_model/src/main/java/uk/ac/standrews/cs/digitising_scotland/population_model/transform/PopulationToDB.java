@@ -1,6 +1,5 @@
 package uk.ac.standrews.cs.digitising_scotland.population_model.transform;
 
-import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
 import uk.ac.standrews.cs.digitising_scotland.population_model.config.PopulationProperties;
 import uk.ac.standrews.cs.digitising_scotland.population_model.database.DBConnector;
 import uk.ac.standrews.cs.digitising_scotland.population_model.generation.distributions.FemaleFirstNameDistribution;
@@ -13,6 +12,7 @@ import uk.ac.standrews.cs.digitising_scotland.population_model.model.CompactPart
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.CompactPerson;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.CompactPopulation;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IDFactory;
+import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -85,6 +85,8 @@ public class PopulationToDB implements AutoCloseable {
     }
 
     public void export() throws SQLException {
+
+        // TODO read highest existing id from db so don't have to save in file system
 
         outputIndividuals();
         outputFamilies();

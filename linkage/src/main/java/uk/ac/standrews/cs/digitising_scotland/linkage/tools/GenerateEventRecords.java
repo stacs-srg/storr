@@ -19,9 +19,9 @@ import java.sql.SQLException;
  */
 public class GenerateEventRecords {
 
-    public static final String BIRTH_RECORDS_PATH = "output/birth_records.txt";
-    public static final String DEATH_RECORDS_PATH = "output/death_records.txt";
-    public static final String MARRIAGE_RECORDS_PATH = "output/marriage_records.txt";
+    public static final String BIRTH_RECORDS_PATH = "linkage/output/birth_records.txt";
+    public static final String DEATH_RECORDS_PATH = "linkage/output/death_records.txt";
+    public static final String MARRIAGE_RECORDS_PATH = "linkage/output/marriage_records.txt";
 
     public static void main(final String[] args) throws IOException, SQLException {
 
@@ -29,6 +29,8 @@ public class GenerateEventRecords {
     }
 
     private static void generateEventRecords() throws SQLException, IOException {
+
+        // TODO add progress indicator.
 
         Diagnostic.traceNoSource("Generating birth records");
         exportRecords(EventIterator.getBirthRecords(), BIRTH_RECORDS_PATH);
@@ -43,17 +45,11 @@ public class GenerateEventRecords {
     private static void exportRecords(final Iterable<?> records, String records_path_string) throws IOException {
 
         Path records_path = Paths.get(records_path_string);
-        createParentDirectoryIfAbsent(records_path);
+        FileManipulation.createParentDirectoryIfDoesNotExist(records_path);
 
         try (final PrintWriter writer = new PrintWriter(Files.newBufferedWriter(records_path, FileManipulation.FILE_CHARSET))) {
 
             for (final Object record : records) writer.println(record);
         }
-    }
-
-    private static void createParentDirectoryIfAbsent(Path records_path) throws IOException {
-
-        Path parent_path = records_path.getParent();
-        if (parent_path != null) Files.createDirectories(parent_path);
     }
 }
