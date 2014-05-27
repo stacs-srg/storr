@@ -7,6 +7,7 @@ import uk.ac.standrews.cs.nds.util.ErrorHandling;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
@@ -28,7 +29,9 @@ public class FileBasedEnumeratedDistribution extends EnumeratedDistribution {
 
         final Map<String, Double> item_probabilities = new HashMap<>();
 
-        try (BufferedReader reader = Files.newBufferedReader(Paths.get(path_string), FileManipulation.FILE_CHARSET)) {
+        Path path = Paths.get(path_string);
+        System.out.println("reading distribution from: " + path.toAbsolutePath());
+        try (BufferedReader reader = Files.newBufferedReader(path, FileManipulation.FILE_CHARSET)) {
 
             String line = reader.readLine();
             if (line.startsWith(FileDistributionGenerator.COMMENT_INDICATOR)) line = reader.readLine();
