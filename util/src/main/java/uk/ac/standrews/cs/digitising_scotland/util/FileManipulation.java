@@ -21,43 +21,7 @@ public class FileManipulation {
 
     public static final Charset FILE_CHARSET = Charset.forName("UTF-8");
 
-    public static void deleteDirectory1(String directory_path) throws IOException {
-
-        File directory = new File(directory_path);
-
-        File[] files = directory.listFiles();
-
-        if (files != null) {
-            for (File f : files) {
-                if (f.isDirectory()) {
-                    deleteDirectory1(f.getAbsolutePath());
-                } else {
-                    if (!f.delete()) throw new IOException("Could not delete file: " + f.getAbsolutePath());
-                }
-            }
-        }
-
-        if (!directory.delete()) throw new IOException("Could not delete directory: " + directory.getAbsolutePath());
-    }
-
-    public static void deleteDirectory2(String directory_path) throws IOException {
-
-        delete(new File(directory_path));
-    }
-
-    private static void delete(File file) throws IOException {
-
-        if (file.isDirectory()) {
-            for (File deletee : file.listFiles()) {
-                delete(deletee);
-            }
-        }
-        if (!file.delete()) {
-            throw new IOException("Could not delete file/directory: " + file.getAbsolutePath());
-        }
-    }
-
-    public static void deleteDirectory3(String directory_path) throws IOException {
+    public static void deleteDirectory(String directory_path) throws IOException {
 
         Path directory = Paths.get(directory_path);
 
@@ -77,28 +41,6 @@ public class FileManipulation {
                 return FileVisitResult.CONTINUE;
             }
         });
-    }
-
-//    public static void deleteDirectory4(String directory_path) throws IOException {
-//
-//        Path directory = Paths.get(directory_path);
-//
-//        delete(directory);
-//    }
-
-    private static void delete(Path directory_path) throws IOException {
-
-        List<Path> entries = getEntries(directory_path);
-
-        for (Path entry : entries) {
-            if (Files.isDirectory(entry)) {
-                delete(entry);
-            } else {
-                Files.delete(entry);
-            }
-        }
-
-        Files.delete(directory_path);
     }
 
     public static void createFileIfDoesNotExist(final Path path) throws IOException {
@@ -131,16 +73,15 @@ public class FileManipulation {
         if (parent_dir != null) createDirectoryIfDoesNotExist(parent_dir);
     }
 
-    private static List<Path> getEntries(Path dir) throws IOException {
+    public static List<Path> getDirectoryEntries(Path directory) throws IOException {
 
         List<Path> result = new ArrayList<>();
-        try (DirectoryStream<Path> stream = Files.newDirectoryStream(dir)) {
+        try (DirectoryStream<Path> stream = Files.newDirectoryStream(directory)) {
             for (Path entry : stream) {
                 result.add(entry);
             }
-        } catch (DirectoryIteratorException ex) {
-            // I/O error encounted during the iteration, the cause is an IOException
-            throw ex.getCause();
+        } catch (DirectoryIteratorException e) {
+            throw e.getCause();
         }
         return result;
     }

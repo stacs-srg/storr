@@ -84,7 +84,7 @@ public class Birth_Death_Resolver {
     private static void tidyUp() {
 
         try {
-            FileManipulation.deleteDirectory1(blocked_repo_path);
+            FileManipulation.deleteDirectory(blocked_repo_path);
         } catch (IOException e) {
             ErrorHandling.exceptionError(e, "Error whilst tidying up");
         }

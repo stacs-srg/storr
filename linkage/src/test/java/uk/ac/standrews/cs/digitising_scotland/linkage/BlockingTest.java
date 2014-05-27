@@ -12,7 +12,6 @@ import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
 
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 
 /**
@@ -50,22 +49,10 @@ public class BlockingTest {
 
     @After
     public void afterEachTest() throws IOException {
-// /        File dir = new File(repo_path);
-//        FileManipulation.recursivelyDeleteFolder(dir);
 
-
-        Path rp = Paths.get(repo_path);
-        System.out.println("repo path: " + rp.toAbsolutePath());
-        System.out.println("exists1: " + Files.exists(rp));
-
-        if (Files.exists(rp)) {
-            FileManipulation.deleteDirectory3(repo_path);
-
-
+        if (Files.exists(Paths.get(repo_path))) {
+            FileManipulation.deleteDirectory(repo_path);
         }
-
-        System.out.println("exists2: " + Files.exists(rp));
-
     }
 
     @Test

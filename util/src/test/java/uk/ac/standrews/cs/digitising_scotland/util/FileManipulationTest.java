@@ -41,28 +41,10 @@ public class FileManipulationTest {
     }
 
     @Test
-    public void createAndDeleteFileTree1() throws IOException {
+    public void createAndDeleteFileTree() throws IOException {
 
-        FileManipulation.deleteDirectory1(temp_file_tree_root);
+        FileManipulation.deleteDirectory(temp_file_tree_root);
     }
-
-    @Test
-    public void createAndDeleteFileTree2() throws IOException {
-
-        FileManipulation.deleteDirectory2(temp_file_tree_root);
-    }
-
-    @Test
-    public void createAndDeleteFileTree3() throws IOException {
-
-        FileManipulation.deleteDirectory3(temp_file_tree_root);
-    }
-
-    @Test
-//    public void createAndDeleteFileTree4() throws IOException {
-//
-//        FileManipulation.deleteDirectory4(temp_file_tree_root);
-//    }
 
     private void createFileTree() throws IOException {
 

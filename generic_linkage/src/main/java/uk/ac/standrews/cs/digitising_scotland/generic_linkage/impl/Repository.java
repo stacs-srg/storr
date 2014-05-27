@@ -84,7 +84,7 @@ public class Repository implements IRepository {
         }
 
         try {
-            FileManipulation.deleteDirectory1(path);
+            FileManipulation.deleteDirectory(path);
         } catch (IOException e) {
             throw new RepositoryException("Cannot delete bucket: " + name );
         }

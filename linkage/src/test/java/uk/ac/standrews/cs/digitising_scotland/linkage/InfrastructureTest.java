@@ -63,7 +63,7 @@ public class InfrastructureTest {
 
         if (Files.exists(rp)) {
 
-            FileManipulation.deleteDirectory3(repo_path);
+            FileManipulation.deleteDirectory(repo_path);
 
 //            File dir = new File(repo_path);
 //            FileManipulation.recursivelyDeleteFolder(repo_path);
