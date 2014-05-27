@@ -59,6 +59,7 @@ public class PropertiesWrapper extends Properties {
      */
     private PropertiesWrapper(final Path properties_path) {
 
+        System.out.println("loading properties from: " + properties_path.toAbsolutePath());
         this.properties_path = properties_path;
 
         try {
