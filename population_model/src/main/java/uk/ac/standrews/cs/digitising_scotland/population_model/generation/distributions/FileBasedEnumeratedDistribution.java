@@ -1,14 +1,11 @@
 package uk.ac.standrews.cs.digitising_scotland.population_model.generation.distributions;
 
 import uk.ac.standrews.cs.digitising_scotland.population_model.generation.distributions.util.FileDistributionGenerator;
-import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
 import uk.ac.standrews.cs.nds.util.ErrorHandling;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -29,10 +26,7 @@ public class FileBasedEnumeratedDistribution extends EnumeratedDistribution {
 
         final Map<String, Double> item_probabilities = new HashMap<>();
 
-        System.out.println("path_string: " + path_string);
-        Path path = Paths.get(path_string);
-        System.out.println("reading distribution from: " + path.toAbsolutePath());
-        try (BufferedReader reader = Files.newBufferedReader(path, FileManipulation.FILE_CHARSET)) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(getClass().getClassLoader().getResourceAsStream(path_string)))) {
 
             String line = reader.readLine();
             if (line.startsWith(FileDistributionGenerator.COMMENT_INDICATOR)) line = reader.readLine();
@@ -47,6 +41,8 @@ public class FileBasedEnumeratedDistribution extends EnumeratedDistribution {
                     line = reader.readLine();
                 }
             } catch (final Exception e) {
+
+                // TODO use proper logger
                 ErrorHandling.exceptionError(e, "Could not process line:" + line);
             }
         }

@@ -4,12 +4,13 @@ import org.gedcom4j.model.Individual;
 import org.gedcom4j.model.IndividualEvent;
 import org.gedcom4j.model.IndividualEventType;
 import org.gedcom4j.model.PersonalName;
-import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
-import uk.ac.standrews.cs.nds.util.ErrorHandling;
 import uk.ac.standrews.cs.digitising_scotland.population_model.config.PopulationProperties;
 import uk.ac.standrews.cs.digitising_scotland.population_model.generation.distributions.FileBasedEnumeratedDistribution;
 import uk.ac.standrews.cs.digitising_scotland.population_model.generation.distributions.InconsistentWeightException;
 import uk.ac.standrews.cs.digitising_scotland.population_model.generation.util.RandomFactory;
+import uk.ac.standrews.cs.digitising_scotland.population_model.transform.PopulationToDB;
+import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
+import uk.ac.standrews.cs.nds.util.ErrorHandling;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -18,9 +19,6 @@ import java.util.Random;
 
 public class PersonFactory {
 
-    private static final String OCCUPATION_DISTRIBUTION_KEY = "occupation_distribution_filename";
-    private static final String COD_DISTRIBUTION_KEY = "cod_distribution_filename";
-
     private FileBasedEnumeratedDistribution occupations;
     private FileBasedEnumeratedDistribution causes_of_death;
 
@@ -28,11 +26,10 @@ public class PersonFactory {
 
         Random random = RandomFactory.getRandom();
 
-        final String occupation_file_name = PopulationProperties.getProperties().getProperty(OCCUPATION_DISTRIBUTION_KEY);
-        final String cod_file_name = PopulationProperties.getProperties().getProperty(COD_DISTRIBUTION_KEY);
-
-        System.out.println("occupation_file_name: " + occupation_file_name);
         try {
+            final String occupation_file_name = PopulationProperties.getProperties().getProperty(PopulationToDB.OCCUPATION_DISTRIBUTION_KEY);
+            final String cod_file_name = PopulationProperties.getProperties().getProperty(PopulationToDB.CAUSE_OF_DEATH_DISTRIBUTION_KEY);
+
             occupations = new FileBasedEnumeratedDistribution(occupation_file_name, random);
             causes_of_death = new FileBasedEnumeratedDistribution(cod_file_name, random);
         }

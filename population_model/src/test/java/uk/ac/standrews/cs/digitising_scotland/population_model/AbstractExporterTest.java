@@ -22,7 +22,7 @@ import static org.junit.Assert.assertNull;
  */
 public abstract class AbstractExporterTest {
 
-    protected static final String TEST_DIRECTORY_PATH_STRING = "population_model/src/test/resources/";
+    protected static final String TEST_DIRECTORY_PATH_STRING = "src/test/resources/";
 
     protected final CompactPopulation population;
     protected final String file_name_root;

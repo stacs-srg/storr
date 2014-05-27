@@ -59,10 +59,10 @@ public class FileManipulationTest {
     }
 
     @Test
-    public void createAndDeleteFileTree4() throws IOException {
-
-        FileManipulation.deleteDirectory4(temp_file_tree_root);
-    }
+//    public void createAndDeleteFileTree4() throws IOException {
+//
+//        FileManipulation.deleteDirectory4(temp_file_tree_root);
+//    }
 
     private void createFileTree() throws IOException {
 

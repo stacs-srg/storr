@@ -79,12 +79,12 @@ public class FileManipulation {
         });
     }
 
-    public static void deleteDirectory4(String directory_path) throws IOException {
-
-        Path directory = Paths.get(directory_path);
-
-        delete(directory);
-    }
+//    public static void deleteDirectory4(String directory_path) throws IOException {
+//
+//        Path directory = Paths.get(directory_path);
+//
+//        delete(directory);
+//    }
 
     private static void delete(Path directory_path) throws IOException {
 

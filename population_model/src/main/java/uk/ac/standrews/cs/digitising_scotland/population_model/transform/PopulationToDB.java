@@ -30,8 +30,8 @@ import java.util.Random;
  */
 public class PopulationToDB implements AutoCloseable {
 
-    private static final String OCCUPATION_DISTRIBUTION_KEY = "occupation_distribution_filename";
-    private static final String COD_DISTRIBUTION_KEY = "cod_distribution_filename";
+    public static final String OCCUPATION_DISTRIBUTION_KEY = "occupation_distribution_filename";
+    public static final String CAUSE_OF_DEATH_DISTRIBUTION_KEY = "cause_of_death_distribution_filename";
 
     private final MaleFirstNameDistribution male_first_name_distribution;
     private final FemaleFirstNameDistribution female_first_name_distribution;
@@ -56,7 +56,7 @@ public class PopulationToDB implements AutoCloseable {
         connection = new DBConnector(PopulationProperties.DATABASE_NAME).createConnection();
 
         final String occupation_distribution_file_name = PopulationProperties.getProperties().getProperty(OCCUPATION_DISTRIBUTION_KEY);
-        final String cause_of_death_distribution_file_name = PopulationProperties.getProperties().getProperty(COD_DISTRIBUTION_KEY);
+        final String cause_of_death_distribution_file_name = PopulationProperties.getProperties().getProperty(CAUSE_OF_DEATH_DISTRIBUTION_KEY);
 
         Random random = RandomFactory.getRandom();
 

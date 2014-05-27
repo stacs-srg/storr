@@ -1,0 +1,10 @@
+#Properties File
+#Tue May 27 11:53:29 BST 2014
+female_first_name_distribution_filename=distributions/female_first_name_probabilities.tsv
+male_first_name_distribution_filename=distributions/male_first_name_probabilities.tsv
+surname_distribution_filename=distributions/surname_probabilities.tsv
+occupation_distribution_filename=distributions/occupation_probabilities.tsv
+cause_of_death_distribution_filename=distributions/cause_of_death_probabilities.tsv
+batch_size=500
+num_batches=1
+deterministic=true

@@ -1,7 +1,6 @@
 package uk.ac.standrews.cs.digitising_scotland.population_model.model;
 
 import uk.ac.standrews.cs.nds.util.ErrorHandling;
-import uk.ac.standrews.cs.digitising_scotland.population_model.config.PopulationProperties;
 
 /**
  * Generates (sequential) persistent unique IDs.
@@ -37,11 +36,12 @@ public class IDFactory {
 
     private static void loadPersistentId() {
 
-        id = Integer.parseInt(PopulationProperties.getProperties().getProperty(UUID_COUNT));
+        // TODO get id from database
+//        id = Integer.parseInt(PopulationProperties.getProperties().getProperty(UUID_COUNT));
     }
 
     public static void savePersistentId() {
 
-        PopulationProperties.getProperties().setProperty(UUID_COUNT, Integer.toString(id));
+//        PopulationProperties.getProperties().setProperty(UUID_COUNT, Integer.toString(id));
     }
 }
