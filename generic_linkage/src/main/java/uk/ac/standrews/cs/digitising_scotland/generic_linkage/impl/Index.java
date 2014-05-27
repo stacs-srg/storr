@@ -92,7 +92,7 @@ public class Index implements IIndex {
 
         List<Integer> entry = map.get(value); // look up index for the value associated with this do we have any of these values in the index already
 
-        if( entry == null ) {
+        if( entry != null ) {
             entry.add( record.getId() ); // add it in.
         } else {
             ArrayList<Integer> list = new ArrayList<>();    // create a new list

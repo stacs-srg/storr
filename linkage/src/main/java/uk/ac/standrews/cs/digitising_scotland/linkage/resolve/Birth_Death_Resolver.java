@@ -5,7 +5,11 @@ import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.LXP;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.Repository;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.RepositoryException;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.RepositoryIterator;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.*;
+import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IBucket;
+import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXP;
+import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXPInputStream;
+import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXPOutputStream;
+import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IRepository;
 import uk.ac.standrews.cs.digitising_scotland.linkage.EventImporter;
 import uk.ac.standrews.cs.digitising_scotland.linkage.RecordFormatException;
 import uk.ac.standrews.cs.digitising_scotland.linkage.blocking.BlockingPFPLMFFFoverBDMrecords;
@@ -14,7 +18,6 @@ import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
 import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
 import uk.ac.standrews.cs.nds.util.ErrorHandling;
 
-import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.Calendar;
@@ -80,7 +83,6 @@ public class Birth_Death_Resolver {
 
     private static void tidyUp() {
 
-        File dir = new File(blocked_repo_path);
         try {
             FileManipulation.deleteDirectory1(blocked_repo_path);
         } catch (IOException e) {
