@@ -29,6 +29,7 @@ public class FileBasedEnumeratedDistribution extends EnumeratedDistribution {
 
         final Map<String, Double> item_probabilities = new HashMap<>();
 
+        System.out.println("path_string: " + path_string);
         Path path = Paths.get(path_string);
         System.out.println("reading distribution from: " + path.toAbsolutePath());
         try (BufferedReader reader = Files.newBufferedReader(path, FileManipulation.FILE_CHARSET)) {
