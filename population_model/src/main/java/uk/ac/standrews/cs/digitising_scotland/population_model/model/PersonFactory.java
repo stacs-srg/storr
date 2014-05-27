@@ -31,6 +31,7 @@ public class PersonFactory {
         final String occupation_file_name = PopulationProperties.getProperties().getProperty(OCCUPATION_DISTRIBUTION_KEY);
         final String cod_file_name = PopulationProperties.getProperties().getProperty(COD_DISTRIBUTION_KEY);
 
+        System.out.println("occupation_file_name: " + occupation_file_name);
         try {
             occupations = new FileBasedEnumeratedDistribution(occupation_file_name, random);
             causes_of_death = new FileBasedEnumeratedDistribution(cod_file_name, random);
