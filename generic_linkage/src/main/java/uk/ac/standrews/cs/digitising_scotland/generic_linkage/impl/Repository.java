@@ -1,6 +1,7 @@
 package uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl;
 
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IBucket;
+import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IIndexedBucket;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IRepository;
 import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
 import uk.ac.standrews.cs.nds.util.ErrorHandling;
@@ -51,6 +52,23 @@ public class Repository implements IRepository {
     }
 
     @Override
+    public IIndexedBucket makeIndexedBucket(String name) throws RepositoryException {
+        if (bucketExists(name)) {
+            throw new RepositoryException("Bucket: " + name + " already exists");
+        }
+
+        String path = repo_path + "/" + name;
+        File dir = new File(path);
+        if (!dir.mkdir()) {
+            ErrorHandling.error("Cannot create bucket " + name);
+            return null;
+        }
+        return getIndexedBucket(name);
+    }
+
+
+
+    @Override
     public boolean bucketExists(String name) {
         String path = repo_path + "/" + name;
         File dir = new File(path);
@@ -78,6 +96,14 @@ public class Repository implements IRepository {
             return new Bucket(name, repo_path);
         } catch (Exception e) {
             throw new RepositoryException("Cannot get bucket called " + name );
+        }
+    }
+
+    public IIndexedBucket getIndexedBucket(String name) throws RepositoryException {
+        try {
+            return new IndexedBucket(name, repo_path);
+        } catch (Exception e) {
+            throw new RepositoryException("Cannot get indexed bucket called " + name );
         }
     }
 

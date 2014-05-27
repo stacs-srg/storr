@@ -54,17 +54,17 @@ public class BlockingTest {
 //        FileManipulation.recursivelyDeleteFolder(dir);
 
 
-            Path rp = Paths.get(repo_path);
-            System.out.println("repo path: " + rp.toAbsolutePath());
-            System.out.println("exists1: " + Files.exists(rp));
+        Path rp = Paths.get(repo_path);
+        System.out.println("repo path: " + rp.toAbsolutePath());
+        System.out.println("exists1: " + Files.exists(rp));
 
-            if (Files.exists(rp)) {
-                FileManipulation.deleteDirectory3(repo_path);
+        if (Files.exists(rp)) {
+            FileManipulation.deleteDirectory3(repo_path);
 
 
-            }
+        }
 
-            System.out.println("exists2: " + Files.exists(rp));
+        System.out.println("exists2: " + Files.exists(rp));
 
     }
 

@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.*;
 
 import static uk.ac.standrews.cs.digitising_scotland.util.FileManipulation.FILE_CHARSET;
@@ -68,8 +67,22 @@ public class Index implements IIndex {
         }
     }
 
+    @Override
+    public Set<String>  keySet() throws IOException {
+        return map.keySet();
+    }
 
-    public ILXPInputStream  get_records( String value ) throws IOException {
+
+    @Override
+    public List<Integer>  values( String value ) throws IOException {
+        on_demand_load_contents();
+
+        return  map.get(value); // list of integers which are indices into the bucket;
+
+    }
+
+    @Override
+    public ILXPInputStream  records( String value ) throws IOException {
         on_demand_load_contents();
 
         List<Integer> entries = map.get(value); // list of integers which are indices into the bucket;
@@ -81,8 +94,6 @@ public class Index implements IIndex {
 
         return new BucketBackedInputStream( indexed_bucket, files.iterator() );
     }
-
-
 
     @Override
     public void add(ILXP record) throws IOException {
@@ -102,7 +113,7 @@ public class Index implements IIndex {
 
         // Now add the new value to the list.
 
-        Path path = Paths.get( dir.getFileName() + "/" + value );
+        Path path =  dir.resolve(value);  // Paths.get( dir.toFile().getAbsolutePath() + File.separator + value );
 
         if (!Files.exists(path)) {
             Files.createFile(path);
@@ -111,6 +122,7 @@ public class Index implements IIndex {
         try (Writer writer = Files.newBufferedWriter(path, FILE_CHARSET)) {
 
             writer.append( record.getId() + "\n" ); // add the new item to the list.
+            writer.flush();
         }
 
 

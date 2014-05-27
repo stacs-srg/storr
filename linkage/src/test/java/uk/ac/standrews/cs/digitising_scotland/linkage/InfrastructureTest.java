@@ -5,17 +5,17 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.*;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.stream_operators.filter.ExactMatch;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IBucket;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXP;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IRepository;
+import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.*;
+import uk.ac.standrews.cs.digitising_scotland.linkage.labels.Birth;
 import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
+import java.util.Set;
 
 import static junit.framework.TestCase.fail;
 import static org.junit.Assert.assertEquals;
@@ -29,7 +29,8 @@ public class InfrastructureTest {
     private static String bucket_name1 = "BUCKET1";
     private static String bucket_name2 = "BUCKET2";
     private static String bucket_name3 = "BLOCKED-BUCKETS";
-    private static String repo_path = "src/test/resources/infrastructure_test_buckets";
+    private static String bucket_name4 = "INDEX";
+    private static String repo_path = "src/test/resources/repositories";
     private static final String BIRTH_RECORDS_PATH = "src/test/resources/1000_TEST_BIRTH_RECORDS.txt";
 
     private static IRepository repo;
@@ -41,17 +42,16 @@ public class InfrastructureTest {
 
         repo = new Repository(repo_path);
 
-
         repo.makeBucket(bucket_name1);
         repo.makeBucket(bucket_name2);
         repo.makeBucket(bucket_name3);
+        repo.makeIndexedBucket(bucket_name4);
     }
 
     @After
     public void tearDown() throws IOException {
 
-
-        deleteRepo();
+      //  deleteRepo();
     }
 
 
@@ -107,6 +107,7 @@ public class InfrastructureTest {
     }
 
     @Test
+//    @Ignore
     public synchronized void testLXPFromFile() throws Exception, RepositoryException {
         IBucket b = repo.getBucket(bucket_name1);
         LXP lxp = new LXP(1);
@@ -166,6 +167,33 @@ public class InfrastructureTest {
 
         ExactMatch filter = new ExactMatch(b.getInputStream(), new BucketBackedOutputStream(b2), "surname", "GONTHWICK");
         filter.apply();
+    }
+
+
+
+    @Test
+    public synchronized void testIndex() throws Exception, RepositoryException {
+
+        IIndexedBucket b = repo.getIndexedBucket(bucket_name4);
+
+        b.add_index( Birth.SURNAME );
+        EventImporter importer = new EventImporter();
+        importer.importBirths(b, BIRTH_RECORDS_PATH);
+
+        IIndex index = b.get_index(Birth.SURNAME);
+
+        Set<String> keys = index.keySet();
+        for( String key : keys ) {
+            System.out.print("keys: " + key + " :");
+            List<Integer> values = index.values(key);
+            System.out.println( values );
+
+        }
+
+        // SHOULD PROBABLY DO SOMETHING like check that the same number of records that are read in are in the index.
+
+
+
     }
 }
 

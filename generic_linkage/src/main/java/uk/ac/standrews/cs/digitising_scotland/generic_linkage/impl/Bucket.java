@@ -56,11 +56,11 @@ public class Bucket implements IBucket  {
     protected File baseDir() { return directory;}
 
     protected String dirPath() {
-        return base_path + "/" + name;
+        return base_path + File.separator + name;
     } // should be file separator but gives a : not / ???
 
     public String filePath(String id) {
-        return dirPath() + "/" + id;
+        return dirPath() + File.separator + id;
     }
 
     @Override

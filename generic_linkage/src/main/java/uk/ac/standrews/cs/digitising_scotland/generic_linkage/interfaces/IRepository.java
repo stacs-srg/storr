@@ -10,11 +10,17 @@ public interface IRepository {
 
     IBucket makeBucket(String name) throws RepositoryException;
 
+    IIndexedBucket makeIndexedBucket(String name) throws RepositoryException;
+
     boolean bucketExists(String name);
 
     void deleteBucket(String name) throws RepositoryException;
 
     IBucket getBucket(String name) throws RepositoryException;
 
+    IIndexedBucket getIndexedBucket(String name) throws RepositoryException;
+
     RepositoryIterator getIterator();
+
+
 }
