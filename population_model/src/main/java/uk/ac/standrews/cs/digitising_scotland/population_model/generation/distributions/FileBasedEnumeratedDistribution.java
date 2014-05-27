@@ -1,6 +1,7 @@
 package uk.ac.standrews.cs.digitising_scotland.population_model.generation.distributions;
 
 import uk.ac.standrews.cs.digitising_scotland.population_model.generation.distributions.util.FileDistributionGenerator;
+import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
 import uk.ac.standrews.cs.nds.util.ErrorHandling;
 
 import java.io.BufferedReader;
@@ -26,7 +27,7 @@ public class FileBasedEnumeratedDistribution extends EnumeratedDistribution {
 
         final Map<String, Double> item_probabilities = new HashMap<>();
 
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(getClass().getClassLoader().getResourceAsStream(path_string)))) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(getClass().getClassLoader().getResourceAsStream(path_string), FileManipulation.FILE_CHARSET))) {
 
             String line = reader.readLine();
             if (line.startsWith(FileDistributionGenerator.COMMENT_INDICATOR)) line = reader.readLine();
