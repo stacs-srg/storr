@@ -13,14 +13,11 @@ import java.util.Iterator;
 /**
  * Created by graham on 28/05/2014.
  */
-public class DeathRecordIterator implements Iterator<DeathRecord>, Iterable<DeathRecord> {
+public class DeathRecordIterator extends RecordIterator<DeathRecord> {
 
     private Iterator<Person> dead_person_iterator;
     private PersonIterator person_iterator;
 
-    // The size is an approximation since it will also include live people that won't be returned by the
-    // main iterator.
-    private int size;
 
     public DeathRecordIterator() {
 
@@ -33,6 +30,9 @@ public class DeathRecordIterator implements Iterator<DeathRecord>, Iterable<Deat
             };
 
             person_iterator = new PersonIterator();
+
+            // The size is an approximation since it will also include live people that won't be returned by the
+            // main iterator.
             size = person_iterator.size();
 
             dead_person_iterator = new FilteredIterator<>(person_iterator, check_dead);
@@ -40,12 +40,6 @@ public class DeathRecordIterator implements Iterator<DeathRecord>, Iterable<Deat
         } catch (SQLException e) {
             ErrorHandling.exceptionError(e, "Could not initialise iterator over people.");
         }
-    }
-
-    @Override
-    public Iterator<DeathRecord> iterator() {
-
-        return this;
     }
 
     @Override
@@ -58,17 +52,6 @@ public class DeathRecordIterator implements Iterator<DeathRecord>, Iterable<Deat
     public DeathRecord next() {
 
         return new DeathRecord(dead_person_iterator.next());
-    }
-
-    @Override
-    public void remove() {
-
-        throw new UnsupportedOperationException("remove");
-    }
-
-    public int size() {
-
-        return size;
     }
 
     public void close() {

@@ -5,15 +5,13 @@ import uk.ac.standrews.cs.digitising_scotland.population_model.database.PersonIt
 import uk.ac.standrews.cs.nds.util.ErrorHandling;
 
 import java.sql.SQLException;
-import java.util.Iterator;
 
 /**
  * Created by graham on 28/05/2014.
  */
-public class BirthRecordIterator implements Iterator<BirthRecord>, Iterable<BirthRecord> {
+public class BirthRecordIterator extends RecordIterator<BirthRecord> {
 
     private PersonIterator person_iterator;
-    private int size;
 
     public BirthRecordIterator() {
 
@@ -27,12 +25,6 @@ public class BirthRecordIterator implements Iterator<BirthRecord>, Iterable<Birt
     }
 
     @Override
-    public Iterator<BirthRecord> iterator() {
-
-        return this;
-    }
-
-    @Override
     public boolean hasNext() {
 
         return person_iterator.hasNext();
@@ -42,17 +34,6 @@ public class BirthRecordIterator implements Iterator<BirthRecord>, Iterable<Birt
     public BirthRecord next() {
 
         return new BirthRecord(person_iterator.next());
-    }
-
-    @Override
-    public void remove() {
-
-        throw new UnsupportedOperationException("remove");
-    }
-
-    public int size() {
-
-        return size;
     }
 
     public void close() {

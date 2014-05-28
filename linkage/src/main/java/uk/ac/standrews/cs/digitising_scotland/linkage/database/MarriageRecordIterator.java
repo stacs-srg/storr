@@ -5,15 +5,13 @@ import uk.ac.standrews.cs.digitising_scotland.population_model.database.Partners
 import uk.ac.standrews.cs.nds.util.ErrorHandling;
 
 import java.sql.SQLException;
-import java.util.Iterator;
 
 /**
  * Created by graham on 28/05/2014.
  */
-public class MarriageRecordIterator implements Iterator<MarriageRecord>, Iterable<MarriageRecord> {
+public class MarriageRecordIterator extends RecordIterator<MarriageRecord> {
 
     private PartnershipIterator partnership_iterator;
-    private int size;
 
     public MarriageRecordIterator() {
 
@@ -27,12 +25,6 @@ public class MarriageRecordIterator implements Iterator<MarriageRecord>, Iterabl
     }
 
     @Override
-    public Iterator<MarriageRecord> iterator() {
-
-        return this;
-    }
-
-    @Override
     public boolean hasNext() {
 
         return partnership_iterator.hasNext();
@@ -42,17 +34,6 @@ public class MarriageRecordIterator implements Iterator<MarriageRecord>, Iterabl
     public MarriageRecord next() {
 
         return new MarriageRecord(partnership_iterator.next());
-    }
-
-    @Override
-    public void remove() {
-
-        throw new UnsupportedOperationException("remove");
-    }
-
-    public int size() {
-
-        return size;
     }
 
     public void close() {

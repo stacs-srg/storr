@@ -26,5 +26,7 @@ public class InitialiseDB {
         new DBInitialiser().setupDB();
 
         Diagnostic.traceNoSource("Database initialised");
+
+        // TODO check for existing db content
     }
 }

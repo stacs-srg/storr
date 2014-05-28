@@ -3,7 +3,7 @@ package uk.ac.standrews.cs.digitising_scotland.linkage.event_records;
 /**
  * Created by graham on 13/05/2014.
  */
-public abstract class IndividualRecord extends AbstractRecord {
+public abstract class IndividualRecord extends Record {
 
     protected String surname;
     protected String surname_changed;

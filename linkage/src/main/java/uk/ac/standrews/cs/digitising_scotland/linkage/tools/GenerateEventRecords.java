@@ -3,9 +3,11 @@ package uk.ac.standrews.cs.digitising_scotland.linkage.tools;
 import uk.ac.standrews.cs.digitising_scotland.linkage.database.BirthRecordIterator;
 import uk.ac.standrews.cs.digitising_scotland.linkage.database.DeathRecordIterator;
 import uk.ac.standrews.cs.digitising_scotland.linkage.database.MarriageRecordIterator;
+import uk.ac.standrews.cs.digitising_scotland.linkage.database.RecordIterator;
 import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
 import uk.ac.standrews.cs.digitising_scotland.util.PercentageProgressIndicator;
 import uk.ac.standrews.cs.digitising_scotland.util.ProgressIndicator;
+import uk.ac.standrews.cs.digitising_scotland.util.TimeManipulation;
 import uk.ac.standrews.cs.nds.util.Diagnostic;
 
 import java.io.IOException;
@@ -37,31 +39,27 @@ public class GenerateEventRecords {
         // TODO use standard logging.
         // TODO output time elapsed.
 
+        final long start_time = System.currentTimeMillis();
+
         Diagnostic.traceNoSource("Generating birth records");
-        BirthRecordIterator birth_records = new BirthRecordIterator();
-        int number_of_birth_records = birth_records.size();
-        exportRecords(birth_records, number_of_birth_records, BIRTH_RECORDS_PATH);
+        exportRecords(new BirthRecordIterator(), BIRTH_RECORDS_PATH);
 
         Diagnostic.traceNoSource("Generating death records");
-        DeathRecordIterator death_records = new DeathRecordIterator();
-        int number_of_death_records = death_records.size();
-        exportRecords(death_records, number_of_death_records, DEATH_RECORDS_PATH);
+        exportRecords(new DeathRecordIterator(), DEATH_RECORDS_PATH);
 
         Diagnostic.traceNoSource("Generating marriage records");
-        MarriageRecordIterator marriage_records = new MarriageRecordIterator();
-        int number_of_marriage_records = marriage_records.size();
-        exportRecords(marriage_records, number_of_marriage_records, MARRIAGE_RECORDS_PATH);
+        exportRecords(new MarriageRecordIterator(), MARRIAGE_RECORDS_PATH);
 
-        birth_records.close();
+        TimeManipulation.reportElapsedTime(start_time);
     }
 
-    private static void exportRecords(final Iterable<?> records, int size, String records_path_string) throws IOException {
+    private static void exportRecords(final RecordIterator<?> records, String records_path_string) throws IOException {
 
         Path records_path = Paths.get(records_path_string);
         FileManipulation.createParentDirectoryIfDoesNotExist(records_path);
 
         ProgressIndicator progress_indicator = new PercentageProgressIndicator(10);
-        progress_indicator.setTotalSteps(size);
+        progress_indicator.setTotalSteps(records.size());
 
         try (final PrintWriter writer = new PrintWriter(Files.newBufferedWriter(records_path, FileManipulation.FILE_CHARSET))) {
 
@@ -72,5 +70,7 @@ public class GenerateEventRecords {
         }
 
         if (progress_indicator.getProportionComplete() < 1.0) progress_indicator.indicateProgress(1.0);
+
+        records.close();
     }
 }

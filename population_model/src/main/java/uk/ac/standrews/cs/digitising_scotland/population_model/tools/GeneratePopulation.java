@@ -6,6 +6,7 @@ import uk.ac.standrews.cs.digitising_scotland.population_model.generation.distri
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.CompactPopulation;
 import uk.ac.standrews.cs.digitising_scotland.population_model.transform.PopulationToDB;
 import uk.ac.standrews.cs.digitising_scotland.util.PercentageProgressIndicator;
+import uk.ac.standrews.cs.digitising_scotland.util.TimeManipulation;
 import uk.ac.standrews.cs.nds.util.CommandLineArgs;
 import uk.ac.standrews.cs.nds.util.Diagnostic;
 
@@ -29,11 +30,18 @@ public class GeneratePopulation {
 
     public static void main(final String[] args) throws IOException, InconsistentWeightException, SQLException, NegativeDeviationException, NegativeWeightException {
 
+        generatePopulation(args);
+    }
+
+    private static void generatePopulation(String[] args) throws IOException, InconsistentWeightException, SQLException, NegativeDeviationException, NegativeWeightException {
+
         final int batch_size = CommandLineArgs.extractIntFromCommandLineArgs(args, BATCH_SIZE_FLAG, DEFAULT_BATCH_SIZE);
         final int number_of_batches = CommandLineArgs.extractIntFromCommandLineArgs(args, NUMBER_OF_BATCHES_FLAG, DEFAULT_NUMBER_OF_BATCHES);
         final int number_of_progress_updates = CommandLineArgs.extractIntFromCommandLineArgs(args, NUMBER_OF_PROGRESS_UPDATES_FLAG, DEFAULT_NUMBER_OF_PROGRESS_UPDATES);
 
         if (batch_size > 0 && number_of_batches > 0 && number_of_progress_updates > 0) {
+
+            long start_time = System.currentTimeMillis();
 
             showInfo(batch_size, number_of_batches);
 
@@ -42,6 +50,7 @@ public class GeneratePopulation {
             }
 
             showInfo(batch_size, number_of_batches);
+            TimeManipulation.reportElapsedTime(start_time);
         }
         else usage();
     }
