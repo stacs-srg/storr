@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.digitising_scotland.linkage.events;
+package uk.ac.standrews.cs.digitising_scotland.linkage.event_records;
 
 /**
  * Created by graham on 13/05/2014.

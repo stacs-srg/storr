@@ -1,12 +1,12 @@
 package uk.ac.standrews.cs.digitising_scotland.population_model.tools;
 
+import uk.ac.standrews.cs.digitising_scotland.population_model.generation.distributions.InconsistentWeightException;
 import uk.ac.standrews.cs.digitising_scotland.population_model.generation.distributions.NegativeDeviationException;
 import uk.ac.standrews.cs.digitising_scotland.population_model.generation.distributions.NegativeWeightException;
-import uk.ac.standrews.cs.digitising_scotland.population_model.transform.ProgressIndicator;
-import uk.ac.standrews.cs.nds.util.CommandLineArgs;
-import uk.ac.standrews.cs.digitising_scotland.population_model.transform.PopulationToDB;
-import uk.ac.standrews.cs.digitising_scotland.population_model.generation.distributions.InconsistentWeightException;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.CompactPopulation;
+import uk.ac.standrews.cs.digitising_scotland.population_model.transform.PopulationToDB;
+import uk.ac.standrews.cs.digitising_scotland.util.PercentageProgressIndicator;
+import uk.ac.standrews.cs.nds.util.CommandLineArgs;
 import uk.ac.standrews.cs.nds.util.Diagnostic;
 
 import java.io.IOException;
@@ -55,21 +55,11 @@ public class GeneratePopulation {
 
         Diagnostic.traceNoSource("Generating batch " + (batch_number + 1));
 
-        final CompactPopulation population = new CompactPopulation(batch_size, getProgressIndicator(number_of_progress_updates));
-        final PopulationToDB exporter = new PopulationToDB(population, getProgressIndicator(number_of_progress_updates));
+        final CompactPopulation population = new CompactPopulation(batch_size, new PercentageProgressIndicator(number_of_progress_updates));
+        final PopulationToDB exporter = new PopulationToDB(population, new PercentageProgressIndicator(number_of_progress_updates));
 
         Diagnostic.traceNoSource("Exporting to database");
         exporter.export();
-    }
-
-    private static ProgressIndicator getProgressIndicator(int number_of_progress_updates) {
-
-        return new ProgressIndicator(number_of_progress_updates) {
-            @Override
-            public void indicateProgress(double proportion_complete) {
-                Diagnostic.traceNoSource(Math.round(proportion_complete * 100) + "%");
-            }
-        };
     }
 
     private static void usage() {

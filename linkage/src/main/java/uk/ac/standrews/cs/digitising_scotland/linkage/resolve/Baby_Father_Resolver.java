@@ -9,7 +9,7 @@ import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.*;
 import uk.ac.standrews.cs.digitising_scotland.linkage.EventImporter;
 import uk.ac.standrews.cs.digitising_scotland.linkage.RecordFormatException;
 import uk.ac.standrews.cs.digitising_scotland.linkage.blocking.BlockingBFF_BFL_MPF_MPL;
-import uk.ac.standrews.cs.digitising_scotland.linkage.events.DeathRecord;
+import uk.ac.standrews.cs.digitising_scotland.linkage.event_records.DeathRecord;
 import uk.ac.standrews.cs.digitising_scotland.linkage.labels.Birth;
 import uk.ac.standrews.cs.nds.util.ErrorHandling;
 

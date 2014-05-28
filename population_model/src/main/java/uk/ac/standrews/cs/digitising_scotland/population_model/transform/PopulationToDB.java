@@ -13,6 +13,7 @@ import uk.ac.standrews.cs.digitising_scotland.population_model.model.CompactPers
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.CompactPopulation;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IDFactory;
 import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
+import uk.ac.standrews.cs.digitising_scotland.util.ProgressIndicator;
 
 import java.io.IOException;
 import java.sql.Connection;

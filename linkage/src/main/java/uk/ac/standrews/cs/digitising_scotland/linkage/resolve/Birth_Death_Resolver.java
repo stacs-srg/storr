@@ -13,7 +13,7 @@ import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IReposi
 import uk.ac.standrews.cs.digitising_scotland.linkage.EventImporter;
 import uk.ac.standrews.cs.digitising_scotland.linkage.RecordFormatException;
 import uk.ac.standrews.cs.digitising_scotland.linkage.blocking.BlockingPFPLMFFFoverBDMrecords;
-import uk.ac.standrews.cs.digitising_scotland.linkage.events.DeathRecord;
+import uk.ac.standrews.cs.digitising_scotland.linkage.event_records.DeathRecord;
 import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
 import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
 import uk.ac.standrews.cs.nds.util.ErrorHandling;

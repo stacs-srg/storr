@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.digitising_scotland.population_model.transform;
+package uk.ac.standrews.cs.digitising_scotland.util;
 
 /**
  * Created by graham on 14/05/2014.
@@ -10,6 +10,8 @@ public abstract class ProgressIndicator {
     private int total_steps;
     private int number_of_steps_completed;
     private int number_of_steps_per_update;
+
+    private double proportion_complete;
 
     public ProgressIndicator(int number_of_updates) {
 
@@ -32,8 +34,15 @@ public abstract class ProgressIndicator {
 
         if (number_of_steps_since_last_update >= number_of_steps_per_update) {
 
-            indicateProgress((double)number_of_steps_completed / (double)total_steps);
+            proportion_complete = (double) number_of_steps_completed / (double) total_steps;
             number_of_steps_since_last_update = 0;
+
+            indicateProgress(proportion_complete);
         }
+    }
+
+    public double getProportionComplete() {
+
+        return proportion_complete;
     }
 }

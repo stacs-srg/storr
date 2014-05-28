@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.digitising_scotland.linkage.events;
+package uk.ac.standrews.cs.digitising_scotland.linkage.event_records;
 
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.DBBackedPartnership;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.Person;

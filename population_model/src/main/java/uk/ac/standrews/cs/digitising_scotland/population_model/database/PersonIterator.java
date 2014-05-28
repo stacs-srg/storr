@@ -21,13 +21,14 @@ public class PersonIterator implements Iterator<Person>, Iterable<Person>, AutoC
 
     private final ResultSet resultSet;
     private Connection connection;
+    private Statement statement;
     private boolean empty;
 
     public PersonIterator() throws SQLException {
 
         connection = new DBConnector(PopulationProperties.DATABASE_NAME).createConnection();
+        statement = connection.createStatement();
 
-        final Statement statement = connection.createStatement();
         resultSet = statement.executeQuery("SELECT * FROM " + PopulationProperties.DATABASE_NAME + "." + PopulationProperties.PERSON_TABLE_NAME);
 
         empty = !resultSet.first();
@@ -75,5 +76,14 @@ public class PersonIterator implements Iterator<Person>, Iterable<Person>, AutoC
     public void remove() {
 
         throw new UnsupportedOperationException("remove");
+    }
+
+    public int size() throws SQLException {
+
+        Statement statement = connection.createStatement();
+        ResultSet size_result = statement.executeQuery("SELECT COUNT(*) FROM " + PopulationProperties.DATABASE_NAME + "." + PopulationProperties.PERSON_TABLE_NAME);
+
+        size_result.first();
+        return size_result.getInt(1);
     }
 }

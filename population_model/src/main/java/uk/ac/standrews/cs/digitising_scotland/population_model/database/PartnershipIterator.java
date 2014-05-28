@@ -21,13 +21,14 @@ public class PartnershipIterator implements Iterator<DBBackedPartnership>, Itera
 
     private final ResultSet result_set;
     private Connection connection;
+    private Statement statement;
     private boolean empty;
 
     public PartnershipIterator() throws SQLException {
 
         connection = new DBConnector(PopulationProperties.DATABASE_NAME).createConnection();
+        statement = connection.createStatement();
 
-        final Statement statement = connection.createStatement();
         result_set = statement.executeQuery(("SELECT * FROM " + PopulationProperties.DATABASE_NAME + "." + PopulationProperties.PARTNERSHIP_TABLE_NAME));
 
         empty = !result_set.first();
@@ -77,4 +78,12 @@ public class PartnershipIterator implements Iterator<DBBackedPartnership>, Itera
         throw new UnsupportedOperationException("remove");
     }
 
+    public int size() throws SQLException {
+
+        Statement statement = connection.createStatement();
+        ResultSet size_result = statement.executeQuery("SELECT COUNT(*) FROM " + PopulationProperties.DATABASE_NAME + "." + PopulationProperties.PARTNERSHIP_TABLE_NAME);
+
+        size_result.first();
+        return size_result.getInt(1);
+    }
 }
