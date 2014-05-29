@@ -80,7 +80,7 @@ public class Person {
 
     public Date getBirthDate() {
 
-        return birth_date;
+        return (Date)birth_date.clone();
     }
 
     public void setBirthDate(final Date birth_date) {
@@ -90,7 +90,7 @@ public class Person {
 
     public Date getDeathDate() {
 
-        return death_date;
+        return (Date)death_date.clone();
     }
 
     public void setDeathDate(final Date death_date) {

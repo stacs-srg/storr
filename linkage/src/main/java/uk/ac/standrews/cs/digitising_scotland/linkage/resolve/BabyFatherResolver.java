@@ -24,13 +24,13 @@ import java.util.Date;
  * <p/>
  * Created by al on 11/05/2014.
  */
-public class Baby_Father_Resolver {
+public class BabyFatherResolver {
 
-    private static String input_repo_path = "../digitising_scotland_linkage/src/test/resources/inputs";
-    private static String blocked_repo_path = "../digitising_scotland_linkage/src/test/resources/blocked";
-    private static String matches_repo_path = "../digitising_scotland_linkage/src/test/resources/BFF_BFL_MPF_MPL";
+    private static String input_repo_path = "src/test/resources/inputs";
+    private static String blocked_repo_path = "src/test/resources/blocked";
+    private static String matches_repo_path = "src/test/resources/BFF_BFL_MPF_MPL";
 
-    private static String source_base_path = "../digitising_scotland_linkage/src/test/resources/BDMSet1";
+    private static String source_base_path = "src/test/resources/BDMSet1";
     private static String births_name = "birth_records";
     private static String matches_name = "baby_father";
 
@@ -43,13 +43,10 @@ public class Baby_Father_Resolver {
     // input buckets containing BDM records in LXP format
 
     private IBucket births;
-    private IBucket deaths;
-    private IBucket marriages;
     private IBucket matches;
-    private IBucket results;
     private int matched_id = 0;
 
-    public Baby_Father_Resolver() throws RepositoryException {
+    public BabyFatherResolver() throws RepositoryException {
 
         input_repo = new Repository(input_repo_path);
         blocked_repo = new Repository(blocked_repo_path);
@@ -99,7 +96,7 @@ public class Baby_Father_Resolver {
 
     public static void main(String[] args) throws Exception {
 
-        Baby_Father_Resolver r = new Baby_Father_Resolver();
+        BabyFatherResolver r = new BabyFatherResolver();
         r.match();
     }
 

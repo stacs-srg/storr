@@ -10,51 +10,40 @@ import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IReposi
 import uk.ac.standrews.cs.digitising_scotland.linkage.labels.CommonLabels;
 import uk.ac.standrews.cs.nds.util.ErrorHandling;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * This class blocks based on persons' first name, last name and first name of parents over streams of BDM Marriage records.
  * Created by al on 02/05/2014. x
  */
 public class BlockingPFPLMFFFoverBDMrecords extends Blocker {
 
-    private final IRepository output_repo;
-    private Map<String, IBucket> names = new HashMap<>();
-
     public BlockingPFPLMFFFoverBDMrecords(IBucket birthsBucket, IBucket deathsBucket, IBucket marriagesBucket, IRepository output_repo) throws RepositoryException {
 
-        super(new TailToTailMergedStream(new ILXPInputStream[]{birthsBucket.getInputStream(), deathsBucket.getInputStream()}),output_repo);
-        this.output_repo = output_repo;
+        super(new TailToTailMergedStream(new ILXPInputStream[]{birthsBucket.getInputStream(), deathsBucket.getInputStream()}), output_repo);
     }
 
     @Override
     public String[] determineBlockedBucketNamesForRecord(ILXP record) {
-        if( record.containsKey( "TYPE" ) && ( record.get("TYPE").equals("birth") || record.get("TYPE").equals("death") ) ) {
+        if (record.containsKey("TYPE") && (record.get("TYPE").equals("birth") || record.get("TYPE").equals("death"))) {
 
             // Note will concat nulls into key if any fields are null - working hypothesis - this doesn't matter.
-            String key = record.get( CommonLabels.FORENAME );
-            key = key + record.get( CommonLabels.SURNAME );
-            key = key + record.get( CommonLabels.FATHERS_FORENAME );
-            key = key + record.get( CommonLabels.MOTHERS_FORENAME );
-            key = remove_nasties( key );
-            return new String[]{ key };
+            String key = record.get(CommonLabels.FORENAME);
+            key = key + record.get(CommonLabels.SURNAME);
+            key = key + record.get(CommonLabels.FATHERS_FORENAME);
+            key = key + record.get(CommonLabels.MOTHERS_FORENAME);
+            key = removeNasties(key);
+            return new String[]{key};
         } else {
-            ErrorHandling.error( "Record with unknown type in input Stream - ignoring" );
+            ErrorHandling.error("Record with unknown type in input Stream - ignoring");
             return null;
         }
-
     }
 
     /**
-     *
      * @param key - a String key to be made into an acceptable bucket name
      * @return the cleaned up String
      */
-    private String remove_nasties(String key) {
+    private String removeNasties(String key) {
         return key.replace("/", "");
     }
-
-
 }
 

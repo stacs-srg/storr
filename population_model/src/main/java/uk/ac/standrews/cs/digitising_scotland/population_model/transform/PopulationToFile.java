@@ -23,7 +23,6 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
@@ -44,7 +43,6 @@ public abstract class PopulationToFile {
     private final FemaleFirstNameDistribution female_first_name_distribution;
     private final SurnameDistribution surname_distribution;
 
-    protected Map<Integer, CompactPartnership> id_to_family_map;
     protected final Set<CompactPartnership> processed_partnerships;
     protected final NumberFormat formatter;
 
@@ -52,8 +50,6 @@ public abstract class PopulationToFile {
     protected abstract void outputIndividual(PrintWriter writer, int index, CompactPerson compact_person, Person person);
     protected abstract void outputFamilies(PrintWriter writer);
     protected abstract void outputTrailer(PrintWriter writer);
-
-    // -------------------------------------------------------------------------------------------------------
 
     /**
      * Initialises the exporter. This includes potentially expensive scanning of the population graph.
@@ -81,8 +77,6 @@ public abstract class PopulationToFile {
         formatter.setGroupingUsed(false);
     }
 
-    // -------------------------------------------------------------------------------------------------------
-
     /**
      * Exports representation of the population to file.
      */
@@ -105,6 +99,7 @@ public abstract class PopulationToFile {
     protected void outputIndividuals(PrintWriter writer) {
 
         final int index = 0;
+
         for (final CompactPerson p : population) {
             if (!p.isMarked()) { // Don't put out people we have already processed
 

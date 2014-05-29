@@ -30,13 +30,13 @@ import java.util.Date;
  * <p/>
  * Created by al on 11/05/2014.
  */
-public class Birth_Death_Resolver {
+public class BirthDeathResolver {
 
-    private static String input_repo_path = "../digitising_scotland_linkage/src/test/resources/inputs";
-    private static String blocked_repo_path = "../digitising_scotland_linkage/src/test/resources/blocked";
-    private static String matches_repo_path = "../digitising_scotland_linkage/src/test/resources/PFPLMFFF";
+    private static String input_repo_path = "src/test/resources/inputs";
+    private static String blocked_repo_path = "src/test/resources/blocked";
+    private static String matches_repo_path = "src/test/resources/PFPLMFFF";
 
-    private static String source_base_path = "../digitising_scotland_linkage/src/test/resources/BDMSet1";;
+    private static String source_base_path = "src/test/resources/BDMSet1";;
     private static String births_name = "birth_records";
     private static String deaths_name = "death_records";
     private static String marriages_name = "marriage_records";
@@ -44,7 +44,6 @@ public class Birth_Death_Resolver {
 
     private static String births_source_path = source_base_path + "/" + births_name + ".txt";
     private static String deaths_source_path = source_base_path + "/" + deaths_name + ".txt";
-    private static String marriages_source_path = source_base_path + "/" + marriages_name + ".txt";
 
     private final IRepository input_repo;
     private final IRepository blocked_repo;
@@ -56,10 +55,10 @@ public class Birth_Death_Resolver {
     private IBucket deaths;
     private IBucket marriages;
     private IBucket matches;
-    private IBucket results;
+
     private int matched_id = 0;
 
-    public Birth_Death_Resolver() throws RepositoryException {
+    public BirthDeathResolver() throws RepositoryException {
 
         input_repo = new Repository(input_repo_path);
         blocked_repo = new Repository(blocked_repo_path);
@@ -96,7 +95,6 @@ public class Birth_Death_Resolver {
 
         importer.importBirths(births, births_source_path);
         importer.importDeaths(deaths, deaths_source_path);
-        //    importer.importMarriages(marriages, marriages_source_path);
 
         BlockingPFPLMFFFoverBDMrecords blocker = new BlockingPFPLMFFFoverBDMrecords(births, deaths, marriages, blocked_repo);
 
@@ -117,7 +115,7 @@ public class Birth_Death_Resolver {
 
        public static void main(String[] args) throws Exception {
 
-        Birth_Death_Resolver r = new Birth_Death_Resolver();
+        BirthDeathResolver r = new BirthDeathResolver();
         r.match();
     }
 
@@ -224,6 +222,7 @@ public class Birth_Death_Resolver {
         }
 
         private Date fieldsToDate(String year_string, String month_string, String day_string) throws RecordFormatException {
+
             Calendar cal = Calendar.getInstance();
             cal.clear();
             try {
@@ -237,8 +236,5 @@ public class Birth_Death_Resolver {
                 throw new RecordFormatException( "error in date" );
             }
         }
-
-
     }
-
 }

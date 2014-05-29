@@ -17,6 +17,7 @@ import uk.ac.standrews.cs.digitising_scotland.util.ProgressIndicator;
 
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -153,19 +154,20 @@ public class PopulationToDB implements AutoCloseable {
         compact_person.setMarked(true);
 
         // TODO factor out
-        final PreparedStatement statement = connection.prepareStatement("INSERT INTO " + PopulationProperties.PERSON_TABLE_NAME + " VALUES(?,?,?,?,?,?,?,?,?);");
+        try (final PreparedStatement statement = connection.prepareStatement("INSERT INTO " + PopulationProperties.PERSON_TABLE_NAME + " VALUES(?,?,?,?,?,?,?,?,?);")) {
 
-        statement.setInt(1, compact_person.getId());
-        statement.setString(2, compact_person.getSex());
-        statement.setString(3, compact_person.isMale() ? male_first_name_distribution.getSample() : female_first_name_distribution.getSample());
-        statement.setString(4, surname);
-        statement.setDate(5, DateManipulation.daysToSQLDate(compact_person.getDateOfBirth()));
-        statement.setDate(6, compact_person.getDateOfDeath() != -1 ? DateManipulation.daysToSQLDate(compact_person.getDateOfDeath()) : null);
-        statement.setString(7, occupation_distribution.getSample());
-        statement.setString(8, compact_person.getDateOfDeath() != -1 ? cause_of_death_distribution.getSample() : null);
-        statement.setString(9, "address");
+            statement.setInt(1, compact_person.getId());
+            statement.setString(2, compact_person.getSex());
+            statement.setString(3, compact_person.isMale() ? male_first_name_distribution.getSample() : female_first_name_distribution.getSample());
+            statement.setString(4, surname);
+            statement.setDate(5, DateManipulation.daysToSQLDate(compact_person.getDateOfBirth()));
+            statement.setDate(6, compact_person.getDateOfDeath() != -1 ? DateManipulation.daysToSQLDate(compact_person.getDateOfDeath()) : null);
+            statement.setString(7, occupation_distribution.getSample());
+            statement.setString(8, compact_person.getDateOfDeath() != -1 ? cause_of_death_distribution.getSample() : null);
+            statement.setString(9, "address");
 
-        statement.executeUpdate();
+            statement.executeUpdate();
+        }
     }
 
     protected void outputFamilies() throws SQLException {
@@ -192,7 +194,7 @@ public class PopulationToDB implements AutoCloseable {
         partnership.setMarked();
 
         int partnership_id = partnership.getId();
-        java.sql.Date marriage_date = DateManipulation.daysToSQLDate(partnership.getMarriageDate());
+        Date marriage_date = DateManipulation.daysToSQLDate(partnership.getMarriageDate());
         int partner1_id = population.getPerson(partnership.getPartner1()).getId();
         int partner2_id = population.getPerson(partnership.getPartner2()).getId();
 
@@ -227,27 +229,33 @@ public class PopulationToDB implements AutoCloseable {
     private void insertPartnership(final int familyID, final java.sql.Date marriageDate) throws SQLException {
 
         // TODO factor out prepared statement
-        final PreparedStatement statement = connection.prepareStatement("INSERT INTO " + PopulationProperties.PARTNERSHIP_TABLE_NAME + " VALUES( ?,? );");
-        statement.setInt(1, familyID);
-        statement.setDate(2, marriageDate);
-        statement.executeUpdate();
+        try (final PreparedStatement statement = connection.prepareStatement("INSERT INTO " + PopulationProperties.PARTNERSHIP_TABLE_NAME + " VALUES( ?,? );")) {
+
+            statement.setInt(1, familyID);
+            statement.setDate(2, marriageDate);
+            statement.executeUpdate();
+        }
     }
 
     private void insertPartner(final int familyID, final int partnerID) throws SQLException {
 
         // TODO factor out prepared statement
-        final PreparedStatement statement = connection.prepareStatement("INSERT INTO " + PopulationProperties.PARTNERSHIP_PARTNER_TABLE_NAME + " VALUES( ?,? );");
-        statement.setInt(1, partnerID);
-        statement.setInt(2, familyID);
-        statement.executeUpdate();
+        try (final PreparedStatement statement = connection.prepareStatement("INSERT INTO " + PopulationProperties.PARTNERSHIP_PARTNER_TABLE_NAME + " VALUES( ?,? );")) {
+
+            statement.setInt(1, partnerID);
+            statement.setInt(2, familyID);
+            statement.executeUpdate();
+        }
     }
 
     private void insertChild(final int familyID, final Integer childID) throws SQLException {
 
         // TODO factor out prepared statement
-        final PreparedStatement statement = connection.prepareStatement("INSERT INTO " + PopulationProperties.PARTNERSHIP_CHILD_TABLE_NAME + " VALUES( ?,? );");
-        statement.setInt(1, childID);
-        statement.setInt(2, familyID);
-        statement.executeUpdate();
+        try (final PreparedStatement statement = connection.prepareStatement("INSERT INTO " + PopulationProperties.PARTNERSHIP_CHILD_TABLE_NAME + " VALUES( ?,? );")) {
+
+            statement.setInt(1, childID);
+            statement.setInt(2, familyID);
+            statement.executeUpdate();
+        }
     }
 }
