@@ -27,7 +27,7 @@ public class WeightedDistributionTest {
 
     public WeightedDistributionTest(final int[] weights) {
 
-        this.weights = weights;
+        this.weights = Arrays.copyOf(weights, weights.length);
     }
 
     @Test

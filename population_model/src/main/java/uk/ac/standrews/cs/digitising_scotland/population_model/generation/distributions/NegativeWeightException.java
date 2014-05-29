@@ -8,11 +8,6 @@ package uk.ac.standrews.cs.digitising_scotland.population_model.generation.distr
 public class NegativeWeightException extends Exception {
 
     /**
-     * 
-     */
-    private static final long serialVersionUID = 1393348057995942052L;
-
-    /**
      * Creates an exception.
      * @param message the message
      */
@@ -20,5 +15,4 @@ public class NegativeWeightException extends Exception {
 
         super(message);
     }
-
 }

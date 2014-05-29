@@ -18,6 +18,7 @@ package uk.ac.standrews.cs.digitising_scotland.util;
  * See LICENSE.txt for details.
  */
 
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
@@ -57,7 +58,7 @@ public class ArrayIterator<ElementType> implements Iterator<ElementType> {
      */
     public ArrayIterator(final ElementType[] array) {
 
-        this.array = array;
+        this.array = Arrays.copyOf(array, array.length);
     }
 
     /**

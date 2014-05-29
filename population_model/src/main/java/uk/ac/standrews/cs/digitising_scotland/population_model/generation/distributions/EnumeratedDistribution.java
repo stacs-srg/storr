@@ -1,6 +1,7 @@
 package uk.ac.standrews.cs.digitising_scotland.population_model.generation.distributions;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Map;
@@ -36,9 +37,10 @@ public class EnumeratedDistribution implements Distribution<String> {
         double cumulative_probability = 0.0;
         int i = 0;
 
-        for (String item : item_probabilities.keySet()) {
-            cumulative_probability += item_probabilities.get(item);
-            items[i++] = new StringWithCumulativeProbability(item, cumulative_probability);
+        for (Map.Entry<String, Double> entry : item_probabilities.entrySet()) {
+
+            cumulative_probability += entry.getValue();
+            items[i++] = new StringWithCumulativeProbability(entry.getKey(), cumulative_probability);
         }
 
         if (Math.abs(cumulative_probability - 1) > ALLOWABLE_TOTAL_WEIGHT_DISCREPANCY) {
@@ -60,7 +62,7 @@ public class EnumeratedDistribution implements Distribution<String> {
         return items[sample_index].item;
     }
 
-    private static class ItemComparator implements Comparator<StringWithCumulativeProbability> {
+    private static class ItemComparator implements Comparator<StringWithCumulativeProbability>, Serializable {
 
         @Override
         public int compare(StringWithCumulativeProbability o1, StringWithCumulativeProbability o2) {

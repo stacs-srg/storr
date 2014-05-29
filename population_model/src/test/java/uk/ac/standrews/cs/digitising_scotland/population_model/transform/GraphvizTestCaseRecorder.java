@@ -1,37 +1,34 @@
-package uk.ac.standrews.cs.digitising_scotland.population_model;
+package uk.ac.standrews.cs.digitising_scotland.population_model.transform;
 
 import uk.ac.standrews.cs.digitising_scotland.population_model.generation.distributions.InconsistentWeightException;
 import uk.ac.standrews.cs.digitising_scotland.population_model.generation.distributions.NegativeDeviationException;
 import uk.ac.standrews.cs.digitising_scotland.population_model.generation.distributions.NegativeWeightException;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.CompactPopulation;
-import uk.ac.standrews.cs.digitising_scotland.population_model.transform.PopulationToFile;
-import uk.ac.standrews.cs.digitising_scotland.population_model.transform.PopulationToGEDCOM;
 
 import java.io.IOException;
 
 /**
- * Generates test cases for GEDCOM export.
+ * Generates test cases for Graphviz export.
  * 
  * @author Graham Kirby (graham.kirby@st-andrews.ac.uk)
  */
-public class GEDCOMTestCaseRecorder extends AbstractTestCaseRecorder {
+public class GraphvizTestCaseRecorder extends AbstractTestCaseRecorder {
 
     public static void main(final String[] args) throws IOException, InconsistentWeightException, NegativeDeviationException, NegativeWeightException {
 
-        final GEDCOMTestCaseRecorder recorder = new GEDCOMTestCaseRecorder();
-
+        final GraphvizTestCaseRecorder recorder = new GraphvizTestCaseRecorder();
         recorder.recordTestCase();
     }
 
     @Override
     protected PopulationToFile getExporter(final CompactPopulation population, final String path_string) throws IOException, InconsistentWeightException {
 
-        return new PopulationToGEDCOM(population, path_string);
+        return new PopulationToGraphviz(population, path_string);
     }
 
     @Override
     protected String getIntendedOutputFileSuffix() {
 
-        return PopulationToGEDCOMTest.INTENDED_SUFFIX;
+        return PopulationToGraphvizTest.INTENDED_SUFFIX;
     }
 }

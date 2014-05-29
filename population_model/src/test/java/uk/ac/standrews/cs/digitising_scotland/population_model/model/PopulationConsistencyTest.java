@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.digitising_scotland.population_model;
+package uk.ac.standrews.cs.digitising_scotland.population_model.model;
 
 import org.junit.Before;
 import org.junit.Test;

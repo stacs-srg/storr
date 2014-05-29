@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.digitising_scotland.population_model;
+package uk.ac.standrews.cs.digitising_scotland.population_model.generation.analytic;
 
 import uk.ac.standrews.cs.digitising_scotland.population_model.generation.analytic.ChildrenAnalytics;
 import uk.ac.standrews.cs.digitising_scotland.population_model.generation.analytic.DeathAnalytics;

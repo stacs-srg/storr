@@ -30,7 +30,7 @@ public class FileBasedEnumeratedDistribution extends EnumeratedDistribution {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(getClass().getClassLoader().getResourceAsStream(path_string), FileManipulation.FILE_CHARSET))) {
 
             String line = reader.readLine();
-            if (line.startsWith(FileDistributionGenerator.COMMENT_INDICATOR)) line = reader.readLine();
+            if (line != null && line.startsWith(FileDistributionGenerator.COMMENT_INDICATOR)) line = reader.readLine();
 
             try {
                 while (line != null) {
