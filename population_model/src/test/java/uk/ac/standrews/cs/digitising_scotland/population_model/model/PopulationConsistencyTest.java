@@ -7,9 +7,6 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 import uk.ac.standrews.cs.digitising_scotland.population_model.generation.distributions.NegativeDeviationException;
 import uk.ac.standrews.cs.digitising_scotland.population_model.generation.distributions.NegativeWeightException;
-import uk.ac.standrews.cs.digitising_scotland.population_model.model.CompactPartnership;
-import uk.ac.standrews.cs.digitising_scotland.population_model.model.CompactPerson;
-import uk.ac.standrews.cs.digitising_scotland.population_model.model.CompactPopulation;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -27,8 +24,6 @@ import static org.junit.Assert.*;
  */
 @RunWith(Parameterized.class)
 public class PopulationConsistencyTest {
-
-    private static final long SEED = 534534524234234L;
 
     private CompactPopulation population;
     private final int population_size;

@@ -13,7 +13,7 @@ import java.util.Set;
 public class DBBackedPartnership {
 
     private final Set<Person> partners = new HashSet<>();
-    private Date startDate = null;
+    private Date start_date = null;
     private DBBackedPerson groom = null;
     private DBBackedPerson bride = null;
     private int id;
@@ -53,7 +53,7 @@ public class DBBackedPartnership {
         final ResultSet marriage_result_set = get_marriage_statement.executeQuery();
 
         if (marriage_result_set.first()) {
-            startDate = marriage_result_set.getDate("date");
+            start_date = marriage_result_set.getDate("date");
         }
     }
 
@@ -84,7 +84,7 @@ public class DBBackedPartnership {
 
     public Date getStartDate() {
 
-        return startDate;
+        return (Date)start_date.clone();
     }
 
     public Date getEndDate() {

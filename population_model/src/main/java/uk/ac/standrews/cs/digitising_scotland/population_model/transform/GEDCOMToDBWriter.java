@@ -74,15 +74,12 @@ public class GEDCOMToDBWriter implements AutoCloseable {
         connection.close();
     }
 
-    // -------------------------------------------------------------------------------------------------------
-
     private void importFamily(final Family f) throws ParseException, SQLException {
 
         final int familyXref = Integer.valueOf(stripAtSymbols(f.xref));
         final int husbandXref = Integer.valueOf(stripAtSymbols(f.husband.xref));
         final int wifeXref = Integer.valueOf(stripAtSymbols(f.wife.xref));
 
-        // FIND the marriage date
         String marriageDateString = "";
         for (final FamilyEvent event : f.events) {
             if (event.type == FamilyEventType.MARRIAGE) {
@@ -102,19 +99,20 @@ public class GEDCOMToDBWriter implements AutoCloseable {
 
     private void importPerson(final Person fp) throws SQLException {
 
-        final PreparedStatement statement = connection.prepareStatement("INSERT INTO " + PopulationProperties.PERSON_TABLE_NAME + " VALUES( ?,?,?,?,?,?,?,?,? );");
+        try (final PreparedStatement statement = connection.prepareStatement("INSERT INTO " + PopulationProperties.PERSON_TABLE_NAME + " VALUES( ?,?,?,?,?,?,?,?,? );")) {
 
-        statement.setInt(1, fp.getID());
-        statement.setString(2, String.valueOf(fp.getGender()));
-        statement.setString(3, fp.getFirstName());
-        statement.setString(4, fp.getSurname());
-        statement.setDate(5, fp.getBirthDate());
-        statement.setDate(6, fp.getDeathDate());
-        statement.setString(7, fp.getOccupation());
-        statement.setString(8, fp.getCauseOfDeath());
-        statement.setString(9, fp.getAddress());
+            statement.setInt(1, fp.getID());
+            statement.setString(2, String.valueOf(fp.getGender()));
+            statement.setString(3, fp.getFirstName());
+            statement.setString(4, fp.getSurname());
+            statement.setDate(5, fp.getBirthDate());
+            statement.setDate(6, fp.getDeathDate());
+            statement.setString(7, fp.getOccupation());
+            statement.setString(8, fp.getCauseOfDeath());
+            statement.setString(9, fp.getAddress());
 
-        statement.executeUpdate();
+            statement.executeUpdate();
+        }
     }
 
     private void importFamily(final int familyID, final java.sql.Date marriageDate, final int husbandID, final int wifeID, final List<Integer> childIDs) throws SQLException {
@@ -131,28 +129,34 @@ public class GEDCOMToDBWriter implements AutoCloseable {
     private void insertPartnership(final int familyID, final java.sql.Date marriageDate) throws SQLException {
 
         // TODO factor out prepared statement
-        final PreparedStatement statement = connection.prepareStatement("INSERT INTO " + PopulationProperties.PARTNERSHIP_TABLE_NAME + " VALUES( ?,? );");
-        statement.setInt(1, familyID);
-        statement.setDate(2, marriageDate);
-        statement.executeUpdate();
+        try (final PreparedStatement statement = connection.prepareStatement("INSERT INTO " + PopulationProperties.PARTNERSHIP_TABLE_NAME + " VALUES( ?,? );")) {
+
+            statement.setInt(1, familyID);
+            statement.setDate(2, marriageDate);
+            statement.executeUpdate();
+        }
     }
 
     private void insertPartner(final int familyID, final int partnerID) throws SQLException {
 
         // TODO factor out prepared statement
-        final PreparedStatement statement = connection.prepareStatement("INSERT INTO " + PopulationProperties.PARTNERSHIP_PARTNER_TABLE_NAME + " VALUES( ?,? );");
-        statement.setInt(1, partnerID);
-        statement.setInt(2, familyID);
-        statement.executeUpdate();
+        try (final PreparedStatement statement = connection.prepareStatement("INSERT INTO " + PopulationProperties.PARTNERSHIP_PARTNER_TABLE_NAME + " VALUES( ?,? );")) {
+
+            statement.setInt(1, partnerID);
+            statement.setInt(2, familyID);
+            statement.executeUpdate();
+        }
     }
 
     private void insertChild(final int familyID, final Integer childID) throws SQLException {
 
         // TODO factor out prepared statement
-        final PreparedStatement statement = connection.prepareStatement("INSERT INTO " + PopulationProperties.PARTNERSHIP_CHILD_TABLE_NAME + " VALUES( ?,? );");
-        statement.setInt(1, childID);
-        statement.setInt(2, familyID);
-        statement.executeUpdate();
+        try (final PreparedStatement statement = connection.prepareStatement("INSERT INTO " + PopulationProperties.PARTNERSHIP_CHILD_TABLE_NAME + " VALUES( ?,? );")) {
+
+            statement.setInt(1, childID);
+            statement.setInt(2, familyID);
+            statement.executeUpdate();
+        }
     }
 
     private String stripAtSymbols(final String reference) {

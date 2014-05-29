@@ -39,8 +39,8 @@ public class Person {
         this.first_name = first_name;
         this.surname = surname;
         this.id = id;
-        this.birth_date = birth_date;
-        this.death_date = death_date;
+        this.birth_date = (Date)birth_date.clone();
+        this.death_date = (Date)death_date.clone();
         this.occupation = occupation;
         this.cause_of_death = cause_of_death;
         this.address = address;
@@ -73,9 +73,9 @@ public class Person {
         this.surname = surname;
     }
 
-    public void setFirstName(final String firstName) {
+    public void setFirstName(final String first_name) {
 
-        this.first_name = firstName;
+        this.first_name = first_name;
     }
 
     public Date getBirthDate() {
@@ -85,7 +85,7 @@ public class Person {
 
     public void setBirthDate(final Date birth_date) {
 
-        this.birth_date = birth_date;
+        this.birth_date = (Date)birth_date.clone();
     }
 
     public Date getDeathDate() {
@@ -95,7 +95,7 @@ public class Person {
 
     public void setDeathDate(final Date death_date) {
 
-        this.death_date = death_date;
+        this.death_date = (Date)death_date.clone();
     }
 
     public String getOccupation() {

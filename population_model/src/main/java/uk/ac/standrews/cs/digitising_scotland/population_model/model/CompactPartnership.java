@@ -149,6 +149,12 @@ public class CompactPartnership implements Comparable<CompactPartnership> {
         return compareTo((CompactPartnership) o) == 0;
     }
 
+    @Override
+    public int hashCode() {
+
+        return id;
+    }
+
     private static void addPartnership(final CompactPerson person, final CompactPartnership partnership) {
 
         if (person.getPartnerships() == null) {
