@@ -23,7 +23,7 @@ public abstract class AbstractPairwiseLinker implements IPairWiseLinker {
     }
 
     @Override
-    public void pairwise_link() {
+    public void pairwiseLink() {
         List<ILXP> records = new ArrayList<>();
 
         for (ILXP record : input) {
@@ -43,7 +43,7 @@ public abstract class AbstractPairwiseLinker implements IPairWiseLinker {
 
         for (Pair pair : all_pairs(records)) {
             if( compare(pair) ) {
-                add_to_results( pair, output);
+                addToResults(pair, output);
             }
         }
     }
@@ -71,5 +71,5 @@ public abstract class AbstractPairwiseLinker implements IPairWiseLinker {
      * Adds a matched result to a result collection
      * @param pair
      */
-    public abstract void add_to_results( Pair pair, ILXPOutputStream results );
+    public abstract void addToResults(Pair pair, ILXPOutputStream results);
 }

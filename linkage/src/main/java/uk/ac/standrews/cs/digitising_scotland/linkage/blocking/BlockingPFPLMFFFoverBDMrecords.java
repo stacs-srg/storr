@@ -16,13 +16,14 @@ import uk.ac.standrews.cs.nds.util.ErrorHandling;
  */
 public class BlockingPFPLMFFFoverBDMrecords extends Blocker {
 
-    public BlockingPFPLMFFFoverBDMrecords(IBucket birthsBucket, IBucket deathsBucket, IBucket marriagesBucket, IRepository output_repo) throws RepositoryException {
+    public BlockingPFPLMFFFoverBDMrecords(IBucket birthsBucket, IBucket deathsBucket, IRepository output_repo) throws RepositoryException {
 
         super(new TailToTailMergedStream(new ILXPInputStream[]{birthsBucket.getInputStream(), deathsBucket.getInputStream()}), output_repo);
     }
 
     @Override
     public String[] determineBlockedBucketNamesForRecord(ILXP record) {
+
         if (record.containsKey("TYPE") && (record.get("TYPE").equals("birth") || record.get("TYPE").equals("death"))) {
 
             // Note will concat nulls into key if any fields are null - working hypothesis - this doesn't matter.

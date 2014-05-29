@@ -29,7 +29,7 @@ public class PartnershipIterator implements Iterator<DBBackedPartnership>, Itera
         connection = new DBConnector(PopulationProperties.DATABASE_NAME).createConnection();
         statement = connection.createStatement();
 
-        result_set = statement.executeQuery(("SELECT * FROM " + PopulationProperties.DATABASE_NAME + "." + PopulationProperties.PARTNERSHIP_TABLE_NAME));
+        result_set = statement.executeQuery("SELECT * FROM " + PopulationProperties.DATABASE_NAME + "." + PopulationProperties.PARTNERSHIP_TABLE_NAME);
 
         empty = !result_set.first();
     }

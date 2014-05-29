@@ -16,12 +16,12 @@ import java.util.Set;
 
 /**
  * Created by al on 23/05/2014.
- *
+ * <p/>
  * Provides an index over the Records stored in the Bucket
  */
 public class IndexedBucket extends Bucket implements IIndexedBucket {
 
-    public HashMap<String,IIndex> indexes = new HashMap<String,IIndex>();
+    public HashMap<String, IIndex> indexes = new HashMap<String, IIndex>();
     private static String INDEX = "INDEX";
     private static String index_dir_name = "INDICES";
 
@@ -40,16 +40,14 @@ public class IndexedBucket extends Bucket implements IIndexedBucket {
     private void init_indexes() throws Exception {
         String dirname = dirPath();
         // Ensure that the index directory exists
-        File index = new File(dirname + File.separator + index_dir_name );
-        if (!index.isDirectory()) {
-            if( ! index.mkdir() ) {
-                throw new Exception("Index Directory: " + dirname + " does not exist and cannot create");
-            }
+        File index = new File(dirname + File.separator + index_dir_name);
+        if (!index.isDirectory() && !index.mkdir()) {
+            throw new Exception("Index Directory: " + dirname + " does not exist and cannot create");
         }
         Iterator<File> fi = FileIteratorFactory.createFileIterator(index, true, false);
-        while( fi.hasNext() ) {
+        while (fi.hasNext()) {
             File next = fi.next();
-            indexes.put( next.getName(),new Index( next.getName(),next.toPath(),this ) );
+            indexes.put(next.getName(), new Index(next.getName(), next.toPath(), this));
         }
 
     }
@@ -63,7 +61,7 @@ public class IndexedBucket extends Bucket implements IIndexedBucket {
             throw new IOException("index exists");
         } else {
             Files.createDirectory(path); // create a directory to store the index
-            indexes.put(label,new Index(label,path,this)); // keep the in memory index list up to date
+            indexes.put(label, new Index(label, path, this)); // keep the in memory index list up to date
         }
     }
 
@@ -76,9 +74,9 @@ public class IndexedBucket extends Bucket implements IIndexedBucket {
     @Override
     public void save(ILXP record) throws IOException, JSONException {
         Set<String> keys = indexes.keySet(); // all the keys currently being indexed
-        for ( String key : keys ) {
-            if( record.containsKey(key) ) { // we are indexing this key
-                IIndex index = indexes.get( key ); // so get the index
+        for (String key : keys) {
+            if (record.containsKey(key)) { // we are indexing this key
+                IIndex index = indexes.get(key); // so get the index
                 index.add(record); // and add this record to the index for that key
 
             }

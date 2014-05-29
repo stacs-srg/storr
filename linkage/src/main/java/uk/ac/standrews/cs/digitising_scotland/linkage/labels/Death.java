@@ -1,6 +1,5 @@
 package uk.ac.standrews.cs.digitising_scotland.linkage.labels;
 
-import java.net.IDN;
 import java.util.Arrays;
 
 /**
@@ -33,5 +32,4 @@ public class Death extends CommonLabels {
             PLACE_OF_DEATH, FATHERS_FORENAME, FATHERS_SURNAME, FATHERS_OCCUPATION, FATHER_DECEASED, MOTHERS_FORENAME,
             MOTHERS_SURNAME, CHANGED_MOTHERS_MAIDEN_SURNAME,
             MOTHER_DECEASED, COD_A, COD_B, COD_C, CERTIFYING_DOCTOR, CORRECTED_ENTRY, IMAGE_QUALITY);
-
 }

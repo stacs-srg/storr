@@ -90,7 +90,7 @@ public class BabyFatherResolver {
         while (blocked_record_iterator.hasNext()) {
             IBucket blocked_records = blocked_record_iterator.next();
             BabyFatherLinker bfl = new BabyFatherLinker( blocked_records.getInputStream(),matches.getOutputStream() );
-            bfl.pairwise_link();
+            bfl.pairwiseLink();
         }
     }
 
@@ -212,7 +212,7 @@ public class BabyFatherResolver {
          * Adds a matched result to a potential matched record repository/bucket.
          * @param pair
          */
-        public void add_to_results(Pair pair, ILXPOutputStream results) {
+        public void addToResults(Pair pair, ILXPOutputStream results) {
             ILXP first = pair.first();
             ILXP second = pair.second();
 

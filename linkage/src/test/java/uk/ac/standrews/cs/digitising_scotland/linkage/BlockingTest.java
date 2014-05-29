@@ -64,7 +64,7 @@ public class BlockingTest {
         importer.importDeaths(deaths, deaths_source_path);
         importer.importMarriages(marriages, marriages_source_path);
 
-        BlockingPFPLMFFFoverBDMrecords blocker = new BlockingPFPLMFFFoverBDMrecords( births, deaths, marriages, repo);
+        BlockingPFPLMFFFoverBDMrecords blocker = new BlockingPFPLMFFFoverBDMrecords( births, deaths, repo);
 
         blocker.apply();
     }

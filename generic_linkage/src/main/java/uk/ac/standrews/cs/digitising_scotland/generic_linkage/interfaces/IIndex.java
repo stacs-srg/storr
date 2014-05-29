@@ -11,11 +11,9 @@ public interface IIndex {
 
     Set<String> keySet() throws IOException;
 
-    public ILXPInputStream records( String value ) throws IOException;
+    ILXPInputStream records(String value) throws IOException;
 
-    public List<Integer> values( String value ) throws IOException;
+    List<Integer> values(String value) throws IOException;
 
-    public void add( ILXP record ) throws IOException;
-
-
+    void add(ILXP record) throws IOException;
 }

@@ -96,7 +96,7 @@ public class BirthDeathResolver {
         importer.importBirths(births, births_source_path);
         importer.importDeaths(deaths, deaths_source_path);
 
-        BlockingPFPLMFFFoverBDMrecords blocker = new BlockingPFPLMFFFoverBDMrecords(births, deaths, marriages, blocked_repo);
+        BlockingPFPLMFFFoverBDMrecords blocker = new BlockingPFPLMFFFoverBDMrecords(births, deaths, blocked_repo);
 
         blocker.apply();
     }
@@ -108,7 +108,7 @@ public class BirthDeathResolver {
         while (blocked_record_iterator.hasNext()) {
             IBucket blocked_records = blocked_record_iterator.next();
             BirthDeathLinker bdl = new BirthDeathLinker( blocked_records.getInputStream(),matches.getOutputStream() );
-            bdl.pairwise_link();
+            bdl.pairwiseLink();
         }
     }
 
@@ -156,7 +156,7 @@ public class BirthDeathResolver {
         }
 
         @Override
-        public void add_to_results(Pair pair, ILXPOutputStream results) {
+        public void addToResults(Pair pair, ILXPOutputStream results) {
             ILXP first = pair.first();
             ILXP second = pair.second();
 

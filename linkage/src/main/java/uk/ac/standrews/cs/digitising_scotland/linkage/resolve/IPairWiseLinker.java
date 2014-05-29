@@ -7,13 +7,13 @@ import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXPOut
  */
 public interface IPairWiseLinker {
 
-    public void pairwise_link();
+    void pairwiseLink();
 
-    public boolean compare(Pair pair);
+    boolean compare(Pair pair);
 
     /**
      * Adds a matched result to a result collection
      * @param pair
      */
-    public void add_to_results(Pair pair, ILXPOutputStream results);
+    void addToResults(Pair pair, ILXPOutputStream results);
 }
