@@ -10,9 +10,7 @@ import java.util.List;
  * @author Alan Dearle (alan.dearle@st-andrews.ac.uk)
  * @author Graham Kirby (graham.kirby@st-andrews.ac.uk)
  * @author Ilia Shumailov (is33@st-andrews.ac.uk)
- * 
  */
-
 public class CompactPartnership implements Comparable<CompactPartnership> {
 
     private int id;
@@ -22,8 +20,6 @@ public class CompactPartnership implements Comparable<CompactPartnership> {
     protected int marriage_date;
     protected List<Integer> children;
     private boolean marked;
-
-    // -------------------------------------------------------------------------------------------------------
 
     /**
      * Creates a partnership with a given marriage date.
@@ -58,8 +54,6 @@ public class CompactPartnership implements Comparable<CompactPartnership> {
 
         this.id = id;
     }
-
-    // -------------------------------------------------------------------------------------------------------
 
     /**
      * Gets the partner of the given person.
@@ -140,13 +134,20 @@ public class CompactPartnership implements Comparable<CompactPartnership> {
     @Override
     public int compareTo(final CompactPartnership other) {
 
-        // No need to override equals() or hashCode() since this does conform to the assumption that (p1.compareTo(p2) == 0) == (p1.equals(p2)) i.e. it only returns zero for equal objects.
+        // No need to override hashCode() since this does conform to the assumption that (p1.compareTo(p2) == 0) == (p1.equals(p2)) i.e. it only returns zero for equal objects.
 
         final int date_difference = getMarriageDate() - other.getMarriageDate();
         return date_difference != 0 ? date_difference : hashCode() - other.hashCode();
     }
 
-    // -------------------------------------------------------------------------------------------------------
+    @Override
+    public boolean equals(Object o) {
+
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        return compareTo((CompactPartnership) o) == 0;
+    }
 
     private static void addPartnership(final CompactPerson person, final CompactPartnership partnership) {
 

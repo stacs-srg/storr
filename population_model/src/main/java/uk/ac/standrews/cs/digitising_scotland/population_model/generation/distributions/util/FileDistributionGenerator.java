@@ -85,10 +85,10 @@ public class FileDistributionGenerator {
 
             outputComment(writer, input_file_path);
 
-            for (String s : string_counts.keySet()) {
+            for (Map.Entry<String, Integer> entry : string_counts.entrySet()) {
 
-                double probability = calculateProbability(string_counts.get(s), total_count);
-                outputProbability(writer, s, probability);
+                double probability = calculateProbability(entry.getValue(), total_count);
+                outputProbability(writer, entry.getKey(), probability);
             }
         }
     }

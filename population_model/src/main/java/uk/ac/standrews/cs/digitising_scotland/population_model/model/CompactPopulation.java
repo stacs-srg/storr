@@ -1,9 +1,6 @@
 package uk.ac.standrews.cs.digitising_scotland.population_model.model;
 
-import uk.ac.standrews.cs.digitising_scotland.util.ProgressIndicator;
-import uk.ac.standrews.cs.digitising_scotland.util.ArrayIterator;
-import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
-import uk.ac.standrews.cs.nds.util.QuickSort;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import uk.ac.standrews.cs.digitising_scotland.population_model.generation.distributions.AgeAtDeathDistribution;
 import uk.ac.standrews.cs.digitising_scotland.population_model.generation.distributions.Distribution;
 import uk.ac.standrews.cs.digitising_scotland.population_model.generation.distributions.IncomersDistribution;
@@ -14,6 +11,10 @@ import uk.ac.standrews.cs.digitising_scotland.population_model.generation.distri
 import uk.ac.standrews.cs.digitising_scotland.population_model.generation.distributions.UniformSexDistribution;
 import uk.ac.standrews.cs.digitising_scotland.population_model.generation.distributions.WeightedIntegerDistribution;
 import uk.ac.standrews.cs.digitising_scotland.population_model.generation.util.RandomFactory;
+import uk.ac.standrews.cs.digitising_scotland.util.ArrayIterator;
+import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
+import uk.ac.standrews.cs.digitising_scotland.util.ProgressIndicator;
+import uk.ac.standrews.cs.nds.util.QuickSort;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -145,16 +146,6 @@ public class CompactPopulation implements Iterable<CompactPerson> {
     public CompactPopulation(final int population_size) throws NegativeDeviationException, NegativeWeightException {
 
         this(population_size, null);
-    }
-
-    private void initialiseProgressIndicator() {
-
-        if (progress_indicator != null) progress_indicator.setTotalSteps(people.length * 5);
-    }
-
-    private void progressStep() {
-
-        if (progress_indicator != null) progress_indicator.progressStep();
     }
 
     /**
@@ -453,14 +444,22 @@ public class CompactPopulation implements Iterable<CompactPerson> {
         return previous_child_birth_date == 0 ? DateManipulation.addYears(partnership.getMarriageDate(), TIME_BEFORE_FIRST_CHILD) : DateManipulation.addYears(previous_child_birth_date, INTER_CHILD_INTERVAL);
     }
 
-    // -------------------------------------------------------------------------------------------------------
+    private void initialiseProgressIndicator() {
+
+        if (progress_indicator != null) progress_indicator.setTotalSteps(people.length * 5);
+    }
+
+    private void progressStep() {
+
+        if (progress_indicator != null) progress_indicator.progressStep();
+    }
 
     private int findSuitableChild(final CompactPartnership partnership, final int start_search_index, final int earliest_birth_date, final int latest_birth_date) {
 
         final int husband_index = husband(partnership);
         final int wife_index = wife(partnership);
 
-        // This could be optimised since if some checks fail then they will never succeed for subsequent children.
+        // TODO This could be optimised since if some checks fail then they will never succeed for subsequent children.
         // E.g. as soon as the birth date of a candidate child is later than the latest acceptable birth date, no point in looking further.
         // Refine Condition interface so result can be yes, no and keep looking, no and stop looking?
 
@@ -632,6 +631,7 @@ public class CompactPopulation implements Iterable<CompactPerson> {
         return new ArrayIterator<>(getPeople());
     }
 
+    @SuppressFBWarnings(value = "EI_EXPOSE_REP",justification = "too expensive...")
     public CompactPerson[] getPeople() {
 
         return people;

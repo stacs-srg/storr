@@ -2,12 +2,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-   <parent>
+    <parent>
         <groupId>uk.ac.standrews.cs</groupId>
         <artifactId>digitising_scotland</artifactId>
-<version>1.0-SNAPSHOT</version>
+        <version>1.0-SNAPSHOT</version>
     </parent>
-    
+
     <groupId>uk.ac.standrews.cs.digitising_scotland</groupId>
     <artifactId>population_model</artifactId>
     <version>1.0-SNAPSHOT</version>
@@ -107,6 +107,12 @@
             <groupId>uk.ac.standrews.cs</groupId>
             <artifactId>nds</artifactId>
             <version>2.0-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.code.findbugs</groupId>
+            <artifactId>findbugs</artifactId>
+            <version>2.0.1</version>
         </dependency>
 
     </dependencies>
