@@ -13,7 +13,7 @@ public class FilteredIterator<T> implements Iterator<T> {
 
     private T next = null;
 
-    public FilteredIterator(Iterator<T> iterator, Condition<T> condition) {
+    public FilteredIterator(final Iterator<T> iterator, final Condition<T> condition) {
 
         this.iterator = iterator;
         this.condition = condition;
@@ -25,8 +25,12 @@ public class FilteredIterator<T> implements Iterator<T> {
 
         if (iterator.hasNext()) {
             next = iterator.next();
-            while (iterator.hasNext() && !condition.test(next)) next = iterator.next();
-            if (!condition.test(next)) next = null;
+            while (iterator.hasNext() && !condition.test(next)) {
+                next = iterator.next();
+            }
+            if (!condition.test(next)) {
+                next = null;
+            }
         }
         else next = null;
     }
@@ -34,7 +38,7 @@ public class FilteredIterator<T> implements Iterator<T> {
     @Override
     public boolean hasNext() {
 
-        return (next != null);
+        return next != null;
     }
 
     @Override

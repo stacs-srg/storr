@@ -5,7 +5,7 @@ package uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl;
  */
 public class RepositoryException extends Exception {
 
-    public RepositoryException(String s) {
-        super(s);
+    public RepositoryException(final String message) {
+        super(message);
     }
 }

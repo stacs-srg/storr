@@ -12,8 +12,8 @@ public interface IPairWiseLinker {
     boolean compare(Pair pair);
 
     /**
-     * Adds a matched result to a result collection
+     * Adds a matched result to a result collection.
      * @param pair
      */
-    void addToResults(Pair pair, ILXPOutputStream results);
+    void addToResults(final Pair pair, final ILXPOutputStream results);
 }

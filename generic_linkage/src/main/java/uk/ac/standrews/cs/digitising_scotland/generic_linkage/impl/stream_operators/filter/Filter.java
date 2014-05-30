@@ -13,24 +13,16 @@ public abstract class Filter implements IFilter {
     private final ILXPInputStream input;
     private final ILXPOutputStream output;
 
-    /**
-     *
-     * @param input
-     * @param output
-     */
-    public Filter( ILXPInputStream input, ILXPOutputStream output ) {
+    public Filter(final ILXPInputStream input, final ILXPOutputStream output) {
         this.input = input;
         this.output = output;
     }
 
-    /**
-     *
-     */
     public void apply() {
 
-        for( ILXP record : input ) {
-            if( select(record) ) {
-                output.add( record );
+        for (ILXP record : input) {
+            if (select(record)) {
+                output.add(record);
             }
         }
     }
@@ -42,6 +34,4 @@ public abstract class Filter implements IFilter {
     public ILXPOutputStream getOutput() {
         return output;
     }
-
-
 }

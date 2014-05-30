@@ -42,8 +42,8 @@ public class Person {
         this.first_name = first_name;
         this.surname = surname;
         this.id = id;
-        this.birth_date = (Date)birth_date.clone();
-        this.death_date = (Date)death_date.clone();
+        this.birth_date = (Date) birth_date.clone();
+        this.death_date = (Date) death_date.clone();
         this.occupation = occupation;
         this.cause_of_death = cause_of_death;
         this.address = address;
@@ -82,22 +82,22 @@ public class Person {
 
     public Date getBirthDate() {
 
-        return (Date)birth_date.clone();
+        return (Date) birth_date.clone();
     }
 
     public void setBirthDate(final Date birth_date) {
 
-        this.birth_date = (Date)birth_date.clone();
+        this.birth_date = (Date) birth_date.clone();
     }
 
     public Date getDeathDate() {
 
-        return (Date)death_date.clone();
+        return (Date) death_date.clone();
     }
 
     public void setDeathDate(final Date death_date) {
 
-        this.death_date = (Date)death_date.clone();
+        this.death_date = (Date) death_date.clone();
     }
 
     public String getOccupation() {
@@ -141,12 +141,12 @@ public class Person {
     }
 
     /**
-     *  Sets the Surname to be the new surname and the maiden name to be their old surname
+     * Sets the Surname to be the new surname and the maiden name to be their old surname.
      */
-    public void setMarriedName(final String newSurname) {
+    public void setMarriedName(final String new_surname) {
 
         maiden_name = surname;
-        surname = newSurname;
+        surname = new_surname;
     }
 
     /**

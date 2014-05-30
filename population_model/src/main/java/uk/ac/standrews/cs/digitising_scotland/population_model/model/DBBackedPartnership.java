@@ -31,7 +31,7 @@ public class DBBackedPartnership {
 
             while (partner_result_set.next()) {
 
-                final int partner_id = partner_result_set.getInt(PopulationProperties.PERSON_ID_FIELD);
+                final int partner_id = partner_result_set.getInt(PopulationProperties.PARTNERSHIP_FIELD_PERSON_ID);
                 final DBBackedPerson partner = DBBackedPersonFactory.createDBBackedPerson(connection, partner_id);
 
                 partners.add(partner);
@@ -56,7 +56,7 @@ public class DBBackedPartnership {
             final ResultSet marriage_result_set = get_marriage_statement.executeQuery();
 
             if (marriage_result_set.first()) {
-                start_date = marriage_result_set.getDate(PopulationProperties.DATE_FIELD);
+                start_date = marriage_result_set.getDate(PopulationProperties.PARTNERSHIP_FIELD_DATE);
             }
         }
     }
@@ -83,6 +83,6 @@ public class DBBackedPartnership {
 
     public Date getStartDate() {
 
-        return (Date)start_date.clone();
+        return (Date) start_date.clone();
     }
 }

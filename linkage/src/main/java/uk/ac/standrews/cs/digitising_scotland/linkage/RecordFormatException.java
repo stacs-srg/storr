@@ -5,7 +5,7 @@ package uk.ac.standrews.cs.digitising_scotland.linkage;
  */
 public class RecordFormatException extends Exception {
 
-    public RecordFormatException(String msg) {
+    public RecordFormatException(final String msg) {
         super(msg);
     }
 }

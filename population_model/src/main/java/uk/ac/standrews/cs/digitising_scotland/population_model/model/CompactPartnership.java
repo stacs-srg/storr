@@ -141,10 +141,14 @@ public class CompactPartnership implements Comparable<CompactPartnership> {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
 
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         return compareTo((CompactPartnership) o) == 0;
     }
@@ -163,8 +167,6 @@ public class CompactPartnership implements Comparable<CompactPartnership> {
         person.getPartnerships().add(partnership);
         Collections.sort(person.getPartnerships());
     }
-
-    // -------------------------------------------------------------------------------------------------------
 
     /**
      * Gets the marriage date of this partnership.
@@ -210,9 +212,6 @@ public class CompactPartnership implements Comparable<CompactPartnership> {
         this.marked = true;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String toString() {
 

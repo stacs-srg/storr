@@ -6,7 +6,7 @@ import java.util.Properties;
 
 public class PropertiesManipulation {
 
-    public static synchronized Properties getProperties(String properties_path_string) throws IOException {
+    public static synchronized Properties getProperties(final String properties_path_string) throws IOException {
 
         try (InputStream stream = PropertiesManipulation.class.getClassLoader().getResourceAsStream(properties_path_string)) {
 

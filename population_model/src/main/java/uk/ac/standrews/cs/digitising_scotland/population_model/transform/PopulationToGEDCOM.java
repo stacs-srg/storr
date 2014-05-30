@@ -7,7 +7,6 @@ import uk.ac.standrews.cs.digitising_scotland.population_model.model.CompactPers
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.CompactPopulation;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.Person;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -31,24 +30,20 @@ public class PopulationToGEDCOM extends PopulationToFile {
 
     private final List<Integer> exported_family_ids = new ArrayList<>(); // used to not those families already exported
 
-    // -------------------------------------------------------------------------------------------------------
-
     /**
      * Initialises the exporter. This includes potentially expensive scanning of the population graph.
      * 
      * @param population the population
      * @param path the path for the output file
-     * @throws FileNotFoundException if the file does not exist and cannot be created
+     * @throws IOException if the file does not exist and cannot be created
      */
     public PopulationToGEDCOM(final CompactPopulation population, final String path) throws IOException, InconsistentWeightException {
 
         super(population, path);
     }
 
-    // -------------------------------------------------------------------------------------------------------
-
     @Override
-    protected void outputHeader(PrintWriter writer) {
+    protected void outputHeader(final PrintWriter writer) {
 
         writer.println("0 HEAD");
         writer.println("1 SOUR " + SOURCE_SOFTWARE);
@@ -60,7 +55,7 @@ public class PopulationToGEDCOM extends PopulationToFile {
     }
 
     @Override
-    protected void outputIndividual(PrintWriter writer, final int index, final CompactPerson compact_person, final Person person) {
+    protected void outputIndividual(final PrintWriter writer, final int index, final CompactPerson compact_person, final Person person) {
 
         writer.println("0 @" + padId(person.getID()) + "@ INDI");
         writer.println("1 NAME " + person.getFirstName() + " /" + person.getSurname() + "/");
@@ -86,7 +81,7 @@ public class PopulationToGEDCOM extends PopulationToFile {
     }
 
     @Override
-    protected void outputFamilies(PrintWriter writer) {
+    protected void outputFamilies(final PrintWriter writer) {
 
         for (final CompactPerson compact_person : population) {
             if (compact_person.getPartnerships() != null) {
@@ -125,21 +120,19 @@ public class PopulationToGEDCOM extends PopulationToFile {
     }
 
     @Override
-    protected void outputTrailer(PrintWriter writer) {
+    protected void outputTrailer(final PrintWriter writer) {
 
         writer.println("0 @S1@ SUBM\n" + "1 NAME " + SUBMITTER);
         writer.println("0 TRLR");
     }
 
-    // -------------------------------------------------------------------------------------------------------
-
-    private List<String> getIdsOfFamiliesWhereChild(final int p) {
+    private List<String> getIdsOfFamiliesWhereChild(final int child) {
 
         final List<String> ids = new ArrayList<String>();
-        for (final CompactPerson cp : population) {
-            if (cp.getPartnerships() != null) {
-                for (final CompactPartnership partnership : cp.getPartnerships()) {
-                    if (partnership.includesChild(p)) {
+        for (final CompactPerson person : population) {
+            if (person.getPartnerships() != null) {
+                for (final CompactPartnership partnership : person.getPartnerships()) {
+                    if (partnership.includesChild(child)) {
                         ids.add(padId(partnership.getId()));
                     }
                 }
@@ -149,11 +142,11 @@ public class PopulationToGEDCOM extends PopulationToFile {
         return ids;
     }
 
-    private List<String> getIdsOfFamiliesWhereSpouse(final CompactPerson p) {
+    private List<String> getIdsOfFamiliesWhereSpouse(final CompactPerson spouse) {
 
         final List<String> ids = new ArrayList<String>();
-        if (p.getPartnerships() != null) {
-            for (final CompactPartnership partnership : p.getPartnerships()) {
+        if (spouse.getPartnerships() != null) {
+            for (final CompactPartnership partnership : spouse.getPartnerships()) {
                 ids.add(padId(partnership.getId()));
             }
         }

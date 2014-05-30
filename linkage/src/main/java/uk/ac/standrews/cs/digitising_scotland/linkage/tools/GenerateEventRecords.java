@@ -38,7 +38,7 @@ public class GenerateEventRecords {
         generateEventRecords(args);
     }
 
-    private static void generateEventRecords(String[] args) throws SQLException, IOException {
+    private static void generateEventRecords(final String[] args) throws SQLException, IOException {
 
         final int number_of_progress_updates = CommandLineArgs.extractIntFromCommandLineArgs(args, NUMBER_OF_PROGRESS_UPDATES_FLAG, DEFAULT_NUMBER_OF_PROGRESS_UPDATES);
 
@@ -57,7 +57,7 @@ public class GenerateEventRecords {
         TimeManipulation.reportElapsedTime(start_time);
     }
 
-    private static void exportRecords(final RecordIterator<?> records, String records_path_string, int number_of_progress_updates) throws IOException {
+    private static void exportRecords(final RecordIterator<?> records, final String records_path_string, final int number_of_progress_updates) throws IOException {
 
         Path records_path = Paths.get(records_path_string);
         FileManipulation.createParentDirectoryIfDoesNotExist(records_path);
@@ -73,7 +73,9 @@ public class GenerateEventRecords {
             }
         }
 
-        if (progress_indicator.getProportionComplete() < 1.0) progress_indicator.indicateProgress(1.0);
+        if (progress_indicator.getProportionComplete() < 1.0) {
+            progress_indicator.indicateProgress(1.0);
+        }
 
         records.close();
     }

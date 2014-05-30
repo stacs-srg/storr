@@ -25,17 +25,17 @@ public class FileDistributionGenerator {
     public static final String COMMENT_INDICATOR = "%";
     private static final String TAB = "\t";
 
-    public void analyseData(Path input_data_file_path, Path output_file_path) throws IOException {
+    public void analyseData(final Path input_data_file_path, final Path output_file_path) throws IOException {
 
         recordProbabilities(getStringCounts(input_data_file_path), input_data_file_path, output_file_path);
     }
 
-    public void analyseData(String input_data_file_path, String output_file_path) throws IOException {
+    public void analyseData(final String input_data_file_path, final String output_file_path) throws IOException {
 
         analyseData(Paths.get(input_data_file_path), Paths.get(output_file_path));
     }
 
-    private Map<String, Integer> getStringCounts(Path input_data_file_path) throws IOException {
+    private Map<String, Integer> getStringCounts(final Path input_data_file_path) throws IOException {
 
         Map<String, Integer> string_counts = new TreeMap<>();
 
@@ -77,7 +77,7 @@ public class FileDistributionGenerator {
         }
     }
 
-    private void recordProbabilities(Map<String, Integer> string_counts, Path input_file_path, Path output_file_path) throws IOException {
+    private void recordProbabilities(final Map<String, Integer> string_counts, final Path input_file_path, final Path output_file_path) throws IOException {
 
         int total_count = getTotalCount(string_counts);
 
@@ -93,19 +93,21 @@ public class FileDistributionGenerator {
         }
     }
 
-    private int getTotalCount(Map<String, Integer> string_counts) {
+    private int getTotalCount(final Map<String, Integer> string_counts) {
 
         int count = 0;
-        for (int i : string_counts.values()) count += i;
+        for (int i : string_counts.values()) {
+            count += i;
+        }
         return count;
     }
 
-    private double calculateProbability(int string_count, int total_count) {
+    private double calculateProbability(final int string_count, int total_count) {
 
         return ((double) string_count) / ((double) total_count);
     }
 
-    private void outputComment(PrintWriter writer, Path input_file_path) {
+    private void outputComment(final PrintWriter writer, final Path input_file_path) {
 
         writer.println(COMMENT_INDICATOR + " Generated from source file: " + input_file_path + " at " + getTimestamp() + ".");
     }
@@ -115,7 +117,7 @@ public class FileDistributionGenerator {
         return new SimpleDateFormat("HH:mm dd/MM/yyyy").format(Calendar.getInstance().getTime());
     }
 
-    private void outputProbability(PrintWriter writer, String s, double probability) {
+    private void outputProbability(final PrintWriter writer, final String s, final double probability) {
 
         writer.print(s);
         writer.print("\t");

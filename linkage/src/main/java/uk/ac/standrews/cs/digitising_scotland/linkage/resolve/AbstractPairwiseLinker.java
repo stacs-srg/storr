@@ -14,22 +14,22 @@ import java.util.List;
 public abstract class AbstractPairwiseLinker implements IPairWiseLinker {
 
     private final ILXPInputStream input;
-    protected final ILXPOutputStream output;
+    private final ILXPOutputStream output;
 
-
-    public AbstractPairwiseLinker(ILXPInputStream input, ILXPOutputStream output) {
+    public AbstractPairwiseLinker(final ILXPInputStream input, final ILXPOutputStream output) {
         this.input = input;
         this.output = output;
     }
 
     @Override
     public void pairwiseLink() {
+
         List<ILXP> records = new ArrayList<>();
 
         for (ILXP record : input) {
 
             if (record.get("TYPE") == null) {
-                ErrorHandling.error("Found record with no type field: " + record.toString());
+                ErrorHandling.error("Found record with no type field: " + record);
             }
             records.add(record);
         }
@@ -39,16 +39,16 @@ public abstract class AbstractPairwiseLinker implements IPairWiseLinker {
     /**
      * @param records a collection of b & d records for people with the same first name, last name, father's first name and mother's first name.
      */
-    private void linkRecords(List<ILXP> records) {
+    private void linkRecords(final List<ILXP> records) {
 
-        for (Pair pair : all_pairs(records)) {
-            if( compare(pair) ) {
+        for (Pair pair : allPairs(records)) {
+            if (compare(pair)) {
                 addToResults(pair, output);
             }
         }
     }
 
-    private Iterable<Pair> all_pairs(List<ILXP> records) {
+    private Iterable<Pair> allPairs(final List<ILXP> records) {
 
         List<Pair> all = new ArrayList<>();
 
@@ -63,12 +63,11 @@ public abstract class AbstractPairwiseLinker implements IPairWiseLinker {
         return all;
     }
 
-    /****** Abstract methods to be implemented by concrete classes ******/
-
     public abstract boolean compare(Pair pair);
 
     /**
-     * Adds a matched result to a result collection
+     * Adds a matched result to a result collection.
+     *
      * @param pair
      */
     public abstract void addToResults(Pair pair, ILXPOutputStream results);

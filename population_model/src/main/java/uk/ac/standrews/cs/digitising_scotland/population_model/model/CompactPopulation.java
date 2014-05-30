@@ -33,6 +33,7 @@ public class CompactPopulation implements Iterable<CompactPerson> {
      */
     public static final int END_YEAR = 2013;
     public static final int POPULATION_TRACE_BATCH_SIZE = 10000;
+    public static final int NUMBER_OF_STAGES_IN_POPULATION_GENERATION = 5;
 
     private final CompactPerson[] people;
 
@@ -82,11 +83,11 @@ public class CompactPopulation implements Iterable<CompactPerson> {
     /**
      * Creates a synthetic population.
      *
-     * @param population_size  the number of people in the population
-     * @param earliest_date    the earliest date of any event (birth, death, marriage, parenthood), coded DateConversion format - using e.g. DateConversion.dateToDays(START_YEAR, 0, 1)
-     * @param latest_date      the latest date of any event, coded DateConversion format
+     * @param population_size the number of people in the population
+     * @param earliest_date   the earliest date of any event (birth, death, marriage, parenthood), coded DateConversion format - using e.g. DateConversion.dateToDays(START_YEAR, 0, 1)
+     * @param latest_date     the latest date of any event, coded DateConversion format
      */
-    public CompactPopulation(final int population_size, final int earliest_date, final int latest_date, ProgressIndicator progress_indicator) throws NegativeWeightException, NegativeDeviationException {
+    public CompactPopulation(final int population_size, final int earliest_date, final int latest_date, final ProgressIndicator progress_indicator) throws NegativeWeightException, NegativeDeviationException {
 
         this.first_date = earliest_date;
         this.last_date = latest_date;
@@ -119,7 +120,7 @@ public class CompactPopulation implements Iterable<CompactPerson> {
      *
      * @param population_size the number of people in the population
      */
-    public CompactPopulation(final int population_size, ProgressIndicator progress_indicator) throws NegativeDeviationException, NegativeWeightException {
+    public CompactPopulation(final int population_size, final ProgressIndicator progress_indicator) throws NegativeDeviationException, NegativeWeightException {
 
         this(population_size, DateManipulation.dateToDays(START_YEAR, 0, 1), DateManipulation.dateToDays(END_YEAR, DECEMBER_INDEX, DAYS_IN_DECEMBER), progress_indicator); // 1st January of start year to 31st December of end year.
     }
@@ -231,7 +232,9 @@ public class CompactPopulation implements Iterable<CompactPerson> {
         final List<CompactPartnership> partnerships = people[p1_index].getPartnerships();
         if (partnerships != null) {
             for (final CompactPartnership partnership : partnerships) {
-                if (partnership.getPartner(p1_index) == p2_index) return true;
+                if (partnership.getPartner(p1_index) == p2_index) {
+                    return true;
+                }
             }
         }
         return false;
@@ -414,7 +417,9 @@ public class CompactPopulation implements Iterable<CompactPerson> {
             final int child_index = findSuitableChild(partnership, start_index, earliest_birth_date, latest_acceptable_birth_date);
 
             // May not be able to find suitable child if time has run out due to a subsequent marriage, or the whole simulation ending.
-            if (child_index == -1) break;
+            if (child_index == -1) {
+                break;
+            }
 
             final CompactPerson child = people[child_index];
 
@@ -432,7 +437,9 @@ public class CompactPopulation implements Iterable<CompactPerson> {
 
     private void initialiseProgressIndicator() {
 
-        if (progress_indicator != null) progress_indicator.setTotalSteps(people.length * 5);
+        if (progress_indicator != null) {
+            progress_indicator.setTotalSteps(people.length * NUMBER_OF_STAGES_IN_POPULATION_GENERATION);
+        }
     }
 
     private void progressStep() {
@@ -617,7 +624,7 @@ public class CompactPopulation implements Iterable<CompactPerson> {
         return new ArrayIterator<>(getPeople());
     }
 
- //   @SuppressFBWarnings(value = "EI_EXPOSE_REP",justification = "too expensive...")
+    //   @SuppressFBWarnings(value = "EI_EXPOSE_REP",justification = "too expensive...")
     public CompactPerson[] getPeople() {
 
         return people;

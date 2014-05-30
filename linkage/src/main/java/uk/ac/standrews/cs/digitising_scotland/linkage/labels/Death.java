@@ -25,7 +25,7 @@ public class Death extends CommonLabels {
     public static final String COD_C = "cod_c";
     public static final String CERTIFYING_DOCTOR = "certifying_doctor";
 
-    public static final Iterable<String> DEATH_FIELD_NAMES = Arrays.asList(ID,SURNAME, FORENAME, SEX, YEAR_OF_REGISTRATION, REGISTRATION_DISTRICT_NUMBER,
+    public static final Iterable<String> DEATH_FIELD_NAMES = Arrays.asList(ID, SURNAME, FORENAME, SEX, YEAR_OF_REGISTRATION, REGISTRATION_DISTRICT_NUMBER,
             REGISTRATION_DISTRICT_SUFFIX, ENTRY, DEATH_YEAR, AGE_AT_DEATH, MOTHERS_MAIDEN_SURNAME, CHANGED_SURNAME, CHANGED_FORENAME, CHANGED_DEATH_AGE,
             DATE_OF_BIRTH, OCCUPATION, MARITAL_STATUS, SPOUSES_NAMES, SPOUSES_OCCUPATIONS,   // TODO check fieldname spouses_occupations - wrong in exporter - population project
             DEATH_MONTH, DEATH_DAY,

@@ -26,18 +26,18 @@ public class DBBackedPartnershipFactory {
     }
 
     /**
-     * @param connection - an open database connection.
-     * @param resultSet: expected to be of row type from: Partnership Table/ Table has id,date
+     * @param connection an open database connection.
+     * @param result_set expected to be of row type from: Partnership Table/ Table has id,date
      * @return the corresponding partnership object.
      * @throws SQLException
      */
-    public static DBBackedPartnership createDBBackedPartnershipFromPartnershipRS(final Connection connection, final ResultSet resultSet) throws SQLException {
+    public static DBBackedPartnership createDBBackedPartnershipFromPartnershipRS(final Connection connection, final ResultSet result_set) throws SQLException {
 
-        final int partnership_id = resultSet.getInt("id");
+        final int partnership_id = result_set.getInt("id");
         return new DBBackedPartnership(connection, partnership_id);
     }
 
-    private static DBBackedPartnership getDBBackedPartnership(Connection connection, PreparedStatement statement) throws SQLException {
+    private static DBBackedPartnership getDBBackedPartnership(final Connection connection, final PreparedStatement statement) throws SQLException {
 
         final ResultSet resultSet = statement.executeQuery();
 

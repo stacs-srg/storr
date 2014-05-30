@@ -2,8 +2,8 @@ package uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.merger;
 
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXP;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXPInputStream;
-import uk.ac.standrews.cs.nds.util.ErrorHandling;
 
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
@@ -16,10 +16,9 @@ public class TailToTailMergedStream implements ILXPInputStream {
 
     private ILXPInputStream[] streams;
 
-    public TailToTailMergedStream(ILXPInputStream[] streams) {
+    public TailToTailMergedStream(final ILXPInputStream[] streams) {
 
-        this.streams = new ILXPInputStream[streams.length];
-        for (int i = 0; i < streams.length; i++) this.streams[i] = streams[i];
+        this.streams = Arrays.copyOf(streams, streams.length);
     }
 
     public Iterator<ILXP> iterator() {
@@ -28,30 +27,30 @@ public class TailToTailMergedStream implements ILXPInputStream {
 
     private class StreamMergeIterator implements Iterator<ILXP> {
 
-        private Iterator<ILXP> currentIterator;
+        private Iterator<ILXP> current_iterator;
         private int index = 0; // index into the streams array
 
         public StreamMergeIterator() {
 
-            currentIterator = streams[index].iterator();
+            current_iterator = streams[index].iterator();
         }
 
         @Override
         public boolean hasNext() {
-            if (currentIterator.hasNext()) {
-                return true;
-            } else {
-                return nextStream();
-            }
+
+            return current_iterator.hasNext() ? true : nextStream();
         }
 
         @Override
         public ILXP next() {
+
             try {
-                return currentIterator.next();
+                return current_iterator.next();
+
             } catch (NoSuchElementException e) { // if there are no more in current stream try and set up the next one.
+
                 if (nextStream()) {
-                    return currentIterator.next();
+                    return current_iterator.next();
                 } else {
                     throw e;
                 }
@@ -60,10 +59,9 @@ public class TailToTailMergedStream implements ILXPInputStream {
 
         @Override
         public void remove() {
-            ErrorHandling.error("remove called on stream - unsupported");
+
             throw new UnsupportedOperationException("remove called on stream - unsupported");
         }
-
 
         /**
          * Move the streams on.
@@ -78,12 +76,13 @@ public class TailToTailMergedStream implements ILXPInputStream {
             do {
                 index++;
                 if (index < streams.length) {
-                    currentIterator = streams[index].iterator();
+                    current_iterator = streams[index].iterator();
                 } else {
                     return false; // we have run out of streams
                 }
             }
-            while (!currentIterator.hasNext());
+            while (!current_iterator.hasNext());
+
             return true;
         }
     }

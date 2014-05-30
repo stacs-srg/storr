@@ -36,7 +36,7 @@ public class BirthDeathResolver {
     private static String blocked_repo_path = "src/test/resources/blocked";
     private static String matches_repo_path = "src/test/resources/PFPLMFFF";
 
-    private static String source_base_path = "src/test/resources/BDMSet1";;
+    private static String source_base_path = "src/test/resources/BDMSet1";
     private static String births_name = "birth_records";
     private static String deaths_name = "death_records";
     private static String matches_name = "baby-father";
@@ -110,7 +110,7 @@ public class BirthDeathResolver {
     }
 
 
-       public static void main(String[] args) throws Exception {
+       public static void main(final String[] args) throws Exception {
 
         BirthDeathResolver r = new BirthDeathResolver();
         r.match();
@@ -118,15 +118,16 @@ public class BirthDeathResolver {
 
     /**************************** Pairwise linker ****************************/
 
-    private class BirthDeathLinker extends AbstractPairwiseLinker implements IPairWiseLinker {
+    private class BirthDeathLinker extends AbstractPairwiseLinker {
 
-        public BirthDeathLinker(ILXPInputStream input, ILXPOutputStream output) {
+        public BirthDeathLinker(final ILXPInputStream input, final ILXPOutputStream output) {
 
             super(input,output);
          }
 
         @Override
-        public boolean compare(Pair pair) {
+        public boolean compare(final Pair pair) {
+
             // TODO we need to sort out naming and project linkage for fieldnames etc. - come back and look at properly.
 
             ILXP first = pair.first();
@@ -134,13 +135,15 @@ public class BirthDeathResolver {
 
             try {
                 return islike(getdob(first), getdob(second));
+
             } catch (RecordFormatException e) {
                 // treat as a not match
                 return false;
             }
         }
 
-        private boolean islike(Date dob1, Date dob2) {
+        private boolean islike(final Date dob1, final Date dob2) {
+
             // code is a mess but not going to survive long... just an experiment
             if (dob1.equals(dob2)) { // exact match
                 return true;
@@ -153,7 +156,8 @@ public class BirthDeathResolver {
         }
 
         @Override
-        public void addToResults(Pair pair, ILXPOutputStream results) {
+        public void addToResults(final Pair pair, final ILXPOutputStream results) {
+
             ILXP first = pair.first();
             ILXP second = pair.second();
 
@@ -168,7 +172,7 @@ public class BirthDeathResolver {
             results.add(result_record );
         }
 
-        private Date getdob(ILXP record) throws RecordFormatException {
+        private Date getdob(final ILXP record) throws RecordFormatException {
 
             //TODO consider this -
 //        Object o = record.instatiateJavaInstance();
@@ -218,16 +222,18 @@ public class BirthDeathResolver {
             }
         }
 
-        private Date fieldsToDate(String year_string, String month_string, String day_string) throws RecordFormatException {
+        private Date fieldsToDate(final String year_string, final String month_string, final String day_string) throws RecordFormatException {
 
             Calendar cal = Calendar.getInstance();
             cal.clear();
+
             try {
                 int year = Integer.parseInt(year_string);
                 int month = Integer.parseInt(month_string);
                 int day = Integer.parseInt(day_string);
                 cal.set(year, month, day);
                 return cal.getTime();
+
             } catch( NumberFormatException e ) {
                 ErrorHandling.error("Error parsing date (d/m/y) : " + day_string + "/" + month_string + "/" + year_string );
                 throw new RecordFormatException( "error in date" );

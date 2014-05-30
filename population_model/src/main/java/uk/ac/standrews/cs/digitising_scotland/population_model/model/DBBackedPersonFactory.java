@@ -21,7 +21,9 @@ public class DBBackedPersonFactory {
         statement.setInt(1, person_id);
         final ResultSet resultSet = statement.executeQuery();
 
-        if (!resultSet.first()) throw new SQLException("can't find person id: " + person_id);
+        if (!resultSet.first()) {
+            throw new SQLException("can't find person id: " + person_id);
+        }
         return createDBBackedPerson(connection, resultSet);
     }
 }

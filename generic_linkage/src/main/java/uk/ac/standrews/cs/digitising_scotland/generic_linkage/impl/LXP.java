@@ -15,27 +15,23 @@ public class LXP extends HashMap<String, String> implements ILXP {
 
     private int id;
 
-    public LXP() {
-    }
-
-    public LXP(int id) {
-        this();
+    public LXP(final int id) {
         this.id = id;
     }
 
-    public LXP(int id, JSONReader reader) throws PersistentObjectException {
+    public LXP(final int id, final JSONReader reader) throws PersistentObjectException {
+
+        this(id);
+
         try {
-            this.id = id;
-
             reader.nextSymbol();
-
             reader.object();
 
             while (!reader.isEndOfStream()) {
 
                 String key = reader.key();
                 String value = reader.stringValue();
-                this.put(key, value);
+                put(key, value);
             }
 
         } catch (JSONException e) {
@@ -50,18 +46,18 @@ public class LXP extends HashMap<String, String> implements ILXP {
     }
 
     /**
-     * This method writes data to a writer - typically used for persistent storage.
+     * Writes data to a writer - typically used for persistent storage.
      *
      * @throws JSONException
      */
-    public void serializeToJSON(JSONWriter writer) throws JSONException {
+    public void serializeToJSON(final JSONWriter writer) throws JSONException {
 
         writer.object();
         serializeFieldsToJSON(writer);
         writer.endObject();
     }
 
-    public void serializeFieldsToJSON(JSONWriter writer) throws JSONException {
+    public void serializeFieldsToJSON(final JSONWriter writer) throws JSONException {
 
         for (Map.Entry<String, String> entry : entrySet()) {
             String key = entry.getKey();
@@ -72,12 +68,15 @@ public class LXP extends HashMap<String, String> implements ILXP {
     }
 
     public String toString() {
-        StringWriter sw = new StringWriter();
+
         try {
-            serializeToJSON( new JSONWriter(sw ) );
+            StringWriter sw = new StringWriter();
+            serializeToJSON(new JSONWriter(sw));
+            return sw.toString();
+
         } catch (JSONException e) {
-            ErrorHandling.error( "in LXP.toString()");
+            ErrorHandling.error("in LXP.toString()");
+            return "";
         }
-        return sw.toString();
     }
 }

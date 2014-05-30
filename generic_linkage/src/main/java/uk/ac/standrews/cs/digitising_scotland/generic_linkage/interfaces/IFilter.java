@@ -7,20 +7,17 @@ package uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces;
 public interface IFilter {
 
     /**
-     *
      * @return the ILXPInputStream over which filtering is being performed.
      */
     ILXPInputStream getInput();
 
     /**
-     *
      * @return the ILXPOutputStream to which selected records are being written
      */
     ILXPOutputStream getOutput();
 
     /**
-     *
-     * Determins if a record from the input stream should be written to the output stream
+     * Determines whether a record from the input stream should be written to the output stream
      * @param record to be selected or otherwise
      * @return true if the record is to be chosen for copying to the output stream.
      */

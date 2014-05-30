@@ -13,7 +13,7 @@ import uk.ac.standrews.cs.digitising_scotland.linkage.labels.Birth;
  */
 public class BlockingBFF_BFL_MPF_MPL extends Blocker {
 
-    public BlockingBFF_BFL_MPF_MPL(IBucket birthsBucket, IRepository output_repo) throws RepositoryException {
+    public BlockingBFF_BFL_MPF_MPL(final IBucket birthsBucket, final IRepository output_repo) throws RepositoryException {
 
         super(birthsBucket.getInputStream(), output_repo);
     }
@@ -22,7 +22,7 @@ public class BlockingBFF_BFL_MPF_MPL extends Blocker {
      * @param record - a record to be blocked
      * @return the blocking keys - one for baby and one for father
      */
-    public String[] determineBlockedBucketNamesForRecord(ILXP record) {
+    public String[] determineBlockedBucketNamesForRecord(final ILXP record) {
 
         // Only operates over birth records
 
@@ -36,6 +36,7 @@ public class BlockingBFF_BFL_MPF_MPL extends Blocker {
         String fathers_surname = record.get(Birth.FATHERS_SURNAME);
         key2 = key2 + (fathers_surname.equals("0") ? baby_surname : fathers_surname); // fathers surname coded as "0" if same as baby
         key2 = removeNasties(key2);
+
         return new String[]{key1, key2};
     }
 

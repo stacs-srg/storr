@@ -15,12 +15,12 @@ import uk.ac.standrews.cs.nds.util.ErrorHandling;
  */
 public class BlockingMrecordsUnused extends Blocker {
 
-    public BlockingMrecordsUnused(IBucket birthsBucket, IBucket deathsBucket, IBucket marriagesBucket, IRepository output_repo) throws RepositoryException {
+    public BlockingMrecordsUnused(final IBucket birthsBucket, final IBucket deathsBucket, final IBucket marriagesBucket, final IRepository output_repo) throws RepositoryException {
 
         super(new TailToTailMergedStream(new ILXPInputStream[]{birthsBucket.getInputStream(), deathsBucket.getInputStream(), marriagesBucket.getInputStream()}), output_repo);
     }
 
-    public String[] determineBlockedBucketNamesForRecord(ILXP record) {
+    public String[] determineBlockedBucketNamesForRecord(final ILXP record) {
 
         if (record.containsKey("TYPE") && record.get("TYPE").equals("marriage")) {
             // make groom and bride separately.
@@ -41,7 +41,7 @@ public class BlockingMrecordsUnused extends Blocker {
 
         } else {
             ErrorHandling.error("Record with unknown type in input Stream - ignoring");
-            return null;
+            return new String[]{};
         }
     }
 
@@ -49,7 +49,7 @@ public class BlockingMrecordsUnused extends Blocker {
      * @param key - a String key to be made into an acceptable bucket name
      * @return the cleaned up String
      */
-    private String removeNasties(String key) {
+    private String removeNasties(final String key) {
         return key.replace("/", "");
     }
 }

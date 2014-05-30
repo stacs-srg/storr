@@ -6,5 +6,5 @@ package uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces;
  */
 public interface ILXPOutputStream {
 
-    void add( ILXP record );
+    void add(ILXP record);
 }

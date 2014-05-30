@@ -16,26 +16,30 @@ import uk.ac.standrews.cs.nds.util.ErrorHandling;
  */
 public class BlockingPFPLMFFFoverBDMrecords extends Blocker {
 
-    public BlockingPFPLMFFFoverBDMrecords(IBucket birthsBucket, IBucket deathsBucket, IRepository output_repo) throws RepositoryException {
+    public BlockingPFPLMFFFoverBDMrecords(final IBucket birthsBucket, final IBucket deathsBucket, final IRepository output_repo) throws RepositoryException {
 
         super(new TailToTailMergedStream(new ILXPInputStream[]{birthsBucket.getInputStream(), deathsBucket.getInputStream()}), output_repo);
     }
 
     @Override
-    public String[] determineBlockedBucketNamesForRecord(ILXP record) {
+    public String[] determineBlockedBucketNamesForRecord(final ILXP record) {
 
         if (record.containsKey("TYPE") && (record.get("TYPE").equals("birth") || record.get("TYPE").equals("death"))) {
 
             // Note will concat nulls into key if any fields are null - working hypothesis - this doesn't matter.
-            String key = record.get(CommonLabels.FORENAME);
-            key = key + record.get(CommonLabels.SURNAME);
-            key = key + record.get(CommonLabels.FATHERS_FORENAME);
-            key = key + record.get(CommonLabels.MOTHERS_FORENAME);
-            key = removeNasties(key);
-            return new String[]{key};
+
+            StringBuilder builder = new StringBuilder();
+
+            builder.append(record.get(CommonLabels.FORENAME));
+            builder.append(record.get(CommonLabels.SURNAME));
+            builder.append(record.get(CommonLabels.FATHERS_FORENAME));
+            builder.append(record.get(CommonLabels.MOTHERS_FORENAME));
+
+            return new String[]{removeNasties(builder.toString())};
+
         } else {
             ErrorHandling.error("Record with unknown type in input Stream - ignoring");
-            return null;
+            return new String[]{};
         }
     }
 
@@ -43,7 +47,7 @@ public class BlockingPFPLMFFFoverBDMrecords extends Blocker {
      * @param key - a String key to be made into an acceptable bucket name
      * @return the cleaned up String
      */
-    private String removeNasties(String key) {
+    private String removeNasties(final String key) {
         return key.replace("/", "");
     }
 }

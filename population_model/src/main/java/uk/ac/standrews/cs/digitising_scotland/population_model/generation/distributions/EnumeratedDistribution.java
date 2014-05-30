@@ -31,7 +31,7 @@ public class EnumeratedDistribution implements Distribution<String> {
         configureProbabilities(item_probabilities);
     }
 
-    protected void configureProbabilities(Map<String, Double> item_probabilities) throws InconsistentWeightException {
+    protected void configureProbabilities(final Map<String, Double> item_probabilities) throws InconsistentWeightException {
 
         items = new StringWithCumulativeProbability[item_probabilities.size()];
         double cumulative_probability = 0.0;
@@ -56,17 +56,21 @@ public class EnumeratedDistribution implements Distribution<String> {
         int sample_index = Arrays.binarySearch(items, new StringWithCumulativeProbability("", dice_throw), ITEM_COMPARATOR);
 
         // If the exact cumulative probability isn't matched - and it's very unlikely to be - the result of binarySearch() is (-(insertion point) - 1).
-        if (sample_index < 0) sample_index = -sample_index - 1;
-        if (sample_index >= items.length) sample_index = items.length - 1;
+        if (sample_index < 0) {
+            sample_index = -sample_index - 1;
+        }
+        if (sample_index >= items.length) {
+            sample_index = items.length - 1;
+        }
 
-        return items[sample_index].item;
+        return items[sample_index].getItem();
     }
 
     private static class ItemComparator implements Comparator<StringWithCumulativeProbability>, Serializable {
 
         @Override
-        public int compare(StringWithCumulativeProbability o1, StringWithCumulativeProbability o2) {
-            return o1.cumulative_probability.compareTo(o2.cumulative_probability);
+        public int compare(final StringWithCumulativeProbability o1, final StringWithCumulativeProbability o2) {
+            return o1.getCumulativeProbability().compareTo(o2.getCumulativeProbability());
         }
     }
 }

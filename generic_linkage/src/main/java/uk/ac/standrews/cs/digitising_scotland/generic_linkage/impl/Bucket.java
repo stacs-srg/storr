@@ -19,7 +19,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-public class Bucket implements IBucket  {
+public class Bucket implements IBucket {
 
     private String base_path; // the name of the parent directory in which this bucket (itself a directory) is stored.
     private String name;     // the name of this bucket - used as the directory name
@@ -28,26 +28,33 @@ public class Bucket implements IBucket  {
     /**
      * Creates a handle on a bucket.
      * Assumes that bucket has been created already using a factory - i.e. the directory already exists.
-     * @param name = the name of the bucket (also used as directory name).
+     *
+     * @param name      the name of the bucket (also used as directory name)
+     * @param base_path the path of the parent directory
      */
-    public Bucket(String name, String base_path) throws Exception {
+    public Bucket(final String name, final String base_path) throws IOException {
+
         this.name = name;
         this.base_path = base_path;
-        String dirname = dirPath();
-        directory = new File(dirname);
+        String dir_name = dirPath();
+        directory = new File(dir_name);
         if (!directory.isDirectory()) {
-            throw new Exception("Bucket Directory: " + dirname + " does not exist");
+            throw new IOException("Bucket Directory: " + dir_name + " does not exist");
         }
     }
 
-
     @Override
-    public ILXP get(int id) throws PersistentObjectException, IOException {
-        return new LXP(id,getReader(id));
+    public ILXP get(final int id) throws PersistentObjectException, IOException {
+
+        JSONReader reader = getReader(id);
+        LXP lxp = new LXP(id, reader);
+
+        // TODO add method to close JSONReader, which should close encapsulated reader, and close here
+        return lxp;
     }
 
     @Override
-    public void put( ILXP record ) throws IOException, JSONException {
+    public void put(final ILXP record) throws IOException, JSONException {
 
         Path path = Paths.get(this.filePath(record.getId()));
 
@@ -62,33 +69,36 @@ public class Bucket implements IBucket  {
     }
 
     @Override
-    public String filePath(int id) {
-        return filePath( Integer.toString(id) );
+    public String filePath(final int id) {
+        return filePath(Integer.toString(id));
     }
 
-    protected File baseDir() { return directory;}
+    protected File baseDir() {
+        return directory;
+    }
 
     protected String dirPath() {
-        return base_path + File.separator + name;
-    } // should be file separator but gives a : not / ???
 
-    public String filePath(String id) {
+        return base_path + File.separator + name;
+    }
+
+    public String filePath(final String id) {
         return dirPath() + File.separator + id;
     }
 
     @Override
     public ILXPInputStream getInputStream() {
         try {
-            return new BucketBackedInputStream( this, baseDir() );
+            return new BucketBackedInputStream(this, baseDir());
         } catch (IOException e) {
-            ErrorHandling.exceptionError( e, "Cannot open input Stream for bucket " + name );
+            ErrorHandling.exceptionError(e, "Cannot open input Stream for bucket " + name);
             return null;
         }
     }
 
     @Override
     public ILXPOutputStream getOutputStream() {
-        return new BucketBackedOutputStream( this );
+        return new BucketBackedOutputStream(this);
     }
 
     @Override
@@ -96,12 +106,11 @@ public class Bucket implements IBucket  {
         return this.name;
     }
 
-    private JSONReader getReader(int id) throws IOException {
+    private JSONReader getReader(final int id) throws IOException {
 
         String path = filePath(id);
         BufferedReader reader = Files.newBufferedReader(Paths.get(path), FileManipulation.FILE_CHARSET);
 
         return new JSONReader(reader);
     }
-
 }

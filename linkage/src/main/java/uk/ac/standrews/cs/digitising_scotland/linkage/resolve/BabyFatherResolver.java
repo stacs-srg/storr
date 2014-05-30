@@ -5,7 +5,11 @@ import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.LXP;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.Repository;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.RepositoryException;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.RepositoryIterator;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.*;
+import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IBucket;
+import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXP;
+import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXPInputStream;
+import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXPOutputStream;
+import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IRepository;
 import uk.ac.standrews.cs.digitising_scotland.linkage.EventImporter;
 import uk.ac.standrews.cs.digitising_scotland.linkage.RecordFormatException;
 import uk.ac.standrews.cs.digitising_scotland.linkage.blocking.BlockingBFF_BFL_MPF_MPL;
@@ -17,7 +21,6 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
-
 
 /**
  * Performs pairwise linkage on babies and fathers
@@ -54,13 +57,12 @@ public class BabyFatherResolver {
 
         births = input_repo.makeBucket(births_name);
         matches = matches_repo.makeBucket(matches_name);
-
     }
 
     public void match() {
         try {
             blockonPFPLMFFF();
-        } catch ( Exception e ) {
+        } catch (Exception e) {
             ErrorHandling.exceptionError(e, "Error whilst blocking");
         }
         pairwiseLinkBlockedRecords();
@@ -89,27 +91,28 @@ public class BabyFatherResolver {
 
         while (blocked_record_iterator.hasNext()) {
             IBucket blocked_records = blocked_record_iterator.next();
-            BabyFatherLinker bfl = new BabyFatherLinker( blocked_records.getInputStream(),matches.getOutputStream() );
+            BabyFatherLinker bfl = new BabyFatherLinker(blocked_records.getInputStream(), matches.getOutputStream());
             bfl.pairwiseLink();
         }
     }
 
-    public static void main(String[] args) throws Exception {
+    public static void main(final String[] args) throws Exception {
 
-        BabyFatherResolver r = new BabyFatherResolver();
-        r.match();
+        new BabyFatherResolver().match();
     }
 
-    /**************************** Pairwise linker ****************************/
+    /**
+     * ************************* Pairwise linker ***************************
+     */
 
-    private class BabyFatherLinker extends AbstractPairwiseLinker implements IPairWiseLinker {
+    private class BabyFatherLinker extends AbstractPairwiseLinker {
 
         public BabyFatherLinker(ILXPInputStream input, ILXPOutputStream output) {
 
-            super(input,output);
+            super(input, output);
         }
 
-        public boolean compare(Pair pair) {
+        public boolean compare(final Pair pair) {
 
             // TODO we need to sort out naming and project linkage for fieldnames etc. - come back and look at properly.
 
@@ -124,26 +127,26 @@ public class BabyFatherResolver {
             int father_birthYear = Integer.parseInt(potential_father.get(Birth.BIRTH_YEAR));
             int child_birthYear = Integer.parseInt(potential_child.get(Birth.BIRTH_YEAR));
 
-            if( father_birthYear == child_birthYear ) { // can't be in a parent-child relationship.
+            if (father_birthYear == child_birthYear) { // can't be in a parent-child relationship.
                 return false;
             }
-            if( father_birthYear > child_birthYear ) { // swap pontential_father and child
+            if (father_birthYear > child_birthYear) { // swap pontential_father and child
                 ILXP temp = potential_father;
                 potential_father = potential_child;
                 potential_child = temp;
             }
-            if( potential_father.get( Birth.SEX ).equals( "F" ) ) {
+            if (potential_father.get(Birth.SEX).equals("F")) {
                 return false;
             }
 
-            String fathers_surname = potential_child.get( Birth.FATHERS_SURNAME );
-            fathers_surname =  fathers_surname.equals( "0" ) ? potential_child.get( Birth.SURNAME ) : fathers_surname; // fathers surname coded as "0" if same as baby
+            String fathers_surname = potential_child.get(Birth.FATHERS_SURNAME);
+            fathers_surname = fathers_surname.equals("0") ? potential_child.get(Birth.SURNAME) : fathers_surname; // fathers surname coded as "0" if same as baby
 
-            return potential_father.get( Birth.SURNAME ).equals( fathers_surname ) &&
-                    potential_father.get( Birth.FORENAME ).equals( potential_child.get( Birth.FATHERS_FORENAME ) );
+            return potential_father.get(Birth.SURNAME).equals(fathers_surname) &&
+                    potential_father.get(Birth.FORENAME).equals(potential_child.get(Birth.FATHERS_FORENAME));
         }
 
-        private Date getdob(ILXP record) throws RecordFormatException {
+        private Date getdob(final ILXP record) throws RecordFormatException {
 
             //TODO consider this -
 //        Object o = record.instatiateJavaInstance();
@@ -163,11 +166,11 @@ public class BabyFatherResolver {
             if (record.get("TYPE").equals("death")) {
 
                 String dob_string = record.get("date_of_birth");
-                if( dob_string != null  ) {
+                if (dob_string != null) {
                     try {
                         return DeathRecord.parseDate(dob_string);
                     } catch (ParseException e) {
-                        throw new RecordFormatException( "error in birth date: " + dob_string );
+                        throw new RecordFormatException("error in birth date: " + dob_string);
                     }
 
                 } else {
@@ -189,11 +192,12 @@ public class BabyFatherResolver {
                 }
             } else {
                 ErrorHandling.error("Found unexpected record type");
-                throw new RecordFormatException( "error in date" );
+                throw new RecordFormatException("error in date");
             }
         }
 
-        private Date fieldsToDate(String year_string, String month_string, String day_string) throws RecordFormatException {
+        private Date fieldsToDate(final String year_string, final String month_string, final String day_string) throws RecordFormatException {
+
             Calendar cal = Calendar.getInstance();
             cal.clear();
             try {
@@ -202,33 +206,34 @@ public class BabyFatherResolver {
                 int day = Integer.parseInt(day_string);
                 cal.set(year, month, day);
                 return cal.getTime();
-            } catch( NumberFormatException e ) {
-                ErrorHandling.error("Error parsing date (d/m/y) : " + day_string + "/" + month_string + "/" + year_string );
-                throw new RecordFormatException( "error in date" );
+
+            } catch (NumberFormatException e) {
+                ErrorHandling.error("Error parsing date (d/m/y) : " + day_string + "/" + month_string + "/" + year_string);
+                throw new RecordFormatException("error in date");
             }
         }
 
         /**
          * Adds a matched result to a potential matched record repository/bucket.
+         *
          * @param pair
          */
-        public void addToResults(Pair pair, ILXPOutputStream results) {
+        public void addToResults(final Pair pair, final ILXPOutputStream results) {
+
             ILXP first = pair.first();
             ILXP second = pair.second();
 
-            System.out.println( "Matched : " + first + "with:" + second );
+            System.out.println("Matched : " + first + "with:" + second);
 
             ILXP result_record = new LXP(matched_id++);
-            result_record.put( "first", first.get("id") );
-            result_record.put( "first_type", first.get("TYPE") );
-            result_record.put( "second", second.get("id") );
-            result_record.put( "second_type", second.get("TYPE") );
-            result_record.put( "relation", second.get("same-person") );
-            result_record.put( "resolver", this.getClass().toString() );
+            result_record.put("first", first.get("id"));
+            result_record.put("first_type", first.get("TYPE"));
+            result_record.put("second", second.get("id"));
+            result_record.put("second_type", second.get("TYPE"));
+            result_record.put("relation", second.get("same-person"));
+            result_record.put("resolver", this.getClass().toString());
 
-            results.add(result_record );
+            results.add(result_record);
         }
-
     }
-
 }

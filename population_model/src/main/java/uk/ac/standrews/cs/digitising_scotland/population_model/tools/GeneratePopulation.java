@@ -33,7 +33,7 @@ public class GeneratePopulation {
         generatePopulation(args);
     }
 
-    private static void generatePopulation(String[] args) throws IOException, InconsistentWeightException, SQLException, NegativeDeviationException, NegativeWeightException {
+    private static void generatePopulation(final String[] args) throws IOException, InconsistentWeightException, SQLException, NegativeDeviationException, NegativeWeightException {
 
         final int batch_size = CommandLineArgs.extractIntFromCommandLineArgs(args, BATCH_SIZE_FLAG, DEFAULT_BATCH_SIZE);
         final int number_of_batches = CommandLineArgs.extractIntFromCommandLineArgs(args, NUMBER_OF_BATCHES_FLAG, DEFAULT_NUMBER_OF_BATCHES);
@@ -51,16 +51,18 @@ public class GeneratePopulation {
 
             showInfo(batch_size, number_of_batches);
             TimeManipulation.reportElapsedTime(start_time);
+
+        } else {
+            usage();
         }
-        else usage();
     }
 
-    private static void showInfo(int batch_size, int number_of_batches) {
+    private static void showInfo(final int batch_size, final int number_of_batches) {
 
         Diagnostic.traceNoSource(number_of_batches + " batch" + (number_of_batches > 1 ? "es" : "") + " of population size " + batch_size);
     }
 
-    private static void generateBatch(int batch_size, int batch_number, int number_of_progress_updates) throws IOException, InconsistentWeightException, SQLException, NegativeDeviationException, NegativeWeightException {
+    private static void generateBatch(final int batch_size, final int batch_number, final int number_of_progress_updates) throws IOException, InconsistentWeightException, SQLException, NegativeDeviationException, NegativeWeightException {
 
         Diagnostic.traceNoSource("Generating batch " + (batch_number + 1));
 

@@ -8,12 +8,10 @@ import uk.ac.standrews.cs.digitising_scotland.population_model.generation.util.R
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.CompactPartnership;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.CompactPerson;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.CompactPopulation;
-import uk.ac.standrews.cs.digitising_scotland.population_model.model.IDFactory;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.Person;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.PersonFactory;
 import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
@@ -56,7 +54,7 @@ public abstract class PopulationToFile {
      * 
      * @param population the population
      * @param path_string the path for the output file
-     * @throws FileNotFoundException if the file does not exist and cannot be created
+     * @throws IOException if the file does not exist and cannot be created
      */
     public PopulationToFile(final CompactPopulation population, final String path_string) throws IOException, InconsistentWeightException {
 
@@ -80,7 +78,7 @@ public abstract class PopulationToFile {
     /**
      * Exports representation of the population to file.
      */
-    public synchronized final void export() throws IOException {
+    public final synchronized void export() throws IOException {
 
         Path path = Paths.get(path_string);
         FileManipulation.createParentDirectoryIfDoesNotExist(path);
@@ -91,12 +89,10 @@ public abstract class PopulationToFile {
             outputIndividuals(writer);
             outputFamilies(writer);
             outputTrailer(writer);
-
-            IDFactory.savePersistentId();
         }
     }
 
-    protected void outputIndividuals(PrintWriter writer) {
+    protected void outputIndividuals(final PrintWriter writer) {
 
         final int index = 0;
 

@@ -32,11 +32,13 @@ public class LoadDBFromGEDCOMFile {
                 System.out.println("Imported " + number_of_families_imported + " families.");
             }
         }
-        else usage();
+        else {
+            usage();
+        }
     }
 
     private static void usage() {
 
-        System.out.println("Usage: java LoadDBFromGEDCOMFile -f<file path>");
+        System.out.println("Usage: java " + LoadDBFromGEDCOMFile.class.getSimpleName() + " -f<file path>");
     }
 }

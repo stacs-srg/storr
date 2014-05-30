@@ -175,11 +175,11 @@ public class InfrastructureTest {
 
         IIndexedBucket b = repo.getIndexedBucket(bucket_name4);
 
-        b.add_index( Birth.SURNAME );
+        b.addIndex(Birth.SURNAME);
         EventImporter importer = new EventImporter();
         int counter1 = importer.importBirths(b, BIRTH_RECORDS_PATH);
 
-        IIndex index = b.get_index(Birth.SURNAME);
+        IIndex index = b.getIndex(Birth.SURNAME);
 
         Set<String> keys = index.keySet();
         int counter2 = 0;

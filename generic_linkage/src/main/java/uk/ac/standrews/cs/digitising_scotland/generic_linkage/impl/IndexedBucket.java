@@ -12,6 +12,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -21,41 +22,44 @@ import java.util.Set;
  */
 public class IndexedBucket extends Bucket implements IIndexedBucket {
 
-    public HashMap<String, IIndex> indexes = new HashMap<String, IIndex>();
-    private static String INDEX = "INDEX";
-    private static String index_dir_name = "INDICES";
+    private Map<String, IIndex> indexes = new HashMap<>();
+
+    private static final String INDEX = "INDEX";
+    private static final String INDEX_DIR_NAME = "INDICES";
 
     /**
      * Creates a handle on a bucket.
      * Assumes that bucket has been created already using a factory - i.e. the directory already exists.
      *
-     * @param name      - the name of the bucket (also used as directory name).
-     * @param base_path - the repository path in which the bucket is created.
+     * @param name      the name of the bucket (also used as directory name).
+     * @param base_path the repository path in which the bucket is created.
      */
-    public IndexedBucket(String name, String base_path) throws Exception {
+    public IndexedBucket(final String name, final String base_path) throws IOException {
+
         super(name, base_path);
-        init_indexes();
+        initIndexes();
     }
 
-    private void init_indexes() throws Exception {
+    private void initIndexes() throws IOException {
+
         String dirname = dirPath();
         // Ensure that the index directory exists
-        File index = new File(dirname + File.separator + index_dir_name);
+        File index = new File(dirname + File.separator + INDEX_DIR_NAME);
         if (!index.isDirectory() && !index.mkdir()) {
-            throw new Exception("Index Directory: " + dirname + " does not exist and cannot create");
+            throw new IOException("Index Directory: " + dirname + " does not exist and cannot create");
         }
-        Iterator<File> fi = FileIteratorFactory.createFileIterator(index, true, false);
-        while (fi.hasNext()) {
-            File next = fi.next();
+
+        Iterator<File> iterator = FileIteratorFactory.createFileIterator(index, true, false);
+        while (iterator.hasNext()) {
+            File next = iterator.next();
             indexes.put(next.getName(), new Index(next.getName(), next.toPath(), this));
         }
-
     }
 
-
     @Override
-    public void add_index(String label) throws IOException {
-        Path path = Paths.get(this.filePath(index_dir_name + "/" + INDEX + label));
+    public void addIndex(final String label) throws IOException {
+
+        Path path = Paths.get(this.filePath(INDEX_DIR_NAME + "/" + INDEX + label));
 
         if (Files.exists(path)) {
             throw new IOException("index exists");
@@ -66,19 +70,18 @@ public class IndexedBucket extends Bucket implements IIndexedBucket {
     }
 
     @Override
-    public IIndex get_index(String label) {
+    public IIndex getIndex(String label) {
         return indexes.get(label);
-
     }
 
     @Override
     public void put(ILXP record) throws IOException, JSONException {
+
         Set<String> keys = indexes.keySet(); // all the keys currently being indexed
         for (String key : keys) {
             if (record.containsKey(key)) { // we are indexing this key
                 IIndex index = indexes.get(key); // so get the index
                 index.add(record); // and add this record to the index for that key
-
             }
         }
     }

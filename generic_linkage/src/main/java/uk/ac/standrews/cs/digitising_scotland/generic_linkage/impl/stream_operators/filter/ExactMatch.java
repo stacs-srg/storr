@@ -13,20 +13,15 @@ public class ExactMatch extends Filter {
     private final String value;
     private final String label;
 
-    /**
-     * @param input
-     * @param output
-     * @param label
-     * @param value
-     */
-    public ExactMatch(ILXPInputStream input, ILXPOutputStream output, String label, String value) {
+    public ExactMatch(final ILXPInputStream input, final ILXPOutputStream output, final String label, final String value) {
+
         super(input, output);
         this.label = label;
         this.value = value;
     }
 
-    public boolean select(ILXP record) {
+    public boolean select(final ILXP record) {
 
-        return record.containsKey( label ) && record.get( label ).equals( value );
+        return record.containsKey(label) && record.get(label).equals(value);
     }
 }

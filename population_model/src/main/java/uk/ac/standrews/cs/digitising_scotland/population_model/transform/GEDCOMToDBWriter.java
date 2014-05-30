@@ -36,8 +36,6 @@ public class GEDCOMToDBWriter implements AutoCloseable {
     private final GedcomParser parser;
     private final PersonFactory person_factory;
 
-    // -------------------------------------------------------------------------------------------------------
-
     public GEDCOMToDBWriter(final String path_string) throws IOException, GedcomParserException, SQLException {
 
         connection = new DBConnector(PopulationProperties.DATABASE_NAME).createConnection();
@@ -46,8 +44,6 @@ public class GEDCOMToDBWriter implements AutoCloseable {
         parser = new GedcomParser();
         parser.load(path_string);
     }
-
-    // -------------------------------------------------------------------------------------------------------
 
     public int importPeople() throws ParseException, SQLException {
 
@@ -74,27 +70,27 @@ public class GEDCOMToDBWriter implements AutoCloseable {
         connection.close();
     }
 
-    private void importFamily(final Family f) throws ParseException, SQLException {
+    private void importFamily(final Family family) throws ParseException, SQLException {
 
-        final int familyXref = Integer.valueOf(stripAtSymbols(f.xref));
-        final int husbandXref = Integer.valueOf(stripAtSymbols(f.husband.xref));
-        final int wifeXref = Integer.valueOf(stripAtSymbols(f.wife.xref));
+        final int familyXref = Integer.valueOf(stripAtSymbols(family.xref));
+        final int husbandXref = Integer.valueOf(stripAtSymbols(family.husband.xref));
+        final int wifeXref = Integer.valueOf(stripAtSymbols(family.wife.xref));
 
-        String marriageDateString = "";
-        for (final FamilyEvent event : f.events) {
+        String marriage_date_string = "";
+        for (final FamilyEvent event : family.events) {
             if (event.type == FamilyEventType.MARRIAGE) {
-                marriageDateString = event.date.toString();
+                marriage_date_string = event.date.toString();
             }
         }
 
-        final Date marriageDate = DateManipulation.stringSQLToDate(marriageDateString);
+        final Date marriage_date = DateManipulation.stringSQLToDate(marriage_date_string);
 
         final List<Integer> childXrefs = new ArrayList<Integer>();
-        for (final Individual child : f.children) {
+        for (final Individual child : family.children) {
             childXrefs.add(Integer.valueOf(stripAtSymbols(child.xref)));
         }
 
-        importFamily(familyXref, marriageDate, husbandXref, wifeXref, childXrefs);
+        importFamily(familyXref, marriage_date, husbandXref, wifeXref, childXrefs);
     }
 
     private void importPerson(final Person fp) throws SQLException {
@@ -115,46 +111,46 @@ public class GEDCOMToDBWriter implements AutoCloseable {
         }
     }
 
-    private void importFamily(final int familyID, final java.sql.Date marriageDate, final int husbandID, final int wifeID, final List<Integer> childIDs) throws SQLException {
+    private void importFamily(final int family_id, final Date marriage_date, final int husband_id, final int wife_id, final List<Integer> child_ids) throws SQLException {
 
-        insertPartnership(familyID, marriageDate);
-        insertPartner(familyID, husbandID);
-        insertPartner(familyID, wifeID);
+        insertPartnership(family_id, marriage_date);
+        insertPartner(family_id, husband_id);
+        insertPartner(family_id, wife_id);
 
-        for (final Integer childID : childIDs) {
-            insertChild(familyID, childID);
+        for (final Integer childID : child_ids) {
+            insertChild(family_id, childID);
         }
     }
 
-    private void insertPartnership(final int familyID, final java.sql.Date marriageDate) throws SQLException {
+    private void insertPartnership(final int family_id, final Date marriage_date) throws SQLException {
 
         // TODO factor out prepared statement
         try (final PreparedStatement statement = connection.prepareStatement("INSERT INTO " + PopulationProperties.PARTNERSHIP_TABLE_NAME + " VALUES( ?,? );")) {
 
-            statement.setInt(1, familyID);
-            statement.setDate(2, marriageDate);
+            statement.setInt(1, family_id);
+            statement.setDate(2, marriage_date);
             statement.executeUpdate();
         }
     }
 
-    private void insertPartner(final int familyID, final int partnerID) throws SQLException {
+    private void insertPartner(final int family_id, final int partner_id) throws SQLException {
 
         // TODO factor out prepared statement
         try (final PreparedStatement statement = connection.prepareStatement("INSERT INTO " + PopulationProperties.PARTNERSHIP_PARTNER_TABLE_NAME + " VALUES( ?,? );")) {
 
-            statement.setInt(1, partnerID);
-            statement.setInt(2, familyID);
+            statement.setInt(1, partner_id);
+            statement.setInt(2, family_id);
             statement.executeUpdate();
         }
     }
 
-    private void insertChild(final int familyID, final Integer childID) throws SQLException {
+    private void insertChild(final int family_id, final int child_id) throws SQLException {
 
         // TODO factor out prepared statement
         try (final PreparedStatement statement = connection.prepareStatement("INSERT INTO " + PopulationProperties.PARTNERSHIP_CHILD_TABLE_NAME + " VALUES( ?,? );")) {
 
-            statement.setInt(1, childID);
-            statement.setInt(2, familyID);
+            statement.setInt(1, child_id);
+            statement.setInt(2, family_id);
             statement.executeUpdate();
         }
     }

@@ -35,7 +35,9 @@ public class GeneratePopulationInGEDCOMFile {
             exporter.export();
             System.out.println("done");
         }
-        else usage();
+        else {
+            usage();
+        }
     }
 
     private static void usage() {

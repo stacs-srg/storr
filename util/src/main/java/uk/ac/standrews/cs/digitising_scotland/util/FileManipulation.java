@@ -21,21 +21,24 @@ public class FileManipulation {
 
     public static final Charset FILE_CHARSET = Charset.forName("UTF-8");
 
-    public static void deleteDirectory(String directory_path) throws IOException {
+    public static void deleteDirectory(final String directory_path) throws IOException {
 
-        Path directory = Paths.get(directory_path);
+        deleteDirectory(Paths.get(directory_path));
+    }
+
+    public static void deleteDirectory(final Path directory) throws IOException {
 
         Files.walkFileTree(directory, new SimpleFileVisitor<Path>() {
 
             @Override
-            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+            public FileVisitResult visitFile(final Path file, final BasicFileAttributes attrs) throws IOException {
 
                 Files.delete(file);
                 return FileVisitResult.CONTINUE;
             }
 
             @Override
-            public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+            public FileVisitResult postVisitDirectory(final Path dir, final IOException exc) throws IOException {
 
                 Files.delete(dir);
                 return FileVisitResult.CONTINUE;
@@ -52,28 +55,28 @@ public class FileManipulation {
         }
     }
 
-    public static void createDirectoryIfDoesNotExist(String directory_path) throws IOException {
+    public static void createDirectoryIfDoesNotExist(final String directory_path) throws IOException {
 
         createDirectoryIfDoesNotExist(new File(directory_path));
     }
 
-    public static void createDirectoryIfDoesNotExist(File directory) throws IOException {
+    public static void createDirectoryIfDoesNotExist(final File directory) throws IOException {
 
         createDirectoryIfDoesNotExist(Paths.get(directory.getAbsolutePath()));
     }
 
-    public static void createDirectoryIfDoesNotExist(Path path) throws IOException {
+    public static void createDirectoryIfDoesNotExist(final Path path) throws IOException {
 
         Files.createDirectories(path);
     }
 
-    public static void createParentDirectoryIfDoesNotExist(Path path) throws IOException {
+    public static void createParentDirectoryIfDoesNotExist(final Path path) throws IOException {
 
         Path parent_dir = path.getParent();
         if (parent_dir != null) createDirectoryIfDoesNotExist(parent_dir);
     }
 
-    public static List<Path> getDirectoryEntries(Path directory) throws IOException {
+    public static List<Path> getDirectoryEntries(final Path directory) throws IOException {
 
         List<Path> result = new ArrayList<>();
         try (DirectoryStream<Path> stream = Files.newDirectoryStream(directory)) {

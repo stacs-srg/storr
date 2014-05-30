@@ -14,15 +14,13 @@ import java.sql.SQLException;
 public class DBConnector {
 
     private static final String CONNECTION_STRING_PREFIX = "jdbc:mysql://";
-    private final static String DEFAULT_ADDRESS = "localhost";
-    private final static String DEFAULT_USERNAME = "root";
-    private final static String DEFAULT_PASSWORD = "";
+    private static final String DEFAULT_ADDRESS = "localhost";
+    private static final String DEFAULT_USERNAME = "root";
+    private static final String DEFAULT_PASSWORD = "";
 
     private final String username;
     private final String password;
     private String connection_string;
-
-    // -------------------------------------------------------------------------------------------------------
 
     /**
      * Initialises the connector to access the server running on "localhost" with default port, username "root" and an empty password.
@@ -34,7 +32,7 @@ public class DBConnector {
 
     /**
      * Initialises the connector with a specific database and default values for the other details.
-     * 
+     *
      * @param database_name the name of the database to be accessed, or the empty string to connect to the server without a specific database
      */
     public DBConnector(final String database_name) {
@@ -44,11 +42,11 @@ public class DBConnector {
 
     /**
      * Initialises the connector with the specified server/database details.
-     * 
-     * @param address the network address of the server, or "localhost"
-     * @param port the port on which the server is listening, or 0 for the default port
-     * @param username the username for accessing the server
-     * @param password the password for accessing the server
+     *
+     * @param address       the network address of the server, or "localhost"
+     * @param port          the port on which the server is listening, or 0 for the default port
+     * @param username      the username for accessing the server
+     * @param password      the password for accessing the server
      * @param database_name the name of the database to be accessed, or the empty string to connect to the server without a specific database
      */
     public DBConnector(final String address, final int port, final String username, final String password, final String database_name) {
@@ -71,11 +69,9 @@ public class DBConnector {
         }
     }
 
-    // -------------------------------------------------------------------------------------------------------
-
     /**
      * Creates a connection to the MariaDB server or database specified via the constructor.
-     * 
+     *
      * @return the connection
      * @throws SQLException if a database access error occurs
      */

@@ -7,7 +7,6 @@ import uk.ac.standrews.cs.digitising_scotland.population_model.model.CompactPers
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.CompactPopulation;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.Person;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.DateFormat;
@@ -26,22 +25,18 @@ public class PopulationToGraphviz extends PopulationToFile {
 
     private final DateFormat formatter;
 
-    // -------------------------------------------------------------------------------------------------------
-
     /**
      * Initialises the exporter. This includes potentially expensive scanning of the population graph.
      *
      * @param population the population
      * @param path_string       the path for the output file
-     * @throws FileNotFoundException if the file does not exist and cannot be created
+     * @throws IOException if the file does not exist and cannot be created
      */
     public PopulationToGraphviz(final CompactPopulation population, final String path_string) throws IOException, InconsistentWeightException {
 
         super(population, path_string);
         formatter = new SimpleDateFormat("dd/MM/yyyy");
     }
-
-    // -------------------------------------------------------------------------------------------------------
 
     @Override
     protected void outputHeader(final PrintWriter writer) {
@@ -103,8 +98,6 @@ public class PopulationToGraphviz extends PopulationToFile {
         writer.println("}");
     }
 
-    // -------------------------------------------------------------------------------------------------------
-
     private String getIndividualNodeAttributes(final CompactPerson person) {
 
         final int date_of_death = person.getDateOfDeath();
@@ -153,7 +146,7 @@ public class PopulationToGraphviz extends PopulationToFile {
         if (partnership.getChildren() != null) {
             for (final int child : partnership.getChildren()) {
                 if (child != -1) {
-                    writer.println(partnership_id + ARC + child); // TODO GRAHAM IS THIS RIGHT? I MAY HAVE CHANGED THE SEMANTICS AL *****8
+                    writer.println(partnership_id + ARC + child);
                 }
             }
         }

@@ -9,7 +9,7 @@ import java.util.StringTokenizer;
 
 /**
  * Provides methods to manipulate dates represented as integers containing number of days elapsed since a fixed start date.
- * 
+ *
  * @author Graham Kirby (graham.kirby@st-andrews.ac.uk)
  */
 public class DateManipulation {
@@ -26,7 +26,7 @@ public class DateManipulation {
     private static final Calendar CALENDAR;
     private static final Map<String, Integer> CALENDAR_MONTHS;
 
-    public static final int START_YEAR = 1600 ;
+    public static final int START_YEAR = 1600;
 
     static {
 
@@ -48,10 +48,10 @@ public class DateManipulation {
 
     /**
      * Calculates the number of days elapsed between 1st January of the {@link #START_YEAR} and the given date.
-     * 
-     * @param year the year
+     *
+     * @param year  the year
      * @param month the month of the given date, with 0 representing January
-     * @param day the day of the month
+     * @param day   the day of the month
      * @return the number of days elapsed
      */
     public static synchronized int dateToDays(final int year, final int month, final int day) {
@@ -67,15 +67,15 @@ public class DateManipulation {
      * @param date the date from which to calculate the days
      * @return the number of days elapsed
      */
-    public static synchronized int dateToDays( final Date date ) {
+    public static synchronized int dateToDays(final Date date) {
         CALENDAR.setTime(date);
         return millisToDays();
     }
 
     /**
-     * Returns a java.sql.Date representation of the date represented by a String such as that created by {@link DateManipulation#daysToString}
-     * 
-     * @param date the string representation of the date 
+     * Returns a java.sql.Date representation of the date represented by a String such as that created by {@link DateManipulation#daysToString}.
+     *
+     * @param date the string representation of the date
      * @return a java.sql.Date representation of the date
      * @throws ParseException if the date representation is not valid
      */
@@ -89,8 +89,7 @@ public class DateManipulation {
 
             CALENDAR.set(year, month, day);
             return new java.sql.Date(CALENDAR.getTimeInMillis());
-        }
-        catch (final UnknownMonthException e) {
+        } catch (final UnknownMonthException e) {
             throw new ParseException(e.getMessage(), 0);
         }
     }
@@ -98,14 +97,16 @@ public class DateManipulation {
     private static int indexOfMonth(final String month_name) throws UnknownMonthException {
 
         final Integer index = CALENDAR_MONTHS.get(month_name);
-        if (index != null) { return index; }
+        if (index != null) {
+            return index;
+        }
 
         throw new UnknownMonthException("Unknown month: " + month_name);
     }
 
     /**
      * Returns a text representation of the date represented by the given number of days from 1st January of the {@link #START_YEAR}.
-     * 
+     *
      * @param days the number of elapsed days
      * @return a text representation of the date
      */
@@ -118,7 +119,7 @@ public class DateManipulation {
 
     /**
      * Returns a {@link Date} representation of the date represented by the given number of days from 1st January of the {@link #START_YEAR}.
-     * 
+     *
      * @param days the number of elapsed days
      * @return a representation of the date
      */
@@ -130,7 +131,7 @@ public class DateManipulation {
 
     /**
      * Returns a {@link Date} representation of the date represented by the given number of days from 1st January of the {@link #START_YEAR}.
-     * 
+     *
      * @param days the number of elapsed days
      * @return a representation of the java.sql.Date
      */
@@ -142,7 +143,7 @@ public class DateManipulation {
 
     /**
      * Returns the day of the month of the date represented by the given number of days from 1st January of the {@link #START_YEAR}.
-     * 
+     *
      * @param days the number of elapsed days
      * @return the day of the month, numbered from 1
      */
@@ -154,7 +155,7 @@ public class DateManipulation {
 
     /**
      * Returns the month of the date represented by the given number of days from 1st January of the {@link #START_YEAR}.
-     * 
+     *
      * @param days the number of elapsed days
      * @return the month, numbered from 0 for January
      */
@@ -166,7 +167,7 @@ public class DateManipulation {
 
     /**
      * Returns the year of the date represented by the given number of days from 1st January of the {@link #START_YEAR}.
-     * 
+     *
      * @param days the number of elapsed days
      * @return the year
      */
@@ -178,7 +179,7 @@ public class DateManipulation {
 
     /**
      * Tests whether a given year is a leap year.
-     * 
+     *
      * @param year the year
      * @return true if the year is a leap year, which is the case if it is divisible by 400, or by 4 and not by 100.
      */
@@ -190,8 +191,8 @@ public class DateManipulation {
 
     /**
      * Adds a given number of years to a date.
-     * 
-     * @param days a date represented as the number of days elapsed since 1st January of the {@link #START_YEAR}
+     *
+     * @param days  a date represented as the number of days elapsed since 1st January of the {@link #START_YEAR}
      * @param years a number of years
      * @return the date obtained from adding the number of years to the date, represented in the same way as the date parameter
      */
@@ -202,19 +203,19 @@ public class DateManipulation {
         return millisToDays();
     }
 
-    public static synchronized int dateToDay(Date date) {
+    public static synchronized int dateToDay(final Date date) {
 
         setCalendarToDate(date);
         return CALENDAR.get(Calendar.DAY_OF_MONTH);
     }
 
-    public static synchronized int dateToMonth(Date date) {
+    public static synchronized int dateToMonth(final Date date) {
 
         setCalendarToDate(date);
         return CALENDAR.get(Calendar.MONTH);
     }
 
-    public static synchronized int dateToYear(Date date) {
+    public static synchronized int dateToYear(final Date date) {
 
         setCalendarToDate(date);
         return CALENDAR.get(Calendar.YEAR);
@@ -222,7 +223,7 @@ public class DateManipulation {
 
     /**
      * Calculates the elapsed time between the given dates expressed in days, with the result in years. The result is positive if the first date given is earlier than the second date.
-     * 
+     *
      * @param days1 the first date
      * @param days2 the second date
      * @return the difference between the dates in years
@@ -231,8 +232,6 @@ public class DateManipulation {
 
         return daysToYear(days2) - daysToYear(days1);
     }
-
-    // -------------------------------------------------------------------------------------------------------
 
     private static synchronized void setCalendarToDate(final int days) {
 

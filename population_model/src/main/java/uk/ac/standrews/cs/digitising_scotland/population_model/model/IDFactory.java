@@ -31,17 +31,10 @@ public class IDFactory {
     public static void resetId() {
 
         id = 0;
-        savePersistentId();
     }
 
     private static void loadPersistentId() {
 
         // TODO get id from database
-//        id = Integer.parseInt(PopulationProperties.getProperties().getProperty(UUID_COUNT));
-    }
-
-    public static void savePersistentId() {
-
-//        PopulationProperties.getProperties().setProperty(UUID_COUNT, Integer.toString(id));
     }
 }

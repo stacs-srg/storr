@@ -13,15 +13,13 @@ public abstract class ProgressIndicator {
 
     private double proportion_complete;
 
-    public ProgressIndicator(int number_of_updates) {
+    public ProgressIndicator(final int number_of_updates) {
 
         this.number_of_updates = number_of_updates;
         number_of_steps_since_last_update = 0;
     }
 
-    public abstract void indicateProgress(double proportion_complete);
-
-    public void setTotalSteps(int total_steps) {
+    public void setTotalSteps(final int total_steps) {
 
         this.total_steps = total_steps;
         number_of_steps_per_update = total_steps / number_of_updates;
@@ -45,4 +43,6 @@ public abstract class ProgressIndicator {
 
         return proportion_complete;
     }
+
+    public abstract void indicateProgress(final double proportion_complete);
 }

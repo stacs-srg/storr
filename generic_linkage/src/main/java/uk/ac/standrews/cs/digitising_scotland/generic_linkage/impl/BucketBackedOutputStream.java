@@ -11,19 +11,19 @@ import java.io.IOException;
 /**
  * Created by al on 28/04/2014.
  */
-public class BucketBackedOutputStream extends BuckedBackedAbstractStream implements ILXPOutputStream {
+public class BucketBackedOutputStream extends BucketBackedAbstractStream implements ILXPOutputStream {
 
-    public BucketBackedOutputStream(IBucket bucket) {
+    public BucketBackedOutputStream(final IBucket bucket) {
         super(bucket);
     }
 
     @Override
-    public void add(ILXP record) {
+    public void add(final ILXP record) {
         try {
             bucket.put(record);
 
         } catch (IOException | JSONException e) {
-            ErrorHandling.error( "Cannot save record with id: " + record.getId() + " to bucket: "  + bucket.getName() + "exception: " + e.getMessage());
+            ErrorHandling.error("Cannot save record with id: " + record.getId() + " to bucket: " + bucket.getName() + "exception: " + e.getMessage());
         }
     }
 }

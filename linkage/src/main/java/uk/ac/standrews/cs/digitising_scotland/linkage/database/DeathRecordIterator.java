@@ -18,13 +18,12 @@ public class DeathRecordIterator extends RecordIterator<DeathRecord> {
     private Iterator<Person> dead_person_iterator;
     private PersonIterator person_iterator;
 
-
     public DeathRecordIterator() {
 
         try {
             Condition<Person> check_dead = new Condition<Person>() {
                 @Override
-                public boolean test(Person person) {
+                public boolean test(final Person person) {
                     return person.getDeathDate() != null;
                 }
             };

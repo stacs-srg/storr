@@ -11,7 +11,6 @@ import uk.ac.standrews.cs.digitising_scotland.population_model.generation.util.R
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.CompactPartnership;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.CompactPerson;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.CompactPopulation;
-import uk.ac.standrews.cs.digitising_scotland.population_model.model.IDFactory;
 import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
 import uk.ac.standrews.cs.digitising_scotland.util.ProgressIndicator;
 
@@ -46,9 +45,8 @@ public class PopulationToDB implements AutoCloseable {
     private final ProgressIndicator progress_indicator;
 
     /**
-     *
-     * @param population  the population
-     * @throws java.io.FileNotFoundException if the file does not exist and cannot be created
+     * @param population the population
+     * @throws IOException if the file does not exist and cannot be created
      */
     public PopulationToDB(final CompactPopulation population, final ProgressIndicator progress_indicator) throws IOException, InconsistentWeightException, SQLException {
 
@@ -78,12 +76,16 @@ public class PopulationToDB implements AutoCloseable {
 
     private void initialiseProgressIndicator() {
 
-        if (progress_indicator != null) progress_indicator.setTotalSteps(population.size() * 2);
+        if (progress_indicator != null) {
+            progress_indicator.setTotalSteps(population.size() * 2);
+        }
     }
 
     private void progressStep() {
 
-        if (progress_indicator != null) progress_indicator.progressStep();
+        if (progress_indicator != null) {
+            progress_indicator.progressStep();
+        }
     }
 
     public void export() throws SQLException {
@@ -92,8 +94,6 @@ public class PopulationToDB implements AutoCloseable {
 
         outputIndividuals();
         outputFamilies();
-
-        IDFactory.savePersistentId();
     }
 
     public void close() throws SQLException {
@@ -117,7 +117,7 @@ public class PopulationToDB implements AutoCloseable {
         }
     }
 
-    private void outputTreeWithSameSurname(CompactPerson compact_person, String surname) throws SQLException {
+    private void outputTreeWithSameSurname(final CompactPerson compact_person, final String surname) throws SQLException {
 
         final List<CompactPerson> descendants = new ArrayList<>();
 
@@ -125,7 +125,7 @@ public class PopulationToDB implements AutoCloseable {
         outputDescendants(descendants, surname);
     }
 
-    private void outputDescendants(List<CompactPerson> descendants, String surname) throws SQLException {
+    private void outputDescendants(final List<CompactPerson> descendants, final String surname) throws SQLException {
 
         while (!descendants.isEmpty()) {
 
@@ -136,7 +136,7 @@ public class PopulationToDB implements AutoCloseable {
         }
     }
 
-    private void addChildrenToDescendants(CompactPerson compact_person, List<CompactPerson> descendants) {
+    private void addChildrenToDescendants(final CompactPerson compact_person, final List<CompactPerson> descendants) {
 
         if (compact_person.getPartnerships() != null) {
 
@@ -149,7 +149,7 @@ public class PopulationToDB implements AutoCloseable {
         }
     }
 
-    private void outputIndividual(CompactPerson compact_person, String surname) throws SQLException {
+    private void outputIndividual(final CompactPerson compact_person, final String surname) throws SQLException {
 
         compact_person.setMarked(true);
 
@@ -189,7 +189,7 @@ public class PopulationToDB implements AutoCloseable {
         }
     }
 
-    protected void outputPartnership(CompactPartnership partnership) throws SQLException {
+    protected void outputPartnership(final CompactPartnership partnership) throws SQLException {
 
         partnership.setMarked();
 
@@ -203,7 +203,7 @@ public class PopulationToDB implements AutoCloseable {
         importFamily(partnership_id, marriage_date, partner1_id, partner2_id, child_ids);
     }
 
-    private List<Integer> getChildIds(CompactPartnership partnership) {
+    private List<Integer> getChildIds(final CompactPartnership partnership) {
 
         List<Integer> child_ids = new ArrayList<>();
 
@@ -215,46 +215,46 @@ public class PopulationToDB implements AutoCloseable {
         return child_ids;
     }
 
-    private void importFamily(final int familyID, final java.sql.Date marriageDate, final int husbandID, final int wifeID, final List<Integer> childIDs) throws SQLException {
+    private void importFamily(final int family_id, final Date marriage_date, final int husband_id, final int wife_id, final List<Integer> child_ids) throws SQLException {
 
-        insertPartnership(familyID, marriageDate);
-        insertPartner(familyID, husbandID);
-        insertPartner(familyID, wifeID);
+        insertPartnership(family_id, marriage_date);
+        insertPartner(family_id, husband_id);
+        insertPartner(family_id, wife_id);
 
-        for (final Integer childID : childIDs) {
-            insertChild(familyID, childID);
+        for (final Integer childID : child_ids) {
+            insertChild(family_id, childID);
         }
     }
 
-    private void insertPartnership(final int familyID, final java.sql.Date marriageDate) throws SQLException {
+    private void insertPartnership(final int family_id, final Date marriage_date) throws SQLException {
 
         // TODO factor out prepared statement
         try (final PreparedStatement statement = connection.prepareStatement("INSERT INTO " + PopulationProperties.PARTNERSHIP_TABLE_NAME + " VALUES( ?,? );")) {
 
-            statement.setInt(1, familyID);
-            statement.setDate(2, marriageDate);
+            statement.setInt(1, family_id);
+            statement.setDate(2, marriage_date);
             statement.executeUpdate();
         }
     }
 
-    private void insertPartner(final int familyID, final int partnerID) throws SQLException {
+    private void insertPartner(final int family_id, final int partner_id) throws SQLException {
 
         // TODO factor out prepared statement
         try (final PreparedStatement statement = connection.prepareStatement("INSERT INTO " + PopulationProperties.PARTNERSHIP_PARTNER_TABLE_NAME + " VALUES( ?,? );")) {
 
-            statement.setInt(1, partnerID);
-            statement.setInt(2, familyID);
+            statement.setInt(1, partner_id);
+            statement.setInt(2, family_id);
             statement.executeUpdate();
         }
     }
 
-    private void insertChild(final int familyID, final Integer childID) throws SQLException {
+    private void insertChild(final int family_id, final Integer child_id) throws SQLException {
 
         // TODO factor out prepared statement
         try (final PreparedStatement statement = connection.prepareStatement("INSERT INTO " + PopulationProperties.PARTNERSHIP_CHILD_TABLE_NAME + " VALUES( ?,? );")) {
 
-            statement.setInt(1, childID);
-            statement.setInt(2, familyID);
+            statement.setInt(1, child_id);
+            statement.setInt(2, family_id);
             statement.executeUpdate();
         }
     }

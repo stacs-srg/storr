@@ -48,27 +48,6 @@ public final class ErrorHandling {
     protected static final String DEFAULT_DATE_FORMAT_PATTERN = "HHmm.ss.SSS yyyy-MM-dd";
     private static DateFormat dateformat = new SimpleDateFormat(DEFAULT_DATE_FORMAT_PATTERN);
 
-    // -------------------------------------------------------------------------------------------------------
-
-    /**
-     * Sets whether timestamps should be used.
-     * 
-     * @param use_timestamp true if timestamps should be used
-     */
-    public static void setTimestampFlag(final boolean use_timestamp) {
-
-        ErrorHandling.use_timestamp = use_timestamp;
-    }
-
-    /**
-     * Returns the date format.
-     * @return the date format
-     */
-    public static DateFormat getDateFormat() {
-
-        return dateformat;
-    }
-
     /**
      * Outputs an error message on the event bus and to standard error, if enabled.
      *
@@ -76,92 +55,8 @@ public final class ErrorHandling {
      */
     public static void error(final Object... msg) {
 
-        outputError(true, false, Diagnostic.getMethodInCallChain(), null, msg);
+        outputError(false, Diagnostic.getMethodInCallChain(), null, msg);
     }
-
-    /**
-     * Outputs an error message on the event bus and to standard error, if enabled.
-     *
-     * @param msg a descriptive message
-     */
-    public static void errorNoSource(final Object... msg) {
-
-        outputError(true, false, null, null, msg);
-    }
-
-    /**
-     * Outputs an error message to standard error, without sending on the event bus.
-     *
-     * @param msg a descriptive message
-     */
-    public static void errorNoEvent(final Object... msg) {
-
-        outputError(false, false, Diagnostic.getMethodInCallChain(), null, msg);
-    }
-
-    /**
-     * Outputs an error message to standard error regardless of whether local
-     * reporting is enabled or not. The message is displayed without displaying
-     * the source of the error, without the "ErrorHandling:" prefix and without sending
-     * on the event bus.
-     *
-     * @param msg a descriptive message
-     */
-    public static void errorExplicitLocalReport(final Object... msg) {
-
-        outputError(false, false, null, null, msg);
-    }
-
-    /**
-     * Outputs an error message to standard error regardless of whether local
-     * reporting is enabled or not, and performs a system exit. The message is
-     * displayed without displaying the source of the error, without the
-     * "ErrorHandling:" prefix and without sending on the event bus.
-     *
-     * @param msg a descriptive message
-     */
-    public static void hardErrorExplicitLocalReport(final Object... msg) {
-
-        outputError(false, true, null, null, msg);
-        hardExit();
-    }
-
-    // -------------------------------------------------------------------------------------------------------
-
-    /**
-     * Outputs an error message, and performs a system exit.
-     *
-     * @param msg a descriptive message
-     */
-    public static void hardError(final Object... msg) {
-
-        outputError(true, true, Diagnostic.getMethodInCallChain(), null, msg);
-        hardExit();
-    }
-
-    /**
-     * Outputs an error message, and performs a system exit.
-     *
-     * @param msg a descriptive message
-     */
-    public static void hardErrorNoSource(final Object... msg) {
-
-        outputError(true, true, null, null, msg);
-        hardExit();
-    }
-
-    /**
-     * Outputs an error message to standard error, without sending on the event bus, and performs a system exit.
-     *
-     * @param msg a descriptive message
-     */
-    public static void hardErrorNoEvent(final Object... msg) {
-
-        outputError(false, true, Diagnostic.getMethodInCallChain(), null, msg);
-        hardExit();
-    }
-
-    // -------------------------------------------------------------------------------------------------------
 
     /**
      * Outputs details of an exception, followed by a stack trace.
@@ -170,55 +65,14 @@ public final class ErrorHandling {
      */
     public static void exceptionError(final Throwable e, final Object... msg) {
 
-        outputError(true, false, Diagnostic.getMethodInCallChain(), e, msg);
+        outputError(false, Diagnostic.getMethodInCallChain(), e, msg);
     }
-
-    /**
-     * Outputs details of an exception, followed by a stack trace, without sending on the event bus.
-     * @param e the exception
-     * @param msg a descriptive message
-     */
-    public static void exceptionErrorNoEvent(final Throwable e, final Object... msg) {
-
-        outputError(false, false, Diagnostic.getMethodInCallChain(), e, msg);
-    }
-
-    /**
-     * Outputs details of an exception, followed by a stack trace, and performs a system exit.
-     * @param e the exception
-     * @param msg a descriptive message
-     */
-    public static void hardExceptionError(final Throwable e, final Object... msg) {
-
-        exceptionError(e, msg);
-        hardExit();
-    }
-
-    /**
-     * Outputs details of an exception, followed by a stack trace, without sending on the event bus, and performs a system exit.
-     * @param e the exception
-     * @param msg a descriptive message
-     */
-    public static void hardExceptionErrorNoEvent(final Throwable e, final Object... msg) {
-
-        exceptionErrorNoEvent(e, msg);
-        hardExit();
-    }
-
-    // -------------------------------------------------------------------------------------------------------
 
     private ErrorHandling() {
 
     }
 
-    private static void hardExit() {
-
-        System.exit(-1);
-    }
-
-    // -------------------------------------------------------------------------------------------------------
-
-    private static void outputError(final boolean generate_event, final boolean fatal, final String source, final Throwable e, final Object... messages) {
+    private static void outputError(final boolean fatal, final String source, final Throwable e, final Object... messages) {
 
         synchronized (SYNC) {
 

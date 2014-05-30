@@ -7,8 +7,7 @@ import java.io.IOException;
  */
 public interface IIndexedBucket extends IBucket {
 
-    void add_index(String label) throws IOException;
+    void addIndex(String label) throws IOException;
 
-    IIndex get_index(String label);
-
+    IIndex getIndex(String label);
 }

@@ -23,13 +23,14 @@ public class GenerateProbabilityDistribution {
         if (input_file_path != null && output_file_path != null) {
 
             FileDistributionGenerator analyser = new FileDistributionGenerator();
-            analyser.analyseData(input_file_path,output_file_path);
+            analyser.analyseData(input_file_path, output_file_path);
+        } else {
+            usage();
         }
-        else usage();
     }
 
     private static void usage() {
 
-        System.out.println("Usage: java GenerateProbabilityDistribution -i<input file path> -o<output file path>");
+        System.out.println("Usage: java " + GenerateProbabilityDistribution.class.getSimpleName() + " -i<input file path> -o<output file path>");
     }
 }

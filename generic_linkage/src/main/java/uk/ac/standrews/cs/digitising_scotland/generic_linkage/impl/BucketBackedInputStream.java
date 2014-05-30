@@ -13,19 +13,17 @@ import java.util.Iterator;
 public class BucketBackedInputStream implements ILXPInputStream {
 
     private final IBucket bucket;
-    Iterator<File> file_iterator;
+    private Iterator<File> file_iterator;
 
-    public BucketBackedInputStream(IBucket bucket, Iterator<File> file_iterator) throws IOException {
+    public BucketBackedInputStream(final IBucket bucket, final Iterator<File> file_iterator) throws IOException {
 
         this.bucket = bucket;
         this.file_iterator = file_iterator;
-
     }
 
+    public BucketBackedInputStream(final IBucket bucket, final File directory) throws IOException {
 
-    public BucketBackedInputStream(IBucket bucket, File directory) throws IOException {
-
-        this( bucket, FileIteratorFactory.createFileIterator(directory, true, false) );
+        this(bucket, FileIteratorFactory.createFileIterator(directory, true, false));
     }
 
     public Iterator<ILXP> iterator() {
@@ -46,10 +44,8 @@ public class BucketBackedInputStream implements ILXPInputStream {
 
                 return bucket.get(id);
 
-
             } catch (PersistentObjectException | IOException e) {
-                System.out.println("exception in iterator: " + e.getMessage());
-//                ErrorHandling.exceptionError(e, "Exception in iterator");
+                ErrorHandling.exceptionError(e, "Exception in iterator");
                 return null;
             }
         }

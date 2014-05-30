@@ -29,7 +29,7 @@ public abstract class Record {
         return entry;
     }
 
-    public void setEntry(String entry) {
+    public void setEntry(final String entry) {
         this.entry = entry;
     }
 
@@ -69,35 +69,27 @@ public abstract class Record {
         return image_quality;
     }
 
-    public void setImage_quality(final String image_quality) {
+    public void setImageQuality(final String image_quality) {
         this.image_quality = image_quality;
     }
 
-    protected String getRecordedParentsSurname(String parents_surname, String childs_surname) {
+    protected String getRecordedParentsSurname(final String parents_surname, final String childs_surname) {
 
         return parents_surname.equals(childs_surname) ? "0" : parents_surname;
     }
 
-    protected void append(StringBuilder builder, Object... fields) {
+    protected void append(final StringBuilder builder, final Object... fields) {
 
-        for (Object field : fields) append(builder, field != null ? field.toString().toUpperCase() : null);
+        for (Object field : fields) {
+            append(builder, field != null ? field.toString().toUpperCase() : null);
+        }
     }
 
-    protected void append(StringBuilder builder, String field) {
+    protected void append(final StringBuilder builder, final String field) {
 
-        if (field != null) builder.append(field);
-        builder.append(SEPARATOR);
-    }
-
-    protected void append(StringBuilder builder, int n) {
-
-        builder.append(n);
-        builder.append(SEPARATOR);
-    }
-
-    protected void append(StringBuilder builder, boolean b) {
-
-        builder.append(b);
+        if (field != null) {
+            builder.append(field);
+        }
         builder.append(SEPARATOR);
     }
 
