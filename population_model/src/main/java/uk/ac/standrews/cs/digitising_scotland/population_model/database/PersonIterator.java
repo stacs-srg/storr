@@ -84,7 +84,7 @@ public class PersonIterator implements Iterator<Person>, Iterable<Person>, AutoC
 
             ResultSet size_result = statement.executeQuery("SELECT COUNT(*) FROM " + PopulationProperties.DATABASE_NAME + "." + PopulationProperties.PERSON_TABLE_NAME);
 
-            size_result.first();
+            if (!size_result.first()) throw new SQLException("No rows returned in person count");
             return size_result.getInt(1);
         }
     }

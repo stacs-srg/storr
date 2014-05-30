@@ -108,7 +108,7 @@ public class BirthRecord extends IndividualRecord {
             // Attributes associated with individual's parents
             for (final Person parent : family.getPartners()) {
 
-                if (parent.getGender() == 'M') {
+                if (parent.getGender() == Person.MALE) {
 
                     setFathersForename(parent.getFirstName());
                     setFathersSurname(getRecordedParentsSurname(parent.getSurname(), person.getSurname()));

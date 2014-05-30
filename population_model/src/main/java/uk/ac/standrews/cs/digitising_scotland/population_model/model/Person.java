@@ -11,6 +11,11 @@ import java.sql.Date;
  */
 public class Person {
 
+    public static final char FEMALE = 'F';
+    public static final char MALE = 'M';
+
+    public static final String MALE_STRING = String.valueOf(MALE);
+
     private int id;
     private char gender;
     private String first_name;
@@ -22,15 +27,13 @@ public class Person {
     private String address;
     private String maiden_name;
 
-    //----------------------------------------------- Constructors -----------------------------------------------
-
     public Person() {
 
     }
 
-    public Person(final int id, final char gender, final Date birthdate, final Date death_date, final String occupation, final String cause_of_death, final String address) {
+    public Person(final int id, final char gender, final Date birth_date, final Date death_date, final String occupation, final String cause_of_death, final String address) {
 
-        this(id, null, null, gender, birthdate, death_date, occupation, cause_of_death, address);
+        this(id, null, null, gender, birth_date, death_date, occupation, cause_of_death, address);
     }
 
     public Person(final int id, final String first_name, final String surname, final char gender, final Date birth_date, final Date death_date, final String occupation, final String cause_of_death, final String address) {
@@ -46,8 +49,6 @@ public class Person {
         this.address = address;
     }
 
-    //----------------------------------------------- Setters and Getters -----------------------------------------------
-
     public char getGender() {
 
         return gender;
@@ -55,6 +56,7 @@ public class Person {
 
     public void setGender(final char gender) {
 
+        if (!(gender == FEMALE || gender == MALE)) throw new RuntimeException("illegal gender char");
         this.gender = gender;
     }
 

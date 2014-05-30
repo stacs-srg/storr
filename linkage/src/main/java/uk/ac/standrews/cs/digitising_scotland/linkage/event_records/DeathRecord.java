@@ -110,7 +110,7 @@ public class DeathRecord extends IndividualRecord {
 
             // Attributes associated with individual's parents
             for (final Person parent : family.getPartners()) {
-                if (parent.getGender() == 'M') { // the father
+                if (parent.getGender() == Person.MALE) { // the father
 
                     setFathersForename(parent.getFirstName());
                     setFathersSurname(getRecordedParentsSurname(parent.getSurname(), person.getSurname()));

@@ -13,6 +13,9 @@ public class PopulationProperties {
     public static final String PARTNERSHIP_PARTNER_TABLE_NAME = "Partnership_Partner";
     public static final String PARTNERSHIP_CHILD_TABLE_NAME = "Partnership_Child";
 
+    public static final String PERSON_ID_FIELD = "person_id";
+    public static final String DATE_FIELD = "date";
+
     private static final String DETERMINISTIC_KEY = "deterministic";
     private static final String DEFAULT_PROPERTIES_PATH = "config/config.txt";
 

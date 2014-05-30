@@ -23,48 +23,47 @@ public class DBBackedPartnership {
         this.id = id;
 
         // TODO might be able to factor this out.
-        final PreparedStatement get_partners_statement = connection.prepareStatement("SELECT * FROM " + PopulationProperties.DATABASE_NAME + "." + PopulationProperties.PARTNERSHIP_PARTNER_TABLE_NAME + " WHERE partnership_id= ?");
-        get_partners_statement.setInt(1, id);
+        try (final PreparedStatement get_partners_statement = connection.prepareStatement("SELECT * FROM " + PopulationProperties.DATABASE_NAME + "." + PopulationProperties.PARTNERSHIP_PARTNER_TABLE_NAME + " WHERE partnership_id= ?")) {
 
-        final ResultSet partner_result_set = get_partners_statement.executeQuery();
+            get_partners_statement.setInt(1, id);
 
-        while (partner_result_set.next()) {
+            final ResultSet partner_result_set = get_partners_statement.executeQuery();
 
-            final int partner_id = partner_result_set.getInt("person_id");
-            final DBBackedPerson partner = DBBackedPersonFactory.createDBBackedPerson(connection, partner_id);
+            while (partner_result_set.next()) {
 
-            partners.add(partner);
-            if (partner.getGender() == 'M') {
-                groom = partner;
-            } else {
-                bride = partner;
+                final int partner_id = partner_result_set.getInt(PopulationProperties.PERSON_ID_FIELD);
+                final DBBackedPerson partner = DBBackedPersonFactory.createDBBackedPerson(connection, partner_id);
+
+                partners.add(partner);
+                if (partner.getGender() == Person.MALE) {
+                    groom = partner;
+                } else {
+                    bride = partner;
+                }
             }
         }
 
         if (bride == null || groom == null) {
-            throw new RuntimeException("bride or groom not found for partnership: " + id);
+            throw new SQLException("bride or groom not found for partnership: " + id);
         }
 
         bride.setMarriedName(groom.getSurname());
 
-        final PreparedStatement get_marriage_statement = connection.prepareStatement("SELECT * FROM " + PopulationProperties.DATABASE_NAME + "." + PopulationProperties.PARTNERSHIP_TABLE_NAME + " WHERE id= ?");
-        get_marriage_statement.setInt(1, id);
+        try (final PreparedStatement get_marriage_statement = connection.prepareStatement("SELECT * FROM " + PopulationProperties.DATABASE_NAME + "." + PopulationProperties.PARTNERSHIP_TABLE_NAME + " WHERE id= ?")) {
 
-        final ResultSet marriage_result_set = get_marriage_statement.executeQuery();
+            get_marriage_statement.setInt(1, id);
 
-        if (marriage_result_set.first()) {
-            start_date = marriage_result_set.getDate("date");
+            final ResultSet marriage_result_set = get_marriage_statement.executeQuery();
+
+            if (marriage_result_set.first()) {
+                start_date = marriage_result_set.getDate(PopulationProperties.DATE_FIELD);
+            }
         }
     }
 
     public int getId() {
 
         return id;
-    }
-
-    public Set<Person> getChildren() {
-
-        return null; //TODO write this
     }
 
     public Set<Person> getPartners() {
@@ -85,15 +84,5 @@ public class DBBackedPartnership {
     public Date getStartDate() {
 
         return (Date)start_date.clone();
-    }
-
-    public Date getEndDate() {
-
-        return null; // TODO write this.
-    }
-
-    public String getOtherInfo() {
-
-        return ""; // TODO
     }
 }

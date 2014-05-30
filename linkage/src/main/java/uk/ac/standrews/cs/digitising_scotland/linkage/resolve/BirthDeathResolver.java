@@ -39,7 +39,6 @@ public class BirthDeathResolver {
     private static String source_base_path = "src/test/resources/BDMSet1";;
     private static String births_name = "birth_records";
     private static String deaths_name = "death_records";
-    private static String marriages_name = "marriage_records";
     private static String matches_name = "baby-father";
 
     private static String births_source_path = source_base_path + "/" + births_name + ".txt";
@@ -53,7 +52,6 @@ public class BirthDeathResolver {
 
     private IBucket births;
     private IBucket deaths;
-    private IBucket marriages;
     private IBucket matches;
 
     private int matched_id = 0;
@@ -66,7 +64,6 @@ public class BirthDeathResolver {
 
         births = input_repo.makeBucket(births_name);
         deaths = input_repo.makeBucket(deaths_name);
-        marriages = input_repo.makeBucket(marriages_name);
         matches = matches_repo.makeBucket(matches_name);
     }
 
