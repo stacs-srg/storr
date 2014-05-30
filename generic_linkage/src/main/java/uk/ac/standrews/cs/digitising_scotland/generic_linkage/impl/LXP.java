@@ -2,13 +2,11 @@ package uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl;
 
 import org.json.JSONException;
 import org.json.JSONWriter;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IBucket;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXP;
 import uk.ac.standrews.cs.nds.persistence.PersistentObjectException;
 import uk.ac.standrews.cs.nds.rpc.stream.JSONReader;
 import uk.ac.standrews.cs.nds.util.ErrorHandling;
 
-import java.io.IOException;
 import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
@@ -25,18 +23,7 @@ public class LXP extends HashMap<String, String> implements ILXP {
         this.id = id;
     }
 
-    @Override
-    public int getId() {
-
-        return id;
-    }
-
-    public void initialiseFromBucket(IBucket bucket, int id) throws PersistentObjectException, IOException {
-        initialiser(id, bucket.getReader(id));
-    }
-
-
-    private void initialiser(int id, JSONReader reader) throws PersistentObjectException {
+    public LXP(int id, JSONReader reader) throws PersistentObjectException {
         try {
             this.id = id;
 
@@ -54,6 +41,12 @@ public class LXP extends HashMap<String, String> implements ILXP {
         } catch (JSONException e) {
             throw new PersistentObjectException(e);
         }
+    }
+
+    @Override
+    public int getId() {
+
+        return id;
     }
 
     /**

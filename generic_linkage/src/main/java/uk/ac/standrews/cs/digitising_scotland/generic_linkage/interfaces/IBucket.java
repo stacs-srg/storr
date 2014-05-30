@@ -1,7 +1,7 @@
 package uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces;
 
 import org.json.JSONException;
-import uk.ac.standrews.cs.nds.rpc.stream.JSONReader;
+import uk.ac.standrews.cs.nds.persistence.PersistentObjectException;
 
 import java.io.IOException;
 
@@ -14,10 +14,17 @@ public interface IBucket {
     /**
      *
      * @param id - the identifier of the LXP record for which a reader is required.
-     * @return a JSONReader that will read the JSON encoded representation of an LXP record with the specified id.
-     * @return null if the file cannot be found or an error in the id
+     * @return an LXP record with the specified id.
+     * @return null if the record cannot be found
      */
-    JSONReader getReader(int id) throws IOException;
+    ILXP get(int id) throws IOException, PersistentObjectException;
+
+    /**
+     *
+     * Writes the state of a record to a bucket
+     * @param record whose state is to be written
+     */
+    void put( ILXP record ) throws IOException, JSONException;
 
     /**
      *
@@ -44,10 +51,4 @@ public interface IBucket {
      */
     String getName();
 
-    /**
-     *
-     * Writes the state of a record to a bucket
-     * @param record whose state is to be written
-     */
-    void save( ILXP record ) throws IOException, JSONException;
 }

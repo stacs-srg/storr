@@ -7,10 +7,11 @@ import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXP;
 import uk.ac.standrews.cs.digitising_scotland.linkage.labels.Birth;
 import uk.ac.standrews.cs.digitising_scotland.linkage.labels.Death;
 import uk.ac.standrews.cs.digitising_scotland.linkage.labels.Marriage;
-import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
 
 import java.io.BufferedReader;
+import java.io.EOFException;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
@@ -27,43 +28,46 @@ import java.util.NoSuchElementException;
  */
 public class EventImporter {
 
+    private static final String UTF_8 = "UTF-8";
     private static final String SEPARATOR = "\\|";
 
     int id = 1; // use this to uniquely stamp all items imported - might need something more sophisticated in future.
 
-    public void importBirths(IBucket bucket, String filename) throws IOException, RecordFormatException, JSONException {
+    public void importBirths(IBucket b, String filename) throws IOException, RecordFormatException, JSONException {
 
-        try (final BufferedReader reader = Files.newBufferedReader(Paths.get(filename), FileManipulation.FILE_CHARSET)) {
-
-            ILXP record = importBirthRecord(reader);
-            while (record != null) {
-                bucket.save(record);
-                record = importBirthRecord(reader);
+        try (final BufferedReader reader = Files.newBufferedReader(Paths.get(filename), Charset.forName(UTF_8))) {
+            while (true) {
+                ILXP record = importBirthRecord(reader);
+                b.put(record);
             }
+        } catch (EOFException e) {
+            // do nothing - reached eof
         }
     }
 
-    public void importDeaths(IBucket bucket, String filename) throws IOException, RecordFormatException, JSONException {
+    public void importDeaths(IBucket b, String filename) throws IOException, RecordFormatException, JSONException {
 
-        try (final BufferedReader reader = Files.newBufferedReader(Paths.get(filename), FileManipulation.FILE_CHARSET)) {
+        try (final BufferedReader reader = Files.newBufferedReader(Paths.get(filename), Charset.forName(UTF_8))) {
 
-            ILXP record = importDeathRecord(reader);
-            while (record != null) {
-                bucket.save(record);
-                record = importDeathRecord(reader);
+            while (true) {
+                ILXP record = importDeathRecord(reader);
+                b.put(record);
             }
+        } catch (EOFException e) {
+            // do nothing - reached eof
         }
     }
 
-    public void importMarriages(IBucket bucket, String filename) throws IOException, RecordFormatException, JSONException {
+    public void importMarriages(IBucket b, String filename) throws IOException, RecordFormatException, JSONException {
 
-        try (final BufferedReader reader = Files.newBufferedReader(Paths.get(filename), FileManipulation.FILE_CHARSET)) {
+        try (final BufferedReader reader = Files.newBufferedReader(Paths.get(filename), Charset.forName(UTF_8))) {
 
-            ILXP record = importMarriageRecord(reader);
-            while (record != null) {
-                bucket.save(record);
-                record = importMarriageRecord(reader);
+            while (true) {
+                ILXP record = importMarriageRecord(reader);
+                b.put(record);
             }
+        } catch (EOFException e) {
+            // do nothing - reached eof
         }
     }
 
@@ -98,7 +102,7 @@ public class EventImporter {
 
         String line = reader.readLine();
         if (line == null) {
-            return null;
+            throw new EOFException();
         }
 
         try {
@@ -112,6 +116,7 @@ public class EventImporter {
             return record;
 
         } catch (NoSuchElementException e) {
+            e.printStackTrace();
             throw new RecordFormatException(e.getMessage());
         }
     }

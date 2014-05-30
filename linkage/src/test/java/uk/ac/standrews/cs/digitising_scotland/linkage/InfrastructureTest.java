@@ -85,7 +85,7 @@ public class InfrastructureTest {
         LXP lxp = new LXP(1);
         lxp.put("age", "42");
         lxp.put("address", "home");
-        b.save(lxp);
+        b.put(lxp);
     }
 
     @Test
@@ -95,10 +95,10 @@ public class InfrastructureTest {
         LXP lxp = new LXP(1);
         lxp.put("age", "42");
         lxp.put("address", "home");
-        b.save(lxp);
+        b.put(lxp);
 
         try {
-            b.save(lxp);
+            b.put(lxp);
         } catch( Exception e ) {
             // should get an exception due to overwrite;
             return;
@@ -113,10 +113,9 @@ public class InfrastructureTest {
         LXP lxp = new LXP(1);
         lxp.put("age", "42");
         lxp.put("address", "home");
-        b.save(lxp);       // <<--------- write record **
+        b.put(lxp);       // <<--------- write record **
 
-        LXP lxp2 = new LXP();
-        lxp2.initialiseFromBucket(b, 1);    // read in the record just written at **
+        ILXP lxp2 = b.get(1);
         assertTrue(lxp2.containsKey("age"));
         assertEquals(lxp2.get("age"), "42");
         assertTrue(lxp2.containsKey("address"));
@@ -132,7 +131,7 @@ public class InfrastructureTest {
             LXP lxp = new LXP(i);
             lxp.put("age", "42");
             lxp.put("address", "home");
-            b.save(lxp);
+            b.put(lxp);
         }
         int count = 1;
         for( ILXP record : b.getInputStream() ) {

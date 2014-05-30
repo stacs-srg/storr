@@ -1,27 +1,13 @@
 package uk.ac.standrews.cs.digitising_scotland.population_model.model;
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import uk.ac.standrews.cs.digitising_scotland.population_model.generation.distributions.AgeAtDeathDistribution;
-import uk.ac.standrews.cs.digitising_scotland.population_model.generation.distributions.Distribution;
-import uk.ac.standrews.cs.digitising_scotland.population_model.generation.distributions.IncomersDistribution;
-import uk.ac.standrews.cs.digitising_scotland.population_model.generation.distributions.NegativeDeviationException;
-import uk.ac.standrews.cs.digitising_scotland.population_model.generation.distributions.NegativeWeightException;
-import uk.ac.standrews.cs.digitising_scotland.population_model.generation.distributions.NormalDistribution;
-import uk.ac.standrews.cs.digitising_scotland.population_model.generation.distributions.UniformDistribution;
-import uk.ac.standrews.cs.digitising_scotland.population_model.generation.distributions.UniformSexDistribution;
-import uk.ac.standrews.cs.digitising_scotland.population_model.generation.distributions.WeightedIntegerDistribution;
+import uk.ac.standrews.cs.digitising_scotland.population_model.generation.distributions.*;
 import uk.ac.standrews.cs.digitising_scotland.population_model.generation.util.RandomFactory;
 import uk.ac.standrews.cs.digitising_scotland.util.ArrayIterator;
 import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
 import uk.ac.standrews.cs.digitising_scotland.util.ProgressIndicator;
 import uk.ac.standrews.cs.nds.util.QuickSort;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 /**
  * Model of synthetic population.
@@ -631,7 +617,7 @@ public class CompactPopulation implements Iterable<CompactPerson> {
         return new ArrayIterator<>(getPeople());
     }
 
-    @SuppressFBWarnings(value = "EI_EXPOSE_REP",justification = "too expensive...")
+ //   @SuppressFBWarnings(value = "EI_EXPOSE_REP",justification = "too expensive...")
     public CompactPerson[] getPeople() {
 
         return people;

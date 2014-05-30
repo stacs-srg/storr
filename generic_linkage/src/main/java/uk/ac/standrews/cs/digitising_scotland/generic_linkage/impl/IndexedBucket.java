@@ -72,7 +72,7 @@ public class IndexedBucket extends Bucket implements IIndexedBucket {
     }
 
     @Override
-    public void save(ILXP record) throws IOException, JSONException {
+    public void put(ILXP record) throws IOException, JSONException {
         Set<String> keys = indexes.keySet(); // all the keys currently being indexed
         for (String key : keys) {
             if (record.containsKey(key)) { // we are indexing this key
@@ -81,7 +81,5 @@ public class IndexedBucket extends Bucket implements IIndexedBucket {
 
             }
         }
-
-
     }
 }

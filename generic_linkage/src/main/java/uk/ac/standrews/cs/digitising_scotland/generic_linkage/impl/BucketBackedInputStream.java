@@ -44,10 +44,8 @@ public class BucketBackedInputStream implements ILXPInputStream {
             try {
                 int id = Integer.valueOf(file_iterator.next().getName());
 
-                LXP lxp = new LXP(id);
-                lxp.initialiseFromBucket(bucket, id);
+                return bucket.get(id);
 
-                return lxp;
 
             } catch (PersistentObjectException | IOException e) {
                 System.out.println("exception in iterator: " + e.getMessage());

@@ -7,6 +7,7 @@ import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXP;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXPInputStream;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXPOutputStream;
 import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
+import uk.ac.standrews.cs.nds.persistence.PersistentObjectException;
 import uk.ac.standrews.cs.nds.rpc.stream.JSONReader;
 import uk.ac.standrews.cs.nds.util.ErrorHandling;
 
@@ -39,13 +40,25 @@ public class Bucket implements IBucket  {
         }
     }
 
+
     @Override
-    public JSONReader getReader(int id) throws IOException {
+    public ILXP get(int id) throws PersistentObjectException, IOException {
+        return new LXP(id,getReader(id));
+    }
 
-        String path = filePath(id);
-        BufferedReader reader = Files.newBufferedReader(Paths.get(path), FileManipulation.FILE_CHARSET);
+    @Override
+    public void put( ILXP record ) throws IOException, JSONException {
 
-        return new JSONReader(reader);
+        Path path = Paths.get(this.filePath(record.getId()));
+
+        if (Files.exists(path)) {
+            throw new IOException("File already exists - LXP records in buckets may not be overwritten");
+        }
+
+        try (Writer writer = Files.newBufferedWriter(path, FileManipulation.FILE_CHARSET)) {
+
+            record.serializeToJSON(new JSONWriter(writer));
+        }
     }
 
     @Override
@@ -83,19 +96,12 @@ public class Bucket implements IBucket  {
         return this.name;
     }
 
-    @Override
-    public void save( ILXP record ) throws IOException, JSONException {
+    private JSONReader getReader(int id) throws IOException {
 
-            Path path = Paths.get(this.filePath(record.getId()));
+        String path = filePath(id);
+        BufferedReader reader = Files.newBufferedReader(Paths.get(path), FileManipulation.FILE_CHARSET);
 
-            if (Files.exists(path)) {
-                throw new IOException("File already exists - LXP records in buckets may not be overwritten");
-            }
-
-            try (Writer writer = Files.newBufferedWriter(path, FileManipulation.FILE_CHARSET)) {
-
-                record.serializeToJSON(new JSONWriter(writer));
-            }
+        return new JSONReader(reader);
     }
 
 }

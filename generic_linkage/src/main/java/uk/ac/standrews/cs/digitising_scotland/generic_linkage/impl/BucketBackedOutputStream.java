@@ -20,7 +20,7 @@ public class BucketBackedOutputStream extends BuckedBackedAbstractStream impleme
     @Override
     public void add(ILXP record) {
         try {
-            bucket.save(record);
+            bucket.put(record);
 
         } catch (IOException | JSONException e) {
             ErrorHandling.error( "Cannot save record with id: " + record.getId() + " to bucket: "  + bucket.getName() + "exception: " + e.getMessage());
