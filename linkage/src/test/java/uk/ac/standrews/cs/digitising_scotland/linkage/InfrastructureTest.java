@@ -177,19 +177,21 @@ public class InfrastructureTest {
 
         b.add_index( Birth.SURNAME );
         EventImporter importer = new EventImporter();
-        importer.importBirths(b, BIRTH_RECORDS_PATH);
+        int counter1 = importer.importBirths(b, BIRTH_RECORDS_PATH);
 
         IIndex index = b.get_index(Birth.SURNAME);
 
         Set<String> keys = index.keySet();
+        int counter2 = 0;
         for( String key : keys ) {
-            System.out.print("keys: " + key + " :");
+
+            // System.out.print("keys: " + key + " :");
             List<Integer> values = index.values(key);
-            System.out.println( values );
+            counter2 += values.size();
+            // System.out.println( values );
 
         }
-
-        // SHOULD PROBABLY DO SOMETHING like check that the same number of records that are read in are in the index.
+        assertTrue(counter1 == counter2); // records indexed are the same as those read in.
 
 
 

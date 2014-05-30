@@ -33,20 +33,40 @@ public class EventImporter {
 
     int id = 1; // use this to uniquely stamp all items imported - might need something more sophisticated in future.
 
-    public void importBirths(IBucket b, String filename) throws IOException, RecordFormatException, JSONException {
+    /**
+     * @param b the bucket from which to import
+     * @param filename containing the source records in digitising scotland format
+     * @return the number of records read in
+     * @throws IOException
+     * @throws RecordFormatException
+     * @throws JSONException
+     */
+    public int importBirths(IBucket b, String filename) throws IOException, RecordFormatException, JSONException {
 
+        int counter = 0;
         try (final BufferedReader reader = Files.newBufferedReader(Paths.get(filename), Charset.forName(UTF_8))) {
             while (true) {
                 ILXP record = importBirthRecord(reader);
                 b.put(record);
+                counter++;
             }
         } catch (EOFException e) {
             // do nothing - reached eof
+            return counter;
         }
     }
 
-    public void importDeaths(IBucket b, String filename) throws IOException, RecordFormatException, JSONException {
+    /**
+     * @param b the bucket from which to import
+     * @param filename containing the source records in digitising scotland format
+     * @return the number of records read in
+     * @throws IOException
+     * @throws RecordFormatException
+     * @throws JSONException
+     */
+    public int importDeaths(IBucket b, String filename) throws IOException, RecordFormatException, JSONException {
 
+        int counter = 0;
         try (final BufferedReader reader = Files.newBufferedReader(Paths.get(filename), Charset.forName(UTF_8))) {
 
             while (true) {
@@ -55,11 +75,21 @@ public class EventImporter {
             }
         } catch (EOFException e) {
             // do nothing - reached eof
+            return counter;
         }
     }
 
-    public void importMarriages(IBucket b, String filename) throws IOException, RecordFormatException, JSONException {
+    /**
+     * @param b the bucket from which to import
+     * @param filename containing the source records in digitising scotland format
+     * @return the number of records read in
+     * @throws IOException
+     * @throws RecordFormatException
+     * @throws JSONException
+     */
+    public int importMarriages(IBucket b, String filename) throws IOException, RecordFormatException, JSONException {
 
+        int counter = 0;
         try (final BufferedReader reader = Files.newBufferedReader(Paths.get(filename), Charset.forName(UTF_8))) {
 
             while (true) {
@@ -68,6 +98,7 @@ public class EventImporter {
             }
         } catch (EOFException e) {
             // do nothing - reached eof
+            return counter;
         }
     }
 
