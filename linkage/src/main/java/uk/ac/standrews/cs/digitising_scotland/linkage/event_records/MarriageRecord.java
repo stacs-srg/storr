@@ -173,7 +173,7 @@ public class MarriageRecord extends Record {
     }
 
     public void setMarriageDay(final String marriage_day) {
-        marriage_date.setDay ( marriage_day);
+        marriage_date.setDay(marriage_day);
     }
 
     public String getMarriageMonth() {
@@ -181,7 +181,7 @@ public class MarriageRecord extends Record {
     }
 
     public void setMarriageMonth(final String marriage_month) {
-        marriage_date.setMonth ( marriage_month);
+        marriage_date.setMonth(marriage_month);
     }
 
     public String getMarriageYear() {
@@ -189,7 +189,7 @@ public class MarriageRecord extends Record {
     }
 
     public void setMarriageYear(final String marriage_year) {
-        marriage_date.setYear ( marriage_year);
+        marriage_date.setYear(marriage_year);
     }
 
     public String getDenomination() {
