@@ -20,7 +20,6 @@ import uk.ac.standrews.cs.nds.util.ErrorHandling;
 
 import java.io.IOException;
 import java.text.ParseException;
-import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -69,7 +68,7 @@ public class BirthDeathResolver {
     public void match() {
         try {
             blockonPFPLMFFF();
-        } catch ( Exception e ) {
+        } catch (Exception e) {
             ErrorHandling.exceptionError(e, "Error whilst blocking");
         }
         pairwiseLinkBlockedRecords();
@@ -103,26 +102,27 @@ public class BirthDeathResolver {
 
         while (blocked_record_iterator.hasNext()) {
             IBucket blocked_records = blocked_record_iterator.next();
-            BirthDeathLinker bdl = new BirthDeathLinker( blocked_records.getInputStream(),matches.getOutputStream() );
+            BirthDeathLinker bdl = new BirthDeathLinker(blocked_records.getInputStream(), matches.getOutputStream());
             bdl.pairwiseLink();
         }
     }
 
-
-       public static void main(final String[] args) throws Exception {
+    public static void main(final String[] args) throws Exception {
 
         BirthDeathResolver r = new BirthDeathResolver();
         r.match();
     }
 
-    /**************************** Pairwise linker ****************************/
+    /**
+     * ************************* Pairwise linker ***************************
+     */
 
     private class BirthDeathLinker extends AbstractPairwiseLinker {
 
         public BirthDeathLinker(final ILXPInputStream input, final ILXPOutputStream output) {
 
-            super(input,output);
-         }
+            super(input, output);
+        }
 
         @Override
         public boolean compare(final Pair pair) {
@@ -133,7 +133,7 @@ public class BirthDeathResolver {
             ILXP second = pair.second();
 
             try {
-                return islike(getdob(first), getdob(second));
+                return datesClose(getDateOfBirth(first), getDateOfBirth(second));
 
             } catch (RecordFormatException e) {
                 // treat as a not match
@@ -141,17 +141,9 @@ public class BirthDeathResolver {
             }
         }
 
-        private boolean islike(final Date dob1, final Date dob2) {
+        private boolean datesClose(final Date dob1, final Date dob2) {
 
-            // code is a mess but not going to survive long... just an experiment
-            if (dob1.equals(dob2)) { // exact match
-                return true;
-            }
-
-            int dob1_days = DateManipulation.dateToDay(dob1);
-            int dob2_days = DateManipulation.dateToDay(dob2);
-
-            return dob1_days > dob2_days ? dob1_days - dob2_days < 365 : dob2_days - dob1_days < 365;   // within 1 year of each other (very liberal)
+            return Math.abs(DateManipulation.differenceInYears(dob1, dob2)) <= 1;   // within 1 year of each other (very liberal)
         }
 
         @Override
@@ -160,20 +152,20 @@ public class BirthDeathResolver {
             ILXP first = pair.first();
             ILXP second = pair.second();
 
-            System.out.println( "Matched : " + first + "with:" + second );
+            System.out.println("Matched : " + first + "with:" + second);
 
             ILXP result_record = new LXP(matched_id++);
-            result_record.put( "first", first.get("id") );
-            result_record.put( "second", second.get("id") );
-            result_record.put( "relation", second.get("baby-father") );
-            result_record.put( "resolver", this.getClass().toString() );
+            result_record.put("first", first.get("id"));
+            result_record.put("second", second.get("id"));
+            result_record.put("relation", second.get("baby-father"));
+            result_record.put("resolver", this.getClass().toString());
 
-            results.add(result_record );
+            results.add(result_record);
         }
 
-        private Date getdob(final ILXP record) throws RecordFormatException {
+        private Date getDateOfBirth(final ILXP record) throws RecordFormatException {
 
-            //TODO consider this -
+            // TODO consider this -
 //        Object o = record.instatiateJavaInstance();
 //        if( o instanceof Birth )
 //
@@ -191,11 +183,12 @@ public class BirthDeathResolver {
             if (record.get("TYPE").equals("death")) {
 
                 String dob_string = record.get("date_of_birth");
-                if( dob_string != null  ) {
+                if (dob_string != null) {
                     try {
                         return DeathRecord.parseDate(dob_string);
+
                     } catch (ParseException e) {
-                        throw new RecordFormatException( "error in birth date: " + dob_string );
+                        throw new RecordFormatException("error in birth date: " + dob_string);
                     }
 
                 } else {
@@ -210,32 +203,27 @@ public class BirthDeathResolver {
 
                     int age_in_years = Integer.parseInt(record.get("age_at_death"));
 
-                    Calendar cal = Calendar.getInstance();
-                    cal.setTime(death_date);
-                    cal.add(Calendar.YEAR, -age_in_years);
-                    return cal.getTime();
+                    int death_date_as_days = DateManipulation.dateToDays(death_date);
+                    int birth_date_as_days = DateManipulation.subtractYears(death_date_as_days, age_in_years);
+                    return DateManipulation.daysToDate(birth_date_as_days);
                 }
             } else {
                 ErrorHandling.error("Found unexpected record type");
-                throw new RecordFormatException( "error in date" );
+                throw new RecordFormatException("error in date");
             }
         }
 
         private Date fieldsToDate(final String year_string, final String month_string, final String day_string) throws RecordFormatException {
 
-            Calendar cal = Calendar.getInstance();
-            cal.clear();
-
             try {
                 int year = Integer.parseInt(year_string);
                 int month = Integer.parseInt(month_string);
                 int day = Integer.parseInt(day_string);
-                cal.set(year, month, day);
-                return cal.getTime();
 
-            } catch( NumberFormatException e ) {
-                ErrorHandling.error("Error parsing date (d/m/y) : " + day_string + "/" + month_string + "/" + year_string );
-                throw new RecordFormatException( "error in date" );
+                return DateManipulation.daysToDate(DateManipulation.dateToDays(year, month, day));
+
+            } catch (NumberFormatException e) {
+                throw new RecordFormatException("Error parsing date (d/m/y) : " + day_string + "/" + month_string + "/" + year_string);
             }
         }
     }

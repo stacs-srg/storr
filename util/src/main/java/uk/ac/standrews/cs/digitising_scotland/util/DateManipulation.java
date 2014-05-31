@@ -68,6 +68,7 @@ public class DateManipulation {
      * @return the number of days elapsed
      */
     public static synchronized int dateToDays(final Date date) {
+
         CALENDAR.setTime(date);
         return millisToDays();
     }
@@ -203,6 +204,11 @@ public class DateManipulation {
         return millisToDays();
     }
 
+    public static synchronized int subtractYears(final int days, final int years) {
+
+        return addYears(days, -years);
+    }
+
     public static synchronized int dateToDay(final Date date) {
 
         setCalendarToDate(date);
@@ -231,6 +237,11 @@ public class DateManipulation {
     public static synchronized int differenceInYears(final int days1, final int days2) {
 
         return daysToYear(days2) - daysToYear(days1);
+    }
+
+    public static synchronized int differenceInYears(Date date1, Date date2) {
+
+        return differenceInYears(dateToDays(date1), dateToDays(date2));
     }
 
     private static synchronized void setCalendarToDate(final int days) {
