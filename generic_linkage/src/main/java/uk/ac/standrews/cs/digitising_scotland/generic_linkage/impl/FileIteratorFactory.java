@@ -23,7 +23,7 @@ public class FileIteratorFactory {
             return null;
         } else {
             for (File f : contents) {
-                if ((f.isDirectory() && directories_wanted) || (f.isFile() && files_wanted)) {
+                if (f.isDirectory() && directories_wanted || f.isFile() && files_wanted) {
                     files.add(f);
                 }
             }

@@ -11,7 +11,6 @@ import uk.ac.standrews.cs.nds.util.ErrorHandling;
  */
 public class IDFactory {
 
-    private static final String UUID_COUNT = "uuid_count";
     private static int id;
 
     static {
