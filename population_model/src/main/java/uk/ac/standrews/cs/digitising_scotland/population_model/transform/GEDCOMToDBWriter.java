@@ -97,15 +97,17 @@ public class GEDCOMToDBWriter implements AutoCloseable {
 
         try (final PreparedStatement statement = connection.prepareStatement("INSERT INTO " + PopulationProperties.PERSON_TABLE_NAME + " VALUES( ?,?,?,?,?,?,?,?,? );")) {
 
-            statement.setInt(1, fp.getID());
-            statement.setString(2, String.valueOf(fp.getGender()));
-            statement.setString(3, fp.getFirstName());
-            statement.setString(4, fp.getSurname());
-            statement.setDate(5, fp.getBirthDate());
-            statement.setDate(6, fp.getDeathDate());
-            statement.setString(7, fp.getOccupation());
-            statement.setString(8, fp.getCauseOfDeath());
-            statement.setString(9, fp.getAddress());
+            int pos = 1;
+
+            statement.setInt(pos++, fp.getID());
+            statement.setString(pos++, String.valueOf(fp.getGender()));
+            statement.setString(pos++, fp.getFirstName());
+            statement.setString(pos++, fp.getSurname());
+            statement.setDate(pos++, fp.getBirthDate());
+            statement.setDate(pos++, fp.getDeathDate());
+            statement.setString(pos++, fp.getOccupation());
+            statement.setString(pos++, fp.getCauseOfDeath());
+            statement.setString(pos, fp.getAddress());
 
             statement.executeUpdate();
         }
@@ -127,8 +129,11 @@ public class GEDCOMToDBWriter implements AutoCloseable {
         // TODO factor out prepared statement
         try (final PreparedStatement statement = connection.prepareStatement("INSERT INTO " + PopulationProperties.PARTNERSHIP_TABLE_NAME + " VALUES( ?,? );")) {
 
-            statement.setInt(1, family_id);
-            statement.setDate(2, marriage_date);
+            int pos = 1;
+
+            statement.setInt(pos++, family_id);
+            statement.setDate(pos, marriage_date);
+
             statement.executeUpdate();
         }
     }
@@ -138,8 +143,11 @@ public class GEDCOMToDBWriter implements AutoCloseable {
         // TODO factor out prepared statement
         try (final PreparedStatement statement = connection.prepareStatement("INSERT INTO " + PopulationProperties.PARTNERSHIP_PARTNER_TABLE_NAME + " VALUES( ?,? );")) {
 
-            statement.setInt(1, partner_id);
-            statement.setInt(2, family_id);
+            int pos = 1;
+
+            statement.setInt(pos++, partner_id);
+            statement.setInt(pos, family_id);
+
             statement.executeUpdate();
         }
     }
@@ -149,8 +157,11 @@ public class GEDCOMToDBWriter implements AutoCloseable {
         // TODO factor out prepared statement
         try (final PreparedStatement statement = connection.prepareStatement("INSERT INTO " + PopulationProperties.PARTNERSHIP_CHILD_TABLE_NAME + " VALUES( ?,? );")) {
 
-            statement.setInt(1, child_id);
-            statement.setInt(2, family_id);
+            int pos = 1;
+
+            statement.setInt(pos++, child_id);
+            statement.setInt(pos, family_id);
+
             statement.executeUpdate();
         }
     }
