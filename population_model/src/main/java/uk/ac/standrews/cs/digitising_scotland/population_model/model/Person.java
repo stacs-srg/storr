@@ -56,7 +56,9 @@ public class Person {
 
     public void setGender(final char gender) {
 
-        if (!(gender == FEMALE || gender == MALE)) throw new RuntimeException("illegal gender char");
+        if (!(gender == FEMALE || gender == MALE)) {
+            throw new RuntimeException("illegal gender char");
+        }
         this.gender = gender;
     }
 

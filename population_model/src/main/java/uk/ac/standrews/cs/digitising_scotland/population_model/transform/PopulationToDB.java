@@ -132,7 +132,9 @@ public class PopulationToDB implements AutoCloseable {
             final CompactPerson compact_person = descendants.remove(0);
             outputIndividual(compact_person, surname);
 
-            if (compact_person.isMale()) addChildrenToDescendants(compact_person, descendants);
+            if (compact_person.isMale()) {
+                addChildrenToDescendants(compact_person, descendants);
+            }
         }
     }
 

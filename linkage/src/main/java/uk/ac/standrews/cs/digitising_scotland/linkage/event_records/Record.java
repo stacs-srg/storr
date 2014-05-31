@@ -106,7 +106,7 @@ public abstract class Record {
             return day;
         }
 
-        public void setDay(String day) {
+        public void setDay(final String day) {
             this.day = day;
         }
 
@@ -114,7 +114,7 @@ public abstract class Record {
             return month;
         }
 
-        public void setMonth(String month) {
+        public void setMonth(final String month) {
             this.month = month;
         }
 
@@ -122,7 +122,7 @@ public abstract class Record {
             return year;
         }
 
-        public void setYear(String year) {
+        public void setYear(final String year) {
             this.year = year;
         }
     }

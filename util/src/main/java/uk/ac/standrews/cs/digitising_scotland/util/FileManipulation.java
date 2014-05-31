@@ -73,7 +73,9 @@ public class FileManipulation {
     public static void createParentDirectoryIfDoesNotExist(final Path path) throws IOException {
 
         Path parent_dir = path.getParent();
-        if (parent_dir != null) createDirectoryIfDoesNotExist(parent_dir);
+        if (parent_dir != null) {
+            createDirectoryIfDoesNotExist(parent_dir);
+        }
     }
 
     public static List<Path> getDirectoryEntries(final Path directory) throws IOException {

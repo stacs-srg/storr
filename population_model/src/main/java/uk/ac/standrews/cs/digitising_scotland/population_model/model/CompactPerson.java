@@ -155,7 +155,9 @@ public class CompactPerson {
         builder.append("{");
         builder.append(getDateOfBirth());
         builder.append("-");
-        if (getDateOfDeath() != -1) builder.append(getDateOfDeath());
+        if (getDateOfDeath() != -1) {
+            builder.append(getDateOfDeath());
+        }
         if (getPartnerships() != null) {
             builder.append(", p:");
             builder.append(getPartnerships().size());

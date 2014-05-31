@@ -457,7 +457,9 @@ public class CompactPopulation implements Iterable<CompactPerson> {
 
     private void progressStep() {
 
-        if (progress_indicator != null) progress_indicator.progressStep();
+        if (progress_indicator != null) {
+            progress_indicator.progressStep();
+        }
     }
 
     private int findSuitableChild(final CompactPartnership partnership, final int start_search_index, final int earliest_birth_date, final int latest_birth_date) {

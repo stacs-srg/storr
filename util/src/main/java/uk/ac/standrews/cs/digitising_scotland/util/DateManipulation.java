@@ -239,7 +239,7 @@ public class DateManipulation {
         return daysToYear(days2) - daysToYear(days1);
     }
 
-    public static synchronized int differenceInYears(Date date1, Date date2) {
+    public static synchronized int differenceInYears(final Date date1, final Date date2) {
 
         return differenceInYears(dateToDays(date1), dateToDays(date2));
     }

@@ -84,7 +84,9 @@ public class PartnershipIterator implements Iterator<DBBackedPartnership>, Itera
 
             ResultSet size_result = statement.executeQuery("SELECT COUNT(*) FROM " + PopulationProperties.DATABASE_NAME + "." + PopulationProperties.PARTNERSHIP_TABLE_NAME);
 
-            if (!size_result.first()) throw new SQLException("No rows returned in partnership count");
+            if (!size_result.first()) {
+                throw new SQLException("No rows returned in partnership count");
+            }
             return size_result.getInt(1);
         }
     }

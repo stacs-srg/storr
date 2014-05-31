@@ -32,7 +32,9 @@ public class FilteredIterator<T> implements Iterator<T> {
                 next = null;
             }
         }
-        else next = null;
+        else {
+            next = null;
+        }
     }
 
     @Override
