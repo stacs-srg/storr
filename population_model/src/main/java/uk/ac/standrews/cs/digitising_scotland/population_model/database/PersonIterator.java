@@ -19,16 +19,18 @@ import java.util.Iterator;
  */
 public class PersonIterator implements Iterator<Person>, Iterable<Person>, AutoCloseable {
 
+    private final Connection connection;
+    private final Statement statement;
     private final ResultSet resultSet;
-    private Connection connection;
-    private Statement statement;
-    private boolean empty;
+
+    private final boolean empty;
 
     public PersonIterator() throws SQLException {
 
         connection = new DBConnector(PopulationProperties.DATABASE_NAME).createConnection();
         statement = connection.createStatement();
 
+        // TODO this seems to be expensive - try executing a specific lookup for each person
         resultSet = statement.executeQuery("SELECT * FROM " + PopulationProperties.DATABASE_NAME + "." + PopulationProperties.PERSON_TABLE_NAME);
 
         empty = !resultSet.first();

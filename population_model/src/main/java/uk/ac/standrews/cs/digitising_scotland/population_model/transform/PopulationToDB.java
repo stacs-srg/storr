@@ -13,6 +13,7 @@ import uk.ac.standrews.cs.digitising_scotland.population_model.model.CompactPers
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.CompactPopulation;
 import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
 import uk.ac.standrews.cs.digitising_scotland.util.ProgressIndicator;
+import uk.ac.standrews.cs.digitising_scotland.util.SQLManipulation;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -158,15 +159,13 @@ public class PopulationToDB implements AutoCloseable {
         // TODO factor out
         try (final PreparedStatement statement = connection.prepareStatement("INSERT INTO " + PopulationProperties.PERSON_TABLE_NAME + " VALUES(?,?,?,?,?,?,?,?,?);")) {
 
-            statement.setInt(1, compact_person.getId());
-            statement.setString(2, compact_person.getSex());
-            statement.setString(3, compact_person.isMale() ? male_first_name_distribution.getSample() : female_first_name_distribution.getSample());
-            statement.setString(4, surname);
-            statement.setDate(5, DateManipulation.daysToSQLDate(compact_person.getDateOfBirth()));
-            statement.setDate(6, compact_person.getDateOfDeath() != -1 ? DateManipulation.daysToSQLDate(compact_person.getDateOfDeath()) : null);
-            statement.setString(7, occupation_distribution.getSample());
-            statement.setString(8, compact_person.getDateOfDeath() != -1 ? cause_of_death_distribution.getSample() : null);
-            statement.setString(9, "address");
+            SQLManipulation.configurePreparedStatement(
+                    statement, compact_person.getId(), compact_person.getSex(),
+                    compact_person.isMale() ? male_first_name_distribution.getSample() : female_first_name_distribution.getSample(),
+                    surname, DateManipulation.daysToSQLDate(compact_person.getDateOfBirth()),
+                    compact_person.getDateOfDeath() != -1 ? DateManipulation.daysToSQLDate(compact_person.getDateOfDeath()) : null,
+                    occupation_distribution.getSample(), compact_person.getDateOfDeath() != -1 ? cause_of_death_distribution.getSample() : null,
+                    "address");
 
             statement.executeUpdate();
         }
@@ -233,8 +232,7 @@ public class PopulationToDB implements AutoCloseable {
         // TODO factor out prepared statement
         try (final PreparedStatement statement = connection.prepareStatement("INSERT INTO " + PopulationProperties.PARTNERSHIP_TABLE_NAME + " VALUES( ?,? );")) {
 
-            statement.setInt(1, family_id);
-            statement.setDate(2, marriage_date);
+            SQLManipulation.configurePreparedStatement(statement, family_id, marriage_date);
             statement.executeUpdate();
         }
     }
@@ -244,8 +242,7 @@ public class PopulationToDB implements AutoCloseable {
         // TODO factor out prepared statement
         try (final PreparedStatement statement = connection.prepareStatement("INSERT INTO " + PopulationProperties.PARTNERSHIP_PARTNER_TABLE_NAME + " VALUES( ?,? );")) {
 
-            statement.setInt(1, partner_id);
-            statement.setInt(2, family_id);
+            SQLManipulation.configurePreparedStatement(statement, partner_id, family_id);
             statement.executeUpdate();
         }
     }
@@ -255,8 +252,7 @@ public class PopulationToDB implements AutoCloseable {
         // TODO factor out prepared statement
         try (final PreparedStatement statement = connection.prepareStatement("INSERT INTO " + PopulationProperties.PARTNERSHIP_CHILD_TABLE_NAME + " VALUES( ?,? );")) {
 
-            statement.setInt(1, child_id);
-            statement.setInt(2, family_id);
+            SQLManipulation.configurePreparedStatement(statement, child_id, family_id);
             statement.executeUpdate();
         }
     }
