@@ -1,6 +1,5 @@
 package uk.ac.standrews.cs.digitising_scotland.population_model.database;
 
-import uk.ac.standrews.cs.digitising_scotland.population_model.model.IDFactory;
 import uk.ac.standrews.cs.digitising_scotland.population_model.config.PopulationProperties;
 
 import java.io.IOException;
@@ -17,17 +16,23 @@ import java.sql.Statement;
  */
 public class DBInitialiser {
 
-    private static final String CREATE_DB_SYNTAX = "CREATE DATABASE IF NOT EXISTS";
-    private static final String DROP_TABLE_SYNTAX = "DROP TABLE IF EXISTS";
+    private static final String CREATE_DB_SYNTAX = "CREATE DATABASE IF NOT EXISTS ";
+    private static final String DROP_TABLE_SYNTAX = "DROP TABLE IF EXISTS ";
+    private static final String CREATE_TABLE_SYNTAX = "CREATE TABLE ";
+    private static final String SQL_TYPE_INTEGER = "int(11)";
+    private static final String SQL_TYPE_DATE = "DATE";
+    private static final String SQL_TYPE_STRING_1 = "varchar(1)";
+    private static final String SQL_TYPE_STRING_50 = "varchar(50)";
+    private static final String SQL_TYPE_STRING_100 = "varchar(100)";
 
     /**
      * Sets up a database ready to contain population data. A new database is created
      * if it does not already exist. Any existing population tables are dropped, and new empty tables are created.
-     * @throws IOException 
+     *
+     * @throws IOException
      */
     public void setupDB() throws SQLException, IOException {
 
-        IDFactory.resetId();
         createDB();
         dropExistingTables();
         createTables();
@@ -61,48 +66,60 @@ public class DBInitialiser {
 
         try (Connection connection = new DBConnector(PopulationProperties.DATABASE_NAME).createConnection()) {
 
-            executeStatement(connection, createPartnershipQuery());
-            executeStatement(connection, createPeopleQuery());
-            executeStatement(connection, createPartnershipPartnerQuery());
-            executeStatement(connection, createPartnershipChildrenQuery());
+            String partnershipTableQuery = createPartnershipTableQuery();
+            System.out.println(partnershipTableQuery);
+            executeStatement(connection, partnershipTableQuery);
+            executeStatement(connection, createPeopleTableQuery());
+            executeStatement(connection, createPartnershipPartnerTableQuery());
+            executeStatement(connection, createPartnershipChildrenTableQuery());
         }
     }
 
-    private String createPeopleQuery() {
+    private String createPeopleTableQuery() throws SQLException {
 
-        return createTableQuery(PopulationProperties.PERSON_TABLE_NAME, // the fields:
-                "  `id` int(11) NOT NULL auto_increment,", // private int id = next_id++;
-                //                        "  `family` int,", // the family to which this person is a child
-                "  `gender` varchar(1) default NULL,", //    private char gender;
-                "  `name` varchar(50) default NULL,", //    private String name;
-                "  `surname` varchar(50) default NULL,", //    private String surname;
-                "  `birthdate` DATE default NULL,", //    private Date birthdate;
-                "  `deathdate` DATE default NULL,", //    private Date deathdate;
-                "  `occupation` varchar(100) default NULL,", //    private String occupation;
-                "  `causeOfDeath` varchar(100) default NULL,", //    private String causeOfDeath;
-                "  `address` varchar(50) default NULL,", //    private String address;
-                //                        "  FOREIGN KEY (`family`) REFERENCES " + PARTNERSHIP_TABLE_NAME + " (`id`),", // people know what family they belong to;
-                "  PRIMARY KEY  (`id`)");
+        String[] attribute_names = new String[]{
+
+                PopulationProperties.PERSON_FIELD_ID, PopulationProperties.PERSON_FIELD_GENDER, PopulationProperties.PERSON_FIELD_NAME,
+                PopulationProperties.PERSON_FIELD_SURNAME, PopulationProperties.PERSON_FIELD_BIRTH_DATE,
+                PopulationProperties.PERSON_FIELD_DEATH_DATE, PopulationProperties.PERSON_FIELD_OCCUPATION,
+                PopulationProperties.PERSON_FIELD_CAUSE_OF_DEATH, PopulationProperties.PERSON_FIELD_ADDRESS
+        };
+
+        String[] attribute_types = new String[]{
+
+                SQL_TYPE_INTEGER, SQL_TYPE_STRING_1, SQL_TYPE_STRING_50, SQL_TYPE_STRING_50, SQL_TYPE_DATE,
+                SQL_TYPE_DATE, SQL_TYPE_STRING_100, SQL_TYPE_STRING_100, SQL_TYPE_STRING_50};
+
+        boolean[] nulls_allowed = new boolean[]{false, true, true, true, true, true, true, true, true};
+
+        return createTableQuery(PopulationProperties.PERSON_TABLE_NAME, attribute_names, attribute_types, nulls_allowed, PopulationProperties.PERSON_FIELD_ID);
     }
 
-    private String createPartnershipQuery() {
+    private String createPartnershipTableQuery() throws SQLException {
 
-        return createTableQuery(PopulationProperties.PARTNERSHIP_TABLE_NAME, // the fields:
-                "  `id` int(11) NOT NULL,", // KEY
-                "  `date` DATE default NULL,", //    Date of partnership;
-                "  PRIMARY KEY  (`id`)");
+        String[] attribute_names = new String[]{PopulationProperties.PARTNERSHIP_FIELD_ID, PopulationProperties.PARTNERSHIP_FIELD_DATE};
+        String[] attribute_types = new String[]{SQL_TYPE_INTEGER, SQL_TYPE_DATE};
+        boolean[] nulls_allowed = new boolean[]{false, false};
+
+        return createTableQuery(PopulationProperties.PARTNERSHIP_TABLE_NAME, attribute_names, attribute_types, nulls_allowed, PopulationProperties.PARTNERSHIP_FIELD_ID);
     }
 
-    private String createPartnershipPartnerQuery() {
+    private String createPartnershipPartnerTableQuery() throws SQLException {
 
-        return createTableQuery(PopulationProperties.PARTNERSHIP_PARTNER_TABLE_NAME, "`person_id` int(11) NOT NULL ,", // FOREIGN KEY - PERSON
-                "`partnership_id` int(11) NOT NULL"); //  FOREIGN KEY - PARTNERSHIP
+        String[] attribute_names = new String[]{PopulationProperties.PARTNERSHIP_FIELD_PERSON_ID, PopulationProperties.PARTNERSHIP_FIELD_PARTNERSHIP_ID};
+        String[] attribute_types = new String[]{SQL_TYPE_INTEGER, SQL_TYPE_INTEGER};
+        boolean[] nulls_allowed = new boolean[]{false, false};
+
+        return createTableQuery(PopulationProperties.PARTNERSHIP_PARTNER_TABLE_NAME, attribute_names, attribute_types, nulls_allowed, null);
     }
 
-    private String createPartnershipChildrenQuery() {
+    private String createPartnershipChildrenTableQuery() throws SQLException {
 
-        return createTableQuery(PopulationProperties.PARTNERSHIP_CHILD_TABLE_NAME, "`person_id` int(11) NOT NULL ,", // FOREIGN KEY - PERSON
-                "`partnership_id` int(11) NOT NULL"); //  FOREIGN KEY - PARTNERSHIP);
+        String[] attribute_names = new String[]{PopulationProperties.PARTNERSHIP_FIELD_PERSON_ID, PopulationProperties.PARTNERSHIP_FIELD_PARTNERSHIP_ID};
+        String[] attribute_types = new String[]{SQL_TYPE_INTEGER, SQL_TYPE_INTEGER};
+        boolean[] nulls_allowed = new boolean[]{false, false};
+
+        return createTableQuery(PopulationProperties.PARTNERSHIP_CHILD_TABLE_NAME, attribute_names, attribute_types, nulls_allowed, null);
     }
 
     private static void executeStatement(final Connection connection, final String query) throws SQLException {
@@ -112,16 +129,31 @@ public class DBInitialiser {
         }
     }
 
-    private static String createTableQuery(final String table_name, final String... attributes) {
+    private static String createTableQuery(final String table_name, final String[] attribute_names, String[] attribute_types, boolean[] nulls_allowed, String primary_key) throws SQLException {
+
+        if (attribute_names.length != attribute_types.length || attribute_names.length != nulls_allowed.length) {
+            throw new SQLException("inconsistent attribute details");
+        }
 
         final StringBuilder builder = new StringBuilder();
 
-        builder.append("CREATE TABLE ");
+        builder.append(CREATE_TABLE_SYNTAX);
         builder.append(table_name);
         builder.append("(");
 
-        for (final String attribute : attributes) {
-            builder.append(attribute);
+        for (int i = 0; i < attribute_names.length; i++) {
+            builder.append("`");
+            builder.append(attribute_names[i]);
+            builder.append("` ");
+            builder.append(attribute_types[i]);
+            builder.append(nulls_allowed[i] ? " DEFAULT NULL" : " NOT NULL");
+            if (i < attribute_names.length - 1) {
+                builder.append(",");
+            }
+        }
+
+        if (primary_key != null) {
+            builder.append(", PRIMARY KEY  (`" + primary_key + "`)");
         }
 
         builder.append(") ENGINE=InnoDB DEFAULT CHARSET=utf8;");
