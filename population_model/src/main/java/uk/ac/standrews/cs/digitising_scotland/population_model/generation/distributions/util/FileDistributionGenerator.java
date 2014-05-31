@@ -102,7 +102,7 @@ public class FileDistributionGenerator {
         return count;
     }
 
-    private double calculateProbability(final int string_count, int total_count) {
+    private double calculateProbability(final int string_count, final int total_count) {
 
         return ((double) string_count) / ((double) total_count);
     }

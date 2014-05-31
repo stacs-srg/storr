@@ -11,50 +11,50 @@ import java.sql.Date;
  *
  * @author Alan Dearle (alan.dearle@st-andrews.ac.uk)
  * @author Graham Kirby (graham.kirby@st-andrews.ac.uk)
- *
- * Fields are as follows:
- *
- * Ref Field
- * 1. Unique'Record'Identifier'
- * 2. Surname
- * 3. Forename
- * 4. Sex
- * 5. Year of Registration
- * 6. Registration District Number
- * 7. Registration District Suffix
- * 8. Entry
- * 9. Birth Year
- * 10. Mother’s Maiden Surname
- * 11. Changed Surname
- * 12. Changed Forename
- * 13. Birth Day
- * 14. Birth Month
- * 15. Birth Address
- * 16. Father’s Forename
- * 17. Father’s Surname ('0' if same as Surname)
- * 18. Father’s Occupation
- * 19. Mother’s Forename
- * 20. Mother’s Surname ('0' if same as Surname)
- * 21. Changed Mothers Maiden Surname
- * 22. Parents Day of Marriage
- * 23. Parents Month of Marriage
- * 24. Parents Year of Marriage
- * 25. Parents Place of Marriage
- * 26. Illegitimate indicator ('Y' or empty)
- * 27. Informant ('M', 'F' or empty)
- * 28. Informant did not Sign ('X' or empty)
- * 29. Corrected Entry ('1', '2', '3' or empty)
- * 30. Adoption ('A' or empty)
- * 31. Image Quality ('1', '2' or empty)
- *
- *
- * Examples of birth records:
- *
- * 1000001|HAY|HERCULES|M|1855|009|00|041||SKLATER|||21|7|SILWICK|WALTER|0|FISHERMAN|INGA|0|||1|1840|SELIVOE||F|||||
- * 1000002|JAMESON|JAMINA|F|1855|009|00|042|||||26|7|HOGANESS|ROBERT|0|FISH_CURER|ANN|0|SKLATER||11|1841|SELIVOE||F|||||
- * 1000003|IRVINE|CATHERINE|F|1855|009|00|043|||||20|7|TULKY|JOHN|0|FISHERMAN_&_CROFTER|MARGARET|0|JOHNSON||12|1841|SELIVOE| |F|||||
- * 1000004|HAWICK|CATHERINE|F|1855|009|00|044|||||25|7|AITH|SCOTT|0|SEAMAN|44|MARY|0|YELL||12|1841|SELIVOE||M|X||||
- * 1000005|GEORGESON|PETER|M|1855|009|00|045||ISBESTER|||17|5|SAND|GEORGE|0|SEAMAN|MARGARET|0|||11|1838|WATNESS||M|X||||
+ *         <p/>
+ *         Fields are as follows:
+ *         <p/>
+ *         Ref Field
+ *         1. Unique'Record'Identifier'
+ *         2. Surname
+ *         3. Forename
+ *         4. Sex
+ *         5. Year of Registration
+ *         6. Registration District Number
+ *         7. Registration District Suffix
+ *         8. Entry
+ *         9. Birth Year
+ *         10. Mother’s Maiden Surname
+ *         11. Changed Surname
+ *         12. Changed Forename
+ *         13. Birth Day
+ *         14. Birth Month
+ *         15. Birth Address
+ *         16. Father’s Forename
+ *         17. Father’s Surname ('0' if same as Surname)
+ *         18. Father’s Occupation
+ *         19. Mother’s Forename
+ *         20. Mother’s Surname ('0' if same as Surname)
+ *         21. Changed Mothers Maiden Surname
+ *         22. Parents Day of Marriage
+ *         23. Parents Month of Marriage
+ *         24. Parents Year of Marriage
+ *         25. Parents Place of Marriage
+ *         26. Illegitimate indicator ('Y' or empty)
+ *         27. Informant ('M', 'F' or empty)
+ *         28. Informant did not Sign ('X' or empty)
+ *         29. Corrected Entry ('1', '2', '3' or empty)
+ *         30. Adoption ('A' or empty)
+ *         31. Image Quality ('1', '2' or empty)
+ *         <p/>
+ *         <p/>
+ *         Examples of birth records:
+ *         <p/>
+ *         1000001|HAY|HERCULES|M|1855|009|00|041||SKLATER|||21|7|SILWICK|WALTER|0|FISHERMAN|INGA|0|||1|1840|SELIVOE||F|||||
+ *         1000002|JAMESON|JAMINA|F|1855|009|00|042|||||26|7|HOGANESS|ROBERT|0|FISH_CURER|ANN|0|SKLATER||11|1841|SELIVOE||F|||||
+ *         1000003|IRVINE|CATHERINE|F|1855|009|00|043|||||20|7|TULKY|JOHN|0|FISHERMAN_&_CROFTER|MARGARET|0|JOHNSON||12|1841|SELIVOE| |F|||||
+ *         1000004|HAWICK|CATHERINE|F|1855|009|00|044|||||25|7|AITH|SCOTT|0|SEAMAN|44|MARY|0|YELL||12|1841|SELIVOE||M|X||||
+ *         1000005|GEORGESON|PETER|M|1855|009|00|045||ISBESTER|||17|5|SAND|GEORGE|0|SEAMAN|MARGARET|0|||11|1838|WATNESS||M|X||||
  */
 public class BirthRecord extends IndividualRecord {
 
@@ -113,8 +113,7 @@ public class BirthRecord extends IndividualRecord {
                     setFathersForename(parent.getFirstName());
                     setFathersSurname(getRecordedParentsSurname(parent.getSurname(), person.getSurname()));
                     setFathersOccupation(parent.getOccupation());
-                }
-                else {
+                } else {
 
                     setMothersForename(parent.getFirstName());
                     setMothersSurname(getRecordedParentsSurname(parent.getSurname(), person.getSurname()));
@@ -125,27 +124,27 @@ public class BirthRecord extends IndividualRecord {
     }
 
     public String getBirthDay() {
-        return birth_date.day;
+        return birth_date.getDay();
     }
 
     public void setBirthDay(final String birth_day) {
-        birth_date.day = birth_day;
+        birth_date.setDay(birth_day);
     }
 
     public String getBirthMonth() {
-        return birth_date.month;
+        return birth_date.getMonth();
     }
 
     public void setBirthMonth(final String birth_month) {
-        birth_date.month = birth_month;
+        birth_date.setMonth(birth_month);
     }
 
     public String getBirthYear() {
-        return birth_date.year;
+        return birth_date.getYear();
     }
 
     public void setBirthYear(final String birth_year) {
-        birth_date.year = birth_year;
+        birth_date.setYear(birth_year);
     }
 
     public String getBirthAddress() {
@@ -156,28 +155,28 @@ public class BirthRecord extends IndividualRecord {
         this.birth_address = birth_address;
     }
 
-     public String getParentsMarriageDay() {
-        return parents_marriage_date.day;
+    public String getParentsMarriageDay() {
+        return parents_marriage_date.getDay();
     }
 
     public void setParentsMarriageDay(final String parents_marriage_day) {
-        parents_marriage_date.day = parents_marriage_day;
+        parents_marriage_date.setDay(parents_marriage_day);
     }
 
     public String getParentsMarriageMonth() {
-        return parents_marriage_date.month;
+        return parents_marriage_date.getMonth();
     }
 
     public void setParentsMarriageMonth(final String parents_marriage_month) {
-        parents_marriage_date.month = parents_marriage_month;
+        parents_marriage_date.setMonth(parents_marriage_month);
     }
 
     public String getParentsMarriageYear() {
-        return parents_marriage_date.year;
+        return parents_marriage_date.getYear();
     }
 
     public void setParentsMarriageYear(final String parents_marriage_year) {
-        parents_marriage_date.year = parents_marriage_year;
+        parents_marriage_date.setYear(parents_marriage_year);
     }
 
     public String getParentsPlaceOfMarriage() {
@@ -225,10 +224,10 @@ public class BirthRecord extends IndividualRecord {
 
         final StringBuilder builder = new StringBuilder();
 
-        append(builder, uid, surname, forename, sex, registration_year, registration_district_number, registration_district_suffix, entry, birth_date.year, mothers_maiden_surname, surname_changed,
-                        forename_changed, birth_date.day, birth_date.month, birth_address, fathers_forename, fathers_surname, fathers_occupation, mothers_forename, mothers_surname, mothers_maiden_surname_changed,
-                        parents_marriage_date.day, parents_marriage_date.month, parents_marriage_date.year, parents_place_of_marriage, illegitimate_indicator, informant, informant_did_not_sign, entry_corrected,
-                        adoption, image_quality);
+        append(builder, uid, surname, forename, sex, registration_year, registration_district_number, registration_district_suffix, entry, birth_date.getYear(), mothers_maiden_surname, surname_changed,
+                forename_changed, birth_date.getDay(), birth_date.getMonth(), birth_address, fathers_forename, fathers_surname, fathers_occupation, mothers_forename, mothers_surname, mothers_maiden_surname_changed,
+                parents_marriage_date.getDay(), parents_marriage_date.getMonth(), parents_marriage_date.getYear(), parents_place_of_marriage, illegitimate_indicator, informant, informant_did_not_sign, entry_corrected,
+                adoption, image_quality);
 
         return builder.toString();
     }

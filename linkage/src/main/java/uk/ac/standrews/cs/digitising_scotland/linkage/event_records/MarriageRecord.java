@@ -169,27 +169,27 @@ public class MarriageRecord extends Record {
     }
 
     public String getMarriageDay() {
-        return marriage_date.day;
+        return marriage_date.getDay();
     }
 
     public void setMarriageDay(final String marriage_day) {
-        marriage_date.day = marriage_day;
+        marriage_date.setDay ( marriage_day);
     }
 
     public String getMarriageMonth() {
-        return marriage_date.month;
+        return marriage_date.getMonth();
     }
 
     public void setMarriageMonth(final String marriage_month) {
-        marriage_date.month = marriage_month;
+        marriage_date.setMonth ( marriage_month);
     }
 
     public String getMarriageYear() {
-        return marriage_date.year;
+        return marriage_date.getYear();
     }
 
     public void setMarriageYear(final String marriage_year) {
-        marriage_date.year = marriage_year;
+        marriage_date.setYear ( marriage_year);
     }
 
     public String getDenomination() {
@@ -461,11 +461,11 @@ public class MarriageRecord extends Record {
 
         final StringBuilder builder = new StringBuilder();
 
-        append(builder, uid, groom_surname, groom_forename, bride_surname, bride_forename, registration_year, registration_district_number, registration_district_suffix, entry, marriage_date.year, groom_surname_changed, groom_forename_changed,
-                        bride_surname_changed, bride_forename_changed, groom_did_not_sign, bride_did_not_sign, marriage_date.day, marriage_date.month, denomination, groom_address, groom_age_or_date_of_birth, groom_occupation,
-                        groom_marital_status, bride_address, bride_age_or_date_of_birth, bride_occupation, bride_marital_status, groom_fathers_forename, groom_fathers_surname, groom_father_deceased, groom_mothers_forename,
-                        groom_mothers_maiden_surname, groom_mother_deceased, groom_fathers_occupation, bride_fathers_forename, bride_fathers_surname, bride_father_deceased, bride_mothers_forename, bride_mothers_maiden_surname,
-                        bride_mother_deceased, bride_father_occupation, entry_corrected, image_quality);
+        append(builder, uid, groom_surname, groom_forename, bride_surname, bride_forename, registration_year, registration_district_number, registration_district_suffix, entry, marriage_date.getYear(), groom_surname_changed, groom_forename_changed,
+                bride_surname_changed, bride_forename_changed, groom_did_not_sign, bride_did_not_sign, marriage_date.getDay(), marriage_date.getMonth(), denomination, groom_address, groom_age_or_date_of_birth, groom_occupation,
+                groom_marital_status, bride_address, bride_age_or_date_of_birth, bride_occupation, bride_marital_status, groom_fathers_forename, groom_fathers_surname, groom_father_deceased, groom_mothers_forename,
+                groom_mothers_maiden_surname, groom_mother_deceased, groom_fathers_occupation, bride_fathers_forename, bride_fathers_surname, bride_father_deceased, bride_mothers_forename, bride_mothers_maiden_surname,
+                bride_mother_deceased, bride_father_occupation, entry_corrected, image_quality);
 
         return builder.toString();
     }

@@ -129,7 +129,7 @@ public class DBInitialiser {
         }
     }
 
-    private static String createTableQuery(final String table_name, final String[] attribute_names, String[] attribute_types, boolean[] nulls_allowed, String primary_key) throws SQLException {
+    private static String createTableQuery(final String table_name, final String[] attribute_names, final String[] attribute_types, final boolean[] nulls_allowed, final String primary_key) throws SQLException {
 
         if (attribute_names.length != attribute_types.length || attribute_names.length != nulls_allowed.length) {
             throw new SQLException("inconsistent attribute details");

@@ -16,7 +16,7 @@ public class RepositoryIterator implements IRepositoryIterator {
     private final Iterator<File> file_iterator;
     private final Repository repository;
 
-    public RepositoryIterator(Repository repository, File repo_directory) {
+    public RepositoryIterator(final Repository repository, final File repo_directory) {
 
         this.repository = repository;
         file_iterator = FileIteratorFactory.createFileIterator(repo_directory, false, true);

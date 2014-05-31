@@ -151,27 +151,27 @@ public class DeathRecord extends IndividualRecord {
     }
 
     public String getDeathDay() {
-        return death_date.day;
+        return death_date.getDay();
     }
 
     public void setDeathDay(final String death_day) {
-        death_date.day = death_day;
+        death_date.setDay(death_day);
     }
 
     public String getDeathMonth() {
-        return death_date.month;
+        return death_date.getMonth();
     }
 
     public void setDeathMonth(final String death_month) {
-        death_date.month = death_month;
+        death_date.setMonth(death_month);
     }
 
     public String getDeathYear() {
-        return death_date.year;
+        return death_date.getYear();
     }
 
     public void setDeathYear(final String death_year) {
-        death_date.year = death_year;
+        death_date.setYear(death_year);
     }
 
     public String getDeathAge() {
@@ -292,8 +292,8 @@ public class DeathRecord extends IndividualRecord {
 
         final StringBuilder builder = new StringBuilder();
 
-        append(builder, uid, surname, forename, sex, registration_year, registration_district_number, registration_district_suffix, entry, death_date.year, death_age, mothers_maiden_surname,
-                surname_changed, forename_changed, death_age_changed, birth_date, occupation, marital_status, spouses_names, spouses_occupations, death_date.month, death_date.day,
+        append(builder, uid, surname, forename, sex, registration_year, registration_district_number, registration_district_suffix, entry, death_date.getYear(), death_age, mothers_maiden_surname,
+                surname_changed, forename_changed, death_age_changed, birth_date, occupation, marital_status, spouses_names, spouses_occupations, death_date.getMonth(), death_date.getDay(),
                 death_place, fathers_forename, fathers_surname, fathers_occupation, father_deceased, mothers_forename, mothers_surname, mothers_maiden_surname_changed, mother_deceased,
                 death_cause_a, death_cause_b, death_cause_c, certifying_doctor, entry_corrected, image_quality);
 

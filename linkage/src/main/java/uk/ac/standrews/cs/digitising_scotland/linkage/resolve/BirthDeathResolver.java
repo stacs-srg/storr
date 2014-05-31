@@ -23,7 +23,6 @@ import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
 
-
 /**
  * This class is derived from the blockingTests test
  * First attempt to do some linkage.

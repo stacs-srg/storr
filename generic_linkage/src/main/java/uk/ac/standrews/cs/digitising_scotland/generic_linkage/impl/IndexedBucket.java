@@ -70,12 +70,12 @@ public class IndexedBucket extends Bucket implements IIndexedBucket {
     }
 
     @Override
-    public IIndex getIndex(String label) {
+    public IIndex getIndex(final String label) {
         return indexes.get(label);
     }
 
     @Override
-    public void put(ILXP record) throws IOException, JSONException {
+    public void put(final ILXP record) throws IOException, JSONException {
 
         Set<String> keys = indexes.keySet(); // all the keys currently being indexed
         for (String key : keys) {

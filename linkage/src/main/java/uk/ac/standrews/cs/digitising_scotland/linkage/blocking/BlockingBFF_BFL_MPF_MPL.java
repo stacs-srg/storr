@@ -44,7 +44,7 @@ public class BlockingBFF_BFL_MPF_MPL extends Blocker {
      * @param key - a String key to be made into an acceptable bucket name
      * @return the cleaned up String
      */
-    private String removeNasties(String key) {
+    private String removeNasties(final String key) {
         return key.replace("/", "");
     }
 }

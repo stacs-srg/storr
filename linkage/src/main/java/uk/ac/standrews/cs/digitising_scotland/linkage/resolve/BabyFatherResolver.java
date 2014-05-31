@@ -104,10 +104,9 @@ public class BabyFatherResolver {
     /**
      * ************************* Pairwise linker ***************************
      */
-
     private class BabyFatherLinker extends AbstractPairwiseLinker {
 
-        public BabyFatherLinker(ILXPInputStream input, ILXPOutputStream output) {
+        public BabyFatherLinker(final ILXPInputStream input, final ILXPOutputStream output) {
 
             super(input, output);
         }

@@ -19,9 +19,10 @@ public interface IBucket {
 
     /**
      * Writes the state of a record to a bucket
+     *
      * @param record whose state is to be written
      */
-    void put( ILXP record ) throws IOException, JSONException;
+    void put(ILXP record) throws IOException, JSONException;
 
     /**
      * @param id
