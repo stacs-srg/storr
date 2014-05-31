@@ -15,18 +15,23 @@
     <url>https://builds.cs.st-andrews.ac.uk/job/digitising_scotland</url>
 
 
-	<modules>
-	
-<module>generic_linkage</module>
-<module>linkage</module>
-<module>population_model</module>
-<module>util</module>
+    <modules>
+
+        <module>generic_linkage</module>
+        <module>linkage</module>
+        <module>population_model</module>
+        <module>util</module>
 
     </modules>
 
     <properties>
         <repository.type>hg</repository.type>
         <repository.location>http://quicksilver.hg.cs.st-andrews.ac.uk/digitising_scotland</repository.location>
+
+        <checkstyle.config>
+            http://quicksilver.hg.cs.st-andrews.ac.uk/digitising_scotland/raw-file/tip/config/checkstyle-config.xml
+        </checkstyle.config>
+
     </properties>
 
     <repositories>
