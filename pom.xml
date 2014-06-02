@@ -12,16 +12,65 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>digitising_scotland</name>
-    <url>https://builds.cs.st-andrews.ac.uk/job/digitising_scotland</url>
+    <description>Software produced by the Digitising Scotland project.</description>
+    <url>http://digitisingscotland.cs.st-andrews.ac.uk/</url>
+    <inceptionYear>2012</inceptionYear>
+
+    <developers>
+        <developer>
+            <id/>
+            <name>Graham Kirby</name>
+            <email>graham.kirby@st-andrews.ac.uk</email>
+            <url>http://graham.host.cs.st-andrews.ac.uk/</url>
+            <organization>University of St Andrews</organization>
+            <organizationUrl>http://www.st-andrews.ac.uk/</organizationUrl>
+            <roles/>
+        </developer>
+        <developer>
+            <id/>
+            <name>Jamie Carson</name>
+            <email>jkc25@st-andrews.ac.uk</email>
+            <url/>
+            <organization>University of St Andrews</organization>
+            <organizationUrl>http://www.st-andrews.ac.uk/</organizationUrl>
+        </developer>
+    </developers>
+    <contributors>
+        <contributor>
+            <name>Chris Dibben</name>
+            <email>chris.dibben@ed.ac.uk</email>
+            <organization>University of Edinburgh</organization>
+            <organizationUrl>http://www.ed.ac.uk/</organizationUrl>
+        </contributor>
+    </contributors>
 
     <modules>
-
         <module>generic_linkage</module>
         <module>linkage</module>
         <module>population_model</module>
         <module>util</module>
-
     </modules>
+
+    <licenses>
+        <license>
+            <comments></comments>
+            <name>GNU General Public License 3.0</name>
+            <url>http://www.gnu.org/licenses/gpl-3.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <scm>
+        <connection>scm:hg:http://quicksilver.hg.cs.st-andrews.ac.uk/digitising_scotland/</connection>
+        <developerConnection>scm:hg:ssh://quicksilver@quicksilver.host.cs.st-andrews.ac.uk/hg/digitising_scotland/
+        </developerConnection>
+        <url>http://quicksilver.hg.cs.st-andrews.ac.uk/digitising_scotland/</url>
+    </scm>
+
+    <ciManagement>
+        <system>Jenkins</system>
+        <url>https://builds.cs.st-andrews.ac.uk/job/digitising_scotland/</url>
+    </ciManagement>
 
     <build>
         <plugins>
@@ -69,25 +118,17 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-project-info-reports-plugin</artifactId>
                 <version>2.7</version>
-                <configuration>
-                    <customBundle>${project.basedir}/src/site/custom/project-info-report.properties</customBundle>
-                </configuration>
                 <reportSets>
                     <reportSet>
                         <reports>
-                            <report>cim</report>
-                            <report>dependencies</report>
-                            <report>dependency-convergence</report>
-                            <report>dependency-info</report>
-                            <report>dependency-management</report>
-                            <report>help</report>
-                            <report>index</report>
-                            <report>license</report>
                             <report>modules</report>
-                            <report>plugin-management</report>
-                            <report>plugins</report>
+                            <report>license</report>
                             <report>project-team</report>
                             <report>scm</report>
+                            <report>cim</report>
+                            <!--<report>dependencies</report>-->
+                            <report>dependency-info</report>
+                            <!--<report>dependency-management</report>-->
                             <report>summary</report>
                         </reports>
                     </reportSet>
@@ -103,6 +144,8 @@
         <checkstyle.config>
             http://quicksilver.hg.cs.st-andrews.ac.uk/digitising_scotland/raw-file/tip/config/checkstyle-config.xml
         </checkstyle.config>
+
+        <teamlist.showAvatarImages>false</teamlist.showAvatarImages>
 
     </properties>
 
