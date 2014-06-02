@@ -7,3 +7,5 @@ target
 **/*_test.ged
 **/*.pdf
 **/population_config.txt
+.Ulysses-Group.plist
+.UlyssesRoot
