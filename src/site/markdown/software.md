@@ -11,6 +11,7 @@ Preliminary version of synthetic population generator:
 * [jar distribution (stand alone)][Jar Standalone]
 * [jar distribution (including dependencies)][Jar With Dependencies]
 * [browsable source][Source]
+* test
 
 
 [Javadoc]:               https://builds.cs.st-andrews.ac.uk/job/population/javadoc/
