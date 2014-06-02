@@ -58,8 +58,8 @@
         <extensions>
             <extension>
                 <groupId>org.apache.maven.wagon</groupId>
-                <artifactId>wagon-ssh-external</artifactId>
-                <version>1.0-beta-6</version>
+                <artifactId>wagon-ssh</artifactId>
+                <version>2.3</version>
             </extension>
         </extensions>
     </build>
@@ -78,7 +78,7 @@
     <distributionManagement>
         <site>
             <id>digitisingscotland.cs</id>
-            <url>scpexe://digitisingscotland.host.cs.st-andrews.ac.uk/public_html_digitisingscotland/</url>
+            <url>scp://digitisingscotland.host.cs.st-andrews.ac.uk/public_html_digitisingscotland/</url>
         </site>
     </distributionManagement>
 
