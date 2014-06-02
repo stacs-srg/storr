@@ -78,7 +78,7 @@
     <distributionManagement>
         <site>
             <id>digitisingscotland.cs</id>
-            <url>scp://digitisingscotland.host.cs.st-andrews.ac.uk/public_html_digitisingscotland/</url>
+            <url>scp://digitisingscotland.host.cs.st-andrews.ac.uk//cs/home/digitisingscotland/public_html_digitisingscotland</url>
         </site>
     </distributionManagement>
 
