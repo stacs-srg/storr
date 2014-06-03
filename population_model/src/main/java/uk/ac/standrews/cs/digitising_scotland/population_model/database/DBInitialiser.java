@@ -66,9 +66,7 @@ public class DBInitialiser {
 
         try (Connection connection = new DBConnector(PopulationProperties.DATABASE_NAME).createConnection()) {
 
-            String partnershipTableQuery = createPartnershipTableQuery();
-            System.out.println(partnershipTableQuery);
-            executeStatement(connection, partnershipTableQuery);
+            executeStatement(connection, createPartnershipTableQuery());
             executeStatement(connection, createPeopleTableQuery());
             executeStatement(connection, createPartnershipPartnerTableQuery());
             executeStatement(connection, createPartnershipChildrenTableQuery());

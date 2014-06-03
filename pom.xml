@@ -228,10 +228,7 @@
                             <report>project-team</report>
                             <report>scm</report>
                             <report>cim</report>
-                            <!--<report>dependencies</report>-->
-                            <report>dependency-info</report>
-                            <!--<report>dependency-management</report>-->
-                            <report>summary</report>
+                            <report>dependency-management</report>
                         </reports>
                     </reportSet>
                 </reportSets>
@@ -253,6 +250,11 @@
 
 
     <distributionManagement>
+        <repository>
+            <id>aaaa</id>
+            <url>http://aaaaaaa</url>
+            <name>asdasads</name>
+        </repository>
         <site>
             <id>digitisingscotland.cs</id>
             <url>

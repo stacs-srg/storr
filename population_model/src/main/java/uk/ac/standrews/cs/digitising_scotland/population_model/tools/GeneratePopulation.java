@@ -41,8 +41,6 @@ public class GeneratePopulation {
 
         if (batch_size > 0 && number_of_batches > 0 && number_of_progress_updates > 0) {
 
-            long start_time = System.currentTimeMillis();
-
             showInfo(batch_size, number_of_batches);
 
             for (int batch_number = 0; batch_number < number_of_batches; batch_number++) {
@@ -50,7 +48,6 @@ public class GeneratePopulation {
             }
 
             showInfo(batch_size, number_of_batches);
-            TimeManipulation.reportElapsedTime(start_time);
 
         } else {
             usage();
@@ -66,11 +63,15 @@ public class GeneratePopulation {
 
         Diagnostic.traceNoSource("Generating batch " + (batch_number + 1));
 
+        long start_time = System.currentTimeMillis();
         final CompactPopulation population = new CompactPopulation(batch_size, new PercentageProgressIndicator(number_of_progress_updates));
         final PopulationToDB exporter = new PopulationToDB(population, new PercentageProgressIndicator(number_of_progress_updates));
+        TimeManipulation.reportElapsedTime(start_time);
 
         Diagnostic.traceNoSource("Exporting to database");
+        start_time = System.currentTimeMillis();
         exporter.export();
+        TimeManipulation.reportElapsedTime(start_time);
     }
 
     private static void usage() {

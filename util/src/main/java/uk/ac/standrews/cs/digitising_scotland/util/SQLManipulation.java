@@ -9,6 +9,8 @@ import java.sql.SQLException;
  */
 public class SQLManipulation {
 
+    public static final Object NULL_DATE = new Object();
+
     public static void configurePreparedStatement(PreparedStatement statement, Object... parameters) throws SQLException {
 
         int pos = 1;
@@ -16,14 +18,18 @@ public class SQLManipulation {
         for (Object parameter : parameters) {
 
             if (parameter instanceof Integer) {
-                statement.setInt(pos++, (Integer) parameter);
+                statement.setInt(pos, (Integer) parameter);
+            } else if (parameter instanceof String) {
+                statement.setString(pos, (String) parameter);
+            } else if (parameter instanceof Date) {
+                statement.setDate(pos, (Date) parameter);
+            } else if (parameter == NULL_DATE) {
+                statement.setDate(pos, null);
+            } else {
+                throw new SQLException("unknown parameter type");
             }
-            if (parameter instanceof String) {
-                statement.setString(pos++, (String) parameter);
-            }
-            if (parameter instanceof Date) {
-                statement.setDate(pos++, (Date) parameter);
-            }
+
+            pos++;
         }
     }
 }

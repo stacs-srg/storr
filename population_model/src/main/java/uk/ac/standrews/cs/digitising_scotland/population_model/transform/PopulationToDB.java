@@ -160,11 +160,15 @@ public class PopulationToDB implements AutoCloseable {
         try (final PreparedStatement statement = connection.prepareStatement("INSERT INTO " + PopulationProperties.PERSON_TABLE_NAME + " VALUES(?,?,?,?,?,?,?,?,?);")) {
 
             SQLManipulation.configurePreparedStatement(
-                    statement, compact_person.getId(), compact_person.getSex(),
-                    compact_person.isMale() ? male_first_name_distribution.getSample() : female_first_name_distribution.getSample(),
-                    surname, DateManipulation.daysToSQLDate(compact_person.getDateOfBirth()),
-                    compact_person.getDateOfDeath() != -1 ? DateManipulation.daysToSQLDate(compact_person.getDateOfDeath()) : null,
-                    occupation_distribution.getSample(), compact_person.getDateOfDeath() != -1 ? cause_of_death_distribution.getSample() : null,
+                    statement,
+                    compact_person.getId(),
+                    compact_person.getSex(),
+                    (compact_person.isMale() ? male_first_name_distribution.getSample() : female_first_name_distribution.getSample()),
+                    surname,
+                    DateManipulation.daysToSQLDate(compact_person.getDateOfBirth()),
+                    (compact_person.getDateOfDeath() != -1 ? DateManipulation.daysToSQLDate(compact_person.getDateOfDeath()) : SQLManipulation.NULL_DATE),
+                    occupation_distribution.getSample(),
+                    (compact_person.getDateOfDeath() != -1 ? cause_of_death_distribution.getSample() : SQLManipulation.NULL_DATE),
                     "address");
 
             statement.executeUpdate();

@@ -1009,7 +1009,7 @@ ul.nav-menu li:hover > ul,
 .entry-summary,
 .entry-meta {
 	margin: 0 auto;
-	max-width: 604px;
+	max-width: 90%;
 	width: 100%;
 }
 

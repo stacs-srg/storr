@@ -47,9 +47,11 @@ public class GenerateEventRecords {
         // TODO use standard logging.
         Diagnostic.traceNoSource("Generating birth records");
         exportRecords(new BirthRecordIterator(), BIRTH_RECORDS_PATH, number_of_progress_updates);
+        TimeManipulation.reportElapsedTime(start_time);
 
         Diagnostic.traceNoSource("Generating death records");
         exportRecords(new DeathRecordIterator(), DEATH_RECORDS_PATH, number_of_progress_updates);
+        TimeManipulation.reportElapsedTime(start_time);
 
         Diagnostic.traceNoSource("Generating marriage records");
         exportRecords(new MarriageRecordIterator(), MARRIAGE_RECORDS_PATH, number_of_progress_updates);

@@ -11,8 +11,15 @@ public class DBBackedPersonFactory {
 
     public static DBBackedPerson createDBBackedPerson(final Connection connection, final ResultSet result_set) throws SQLException {
 
-        return new DBBackedPerson(connection, result_set.getInt("id"), result_set.getString("name"), result_set.getString("surname"), result_set.getString("gender").charAt(0), result_set.getDate("birthdate"), result_set.getDate("deathdate"),
-                result_set.getString("occupation"), result_set.getString("causeOfDeath"), result_set.getString("address"));
+        return new DBBackedPerson(connection, result_set.getInt(PopulationProperties.PERSON_FIELD_ID),
+                result_set.getString(PopulationProperties.PERSON_FIELD_NAME),
+                result_set.getString(PopulationProperties.PERSON_FIELD_SURNAME),
+                result_set.getString(PopulationProperties.PERSON_FIELD_GENDER).charAt(0),
+                result_set.getDate(PopulationProperties.PERSON_FIELD_BIRTH_DATE),
+                result_set.getDate(PopulationProperties.PERSON_FIELD_DEATH_DATE),
+                result_set.getString(PopulationProperties.PERSON_FIELD_OCCUPATION),
+                result_set.getString(PopulationProperties.PERSON_FIELD_CAUSE_OF_DEATH),
+                result_set.getString(PopulationProperties.PERSON_FIELD_ADDRESS));
     }
 
     public static DBBackedPerson createDBBackedPerson(final Connection connection, final int person_id) throws SQLException {
