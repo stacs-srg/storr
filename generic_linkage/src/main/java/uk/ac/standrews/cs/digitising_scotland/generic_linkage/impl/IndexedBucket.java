@@ -84,5 +84,6 @@ public class IndexedBucket extends Bucket implements IIndexedBucket {
                 index.add(record); // and add this record to the index for that key
             }
         }
+        super.put(record);
     }
 }

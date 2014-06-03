@@ -15,23 +15,27 @@ public class LXP extends HashMap<String, String> implements ILXP {
 
     private int id;
 
-    public LXP(final int id) {
+    public LXP() {
+    }
+
+    public LXP(int id) {
+        this();
         this.id = id;
     }
 
-    public LXP(final int id, final JSONReader reader) throws PersistentObjectException {
-
-        this(id);
-
+    public LXP(int id, JSONReader reader) throws PersistentObjectException {
         try {
+            this.id = id;
+
             reader.nextSymbol();
+
             reader.object();
 
             while (!reader.isEndOfStream()) {
 
                 String key = reader.key();
                 String value = reader.stringValue();
-                put(key, value);
+                this.put(key, value);
             }
 
         } catch (JSONException e) {
@@ -46,18 +50,23 @@ public class LXP extends HashMap<String, String> implements ILXP {
     }
 
     /**
-     * Writes data to a writer - typically used for persistent storage.
+     * This method writes data to a writer - typically used for persistent storage.
      *
      * @throws JSONException
      */
-    public void serializeToJSON(final JSONWriter writer) throws JSONException {
+    public void serializeToJSON(JSONWriter writer) throws JSONException {
 
         writer.object();
         serializeFieldsToJSON(writer);
         writer.endObject();
     }
 
-    public void serializeFieldsToJSON(final JSONWriter writer) throws JSONException {
+    @Override
+    public void put(String key, int value) {
+        put( key, Integer.toString(value));
+    }
+
+    public void serializeFieldsToJSON(JSONWriter writer) throws JSONException {
 
         for (Map.Entry<String, String> entry : entrySet()) {
             String key = entry.getKey();
@@ -68,15 +77,12 @@ public class LXP extends HashMap<String, String> implements ILXP {
     }
 
     public String toString() {
-
+        StringWriter sw = new StringWriter();
         try {
-            StringWriter sw = new StringWriter();
-            serializeToJSON(new JSONWriter(sw));
-            return sw.toString();
-
+            serializeToJSON( new JSONWriter(sw ) );
         } catch (JSONException e) {
-            ErrorHandling.error("in LXP.toString()");
-            return "";
+            ErrorHandling.error( "in LXP.toString()");
         }
+        return sw.toString();
     }
 }

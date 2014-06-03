@@ -1,0 +1,222 @@
+package uk.ac.standrews.cs.digitising_scotland.linkage.resolve;
+
+import org.json.JSONException;
+import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.LXP;
+import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.Repository;
+import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.RepositoryException;
+import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.*;
+import uk.ac.standrews.cs.digitising_scotland.linkage.EventImporter;
+import uk.ac.standrews.cs.digitising_scotland.linkage.RecordFormatException;
+import uk.ac.standrews.cs.digitising_scotland.linkage.labels.*;
+
+import java.io.IOException;
+
+
+/**
+ * Performs pairwise linkage on babies and fathers
+ * <p/>
+ * Created by al on 11/05/2014.
+ */
+public class BassJohnBass {
+
+    private static String input_repo_path = "src/test/resources/BDM_repo";          // input repository containing event records
+    private static String linkage_repo_path = "src/test/resources/linkage_repo";    // repository for linked records
+
+    private static String source_base_path = "src/test/resources/BDMSet1";          // Path to source of vital event records in Digitising Scotland format
+    private static String births_name = "birth_records";                            // Name of bucket containing birth records (inputs).
+    private static String people_name = "people";                                   // Name of bucket containing maximal people extracted from birth records
+    private static String relationships_name = "relationships";                     // Name of bucket containing relationships between people extracted from birth records
+    private static String identities_name = "identity";                             // Name of bucket containing equivalent identities of people
+
+    private static String births_source_path = source_base_path + "/" + births_name + ".txt";
+
+    private final IRepository input_repo;
+    private final IRepository linkage_repo;
+
+    // input buckets containing BDM records in LXP format
+
+    private IBucket births;                     // Bucket containing birth records (inputs).
+    private IIndexedBucket people;              // Bucket containing people extracted from birth records
+    private IIndexedBucket relationships;       // Bucket containing relationships between people
+    private IIndexedBucket identity;            // Bucket containing identities of equivalent people in records
+    private int id = 0;
+
+    public BassJohnBass() throws RepositoryException, RecordFormatException, JSONException, IOException {
+
+        input_repo = new Repository(input_repo_path);
+        linkage_repo = new Repository(linkage_repo_path);
+
+        births = input_repo.makeBucket(births_name);
+
+        people = linkage_repo.makeIndexedBucket(people_name);
+
+        relationships = linkage_repo.makeIndexedBucket(relationships_name);
+
+        identity = linkage_repo.makeIndexedBucket(identities_name);
+        identity.addIndex( SameAs.record_id1 );
+
+        // import the birth records
+        EventImporter importer = new EventImporter();
+        importer.importBirths(births, births_source_path);
+
+        // populate the people and relationships bucket
+        populateMaximalPeople();
+
+
+    }
+
+    /**
+     * Populates the maximal_people_repo with 1 person from each birth record.
+     * For each birth record there will be 1 person created - mother, father baby
+     */
+    private void populateMaximalPeople() {
+
+        ILXPOutputStream people_stream = people.getOutputStream();
+        ILXPOutputStream relationships_stream = relationships.getOutputStream();
+
+        ILXPInputStream stream = births.getInputStream();
+        for( ILXP birth_record : stream ) {
+
+            int baby_id = add_baby_to_output(birth_record, people_stream);
+            int dad_id = add_father_to_output(birth_record, people_stream);
+            int mum_id = add_mother_to_output(birth_record, people_stream);
+
+            add_BMF( birth_record,baby_id,dad_id,mum_id,relationships_stream );
+        }
+
+    }
+
+    /**
+     * Adds the baby-mother-father relationships to the relationships bucket
+     * @param birth_record
+     * @param child_id
+     * @param dad_id
+     * @param mum_id
+     * @param relationships_stream
+     */
+    private void add_BMF(ILXP birth_record, int child_id, int dad_id, int mum_id, ILXPOutputStream relationships_stream) {
+        ILXP is_father = new LXP(get_next_id());
+        is_father.put( "TYPE", FatherOf.TYPE);
+        is_father.put( FatherOf.child_id,child_id );
+        is_father.put( FatherOf.father_id, dad_id );
+        is_father.put( FatherOf.birth_record_id, birth_record.getId());
+        relationships_stream.add(is_father);
+
+        ILXP is_mother = new LXP(get_next_id());
+        is_mother.put( "TYPE", MotherOf.TYPE);
+        is_mother.put( MotherOf.child_id,child_id );
+        is_mother.put( MotherOf.mother_id, mum_id );
+        is_mother.put( MotherOf.birth_record_id, birth_record.getId());
+        relationships_stream.add(is_mother);
+
+        // Could add is_child but not now...
+
+    }
+
+    /**
+     * @param birth_record a record from which to extract baby information and add to the stream
+     * @param people_stream a stream to which to add a new Person record
+     * @return the id of the baby in the birth record
+     */
+    private int add_baby_to_output( ILXP birth_record, ILXPOutputStream people_stream ) {
+        int person_id = get_next_id();
+        ILXP person = new LXP(person_id);
+
+        Person plabels = new Person();
+        Birth blabels = new Birth();
+
+        person.put( plabels.TYPE, plabels.get_type() );
+
+        person.put( plabels.ORIGINAL_RECORD_ID, birth_record.getId() );
+        person.put( plabels.ORIGINAL_RECORD_TYPE, birth_record.get( blabels.TYPE ) );
+        person.put( plabels.RELATION_TO_CERT, "baby" );
+
+        person.put( plabels.SURNAME, birth_record.get( blabels.SURNAME ) );
+        person.put( plabels.FORENAME, birth_record.get( blabels.FORENAME ) );
+        person.put( plabels.SEX, birth_record.get( blabels.SEX ) );
+        person.put( plabels.FATHERS_FORENAME , birth_record.get(blabels.FATHERS_FORENAME) );
+        person.put( plabels.FATHERS_SURNAME , birth_record.get(blabels.FATHERS_SURNAME) );
+        person.put( plabels.FATHERS_OCCUPATION , birth_record.get(blabels.FATHERS_OCCUPATION) );
+        person.put( plabels.MOTHERS_FORENAME , birth_record.get(blabels.MOTHERS_FORENAME) );
+        person.put( plabels.MOTHERS_SURNAME , birth_record.get(blabels.MOTHERS_SURNAME) );
+        person.put( plabels.MOTHERS_MAIDEN_SURNAME , birth_record.get(blabels.MOTHERS_MAIDEN_SURNAME) );
+        person.put( plabels.CHANGED_SURNAME , birth_record.get(blabels.CHANGED_SURNAME) );
+        person.put( plabels.CHANGED_FORENAME , birth_record.get(blabels.CHANGED_FORENAME) );
+        person.put( plabels.CHANGED_MOTHERS_MAIDEN_SURNAME , birth_record.get(blabels.CHANGED_MOTHERS_MAIDEN_SURNAME) );
+
+        people_stream.add( person );
+        return person_id;
+    }
+
+    /**
+     * @param birth_record a record from which to extract father information and add to the stream
+     * @param people_stream a stream to which to add a new Person record
+     * @return the id of the father in the birth record
+     */
+    private int add_father_to_output( ILXP birth_record, ILXPOutputStream people_stream ) {
+
+        int person_id = get_next_id();
+        ILXP person = new LXP(person_id);
+
+        Person plabels = new Person();
+        Birth blabels = new Birth();
+
+        person.put( plabels.TYPE, plabels.get_type() );
+
+        person.put( plabels.ORIGINAL_RECORD_ID, birth_record.getId() );
+        person.put( plabels.ORIGINAL_RECORD_TYPE, birth_record.get( blabels.TYPE ) );
+        person.put( plabels.RELATION_TO_CERT, "father" );
+
+        person.put( plabels.SURNAME, birth_record.get( blabels.FATHERS_SURNAME ) );
+        person.put( plabels.FORENAME, birth_record.get( blabels.FATHERS_FORENAME ) );
+        person.put( plabels.OCCUPATION , birth_record.get(blabels.FATHERS_OCCUPATION) );
+        person.put( plabels.SEX , "M" );
+
+        people_stream.add( person );
+        return person_id;
+
+    }
+
+    /**
+     * @param birth_record a record from which to extract mother information and add to the stream
+     * @param people_stream a stream to which to add a new Person record
+     * @return the id of the mother in the birth record
+     */
+    private int add_mother_to_output( ILXP birth_record, ILXPOutputStream people_stream ) {
+        int person_id = get_next_id();
+        ILXP person = new LXP(person_id);
+
+        Person plabels = new Person();
+        Birth blabels = new Birth();
+
+        person.put( plabels.TYPE, plabels.get_type() );
+
+        person.put( plabels.ORIGINAL_RECORD_ID, birth_record.getId() );
+        person.put( plabels.ORIGINAL_RECORD_TYPE, birth_record.get( blabels.TYPE ) );
+        person.put( plabels.RELATION_TO_CERT, "baby" );
+
+        person.put( plabels.MOTHERS_SURNAME, birth_record.get( blabels.SURNAME ) );
+        person.put( plabels.MOTHERS_FORENAME, birth_record.get( blabels.FORENAME ) );
+        person.put( plabels.SEX , "F" );
+
+        people_stream.add( person );
+        return person_id;
+
+    }
+
+    private int get_next_id() {
+        return id++;
+    }
+
+
+    /******************************************************************************************************************/
+
+    public static void main(String[] args) throws Exception {
+
+        BassJohnBass r = new BassJohnBass();
+
+
+
+    }
+
+}

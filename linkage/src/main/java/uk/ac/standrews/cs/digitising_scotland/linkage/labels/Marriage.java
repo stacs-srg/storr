@@ -7,6 +7,7 @@ import java.util.Arrays;
  */
 public class Marriage extends CommonLabels {
 
+    public final String TYPE = "Marriage";
 
     public static final String GROOM_SURNAME = "groom_surname";
     public static final String GROOM_FORENAME = "groom_forename";
@@ -57,5 +58,13 @@ public class Marriage extends CommonLabels {
             BRIDE_FATHER_DECEASED, BRIDE_MOTHERS_FORENAME, BRIDE_MOTHERS_MAIDEN_SURNAME, BRIDE_MOTHER_DECEASED,
             BRIDE_FATHER_OCCUPATION, CORRECTED_ENTRY, IMAGE_QUALITY);
 
+    public Iterable<String> get_field_names() {
+        return MARRIAGE_FIELD_NAMES;
+    }
+
+    @Override
+    public String get_type() {
+        return TYPE;
+    }
 
 }

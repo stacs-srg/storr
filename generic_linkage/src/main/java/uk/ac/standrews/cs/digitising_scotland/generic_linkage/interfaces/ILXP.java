@@ -24,4 +24,6 @@ public interface ILXP extends Map<String, String> {
      * @param writer the stream to which the state is written.
      */
     void serializeToJSON(JSONWriter writer) throws JSONException;
+
+    void put( String key, int value );
 }

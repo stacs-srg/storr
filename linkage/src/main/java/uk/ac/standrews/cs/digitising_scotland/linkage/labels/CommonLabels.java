@@ -1,9 +1,11 @@
 package uk.ac.standrews.cs.digitising_scotland.linkage.labels;
 
+import java.util.Arrays;
+
 /**
  * Created by al on 19/05/2014.
  */
-public class CommonLabels {
+public abstract class CommonLabels extends Labels {
 
     public static final String ID = "id";
     public static final String SURNAME = "surname";
@@ -27,5 +29,10 @@ public class CommonLabels {
 
     public static final String CORRECTED_ENTRY = "corrected_entry";
     public static final String IMAGE_QUALITY = "image_quality";
+
+    public static final Iterable<String> COMMON_FIELD_NAMES = Arrays.asList(ID, SURNAME, FORENAME, SEX, YEAR_OF_REGISTRATION, REGISTRATION_DISTRICT_NUMBER,
+            REGISTRATION_DISTRICT_SUFFIX, ENTRY, MOTHERS_MAIDEN_SURNAME, CHANGED_SURNAME, CHANGED_FORENAME,
+            FATHERS_FORENAME, FATHERS_SURNAME, FATHERS_OCCUPATION, MOTHERS_FORENAME, MOTHERS_SURNAME, CHANGED_MOTHERS_MAIDEN_SURNAME,
+            CORRECTED_ENTRY, IMAGE_QUALITY);
 
 }

@@ -7,6 +7,8 @@ import java.util.Arrays;
  */
 public class Death extends CommonLabels {
 
+    public final String TYPE = "Marriage";
+
     public static final String DEATH_YEAR = "death_year";
     public static final String AGE_AT_DEATH = "age_at_death";
     public static final String CHANGED_DEATH_AGE = "changed_death_age";
@@ -32,4 +34,13 @@ public class Death extends CommonLabels {
             PLACE_OF_DEATH, FATHERS_FORENAME, FATHERS_SURNAME, FATHERS_OCCUPATION, FATHER_DECEASED, MOTHERS_FORENAME,
             MOTHERS_SURNAME, CHANGED_MOTHERS_MAIDEN_SURNAME,
             MOTHER_DECEASED, COD_A, COD_B, COD_C, CERTIFYING_DOCTOR, CORRECTED_ENTRY, IMAGE_QUALITY);
+
+    public Iterable<String> get_field_names() {
+        return DEATH_FIELD_NAMES;
+    }
+
+    @Override
+    public String get_type() {
+        return TYPE;
+    }
 }

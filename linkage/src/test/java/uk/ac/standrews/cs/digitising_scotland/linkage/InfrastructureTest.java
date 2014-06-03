@@ -175,7 +175,7 @@ public class InfrastructureTest {
 
         IIndexedBucket b = repo.getIndexedBucket(bucket_name4);
 
-        b.addIndex(Birth.SURNAME);
+        b.addIndex( Birth.SURNAME );
         EventImporter importer = new EventImporter();
         int counter1 = importer.importBirths(b, BIRTH_RECORDS_PATH);
 
