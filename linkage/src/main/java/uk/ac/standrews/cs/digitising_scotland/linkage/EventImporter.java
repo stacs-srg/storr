@@ -4,9 +4,9 @@ import org.json.JSONException;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.LXP;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IBucket;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXP;
-import uk.ac.standrews.cs.digitising_scotland.linkage.labels.Birth;
-import uk.ac.standrews.cs.digitising_scotland.linkage.labels.Death;
-import uk.ac.standrews.cs.digitising_scotland.linkage.labels.Marriage;
+import uk.ac.standrews.cs.digitising_scotland.linkage.labels.BirthLabels;
+import uk.ac.standrews.cs.digitising_scotland.linkage.labels.DeathLabels;
+import uk.ac.standrews.cs.digitising_scotland.linkage.labels.MarriageLabels;
 
 import java.io.BufferedReader;
 import java.io.EOFException;
@@ -107,7 +107,7 @@ public class EventImporter {
      */
     private ILXP importBirthRecord(BufferedReader reader) throws IOException, RecordFormatException {
 
-        return importRecord(reader, "birth", Birth.BIRTH_FIELD_NAMES);
+        return importRecord(reader, "birth", BirthLabels.BIRTH_FIELD_NAMES);
     }
 
     /**
@@ -115,7 +115,7 @@ public class EventImporter {
      */
     private ILXP importDeathRecord(BufferedReader reader) throws IOException, RecordFormatException {
 
-        return importRecord(reader, "death", Death.DEATH_FIELD_NAMES);
+        return importRecord(reader, "death", DeathLabels.DEATH_FIELD_NAMES);
     }
 
     /**
@@ -123,7 +123,7 @@ public class EventImporter {
      */
     private ILXP importMarriageRecord(BufferedReader reader) throws IOException, RecordFormatException {
         
-        return importRecord(reader, "marriage", Marriage.MARRIAGE_FIELD_NAMES);
+        return importRecord(reader, "marriage", MarriageLabels.MARRIAGE_FIELD_NAMES);
     }
 
     /**

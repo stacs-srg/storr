@@ -1,11 +1,12 @@
 package uk.ac.standrews.cs.digitising_scotland.linkage.labels;
 
 import java.util.Arrays;
+import java.util.Iterator;
 
 /**
  * Created by al on 19/05/2014.
  */
-public class Marriage extends CommonLabels {
+public class MarriageLabels extends CommonLabels {
 
     public final String TYPE = "Marriage";
 
@@ -58,13 +59,9 @@ public class Marriage extends CommonLabels {
             BRIDE_FATHER_DECEASED, BRIDE_MOTHERS_FORENAME, BRIDE_MOTHERS_MAIDEN_SURNAME, BRIDE_MOTHER_DECEASED,
             BRIDE_FATHER_OCCUPATION, CORRECTED_ENTRY, IMAGE_QUALITY);
 
-    public Iterable<String> get_field_names() {
-        return MARRIAGE_FIELD_NAMES;
+    public Iterator<String> iterator() {
+        return MARRIAGE_FIELD_NAMES.iterator();
     }
 
-    @Override
-    public String get_type() {
-        return TYPE;
-    }
 
 }

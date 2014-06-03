@@ -7,7 +7,7 @@ import org.junit.Test;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.*;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.stream_operators.filter.ExactMatch;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.*;
-import uk.ac.standrews.cs.digitising_scotland.linkage.labels.Birth;
+import uk.ac.standrews.cs.digitising_scotland.linkage.labels.BirthLabels;
 import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
 
 import java.io.IOException;
@@ -175,11 +175,11 @@ public class InfrastructureTest {
 
         IIndexedBucket b = repo.getIndexedBucket(bucket_name4);
 
-        b.addIndex( Birth.SURNAME );
+        b.addIndex(BirthLabels.SURNAME);
         EventImporter importer = new EventImporter();
         int counter1 = importer.importBirths(b, BIRTH_RECORDS_PATH);
 
-        IIndex index = b.getIndex(Birth.SURNAME);
+        IIndex index = b.getIndex(BirthLabels.SURNAME);
 
         Set<String> keys = index.keySet();
         int counter2 = 0;

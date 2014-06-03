@@ -1,11 +1,12 @@
 package uk.ac.standrews.cs.digitising_scotland.linkage.labels;
 
 import java.util.Arrays;
+import java.util.Iterator;
 
 /**
  * Created by al on 19/05/2014.
  */
-public class Birth extends CommonLabels {
+public class BirthLabels extends CommonLabels {
 
     public static final String TYPE = "birth";
 
@@ -31,13 +32,9 @@ public class Birth extends CommonLabels {
     PARENTS_DAY_OF_MARRIAGE, PARENTS_MONTH_OF_MARRIAGE, PARENTS_YEAR_OF_MARRIAGE, PARENTS_PLACE_OF_MARRIAGE, ILLEGITIMATE_INDICATOR, INFORMANT,
     INFORMANT_DID_NOT_SIGN, CORRECTED_ENTRY, ADOPTION, IMAGE_QUALITY);
 
-    @Override
-    public Iterable<String> get_field_names() {
-        return BIRTH_FIELD_NAMES;
+
+    public Iterator<String> iterator() {
+        return BIRTH_FIELD_NAMES.iterator();
     }
 
-    @Override
-    public String get_type() {
-        return TYPE;
-    }
 }

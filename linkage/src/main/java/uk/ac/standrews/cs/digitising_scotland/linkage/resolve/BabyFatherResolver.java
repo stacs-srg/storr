@@ -14,7 +14,7 @@ import uk.ac.standrews.cs.digitising_scotland.linkage.EventImporter;
 import uk.ac.standrews.cs.digitising_scotland.linkage.RecordFormatException;
 import uk.ac.standrews.cs.digitising_scotland.linkage.blocking.BlockingBFF_BFL_MPF_MPL;
 import uk.ac.standrews.cs.digitising_scotland.linkage.event_records.DeathRecord;
-import uk.ac.standrews.cs.digitising_scotland.linkage.labels.Birth;
+import uk.ac.standrews.cs.digitising_scotland.linkage.labels.BirthLabels;
 import uk.ac.standrews.cs.nds.util.ErrorHandling;
 
 import java.io.IOException;
@@ -123,8 +123,8 @@ public class BabyFatherResolver {
             // are a birth record of 1 person in a probable father-child relationsip.
 
             // first make sure that the first is the possible father
-            int father_birthYear = Integer.parseInt(potential_father.get(Birth.BIRTH_YEAR));
-            int child_birthYear = Integer.parseInt(potential_child.get(Birth.BIRTH_YEAR));
+            int father_birthYear = Integer.parseInt(potential_father.get(BirthLabels.BIRTH_YEAR));
+            int child_birthYear = Integer.parseInt(potential_child.get(BirthLabels.BIRTH_YEAR));
 
             if (father_birthYear == child_birthYear) { // can't be in a parent-child relationship.
                 return false;
@@ -134,15 +134,15 @@ public class BabyFatherResolver {
                 potential_father = potential_child;
                 potential_child = temp;
             }
-            if (potential_father.get(Birth.SEX).equals("F")) {
+            if (potential_father.get(BirthLabels.SEX).equals("F")) {
                 return false;
             }
 
-            String fathers_surname = potential_child.get(Birth.FATHERS_SURNAME);
-            fathers_surname = fathers_surname.equals("0") ? potential_child.get(Birth.SURNAME) : fathers_surname; // fathers surname coded as "0" if same as baby
+            String fathers_surname = potential_child.get(BirthLabels.FATHERS_SURNAME);
+            fathers_surname = fathers_surname.equals("0") ? potential_child.get(BirthLabels.SURNAME) : fathers_surname; // fathers surname coded as "0" if same as baby
 
-            return potential_father.get(Birth.SURNAME).equals(fathers_surname) &&
-                    potential_father.get(Birth.FORENAME).equals(potential_child.get(Birth.FATHERS_FORENAME));
+            return potential_father.get(BirthLabels.SURNAME).equals(fathers_surname) &&
+                    potential_father.get(BirthLabels.FORENAME).equals(potential_child.get(BirthLabels.FATHERS_FORENAME));
         }
 
         private Date getdob(final ILXP record) throws RecordFormatException {

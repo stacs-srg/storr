@@ -5,7 +5,7 @@ import java.util.Arrays;
 /**
  * Created by al on 19/05/2014.
  */
-public abstract class CommonLabels extends Labels {
+public abstract class CommonLabels implements Iterable<String> {
 
     public static final String ID = "id";
     public static final String SURNAME = "surname";

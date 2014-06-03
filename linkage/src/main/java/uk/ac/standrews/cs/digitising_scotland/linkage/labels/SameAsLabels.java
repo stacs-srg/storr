@@ -1,11 +1,12 @@
 package uk.ac.standrews.cs.digitising_scotland.linkage.labels;
 
 import java.util.Arrays;
+import java.util.Iterator;
 
 /**
  * Created by al on 19/05/2014.
  */
-public class SameAs extends Labels {
+public class SameAsLabels implements Iterable<String> {
 
     public static final String TYPE = "SAME_AS";
 
@@ -14,13 +15,8 @@ public class SameAs extends Labels {
 
     public static final Iterable<String> FIELD_NAMES = Arrays.asList(record_id1,record_id2);
 
-    @Override
-    public Iterable<String> get_field_names() {
-        return FIELD_NAMES;
+    public Iterator<String> iterator() {
+        return FIELD_NAMES.iterator();
     }
 
-    @Override
-    public String get_type() {
-        return TYPE;
-    }
 }

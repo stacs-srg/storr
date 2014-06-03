@@ -5,7 +5,7 @@ import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.stream_operat
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IBucket;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXP;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IRepository;
-import uk.ac.standrews.cs.digitising_scotland.linkage.labels.Birth;
+import uk.ac.standrews.cs.digitising_scotland.linkage.labels.BirthLabels;
 
 /**
  * This class blocks based on baby's first name, baby's last name and father's first name, father's last name over streams of Birth records.
@@ -27,13 +27,13 @@ public class BlockingBFF_BFL_MPF_MPL extends Blocker {
         // Only operates over birth records
 
         // Note will concat nulls into key if any fields are null - working hypothesis - this doesn't matter.
-        String key1 = record.get(Birth.FORENAME);
-        String baby_surname = record.get(Birth.SURNAME);
+        String key1 = record.get(BirthLabels.FORENAME);
+        String baby_surname = record.get(BirthLabels.SURNAME);
         key1 = key1 + baby_surname;
         key1 = removeNasties(key1);
 
-        String key2 = record.get(Birth.FATHERS_FORENAME);
-        String fathers_surname = record.get(Birth.FATHERS_SURNAME);
+        String key2 = record.get(BirthLabels.FATHERS_FORENAME);
+        String fathers_surname = record.get(BirthLabels.FATHERS_SURNAME);
         key2 = key2 + (fathers_surname.equals("0") ? baby_surname : fathers_surname); // fathers surname coded as "0" if same as baby
         key2 = removeNasties(key2);
 

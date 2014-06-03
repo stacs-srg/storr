@@ -7,6 +7,7 @@ import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.RepositoryExc
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.*;
 import uk.ac.standrews.cs.digitising_scotland.linkage.EventImporter;
 import uk.ac.standrews.cs.digitising_scotland.linkage.RecordFormatException;
+import uk.ac.standrews.cs.digitising_scotland.linkage.blocking.BlockingFirstLastSexOverPerson;
 import uk.ac.standrews.cs.digitising_scotland.linkage.labels.*;
 
 import java.io.IOException;
@@ -21,6 +22,7 @@ public class BassJohnBass {
 
     private static String input_repo_path = "src/test/resources/BDM_repo";          // input repository containing event records
     private static String linkage_repo_path = "src/test/resources/linkage_repo";    // repository for linked records
+    private static String blocked_people_repo_path = "src/test/resources/blocked_people_repo";    // repository for blocked records
 
     private static String source_base_path = "src/test/resources/BDMSet1";          // Path to source of vital event records in Digitising Scotland format
     private static String births_name = "birth_records";                            // Name of bucket containing birth records (inputs).
@@ -32,6 +34,7 @@ public class BassJohnBass {
 
     private final IRepository input_repo;
     private final IRepository linkage_repo;
+    private final IRepository blocked_people_repo;
 
     // input buckets containing BDM records in LXP format
 
@@ -45,6 +48,7 @@ public class BassJohnBass {
 
         input_repo = new Repository(input_repo_path);
         linkage_repo = new Repository(linkage_repo_path);
+        blocked_people_repo = new Repository(blocked_people_repo_path);
 
         births = input_repo.makeBucket(births_name);
 
@@ -53,7 +57,7 @@ public class BassJohnBass {
         relationships = linkage_repo.makeIndexedBucket(relationships_name);
 
         identity = linkage_repo.makeIndexedBucket(identities_name);
-        identity.addIndex( SameAs.record_id1 );
+        identity.addIndex(SameAsLabels.record_id1);
 
         // import the birth records
         EventImporter importer = new EventImporter();
@@ -61,6 +65,13 @@ public class BassJohnBass {
 
         // populate the people and relationships bucket
         populateMaximalPeople();
+
+        try {
+            IBlocker blocker = new BlockingFirstLastSexOverPerson( people, blocked_people_repo );
+
+        } catch (RepositoryException e) {
+            e.printStackTrace();
+        }
 
 
     }
@@ -96,17 +107,17 @@ public class BassJohnBass {
      */
     private void add_BMF(ILXP birth_record, int child_id, int dad_id, int mum_id, ILXPOutputStream relationships_stream) {
         ILXP is_father = new LXP(get_next_id());
-        is_father.put( "TYPE", FatherOf.TYPE);
-        is_father.put( FatherOf.child_id,child_id );
-        is_father.put( FatherOf.father_id, dad_id );
-        is_father.put( FatherOf.birth_record_id, birth_record.getId());
+        is_father.put( "TYPE", FatherOfLabels.TYPE);
+        is_father.put( FatherOfLabels.child_id,child_id );
+        is_father.put( FatherOfLabels.father_id, dad_id );
+        is_father.put( FatherOfLabels.birth_record_id, birth_record.getId());
         relationships_stream.add(is_father);
 
         ILXP is_mother = new LXP(get_next_id());
-        is_mother.put( "TYPE", MotherOf.TYPE);
-        is_mother.put( MotherOf.child_id,child_id );
-        is_mother.put( MotherOf.mother_id, mum_id );
-        is_mother.put( MotherOf.birth_record_id, birth_record.getId());
+        is_mother.put( "TYPE", MotherOfLabels.TYPE);
+        is_mother.put( MotherOfLabels.child_id,child_id );
+        is_mother.put( MotherOfLabels.mother_id, mum_id );
+        is_mother.put( MotherOfLabels.birth_record_id, birth_record.getId());
         relationships_stream.add(is_mother);
 
         // Could add is_child but not now...
@@ -122,27 +133,24 @@ public class BassJohnBass {
         int person_id = get_next_id();
         ILXP person = new LXP(person_id);
 
-        Person plabels = new Person();
-        Birth blabels = new Birth();
+        person.put( "TYPE", PersonLabels.TYPE );
 
-        person.put( plabels.TYPE, plabels.get_type() );
+        person.put( PersonLabels.ORIGINAL_RECORD_ID, birth_record.getId() );
+        person.put( PersonLabels.ORIGINAL_RECORD_TYPE, birth_record.get( BirthLabels.TYPE ) );
+        person.put( PersonLabels.ROLE, "baby" );
 
-        person.put( plabels.ORIGINAL_RECORD_ID, birth_record.getId() );
-        person.put( plabels.ORIGINAL_RECORD_TYPE, birth_record.get( blabels.TYPE ) );
-        person.put( plabels.RELATION_TO_CERT, "baby" );
-
-        person.put( plabels.SURNAME, birth_record.get( blabels.SURNAME ) );
-        person.put( plabels.FORENAME, birth_record.get( blabels.FORENAME ) );
-        person.put( plabels.SEX, birth_record.get( blabels.SEX ) );
-        person.put( plabels.FATHERS_FORENAME , birth_record.get(blabels.FATHERS_FORENAME) );
-        person.put( plabels.FATHERS_SURNAME , birth_record.get(blabels.FATHERS_SURNAME) );
-        person.put( plabels.FATHERS_OCCUPATION , birth_record.get(blabels.FATHERS_OCCUPATION) );
-        person.put( plabels.MOTHERS_FORENAME , birth_record.get(blabels.MOTHERS_FORENAME) );
-        person.put( plabels.MOTHERS_SURNAME , birth_record.get(blabels.MOTHERS_SURNAME) );
-        person.put( plabels.MOTHERS_MAIDEN_SURNAME , birth_record.get(blabels.MOTHERS_MAIDEN_SURNAME) );
-        person.put( plabels.CHANGED_SURNAME , birth_record.get(blabels.CHANGED_SURNAME) );
-        person.put( plabels.CHANGED_FORENAME , birth_record.get(blabels.CHANGED_FORENAME) );
-        person.put( plabels.CHANGED_MOTHERS_MAIDEN_SURNAME , birth_record.get(blabels.CHANGED_MOTHERS_MAIDEN_SURNAME) );
+        person.put( PersonLabels.SURNAME, birth_record.get( BirthLabels.SURNAME ) );
+        person.put( PersonLabels.FORENAME, birth_record.get( BirthLabels.FORENAME ) );
+        person.put( PersonLabels.SEX, birth_record.get( BirthLabels.SEX ) );
+        person.put( PersonLabels.FATHERS_FORENAME , birth_record.get(BirthLabels.FATHERS_FORENAME) );
+        person.put( PersonLabels.FATHERS_SURNAME , birth_record.get(BirthLabels.FATHERS_SURNAME) );
+        person.put( PersonLabels.FATHERS_OCCUPATION , birth_record.get(BirthLabels.FATHERS_OCCUPATION) );
+        person.put( PersonLabels.MOTHERS_FORENAME , birth_record.get(BirthLabels.MOTHERS_FORENAME) );
+        person.put( PersonLabels.MOTHERS_SURNAME , birth_record.get(BirthLabels.MOTHERS_SURNAME) );
+        person.put( PersonLabels.MOTHERS_MAIDEN_SURNAME , birth_record.get(BirthLabels.MOTHERS_MAIDEN_SURNAME) );
+        person.put( PersonLabels.CHANGED_SURNAME , birth_record.get(BirthLabels.CHANGED_SURNAME) );
+        person.put( PersonLabels.CHANGED_FORENAME , birth_record.get(BirthLabels.CHANGED_FORENAME) );
+        person.put( PersonLabels.CHANGED_MOTHERS_MAIDEN_SURNAME , birth_record.get(BirthLabels.CHANGED_MOTHERS_MAIDEN_SURNAME) );
 
         people_stream.add( person );
         return person_id;
@@ -158,19 +166,16 @@ public class BassJohnBass {
         int person_id = get_next_id();
         ILXP person = new LXP(person_id);
 
-        Person plabels = new Person();
-        Birth blabels = new Birth();
+        person.put( "TYPE", PersonLabels.TYPE );
 
-        person.put( plabels.TYPE, plabels.get_type() );
+        person.put( PersonLabels.ORIGINAL_RECORD_ID, birth_record.getId() );
+        person.put( PersonLabels.ORIGINAL_RECORD_TYPE, birth_record.get( BirthLabels.TYPE ) );
+        person.put( PersonLabels.ROLE, "father" );
 
-        person.put( plabels.ORIGINAL_RECORD_ID, birth_record.getId() );
-        person.put( plabels.ORIGINAL_RECORD_TYPE, birth_record.get( blabels.TYPE ) );
-        person.put( plabels.RELATION_TO_CERT, "father" );
-
-        person.put( plabels.SURNAME, birth_record.get( blabels.FATHERS_SURNAME ) );
-        person.put( plabels.FORENAME, birth_record.get( blabels.FATHERS_FORENAME ) );
-        person.put( plabels.OCCUPATION , birth_record.get(blabels.FATHERS_OCCUPATION) );
-        person.put( plabels.SEX , "M" );
+        person.put( PersonLabels.SURNAME, birth_record.get( BirthLabels.FATHERS_SURNAME ) );
+        person.put( PersonLabels.FORENAME, birth_record.get( BirthLabels.FATHERS_FORENAME ) );
+        person.put( PersonLabels.OCCUPATION , birth_record.get(BirthLabels.FATHERS_OCCUPATION) );
+        person.put( PersonLabels.SEX , "M" );
 
         people_stream.add( person );
         return person_id;
@@ -186,18 +191,15 @@ public class BassJohnBass {
         int person_id = get_next_id();
         ILXP person = new LXP(person_id);
 
-        Person plabels = new Person();
-        Birth blabels = new Birth();
+        person.put( "TYPE", PersonLabels.TYPE );
 
-        person.put( plabels.TYPE, plabels.get_type() );
+        person.put( PersonLabels.ORIGINAL_RECORD_ID, birth_record.getId() );
+        person.put( PersonLabels.ORIGINAL_RECORD_TYPE, birth_record.get( BirthLabels.TYPE ) );
+        person.put( PersonLabels.ROLE, "mother" );
 
-        person.put( plabels.ORIGINAL_RECORD_ID, birth_record.getId() );
-        person.put( plabels.ORIGINAL_RECORD_TYPE, birth_record.get( blabels.TYPE ) );
-        person.put( plabels.RELATION_TO_CERT, "baby" );
-
-        person.put( plabels.MOTHERS_SURNAME, birth_record.get( blabels.SURNAME ) );
-        person.put( plabels.MOTHERS_FORENAME, birth_record.get( blabels.FORENAME ) );
-        person.put( plabels.SEX , "F" );
+        person.put( PersonLabels.MOTHERS_SURNAME, birth_record.get( BirthLabels.SURNAME ) );
+        person.put( PersonLabels.MOTHERS_FORENAME, birth_record.get( BirthLabels.FORENAME ) );
+        person.put( PersonLabels.SEX , "F" );
 
         people_stream.add( person );
         return person_id;

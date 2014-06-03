@@ -1,11 +1,12 @@
 package uk.ac.standrews.cs.digitising_scotland.linkage.labels;
 
 import java.util.Arrays;
+import java.util.Iterator;
 
 /**
  * Created by al on 19/05/2014.
  */
-public class FatherOf extends Labels {
+public class FatherOfLabels implements Iterable<String> {
 
     public static final String TYPE = "FATHER_OF";
 
@@ -16,12 +17,9 @@ public class FatherOf extends Labels {
     public static final Iterable<String> FIELD_NAMES = Arrays.asList(birth_record_id,father_id,child_id);
 
     @Override
-    public Iterable<String> get_field_names() {
-        return FIELD_NAMES;
+    public Iterator<String> iterator() {
+        return FIELD_NAMES.iterator();
     }
 
-    @Override
-    public String get_type() {
-        return TYPE;
-    }
+
 }
