@@ -67,7 +67,12 @@ public class BassJohnBass {
         populateMaximalPeople();
 
         try {
+            BlockedMaximalPersonResolver r = new BlockedMaximalPersonResolver(  people, blocked_people_repo, identity );
+            r.match();
+
+
             IBlocker blocker = new BlockingFirstLastSexOverPerson( people, blocked_people_repo );
+            blocker.apply();
 
         } catch (RepositoryException e) {
             e.printStackTrace();

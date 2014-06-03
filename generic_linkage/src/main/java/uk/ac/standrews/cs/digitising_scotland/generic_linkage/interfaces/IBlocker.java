@@ -7,9 +7,21 @@ package uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces;
 public interface IBlocker {
 
     /**
-     * @return the ILXPInputStream over which filtering is being performed.
+     * @return the ILXPInputStream over which blocking is being performed.
      */
     ILXPInputStream getInput();
+
+    /*
+     * Applies the blocking method @method determineBlockedBucketNamesForRecord to the input records
+     * and assigns to the determined bucket
+     */
+    void apply();
+
+    /**
+     *
+     * @param record the record to be assigned to a bucket (determined by @method determineBlockedBucketNamesForRecord
+     */
+    void assign(ILXP record);
 
     /**
      * @param record a record to be blocked

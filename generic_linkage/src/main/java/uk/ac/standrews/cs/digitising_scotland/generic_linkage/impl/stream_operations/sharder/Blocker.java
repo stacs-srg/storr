@@ -38,6 +38,7 @@ public abstract class Blocker implements IBlocker {
     /**
      * Apply the method assign to all (non-null) records in the stream
      */
+    @Override
     public void apply() {
 
         for (ILXP record : input) {
@@ -47,7 +48,8 @@ public abstract class Blocker implements IBlocker {
         }
     }
 
-    private void assign(final ILXP record) {
+    @Override
+    public void assign(final ILXP record) {
 
         for (String bucket_name : determineBlockedBucketNamesForRecord(record)) {
 
