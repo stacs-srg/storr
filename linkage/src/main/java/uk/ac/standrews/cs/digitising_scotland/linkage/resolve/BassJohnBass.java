@@ -89,7 +89,7 @@ public class BassJohnBass {
         for( ILXP birth_record : stream ) {
 
             int baby_id = add_baby_to_output(birth_record, people_stream);
-            int dad_id = add_father_to_output(birth_record, people_stream);
+            int dad_id = addFatherToOutput(birth_record, people_stream);
             int mum_id = add_mother_to_output(birth_record, people_stream);
 
             add_BMF( birth_record,baby_id,dad_id,mum_id,relationships_stream );
@@ -161,7 +161,7 @@ public class BassJohnBass {
      * @param people_stream a stream to which to add a new Person record
      * @return the id of the father in the birth record
      */
-    private int add_father_to_output( ILXP birth_record, ILXPOutputStream people_stream ) {
+    private int addFatherToOutput(ILXP birth_record, ILXPOutputStream people_stream) {
 
         int person_id = get_next_id();
         ILXP person = new LXP(person_id);
