@@ -251,9 +251,9 @@
 
     <distributionManagement>
         <repository>
-            <id>aaaa</id>
-            <url>http://aaaaaaa</url>
-            <name>asdasads</name>
+            <id>uk.ac.standrews.cs.maven.repository</id>
+            <url>http://maven.cs.st-andrews.ac.uk/</url>
+            <name>School of Computer Science Maven Repository</name>
         </repository>
         <site>
             <id>digitisingscotland.cs</id>
