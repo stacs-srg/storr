@@ -19,28 +19,130 @@
     <developers>
         <developer>
             <id/>
+            <name>Jamie Carson</name>
+            <email>jkc25@st-andrews.ac.uk</email>
+            <url>http://jkc25.host.cs.st-andrews.ac.uk</url>
+            <organization>University of St Andrews</organization>
+            <organizationUrl>http://www.st-andrews.ac.uk/</organizationUrl>
+            <roles><role>Developer</role></roles>
+        </developer>
+        <developer>
+            <id/>
+            <name>Alan Dearle</name>
+            <email>alan.dearle@st-andrews.ac.uk</email>
+            <url>http://al.host.cs.st-andrews.ac.uk/</url>
+            <organization>University of St Andrews</organization>
+            <organizationUrl>http://www.st-andrews.ac.uk/</organizationUrl>
+            <roles><role>Developer</role></roles>
+        </developer>
+        <developer>
+            <id/>
+            <name>Fraser Dunlop</name>
+            <email>frjd2@st-andrews.ac.uk</email>
+            <organization>University of St Andrews</organization>
+            <organizationUrl>http://www.st-andrews.ac.uk/</organizationUrl>
+            <roles><role>Developer</role></roles>
+        </developer>
+        <developer>
+            <id/>
             <name>Graham Kirby</name>
             <email>graham.kirby@st-andrews.ac.uk</email>
             <url>http://graham.host.cs.st-andrews.ac.uk/</url>
             <organization>University of St Andrews</organization>
             <organizationUrl>http://www.st-andrews.ac.uk/</organizationUrl>
-            <roles/>
+            <roles><role>Developer</role></roles>
         </developer>
         <developer>
             <id/>
-            <name>Jamie Carson</name>
-            <email>jkc25@st-andrews.ac.uk</email>
-            <url/>
+            <name>Victor Andrei</name>
+            <email>va9@st-andrews.ac.uk</email>
             <organization>University of St Andrews</organization>
             <organizationUrl>http://www.st-andrews.ac.uk/</organizationUrl>
+            <roles><role>Student Intern</role></roles>
         </developer>
     </developers>
     <contributors>
         <contributor>
             <name>Chris Dibben</name>
             <email>chris.dibben@ed.ac.uk</email>
+            <url>http://www.ed.ac.uk/schools-departments/geosciences/people?indv=3666</url>
             <organization>University of Edinburgh</organization>
             <organizationUrl>http://www.ed.ac.uk/</organizationUrl>
+            <roles><role>Collaborator</role></roles>
+        </contributor>
+        <contributor>
+            <name>Lee Williamson</name>
+            <email>lee.williamson@ed.ac.uk</email>
+            <url>http://www.ed.ac.uk/schools-departments/geosciences/people?indv=3966</url>
+            <organization>University of Edinburgh</organization>
+            <organizationUrl>http://www.ed.ac.uk/</organizationUrl>
+            <roles><role>Collaborator</role></roles>
+        </contributor>
+        <contributor>
+            <name>Alasdair Gray</name>
+            <email>A.J.G.Gray@hw.ac.uk</email>
+            <url>http://www.macs.hw.ac.uk/~ajg33/</url>
+            <organization>Heriot-Watt University</organization>
+            <organizationUrl>http://www.hw.ac.uk/</organizationUrl>
+            <roles><role>Collaborator</role></roles>
+        </contributor>
+        <contributor>
+            <name>Peter Christen</name>
+            <email>peter.christen@anu.edu.au</email>
+            <url>http://cs.anu.edu.au/~Peter.Christen/</url>
+            <organization>Australian National University</organization>
+            <organizationUrl>http://www.anu.edu.au/</organizationUrl>
+            <roles><role>Collaborator</role></roles>
+        </contributor>
+        <contributor>
+            <name>John Bass</name>
+            <organization>Institute for Marine and Antarctic Studies</organization>
+            <organizationUrl>http://www.imas.utas.edu.au</organizationUrl>
+            <roles><role>Collaborator</role></roles>
+        </contributor>
+        <contributor>
+            <name>Eilidh Garrett</name>
+            <email>eilidh.garrett@btinternet.com</email>
+            <url>http://www.geog.cam.ac.uk/people/garrett/</url>
+            <organization>University of Cambridge</organization>
+            <organizationUrl>http://www.cam.ac.uk/</organizationUrl>
+            <roles><role>Collaborator</role></roles>
+        </contributor>
+        <contributor>
+            <name>Alice Reid</name>
+            <email>alice.reid@geog.cam.ac.uk</email>
+            <url>http://www.geog.cam.ac.uk/people/reid/</url>
+            <organization>University of Cambridge</organization>
+            <organizationUrl>http://www.cam.ac.uk/</organizationUrl>
+            <roles><role>Collaborator</role></roles>
+        </contributor>
+        <contributor>
+            <name>Conrad de Kerckhove</name>
+            <url>https://www.linkedin.com/in/cfedk</url>
+            <organization>University of St Andrews</organization>
+            <organizationUrl>http://www.st-andrews.ac.uk/</organizationUrl>
+            <roles><role>Student Intern 2013</role></roles>
+        </contributor>
+        <contributor>
+            <name>Ilia Shumailov</name>
+            <url>https://www.linkedin.com/pub/ilia-shumailov/93/297/781</url>
+            <organization>University of St Andrews</organization>
+            <organizationUrl>http://www.st-andrews.ac.uk/</organizationUrl>
+            <roles><role>Student Intern 2013</role></roles>
+        </contributor>
+        <contributor>
+            <name>Ben Lovell</name>
+            <url>uk.linkedin.com/pub/ben-lovell/22/5a2/b76</url>
+            <organization>University of St Andrews</organization>
+            <organizationUrl>http://www.st-andrews.ac.uk/</organizationUrl>
+            <roles><role>Student Intern 2012</role></roles>
+        </contributor>
+        <contributor>
+            <name>Ivars Zubkans</name>
+            <url>lv.linkedin.com/pub/ivars-zubkans/32/750/19</url>
+            <organization>University of St Andrews</organization>
+            <organizationUrl>http://www.st-andrews.ac.uk/</organizationUrl>
+            <roles><role>Student Intern 2012</role></roles>
         </contributor>
     </contributors>
 
