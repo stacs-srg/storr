@@ -9,3 +9,4 @@ target
 **/population_config.txt
 .Ulysses-Group.plist
 .UlyssesRoot
+pom-template.xml
