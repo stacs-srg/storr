@@ -90,8 +90,10 @@ public class CompactPopulation implements Iterable<CompactPerson> {
     private ProgressIndicator progress_indicator;
 
     public interface Condition {
-
-        boolean check(int index);
+        final int POSITIVE = 1;
+        final int NEGATIVE_STOP = 2;
+        final int NEGATIVE_CONTINUE = 3;
+        int check(int index);
     }
 
     /**
@@ -223,8 +225,8 @@ public class CompactPopulation implements Iterable<CompactPerson> {
         final Condition match = new Condition() {
 
             @Override
-            public boolean check(final int person_index) {
-                return person == people[person_index];
+            public int check(final int person_index) {
+                return (person == people[person_index]) ? Condition.POSITIVE : Condition.NEGATIVE_CONTINUE;
             }
         };
 
@@ -234,8 +236,14 @@ public class CompactPopulation implements Iterable<CompactPerson> {
     public int findPerson(final int start_index, final Condition condition) {
 
         for (int i = start_index + 1; i < getPeople().length; i++) {
-            if (condition.check(i)) {
+            if (condition.check(i) == Condition.POSITIVE) {
                 return i;
+            }
+            if (condition.check(i) == Condition.NEGATIVE_CONTINUE) {
+                continue;
+            }
+            if (condition.check(i) == Condition.NEGATIVE_STOP) {
+                return -1;
             }
         }
         return -1;
@@ -468,6 +476,7 @@ public class CompactPopulation implements Iterable<CompactPerson> {
         final int husband_index = husband(partnership);
         final int wife_index = wife(partnership);
 
+        // To be removed:
         // TODO This could be optimised since if some checks fail then they will never succeed for subsequent children.
         // E.g. as soon as the birth date of a candidate child is later than the latest acceptable birth date, no point in looking further.
         // Refine Condition interface so result can be yes, no and keep looking, no and stop looking?
@@ -475,11 +484,14 @@ public class CompactPopulation implements Iterable<CompactPerson> {
         final Condition conditions = new Condition() {
 
             @Override
-            public boolean check(final int child_index) {
+            public int check(final int child_index) {
 
                 final CompactPerson p = people[child_index];
 
-                return !p.isIncomer() && p.date_of_birth > earliest_birth_date && p.date_of_birth < latest_birth_date && !p.hasParents() && parentsHaveSensibleAgesAtChildBirth(husband_index, wife_index, child_index) && !marriedToAnyChildrenOf(child_index, partnership);
+                if(p.date_of_birth >= latest_birth_date)
+                    return Condition.NEGATIVE_STOP;
+
+                return !p.isIncomer() && p.date_of_birth > earliest_birth_date && p.date_of_birth < latest_birth_date &&!p.hasParents() && parentsHaveSensibleAgesAtChildBirth(husband_index, wife_index, child_index) && !marriedToAnyChildrenOf(child_index, partnership) ? Condition.POSITIVE : Condition.NEGATIVE_CONTINUE;
             }
         };
 
@@ -573,9 +585,9 @@ public class CompactPopulation implements Iterable<CompactPerson> {
         final Condition partner_compatible = new Condition() {
 
             @Override
-            public boolean check(final int person_index) {
+            public int check(final int person_index) {
 
-                return partnersAreCompatible(first_partner_index, person_index, marriage_date);
+                return partnersAreCompatible(first_partner_index, person_index, marriage_date) ? Condition.POSITIVE : Condition.NEGATIVE_CONTINUE;
             }
         };
 

@@ -77,9 +77,9 @@ public class PopulationToGraphviz extends PopulationToFile {
         final CompactPopulation.Condition has_parents_condition = new CompactPopulation.Condition() {
 
             @Override
-            public boolean check(final int person_index) {
+            public int check(final int person_index) {
 
-                return population.getPerson(person_index).hasParents();
+                return population.getPerson(person_index).hasParents() ? CompactPopulation.Condition.POSITIVE : CompactPopulation.Condition.NEGATIVE_CONTINUE;
             }
         };
 

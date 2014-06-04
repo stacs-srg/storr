@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.digitising_scotland.population_model.nightly;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.CompactPopulation;
@@ -16,6 +17,7 @@ public class CapacityTest {
 
     private static final int POPULATION_SIZE = 1000000;
 
+    @Ignore
     @Test
     public void capacity() throws Exception {
 
