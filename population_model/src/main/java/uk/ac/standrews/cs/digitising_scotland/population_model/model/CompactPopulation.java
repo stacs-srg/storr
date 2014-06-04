@@ -32,6 +32,11 @@ import java.util.Random;
 
 public class CompactPopulation implements Iterable<CompactPerson> {
 
+    // TODO define a general interface to be implemented by this, the db and a GEDCOM reader.
+
+    // TODO provide a way to configure the parameters dynamically
+    // TODO consider a different implementation growing from a seed population.
+
     /**
      * The approximate average number of days per year.
      */
@@ -46,10 +51,7 @@ public class CompactPopulation implements Iterable<CompactPerson> {
      * The end year of the simulation.
      */
     public static final int END_YEAR = 2013;
-    public static final int POPULATION_TRACE_BATCH_SIZE = 10000;
     public static final int NUMBER_OF_STAGES_IN_POPULATION_GENERATION = 5;
-
-    private final CompactPerson[] people;
 
     private static final int DAYS_IN_DECEMBER = 31;
     private static final int DECEMBER_INDEX = 11;
@@ -88,6 +90,8 @@ public class CompactPopulation implements Iterable<CompactPerson> {
     private final NormalDistribution age_at_first_marriage_distribution;
     private final NormalDistribution marriage_separation_distribution;
     private ProgressIndicator progress_indicator;
+
+    private final CompactPerson[] people;
 
     public interface Condition {
         final int POSITIVE = 1;

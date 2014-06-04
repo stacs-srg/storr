@@ -20,6 +20,8 @@ import java.sql.SQLException;
  */
 public class GeneratePopulation {
 
+    // TODO document database dependency
+
     private static final String BATCH_SIZE_FLAG = "-b";
     private static final String NUMBER_OF_BATCHES_FLAG = "-n";
     private static final String NUMBER_OF_PROGRESS_UPDATES_FLAG = "-u";
