@@ -8,7 +8,7 @@ import java.util.Iterator;
  */
 public class DeathLabels extends CommonLabels {
 
-    public final String TYPE = "Death";
+    public static final String TYPE = "death";
 
     public static final String DEATH_YEAR = "death_year";
     public static final String AGE_AT_DEATH = "age_at_death";

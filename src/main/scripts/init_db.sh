@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# TODO add scripts to print number of people in db
+
 if [ -n "$1" ];
 then
     export MAVEN_OPTS="-Xmx"$1"G"

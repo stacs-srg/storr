@@ -28,7 +28,6 @@ public class LXP extends HashMap<String, String> implements ILXP {
             this.id = id;
 
             reader.nextSymbol();
-
             reader.object();
 
             while (!reader.isEndOfStream()) {
@@ -63,13 +62,13 @@ public class LXP extends HashMap<String, String> implements ILXP {
 
     @Override
     public void put(String key, int value) {
-        put( key, Integer.toString(value));
+        put(key, Integer.toString(value));
     }
 
 
     @Override
     public String get(String key) {
-        return null;
+        return super.get(key);
     }
 
     @Override
@@ -80,6 +79,7 @@ public class LXP extends HashMap<String, String> implements ILXP {
     public void serializeFieldsToJSON(JSONWriter writer) throws JSONException {
 
         for (Map.Entry<String, String> entry : entrySet()) {
+
             String key = entry.getKey();
             writer.key(key);
             String value = entry.getValue();
@@ -88,11 +88,12 @@ public class LXP extends HashMap<String, String> implements ILXP {
     }
 
     public String toString() {
+
         StringWriter sw = new StringWriter();
         try {
-            serializeToJSON( new JSONWriter(sw ) );
+            serializeToJSON(new JSONWriter(sw));
         } catch (JSONException e) {
-            ErrorHandling.error( "in LXP.toString()");
+            ErrorHandling.error("in LXP.toString()");
         }
         return sw.toString();
     }

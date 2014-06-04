@@ -30,6 +30,8 @@ public class GenerateEventRecords {
     public static final String DEATH_RECORDS_PATH = "output/death_records.txt";
     public static final String MARRIAGE_RECORDS_PATH = "output/marriage_records.txt";
 
+    // TODO add -i option to output to console
+
     public static final int DEFAULT_NUMBER_OF_PROGRESS_UPDATES = 10;
     private static final String NUMBER_OF_PROGRESS_UPDATES_FLAG = "-u";
 

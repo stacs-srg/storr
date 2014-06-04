@@ -5,13 +5,13 @@ import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.LXP;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IBucket;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXP;
 import uk.ac.standrews.cs.digitising_scotland.linkage.labels.BirthLabels;
+import uk.ac.standrews.cs.digitising_scotland.linkage.labels.CommonLabels;
 import uk.ac.standrews.cs.digitising_scotland.linkage.labels.DeathLabels;
 import uk.ac.standrews.cs.digitising_scotland.linkage.labels.MarriageLabels;
+import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
 
 import java.io.BufferedReader;
-import java.io.EOFException;
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
@@ -28,13 +28,12 @@ import java.util.NoSuchElementException;
  */
 public class EventImporter {
 
-    private static final String UTF_8 = "UTF-8";
     private static final String SEPARATOR = "\\|";
 
     int id = 1; // use this to uniquely stamp all items imported - might need something more sophisticated in future.
 
     /**
-     * @param b the bucket from which to import
+     * @param b        the bucket from which to import
      * @param filename containing the source records in digitising scotland format
      * @return the number of records read in
      * @throws IOException
@@ -44,20 +43,21 @@ public class EventImporter {
     public int importBirths(IBucket b, String filename) throws IOException, RecordFormatException, JSONException {
 
         int counter = 0;
-        try (final BufferedReader reader = Files.newBufferedReader(Paths.get(filename), Charset.forName(UTF_8))) {
-            while (true) {
-                ILXP record = importBirthRecord(reader);
+        try (final BufferedReader reader = Files.newBufferedReader(Paths.get(filename), FileManipulation.FILE_CHARSET)) {
+
+            ILXP record = importBirthRecord(reader);
+
+            while (record != null) {
                 b.put(record);
+                record = importBirthRecord(reader);
                 counter++;
             }
-        } catch (EOFException e) {
-            // do nothing - reached eof
-            return counter;
         }
+        return counter;
     }
 
     /**
-     * @param b the bucket from which to import
+     * @param b        the bucket from which to import
      * @param filename containing the source records in digitising scotland format
      * @return the number of records read in
      * @throws IOException
@@ -67,20 +67,21 @@ public class EventImporter {
     public int importDeaths(IBucket b, String filename) throws IOException, RecordFormatException, JSONException {
 
         int counter = 0;
-        try (final BufferedReader reader = Files.newBufferedReader(Paths.get(filename), Charset.forName(UTF_8))) {
+        try (final BufferedReader reader = Files.newBufferedReader(Paths.get(filename), FileManipulation.FILE_CHARSET)) {
 
-            while (true) {
-                ILXP record = importDeathRecord(reader);
+            ILXP record = importDeathRecord(reader);
+
+            while (record != null) {
                 b.put(record);
+                record = importDeathRecord(reader);
+                counter++;
             }
-        } catch (EOFException e) {
-            // do nothing - reached eof
-            return counter;
         }
+        return counter;
     }
 
     /**
-     * @param b the bucket from which to import
+     * @param b        the bucket from which to import
      * @param filename containing the source records in digitising scotland format
      * @return the number of records read in
      * @throws IOException
@@ -90,16 +91,17 @@ public class EventImporter {
     public int importMarriages(IBucket b, String filename) throws IOException, RecordFormatException, JSONException {
 
         int counter = 0;
-        try (final BufferedReader reader = Files.newBufferedReader(Paths.get(filename), Charset.forName(UTF_8))) {
+        try (final BufferedReader reader = Files.newBufferedReader(Paths.get(filename), FileManipulation.FILE_CHARSET)) {
 
-            while (true) {
-                ILXP record = importMarriageRecord(reader);
+            ILXP record = importMarriageRecord(reader);
+
+            while (record != null) {
                 b.put(record);
+                record = importMarriageRecord(reader);
+                counter++;
             }
-        } catch (EOFException e) {
-            // do nothing - reached eof
-            return counter;
         }
+        return counter;
     }
 
     /**
@@ -107,7 +109,7 @@ public class EventImporter {
      */
     private ILXP importBirthRecord(BufferedReader reader) throws IOException, RecordFormatException {
 
-        return importRecord(reader, "birth", BirthLabels.BIRTH_FIELD_NAMES);
+        return importRecord(reader, BirthLabels.TYPE, BirthLabels.BIRTH_FIELD_NAMES);
     }
 
     /**
@@ -115,15 +117,15 @@ public class EventImporter {
      */
     private ILXP importDeathRecord(BufferedReader reader) throws IOException, RecordFormatException {
 
-        return importRecord(reader, "death", DeathLabels.DEATH_FIELD_NAMES);
+        return importRecord(reader, DeathLabels.TYPE, DeathLabels.DEATH_FIELD_NAMES);
     }
 
     /**
      * Creates a LXP marriage record from a file of marriage records.
      */
     private ILXP importMarriageRecord(BufferedReader reader) throws IOException, RecordFormatException {
-        
-        return importRecord(reader, "marriage", MarriageLabels.MARRIAGE_FIELD_NAMES);
+
+        return importRecord(reader, MarriageLabels.TYPE, MarriageLabels.MARRIAGE_FIELD_NAMES);
     }
 
     /**
@@ -133,13 +135,13 @@ public class EventImporter {
 
         String line = reader.readLine();
         if (line == null) {
-            throw new EOFException();
+            return null;
         }
 
         try {
             LXP record = new LXP(id++);
 
-            record.put("TYPE", record_type);
+            record.put(CommonLabels.TYPE_LABEL, record_type);
 
             Iterable<String> field_values = Arrays.asList(line.split(SEPARATOR, -1));
             addFields(field_names, field_values, record);
@@ -151,7 +153,7 @@ public class EventImporter {
             throw new RecordFormatException(e.getMessage());
         }
     }
-    
+
     private void addFields(Iterable<String> field_names, Iterable<String> field_values, LXP record) {
 
         Iterator<String> value_iterator = field_values.iterator();

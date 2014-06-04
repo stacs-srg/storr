@@ -23,11 +23,11 @@ public interface ILXP {
      */
     void serializeToJSON(JSONWriter writer) throws JSONException;
 
-    void put( String key, int value );
+    void put(String key, int value);
 
-    String put( String key, String value );
-    
-    String get( String key );
+    String put(String key, String value);
+
+    String get(String key);
 
     boolean containsKey(String key);
 }

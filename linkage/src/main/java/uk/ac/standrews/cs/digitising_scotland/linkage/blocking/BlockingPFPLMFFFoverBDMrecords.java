@@ -7,7 +7,9 @@ import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IBucket
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXP;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXPInputStream;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IRepository;
+import uk.ac.standrews.cs.digitising_scotland.linkage.labels.BirthLabels;
 import uk.ac.standrews.cs.digitising_scotland.linkage.labels.CommonLabels;
+import uk.ac.standrews.cs.digitising_scotland.linkage.labels.DeathLabels;
 import uk.ac.standrews.cs.nds.util.ErrorHandling;
 
 /**
@@ -24,21 +26,27 @@ public class BlockingPFPLMFFFoverBDMrecords extends Blocker {
     @Override
     public String[] determineBlockedBucketNamesForRecord(final ILXP record) {
 
-        if (record.containsKey("TYPE") && (record.get("TYPE").equals("birth") || record.get("TYPE").equals("death"))) {
+        if (record.containsKey(CommonLabels.TYPE_LABEL)) {
+            if (record.get(CommonLabels.TYPE_LABEL).equals(BirthLabels.TYPE) ||
+                    record.get(CommonLabels.TYPE_LABEL).equals(DeathLabels.TYPE)) {
 
-            // Note will concat nulls into key if any fields are null - working hypothesis - this doesn't matter.
+                // Note will concat nulls into key if any fields are null - working hypothesis - this doesn't matter.
 
-            StringBuilder builder = new StringBuilder();
+                StringBuilder builder = new StringBuilder();
 
-            builder.append(record.get(CommonLabels.FORENAME));
-            builder.append(record.get(CommonLabels.SURNAME));
-            builder.append(record.get(CommonLabels.FATHERS_FORENAME));
-            builder.append(record.get(CommonLabels.MOTHERS_FORENAME));
+                builder.append(record.get(CommonLabels.FORENAME));
+                builder.append(record.get(CommonLabels.SURNAME));
+                builder.append(record.get(CommonLabels.FATHERS_FORENAME));
+                builder.append(record.get(CommonLabels.MOTHERS_FORENAME));
 
-            return new String[]{removeNasties(builder.toString())};
+                return new String[]{removeNasties(builder.toString())};
+            } else {
+                ErrorHandling.error("Record with unknown type in input Stream: " + record.get(CommonLabels.TYPE_LABEL) + " - ignoring");
+                return new String[]{};
+            }
 
         } else {
-            ErrorHandling.error("Record with unknown type in input Stream - ignoring");
+            ErrorHandling.error("Record with no specified type in input Stream - ignoring");
             return new String[]{};
         }
     }

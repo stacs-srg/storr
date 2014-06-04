@@ -8,7 +8,7 @@ import java.util.Iterator;
  */
 public class MarriageLabels extends CommonLabels {
 
-    public final String TYPE = "Marriage";
+    public static final String TYPE = "marriage";
 
     public static final String GROOM_SURNAME = "groom_surname";
     public static final String GROOM_FORENAME = "groom_forename";
@@ -62,6 +62,4 @@ public class MarriageLabels extends CommonLabels {
     public Iterator<String> iterator() {
         return MARRIAGE_FIELD_NAMES.iterator();
     }
-
-
 }

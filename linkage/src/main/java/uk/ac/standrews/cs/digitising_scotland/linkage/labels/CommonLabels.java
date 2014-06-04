@@ -7,6 +7,8 @@ import java.util.Arrays;
  */
 public abstract class CommonLabels implements Iterable<String> {
 
+    public static final String TYPE_LABEL = "TYPE";
+
     public static final String ID = "id";
     public static final String SURNAME = "surname";
     public static final String FORENAME = "forename";
