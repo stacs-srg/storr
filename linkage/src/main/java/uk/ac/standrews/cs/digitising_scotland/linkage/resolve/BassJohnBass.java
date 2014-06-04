@@ -4,11 +4,21 @@ import org.json.JSONException;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.LXP;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.Repository;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.RepositoryException;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.*;
+import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IBlocker;
+import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IBucket;
+import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IIndexedBucket;
+import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXP;
+import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXPInputStream;
+import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXPOutputStream;
+import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IRepository;
 import uk.ac.standrews.cs.digitising_scotland.linkage.EventImporter;
 import uk.ac.standrews.cs.digitising_scotland.linkage.RecordFormatException;
 import uk.ac.standrews.cs.digitising_scotland.linkage.blocking.BlockingFirstLastSexOverPerson;
-import uk.ac.standrews.cs.digitising_scotland.linkage.labels.*;
+import uk.ac.standrews.cs.digitising_scotland.linkage.labels.BirthLabels;
+import uk.ac.standrews.cs.digitising_scotland.linkage.labels.FatherOfLabels;
+import uk.ac.standrews.cs.digitising_scotland.linkage.labels.MotherOfLabels;
+import uk.ac.standrews.cs.digitising_scotland.linkage.labels.PersonLabels;
+import uk.ac.standrews.cs.digitising_scotland.linkage.labels.SameAsLabels;
 
 import java.io.IOException;
 
@@ -67,18 +77,15 @@ public class BassJohnBass {
         populateMaximalPeople();
 
         try {
-            BlockedMaximalPersonResolver r = new BlockedMaximalPersonResolver(  people, blocked_people_repo, identity );
+            BlockedMaximalPersonResolver r = new BlockedMaximalPersonResolver(people, blocked_people_repo, identity);
             r.match();
 
-
-            IBlocker blocker = new BlockingFirstLastSexOverPerson( people, blocked_people_repo );
+            IBlocker blocker = new BlockingFirstLastSexOverPerson(people, blocked_people_repo);
             blocker.apply();
 
         } catch (RepositoryException e) {
             e.printStackTrace();
         }
-
-
     }
 
     /**
@@ -91,139 +98,136 @@ public class BassJohnBass {
         ILXPOutputStream relationships_stream = relationships.getOutputStream();
 
         ILXPInputStream stream = births.getInputStream();
-        for( ILXP birth_record : stream ) {
+        for (ILXP birth_record : stream) {
 
-            int baby_id = add_baby_to_output(birth_record, people_stream);
+            int baby_id = addBabyToOutput(birth_record, people_stream);
             int dad_id = addFatherToOutput(birth_record, people_stream);
-            int mum_id = add_mother_to_output(birth_record, people_stream);
+            int mum_id = addMotherToOutput(birth_record, people_stream);
 
-            add_BMF( birth_record,baby_id,dad_id,mum_id,relationships_stream );
+            addBMF(birth_record, baby_id, dad_id, mum_id, relationships_stream);
         }
-
     }
 
     /**
      * Adds the baby-mother-father relationships to the relationships bucket
+     *
      * @param birth_record
      * @param child_id
      * @param dad_id
      * @param mum_id
      * @param relationships_stream
      */
-    private void add_BMF(ILXP birth_record, int child_id, int dad_id, int mum_id, ILXPOutputStream relationships_stream) {
-        ILXP is_father = new LXP(get_next_id());
-        is_father.put( "TYPE", FatherOfLabels.TYPE);
-        is_father.put( FatherOfLabels.child_id,child_id );
-        is_father.put( FatherOfLabels.father_id, dad_id );
-        is_father.put( FatherOfLabels.birth_record_id, birth_record.getId());
+    private void addBMF(ILXP birth_record, int child_id, int dad_id, int mum_id, ILXPOutputStream relationships_stream) {
+
+        ILXP is_father = new LXP(getNextId());
+        is_father.put("TYPE", FatherOfLabels.TYPE);
+        is_father.put(FatherOfLabels.child_id, child_id);
+        is_father.put(FatherOfLabels.father_id, dad_id);
+        is_father.put(FatherOfLabels.birth_record_id, birth_record.getId());
         relationships_stream.add(is_father);
 
-        ILXP is_mother = new LXP(get_next_id());
-        is_mother.put( "TYPE", MotherOfLabels.TYPE);
-        is_mother.put( MotherOfLabels.child_id,child_id );
-        is_mother.put( MotherOfLabels.mother_id, mum_id );
-        is_mother.put( MotherOfLabels.birth_record_id, birth_record.getId());
+        ILXP is_mother = new LXP(getNextId());
+        is_mother.put("TYPE", MotherOfLabels.TYPE);
+        is_mother.put(MotherOfLabels.child_id, child_id);
+        is_mother.put(MotherOfLabels.mother_id, mum_id);
+        is_mother.put(MotherOfLabels.birth_record_id, birth_record.getId());
         relationships_stream.add(is_mother);
 
         // Could add is_child but not now...
-
     }
 
     /**
-     * @param birth_record a record from which to extract baby information and add to the stream
+     * @param birth_record  a record from which to extract baby information and add to the stream
      * @param people_stream a stream to which to add a new Person record
      * @return the id of the baby in the birth record
      */
-    private int add_baby_to_output( ILXP birth_record, ILXPOutputStream people_stream ) {
-        int person_id = get_next_id();
+    private int addBabyToOutput(ILXP birth_record, ILXPOutputStream people_stream) {
+
+        int person_id = getNextId();
         ILXP person = new LXP(person_id);
 
-        person.put( "TYPE", PersonLabels.TYPE );
+        person.put("TYPE", PersonLabels.TYPE);
 
-        person.put( PersonLabels.ORIGINAL_RECORD_ID, birth_record.getId() );
-        person.put( PersonLabels.ORIGINAL_RECORD_TYPE, birth_record.get( BirthLabels.TYPE ) );
-        person.put( PersonLabels.ROLE, "baby" );
+        person.put(PersonLabels.ORIGINAL_RECORD_ID, birth_record.getId());
+        person.put(PersonLabels.ORIGINAL_RECORD_TYPE, birth_record.get(BirthLabels.TYPE));
+        person.put(PersonLabels.ROLE, "baby");
 
-        person.put( PersonLabels.SURNAME, birth_record.get( BirthLabels.SURNAME ) );
-        person.put( PersonLabels.FORENAME, birth_record.get( BirthLabels.FORENAME ) );
-        person.put( PersonLabels.SEX, birth_record.get( BirthLabels.SEX ) );
-        person.put( PersonLabels.FATHERS_FORENAME , birth_record.get(BirthLabels.FATHERS_FORENAME) );
-        person.put( PersonLabels.FATHERS_SURNAME , birth_record.get(BirthLabels.FATHERS_SURNAME) );
-        person.put( PersonLabels.FATHERS_OCCUPATION , birth_record.get(BirthLabels.FATHERS_OCCUPATION) );
-        person.put( PersonLabels.MOTHERS_FORENAME , birth_record.get(BirthLabels.MOTHERS_FORENAME) );
-        person.put( PersonLabels.MOTHERS_SURNAME , birth_record.get(BirthLabels.MOTHERS_SURNAME) );
-        person.put( PersonLabels.MOTHERS_MAIDEN_SURNAME , birth_record.get(BirthLabels.MOTHERS_MAIDEN_SURNAME) );
-        person.put( PersonLabels.CHANGED_SURNAME , birth_record.get(BirthLabels.CHANGED_SURNAME) );
-        person.put( PersonLabels.CHANGED_FORENAME , birth_record.get(BirthLabels.CHANGED_FORENAME) );
-        person.put( PersonLabels.CHANGED_MOTHERS_MAIDEN_SURNAME , birth_record.get(BirthLabels.CHANGED_MOTHERS_MAIDEN_SURNAME) );
+        person.put(PersonLabels.SURNAME, birth_record.get(BirthLabels.SURNAME));
+        person.put(PersonLabels.FORENAME, birth_record.get(BirthLabels.FORENAME));
+        person.put(PersonLabels.SEX, birth_record.get(BirthLabels.SEX));
+        person.put(PersonLabels.FATHERS_FORENAME, birth_record.get(BirthLabels.FATHERS_FORENAME));
+        person.put(PersonLabels.FATHERS_SURNAME, birth_record.get(BirthLabels.FATHERS_SURNAME));
+        person.put(PersonLabels.FATHERS_OCCUPATION, birth_record.get(BirthLabels.FATHERS_OCCUPATION));
+        person.put(PersonLabels.MOTHERS_FORENAME, birth_record.get(BirthLabels.MOTHERS_FORENAME));
+        person.put(PersonLabels.MOTHERS_SURNAME, birth_record.get(BirthLabels.MOTHERS_SURNAME));
+        person.put(PersonLabels.MOTHERS_MAIDEN_SURNAME, birth_record.get(BirthLabels.MOTHERS_MAIDEN_SURNAME));
+        person.put(PersonLabels.CHANGED_SURNAME, birth_record.get(BirthLabels.CHANGED_SURNAME));
+        person.put(PersonLabels.CHANGED_FORENAME, birth_record.get(BirthLabels.CHANGED_FORENAME));
+        person.put(PersonLabels.CHANGED_MOTHERS_MAIDEN_SURNAME, birth_record.get(BirthLabels.CHANGED_MOTHERS_MAIDEN_SURNAME));
 
-        people_stream.add( person );
+        people_stream.add(person);
         return person_id;
     }
 
     /**
-     * @param birth_record a record from which to extract father information and add to the stream
+     * @param birth_record  a record from which to extract father information and add to the stream
      * @param people_stream a stream to which to add a new Person record
      * @return the id of the father in the birth record
      */
     private int addFatherToOutput(ILXP birth_record, ILXPOutputStream people_stream) {
 
-        int person_id = get_next_id();
+        int person_id = getNextId();
         ILXP person = new LXP(person_id);
 
-        person.put( "TYPE", PersonLabels.TYPE );
+        person.put("TYPE", PersonLabels.TYPE);
 
-        person.put( PersonLabels.ORIGINAL_RECORD_ID, birth_record.getId() );
-        person.put( PersonLabels.ORIGINAL_RECORD_TYPE, birth_record.get( BirthLabels.TYPE ) );
-        person.put( PersonLabels.ROLE, "father" );
+        person.put(PersonLabels.ORIGINAL_RECORD_ID, birth_record.getId());
+        person.put(PersonLabels.ORIGINAL_RECORD_TYPE, birth_record.get(BirthLabels.TYPE));
+        person.put(PersonLabels.ROLE, "father");
 
-        person.put( PersonLabels.SURNAME, birth_record.get( BirthLabels.FATHERS_SURNAME ) );
-        person.put( PersonLabels.FORENAME, birth_record.get( BirthLabels.FATHERS_FORENAME ) );
-        person.put( PersonLabels.OCCUPATION , birth_record.get(BirthLabels.FATHERS_OCCUPATION) );
-        person.put( PersonLabels.SEX , "M" );
+        person.put(PersonLabels.SURNAME, birth_record.get(BirthLabels.FATHERS_SURNAME));
+        person.put(PersonLabels.FORENAME, birth_record.get(BirthLabels.FATHERS_FORENAME));
+        person.put(PersonLabels.OCCUPATION, birth_record.get(BirthLabels.FATHERS_OCCUPATION));
+        person.put(PersonLabels.SEX, "M");
 
-        people_stream.add( person );
+        people_stream.add(person);
         return person_id;
-
     }
 
     /**
-     * @param birth_record a record from which to extract mother information and add to the stream
+     * @param birth_record  a record from which to extract mother information and add to the stream
      * @param people_stream a stream to which to add a new Person record
      * @return the id of the mother in the birth record
      */
-    private int add_mother_to_output( ILXP birth_record, ILXPOutputStream people_stream ) {
-        int person_id = get_next_id();
+    private int addMotherToOutput(ILXP birth_record, ILXPOutputStream people_stream) {
+
+        int person_id = getNextId();
         ILXP person = new LXP(person_id);
 
-        person.put( "TYPE", PersonLabels.TYPE );
+        person.put("TYPE", PersonLabels.TYPE);
 
-        person.put( PersonLabels.ORIGINAL_RECORD_ID, birth_record.getId() );
-        person.put( PersonLabels.ORIGINAL_RECORD_TYPE, birth_record.get( BirthLabels.TYPE ) );
-        person.put( PersonLabels.ROLE, "mother" );
+        person.put(PersonLabels.ORIGINAL_RECORD_ID, birth_record.getId());
+        person.put(PersonLabels.ORIGINAL_RECORD_TYPE, birth_record.get(BirthLabels.TYPE));
+        person.put(PersonLabels.ROLE, "mother");
 
-        person.put( PersonLabels.MOTHERS_SURNAME, birth_record.get( BirthLabels.SURNAME ) );
-        person.put( PersonLabels.MOTHERS_FORENAME, birth_record.get( BirthLabels.FORENAME ) );
-        person.put( PersonLabels.SEX , "F" );
+        person.put(PersonLabels.MOTHERS_SURNAME, birth_record.get(BirthLabels.SURNAME));
+        person.put(PersonLabels.MOTHERS_FORENAME, birth_record.get(BirthLabels.FORENAME));
+        person.put(PersonLabels.SEX, "F");
 
-        people_stream.add( person );
+        people_stream.add(person);
         return person_id;
-
     }
 
-    private int get_next_id() {
+    private int getNextId() {
         return id++;
     }
 
-
-    /******************************************************************************************************************/
+    /**
+     * **************************************************************************************************************
+     */
 
     public static void main(String[] args) throws Exception {
 
-        BassJohnBass r = new BassJohnBass();
-
-
-
+        new BassJohnBass();
     }
-
 }

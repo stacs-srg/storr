@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.digitising_scotland.population_model.model;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import uk.ac.standrews.cs.digitising_scotland.population_model.generation.distributions.AgeAtDeathDistribution;
 import uk.ac.standrews.cs.digitising_scotland.population_model.generation.distributions.Distribution;
 import uk.ac.standrews.cs.digitising_scotland.population_model.generation.distributions.IncomersDistribution;
@@ -639,7 +640,7 @@ public class CompactPopulation implements Iterable<CompactPerson> {
         return new ArrayIterator<>(getPeople());
     }
 
-    //   @SuppressFBWarnings(value = "EI_EXPOSE_REP",justification = "too expensive...")
+    @SuppressFBWarnings(value = "EI_EXPOSE_REP", justification = "too expensive...")
     public CompactPerson[] getPeople() {
 
         return people;

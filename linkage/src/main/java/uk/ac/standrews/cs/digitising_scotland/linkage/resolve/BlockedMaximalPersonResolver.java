@@ -70,8 +70,8 @@ public class BlockedMaximalPersonResolver {
         @Override
         public boolean compare(final Pair pair) {
 
-            ILXP first = pair.first();
-            ILXP second = pair.second();
+//            ILXP first = pair.first();
+//            ILXP second = pair.second();
 
             return true;  // TODO fix up - for the minute make all blocked records match
         }
@@ -92,6 +92,5 @@ public class BlockedMaximalPersonResolver {
 
             results.add(result_record);
         }
-
     }
 }
