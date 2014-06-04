@@ -26,11 +26,20 @@ public class BlockingFirstLastSexOverPerson extends Blocker {
 
             // Note will concat nulls into key if any fields are null - working hypothesis - this doesn't matter.
 
+            String forename = record.get(PersonLabels.FORENAME);
+            String surname = record.get(PersonLabels.SURNAME);
+            String mmsurname = record.get(PersonLabels.MOTHERS_MAIDEN_SURNAME);
+            String sex = record.get(PersonLabels.SEX);
+
             StringBuilder builder = new StringBuilder();
 
-            builder.append(record.get(PersonLabels.FORENAME));
-            builder.append(record.get(PersonLabels.SURNAME));
-            builder.append(record.get(PersonLabels.SEX));
+            builder.append(forename);
+            if( sex.equals("F") && mmsurname != null && ! mmsurname.equals("") ) {
+                builder.append(mmsurname);
+            } else {
+                builder.append(surname);
+            }
+            builder.append(sex);
 
             return new String[]{removeNasties(builder.toString())};
 

@@ -140,12 +140,30 @@ public class BassJohnBass {
 
         person.put(PersonLabels.SURNAME, birth_record.get(BirthLabels.SURNAME));
         person.put(PersonLabels.FORENAME, birth_record.get(BirthLabels.FORENAME));
+        person.put(PersonLabels.SURNAME, birth_record.get(BirthLabels.SURNAME));
         person.put(PersonLabels.SEX, birth_record.get(BirthLabels.SEX));
         person.put(PersonLabels.FATHERS_FORENAME, birth_record.get(BirthLabels.FATHERS_FORENAME));
-        person.put(PersonLabels.FATHERS_SURNAME, birth_record.get(BirthLabels.FATHERS_SURNAME));
+
+        String fathersurname = birth_record.get(BirthLabels.FATHERS_SURNAME);
+
+        if( fathersurname.equals("0") ) {
+            person.put(PersonLabels.FATHERS_SURNAME, birth_record.get(BirthLabels.SURNAME));
+        } else {
+            person.put(PersonLabels.FATHERS_SURNAME,fathersurname );
+        }
+
         person.put(PersonLabels.FATHERS_OCCUPATION, birth_record.get(BirthLabels.FATHERS_OCCUPATION));
         person.put(PersonLabels.MOTHERS_FORENAME, birth_record.get(BirthLabels.MOTHERS_FORENAME));
         person.put(PersonLabels.MOTHERS_SURNAME, birth_record.get(BirthLabels.MOTHERS_SURNAME));
+
+        String mothersurname = birth_record.get(BirthLabels.MOTHERS_SURNAME);
+
+        if( mothersurname.equals("0") ) {
+            person.put(PersonLabels.MOTHERS_SURNAME, birth_record.get(BirthLabels.SURNAME));
+        } else {
+            person.put(PersonLabels.MOTHERS_SURNAME,mothersurname );
+        }
+
         person.put(PersonLabels.MOTHERS_MAIDEN_SURNAME, birth_record.get(BirthLabels.MOTHERS_MAIDEN_SURNAME));
         person.put(PersonLabels.CHANGED_SURNAME, birth_record.get(BirthLabels.CHANGED_SURNAME));
         person.put(PersonLabels.CHANGED_FORENAME, birth_record.get(BirthLabels.CHANGED_FORENAME));
@@ -171,7 +189,14 @@ public class BassJohnBass {
         person.put(PersonLabels.ORIGINAL_RECORD_TYPE, birth_record.get(BirthLabels.TYPE_LABEL));
         person.put(PersonLabels.ROLE, "father");
 
-        person.put(PersonLabels.SURNAME, birth_record.get(BirthLabels.FATHERS_SURNAME));
+        String fathersurname = birth_record.get(BirthLabels.FATHERS_SURNAME);
+
+        if( fathersurname.equals("0") ) {
+            person.put(PersonLabels.SURNAME, birth_record.get(BirthLabels.SURNAME));
+        } else {
+            person.put(PersonLabels.SURNAME,fathersurname );
+        }
+
         person.put(PersonLabels.FORENAME, birth_record.get(BirthLabels.FATHERS_FORENAME));
         person.put(PersonLabels.OCCUPATION, birth_record.get(BirthLabels.FATHERS_OCCUPATION));
         person.put(PersonLabels.SEX, "M");
@@ -196,8 +221,15 @@ public class BassJohnBass {
         person.put(PersonLabels.ORIGINAL_RECORD_TYPE, birth_record.get(BirthLabels.TYPE_LABEL));
         person.put(PersonLabels.ROLE, "mother");
 
-        person.put(PersonLabels.MOTHERS_SURNAME, birth_record.get(BirthLabels.SURNAME));
-        person.put(PersonLabels.MOTHERS_FORENAME, birth_record.get(BirthLabels.FORENAME));
+        String mothersurname = birth_record.get(BirthLabels.MOTHERS_SURNAME);
+
+        if( mothersurname.equals("0") ) {
+            person.put(PersonLabels.SURNAME, birth_record.get(BirthLabels.SURNAME));
+        } else {
+            person.put(PersonLabels.SURNAME,mothersurname );
+        }
+
+        person.put(PersonLabels.FORENAME, birth_record.get(BirthLabels.FORENAME));
         person.put(PersonLabels.SEX, "F");
 
         people_stream.add(person);
