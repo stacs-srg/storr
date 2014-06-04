@@ -20,5 +20,6 @@ records to determine genealogical structures. The people involved are listed [he
 [3]:	http://socialhistory.org/en/projects/hisco-history-work
 [4]:	http://www.who.int/classifications/icd/en/
 [5]:	team-list.html
+[9]:	http://www.lscs.ac.uk/projects/digitising-scotland/
 
 [image-1]:	digitising-scotland-logo.jpg "Digitising Scotland"
