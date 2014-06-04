@@ -4,21 +4,10 @@ import org.json.JSONException;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.LXP;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.Repository;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.RepositoryException;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IBlocker;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IBucket;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IIndexedBucket;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXP;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXPInputStream;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXPOutputStream;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IRepository;
+import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.*;
 import uk.ac.standrews.cs.digitising_scotland.linkage.EventImporter;
 import uk.ac.standrews.cs.digitising_scotland.linkage.RecordFormatException;
-import uk.ac.standrews.cs.digitising_scotland.linkage.blocking.BlockingFirstLastSexOverPerson;
-import uk.ac.standrews.cs.digitising_scotland.linkage.labels.BirthLabels;
-import uk.ac.standrews.cs.digitising_scotland.linkage.labels.FatherOfLabels;
-import uk.ac.standrews.cs.digitising_scotland.linkage.labels.MotherOfLabels;
-import uk.ac.standrews.cs.digitising_scotland.linkage.labels.PersonLabels;
-import uk.ac.standrews.cs.digitising_scotland.linkage.labels.SameAsLabels;
+import uk.ac.standrews.cs.digitising_scotland.linkage.labels.*;
 
 import java.io.IOException;
 
@@ -49,8 +38,8 @@ public class BassJohnBass {
     // input buckets containing BDM records in LXP format
 
     private IBucket births;                     // Bucket containing birth records (inputs).
-    private IIndexedBucket people;              // Bucket containing people extracted from birth records
-    private IIndexedBucket relationships;       // Bucket containing relationships between people
+    private IBucket people;              // Bucket containing people extracted from birth records
+    private IBucket relationships;       // Bucket containing relationships between people
     private IIndexedBucket identity;            // Bucket containing identities of equivalent people in records
     private int id = 0;
 
@@ -62,9 +51,9 @@ public class BassJohnBass {
 
         births = input_repo.makeBucket(births_name);
 
-        people = linkage_repo.makeIndexedBucket(people_name);
+        people = linkage_repo.makeBucket(people_name); // linkage_repo.makeIndexedBucket(people_name);
 
-        relationships = linkage_repo.makeIndexedBucket(relationships_name);
+        relationships = linkage_repo.makeBucket(relationships_name); // linkage_repo.makeIndexedBucket(relationships_name);
 
         identity = linkage_repo.makeIndexedBucket(identities_name);
         identity.addIndex(SameAsLabels.record_id1);
@@ -79,9 +68,6 @@ public class BassJohnBass {
         try {
             BlockedMaximalPersonResolver r = new BlockedMaximalPersonResolver(people, blocked_people_repo, identity);
             r.match();
-
-            IBlocker blocker = new BlockingFirstLastSexOverPerson(people, blocked_people_repo);
-            blocker.apply();
 
         } catch (RepositoryException e) {
             e.printStackTrace();
@@ -149,7 +135,7 @@ public class BassJohnBass {
         person.put("TYPE", PersonLabels.TYPE);
 
         person.put(PersonLabels.ORIGINAL_RECORD_ID, birth_record.getId());
-        person.put(PersonLabels.ORIGINAL_RECORD_TYPE, birth_record.get(BirthLabels.TYPE));
+        person.put(PersonLabels.ORIGINAL_RECORD_TYPE, birth_record.get(BirthLabels.TYPE_LABEL));  //<<<<<<<<<<<<<<<<<< Problem....
         person.put(PersonLabels.ROLE, "baby");
 
         person.put(PersonLabels.SURNAME, birth_record.get(BirthLabels.SURNAME));
@@ -182,7 +168,7 @@ public class BassJohnBass {
         person.put("TYPE", PersonLabels.TYPE);
 
         person.put(PersonLabels.ORIGINAL_RECORD_ID, birth_record.getId());
-        person.put(PersonLabels.ORIGINAL_RECORD_TYPE, birth_record.get(BirthLabels.TYPE));
+        person.put(PersonLabels.ORIGINAL_RECORD_TYPE, birth_record.get(BirthLabels.TYPE_LABEL));
         person.put(PersonLabels.ROLE, "father");
 
         person.put(PersonLabels.SURNAME, birth_record.get(BirthLabels.FATHERS_SURNAME));
@@ -207,7 +193,7 @@ public class BassJohnBass {
         person.put("TYPE", PersonLabels.TYPE);
 
         person.put(PersonLabels.ORIGINAL_RECORD_ID, birth_record.getId());
-        person.put(PersonLabels.ORIGINAL_RECORD_TYPE, birth_record.get(BirthLabels.TYPE));
+        person.put(PersonLabels.ORIGINAL_RECORD_TYPE, birth_record.get(BirthLabels.TYPE_LABEL));
         person.put(PersonLabels.ROLE, "mother");
 
         person.put(PersonLabels.MOTHERS_SURNAME, birth_record.get(BirthLabels.SURNAME));

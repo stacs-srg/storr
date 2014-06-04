@@ -27,7 +27,7 @@ public class PersonLabels implements Iterable<String> {
 
     public final static String ORIGINAL_RECORD_ID = "original_record_id";
     public final static String ORIGINAL_RECORD_TYPE = "original_record_type";
-    public final static String ROLE = "relationship_to_cert";
+    public final static String ROLE = "role";
     public final static String OCCUPATION = "occupation";
 
     public static final Iterable<String> FIELD_NAMES = Arrays.asList(SURNAME,FORENAME,SEX,FATHERS_FORENAME,FATHERS_SURNAME, FATHERS_OCCUPATION, MOTHERS_FORENAME, MOTHERS_SURNAME,

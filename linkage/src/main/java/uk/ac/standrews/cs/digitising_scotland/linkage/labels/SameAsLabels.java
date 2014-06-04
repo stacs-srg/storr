@@ -8,7 +8,7 @@ import java.util.Iterator;
  */
 public class SameAsLabels implements Iterable<String> {
 
-    public static final String TYPE = "SAME_AS";
+    public static final String TYPE = "Same_as";
 
     public static final String  record_id1 = "record_id1";
     public static final String  record_id2 = "record_id2";
