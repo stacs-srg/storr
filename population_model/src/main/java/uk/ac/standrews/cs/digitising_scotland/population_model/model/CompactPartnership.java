@@ -3,6 +3,7 @@ package uk.ac.standrews.cs.digitising_scotland.population_model.model;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.prefs.Preferences;
 
 /**
  * Represents a partnership between two people, with an optional marriage date.
@@ -104,15 +105,28 @@ public class CompactPartnership implements Comparable<CompactPartnership> {
 
     /**
      * Tests whether a given person is a child of this partnership.
+     * Uses binary search. Replace with sequential search if order preservation is lost.
      * @param p the person
      * @return true if the person is a child of this partnership
      */
     public boolean includesChild(final int p) {
 
         if (getChildren() != null) {
-            for (final int child : getChildren()) {
-                if (child == p) { return true; }
+            if(getChildren().size() == 0) {
+                return false;
             }
+
+            int index, binaryStep;
+            for(binaryStep = 1 ; binaryStep<getChildren().size() ; binaryStep <<= 1);
+
+            for(index = 0 ; binaryStep != 0 ; binaryStep >>=1) {
+                if (index + binaryStep < getChildren().size() && getChildren().get(index + binaryStep) <= p) {
+                    index += binaryStep;
+                }
+            }
+
+            if(getChildren().get(index) == p) { return true; }
+
         }
 
         return false;
