@@ -79,7 +79,6 @@ public class LXP extends HashMap<String, String> implements ILXP {
     public void serializeFieldsToJSON(JSONWriter writer) throws JSONException {
 
         for (Map.Entry<String, String> entry : entrySet()) {
-
             String key = entry.getKey();
             writer.key(key);
             String value = entry.getValue();

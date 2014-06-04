@@ -18,12 +18,13 @@ import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Iterator;
 
 public class Bucket implements IBucket {
 
     private String base_path; // the name of the parent directory in which this bucket (itself a directory) is stored.
     private String name;     // the name of this bucket - used as the directory name
-    private File directory;  // the directory implementing the bucket storage
+    protected File directory;  // the directory implementing the bucket storage
 
     /**
      * Creates a handle on a bucket.
@@ -88,12 +89,8 @@ public class Bucket implements IBucket {
 
     @Override
     public ILXPInputStream getInputStream() {
-        try {
-            return new BucketBackedInputStream(this, baseDir());
-        } catch (IOException e) {
-            ErrorHandling.exceptionError(e, "Cannot open input Stream for bucket " + name);
-            return null;
-        }
+
+            return new BucketBackedInputStream();
     }
 
     @Override
@@ -113,4 +110,50 @@ public class Bucket implements IBucket {
 
         return new JSONReader(reader);
     }
+
+    private Iterator<File> getFileIterator() {
+        return FileIteratorFactory.createFileIterator(directory, true, false);
+    }
+
+    private class BucketBackedInputStream implements ILXPInputStream {
+
+        private Iterator<File> file_iterator;
+
+        public BucketBackedInputStream() {
+            file_iterator = getFileIterator();
+        }
+
+        public Iterator<ILXP> iterator() {
+            return new ILXPIterator();
+        }
+
+        private class ILXPIterator implements Iterator<ILXP> {
+
+            public boolean hasNext() {
+                return file_iterator.hasNext();
+            }
+
+            @Override
+            public ILXP next() {
+
+                try {
+                    int id = Integer.valueOf(file_iterator.next().getName());
+
+                    return get(id);
+
+                } catch (PersistentObjectException | IOException e) {
+                    ErrorHandling.exceptionError(e, "Exception in iterator");
+                    return null;
+                }
+            }
+
+            @Override
+            public void remove() {
+                ErrorHandling.error("remove called on stream - unsupported");
+                throw new UnsupportedOperationException("remove called on stream - unsupported");
+            }
+        }
+    }
+
+
 }
