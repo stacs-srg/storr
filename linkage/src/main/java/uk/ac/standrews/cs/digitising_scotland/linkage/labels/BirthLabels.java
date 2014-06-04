@@ -8,7 +8,7 @@ import java.util.Iterator;
  */
 public class BirthLabels extends CommonLabels {
 
-    public static final String TYPE = "birth";
+    public static final String TYPE = "Birth";
 
     public static final String BIRTH_YEAR = "birth_year";
     public static final String BIRTH_DAY = "birth_day";

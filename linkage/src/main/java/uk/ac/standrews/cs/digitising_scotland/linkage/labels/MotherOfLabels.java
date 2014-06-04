@@ -8,7 +8,7 @@ import java.util.Iterator;
  */
 public class MotherOfLabels implements Iterable<String> {
 
-    public static final String TYPE = "MOTHER_OF";
+    public static final String TYPE = "Mother_of";
 
     public static final String  birth_record_id = "birth_record_id";
     public static final String  mother_id = "mother";
