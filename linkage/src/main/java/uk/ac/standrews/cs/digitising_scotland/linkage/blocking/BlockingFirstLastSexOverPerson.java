@@ -16,13 +16,13 @@ public class BlockingFirstLastSexOverPerson extends Blocker {
 
     public BlockingFirstLastSexOverPerson(final IBucket people, final IRepository output_repo) throws RepositoryException {
 
-        super( people.getInputStream(), output_repo);
+        super(people.getInputStream(), output_repo);
     }
 
     @Override
     public String[] determineBlockedBucketNamesForRecord(final ILXP record) {
 
-        if ( record.containsKey("TYPE") && (record.get("TYPE").equals(PersonLabels.TYPE) ) ) {
+        if (record.containsKey("TYPE") && record.get("TYPE").equals(PersonLabels.TYPE)) {
 
             // Note will concat nulls into key if any fields are null - working hypothesis - this doesn't matter.
 
@@ -34,7 +34,7 @@ public class BlockingFirstLastSexOverPerson extends Blocker {
             StringBuilder builder = new StringBuilder();
 
             builder.append(forename);
-            if( sex.equals("F") && mmsurname != null && ! mmsurname.equals("") ) {
+            if (sex.equals("F") && mmsurname != null && !mmsurname.equals("")) {
                 builder.append(mmsurname);
             } else {
                 builder.append(surname);

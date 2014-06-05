@@ -87,35 +87,11 @@ public class IndexedBucket extends Bucket implements IIndexedBucket {
         super.put(record);
     }
 
-    private Iterator<File> getFileIterator() {
-        return createFileIterator();
-    }
-
     /**
      * @return a file iterator which filters out the index files
      */
     private Iterator<File> createFileIterator() {
 
         return FileIteratorFactory.createFileIterator(directory, true, false);
-
-//        return new Iterator<File>() {
-//            @Override
-//            public boolean hasNext() {
-//                return false;
-//            }
-//
-//            @Override
-//            public File next() {
-//                return null;
-//            }
-//
-//            @Override
-//            public void remove() {
-//                // unimplemented
-//            }
-//        }
-
-
     }
-
 }

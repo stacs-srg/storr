@@ -94,9 +94,9 @@ public class CompactPopulation implements Iterable<CompactPerson> {
     private final CompactPerson[] people;
 
     public interface Condition {
-        final int POSITIVE = 1;
-        final int NEGATIVE_STOP = 2;
-        final int NEGATIVE_CONTINUE = 3;
+        int POSITIVE = 1;
+        int NEGATIVE_STOP = 2;
+        int NEGATIVE_CONTINUE = 3;
         int check(int index);
     }
 

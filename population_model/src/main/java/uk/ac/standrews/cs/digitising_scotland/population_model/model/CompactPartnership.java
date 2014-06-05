@@ -3,7 +3,6 @@ package uk.ac.standrews.cs.digitising_scotland.population_model.model;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.prefs.Preferences;
 
 /**
  * Represents a partnership between two people, with an optional marriage date.
