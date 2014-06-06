@@ -13,7 +13,7 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>generic_linkage</name>
-
+    <description>Generic record linkage.</description>
 
     <build>
         <plugins>

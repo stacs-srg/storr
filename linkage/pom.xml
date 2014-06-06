@@ -13,6 +13,7 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>linkage</name>
+    <description>Linkage for historical records.</description>
 
     <build>
         <plugins>
