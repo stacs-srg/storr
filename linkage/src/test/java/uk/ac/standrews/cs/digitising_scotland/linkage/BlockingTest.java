@@ -21,8 +21,6 @@ import java.nio.file.Paths;
  */
 public class BlockingTest {
 
-    private static final String bucket_name = "BLOCKED-BUCKETS";
-    private static final String BIRTH_RECORDS_PATH = "src/test/resources/1000_TEST_BIRTH_RECORDS.txt";
     private static final String repo_path = "test_buckets";
     private static final String source_base_path = "src/test/resources/BDMSet1";
     private static final String births_name = "birth_records";
@@ -47,7 +45,7 @@ public class BlockingTest {
 
         store = new Store(store_path);
 
-        repo = store.makeRepository("repo_name");
+        repo = store.makeRepository(repo_path);
 
         births = repo.makeBucket(births_name);
         deaths = repo.makeBucket(deaths_name);
@@ -57,8 +55,8 @@ public class BlockingTest {
     @After
     public void afterEachTest() throws IOException {
 
-        if (Files.exists(Paths.get(repo_path))) {
-            FileManipulation.deleteDirectory(repo_path);
+        if (Files.exists(Paths.get(store_path))) {
+            FileManipulation.deleteDirectory(store_path);
         }
     }
 
