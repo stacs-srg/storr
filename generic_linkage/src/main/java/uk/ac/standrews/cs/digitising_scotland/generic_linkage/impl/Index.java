@@ -74,6 +74,9 @@ public class Index implements IIndex {
 
     @Override
     public Set<String> keySet() throws IOException {
+
+        onDemandLoadContents();
+
         return map.keySet();
     }
 

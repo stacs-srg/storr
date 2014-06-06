@@ -30,8 +30,6 @@ public class EventImporter {
 
     private static final String SEPARATOR = "\\|";
 
-    int id = 1; // use this to uniquely stamp all items imported - might need something more sophisticated in future.
-
     /**
      * @param b        the bucket from which to import
      * @param filename containing the source records in digitising scotland format
@@ -139,7 +137,7 @@ public class EventImporter {
         }
 
         try {
-            LXP record = new LXP(id++);
+            LXP record = new LXP();
 
             record.put(CommonLabels.TYPE_LABEL, record_type);
 

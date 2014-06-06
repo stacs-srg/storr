@@ -8,6 +8,8 @@ import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.*;
 import uk.ac.standrews.cs.digitising_scotland.linkage.EventImporter;
 import uk.ac.standrews.cs.digitising_scotland.linkage.RecordFormatException;
 import uk.ac.standrews.cs.digitising_scotland.linkage.labels.*;
+import uk.ac.standrews.cs.digitising_scotland.linkage.visualise.IdentityVisualiser;
+import uk.ac.standrews.cs.nds.persistence.PersistentObjectException;
 
 import java.io.IOException;
 
@@ -43,7 +45,7 @@ public class BassJohnBass {
     private IIndexedBucket identity;            // Bucket containing identities of equivalent people in records
     private int id = 0;
 
-    public BassJohnBass() throws RepositoryException, RecordFormatException, JSONException, IOException {
+    public BassJohnBass() throws RepositoryException, RecordFormatException, JSONException, IOException, PersistentObjectException {
 
         input_repo = new Repository(input_repo_path);
         linkage_repo = new Repository(linkage_repo_path);
@@ -56,7 +58,7 @@ public class BassJohnBass {
         relationships = linkage_repo.makeBucket(relationships_name); // linkage_repo.makeIndexedBucket(relationships_name);
 
         identity = linkage_repo.makeIndexedBucket(identities_name);
-        identity.addIndex(SameAsLabels.record_id1);
+        identity.addIndex(SameAsLabels.first);
 
         // import the birth records
         EventImporter importer = new EventImporter();
@@ -72,6 +74,9 @@ public class BassJohnBass {
         } catch (RepositoryException e) {
             e.printStackTrace();
         }
+        System.out.println("Identity table:");
+        IdentityVisualiser v = new IdentityVisualiser( identity, people );
+        v.show();
     }
 
     /**
@@ -105,19 +110,23 @@ public class BassJohnBass {
      */
     private void addBMF(ILXP birth_record, int child_id, int dad_id, int mum_id, ILXPOutputStream relationships_stream) {
 
-        ILXP is_father = new LXP(getNextId());
-        is_father.put("TYPE", FatherOfLabels.TYPE);
-        is_father.put(FatherOfLabels.child_id, child_id);
-        is_father.put(FatherOfLabels.father_id, dad_id);
-        is_father.put(FatherOfLabels.birth_record_id, birth_record.getId());
-        relationships_stream.add(is_father);
+        if( dad_id != -1 ) { // no father
+            ILXP is_father = new LXP();
+            is_father.put("TYPE", FatherOfLabels.TYPE);
+            is_father.put(FatherOfLabels.child_id, child_id);
+            is_father.put(FatherOfLabels.father_id, dad_id);
+            is_father.put(FatherOfLabels.birth_record_id, birth_record.getId());
+            relationships_stream.add(is_father);
+        }
 
-        ILXP is_mother = new LXP(getNextId());
-        is_mother.put("TYPE", MotherOfLabels.TYPE);
-        is_mother.put(MotherOfLabels.child_id, child_id);
-        is_mother.put(MotherOfLabels.mother_id, mum_id);
-        is_mother.put(MotherOfLabels.birth_record_id, birth_record.getId());
-        relationships_stream.add(is_mother);
+        if( mum_id != -1 ) {
+            ILXP is_mother = new LXP();
+            is_mother.put("TYPE", MotherOfLabels.TYPE);
+            is_mother.put(MotherOfLabels.child_id, child_id);
+            is_mother.put(MotherOfLabels.mother_id, mum_id);
+            is_mother.put(MotherOfLabels.birth_record_id, birth_record.getId());
+            relationships_stream.add(is_mother);
+        }
 
         // Could add is_child but not now...
     }
@@ -129,8 +138,7 @@ public class BassJohnBass {
      */
     private int addBabyToOutput(ILXP birth_record, ILXPOutputStream people_stream) {
 
-        int person_id = getNextId();
-        ILXP person = new LXP(person_id);
+        ILXP person = new LXP();
 
         person.put("TYPE", PersonLabels.TYPE);
 
@@ -170,31 +178,29 @@ public class BassJohnBass {
         person.put(PersonLabels.CHANGED_MOTHERS_MAIDEN_SURNAME, birth_record.get(BirthLabels.CHANGED_MOTHERS_MAIDEN_SURNAME));
 
         people_stream.add(person);
-        return person_id;
+        return person.getId();
     }
 
     /**
      * @param birth_record  a record from which to extract father information and add to the stream
      * @param people_stream a stream to which to add a new Person record
-     * @return the id of the father in the birth record
+     * @return the id of the father in the birth record or -1 if there is no father record.
      */
     private int addFatherToOutput(ILXP birth_record, ILXPOutputStream people_stream) {
 
-        // Graham was here.
+        String fathersurname = birth_record.get(BirthLabels.FATHERS_SURNAME);
 
-        int banana = 3;
-        String foo = "foo";
+        if( fathersurname.equals("") ) { // no father in record - do not continue with process.
+            return -1;
+        }
 
-        int person_id = getNextId();
-        ILXP person = new LXP(person_id);
+        ILXP person = new LXP();
 
         person.put("TYPE", PersonLabels.TYPE);
 
         person.put(PersonLabels.ORIGINAL_RECORD_ID, birth_record.getId());
         person.put(PersonLabels.ORIGINAL_RECORD_TYPE, birth_record.get(BirthLabels.TYPE_LABEL));
         person.put(PersonLabels.ROLE, "father");
-
-        String fathersurname = birth_record.get(BirthLabels.FATHERS_SURNAME);
 
         if( fathersurname.equals("0") ) {
             person.put(PersonLabels.SURNAME, birth_record.get(BirthLabels.SURNAME));
@@ -207,26 +213,32 @@ public class BassJohnBass {
         person.put(PersonLabels.SEX, "M");
 
         people_stream.add(person);
-        return person_id;
+        return person.getId();
     }
 
     /**
      * @param birth_record  a record from which to extract mother information and add to the stream
      * @param people_stream a stream to which to add a new Person record
-     * @return the id of the mother in the birth record
+     * @return the id of the mother in the birth record or -1 if there is no mother record.
      */
     private int addMotherToOutput(ILXP birth_record, ILXPOutputStream people_stream) {
 
-        int person_id = getNextId();
-        ILXP person = new LXP(person_id);
+        String mothersurname = birth_record.get(BirthLabels.MOTHERS_SURNAME);
+
+        if( mothersurname.equals( "" ) ) { // no mother in record - do not continue with process.
+            return -1;
+        }
+
+        ILXP person = new LXP();
 
         person.put("TYPE", PersonLabels.TYPE);
 
         person.put(PersonLabels.ORIGINAL_RECORD_ID, birth_record.getId());
         person.put(PersonLabels.ORIGINAL_RECORD_TYPE, birth_record.get(BirthLabels.TYPE_LABEL));
         person.put(PersonLabels.ROLE, "mother");
-
-        String mothersurname = birth_record.get(BirthLabels.MOTHERS_SURNAME);
+        person.put(PersonLabels.FORENAME, birth_record.get(BirthLabels.MOTHERS_FORENAME));
+        person.put(PersonLabels.MOTHERS_MAIDEN_SURNAME,  birth_record.get(BirthLabels.MOTHERS_MAIDEN_SURNAME) );
+        person.put(PersonLabels.SEX, "F");
 
         if( mothersurname.equals("0") ) {
             person.put(PersonLabels.SURNAME, birth_record.get(BirthLabels.SURNAME));
@@ -234,15 +246,8 @@ public class BassJohnBass {
             person.put(PersonLabels.SURNAME,mothersurname );
         }
 
-        person.put(PersonLabels.FORENAME, birth_record.get(BirthLabels.FORENAME));
-        person.put(PersonLabels.SEX, "F");
-
         people_stream.add(person);
-        return person_id;
-    }
-
-    private int getNextId() {
-        return id++;
+        return person.getId();
     }
 
     /**

@@ -1,7 +1,8 @@
 package uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces;
 
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.RepositoryException;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.RepositoryIterator;
+
+import java.util.Iterator;
 
 /**
  * Created by al on 11/05/2014.
@@ -20,7 +21,6 @@ public interface IRepository {
 
     IIndexedBucket getIndexedBucket(String name) throws RepositoryException;
 
-    RepositoryIterator getIterator();
-
+    Iterator<IBucket> getIterator();
 
 }

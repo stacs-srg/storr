@@ -16,11 +16,7 @@ public class LXP extends HashMap<String, String> implements ILXP {
     private int id;
 
     public LXP() {
-    }
-
-    public LXP(int id) {
-        this();
-        this.id = id;
+        this.id = Store.getInstance().getNextFreePID();
     }
 
     public LXP(int id, JSONReader reader) throws PersistentObjectException {

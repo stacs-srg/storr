@@ -4,12 +4,14 @@ import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IBucket
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IIndexedBucket;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IRepository;
 import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
+import uk.ac.standrews.cs.nds.util.ErrorHandling;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Iterator;
 
 /**
  * A Collection of buckets identified by a file path representing its root.
@@ -114,7 +116,45 @@ public class Repository implements IRepository {
     }
 
     @Override
-    public RepositoryIterator getIterator() {
-        return new RepositoryIterator(this, repo_directory);
+    public BucketIterator getIterator() {
+        return new BucketIterator(this, repo_directory);
     }
+
+    private class BucketIterator implements Iterator<IBucket> {
+
+        private final Iterator<File> file_iterator;
+        private final Repository repository;
+
+        public BucketIterator(final Repository repository, final File repo_directory) {
+
+            this.repository = repository;
+            file_iterator = FileIteratorFactory.createFileIterator(repo_directory, false, true);
+        }
+
+        public boolean hasNext() {
+            return file_iterator.hasNext();
+        }
+
+        @Override
+        public IBucket next() {
+
+            String name = file_iterator.next().getName();
+
+            try {
+                return repository.getBucket(name);
+
+            } catch (RepositoryException e) {
+                ErrorHandling.exceptionError(e, "RepositoryException in iterator");
+                return null;
+            }
+        }
+
+        @Override
+        public void remove() {
+
+            throw new UnsupportedOperationException("remove called on stream - unsupported");
+        }
+
+    }
+
 }

@@ -4,7 +4,6 @@ import org.json.JSONException;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.LXP;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.Repository;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.RepositoryException;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.RepositoryIterator;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IBucket;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXP;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXPInputStream;
@@ -21,6 +20,7 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;
 
 /**
  * Performs pairwise linkage on babies and fathers
@@ -87,7 +87,7 @@ public class BabyFatherResolver {
 
     private void pairwiseLinkBlockedRecords() {
 
-        RepositoryIterator blocked_record_iterator = blocked_repo.getIterator();
+        Iterator<IBucket> blocked_record_iterator = blocked_repo.getIterator();
 
         while (blocked_record_iterator.hasNext()) {
             IBucket blocked_records = blocked_record_iterator.next();
@@ -224,7 +224,7 @@ public class BabyFatherResolver {
 
             System.out.println("Matched : " + first + "with:" + second);
 
-            ILXP result_record = new LXP(matched_id++);
+            ILXP result_record = new LXP();
             result_record.put("first", first.get("id"));
             result_record.put("first_type", first.get("TYPE"));
             result_record.put("second", second.get("id"));

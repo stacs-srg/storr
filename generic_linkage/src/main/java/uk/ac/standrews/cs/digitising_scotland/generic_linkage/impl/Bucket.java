@@ -2,10 +2,7 @@ package uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl;
 
 import org.json.JSONException;
 import org.json.JSONWriter;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IBucket;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXP;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXPInputStream;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXPOutputStream;
+import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.*;
 import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
 import uk.ac.standrews.cs.nds.persistence.PersistentObjectException;
 import uk.ac.standrews.cs.nds.rpc.stream.JSONReader;
@@ -33,7 +30,7 @@ public class Bucket implements IBucket {
      * @param name      the name of the bucket (also used as directory name)
      * @param base_path the path of the parent directory
      */
-    public Bucket(final String name, final String base_path) throws IOException {
+    public Bucket(final String name, final String base_path ) throws IOException {
 
         this.name = name;
         this.base_path = base_path;
@@ -47,11 +44,10 @@ public class Bucket implements IBucket {
     @Override
     public ILXP get(final int id) throws PersistentObjectException, IOException {
 
-        JSONReader reader = getReader(id);
-        LXP lxp = new LXP(id, reader);
+        try ( BufferedReader reader = Files.newBufferedReader(Paths.get(filePath(id)), FileManipulation.FILE_CHARSET) ) {
 
-        // TODO add method to close JSONReader, which should close encapsulated reader, and close here
-        return lxp;
+            return new LXP(id, new JSONReader(reader));
+        }
     }
 
     @Override
@@ -101,14 +97,6 @@ public class Bucket implements IBucket {
     @Override
     public String getName() {
         return this.name;
-    }
-
-    private JSONReader getReader(final int id) throws IOException {
-
-        String path = filePath(id);
-        BufferedReader reader = Files.newBufferedReader(Paths.get(path), FileManipulation.FILE_CHARSET);
-
-        return new JSONReader(reader);
     }
 
     private Iterator<File> getFileIterator() {

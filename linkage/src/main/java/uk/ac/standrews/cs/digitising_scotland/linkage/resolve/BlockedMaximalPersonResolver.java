@@ -2,10 +2,13 @@ package uk.ac.standrews.cs.digitising_scotland.linkage.resolve;
 
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.LXP;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.RepositoryException;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.RepositoryIterator;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.*;
 import uk.ac.standrews.cs.digitising_scotland.linkage.blocking.BlockingFirstLastSexOverPerson;
+import uk.ac.standrews.cs.digitising_scotland.linkage.labels.PersonLabels;
+import uk.ac.standrews.cs.digitising_scotland.linkage.labels.SameAsLabels;
 import uk.ac.standrews.cs.nds.util.ErrorHandling;
+
+import java.util.Iterator;
 
 /**
  * This class is derived from the blockingTests test
@@ -47,7 +50,7 @@ public class BlockedMaximalPersonResolver {
 
     private void pairwiseLinkBlockedRecords() {
 
-        RepositoryIterator blocked_record_iterator = blocked_repo.getIterator();
+        Iterator<IBucket> blocked_record_iterator = blocked_repo.getIterator();
 
         while (blocked_record_iterator.hasNext()) {
             IBucket blocked_records = blocked_record_iterator.next();
@@ -70,10 +73,15 @@ public class BlockedMaximalPersonResolver {
         @Override
         public boolean compare(final Pair pair) {
 
-//            ILXP first = pair.first();
-//            ILXP second = pair.second();
+            ILXP first = pair.first();
+            ILXP second = pair.second();
 
-            return true;  // TODO fix up - for the minute make all blocked records match
+            // Cannot match baby-baby: only one birth only baby-father and baby-mother - different roles.
+
+            if( first.get(PersonLabels.ROLE).equals("baby") && second.get(PersonLabels.ROLE).equals("baby") ) {
+                return false;
+            }
+            return true;  // make rest match for now.
         }
 
         @Override
@@ -84,11 +92,11 @@ public class BlockedMaximalPersonResolver {
 
             System.out.println("Matched : " + first + "with:" + second);
 
-            ILXP result_record = new LXP(matched_id++);
-            result_record.put("first", first.get("id"));
-            result_record.put("second", second.get("id"));
-            result_record.put("relation", second.get("name-match"));
-            result_record.put("resolver", this.getClass().toString());
+            ILXP result_record = new LXP();
+            result_record.put(SameAsLabels.first, first.getId() );
+            result_record.put(SameAsLabels.second, second.getId() );
+            result_record.put(SameAsLabels.relationship, first.get(PersonLabels.ROLE) + "-" + second.get(PersonLabels.ROLE) );
+            result_record.put(SameAsLabels.resolver, this.getClass().toString());
 
             results.add(result_record);
         }

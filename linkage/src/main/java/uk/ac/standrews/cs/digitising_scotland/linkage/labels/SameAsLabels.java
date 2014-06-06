@@ -10,10 +10,13 @@ public class SameAsLabels implements Iterable<String> {
 
     public static final String TYPE = "Same_as";
 
-    public static final String  record_id1 = "record_id1";
-    public static final String  record_id2 = "record_id2";
+    public static final String  first = "first";
+    public static final String  second = "second";
+    public static final String relationship = "relationship";
+    public static final String resolver = "resolver";
 
-    public static final Iterable<String> FIELD_NAMES = Arrays.asList(record_id1,record_id2);
+    public static final Iterable<String> FIELD_NAMES = Arrays.asList(first,second);
+
 
     public Iterator<String> iterator() {
         return FIELD_NAMES.iterator();
