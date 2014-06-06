@@ -10,7 +10,7 @@ This module provides a simple population model, configurable with parameters suc
 The API documentation is here:
 
 <div class="source">
-    <pre><a href="https://builds.cs.st-andrews.ac.uk/job/digitising_scotland/javadoc/">https://builds.cs.st-andrews.ac.uk/job/digitising_scotland/javadoc/</a></pre>
+    <pre><a href="https://builds.cs.st-andrews.ac.uk/job/digitising_scotland/javadoc/index.html?uk/ac/standrews/cs/digitising_scotland/population_model/package-summary.html">https://builds.cs.st-andrews.ac.uk/job/digitising_scotland/javadoc/</a></pre>
 </div>
 
 ## Download
