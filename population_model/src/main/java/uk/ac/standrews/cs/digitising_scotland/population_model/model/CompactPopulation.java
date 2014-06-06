@@ -28,8 +28,8 @@ import java.util.Random;
  *
  * @author Alan Dearle (alan.dearle@st-andrews.ac.uk)
  * @author Graham Kirby (graham.kirby@st-andrews.ac.uk)
+ * @author Victor Andrei (va9@st-andrews.ac.uk)
  */
-
 public class CompactPopulation implements Iterable<CompactPerson> {
 
     // TODO define a general interface to be implemented by this, the db and a GEDCOM reader.
@@ -97,6 +97,7 @@ public class CompactPopulation implements Iterable<CompactPerson> {
         int POSITIVE = 1;
         int NEGATIVE_STOP = 2;
         int NEGATIVE_CONTINUE = 3;
+
         int check(int index);
     }
 
@@ -480,11 +481,6 @@ public class CompactPopulation implements Iterable<CompactPerson> {
         final int husband_index = husband(partnership);
         final int wife_index = wife(partnership);
 
-        // To be removed:
-        // TODO This could be optimised since if some checks fail then they will never succeed for subsequent children.
-        // E.g. as soon as the birth date of a candidate child is later than the latest acceptable birth date, no point in looking further.
-        // Refine Condition interface so result can be yes, no and keep looking, no and stop looking?
-
         final Condition conditions = new Condition() {
 
             @Override
@@ -492,10 +488,10 @@ public class CompactPopulation implements Iterable<CompactPerson> {
 
                 final CompactPerson p = people[child_index];
 
-                if(p.date_of_birth >= latest_birth_date)
+                if (p.date_of_birth >= latest_birth_date)
                     return Condition.NEGATIVE_STOP;
 
-                return !p.isIncomer() && p.date_of_birth > earliest_birth_date && p.date_of_birth < latest_birth_date &&!p.hasParents() && parentsHaveSensibleAgesAtChildBirth(husband_index, wife_index, child_index) && !marriedToAnyChildrenOf(child_index, partnership) ? Condition.POSITIVE : Condition.NEGATIVE_CONTINUE;
+                return !p.isIncomer() && p.date_of_birth > earliest_birth_date && p.date_of_birth < latest_birth_date && !p.hasParents() && parentsHaveSensibleAgesAtChildBirth(husband_index, wife_index, child_index) && !marriedToAnyChildrenOf(child_index, partnership) ? Condition.POSITIVE : Condition.NEGATIVE_CONTINUE;
             }
         };
 

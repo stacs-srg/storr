@@ -6,10 +6,11 @@ import java.util.List;
 
 /**
  * Represents a partnership between two people, with an optional marriage date.
- * 
+ *
  * @author Alan Dearle (alan.dearle@st-andrews.ac.uk)
  * @author Graham Kirby (graham.kirby@st-andrews.ac.uk)
  * @author Ilia Shumailov (is33@st-andrews.ac.uk)
+ * @author Victor Andrei (va9@st-andrews.ac.uk)
  */
 public class CompactPartnership implements Comparable<CompactPartnership> {
 
@@ -23,8 +24,9 @@ public class CompactPartnership implements Comparable<CompactPartnership> {
 
     /**
      * Creates a partnership with a given marriage date.
-     * @param partner1 the first partner's index in the People array
-     * @param partner2 the second partner's index in the People array
+     *
+     * @param partner1      the first partner's index in the People array
+     * @param partner2      the second partner's index in the People array
      * @param marriage_date the marriage date
      */
     public CompactPartnership(final int partner1, final int partner2, final int marriage_date) {
@@ -39,6 +41,7 @@ public class CompactPartnership implements Comparable<CompactPartnership> {
 
     /**
      * Gets an id for the partnership.
+     *
      * @return the id of this object
      */
     public int getId() {
@@ -48,6 +51,7 @@ public class CompactPartnership implements Comparable<CompactPartnership> {
 
     /**
      * Setter for Id.
+     *
      * @param id the id to be set
      */
     public void setId(final int id) {
@@ -57,6 +61,7 @@ public class CompactPartnership implements Comparable<CompactPartnership> {
 
     /**
      * Gets the partner of the given person.
+     *
      * @param p the index of one person in this partnership
      * @return the partner index of the given person, or -1 if the person is not in the partnership
      */
@@ -67,6 +72,7 @@ public class CompactPartnership implements Comparable<CompactPartnership> {
 
     /**
      * Gets the first member of this partnership.
+     *
      * @return the first member of this partnership
      */
 
@@ -77,6 +83,7 @@ public class CompactPartnership implements Comparable<CompactPartnership> {
 
     /**
      * Gets the second member of this partnership.
+     *
      * @return the second member of this partnership
      */
     public int getPartner2() {
@@ -86,6 +93,7 @@ public class CompactPartnership implements Comparable<CompactPartnership> {
 
     /**
      * Setter for partner.
+     *
      * @param partner1 partner to set
      */
     public void setPartner1(final int partner1) {
@@ -95,6 +103,7 @@ public class CompactPartnership implements Comparable<CompactPartnership> {
 
     /**
      * Setter for partner.
+     *
      * @param partner2 partner to set
      */
     public void setPartner2(final int partner2) {
@@ -105,27 +114,34 @@ public class CompactPartnership implements Comparable<CompactPartnership> {
     /**
      * Tests whether a given person is a child of this partnership.
      * Uses binary search. Replace with sequential search if order preservation is lost.
+     *
      * @param p the person
      * @return true if the person is a child of this partnership
      */
     public boolean includesChild(final int p) {
 
-        if (getChildren() != null) {
-            if(getChildren().size() == 0) {
+        if (children != null) {
+
+            int number_of_children = children.size();
+            if (number_of_children == 0) {
                 return false;
             }
 
-            int index, binaryStep;
-            for(binaryStep = 1 ; binaryStep<getChildren().size() ; binaryStep <<= 1);
+            int binary_step = 1;
+            while (binary_step < number_of_children) {
+                binary_step <<= 1;
+            }
 
-            for(index = 0 ; binaryStep != 0 ; binaryStep >>=1) {
-                if (index + binaryStep < getChildren().size() && getChildren().get(index + binaryStep) <= p) {
-                    index += binaryStep;
+            int index;
+            for (index = 0; binary_step != 0; binary_step >>= 1) {
+                if (index + binary_step < number_of_children && children.get(index + binary_step) <= p) {
+                    index += binary_step;
                 }
             }
 
-            if(getChildren().get(index) == p) { return true; }
-
+            if (children.get(index) == p) {
+                return true;
+            }
         }
 
         return false;
@@ -133,8 +149,9 @@ public class CompactPartnership implements Comparable<CompactPartnership> {
 
     /**
      * Creates a new partnership with the given people, and links each person to the partnership.
-     * @param partner1 the index of first partner
-     * @param partner2 the index of second partner
+     *
+     * @param partner1      the index of first partner
+     * @param partner2      the index of second partner
      * @param marriage_date the marriage date
      */
     public static void createPartnership(final CompactPerson partner1, final int partner1_index, final CompactPerson partner2, final int partner2_index, final int marriage_date) {
@@ -156,14 +173,7 @@ public class CompactPartnership implements Comparable<CompactPartnership> {
     @Override
     public boolean equals(final Object o) {
 
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
-        return compareTo((CompactPartnership) o) == 0;
+        return this == o || !(o == null || getClass() != o.getClass()) && compareTo((CompactPartnership) o) == 0;
     }
 
     @Override
@@ -183,6 +193,7 @@ public class CompactPartnership implements Comparable<CompactPartnership> {
 
     /**
      * Gets the marriage date of this partnership.
+     *
      * @return the date.
      */
     public int getMarriageDate() {
@@ -192,6 +203,7 @@ public class CompactPartnership implements Comparable<CompactPartnership> {
 
     /**
      * Sets the marriage date of this partnership.
+     *
      * @param marriage_date the date of marriage to set
      */
     public void setMarriageDate(final int marriage_date) {
@@ -201,6 +213,7 @@ public class CompactPartnership implements Comparable<CompactPartnership> {
 
     /**
      * Gets the children associated with this partnership.
+     *
      * @return the children.
      */
     public List<Integer> getChildren() {
@@ -210,6 +223,7 @@ public class CompactPartnership implements Comparable<CompactPartnership> {
 
     /**
      * Set the children to be the children of this partnership.
+     *
      * @param children to associate with the partnership.
      */
     public void setChildren(final List<Integer> children) {
