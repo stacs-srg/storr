@@ -104,6 +104,9 @@ public class CompactPopulation implements IPopulation {
 
            @Override
            public boolean hasNext() {
+               Iterator people = peopleIterator();
+               IPerson current = (IPerson)people.next();
+
                return false;
            }
 
@@ -114,7 +117,7 @@ public class CompactPopulation implements IPopulation {
 
            @Override
            public void remove() {
-
+                //Shouldn't be used.
            }
        };
     }

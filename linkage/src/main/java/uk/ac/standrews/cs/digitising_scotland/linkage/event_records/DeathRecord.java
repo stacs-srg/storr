@@ -103,7 +103,7 @@ public class DeathRecord extends IndividualRecord {
         setDeathCauseA(person.getCauseOfDeath());
 
         Date birth_date = person.getBirthDate();
-        Date death_date = person.getDeathDate();
+        Date death_date = (Date) person.getDeathDate();
 
         processDates(birth_date, death_date);
 
