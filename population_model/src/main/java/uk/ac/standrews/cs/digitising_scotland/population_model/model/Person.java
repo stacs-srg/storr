@@ -11,11 +11,6 @@ import java.sql.Date;
  */
 public class Person {
 
-    public static final char FEMALE = 'F';
-    public static final char MALE = 'M';
-
-    public static final String MALE_STRING = String.valueOf(MALE);
-
     private int id;
     private char gender;
     private String first_name;
@@ -56,7 +51,7 @@ public class Person {
 
     public void setGender(final char gender) {
 
-        if (!(gender == FEMALE || gender == MALE)) {
+        if (!(gender == IPerson.FEMALE || gender == IPerson.MALE)) {
             throw new RuntimeException("illegal gender char");
         }
         this.gender = gender;

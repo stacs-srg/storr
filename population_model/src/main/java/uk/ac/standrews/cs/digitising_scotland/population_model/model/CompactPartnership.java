@@ -75,7 +75,6 @@ public class CompactPartnership implements Comparable<CompactPartnership> {
      *
      * @return the first member of this partnership
      */
-
     public int getPartner1() {
 
         return partner1;
@@ -161,7 +160,6 @@ public class CompactPartnership implements Comparable<CompactPartnership> {
         addPartnership(partner2, partnership);
     }
 
-    @Override
     public int compareTo(final CompactPartnership other) {
 
         // No need to override hashCode() since this does conform to the assumption that (p1.compareTo(p2) == 0) == (p1.equals(p2)) i.e. it only returns zero for equal objects.

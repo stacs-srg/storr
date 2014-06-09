@@ -44,7 +44,7 @@ public class PersonFactory {
 
         // TODO investigate usage of this method and the COD and occupation fields.
 
-        return new Person(compact_person.getId(), compact_person.isMale() ? Person.MALE : Person.FEMALE, DateManipulation.daysToSQLDate(compact_person.getDateOfBirth()),
+        return new Person(compact_person.getId(), compact_person.isMale() ? IPerson.MALE : IPerson.FEMALE, DateManipulation.daysToSQLDate(compact_person.getDateOfBirth()),
                 DateManipulation.daysToSQLDate(compact_person.getDateOfDeath()), "Occupation", "Cause of death", "Address");
     }
 
@@ -64,7 +64,7 @@ public class PersonFactory {
             throw new ParseException(e.getMessage(), 0);
         }
 
-        person.setGender(gedcom_person.sex.toString().equals(Person.MALE_STRING) ? Person.MALE : Person.FEMALE);
+        person.setGender(gedcom_person.sex.toString().equals(IPerson.MALE_STRING) ? IPerson.MALE : IPerson.FEMALE);
 
         final List<PersonalName> names = gedcom_person.names;
 

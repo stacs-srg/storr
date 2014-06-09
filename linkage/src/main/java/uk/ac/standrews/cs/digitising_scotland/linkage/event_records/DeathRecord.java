@@ -1,6 +1,7 @@
 package uk.ac.standrews.cs.digitising_scotland.linkage.event_records;
 
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.DBBackedPartnership;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPerson;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.Person;
 import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
 
@@ -110,7 +111,7 @@ public class DeathRecord extends IndividualRecord {
 
             // Attributes associated with individual's parents
             for (final Person parent : family.getPartners()) {
-                if (parent.getGender() == Person.MALE) { // the father
+                if (parent.getGender() == IPerson.MALE) { // the father
 
                     setFathersForename(parent.getFirstName());
                     setFathersSurname(getRecordedParentsSurname(parent.getSurname(), person.getSurname()));
