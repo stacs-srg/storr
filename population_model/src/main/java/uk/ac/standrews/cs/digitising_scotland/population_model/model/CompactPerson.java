@@ -1,8 +1,8 @@
 package uk.ac.standrews.cs.digitising_scotland.population_model.model;
 
 import uk.ac.standrews.cs.digitising_scotland.util.BitManipulation;
-
-import java.sql.Date;
+import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -208,27 +208,28 @@ public class CompactPerson implements  IPerson{
 
     @Override
     public Date getBirthDate() {
-        return null;
+        return DateManipulation.daysToDate(getDateOfBirth());
+
     }
 
     @Override
-    public Date getDeathDate() {
-        return null;
+    public java.util.Date getDeathDate() {
+        return DateManipulation.daysToDate(getDateOfDeath());
     }
 
     @Override
     public String getOccupation() {
-        return null;
+        return "N/A";
     }
 
     @Override
     public String getCauseOfDeath() {
-        return null;
+        return "N/A";
     }
 
     @Override
     public String getAddress() {
-        return null;
+        return "N/A";
     }
 
     @Override

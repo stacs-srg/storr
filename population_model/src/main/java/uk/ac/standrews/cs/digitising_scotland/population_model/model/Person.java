@@ -9,7 +9,7 @@ import java.sql.Date;
  *
  * @author Alan Dearle (alan.dearle@st-andrews.ac.uk)
  */
-public class Person {
+public class Person implements IPerson{
 
     private int id;
     private char gender;
@@ -87,7 +87,7 @@ public class Person {
         this.birth_date = (Date) birth_date.clone();
     }
 
-    public Date getDeathDate() {
+    public java.util.Date getDeathDate() {
 
         return death_date == null ? null : (Date) death_date.clone();
     }
@@ -152,6 +152,16 @@ public class Person {
     public String getMaidenName() {
 
         return maiden_name;
+    }
+
+    @Override
+    public int getPartnership() {
+        return 0;
+    }
+
+    @Override
+    public int getParentsPartnership() {
+        return 0;
     }
 
     public DBBackedPartnership getParentsFamily() {

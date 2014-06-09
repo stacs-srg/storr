@@ -1,6 +1,6 @@
 package uk.ac.standrews.cs.digitising_scotland.population_model.model;
 
-import java.sql.Date;
+import java.util.Date;
 
 /**
  * Created by graham on 09/06/2014.
@@ -22,7 +22,7 @@ public interface IPerson {
 
     Date getBirthDate();
 
-    Date getDeathDate();
+    java.util.Date getDeathDate();
 
     String getOccupation();
 
@@ -31,6 +31,8 @@ public interface IPerson {
     String getAddress();
 
     String getMaidenName();
+
+    //What are these supposed to do?
 
     int getPartnership();
 

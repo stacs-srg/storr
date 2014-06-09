@@ -12,7 +12,7 @@ import java.util.List;
  * @author Ilia Shumailov (is33@st-andrews.ac.uk)
  * @author Victor Andrei (va9@st-andrews.ac.uk)
  */
-public class CompactPartnership implements Comparable<CompactPartnership> {
+public class CompactPartnership implements IPartnership {
 
     private int id;
 
@@ -259,5 +259,11 @@ public class CompactPartnership implements Comparable<CompactPartnership> {
         builder.append("}");
 
         return builder.toString();
+    }
+
+    //TODO what is this supposed to do?
+    @Override
+    public int compareTo(IPartnership iPartnership) {
+        return 0;
     }
 }
