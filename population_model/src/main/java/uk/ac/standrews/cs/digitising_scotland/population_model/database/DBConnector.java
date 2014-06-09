@@ -13,6 +13,8 @@ import java.sql.SQLException;
  */
 public class DBConnector {
 
+    // TODO provide convenient mechanism to use a different database for tests
+
     private static final String CONNECTION_STRING_PREFIX = "jdbc:mysql://";
     private static final String DEFAULT_ADDRESS = "localhost";
     private static final String DEFAULT_USERNAME = "root";

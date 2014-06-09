@@ -10,6 +10,8 @@ package uk.ac.standrews.cs.digitising_scotland.population_model.model;
  */
 public interface IPopulationWithRandomAccess extends IPopulation {
 
-    IPerson getPerson(int id);
-    IPartnership getPartnership(int id);
+    IPerson getPersonById(int id);
+    IPartnership getPartnershipById(int id);
+
+    int size();
 }
