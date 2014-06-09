@@ -10,6 +10,7 @@ import uk.ac.standrews.cs.digitising_scotland.population_model.model.Person;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -83,7 +84,10 @@ public class PopulationToGEDCOM extends PopulationToFile {
     @Override
     protected void outputFamilies(final PrintWriter writer) {
 
-        for (final CompactPerson compact_person : population) {
+        Iterator people = population.peopleIterator();
+
+        while(people.hasNext()) {
+            CompactPerson compact_person = (CompactPerson)people.next();
             if (compact_person.getPartnerships() != null) {
                 for (final CompactPartnership partnership : compact_person.getPartnerships()) {
 
@@ -129,7 +133,10 @@ public class PopulationToGEDCOM extends PopulationToFile {
     private List<String> getIdsOfFamiliesWhereChild(final int child) {
 
         final List<String> ids = new ArrayList<String>();
-        for (final CompactPerson person : population) {
+        Iterator people = population.peopleIterator();
+
+        while(people.hasNext()) {
+            CompactPerson person = (CompactPerson)people.next();
             if (person.getPartnerships() != null) {
                 for (final CompactPartnership partnership : person.getPartnerships()) {
                     if (partnership.includesChild(child)) {

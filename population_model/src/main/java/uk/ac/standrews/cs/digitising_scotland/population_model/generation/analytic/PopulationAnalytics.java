@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.digitising_scotland.population_model.generation.analytic;
 
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPerson;
 import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.CompactPartnership;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.CompactPerson;
@@ -45,10 +46,11 @@ public class PopulationAnalytics {
      */
     public void printAllDatesOfBirth() {
 
-        final Iterator<CompactPerson> people = population.iterator();
+        final Iterator<IPerson> people = population.peopleIterator();
 
         while (people.hasNext()) {
-            System.out.println(DateManipulation.daysToString(people.next().getDateOfBirth()));
+            CompactPerson p = (CompactPerson)people.next();
+           System.out.println(DateManipulation.daysToString(p.getDateOfBirth()));
         }
     }
 
@@ -57,10 +59,10 @@ public class PopulationAnalytics {
      */
     public void printAllDatesOfDeath() {
 
-        final Iterator<CompactPerson> people = population.iterator();
+        final Iterator<IPerson> people = population.peopleIterator();
 
         while (people.hasNext()) {
-            final CompactPerson p = people.next();
+            final CompactPerson p = (CompactPerson)people.next();
             if (p.getDateOfDeath() >= 0) {
                 System.out.println(DateManipulation.daysToString(p.getDateOfDeath()));
             }
@@ -107,10 +109,10 @@ public class PopulationAnalytics {
     public void printAllDates() {
 
         int index = 0;
-        final Iterator<CompactPerson> people = population.iterator();
+        final Iterator<IPerson> people = population.peopleIterator();
 
         while (people.hasNext()) {
-            final CompactPerson p = people.next();
+            final CompactPerson p = (CompactPerson)people.next();
 
             System.out.print(p.getSex() + " Born: " + DateManipulation.daysToString(p.getDateOfBirth()));
             if (p.getDateOfDeath() >= 0) {

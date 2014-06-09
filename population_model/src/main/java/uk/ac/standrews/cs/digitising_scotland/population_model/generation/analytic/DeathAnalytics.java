@@ -5,6 +5,8 @@ import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.CompactPerson;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.CompactPopulation;
 
+import java.util.Iterator;
+
 /**
  * An analytic class to analyse the distribution of deaths.
  * @author Alan Dearle (alan.dearle@st-andrews.ac.uk)
@@ -31,8 +33,10 @@ public class DeathAnalytics {
      */
     private void analyseDeaths() {
 
-        for (CompactPerson p : population) {
+        Iterator people = population.peopleIterator();
 
+        while(people.hasNext()) {
+            CompactPerson p = (CompactPerson)people.next();
             final int age_at_death_in_years = DateManipulation.differenceInYears(p.getDateOfBirth(), p.getDateOfDeath());
             if (age_at_death_in_years >= 0 && age_at_death_in_years < age_at_death.length) {
                 age_at_death[age_at_death_in_years]++;

@@ -21,6 +21,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
@@ -104,7 +105,10 @@ public class PopulationToDB implements AutoCloseable {
 
     protected void outputIndividuals() throws SQLException {
 
-        for (final CompactPerson compact_person : population) {
+        Iterator people = population.peopleIterator();
+
+        while(people.hasNext()) {
+            CompactPerson compact_person = (CompactPerson)people.next();
 
             // Ignore if already processed.
             if (!compact_person.isMarked()) {
@@ -177,7 +181,10 @@ public class PopulationToDB implements AutoCloseable {
 
     protected void outputFamilies() throws SQLException {
 
-        for (final CompactPerson compact_person : population) {
+        Iterator people = population.peopleIterator();
+
+        while(people.hasNext()) {
+            CompactPerson compact_person = (CompactPerson)people.next();
 
             if (compact_person.getPartnerships() != null) {
                 for (final CompactPartnership partnership : compact_person.getPartnerships()) {

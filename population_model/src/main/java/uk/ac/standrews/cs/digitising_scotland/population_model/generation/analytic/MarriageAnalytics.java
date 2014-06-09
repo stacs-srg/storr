@@ -5,6 +5,7 @@ import uk.ac.standrews.cs.digitising_scotland.population_model.model.CompactPart
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.CompactPerson;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.CompactPopulation;
 
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -46,7 +47,10 @@ public class MarriageAnalytics {
      */
     public void analyseMarriages() {
 
-        for (CompactPerson p : population) {
+        Iterator people = population.peopleIterator();
+
+        while(people.hasNext()) {
+            CompactPerson p = (CompactPerson)people.next();
 
             if (p.isMale()) { // only look at Makes to avoid counting marriages twice. TODO is this OK? Not sure!
                 final List<CompactPartnership> partnerships = p.getPartnerships();

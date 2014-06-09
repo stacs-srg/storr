@@ -5,6 +5,7 @@ import uk.ac.standrews.cs.digitising_scotland.population_model.model.CompactPart
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.CompactPerson;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.CompactPopulation;
 
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -46,7 +47,10 @@ public class ChildrenAnalytics {
      */
     public void analyseChildren() {
 
-        for (CompactPerson p : population) {
+        Iterator people = population.peopleIterator();
+
+        while(people.hasNext()) {
+            CompactPerson p = (CompactPerson)people.next();
 
             final List<CompactPartnership> partnerships = p.getPartnerships();
             if (partnerships != null) {

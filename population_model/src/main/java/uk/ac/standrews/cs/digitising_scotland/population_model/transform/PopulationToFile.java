@@ -18,11 +18,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Writes a representation of the population to file in some external format - specialised by subclasses.
@@ -95,8 +91,10 @@ public abstract class PopulationToFile {
     protected void outputIndividuals(final PrintWriter writer) {
 
         final int index = 0;
+        Iterator people = population.peopleIterator();
 
-        for (final CompactPerson p : population) {
+        while(people.hasNext()) {
+            CompactPerson p = (CompactPerson)people.next();
             if (!p.isMarked()) { // Don't put out people we have already processed
 
                 final String currSurname = surname_distribution.getSample(); // everyone in this tree will have the same surname

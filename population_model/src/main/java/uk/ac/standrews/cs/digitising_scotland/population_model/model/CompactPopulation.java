@@ -30,7 +30,7 @@ import java.util.Random;
  * @author Graham Kirby (graham.kirby@st-andrews.ac.uk)
  * @author Victor Andrei (va9@st-andrews.ac.uk)
  */
-public class CompactPopulation implements Iterable<CompactPerson> {
+public class CompactPopulation implements IPopulation {
 
     // TODO define a general interface to be implemented by this, the db and a GEDCOM reader.
 
@@ -92,6 +92,33 @@ public class CompactPopulation implements Iterable<CompactPerson> {
     private ProgressIndicator progress_indicator;
 
     private final CompactPerson[] people;
+
+    @Override
+    public Iterator<IPerson> peopleIterator() {
+        return new ArrayIterator<>((IPerson[])people);
+    }
+
+    @Override
+    public Iterator<IPartnership> partnershipIterator() {
+       return new Iterator<IPartnership>(){
+
+           @Override
+           public boolean hasNext() {
+               return false;
+           }
+
+           @Override
+           public IPartnership next() {
+               return null;
+           }
+
+           @Override
+           public void remove() {
+
+           }
+       };
+    }
+
 
     public interface Condition {
         int POSITIVE = 1;
@@ -646,15 +673,17 @@ public class CompactPopulation implements Iterable<CompactPerson> {
         sorter.sort();
     }
 
-    @Override
+    /*@Override
     public Iterator<CompactPerson> iterator() {
 
         return new ArrayIterator<>(getPeople());
-    }
+    }*/
 
     @SuppressFBWarnings(value = "EI_EXPOSE_REP", justification = "too expensive...")
     public CompactPerson[] getPeople() {
 
         return people;
     }
+
+
 }
