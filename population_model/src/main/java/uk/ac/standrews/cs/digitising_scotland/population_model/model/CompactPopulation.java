@@ -102,16 +102,35 @@ public class CompactPopulation implements IPopulation {
     public Iterator<IPartnership> partnershipIterator() {
        return new Iterator<IPartnership>(){
 
+           Iterator people = peopleIterator();
+           CompactPerson current = (CompactPerson)people.next();
+           Iterator currentPartnership = current.getPartnerships().iterator();
+
            @Override
            public boolean hasNext() {
-               Iterator people = peopleIterator();
-               IPerson current = (IPerson)people.next();
+
+               while(people.hasNext()){
+                   if(currentPartnership.hasNext()){
+                       return true;
+                   }
+
+                   current = (CompactPerson)people.next();
+                   currentPartnership = current.getPartnerships().iterator();
+               }
 
                return false;
            }
 
            @Override
            public IPartnership next() {
+               while(people.hasNext()){
+                   if(currentPartnership.hasNext()){
+                       return (IPartnership)currentPartnership.next();
+                   }
+
+                   current = (CompactPerson)people.next();
+                   currentPartnership = current.getPartnerships().iterator();
+               }
                return null;
            }
 
