@@ -17,6 +17,7 @@
 package uk.ac.standrews.cs.digitising_scotland.population_model.generation.analytic;
 
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPerson;
+import uk.ac.standrews.cs.digitising_scotland.util.ArrayIterator;
 import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.CompactPartnership;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.CompactPerson;
@@ -62,7 +63,7 @@ public class PopulationAnalytics {
      */
     public void printAllDatesOfBirth() {
 
-        final Iterator<IPerson> people = population.peopleIterator();
+        final Iterator<IPerson> people = new ArrayIterator(population.getPeopleArray());
 
         while (people.hasNext()) {
             CompactPerson p = (CompactPerson)people.next();
@@ -75,7 +76,7 @@ public class PopulationAnalytics {
      */
     public void printAllDatesOfDeath() {
 
-        final Iterator<IPerson> people = population.peopleIterator();
+        final Iterator<IPerson> people = new ArrayIterator(population.getPeopleArray());
 
         while (people.hasNext()) {
             final CompactPerson p = (CompactPerson)people.next();
@@ -125,7 +126,7 @@ public class PopulationAnalytics {
     public void printAllDates() {
 
         int index = 0;
-        final Iterator<IPerson> people = population.peopleIterator();
+        final Iterator<IPerson> people = new ArrayIterator(population.getPeopleArray());
 
         while (people.hasNext()) {
             final CompactPerson p = (CompactPerson)people.next();

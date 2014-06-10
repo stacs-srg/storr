@@ -16,6 +16,7 @@
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.transform;
 
+import uk.ac.standrews.cs.digitising_scotland.util.ArrayIterator;
 import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
 import uk.ac.standrews.cs.digitising_scotland.population_model.generation.distributions.InconsistentWeightException;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.CompactPartnership;
@@ -100,7 +101,7 @@ public class PopulationToGEDCOM extends PopulationToFile {
     @Override
     protected void outputFamilies(final PrintWriter writer) {
 
-        Iterator people = population.peopleIterator();
+        Iterator people = new ArrayIterator(population.getPeopleArray());
 
         while(people.hasNext()) {
             CompactPerson compact_person = (CompactPerson)people.next();
@@ -149,7 +150,7 @@ public class PopulationToGEDCOM extends PopulationToFile {
     private List<String> getIdsOfFamiliesWhereChild(final int child) {
 
         final List<String> ids = new ArrayList<String>();
-        Iterator people = population.peopleIterator();
+        Iterator people = new ArrayIterator(population.getPeopleArray());
 
         while(people.hasNext()) {
             CompactPerson person = (CompactPerson)people.next();

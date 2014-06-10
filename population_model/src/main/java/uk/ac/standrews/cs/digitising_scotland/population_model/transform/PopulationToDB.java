@@ -27,6 +27,7 @@ import uk.ac.standrews.cs.digitising_scotland.population_model.generation.util.R
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.CompactPartnership;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.CompactPerson;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.CompactPopulation;
+import uk.ac.standrews.cs.digitising_scotland.util.ArrayIterator;
 import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
 import uk.ac.standrews.cs.digitising_scotland.util.ProgressIndicator;
 import uk.ac.standrews.cs.digitising_scotland.util.SQLManipulation;
@@ -121,7 +122,7 @@ public class PopulationToDB implements AutoCloseable {
 
     protected void outputIndividuals() throws SQLException {
 
-        Iterator people = population.peopleIterator();
+        Iterator people = new ArrayIterator(population.getPeopleArray());
 
         while(people.hasNext()) {
             CompactPerson compact_person = (CompactPerson)people.next();
@@ -197,7 +198,7 @@ public class PopulationToDB implements AutoCloseable {
 
     protected void outputFamilies() throws SQLException {
 
-        Iterator people = population.peopleIterator();
+        Iterator people = new ArrayIterator(population.getPeopleArray());
 
         while(people.hasNext()) {
             CompactPerson compact_person = (CompactPerson)people.next();

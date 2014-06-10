@@ -16,6 +16,7 @@
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.generation.analytic;
 
+import uk.ac.standrews.cs.digitising_scotland.util.ArrayIterator;
 import uk.ac.standrews.cs.digitising_scotland.util.ArrayManipulation;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.CompactPartnership;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.CompactPerson;
@@ -63,7 +64,7 @@ public class ChildrenAnalytics {
      */
     public void analyseChildren() {
 
-        Iterator people = population.peopleIterator();
+        Iterator people = new ArrayIterator(population.getPeopleArray());
 
         while(people.hasNext()) {
             CompactPerson p = (CompactPerson)people.next();

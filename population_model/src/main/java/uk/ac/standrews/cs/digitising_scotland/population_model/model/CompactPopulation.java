@@ -27,7 +27,6 @@ import uk.ac.standrews.cs.digitising_scotland.population_model.generation.distri
 import uk.ac.standrews.cs.digitising_scotland.population_model.generation.distributions.UniformSexDistribution;
 import uk.ac.standrews.cs.digitising_scotland.population_model.generation.distributions.WeightedIntegerDistribution;
 import uk.ac.standrews.cs.digitising_scotland.population_model.generation.util.RandomFactory;
-import uk.ac.standrews.cs.digitising_scotland.util.ArrayIterator;
 import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
 import uk.ac.standrews.cs.digitising_scotland.util.ProgressIndicator;
 import uk.ac.standrews.cs.nds.util.QuickSort;
@@ -35,7 +34,6 @@ import uk.ac.standrews.cs.nds.util.QuickSort;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
@@ -46,7 +44,7 @@ import java.util.Random;
  * @author Graham Kirby (graham.kirby@st-andrews.ac.uk)
  * @author Victor Andrei (va9@st-andrews.ac.uk)
  */
-public class CompactPopulation implements IPopulation {
+public class CompactPopulation {
 
     // TODO define a general interface to be implemented by this, the db and a GEDCOM reader.
 
@@ -107,56 +105,7 @@ public class CompactPopulation implements IPopulation {
     private final NormalDistribution marriage_separation_distribution;
     private ProgressIndicator progress_indicator;
 
-    private final CompactPerson[] people;
-
-    @Override
-    public Iterator<IPerson> peopleIterator() {
-        return new ArrayIterator<>((IPerson[])people);
-    }
-
-    @Override
-    public Iterator<IPartnership> partnershipIterator() {
-       return new Iterator<IPartnership>(){
-
-           Iterator people = peopleIterator();
-           CompactPerson current = (CompactPerson)people.next();
-           Iterator currentPartnership = current.getPartnerships().iterator();
-
-           @Override
-           public boolean hasNext() {
-
-               while(people.hasNext()){
-                   if(currentPartnership.hasNext()){
-                       return true;
-                   }
-
-                   current = (CompactPerson)people.next();
-                   currentPartnership = current.getPartnerships().iterator();
-               }
-
-               return false;
-           }
-
-           @Override
-           public IPartnership next() {
-               while(people.hasNext()){
-                   if(currentPartnership.hasNext()){
-                       return (IPartnership)currentPartnership.next();
-                   }
-
-                   current = (CompactPerson)people.next();
-                   currentPartnership = current.getPartnerships().iterator();
-               }
-               return null;
-           }
-
-           @Override
-           public void remove() {
-                //Shouldn't be used.
-           }
-       };
-    }
-
+    private CompactPerson[] people;
 
     public interface Condition {
         int POSITIVE = 1;
@@ -228,7 +177,7 @@ public class CompactPopulation implements IPopulation {
      */
     public int size() {
 
-        return getPeople().length;
+        return getPeopleArray().length;
     }
 
     /**
@@ -240,7 +189,7 @@ public class CompactPopulation implements IPopulation {
 
         int count = 0;
 
-        for (final CompactPerson p : getPeople()) {
+        for (final CompactPerson p : getPeopleArray()) {
             if (p.isMale()) {
                 count++;
             }
@@ -257,7 +206,7 @@ public class CompactPopulation implements IPopulation {
 
         int count = 0;
 
-        for (final CompactPerson p : getPeople()) {
+        for (final CompactPerson p : getPeopleArray()) {
             if (!p.isMale()) {
                 count++;
             }
@@ -305,7 +254,7 @@ public class CompactPopulation implements IPopulation {
 
     public int findPerson(final int start_index, final Condition condition) {
 
-        for (int i = start_index + 1; i < getPeople().length; i++) {
+        for (int i = start_index + 1; i < getPeopleArray().length; i++) {
             if (condition.check(i) == Condition.POSITIVE) {
                 return i;
             }
@@ -405,7 +354,7 @@ public class CompactPopulation implements IPopulation {
 
         for (int i = 0; i < people.length; i++) {
 
-            if (getPeople()[i].getPartnerships() == null) { // Skip if marriages have already been set for this person.
+            if (getPeopleArray()[i].getPartnerships() == null) { // Skip if marriages have already been set for this person.
 
                 createMarriages(i, number_of_marriages_distribution.getSample());
             }
@@ -427,7 +376,7 @@ public class CompactPopulation implements IPopulation {
 
     private void createMarriages(final int index, final int number_of_marriages) {
 
-        final CompactPerson person = getPeople()[index];
+        final CompactPerson person = getPeopleArray()[index];
         int marriage_date = (int) (person.date_of_birth + age_at_first_marriage_distribution.getSample());
 
         int start_index = index + 1;
@@ -699,7 +648,7 @@ public class CompactPopulation implements IPopulation {
 
     private void sortPeopleByAge() {
 
-        final List<CompactPerson> people_list = Arrays.asList(getPeople());
+        final List<CompactPerson> people_list = Arrays.asList(getPeopleArray());
         final QuickSort<CompactPerson> sorter = new QuickSort<>(people_list, new Comparator<CompactPerson>() {
 
             @Override
@@ -711,17 +660,9 @@ public class CompactPopulation implements IPopulation {
         sorter.sort();
     }
 
-    /*@Override
-    public Iterator<CompactPerson> iterator() {
-
-        return new ArrayIterator<>(getPeople());
-    }*/
-
     @SuppressFBWarnings(value = "EI_EXPOSE_REP", justification = "too expensive...")
-    public CompactPerson[] getPeople() {
+    public CompactPerson[] getPeopleArray() {
 
         return people;
     }
-
-
 }

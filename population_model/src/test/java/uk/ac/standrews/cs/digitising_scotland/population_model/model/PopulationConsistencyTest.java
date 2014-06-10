@@ -64,7 +64,7 @@ public class PopulationConsistencyTest {
     @Test
     public void populationSize() {
 
-        assertEquals(population_size, population.getPeople().length);
+        assertEquals(population_size, population.getPeopleArray().length);
     }
 
     @Test
@@ -93,7 +93,7 @@ public class PopulationConsistencyTest {
 
     private void assertParentsHaveSensibleAgesAtChildBirth(final CompactPopulation population) {
 
-        for (final CompactPerson p : population.getPeople()) {
+        for (final CompactPerson p : population.getPeopleArray()) {
 
             if (p.getPartnerships() != null) {
                 for (final CompactPartnership partnership : p.getPartnerships()) {
@@ -108,7 +108,7 @@ public class PopulationConsistencyTest {
 
     private void assertNoSiblingsMarried(final CompactPopulation population) {
 
-        for (final CompactPerson p : population.getPeople()) {
+        for (final CompactPerson p : population.getPeopleArray()) {
 
             // Include half-siblings.
             final Set<Integer> siblings = new HashSet<>();
@@ -142,7 +142,7 @@ public class PopulationConsistencyTest {
 
     private void assertNoParentsMarriedToChildren(final CompactPopulation population) {
 
-        for (final CompactPerson p : population.getPeople()) {
+        for (final CompactPerson p : population.getPeopleArray()) {
 
             if (p.getPartnerships() != null) {
                 for (final CompactPartnership partnership : p.getPartnerships()) {
@@ -159,12 +159,12 @@ public class PopulationConsistencyTest {
 
     private void assertNoSameSexMarriages(final CompactPopulation population) {
 
-        for (final CompactPerson p : population.getPeople()) {
+        for (final CompactPerson p : population.getPeopleArray()) {
 
             if (p.getPartnerships() != null) {
                 for (final CompactPartnership partnership : p.getPartnerships()) {
 
-                    CompactPerson[] people = population.getPeople();
+                    CompactPerson[] people = population.getPeopleArray();
                     assertTrue(CompactPerson.oppositeSex(people[partnership.getPartner1()], people[partnership.getPartner2()]));
                 }
             }

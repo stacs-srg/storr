@@ -17,6 +17,7 @@
 package uk.ac.standrews.cs.digitising_scotland.population_model.generation.analytic;
 
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPerson;
+import uk.ac.standrews.cs.digitising_scotland.util.ArrayIterator;
 import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.CompactPerson;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.CompactPopulation;
@@ -53,7 +54,7 @@ public class ParentAnalytics {
         final int num_buckets = population_duration / DATE_GRAIN; // number of DATE_GRAIN year blocks of time in duration
         incomers_over_time_date_grain = new int[num_buckets + 1]; // use these to store the incomers over time
 
-        final Iterator<IPerson> people = population.peopleIterator();
+        final Iterator<IPerson> people = new ArrayIterator(population.getPeopleArray());
 
         while (people.hasNext()) {
 

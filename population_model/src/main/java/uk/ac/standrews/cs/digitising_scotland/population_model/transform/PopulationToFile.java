@@ -26,6 +26,7 @@ import uk.ac.standrews.cs.digitising_scotland.population_model.model.CompactPers
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.CompactPopulation;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.Person;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.PersonFactory;
+import uk.ac.standrews.cs.digitising_scotland.util.ArrayIterator;
 import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
 
 import java.io.IOException;
@@ -34,7 +35,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.NumberFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Random;
+import java.util.Set;
 
 /**
  * Writes a representation of the population to file in some external format - specialised by subclasses.
@@ -107,7 +113,7 @@ public abstract class PopulationToFile {
     protected void outputIndividuals(final PrintWriter writer) {
 
         final int index = 0;
-        Iterator people = population.peopleIterator();
+        Iterator people = new ArrayIterator(population.getPeopleArray());
 
         while(people.hasNext()) {
             CompactPerson p = (CompactPerson)people.next();
