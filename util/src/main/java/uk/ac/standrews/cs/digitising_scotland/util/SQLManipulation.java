@@ -5,13 +5,23 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 /**
- * Created by graham on 31/05/2014.
+ * Utility methods for SQL manipulation.
+ *
+ * @author Graham Kirby (graham.kirby@st-andrews.ac.uk)
  */
 public class SQLManipulation {
 
     public static final Object NULL_DATE = new Object();
 
-    public static void configurePreparedStatement(PreparedStatement statement, Object... parameters) throws SQLException {
+    /**
+     * Configures the parameters for a given prepared statement.
+     * The constant value {@link #NULL_DATE} should be used to set a date parameter to null.
+     *
+     * @param statement the statement to be configured
+     * @param parameters a sequence of integer, string or date values
+     * @throws SQLException if a value does not have one of the allowed types
+     */
+    public static void configurePreparedStatement(final PreparedStatement statement, final Object... parameters) throws SQLException {
 
         int pos = 1;
 

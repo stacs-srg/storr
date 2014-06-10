@@ -1,26 +1,19 @@
-/***************************************************************************
- *                                                                         *
- * digitising_scotland Library                                                             *
- * Copyright (C) 2005-2010 Distributed Systems Architecture Research Group *
- * University of St Andrews, Scotland                                      *
- * http://www-systems.cs.st-andrews.ac.uk/                                 *
- *                                                                         *
- * This file is part of digitising_scotland, a package of utility classes.                 *
- *                                                                         *
- * digitising_scotland is free software: you can redistribute it and/or modify             *
- * it under the terms of the GNU General Public License as published by    *
- * the Free Software Foundation, either version 3 of the License, or       *
- * (at your option) any later version.                                     *
- *                                                                         *
- * digitising_scotland is distributed in the hope that it will be useful,                  *
- * but WITHOUT ANY WARRANTY; without even the implied warranty of          *
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           *
- * GNU General Public License for more details.                            *
- *                                                                         *
- * You should have received a copy of the GNU General Public License       *
- * along with digitising_scotland.  If not, see <http://www.gnu.org/licenses/>.            *
- *                                                                         *
- ***************************************************************************/
+/**
+ * Copyright 2014 Digitising Scotland project:
+ * <http://digitisingscotland.cs.st-andrews.ac.uk/>
+ *
+ * This file is part of the module util.
+ *
+ * util is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * util is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with util. If not, see
+ * <http://www.gnu.org/licenses/>.
+ */
 package uk.ac.standrews.cs.digitising_scotland.util;
 
 import java.text.DateFormat;

@@ -17,7 +17,6 @@ package uk.ac.standrews.cs.digitising_scotland.util;
  *
  * See LICENSE.txt for details.
  */
-
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
