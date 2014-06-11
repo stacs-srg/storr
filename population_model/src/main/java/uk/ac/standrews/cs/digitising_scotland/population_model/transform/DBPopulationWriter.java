@@ -69,6 +69,8 @@ public class DBPopulationWriter implements IPopulationWriter {
 
     public void recordIndividual(final IPerson person) throws SQLException {
 
+        System.out.println("recording person: " + person.getId());
+
         SQLManipulation.configurePreparedStatement(
                 record_person_statement,
                 person.getId(),
@@ -99,6 +101,8 @@ public class DBPopulationWriter implements IPopulationWriter {
     }
 
     private void recordPartnership(final int partnership_id, final Date marriage_date) throws SQLException {
+
+        System.out.println("recording partnership: " + partnership_id);
 
         SQLManipulation.configurePreparedStatement(record_partnership_statement, partnership_id, marriage_date);
         record_partnership_statement.executeUpdate();

@@ -220,7 +220,7 @@ public class PopulationToDB implements AutoCloseable {
 
     protected void outputPartnership(final CompactPartnership partnership) throws SQLException {
 
-        partnership.setMarked();
+        partnership.setMarked(true);
 
         int partnership_id = partnership.getId();
         Date marriage_date = DateManipulation.daysToSQLDate(partnership.getMarriageDate());

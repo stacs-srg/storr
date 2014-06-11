@@ -263,10 +263,12 @@ public class CompactPopulation {
 
     public CompactPartnership findPartnership(final int id) {
 
-        int population_size = people.length;
         for (CompactPerson person : people) {
-            for (CompactPartnership partnership : person.getPartnerships()) {
-                if (partnership.getId() == id) return partnership;
+            List<CompactPartnership> partnerships = person.getPartnerships();
+            if (partnerships != null) {
+                for (CompactPartnership partnership : partnerships) {
+                    if (partnership.getId() == id) return partnership;
+                }
             }
         }
         return null;

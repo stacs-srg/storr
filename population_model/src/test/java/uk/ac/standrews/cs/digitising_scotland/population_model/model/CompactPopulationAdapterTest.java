@@ -183,11 +183,6 @@ public class CompactPopulationAdapterTest {
         assertNull(population.findPartnership(-1));
     }
 
-    private void assertEqualIds(IPartnership partnership, CompactPartnership partnership1) {
-
-        assertEquals(partnership.getId(), partnership1.getId());
-    }
-
     @Test(expected = NoSuchElementException.class)
     public void tooManyPersonIterations() {
 
@@ -242,6 +237,7 @@ public class CompactPopulationAdapterTest {
 
         partnerships2.add(partnership2);
         partnerships2.add(partnership3);
+        partnerships2.add(partnership1); // Two people may share a partnership.
         population[2].setPartnerships(partnerships2);
 
         return population;
@@ -259,10 +255,10 @@ public class CompactPopulationAdapterTest {
 
         Iterator<IPerson> person_iterator = population.getPeople().iterator();
 
-        for (int i = 0; i < people.length; i++) {
+        for (CompactPerson person : people) {
 
             assertTrue(person_iterator.hasNext());
-            assertEquals(person_iterator.next(), people[i]);
+            assertEquals(person_iterator.next(), person);
         }
 
         assertFalse(person_iterator.hasNext());
@@ -283,15 +279,25 @@ public class CompactPopulationAdapterTest {
 
     private void checkPopulationIteration(IPopulation population, Object... objects) {
 
-        Iterator<Object> partnership_iterator = population.getPopulation().iterator();
+        Iterator<Object> population_iterator = population.getPopulation().iterator();
 
         for (int i = 0; i < objects.length; i++) {
 
-            assertTrue(partnership_iterator.hasNext());
-            assertEquals(partnership_iterator.next(), objects[i]);
+            assertTrue(population_iterator.hasNext());
+            assertEqualPopulationMembers(population_iterator.next(), objects[i]);
         }
 
-        assertFalse(partnership_iterator.hasNext());
+        assertFalse(population_iterator.hasNext());
+    }
+
+    private void assertEqualPopulationMembers(Object member1, Object member2) {
+
+        if (member1 instanceof IPerson) {
+            assertEquals(member1, member2);
+        }
+        else {
+            assertEqualIds((IPartnership)member1, (CompactPartnership)member2);
+        }
     }
 
     private void doTooManyIterations(Iterator<?> iterator, int number_available) {
@@ -299,5 +305,10 @@ public class CompactPopulationAdapterTest {
         for (int i = 0; i < number_available + 1; i++) {
             iterator.next();
         }
+    }
+
+    private void assertEqualIds(IPartnership partnership1, CompactPartnership partnership2) {
+
+        assertEquals(partnership1.getId(), partnership2.getId());
     }
 }

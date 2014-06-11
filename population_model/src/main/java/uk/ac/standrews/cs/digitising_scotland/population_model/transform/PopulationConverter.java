@@ -59,11 +59,12 @@ public class PopulationConverter {
             else {
                 if (member instanceof IPartnership) {
 
+                    System.out.println("recording partnerhsip: " + ((IPartnership) member).getId());
                     writer.recordPartnership((IPartnership) member);
                     progressStep();
                 }
                 else {
-                    throw new RuntimeException("unexpected population member type");
+                    throw new RuntimeException("unexpected population member type: " + member.getClass().getSimpleName());
                 }
             }
         }

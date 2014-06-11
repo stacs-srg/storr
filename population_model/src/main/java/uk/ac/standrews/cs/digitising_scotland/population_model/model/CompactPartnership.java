@@ -250,8 +250,8 @@ public class CompactPartnership implements Comparable<CompactPartnership> {
         return marked;
     }
 
-    public void setMarked() {
-        this.marked = true;
+    public void setMarked(boolean marked) {
+        this.marked = marked;
     }
 
     @Override

@@ -27,6 +27,7 @@ import java.util.NoSuchElementException;
 
 /**
  * Created by graham on 10/06/2014.
+ * Not thread-safe.
  */
 public class CompactPopulationAdapter implements IPopulation {
 
@@ -60,6 +61,7 @@ public class CompactPopulationAdapter implements IPopulation {
             @Override
             public Iterator<IPartnership> iterator() {
 
+                unmarkAllPartnerships();
                 return new PartnershipIterator();
             }
 
@@ -67,7 +69,7 @@ public class CompactPopulationAdapter implements IPopulation {
 
                 int person_index = 0;
                 Iterator<CompactPartnership> partnerships = null;
-                IPartnership next_partnership = null;
+                CompactPartnership next_partnership = null;
 
                 PartnershipIterator() {
                     advanceToNext();
@@ -83,7 +85,7 @@ public class CompactPopulationAdapter implements IPopulation {
                 public IPartnership next() {
 
                     if (!hasNext()) throw new NoSuchElementException();
-                    IPartnership result = next_partnership;
+                    IPartnership result = new PartnershipWithIds(next_partnership);
                     advanceToNext();
                     return result;
                 }
@@ -100,15 +102,34 @@ public class CompactPopulationAdapter implements IPopulation {
                         partnerships = getPartnerships(0);
                     }
 
-                    while (person_index < people.length && !partnerships.hasNext()) {
-                        person_index++;
-                        partnerships = getPartnerships(person_index);
-                    }
+                    do {
+                        while (person_index < people.length && !partnerships.hasNext()) {
+                            person_index++;
+                            partnerships = getPartnerships(person_index);
+                        }
 
-                    next_partnership = partnerships.hasNext() ? new PartnershipWithIds(partnerships.next()) : null;
+                        next_partnership = partnerships.hasNext() ? partnerships.next() : null;
+                    }
+                    while (next_partnership != null && next_partnership.isMarked());
+
+                    if (next_partnership != null) {
+                        next_partnership.setMarked(true);
+                    }
                 }
             }
         };
+    }
+
+    private void unmarkAllPartnerships() {
+
+        for (CompactPerson person : people) {
+            List<CompactPartnership> partnerships = person.getPartnerships();
+            if (partnerships != null) {
+                for (CompactPartnership partnership : partnerships) {
+                    partnership.setMarked(false);
+                }
+            }
+        }
     }
 
     @Override
@@ -119,6 +140,7 @@ public class CompactPopulationAdapter implements IPopulation {
             @Override
             public Iterator<Object> iterator() {
 
+                unmarkAllPartnerships();
                 return new PopulationIterator();
             }
 
@@ -144,6 +166,9 @@ public class CompactPopulationAdapter implements IPopulation {
 
                     if (!hasNext()) throw new NoSuchElementException();
                     Object result = next_object;
+                    if (result instanceof CompactPartnership) {
+                        result = convertToPartnershipWithIds((CompactPartnership) result);
+                    }
                     advanceToNext();
                     return result;
                 }
@@ -156,10 +181,18 @@ public class CompactPopulationAdapter implements IPopulation {
 
                 private void advanceToNext() {
 
-                    if (return_person_next_time || !partnerships.hasNext()) {
-                        readNextPerson();
-                    } else {
-                        readNextPartnership();
+                    do {
+                        if (return_person_next_time || !partnerships.hasNext()) {
+                            readNextPerson();
+
+                        } else {
+                            readNextPartnership();
+                        }
+                    }
+                    while (next_object instanceof CompactPartnership && ((CompactPartnership) next_object).isMarked());
+
+                    if (next_object instanceof CompactPartnership) {
+                        ((CompactPartnership) next_object).setMarked(true);
                     }
                 }
 
@@ -192,8 +225,8 @@ public class CompactPopulationAdapter implements IPopulation {
 
     @Override
     public IPartnership findPartnership(int id) {
-        CompactPartnership partnership = population.findPartnership(id);
-        return partnership != null ? new PartnershipWithIds(partnership) : null;
+
+        return convertToPartnershipWithIds(population.findPartnership(id));
     }
 
     @Override
@@ -264,5 +297,10 @@ public class CompactPopulationAdapter implements IPopulation {
         public int compareTo(IPartnership other) {
             return id - other.getId();
         }
+    }
+
+    private IPartnership convertToPartnershipWithIds(CompactPartnership partnership) {
+
+        return partnership != null ? new PartnershipWithIds(partnership) : null;
     }
 }

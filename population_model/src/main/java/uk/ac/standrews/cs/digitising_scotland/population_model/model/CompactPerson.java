@@ -19,7 +19,6 @@ package uk.ac.standrews.cs.digitising_scotland.population_model.model;
 import uk.ac.standrews.cs.digitising_scotland.util.BitManipulation;
 import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -193,11 +192,8 @@ public class CompactPerson implements IPerson {
      *
      * @return the partnerships
      */
-    public synchronized List<CompactPartnership> getPartnerships() {
+    public List<CompactPartnership> getPartnerships() {
 
-        if (partnership_list == null) {
-            partnership_list = new ArrayList<>();
-        }
         return partnership_list;
     }
 
