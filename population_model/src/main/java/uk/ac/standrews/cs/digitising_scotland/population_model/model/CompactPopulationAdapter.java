@@ -17,8 +17,10 @@
 package uk.ac.standrews.cs.digitising_scotland.population_model.model;
 
 import uk.ac.standrews.cs.digitising_scotland.util.ArrayIterator;
+import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -103,7 +105,7 @@ public class CompactPopulationAdapter implements IPopulation {
                         partnerships = getPartnerships(person_index);
                     }
 
-                    next_partnership = partnerships.hasNext() ? partnerships.next() : null;
+                    next_partnership = partnerships.hasNext() ? new PartnershipWithIds(partnerships.next()) : null;
                 }
             }
         };
@@ -190,7 +192,8 @@ public class CompactPopulationAdapter implements IPopulation {
 
     @Override
     public IPartnership findPartnership(int id) {
-        return population.findPartnership(id);
+        CompactPartnership partnership = population.findPartnership(id);
+        return partnership != null ? new PartnershipWithIds(partnership) : null;
     }
 
     @Override
@@ -202,5 +205,64 @@ public class CompactPopulationAdapter implements IPopulation {
 
         List<CompactPartnership> partnerships = person_index < people.length ? people[person_index].getPartnerships() : null;
         return (partnerships == null ? new ArrayList<CompactPartnership>() : partnerships).iterator();
+    }
+
+    private class PartnershipWithIds implements IPartnership {
+
+        private int id;
+        private int partner1_id;
+        private int partner2_id;
+        private Date marriage_date;
+        private List<Integer> children;
+
+        private int populationIndexToId(int index) {
+            return population.getPerson(index).getId();
+        }
+
+        PartnershipWithIds(CompactPartnership compact_partnership) {
+
+            id = compact_partnership.getId();
+            partner1_id = populationIndexToId(compact_partnership.getPartner1());
+            partner2_id = populationIndexToId(compact_partnership.getPartner2());
+            marriage_date = DateManipulation.daysToDate(compact_partnership.getMarriageDate());
+
+            children = new ArrayList<>();
+            List<Integer> original_children = compact_partnership.getChildren();
+            if (original_children != null) {
+                for (Integer child_index : original_children) {
+                    children.add(populationIndexToId(child_index));
+                }
+            }
+        }
+
+        @Override
+        public int getId() {
+            return id;
+        }
+
+        @Override
+        public int getPartner1Id() {
+            return partner1_id;
+        }
+
+        @Override
+        public int getPartner2Id() {
+            return partner2_id;
+        }
+
+        @Override
+        public Date getMarriageDate() {
+            return marriage_date;
+        }
+
+        @Override
+        public List<Integer> getChildren() {
+            return children;
+        }
+
+        @Override
+        public int compareTo(IPartnership other) {
+            return id - other.getId();
+        }
     }
 }

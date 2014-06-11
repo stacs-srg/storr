@@ -77,7 +77,7 @@ public class PopulationToGEDCOM extends PopulationToFile {
 
         writer.println("0 @" + padId(person.getId()) + "@ INDI");
         writer.println("1 NAME " + person.getFirstName() + " /" + person.getSurname() + "/");
-        writer.println("1 SEX " + person.getGender());
+        writer.println("1 SEX " + person.getSex());
         writer.println("1 BIRT");
         writer.println("2 DATE " + DateManipulation.daysToString(compact_person.getDateOfBirth()));
 

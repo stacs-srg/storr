@@ -116,7 +116,7 @@ public class GEDCOMToDBWriter implements AutoCloseable {
             int pos = 1;
 
             statement.setInt(pos++, fp.getId());
-            statement.setString(pos++, String.valueOf(fp.getGender()));
+            statement.setString(pos++, String.valueOf(fp.getSex()));
             statement.setString(pos++, fp.getFirstName());
             statement.setString(pos++, fp.getSurname());
             statement.setDate(pos++, fp.getBirthDate());

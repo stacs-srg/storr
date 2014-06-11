@@ -158,6 +158,11 @@ public class DateManipulation {
         return new java.sql.Date(CALENDAR.getTimeInMillis());
     }
 
+    public static synchronized java.sql.Date dateToSQLDate(final Date date) {
+
+        return daysToSQLDate(dateToDays(date));
+    }
+
     /**
      * Returns the day of the month of the date represented by the given number of days from 1st January of the {@link #START_YEAR}.
      *

@@ -27,11 +27,11 @@ import java.util.List;
  * A compact representation of a person, designed for minimal space overhead.
  * Encodes multiple attributes into a field wherever possible.
  * Dates are encoded as integers.
- * 
+ *
  * @author Alan Dearle (alan.dearle@st-andrews.ac.uk)
  * @author Graham Kirby (graham.kirby@st-andrews.ac.uk)
  */
-public class CompactPerson implements IPerson{
+public class CompactPerson implements IPerson {
 
     private int id;
 
@@ -48,8 +48,9 @@ public class CompactPerson implements IPerson{
 
     /**
      * Creates a person.
+     *
      * @param date_of_birth the date of birth represented in days elapsed from the start of the simulation
-     * @param male true if the person is male
+     * @param male          true if the person is male
      */
     public CompactPerson(final int date_of_birth, final boolean male) {
 
@@ -60,6 +61,7 @@ public class CompactPerson implements IPerson{
 
     /**
      * Gets an id for the person.
+     *
      * @return the id of this person
      */
     public int getId() {
@@ -72,13 +74,14 @@ public class CompactPerson implements IPerson{
         return getPartnerships().get(getPartnerships().size() - 1);
     }
 
-    public String getSex() {
+    public char getSex() {
 
-        return isMale() ? "M" : "F";
+        return isMale() ? IPerson.MALE : IPerson.FEMALE;
     }
 
     /**
      * Tests whether the given people are of opposite sex.
+     *
      * @param person1 the first person
      * @param person2 the second person
      * @return true if the people are of opposite sex
@@ -90,6 +93,7 @@ public class CompactPerson implements IPerson{
 
     /**
      * Tests whether this person is male.
+     *
      * @return true if this person is male
      */
     public boolean isMale() {
@@ -99,6 +103,7 @@ public class CompactPerson implements IPerson{
 
     /**
      * Sets the sex of this person.
+     *
      * @param male true if this person is male
      */
     public void setMale(final boolean male) {
@@ -113,7 +118,7 @@ public class CompactPerson implements IPerson{
 
     /**
      * Records if a record has been visited.
-     * 
+     *
      * @param marked true if a record has been visited
      */
     public void setMarked(final boolean marked) {
@@ -149,6 +154,7 @@ public class CompactPerson implements IPerson{
 
     /**
      * Get the date of birth of this person.
+     *
      * @return the date of birth.
      */
     public int getDateOfBirth() {
@@ -184,6 +190,7 @@ public class CompactPerson implements IPerson{
 
     /**
      * Get the list of partnerships in which this person has been a member.
+     *
      * @return the partnerships
      */
     public synchronized List<CompactPartnership> getPartnerships() {
@@ -196,6 +203,7 @@ public class CompactPerson implements IPerson{
 
     /**
      * Setter for partnership_list.
+     *
      * @param partnership_list list to set
      */
     public void setPartnerships(final List<CompactPartnership> partnership_list) {
@@ -211,11 +219,6 @@ public class CompactPerson implements IPerson{
     @Override
     public String getSurname() {
         return "N/A";
-    }
-
-    @Override
-    public char getGender() {
-        return getSex().charAt(0);
     }
 
     @Override

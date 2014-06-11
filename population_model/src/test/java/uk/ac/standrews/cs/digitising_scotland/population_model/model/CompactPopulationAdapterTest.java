@@ -147,7 +147,7 @@ public class CompactPopulationAdapterTest {
 
         IPopulation population = new CompactPopulationAdapter(new CompactPopulation(people, 0, 0));
 
-        assertEquals(population.findPartnership(partnership.getId()), partnership);
+        assertEqualIds(population.findPartnership(partnership.getId()), partnership);
     }
 
     @Test
@@ -176,11 +176,16 @@ public class CompactPopulationAdapterTest {
 
         IPopulation population = new CompactPopulationAdapter(new CompactPopulation(people, 0, 0));
 
-        assertEquals(population.findPartnership(partnership1.getId()), partnership1);
-        assertEquals(population.findPartnership(partnership2.getId()), partnership2);
-        assertEquals(population.findPartnership(partnership3.getId()), partnership3);
+        assertEqualIds(population.findPartnership(partnership1.getId()), partnership1);
+        assertEqualIds(population.findPartnership(partnership2.getId()), partnership2);
+        assertEqualIds(population.findPartnership(partnership3.getId()), partnership3);
 
         assertNull(population.findPartnership(-1));
+    }
+
+    private void assertEqualIds(IPartnership partnership, CompactPartnership partnership1) {
+
+        assertEquals(partnership.getId(), partnership1.getId());
     }
 
     @Test(expected = NoSuchElementException.class)
@@ -270,7 +275,7 @@ public class CompactPopulationAdapterTest {
         for (int i = 0; i < partnerships.length; i++) {
 
             assertTrue(partnership_iterator.hasNext());
-            assertEquals(partnership_iterator.next(), partnerships[i]);
+            assertEqualIds(partnership_iterator.next(), partnerships[i]);
         }
 
         assertFalse(partnership_iterator.hasNext());

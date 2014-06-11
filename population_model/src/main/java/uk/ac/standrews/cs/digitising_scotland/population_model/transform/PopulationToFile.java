@@ -24,6 +24,7 @@ import uk.ac.standrews.cs.digitising_scotland.population_model.generation.util.R
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.CompactPartnership;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.CompactPerson;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.CompactPopulation;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPerson;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.Person;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.PersonFactory;
 import uk.ac.standrews.cs.digitising_scotland.util.ArrayIterator;
@@ -134,7 +135,7 @@ public abstract class PopulationToFile {
                     final Person fp = person_factory.createPerson(next);
                     next.setMarked(true); // remember that we have processed this person.
                     fp.setSurname(currSurname);
-                    fp.setFirstName(fp.getGender() == 'F' ? female_first_name_distribution.getSample() : male_first_name_distribution.getSample());
+                    fp.setFirstName(fp.getSex() == IPerson.FEMALE ? female_first_name_distribution.getSample() : male_first_name_distribution.getSample());
 
                     outputIndividual(writer, index, next, fp);
 

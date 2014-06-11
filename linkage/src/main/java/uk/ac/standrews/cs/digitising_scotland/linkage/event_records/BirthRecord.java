@@ -79,7 +79,7 @@ public class BirthRecord extends IndividualRecord {
 
         // Attributes associated with individual
         setUid(String.valueOf(person.getId()));
-        setSex(String.valueOf(person.getGender()));
+        setSex(String.valueOf(person.getSex()));
         setForename(person.getFirstName());
         setSurname(person.getSurname());
 
@@ -109,7 +109,7 @@ public class BirthRecord extends IndividualRecord {
             // Attributes associated with individual's parents
             for (final Person parent : family.getPartners()) {
 
-                if (parent.getGender() == IPerson.MALE) {
+                if (parent.getSex() == IPerson.MALE) {
 
                     setFathersForename(parent.getFirstName());
                     setFathersSurname(getRecordedParentsSurname(parent.getSurname(), person.getSurname()));

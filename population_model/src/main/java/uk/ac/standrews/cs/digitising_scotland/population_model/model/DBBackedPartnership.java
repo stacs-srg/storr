@@ -51,7 +51,7 @@ public class DBBackedPartnership {
                 final DBBackedPerson partner = DBBackedPersonFactory.createDBBackedPerson(connection, partner_id);
 
                 partners.add(partner);
-                if (partner.getGender() == IPerson.MALE) {
+                if (partner.getSex() == IPerson.MALE) {
                     groom = partner;
                 } else {
                     bride = partner;

@@ -16,6 +16,7 @@
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.model;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -25,19 +26,11 @@ public interface IPartnership extends Comparable<IPartnership> {
 
     int getId();
 
-    int getPartner(int p);
+    int getPartner1Id();
 
-    int getPartner1();
+    int getPartner2Id();
 
-    int getPartner2();
-
-    boolean includesChild(int p);
-
-    int getMarriageDate();
+    Date getMarriageDate();
 
     List<Integer> getChildren();
-
-    boolean isMarked();
-
-    void setMarked();
 }

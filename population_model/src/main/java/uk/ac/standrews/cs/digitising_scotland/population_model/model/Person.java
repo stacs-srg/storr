@@ -28,7 +28,7 @@ import java.sql.Date;
 public class Person implements IPerson {
 
     private int id;
-    private char gender;
+    private char sex;
     private String first_name;
     protected String surname;
     private Date birth_date;
@@ -39,17 +39,16 @@ public class Person implements IPerson {
     private String maiden_name;
 
     public Person() {
-
     }
 
-    public Person(final int id, final char gender, final Date birth_date, final Date death_date, final String occupation, final String cause_of_death, final String address) {
+    public Person(final int id, final char sex, final Date birth_date, final Date death_date, final String occupation, final String cause_of_death, final String address) {
 
-        this(id, null, null, gender, birth_date, death_date, occupation, cause_of_death, address);
+        this(id, null, null, sex, birth_date, death_date, occupation, cause_of_death, address);
     }
 
-    public Person(final int id, final String first_name, final String surname, final char gender, final Date birth_date, final Date death_date, final String occupation, final String cause_of_death, final String address) {
+    public Person(final int id, final String first_name, final String surname, final char sex, final Date birth_date, final Date death_date, final String occupation, final String cause_of_death, final String address) {
 
-        this.gender = gender;
+        this.sex = sex;
         this.first_name = first_name;
         this.surname = surname;
         this.id = id;
@@ -60,17 +59,16 @@ public class Person implements IPerson {
         this.address = address;
     }
 
-    public char getGender() {
-
-        return gender;
+    public char getSex() {
+        return sex;
     }
 
-    public void setGender(final char gender) {
+    public void setGender(final char sex) {
 
-        if (!(gender == IPerson.FEMALE || gender == IPerson.MALE)) {
+        if (!(sex == IPerson.FEMALE || sex == IPerson.MALE)) {
             throw new RuntimeException("illegal gender char");
         }
-        this.gender = gender;
+        this.sex = sex;
     }
 
     public String getFirstName() {

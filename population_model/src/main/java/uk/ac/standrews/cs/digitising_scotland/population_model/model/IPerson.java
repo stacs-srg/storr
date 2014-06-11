@@ -34,11 +34,11 @@ public interface IPerson {
 
     String getSurname();
 
-    char getGender();
+    char getSex();
 
     Date getBirthDate();
 
-    java.util.Date getDeathDate();
+    Date getDeathDate();
 
     String getOccupation();
 
