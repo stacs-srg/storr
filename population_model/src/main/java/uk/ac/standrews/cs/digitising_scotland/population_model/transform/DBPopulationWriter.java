@@ -72,7 +72,7 @@ public class DBPopulationWriter implements IPopulationWriter {
         SQLManipulation.configurePreparedStatement(
                 record_person_statement,
                 person.getId(),
-                person.getSex(),
+                String.valueOf(person.getSex()),
                 person.getFirstName(),
                 person.getSurname(),
                 DateManipulation.dateToSQLDate(person.getBirthDate()),
