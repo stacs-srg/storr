@@ -21,6 +21,7 @@ import uk.ac.standrews.cs.digitising_scotland.util.ArrayIterator;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 /**
  * Created by graham on 10/06/2014.
@@ -52,10 +53,17 @@ public class CompactPopulationAdapter implements IPopulation {
 
         return new Iterable<IPartnership>() {
 
+            @Override
+            public Iterator<IPartnership> iterator() {
+
+                return new PartnershipIterator();
+            }
+
             class PartnershipIterator implements Iterator<IPartnership> {
 
                 int person_index = 0;
-                Iterator<CompactPartnership> partnerships = getPartnerships();
+                Iterator<CompactPartnership> partnerships = null;
+                IPartnership next_partnership = null;
 
                 PartnershipIterator() {
                     advanceToNext();
@@ -64,13 +72,14 @@ public class CompactPopulationAdapter implements IPopulation {
                 @Override
                 public boolean hasNext() {
 
-                    return person_index < people.length && partnerships.hasNext();
+                    return next_partnership != null;
                 }
 
                 @Override
                 public IPartnership next() {
 
-                    IPartnership result = partnerships.next();
+                    if (!hasNext()) throw new NoSuchElementException();
+                    IPartnership result = next_partnership;
                     advanceToNext();
                     return result;
                 }
@@ -83,24 +92,98 @@ public class CompactPopulationAdapter implements IPopulation {
 
                 private void advanceToNext() {
 
-                    while (!partnerships.hasNext() && person_index < people.length) {
+                    if (partnerships == null) {
+                        partnerships = getPartnerships(0);
+                    }
+
+                    while (person_index < people.length && !partnerships.hasNext()) {
                         person_index++;
-                        partnerships = getPartnerships();
+                        partnerships = getPartnerships(person_index);
+                    }
+
+                    next_partnership = partnerships.hasNext() ? partnerships.next() : null;
+                }
+            }
+        };
+    }
+
+    @Override
+    public Iterable<Object> getPopulation() {
+
+        return new Iterable<Object>() {
+
+            @Override
+            public Iterator<Object> iterator() {
+
+                return new PopulationIterator();
+            }
+
+            class PopulationIterator implements Iterator<Object> {
+
+                int person_index = -1;
+                Iterator<CompactPartnership> partnerships = null;
+                boolean return_person_next_time = true;
+                Object next_object = null;
+
+                PopulationIterator() {
+                    advanceToNext();
+                }
+
+                @Override
+                public boolean hasNext() {
+
+                    return next_object != null;
+                }
+
+                @Override
+                public Object next() {
+
+                    if (!hasNext()) throw new NoSuchElementException();
+                    Object result = next_object;
+                    advanceToNext();
+                    return result;
+                }
+
+                @Override
+                public void remove() {
+
+                    throw new UnsupportedOperationException("remove");
+                }
+
+                private void advanceToNext() {
+
+                    if (return_person_next_time || !partnerships.hasNext()) {
+                        readNextPerson();
+                    } else {
+                        readNextPartnership();
                     }
                 }
 
-                private Iterator<CompactPartnership> getPartnerships() {
+                private void readNextPerson() {
 
-                    List<CompactPartnership> partnerships = person_index < people.length ? people[person_index].getPartnerships() : null;
-                    return (partnerships == null ? new ArrayList<CompactPartnership>() : partnerships).iterator();
+                    person_index++;
+
+                    if (person_index < people.length) {
+
+                        next_object = people[person_index];
+                        partnerships = getPartnerships(person_index);
+                        return_person_next_time = !partnerships.hasNext();
+
+                    } else {
+                        next_object = null;
+                    }
+                }
+
+                private void readNextPartnership() {
+                    next_object = partnerships.next();
                 }
             }
-
-            @Override
-            public Iterator<IPartnership> iterator() {
-
-                return new PartnershipIterator();
-            }
         };
+    }
+
+    private Iterator<CompactPartnership> getPartnerships(int person_index) {
+
+        List<CompactPartnership> partnerships = person_index < people.length ? people[person_index].getPartnerships() : null;
+        return (partnerships == null ? new ArrayList<CompactPartnership>() : partnerships).iterator();
     }
 }

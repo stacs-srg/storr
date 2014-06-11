@@ -61,6 +61,16 @@ public class CompactPopulationAdapterTest {
         assertFalse(population_interface.getPartnerships().iterator().hasNext());
     }
 
+    @Test
+    public void testEmptyPopulation1X() {
+
+        CompactPerson[] population = makePopulation(0);
+
+        IPopulation population_interface = new CompactPopulationAdapter(population);
+
+        assertFalse(population_interface.getPopulation().iterator().hasNext());
+    }
+
     @Test(expected = NoSuchElementException.class)
     public void testEmptyPopulation2() {
 
@@ -71,6 +81,15 @@ public class CompactPopulationAdapterTest {
         population_interface.getPeople().iterator().next();
     }
 
+    @Test(expected = NoSuchElementException.class)
+    public void testEmptyPopulation2X() {
+
+        CompactPerson[] population = makePopulation(0);
+
+        IPopulation population_interface = new CompactPopulationAdapter(population);
+
+        population_interface.getPopulation().iterator().next();
+    }
 
     @Test(expected = NoSuchElementException.class)
     public void testEmptyPopulation3() {
@@ -94,6 +113,17 @@ public class CompactPopulationAdapterTest {
     }
 
     @Test
+    public void testPopulation1X() {
+
+        CompactPerson[] population = makePopulation(1);
+
+        IPopulation population_interface = new CompactPopulationAdapter(population);
+
+        assertTrue(population_interface.getPopulation().iterator().hasNext());
+        assertEquals(population_interface.getPopulation().iterator().next(), population[0]);
+    }
+
+    @Test
     public void testPopulation2() {
 
         CompactPerson[] population = makePopulation(3);
@@ -108,6 +138,21 @@ public class CompactPopulationAdapterTest {
         assertFalse(iterator.hasNext());
 
         assertFalse(population_interface.getPartnerships().iterator().hasNext());
+    }
+
+    @Test
+    public void testPopulation2X() {
+
+        CompactPerson[] population = makePopulation(3);
+
+        IPopulation population_interface = new CompactPopulationAdapter(population);
+
+        Iterator<Object> iterator = population_interface.getPopulation().iterator();
+
+        iterator.next();
+        iterator.next();
+        iterator.next();
+        assertFalse(iterator.hasNext());
     }
 
     @Test
@@ -130,6 +175,31 @@ public class CompactPopulationAdapterTest {
     }
 
     @Test
+    public void testPopulation3X() {
+
+        CompactPerson[] population = makePopulation(3);
+
+        CompactPartnership partnership = new CompactPartnership(0, 0, 0);
+        List<CompactPartnership> partnerships = new ArrayList<>();
+        partnerships.add(partnership);
+        population[1].setPartnerships(partnerships);
+
+        IPopulation population_interface = new CompactPopulationAdapter(population);
+
+        Iterator<Object> iterator = population_interface.getPopulation().iterator();
+
+        assertTrue(iterator.hasNext());
+        assertEquals(iterator.next(), population[0]);
+        assertTrue(iterator.hasNext());
+        assertEquals(iterator.next(), population[1]);
+        assertTrue(iterator.hasNext());
+        assertEquals(iterator.next(), partnership);
+        assertTrue(iterator.hasNext());
+        assertEquals(iterator.next(), population[2]);
+        assertFalse(iterator.hasNext());
+    }
+
+    @Test
     public void testPopulation4() {
 
         CompactPartnership partnership1 = new CompactPartnership(0, 0, 0);
@@ -140,6 +210,34 @@ public class CompactPopulationAdapterTest {
 
         assertTrue(iterator.hasNext());
         assertEquals(iterator.next(), partnership1);
+        assertTrue(iterator.hasNext());
+        assertEquals(iterator.next(), partnership2);
+        assertTrue(iterator.hasNext());
+        assertEquals(iterator.next(), partnership3);
+        assertFalse(iterator.hasNext());
+    }
+
+    @Test
+    public void testPopulation4X() {
+
+        CompactPartnership partnership1 = new CompactPartnership(0, 0, 0);
+        CompactPartnership partnership2 = new CompactPartnership(0, 0, 0);
+        CompactPartnership partnership3 = new CompactPartnership(0, 0, 0);
+
+        CompactPerson[] population = makePopulationWithPartnerships(partnership1, partnership2, partnership3);
+
+        IPopulation population_interface = new CompactPopulationAdapter(population);
+
+        Iterator<Object> iterator = population_interface.getPopulation().iterator();
+
+        assertTrue(iterator.hasNext());
+        assertEquals(iterator.next(), population[0]);
+        assertTrue(iterator.hasNext());
+        assertEquals(iterator.next(), partnership1);
+        assertTrue(iterator.hasNext());
+        assertEquals(iterator.next(), population[1]);
+        assertTrue(iterator.hasNext());
+        assertEquals(iterator.next(), population[2]);
         assertTrue(iterator.hasNext());
         assertEquals(iterator.next(), partnership2);
         assertTrue(iterator.hasNext());
@@ -162,7 +260,38 @@ public class CompactPopulationAdapterTest {
         iterator.next();
     }
 
+    @Test(expected = NoSuchElementException.class)
+    public void testPopulation5X() {
+
+        CompactPartnership partnership1 = new CompactPartnership(0, 0, 0);
+        CompactPartnership partnership2 = new CompactPartnership(0, 0, 0);
+        CompactPartnership partnership3 = new CompactPartnership(0, 0, 0);
+
+        CompactPerson[] population = makePopulationWithPartnerships(partnership1, partnership2, partnership3);
+
+        IPopulation population_interface = new CompactPopulationAdapter(population);
+
+        Iterator<Object> iterator = population_interface.getPopulation().iterator();
+
+        iterator.next();
+        iterator.next();
+        iterator.next();
+        iterator.next();
+        iterator.next();
+        iterator.next();
+        iterator.next();
+    }
+
     private Iterator<IPartnership> makePartnershipIterator(CompactPartnership partnership1, CompactPartnership partnership2, CompactPartnership partnership3) {
+
+        CompactPerson[] population = makePopulationWithPartnerships(partnership1, partnership2, partnership3);
+
+        IPopulation population_interface = new CompactPopulationAdapter(population);
+
+        return population_interface.getPartnerships().iterator();
+    }
+
+    private CompactPerson[] makePopulationWithPartnerships(CompactPartnership partnership1, CompactPartnership partnership2, CompactPartnership partnership3) {
 
         CompactPerson[] population = makePopulation(3);
 
@@ -176,8 +305,6 @@ public class CompactPopulationAdapterTest {
         partnerships2.add(partnership3);
         population[2].setPartnerships(partnerships2);
 
-        IPopulation population_interface = new CompactPopulationAdapter(population);
-
-        return population_interface.getPartnerships().iterator();
+        return population;
     }
 }

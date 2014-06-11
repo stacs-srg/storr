@@ -27,4 +27,5 @@ public interface IPopulation {
 
     Iterable<IPerson> getPeople();
     Iterable<IPartnership> getPartnerships();
+    Iterable<Object> getPopulation();
 }

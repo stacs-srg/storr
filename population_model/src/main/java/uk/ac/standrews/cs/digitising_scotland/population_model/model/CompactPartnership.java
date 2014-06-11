@@ -176,7 +176,7 @@ public class CompactPartnership implements IPartnership {
         addPartnership(partner2, partnership);
     }
 
-    public int compareTo(final CompactPartnership other) {
+    public int compareTo(final IPartnership other) {
 
         // No need to override hashCode() since this does conform to the assumption that (p1.compareTo(p2) == 0) == (p1.equals(p2)) i.e. it only returns zero for equal objects.
 
@@ -187,7 +187,7 @@ public class CompactPartnership implements IPartnership {
     @Override
     public boolean equals(final Object o) {
 
-        return this == o || !(o == null || getClass() != o.getClass()) && compareTo((CompactPartnership) o) == 0;
+        return this == o || !(o == null || !(o instanceof IPartnership)) && compareTo((IPartnership) o) == 0;
     }
 
     @Override
@@ -271,15 +271,9 @@ public class CompactPartnership implements IPartnership {
         }
         builder.append(", p:" + pcount);
         builder.append(", c:");
-        builder.append(getChildren().size());
+        builder.append(children == null ? 0 : children.size());
         builder.append("}");
 
         return builder.toString();
-    }
-
-    //TODO what is this supposed to do?
-    @Override
-    public int compareTo(IPartnership iPartnership) {
-        return 0;
     }
 }
