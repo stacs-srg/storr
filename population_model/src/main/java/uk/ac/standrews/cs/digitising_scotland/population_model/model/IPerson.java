@@ -28,7 +28,7 @@ public interface IPerson {
 
     String MALE_STRING = String.valueOf(MALE);
 
-    int getID();
+    int getId();
 
     String getFirstName();
 
@@ -50,7 +50,7 @@ public interface IPerson {
 
     //What are these supposed to do?
 
-    int getPartnership();
-
-    int getParentsPartnership();
+//    int getPartnership();
+//
+//    int getParentsPartnership();
 }

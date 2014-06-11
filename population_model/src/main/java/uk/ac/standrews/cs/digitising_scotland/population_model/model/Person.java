@@ -25,7 +25,7 @@ import java.sql.Date;
  *
  * @author Alan Dearle (alan.dearle@st-andrews.ac.uk)
  */
-public class Person implements IPerson{
+public class Person implements IPerson {
 
     private int id;
     private char gender;
@@ -143,12 +143,12 @@ public class Person implements IPerson{
         this.address = address;
     }
 
-    public void setID(final int id) {
+    public void setId(final int id) {
 
         this.id = id;
     }
 
-    public int getID() {
+    public int getId() {
 
         return id;
     }
@@ -170,15 +170,15 @@ public class Person implements IPerson{
         return maiden_name;
     }
 
-    @Override
-    public int getPartnership() {
-        return 0;
-    }
-
-    @Override
-    public int getParentsPartnership() {
-        return 0;
-    }
+//    @Override
+//    public int getPartnership() {
+//        return 0;
+//    }
+//
+//    @Override
+//    public int getParentsPartnership() {
+//        return 0;
+//    }
 
     public DBBackedPartnership getParentsFamily() {
         throw new RuntimeException("unimplemented");

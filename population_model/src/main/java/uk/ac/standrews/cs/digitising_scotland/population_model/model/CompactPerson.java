@@ -18,6 +18,8 @@ package uk.ac.standrews.cs.digitising_scotland.population_model.model;
 
 import uk.ac.standrews.cs.digitising_scotland.util.BitManipulation;
 import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
+
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -29,7 +31,7 @@ import java.util.List;
  * @author Alan Dearle (alan.dearle@st-andrews.ac.uk)
  * @author Graham Kirby (graham.kirby@st-andrews.ac.uk)
  */
-public class CompactPerson implements  IPerson{
+public class CompactPerson implements IPerson{
 
     private int id;
 
@@ -44,8 +46,6 @@ public class CompactPerson implements  IPerson{
     private List<CompactPartnership> partnership_list;
     private byte bits = 0; // Used to store various boolean properties.
 
-    // -------------------------------------------------------------------------------------------------------
-
     /**
      * Creates a person.
      * @param date_of_birth the date of birth represented in days elapsed from the start of the simulation
@@ -57,8 +57,6 @@ public class CompactPerson implements  IPerson{
         setMale(male);
         id = IDFactory.getNextID();
     }
-
-    // ------------------------------------------------------------------------------------------------------
 
     /**
      * Gets an id for the person.
@@ -188,8 +186,11 @@ public class CompactPerson implements  IPerson{
      * Get the list of partnerships in which this person has been a member.
      * @return the partnerships
      */
-    public List<CompactPartnership> getPartnerships() {
+    public synchronized List<CompactPartnership> getPartnerships() {
 
+        if (partnership_list == null) {
+            partnership_list = new ArrayList<>();
+        }
         return partnership_list;
     }
 
@@ -200,11 +201,6 @@ public class CompactPerson implements  IPerson{
     public void setPartnerships(final List<CompactPartnership> partnership_list) {
 
         this.partnership_list = partnership_list;
-    }
-
-    @Override
-    public int getID() {
-        return id;
     }
 
     @Override
@@ -225,7 +221,6 @@ public class CompactPerson implements  IPerson{
     @Override
     public Date getBirthDate() {
         return DateManipulation.daysToDate(getDateOfBirth());
-
     }
 
     @Override
@@ -252,14 +247,14 @@ public class CompactPerson implements  IPerson{
     public String getMaidenName() {
         return null;
     }
-
-    @Override
-    public int getPartnership() {
-        return 0;
-    }
-
-    @Override
-    public int getParentsPartnership() {
-        return 0;
-    }
+//
+//    @Override
+//    public int getPartnership() {
+//        return 0;
+//    }
+//
+//    @Override
+//    public int getParentsPartnership() {
+//        return 0;
+//    }
 }

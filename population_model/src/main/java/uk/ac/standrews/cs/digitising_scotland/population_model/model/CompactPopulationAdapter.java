@@ -28,11 +28,13 @@ import java.util.NoSuchElementException;
  */
 public class CompactPopulationAdapter implements IPopulation {
 
+    private final CompactPopulation population;
     private final CompactPerson[] people;
 
-    public CompactPopulationAdapter(CompactPerson[] people) {
+    public CompactPopulationAdapter(CompactPopulation population) {
 
-        this.people = people;
+        this.population = population;
+        people = population.getPeopleArray();
     }
 
     @Override
@@ -179,6 +181,21 @@ public class CompactPopulationAdapter implements IPopulation {
                 }
             }
         };
+    }
+
+    @Override
+    public IPerson findPerson(int id) {
+        return population.findPerson(id);
+    }
+
+    @Override
+    public IPartnership findPartnership(int id) {
+        return population.findPartnership(id);
+    }
+
+    @Override
+    public int size() {
+        return people.length;
     }
 
     private Iterator<CompactPartnership> getPartnerships(int person_index) {

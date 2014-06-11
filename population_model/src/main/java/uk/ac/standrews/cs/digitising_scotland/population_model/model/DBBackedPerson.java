@@ -40,7 +40,7 @@ public class DBBackedPerson extends Person {
     public DBBackedPartnership getParentsFamily() {
 
         try {
-            return DBBackedPartnershipFactory.createDBBackedPartnershipForChild(connection, getID());
+            return DBBackedPartnershipFactory.createDBBackedPartnershipForChild(connection, getId());
         }
         catch (final SQLException e) {
             ErrorHandling.error("Cannot get parents' family");
@@ -54,7 +54,7 @@ public class DBBackedPerson extends Person {
     public DBBackedPartnership getFamily() {
 
         try {
-            return DBBackedPartnershipFactory.createDBBackedPartnershipFromSpouse(connection, getID());
+            return DBBackedPartnershipFactory.createDBBackedPartnershipFromSpouse(connection, getId());
         }
         catch (final SQLException e) {
             ErrorHandling.error("Cannot get family");

@@ -88,7 +88,7 @@ public class PopulationToGraphviz extends PopulationToFile {
 
     private CompactPerson findNextPersonWithParents(final CompactPerson person) {
 
-        int index = population.findPerson(person);
+        int index = population.findPersonIndex(person);
 
         final CompactPopulation.Condition has_parents_condition = new CompactPopulation.Condition() {
 

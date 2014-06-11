@@ -75,7 +75,7 @@ public class PopulationToGEDCOM extends PopulationToFile {
     @Override
     protected void outputIndividual(final PrintWriter writer, final int index, final CompactPerson compact_person, final Person person) {
 
-        writer.println("0 @" + padId(person.getID()) + "@ INDI");
+        writer.println("0 @" + padId(person.getId()) + "@ INDI");
         writer.println("1 NAME " + person.getFirstName() + " /" + person.getSurname() + "/");
         writer.println("1 SEX " + person.getGender());
         writer.println("1 BIRT");

@@ -74,7 +74,7 @@ public class PersonFactory {
         final String id = stripAtSymbols(gedcom_person.xref);
 
         try {
-            person.setID(Integer.parseInt(id));
+            person.setId(Integer.parseInt(id));
         }
         catch (final NumberFormatException e) {
             throw new ParseException(e.getMessage(), 0);

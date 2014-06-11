@@ -78,7 +78,7 @@ public class BirthRecord extends IndividualRecord {
         final DBBackedPartnership family = person.getParentsFamily();
 
         // Attributes associated with individual
-        setUid(String.valueOf(person.getID()));
+        setUid(String.valueOf(person.getId()));
         setSex(String.valueOf(person.getGender()));
         setForename(person.getFirstName());
         setSurname(person.getSurname());

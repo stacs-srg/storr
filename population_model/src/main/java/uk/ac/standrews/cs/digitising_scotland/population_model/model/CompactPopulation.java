@@ -92,21 +92,22 @@ public class CompactPopulation {
 
     private static final double PROBABILITY_OF_BEING_INCOMER = 0.125;
 
-    private final int first_date;
-    private final int last_date;
+    private final int earliest_date;
+    private final int latest_date;
 
-    private final Distribution<Integer> date_of_birth_distribution;
-    private final Distribution<Boolean> sex_distribution;
-    private final Distribution<Integer> age_at_death_distribution;
-    private final Distribution<Boolean> incomers_distribution;
-    private final WeightedIntegerDistribution number_of_children_distribution;
-    private final WeightedIntegerDistribution number_of_marriages_distribution;
-    private final NormalDistribution age_at_first_marriage_distribution;
-    private final NormalDistribution marriage_separation_distribution;
+    private Distribution<Integer> date_of_birth_distribution;
+    private Distribution<Boolean> sex_distribution;
+    private Distribution<Integer> age_at_death_distribution;
+    private Distribution<Boolean> incomers_distribution;
+    private WeightedIntegerDistribution number_of_children_distribution;
+    private WeightedIntegerDistribution number_of_marriages_distribution;
+    private NormalDistribution age_at_first_marriage_distribution;
+    private NormalDistribution marriage_separation_distribution;
     private ProgressIndicator progress_indicator;
 
     private CompactPerson[] people;
 
+    // TODO make into enum
     public interface Condition {
         int POSITIVE = 1;
         int NEGATIVE_STOP = 2;
@@ -124,13 +125,13 @@ public class CompactPopulation {
      */
     public CompactPopulation(final int population_size, final int earliest_date, final int latest_date, final ProgressIndicator progress_indicator) throws NegativeWeightException, NegativeDeviationException {
 
-        this.first_date = earliest_date;
-        this.last_date = latest_date;
+        this.earliest_date = earliest_date;
+        this.latest_date = latest_date;
         this.progress_indicator = progress_indicator;
 
         Random random = RandomFactory.getRandom();
 
-        date_of_birth_distribution = new UniformDistribution(first_date, last_date, random);
+        date_of_birth_distribution = new UniformDistribution(this.earliest_date, this.latest_date, random);
         sex_distribution = new UniformSexDistribution(random);
         age_at_death_distribution = new AgeAtDeathDistribution(random);
         incomers_distribution = new IncomersDistribution(PROBABILITY_OF_BEING_INCOMER, random);
@@ -170,6 +171,13 @@ public class CompactPopulation {
         this(population_size, null);
     }
 
+    public CompactPopulation(CompactPerson[] people, final int earliest_date, final int latest_date) {
+
+        this.people = people;
+        this.earliest_date = earliest_date;
+        this.latest_date = latest_date;
+    }
+
     /**
      * Get the size of the population.
      *
@@ -177,7 +185,7 @@ public class CompactPopulation {
      */
     public int size() {
 
-        return getPeopleArray().length;
+        return people.length;
     }
 
     /**
@@ -189,7 +197,7 @@ public class CompactPopulation {
 
         int count = 0;
 
-        for (final CompactPerson p : getPeopleArray()) {
+        for (final CompactPerson p : people) {
             if (p.isMale()) {
                 count++;
             }
@@ -206,7 +214,7 @@ public class CompactPopulation {
 
         int count = 0;
 
-        for (final CompactPerson p : getPeopleArray()) {
+        for (final CompactPerson p : people) {
             if (!p.isMale()) {
                 count++;
             }
@@ -221,7 +229,7 @@ public class CompactPopulation {
      */
     public int getFirstDate() {
 
-        return first_date;
+        return earliest_date;
     }
 
     /**
@@ -231,7 +239,7 @@ public class CompactPopulation {
      */
     public int getLastDate() {
 
-        return last_date;
+        return latest_date;
     }
 
     public CompactPerson getPerson(final int index) {
@@ -239,7 +247,32 @@ public class CompactPopulation {
         return people[index];
     }
 
-    public int findPerson(final CompactPerson person) {
+    public CompactPerson findPerson(final int id) {
+
+        // TODO use binary split since ids are in ascending order in array
+
+        int index = findPerson(-1, new Condition() {
+            @Override
+            public int check(int index) {
+                return people[index].getId() == id ? Condition.POSITIVE : Condition.NEGATIVE_CONTINUE;
+            }
+        });
+
+        return index > -1 ? people[index] : null;
+    }
+
+    public CompactPartnership findPartnership(final int id) {
+
+        int population_size = people.length;
+        for (CompactPerson person : people) {
+            for (CompactPartnership partnership : person.getPartnerships()) {
+                if (partnership.getId() == id) return partnership;
+            }
+        }
+        return null;
+    }
+
+    public int findPersonIndex(final CompactPerson person) {
 
         final Condition match = new Condition() {
 
@@ -254,15 +287,20 @@ public class CompactPopulation {
 
     public int findPerson(final int start_index, final Condition condition) {
 
-        for (int i = start_index + 1; i < getPeopleArray().length; i++) {
-            if (condition.check(i) == Condition.POSITIVE) {
-                return i;
-            }
-            if (condition.check(i) == Condition.NEGATIVE_CONTINUE) {
-                continue;
-            }
-            if (condition.check(i) == Condition.NEGATIVE_STOP) {
-                return -1;
+        int population_size = people.length;
+        for (int i = start_index + 1; i < population_size; i++) {
+
+            switch (condition.check(i)) {
+
+                case Condition.POSITIVE:
+                    return i;
+                case Condition.NEGATIVE_STOP:
+                    return -1;
+                case Condition.NEGATIVE_CONTINUE: {
+                    continue;
+                }
+                default:
+                    throw new RuntimeException("unexpected condition");
             }
         }
         return -1;
@@ -444,7 +482,7 @@ public class CompactPopulation {
 
     private void linkChildren(final CompactPartnership partnership, final int number_of_children, final int latest_acceptable_birth_date) {
 
-        final List<Integer> children = new ArrayList<Integer>(number_of_children);
+        final List<Integer> children = new ArrayList<>(number_of_children);
         partnership.setChildren(children);
 
         int previous_child_birth_date = 0;
