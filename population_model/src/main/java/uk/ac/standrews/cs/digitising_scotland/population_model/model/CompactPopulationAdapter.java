@@ -85,7 +85,7 @@ public class CompactPopulationAdapter implements IPopulation {
                 public IPartnership next() {
 
                     if (!hasNext()) throw new NoSuchElementException();
-                    IPartnership result = new PartnershipWithIds(next_partnership);
+                    IPartnership result = convertToPartnershipWithIds(next_partnership);
                     advanceToNext();
                     return result;
                 }
@@ -98,38 +98,52 @@ public class CompactPopulationAdapter implements IPopulation {
 
                 private void advanceToNext() {
 
+                    readFirstPartnerships();
+                    readNextUnmarkedPartnership();
+                    markPartnership();
+                }
+
+                private void readFirstPartnerships() {
+
                     if (partnerships == null) {
                         partnerships = getPartnerships(0);
                     }
+                }
+
+                private void readNextUnmarkedPartnership() {
 
                     do {
-                        while (person_index < people.length && !partnerships.hasNext()) {
-                            person_index++;
-                            partnerships = getPartnerships(person_index);
-                        }
-
-                        next_partnership = partnerships.hasNext() ? partnerships.next() : null;
+                        readPartnershipsForNextPerson();
+                        readNextPartnershipForThisPerson();
                     }
-                    while (next_partnership != null && next_partnership.isMarked());
+                    while (nextPartnershipIsMarked());
+                }
+
+                private boolean nextPartnershipIsMarked() {
+
+                    return next_partnership != null && next_partnership.isMarked();
+                }
+
+                private void markPartnership() {
 
                     if (next_partnership != null) {
                         next_partnership.setMarked(true);
                     }
                 }
-            }
-        };
-    }
 
-    private void unmarkAllPartnerships() {
+                private void readPartnershipsForNextPerson() {
 
-        for (CompactPerson person : people) {
-            List<CompactPartnership> partnerships = person.getPartnerships();
-            if (partnerships != null) {
-                for (CompactPartnership partnership : partnerships) {
-                    partnership.setMarked(false);
+                    while (person_index < people.length && !partnerships.hasNext()) {
+                        partnerships = getPartnerships(++person_index);
+                    }
+                }
+
+                private void readNextPartnershipForThisPerson() {
+
+                    next_partnership = partnerships.hasNext() ? partnerships.next() : null;
                 }
             }
-        }
+        };
     }
 
     @Override
@@ -165,12 +179,19 @@ public class CompactPopulationAdapter implements IPopulation {
                 public Object next() {
 
                     if (!hasNext()) throw new NoSuchElementException();
-                    Object result = next_object;
-                    if (result instanceof CompactPartnership) {
-                        result = convertToPartnershipWithIds((CompactPartnership) result);
-                    }
+                    Object result = getNextPersonOrPartnership();
                     advanceToNext();
                     return result;
+                }
+
+                private Object getNextPersonOrPartnership() {
+
+                    if (next_object instanceof CompactPartnership) {
+                        return convertToPartnershipWithIds((CompactPartnership) next_object);
+                    }
+                    else {
+                        return next_object;
+                    }
                 }
 
                 @Override
@@ -181,15 +202,34 @@ public class CompactPopulationAdapter implements IPopulation {
 
                 private void advanceToNext() {
 
-                    do {
-                        if (return_person_next_time || !partnerships.hasNext()) {
-                            readNextPerson();
+                    readNextUnmarkedPersonOrPartnership();
+                    markPartnership();
+                }
 
-                        } else {
-                            readNextPartnership();
-                        }
+                private void readNextUnmarkedPersonOrPartnership() {
+
+                    do {
+                        readNextPersonOrPartnership();
                     }
-                    while (next_object instanceof CompactPartnership && ((CompactPartnership) next_object).isMarked());
+                    while (nextObjectIsMarkedPartnership());
+                }
+
+                private boolean nextObjectIsMarkedPartnership() {
+
+                    return next_object instanceof CompactPartnership && ((CompactPartnership) next_object).isMarked();
+                }
+
+                private void readNextPersonOrPartnership() {
+
+                    if (return_person_next_time || !partnerships.hasNext()) {
+                        readNextPerson();
+
+                    } else {
+                        readNextPartnership();
+                    }
+                }
+
+                private void markPartnership() {
 
                     if (next_object instanceof CompactPartnership) {
                         ((CompactPartnership) next_object).setMarked(true);
@@ -198,9 +238,7 @@ public class CompactPopulationAdapter implements IPopulation {
 
                 private void readNextPerson() {
 
-                    person_index++;
-
-                    if (person_index < people.length) {
+                    if (++person_index < people.length) {
 
                         next_object = people[person_index];
                         partnerships = getPartnerships(person_index);
@@ -240,6 +278,23 @@ public class CompactPopulationAdapter implements IPopulation {
         return (partnerships == null ? new ArrayList<CompactPartnership>() : partnerships).iterator();
     }
 
+    private void unmarkAllPartnerships() {
+
+        for (CompactPerson person : people) {
+            List<CompactPartnership> partnerships = person.getPartnerships();
+            if (partnerships != null) {
+                for (CompactPartnership partnership : partnerships) {
+                    partnership.setMarked(false);
+                }
+            }
+        }
+    }
+
+    private IPartnership convertToPartnershipWithIds(CompactPartnership partnership) {
+
+        return partnership != null ? new PartnershipWithIds(partnership) : null;
+    }
+
     private class PartnershipWithIds implements IPartnership {
 
         private int id;
@@ -259,13 +314,18 @@ public class CompactPopulationAdapter implements IPopulation {
             partner2_id = populationIndexToId(compact_partnership.getPartner2());
             marriage_date = DateManipulation.daysToDate(compact_partnership.getMarriageDate());
 
-            children = new ArrayList<>();
-            List<Integer> original_children = compact_partnership.getChildren();
+            children = copyChildren(compact_partnership.getChildren());
+        }
+
+        private List<Integer> copyChildren(List<Integer> original_children) {
+
+            List<Integer> children = new ArrayList<>();
             if (original_children != null) {
                 for (Integer child_index : original_children) {
                     children.add(populationIndexToId(child_index));
                 }
             }
+            return children;
         }
 
         @Override
@@ -297,10 +357,5 @@ public class CompactPopulationAdapter implements IPopulation {
         public int compareTo(IPartnership other) {
             return id - other.getId();
         }
-    }
-
-    private IPartnership convertToPartnershipWithIds(CompactPartnership partnership) {
-
-        return partnership != null ? new PartnershipWithIds(partnership) : null;
     }
 }
