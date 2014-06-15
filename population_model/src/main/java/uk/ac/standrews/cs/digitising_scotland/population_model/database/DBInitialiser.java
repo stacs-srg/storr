@@ -17,11 +17,11 @@
 package uk.ac.standrews.cs.digitising_scotland.population_model.database;
 
 import uk.ac.standrews.cs.digitising_scotland.population_model.config.PopulationProperties;
+import uk.ac.standrews.cs.digitising_scotland.util.DBManipulation;
 
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 /**
  * Sets up a database ready to contain population data, overwriting any existing data.
@@ -32,7 +32,6 @@ import java.sql.Statement;
  */
 public class DBInitialiser {
 
-    private static final String CREATE_DB_SYNTAX = "CREATE DATABASE IF NOT EXISTS ";
     private static final String DROP_TABLE_SYNTAX = "DROP TABLE IF EXISTS ";
     private static final String CREATE_TABLE_SYNTAX = "CREATE TABLE ";
     private static final String SQL_TYPE_INTEGER = "int(11)";
@@ -58,13 +57,13 @@ public class DBInitialiser {
 
         try (Connection connection = new DBConnector().createConnection()) {
 
-            executeStatement(connection, CREATE_DB_SYNTAX + " " + PopulationProperties.DATABASE_NAME);
+            DBManipulation.createDatabaseIfDoesNotExist(connection, PopulationProperties.getDatabaseName());
         }
     }
 
     private void dropExistingTables() throws SQLException {
 
-        try (Connection connection = new DBConnector(PopulationProperties.DATABASE_NAME).createConnection()) {
+        try (Connection connection = new DBConnector(PopulationProperties.getDatabaseName()).createConnection()) {
 
             dropTable(connection, PopulationProperties.PERSON_TABLE_NAME);
             dropTable(connection, PopulationProperties.PARTNERSHIP_TABLE_NAME);
@@ -75,17 +74,17 @@ public class DBInitialiser {
 
     private void dropTable(final Connection connection, final String table_name) throws SQLException {
 
-        executeStatement(connection, DROP_TABLE_SYNTAX + " " + table_name);
+        DBManipulation.executeStatement(connection, DROP_TABLE_SYNTAX + " " + table_name);
     }
 
     private void createTables() throws SQLException {
 
-        try (Connection connection = new DBConnector(PopulationProperties.DATABASE_NAME).createConnection()) {
+        try (Connection connection = new DBConnector(PopulationProperties.getDatabaseName()).createConnection()) {
 
-            executeStatement(connection, createPartnershipTableQuery());
-            executeStatement(connection, createPeopleTableQuery());
-            executeStatement(connection, createPartnershipPartnerTableQuery());
-            executeStatement(connection, createPartnershipChildrenTableQuery());
+            DBManipulation.executeStatement(connection, createPartnershipTableQuery());
+            DBManipulation.executeStatement(connection, createPeopleTableQuery());
+            DBManipulation.executeStatement(connection, createPartnershipPartnerTableQuery());
+            DBManipulation.executeStatement(connection, createPartnershipChildrenTableQuery());
         }
     }
 
@@ -134,13 +133,6 @@ public class DBInitialiser {
         boolean[] nulls_allowed = new boolean[]{false, false};
 
         return createTableQuery(PopulationProperties.PARTNERSHIP_CHILD_TABLE_NAME, attribute_names, attribute_types, nulls_allowed, null);
-    }
-
-    private static void executeStatement(final Connection connection, final String query) throws SQLException {
-
-        try (Statement statement = connection.createStatement()) {
-            statement.execute(query);
-        }
     }
 
     private static String createTableQuery(final String table_name, final String[] attribute_names, final String[] attribute_types, final boolean[] nulls_allowed, final String primary_key) throws SQLException {

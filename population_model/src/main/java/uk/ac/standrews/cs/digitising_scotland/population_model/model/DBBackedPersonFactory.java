@@ -40,7 +40,7 @@ public class DBBackedPersonFactory {
 
     public static DBBackedPerson createDBBackedPerson(final Connection connection, final int person_id) throws SQLException {
 
-        final PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + PopulationProperties.DATABASE_NAME + "." + PopulationProperties.PERSON_TABLE_NAME + " WHERE id = ?");
+        final PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + PopulationProperties.getDatabaseName() + "." + PopulationProperties.PERSON_TABLE_NAME + " WHERE id = ?");
         statement.setInt(1, person_id);
         final ResultSet resultSet = statement.executeQuery();
 

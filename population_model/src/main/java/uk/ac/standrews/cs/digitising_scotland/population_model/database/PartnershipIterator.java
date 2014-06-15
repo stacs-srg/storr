@@ -42,10 +42,10 @@ public class PartnershipIterator implements Iterator<DBBackedPartnership>, Itera
 
     public PartnershipIterator() throws SQLException {
 
-        connection = new DBConnector(PopulationProperties.DATABASE_NAME).createConnection();
+        connection = new DBConnector(PopulationProperties.getDatabaseName()).createConnection();
         statement = connection.createStatement();
 
-        result_set = statement.executeQuery("SELECT * FROM " + PopulationProperties.DATABASE_NAME + "." + PopulationProperties.PARTNERSHIP_TABLE_NAME);
+        result_set = statement.executeQuery("SELECT * FROM " + PopulationProperties.getDatabaseName() + "." + PopulationProperties.PARTNERSHIP_TABLE_NAME);
 
         empty = !result_set.first();
     }
@@ -98,7 +98,7 @@ public class PartnershipIterator implements Iterator<DBBackedPartnership>, Itera
 
         try (Statement statement = connection.createStatement()) {
 
-            ResultSet size_result = statement.executeQuery("SELECT COUNT(*) FROM " + PopulationProperties.DATABASE_NAME + "." + PopulationProperties.PARTNERSHIP_TABLE_NAME);
+            ResultSet size_result = statement.executeQuery("SELECT COUNT(*) FROM " + PopulationProperties.getDatabaseName() + "." + PopulationProperties.PARTNERSHIP_TABLE_NAME);
 
             if (!size_result.first()) {
                 throw new SQLException("No rows returned in partnership count");

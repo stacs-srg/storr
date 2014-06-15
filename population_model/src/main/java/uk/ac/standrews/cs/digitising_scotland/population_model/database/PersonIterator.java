@@ -16,6 +16,7 @@
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.database;
 
+import uk.ac.standrews.cs.digitising_scotland.util.DBManipulation;
 import uk.ac.standrews.cs.nds.util.ErrorHandling;
 import uk.ac.standrews.cs.digitising_scotland.population_model.config.PopulationProperties;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.DBBackedPersonFactory;
@@ -43,11 +44,11 @@ public class PersonIterator implements Iterator<Person>, Iterable<Person>, AutoC
 
     public PersonIterator() throws SQLException {
 
-        connection = new DBConnector(PopulationProperties.DATABASE_NAME).createConnection();
+        connection = new DBConnector(PopulationProperties.getDatabaseName()).createConnection();
         statement = connection.createStatement();
 
         // TODO this seems to be expensive - try executing a specific lookup for each person
-        resultSet = statement.executeQuery("SELECT * FROM " + PopulationProperties.DATABASE_NAME + "." + PopulationProperties.PERSON_TABLE_NAME);
+        resultSet = statement.executeQuery("SELECT * FROM " + PopulationProperties.getDatabaseName() + "." + PopulationProperties.PERSON_TABLE_NAME);
 
         empty = !resultSet.first();
     }
@@ -98,14 +99,6 @@ public class PersonIterator implements Iterator<Person>, Iterable<Person>, AutoC
 
     public int size() throws SQLException {
 
-        try (Statement statement = connection.createStatement()) {
-
-            ResultSet size_result = statement.executeQuery("SELECT COUNT(*) FROM " + PopulationProperties.DATABASE_NAME + "." + PopulationProperties.PERSON_TABLE_NAME);
-
-            if (!size_result.first()) {
-                throw new SQLException("No rows returned in person count");
-            }
-            return size_result.getInt(1);
-        }
+        return DBManipulation.countRows(connection, PopulationProperties.getDatabaseName(), PopulationProperties.PERSON_TABLE_NAME);
     }
 }

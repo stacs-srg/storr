@@ -39,7 +39,7 @@ public class DBBackedPartnership {
         this.id = id;
 
         // TODO might be able to factor this out.
-        try (final PreparedStatement get_partners_statement = connection.prepareStatement("SELECT * FROM " + PopulationProperties.DATABASE_NAME + "." + PopulationProperties.PARTNERSHIP_PARTNER_TABLE_NAME + " WHERE partnership_id= ?")) {
+        try (final PreparedStatement get_partners_statement = connection.prepareStatement("SELECT * FROM " + PopulationProperties.getDatabaseName() + "." + PopulationProperties.PARTNERSHIP_PARTNER_TABLE_NAME + " WHERE partnership_id= ?")) {
 
             get_partners_statement.setInt(1, id);
 
@@ -65,7 +65,7 @@ public class DBBackedPartnership {
 
         bride.setMarriedName(groom.getSurname());
 
-        try (final PreparedStatement get_marriage_statement = connection.prepareStatement("SELECT * FROM " + PopulationProperties.DATABASE_NAME + "." + PopulationProperties.PARTNERSHIP_TABLE_NAME + " WHERE id= ?")) {
+        try (final PreparedStatement get_marriage_statement = connection.prepareStatement("SELECT * FROM " + PopulationProperties.getDatabaseName() + "." + PopulationProperties.PARTNERSHIP_TABLE_NAME + " WHERE id= ?")) {
 
             get_marriage_statement.setInt(1, id);
 

@@ -28,9 +28,9 @@ import uk.ac.standrews.cs.digitising_scotland.population_model.model.CompactPart
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.CompactPerson;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.CompactPopulation;
 import uk.ac.standrews.cs.digitising_scotland.util.ArrayIterator;
+import uk.ac.standrews.cs.digitising_scotland.util.DBManipulation;
 import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
 import uk.ac.standrews.cs.digitising_scotland.util.ProgressIndicator;
-import uk.ac.standrews.cs.digitising_scotland.util.SQLManipulation;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -72,7 +72,7 @@ public class PopulationToDB implements AutoCloseable {
         this.population = population;
         this.progress_indicator = progress_indicator;
 
-        connection = new DBConnector(PopulationProperties.DATABASE_NAME).createConnection();
+        connection = new DBConnector(PopulationProperties.getDatabaseName()).createConnection();
 
         final String occupation_distribution_file_name = PopulationProperties.getProperties().getProperty(OCCUPATION_DISTRIBUTION_KEY);
         final String cause_of_death_distribution_file_name = PopulationProperties.getProperties().getProperty(CAUSE_OF_DEATH_DISTRIBUTION_KEY);
@@ -180,16 +180,16 @@ public class PopulationToDB implements AutoCloseable {
         // TODO factor out
         try (final PreparedStatement statement = connection.prepareStatement("INSERT INTO " + PopulationProperties.PERSON_TABLE_NAME + " VALUES(?,?,?,?,?,?,?,?,?);")) {
 
-            SQLManipulation.configurePreparedStatement(
+            DBManipulation.configurePreparedStatement(
                     statement,
                     compact_person.getId(),
                     compact_person.getSex(),
                     compact_person.isMale() ? male_first_name_distribution.getSample() : female_first_name_distribution.getSample(),
                     surname,
                     DateManipulation.daysToSQLDate(compact_person.getDateOfBirth()),
-                    compact_person.getDateOfDeath() != -1 ? DateManipulation.daysToSQLDate(compact_person.getDateOfDeath()) : SQLManipulation.NULL_DATE,
+                    compact_person.getDateOfDeath() != -1 ? DateManipulation.daysToSQLDate(compact_person.getDateOfDeath()) : DBManipulation.NULL_DATE,
                     occupation_distribution.getSample(),
-                    compact_person.getDateOfDeath() != -1 ? cause_of_death_distribution.getSample() : SQLManipulation.NULL_DATE,
+                    compact_person.getDateOfDeath() != -1 ? cause_of_death_distribution.getSample() : DBManipulation.NULL_DATE,
                     "address");
 
             statement.executeUpdate();
@@ -260,7 +260,7 @@ public class PopulationToDB implements AutoCloseable {
         // TODO factor out prepared statement
         try (final PreparedStatement statement = connection.prepareStatement("INSERT INTO " + PopulationProperties.PARTNERSHIP_TABLE_NAME + " VALUES( ?,? );")) {
 
-            SQLManipulation.configurePreparedStatement(statement, family_id, marriage_date);
+            DBManipulation.configurePreparedStatement(statement, family_id, marriage_date);
             statement.executeUpdate();
         }
     }
@@ -270,7 +270,7 @@ public class PopulationToDB implements AutoCloseable {
         // TODO factor out prepared statement
         try (final PreparedStatement statement = connection.prepareStatement("INSERT INTO " + PopulationProperties.PARTNERSHIP_PARTNER_TABLE_NAME + " VALUES( ?,? );")) {
 
-            SQLManipulation.configurePreparedStatement(statement, partner_id, family_id);
+            DBManipulation.configurePreparedStatement(statement, partner_id, family_id);
             statement.executeUpdate();
         }
     }
@@ -280,7 +280,7 @@ public class PopulationToDB implements AutoCloseable {
         // TODO factor out prepared statement
         try (final PreparedStatement statement = connection.prepareStatement("INSERT INTO " + PopulationProperties.PARTNERSHIP_CHILD_TABLE_NAME + " VALUES( ?,? );")) {
 
-            SQLManipulation.configurePreparedStatement(statement, child_id, family_id);
+            DBManipulation.configurePreparedStatement(statement, child_id, family_id);
             statement.executeUpdate();
         }
     }

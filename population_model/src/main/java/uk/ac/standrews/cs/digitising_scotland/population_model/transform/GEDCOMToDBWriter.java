@@ -54,7 +54,7 @@ public class GEDCOMToDBWriter implements AutoCloseable {
 
     public GEDCOMToDBWriter(final String path_string) throws IOException, GedcomParserException, SQLException {
 
-        connection = new DBConnector(PopulationProperties.DATABASE_NAME).createConnection();
+        connection = new DBConnector(PopulationProperties.getDatabaseName()).createConnection();
         person_factory = new PersonFactory();
 
         parser = new GedcomParser();

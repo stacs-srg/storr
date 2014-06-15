@@ -16,6 +16,7 @@
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.tools;
 
+import uk.ac.standrews.cs.digitising_scotland.population_model.config.PopulationProperties;
 import uk.ac.standrews.cs.digitising_scotland.population_model.database.DBInitialiser;
 import uk.ac.standrews.cs.nds.util.Diagnostic;
 
@@ -41,7 +42,7 @@ public class InitialiseDB {
 
         new DBInitialiser().setupDB();
 
-        Diagnostic.traceNoSource("Database initialised");
+        Diagnostic.traceNoSource("Database " + PopulationProperties.getDatabaseName() + " initialised");
 
         // TODO check for existing db content
     }

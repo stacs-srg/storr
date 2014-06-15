@@ -23,7 +23,7 @@ import java.util.Properties;
 
 public class PopulationProperties {
 
-    public static final String DATABASE_NAME = "population";
+    private static final String DEFAULT_DATABASE_NAME = "population";
 
     public static final String PERSON_TABLE_NAME = "Person";
     public static final String PARTNERSHIP_TABLE_NAME = "Partnership";
@@ -50,6 +50,7 @@ public class PopulationProperties {
     private static final String DEFAULT_PROPERTIES_PATH = "config/config.txt";
 
     private static String properties_path = DEFAULT_PROPERTIES_PATH;
+    private static String database_name = DEFAULT_DATABASE_NAME;
 
     public static Properties getProperties() throws IOException {
 
@@ -59,6 +60,16 @@ public class PopulationProperties {
     public static void setPropertiesPath(final String properties_path) {
 
         PopulationProperties.properties_path = properties_path;
+    }
+
+    public static String getDatabaseName() {
+
+        return database_name;
+    }
+
+    public static void setDatabaseName(String database_name) {
+
+        PopulationProperties.database_name = database_name;
     }
 
     public static boolean getDeterministic() throws IOException {

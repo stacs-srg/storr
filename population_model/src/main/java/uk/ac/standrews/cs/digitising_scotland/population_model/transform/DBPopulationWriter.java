@@ -21,8 +21,8 @@ import uk.ac.standrews.cs.digitising_scotland.population_model.database.DBConnec
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPartnership;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPerson;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPopulationWriter;
+import uk.ac.standrews.cs.digitising_scotland.util.DBManipulation;
 import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
-import uk.ac.standrews.cs.digitising_scotland.util.SQLManipulation;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -51,7 +51,7 @@ public class DBPopulationWriter implements IPopulationWriter {
 
     public DBPopulationWriter() throws IOException, SQLException {
 
-        connection = new DBConnector(PopulationProperties.DATABASE_NAME).createConnection();
+        connection = new DBConnector(PopulationProperties.getDatabaseName()).createConnection();
 
         record_person_statement = connection.prepareStatement(RECORD_PERSON_STATEMENT);
         record_partnership_statement = connection.prepareStatement(RECORD_PARTNERSHIP_STATEMENT);
@@ -71,14 +71,14 @@ public class DBPopulationWriter implements IPopulationWriter {
 
         System.out.println("recording person: " + person.getId());
 
-        SQLManipulation.configurePreparedStatement(
+        DBManipulation.configurePreparedStatement(
                 record_person_statement,
                 person.getId(),
                 String.valueOf(person.getSex()),
                 person.getFirstName(),
                 person.getSurname(),
                 DateManipulation.dateToSQLDate(person.getBirthDate()),
-                person.getDeathDate() != null ? DateManipulation.dateToSQLDate(person.getDeathDate()) : SQLManipulation.NULL_DATE,
+                person.getDeathDate() != null ? DateManipulation.dateToSQLDate(person.getDeathDate()) : DBManipulation.NULL_DATE,
                 person.getOccupation(),
                 person.getCauseOfDeath(),
                 person.getAddress());
@@ -104,19 +104,19 @@ public class DBPopulationWriter implements IPopulationWriter {
 
         System.out.println("recording partnership: " + partnership_id);
 
-        SQLManipulation.configurePreparedStatement(record_partnership_statement, partnership_id, marriage_date);
+        DBManipulation.configurePreparedStatement(record_partnership_statement, partnership_id, marriage_date);
         record_partnership_statement.executeUpdate();
     }
 
     private void recordPartnerWithinPartnership(final int partnership_id, final int partner_id) throws SQLException {
 
-        SQLManipulation.configurePreparedStatement(record_partner_within_partnership_statement, partner_id, partnership_id);
+        DBManipulation.configurePreparedStatement(record_partner_within_partnership_statement, partner_id, partnership_id);
         record_partner_within_partnership_statement.executeUpdate();
     }
 
     private void recordChildWithinPartnership(final int partnership_id, final Integer child_id) throws SQLException {
 
-        SQLManipulation.configurePreparedStatement(record_child_within_partnership_statement, child_id, partnership_id);
+        DBManipulation.configurePreparedStatement(record_child_within_partnership_statement, child_id, partnership_id);
         record_child_within_partnership_statement.executeUpdate();
     }
 

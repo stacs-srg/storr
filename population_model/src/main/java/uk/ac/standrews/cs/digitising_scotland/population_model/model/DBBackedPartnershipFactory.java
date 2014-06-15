@@ -27,7 +27,7 @@ public class DBBackedPartnershipFactory {
 
     public static DBBackedPartnership createDBBackedPartnershipForChild(final Connection connection, final int child_id) throws SQLException {
 
-        final PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + PopulationProperties.DATABASE_NAME + "." + PopulationProperties.PARTNERSHIP_CHILD_TABLE_NAME + " WHERE person_id = ?");
+        final PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + PopulationProperties.getDatabaseName() + "." + PopulationProperties.PARTNERSHIP_CHILD_TABLE_NAME + " WHERE person_id = ?");
         statement.setInt(1, child_id);
 
         return getDBBackedPartnership(connection, statement);
@@ -35,7 +35,7 @@ public class DBBackedPartnershipFactory {
 
     public static DBBackedPartnership createDBBackedPartnershipFromSpouse(final Connection connection, final int partner_id) throws SQLException {
 
-        final PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + PopulationProperties.DATABASE_NAME + "." + PopulationProperties.PARTNERSHIP_PARTNER_TABLE_NAME + " WHERE person_id = ?");
+        final PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + PopulationProperties.getDatabaseName() + "." + PopulationProperties.PARTNERSHIP_PARTNER_TABLE_NAME + " WHERE person_id = ?");
         statement.setInt(1, partner_id);
 
         return getDBBackedPartnership(connection, statement);
