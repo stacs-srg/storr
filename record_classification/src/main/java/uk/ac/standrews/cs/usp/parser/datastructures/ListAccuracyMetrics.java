@@ -99,6 +99,9 @@ public class ListAccuracyMetrics {
 
     }
 
+    /**
+     * Prints the statistics generated with pretty formatting.
+     */
     public void prettyPrint() {
 
         System.out.println("Unique records: " + uniqueRecords);
@@ -417,7 +420,7 @@ public class ListAccuracyMetrics {
         return codedBySubStringMatch;
     }
 
-    public void setCodedBySubStringMatch(int codedBySubStringMatch) {
+    public void setCodedBySubStringMatch(final int codedBySubStringMatch) {
 
         this.codedBySubStringMatch = codedBySubStringMatch;
     }

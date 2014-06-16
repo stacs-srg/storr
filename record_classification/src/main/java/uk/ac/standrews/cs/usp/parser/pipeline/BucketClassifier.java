@@ -11,12 +11,12 @@ public class BucketClassifier {
 
     RecordClassificationPipeline recordClassifier;
 
-    public BucketClassifier(RecordClassificationPipeline recordClassifier) {
+    public BucketClassifier(final RecordClassificationPipeline recordClassifier) {
 
         this.recordClassifier = recordClassifier;
     }
 
-    public Bucket classify(Bucket bucket) throws IOException {
+    public Bucket classify(final Bucket bucket) throws IOException {
 
         for (Record record : bucket) {
             Set<CodeTriple> result = recordClassifier.classify(record);

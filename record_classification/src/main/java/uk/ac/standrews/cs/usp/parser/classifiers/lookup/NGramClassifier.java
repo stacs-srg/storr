@@ -164,7 +164,7 @@ public class NGramClassifier extends AbstractClassifier implements Serializable 
     }
 
     @Override
-    public Pair<Code, Double> classify(TokenSet tokenSet) throws IOException {
+    public Pair<Code, Double> classify(final TokenSet tokenSet) throws IOException {
 
         // TODO Auto-generated method stub
         return null;
