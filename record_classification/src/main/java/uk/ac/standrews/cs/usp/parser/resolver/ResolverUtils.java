@@ -10,8 +10,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import uk.ac.standrews.cs.usp.parser.datastructures.TokenSet;
 import uk.ac.standrews.cs.usp.parser.datastructures.code.Code;
+
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multiset;
 
@@ -23,7 +25,12 @@ import com.google.common.collect.Multiset;
  * @author jkc25
  * @author frjd2
  */
-public class ResolverUtils {
+public final class ResolverUtils {
+
+    private ResolverUtils() {
+
+        //Utility class -  private constructor
+    }
 
     /**
      * Sorts a Map<K,V> by it's values in descending order.
@@ -90,6 +97,7 @@ public class ResolverUtils {
      * @return the double loss value
      */
     public static Double lossFunction(final Set<CodeTriple> set) {
+
         List<Double> confidences = new ArrayList<>();
         for (CodeTriple triple : set) {
             confidences.add(triple.getConfidence());
@@ -109,6 +117,7 @@ public class ResolverUtils {
      * @return true, if valid subset, false otherwise
      */
     public static boolean isValid(final Multiset<TokenSet> tokenSetSet, final Multiset<TokenSet> powerSet) {
+
         TokenSet tokenSet = getUnion(tokenSetSet);
         return powerSet.contains(tokenSet);
     }
@@ -122,6 +131,7 @@ public class ResolverUtils {
      * @return true, if successful
      */
     public static boolean tripleSetIsValid(final Set<CodeTriple> triple, final Multiset<TokenSet> powerSet) {
+
         return isValid(getTokenSetsFromTriple(triple), powerSet);
     }
 
@@ -132,6 +142,7 @@ public class ResolverUtils {
      * @return the token sets from triple
      */
     private static Multiset<TokenSet> getTokenSetsFromTriple(final Set<CodeTriple> triples) {
+
         Multiset<TokenSet> tokenSetSet = HashMultiset.create();
         for (CodeTriple triple : triples) {
             tokenSetSet.add(triple.getTokenSet());
@@ -163,6 +174,7 @@ public class ResolverUtils {
      * @return the sets the
      */
     public static Set<Code> removeAncestors(final Set<Code> codes) {
+
         Set<Code> resolvedCodes = new HashSet<>();
         resolvedCodes.addAll(codes);
         for (Code code : codes) {
@@ -200,6 +212,7 @@ public class ResolverUtils {
      * @return true, if codes contains child of code
      */
     static boolean codeIsAncestorOfCodeInSet(final Code code, final Set<Code> codes) {
+
         for (Code c : codes) {
             if (code.isAncestor(c)) { return true; }
         }

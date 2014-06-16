@@ -30,7 +30,7 @@ import com.google.common.collect.Multiset;
 public class ResolverMatrix {
 
     /** The Code, List<Pair> matrix. */
-    Map<Code, List<Pair<TokenSet, Double>>> matrix;
+    private Map<Code, List<Pair<TokenSet, Double>>> matrix;
 
     /**
      * Instantiates a new empty resolver matrix.
@@ -99,8 +99,8 @@ public class ResolverMatrix {
     }
 
     /**
-     * Resolves hierarchies in the matrix by removing the ancestors of {@link Code}s in the matrix. 
-     * This utilises the ResolverUtils.removeAncestors() method to achieve this. 
+     * Resolves hierarchies in the matrix by removing the ancestors of {@link Code}s in the matrix.
+     * This utilises the ResolverUtils.removeAncestors() method to achieve this.
      */
     protected void resolveHierarchies() {
 

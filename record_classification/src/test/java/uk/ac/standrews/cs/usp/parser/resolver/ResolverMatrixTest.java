@@ -101,14 +101,14 @@ public class ResolverMatrixTest {
         Assert.assertEquals(4, matrix.complexity());
     }
 
-    private void addMockEntryToMatrix(String string, int id, double conf) {
+    private void addMockEntryToMatrix(final String string, final int id, final double conf) {
 
         TokenSet tokenSet3 = new TokenSet(string);
         Code code3 = CodeFactory.getInstance().getCode(id);
         matrix.add(tokenSet3, new Pair<>(code3, conf));
     }
 
-    private void addMockEntryToMatrix(String string, String code, double conf) {
+    private void addMockEntryToMatrix(final String string, final String code, final double conf) {
 
         TokenSet tokenSet3 = new TokenSet(string);
         Code code3 = CodeFactory.getInstance().getCode(code);

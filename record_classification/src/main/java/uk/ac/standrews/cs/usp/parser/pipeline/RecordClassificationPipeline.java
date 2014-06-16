@@ -24,7 +24,11 @@ import com.google.common.collect.Multiset;
  */
 public class RecordClassificationPipeline {
 
-    int WORDLIMIT = 7;
+    /**
+     * WORDLIMIT sets the maximum number of tokens that a TokenSet can contain before attempting multiple classification becomes unfeasible.
+     * Any TokenSets with more tokens than WORDLIMIT will be skipped and not classified.
+     */
+    private static final int WORDLIMIT = 7;
 
     private TokenClassificationCache cache;
 
@@ -61,9 +65,10 @@ public class RecordClassificationPipeline {
             resolverMatrix.chopBelowConfidence(0.3);
             List<Set<CodeTriple>> triples = resolverMatrix.getValidCodeTriples(powerSet);
             Set<CodeTriple> best;
-            if(triples.size()>0) {
-               best = ResolverUtils.getBest(triples);
-            } else {
+            if (triples.size() > 0) {
+                best = ResolverUtils.getBest(triples);
+            }
+            else {
                 best = new HashSet<>();
             }
 

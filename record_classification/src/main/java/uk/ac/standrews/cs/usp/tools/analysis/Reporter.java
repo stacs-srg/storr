@@ -20,21 +20,49 @@ import uk.ac.standrews.cs.usp.tools.Utils;
  */
 public final class Reporter {
 
+    /** The data set. */
     private String dataSet = "";
+
+    /** The number of classes. */
     private double numberOfClasses;
+
+    /** The number of training files. */
     private double numberOfTrainingFiles;
+
+    /** The number of features. */
     private String numberOfFeatures = "";
+
+    /** The best accuracy string. */
     private String bestAccuracyString = "";
+
+    /** The total nb correct. */
     private double totalNBCorrect = 0;
+
+    /** The total sgd correct. */
     private double totalSGDCorrect = 0;
+
+    /** The total ppsgd correct. */
     private double totalPPSGDCorrect = 0;
+
+    /** The total best con correct. */
     private double totalBestConCorrect = 0;
+
+    /** The total majority vote. */
     private double totalMajorityVote = 0;
+
+    /** The total threshold vote. */
     private double totalThresholdVote = 0;
+
+    /** The proxy confidence. */
     private double proxyConfidence = 0;
+
+    /** The string sim correct. */
     private double stringSimCorrect = 0;
 
     // Singleton, so no public access.
+    /**
+     * Instantiates a new reporter.
+     */
     private Reporter() {
 
     }
@@ -45,6 +73,7 @@ public final class Reporter {
      */
     private static class SingletonHolder {
 
+        /** The Constant INSTANCE. */
         public static final Reporter INSTANCE = new Reporter();
     }
 
@@ -296,11 +325,21 @@ public final class Reporter {
         this.totalMajorityVote = totalCorrect;
     }
 
+    /**
+     * Sets the string sim correct.
+     *
+     * @param d the new string sim correct
+     */
     public void setStringSimCorrect(final double d) {
 
         this.stringSimCorrect = d;
     }
 
+    /**
+     * Gets the string sim correct.
+     *
+     * @return the string sim correct
+     */
     public double getStringSimCorrect() {
 
         return stringSimCorrect;

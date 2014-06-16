@@ -12,7 +12,6 @@ import uk.ac.standrews.cs.usp.parser.datastructures.code.Code;
 import uk.ac.standrews.cs.usp.parser.datastructures.code.CodeFactory;
 import uk.ac.standrews.cs.usp.parser.resolver.CodeTriple;
 
-// TODO: Auto-generated Javadoc
 /**
  * Creates {@link Record} objects populated with data from file.
  * @author jkc25, frjd2

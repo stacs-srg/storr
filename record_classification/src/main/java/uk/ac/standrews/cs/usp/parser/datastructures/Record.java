@@ -13,9 +13,16 @@ import uk.ac.standrews.cs.usp.parser.resolver.CodeTriple;
  */
 public class Record {
 
+    /** The u id. */
     private final UUID uID = UUID.randomUUID();
+
+    /** The original data. */
     private OriginalData originalData;
+
+    /** The cleaned description. */
     private String cleanedDescription;
+
+    /** The code triples. */
     private Set<CodeTriple> codeTriples;
 
     /**
@@ -75,7 +82,8 @@ public class Record {
     /**
      * Returns the gold standard {@link ClassificationSet} for this Record.
      * If no gold standard set exists then an empty {@link ClassificationSet} will be returned.
-     * @return
+     *
+     * @return the gold standard classification set
      */
     public Set<CodeTriple> getGoldStandardClassificationSet() {
 
@@ -96,12 +104,18 @@ public class Record {
         return false;
     }
 
+    /* (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
     @Override
     public String toString() {
 
         return "Record [cleanedDescription=" + cleanedDescription + "\t codeTriples=" + codeTriples + "]\n";
     }
 
+    /* (non-Javadoc)
+     * @see java.lang.Object#hashCode()
+     */
     @Override
     public int hashCode() {
 
@@ -113,6 +127,9 @@ public class Record {
         return result;
     }
 
+    /* (non-Javadoc)
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
     @Override
     public boolean equals(final Object obj) {
 
@@ -135,11 +152,22 @@ public class Record {
         return true;
     }
 
+    /**
+     * Gets the Set of {@link CodeTriple}s contained in this record.
+     *
+     * @return the Set of CodeTriples.
+     */
     public Set<CodeTriple> getCodeTriples() {
 
         return codeTriples;
     }
 
+    /**
+     * Adds a code triple to the set of {@link CodeTriple}s maintained by this record.
+     * The CodeTriple is only added if it is non null.
+     *
+     * @param codeTriples the code triple to add
+     */
     public void addCodeTriples(final CodeTriple codeTriples) {
 
         if (codeTriples != null) {
@@ -147,6 +175,12 @@ public class Record {
         }
     }
 
+    /**
+     * Adds all the code triples in the collection.
+     * Null CodeTriples are not added.
+     * 
+     * @param codeTriples the  collection of code triples to add.
+     */
     public void addAllCodeTriples(final Collection<CodeTriple> codeTriples) {
 
         for (CodeTriple codeTriple : codeTriples) {

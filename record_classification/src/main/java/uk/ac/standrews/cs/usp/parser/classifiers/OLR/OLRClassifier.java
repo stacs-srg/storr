@@ -144,7 +144,7 @@ public class OLRClassifier extends AbstractClassifier {
     }
 
     @Override
-    public Pair<Code, Double> classify(TokenSet tokenSet) throws IOException {
+    public Pair<Code, Double> classify(final TokenSet tokenSet) throws IOException {
 
         Pair<Code, Double> pair;
         NamedVector vector = vectorFactory.createNamedVectorFromString(tokenSet.toString(), "unknown");
