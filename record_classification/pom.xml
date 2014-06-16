@@ -10,7 +10,6 @@
 
     <groupId>uk.ac.standrews.cs.digitising_scotland</groupId>
 	<artifactId>record_classification</artifactId>
-	<version>1.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<name>record_classification</name>
 

@@ -10,3 +10,6 @@ target
 .Ulysses-Group.plist
 .UlyssesRoot
 pom-template.xml
+.classpath
+.project
+.settings
