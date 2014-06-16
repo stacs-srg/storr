@@ -158,6 +158,7 @@
         <module>linkage</module>
         <module>population_model</module>
         <module>util</module>
+        <module>record_classification</module>
     </modules>
 
     <licenses>
