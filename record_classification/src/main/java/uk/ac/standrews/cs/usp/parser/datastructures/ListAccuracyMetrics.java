@@ -100,6 +100,7 @@ public class ListAccuracyMetrics {
     }
 
     public void prettyPrint() {
+
         System.out.println("Unique records: " + uniqueRecords);
         System.out.println("Total aggregated: " + totalAggregatedRecords);
         System.out.println("Average confidence: " + averageConfidence);
@@ -114,8 +115,8 @@ public class ListAccuracyMetrics {
 
     }
 
-
     private void countNumClassifications(final Bucket bucket) {
+
         unclassified = 0;
         singleClassification = 0;
         twoClassifications = 0;
@@ -125,23 +126,29 @@ public class ListAccuracyMetrics {
             int size = setCodeTriples.size();
             if (size < 1) {
                 unclassified++;
-            } else if (size == 1) {
+            }
+            else if (size == 1) {
                 singleClassification++;
-            } else if (size == 2) {
+            }
+            else if (size == 2) {
                 twoClassifications++;
-            } else if (size > 2) {
+            }
+            else if (size > 2) {
                 moreThanTwoClassifications++;
             }
         }
     }
 
-
     private double calculatePropGoldStandardCorrectlyPredicted(final Bucket bucket) {
+
         double propGoldPredicted = 0.;
 
         for (Record record : bucket) {
             Set<CodeTriple> setCodeTriples = record.getCodeTriples();
             Set<CodeTriple> goldStandardTriples = record.getGoldStandardClassificationSet();
+            if (goldStandardTriples.size() < 1) {
+                break;
+            }
             int count = 0;
             for (CodeTriple goldTriple : goldStandardTriples) {
                 for (CodeTriple classification : setCodeTriples) {
