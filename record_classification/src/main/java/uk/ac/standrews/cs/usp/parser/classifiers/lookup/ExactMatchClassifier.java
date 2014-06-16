@@ -22,190 +22,225 @@ import cc.mallet.classify.Classification;
 
 /**
  * Uses a lookup table to return matches as classifications.
+ * 
  * @author frjd2, jkc25
- *
+ * 
  */
 public class ExactMatchClassifier extends AbstractClassifier {
 
-    private Map<TokenSet, Code> lookupTable;
-    private String modelFileName = "target/lookupTable";
+	private Map<TokenSet, Code> lookupTable;
+	private String modelFileName = "target/lookupTable";
 
-    /**
-     * Creates a new {@link ExactMatchClassifier} and creates an empty lookup table.
-     */
-    public ExactMatchClassifier() {
+	/**
+	 * Creates a new {@link ExactMatchClassifier} and creates an empty lookup
+	 * table.
+	 */
+	public ExactMatchClassifier() {
+		super();
+		this.lookupTable = new HashMap<>();
 
-        this.lookupTable = new HashMap<>();
+	}
 
-    }
+	/**
+	 * Creates a new {@link ExactMatchClassifier} and creates and fills the
+	 * lookup table with the contents of the bucket. Equivalent to call
+	 * @train().
+	 * 
+	 * @param bucket
+	 *            Bucket containing records to put in the lookup table.
+	 * @throws IOException
+	 *             IO error if location to write model cannot be accessed
+	 */
+	public ExactMatchClassifier(final Bucket bucket) throws IOException {
 
-    /**
-     * Creates a new {@link ExactMatchClassifier} and creates and fills the lookup table with the contents of the bucket.
-     * Equivalent to call @train().
-     * @param bucket Bucket containing records to put in the lookup table.
-     * @throws IOException IO error if location to write model cannot be accessed
-     */
-    public ExactMatchClassifier(final Bucket bucket) throws IOException {
+		this();
+		fillLookupTable(bucket);
+		writeModel(modelFileName);
 
-        this();
-        fillLookupTable(bucket);
-        writeModel(modelFileName);
+	}
 
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * uk.ac.standrews.cs.usp.parser.classifiers.AbstractClassifier#train(uk
+	 * .ac.standrews.cs.usp.parser.datastructures.Bucket)
+	 */
+	@Override
+	public void train(final Bucket bucket) throws Exception {
 
-    /* (non-Javadoc)
-     * @see uk.ac.standrews.cs.usp.parser.classifiers.AbstractClassifier#train(uk.ac.standrews.cs.usp.parser.datastructures.Bucket)
-     */
-    @Override
-    public void train(final Bucket bucket) throws Exception {
+		fillLookupTable(bucket);
+		writeModel(modelFileName);
 
-        fillLookupTable(bucket);
-        writeModel(modelFileName);
+	}
 
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * uk.ac.standrews.cs.usp.parser.classifiers.AbstractClassifier#classify
+	 * (uk.ac.standrews.cs.usp.parser.datastructures.Record)
+	 */
+	@Override
+	public Record classify(final Record record) throws IOException {
 
-    /* (non-Javadoc)
-     * @see uk.ac.standrews.cs.usp.parser.classifiers.AbstractClassifier#classify(uk.ac.standrews.cs.usp.parser.datastructures.Record)
-     */
-    @Override
-    public Record classify(final Record record) throws IOException {
+		TokenSet cleanDescriptionTokenSet = new TokenSet(
+				record.getCleanedDescription());
+		Code code = lookupTable.get(cleanDescriptionTokenSet);
+		if (code == null) {
+			return record;
+		} else {
+			CodeTriple result = new CodeTriple(code, cleanDescriptionTokenSet,
+					1.0);
+			record.addCodeTriples(result);
+			return record;
 
-        TokenSet cleanDescriptionTokenSet = new TokenSet(record.getCleanedDescription());
-        Code code = lookupTable.get(cleanDescriptionTokenSet);
-        if (code == null) {
-            return record;
-        }
-        else {
-            CodeTriple result = new CodeTriple(code, cleanDescriptionTokenSet, 1.0);
-            record.addCodeTriples(result);
-            return record;
+		}
 
-        }
+	}
 
-    }
+	/**
+	 * Classifies all the records in a {@link Bucket}.
+	 * 
+	 * @param bucket
+	 *            Bucket to classify
+	 * @return the bucket with classified records.
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
+	 */
+	public Bucket classify(final Bucket bucket) throws IOException {
 
-    /**
-     * Classifies all the records in a {@link Bucket}.
-     *
-     * @param bucket Bucket to classify
-     * @return the bucket with classified records.
-     * @throws IOException Signals that an I/O exception has occurred.
-     */
-    public Bucket classify(final Bucket bucket) throws IOException {
+		Bucket classifiedBucket = new Bucket();
+		for (Record record : bucket) {
+			classifiedBucket.addRecordToBucket(classify(record));
+		}
 
-        Bucket classifiedBucket = new Bucket();
-        for (Record record : bucket) {
-            classifiedBucket.addRecordToBucket(classify(record));
-        }
+		return classifiedBucket;
+	}
 
-        return classifiedBucket;
-    }
+	/**
+	 * Adds each {@link Classification} in the records {@link ClassificationSet}
+	 * to the lookupTable.
+	 * 
+	 * @param record
+	 *            to add
+	 */
+	private void addRecordToLookupTable(final Record record) {
 
-    /**
-     * Adds each {@link Classification} in the records {@link ClassificationSet} to the lookupTable.
-     * @param record to add
-     */
-    private void addRecordToLookupTable(final Record record) {
+		for (CodeTriple codeTriple : record.getOriginalData()
+				.getGoldStandardCodeTriples()) {
+			lookupTable.put(codeTriple.getTokenSet(), codeTriple.getCode());
+		}
 
-        for (CodeTriple codeTriple : record.getOriginalData().getGoldStandardCodeTriples()) {
-            lookupTable.put(codeTriple.getTokenSet(), codeTriple.getCode());
-        }
+	}
 
-    }
+	private void fillLookupTable(final Bucket bucket) {
 
-    private void fillLookupTable(final Bucket bucket) {
+		for (Record record : bucket) {
+			addRecordToLookupTable(record);
+		}
+	}
 
-        for (Record record : bucket) {
-            addRecordToLookupTable(record);
-        }
-    }
+	/**
+	 * Writes model to file. File name is fileName.ser
+	 * 
+	 * @param fileName
+	 *            name of file to write model to
+	 * @throws IOException
+	 *             if model location cannot be read
+	 * */
+	public void writeModel(final String fileName) throws IOException {
 
-    /**
-     * Writes model to file. File name is fileName.ser
-     *
-     * @param fileName name of file to write model to
-     * @throws IOException if model location cannot be read
-     * */
-    public void writeModel(final String fileName) throws IOException {
+		FileOutputStream fos = new FileOutputStream(fileName + ".ser");
+		ObjectOutputStream oos = new ObjectOutputStream(fos);
+		write(oos);
+	}
 
-        FileOutputStream fos = new FileOutputStream(fileName + ".ser");
-        ObjectOutputStream oos = new ObjectOutputStream(fos);
-        write(oos);
-    }
+	protected void readModel(final String fileName)
+			throws ClassNotFoundException, IOException {
 
-    protected void readModel(final String fileName) throws ClassNotFoundException, IOException {
+		// deserialize the .ser file
+		InputStream file = new FileInputStream(fileName + ".ser");
+		InputStream buffer = new BufferedInputStream(file);
+		ObjectInput input = new ObjectInputStream(buffer);
 
-        //deserialize the .ser file
-        InputStream file = new FileInputStream(fileName + ".ser");
-        InputStream buffer = new BufferedInputStream(file);
-        ObjectInput input = new ObjectInputStream(buffer);
+		try {
 
-        try {
+			Map<TokenSet, Code> recoveredMap = (Map<TokenSet, Code>) input
+					.readObject();
+			lookupTable = recoveredMap;
+		} finally {
+			closeStrams(file, input);
 
-            Map<TokenSet, Code> recoveredMap = (Map<TokenSet, Code>) input.readObject();
-            lookupTable = recoveredMap;
-        }
-        finally {
-            closeStrams(file, input);
+		}
+	}
 
-        }
-    }
+	private void closeStrams(final InputStream file, final ObjectInput input)
+			throws IOException {
 
-    private void closeStrams(final InputStream file, final ObjectInput input) throws IOException {
+		if (input != null) {
+			input.close();
+			file.close();
+		}
+	}
 
-        if (input != null) {
-            input.close();
-            file.close();
-        }
-    }
+	private void write(final ObjectOutputStream oos) throws IOException {
 
-    private void write(final ObjectOutputStream oos) throws IOException {
+		oos.writeObject(lookupTable);
+		oos.close();
+	}
 
-        oos.writeObject(lookupTable);
-        oos.close();
-    }
+	@Override
+	public void getModelFromDefaultLocation() {
 
-    @Override
-    public void getModelFromDefaultLocation() {
+		try {
+			readModel(modelFileName);
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
-        try {
-            readModel(modelFileName);
-        }
-        catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+	@Override
+	public int hashCode() {
 
-    @Override
-    public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((lookupTable == null) ? 0 : lookupTable.hashCode());
+		return result;
+	}
 
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((lookupTable == null) ? 0 : lookupTable.hashCode());
-        return result;
-    }
+	@Override
+	public boolean equals(final Object obj) {
 
-    @Override
-    public boolean equals(final Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		ExactMatchClassifier other = (ExactMatchClassifier) obj;
+		if (lookupTable == null) {
+			if (other.lookupTable != null) {
+				return false;
+			}
+		} else if (!lookupTable.equals(other.lookupTable)) {
+			return false;
+		}
+		return true;
+	}
 
-        if (this == obj) { return true; }
-        if (obj == null) { return false; }
-        if (getClass() != obj.getClass()) { return false; }
-        ExactMatchClassifier other = (ExactMatchClassifier) obj;
-        if (lookupTable == null) {
-            if (other.lookupTable != null) { return false; }
-        }
-        else if (!lookupTable.equals(other.lookupTable)) { return false; }
-        return true;
-    }
+	@Override
+	public Pair<Code, Double> classify(final TokenSet tokenSet)
+			throws IOException {
 
-    @Override
-    public Pair<Code, Double> classify(final TokenSet tokenSet) throws IOException {
-
-        throw new UnsupportedOperationException("cannot call calssify(TokenSet) with ExactMatchClassifier");
-    }
+		throw new UnsupportedOperationException(
+				"cannot call calssify(TokenSet) with ExactMatchClassifier");
+	}
 
 }
