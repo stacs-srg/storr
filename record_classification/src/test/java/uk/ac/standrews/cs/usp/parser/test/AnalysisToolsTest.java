@@ -320,7 +320,8 @@ public class AnalysisToolsTest {
     @Test
     public void testMicroAndMacroPrecisionAndRecall() {
 
-        AnalysisTools atreal = new AnalysisTools(new File("resources/AnalysisToolsTestFile.csv"));
+        File fileToBeAnalysed = new File(getClass().getResource("/AnalysisToolsTestFile.csv").getFile());
+        AnalysisTools atreal = new AnalysisTools(fileToBeAnalysed);
         Object[] classes = atreal.getClassificationMap().keySet().toArray();
 
         for (int i = 0; i < classes.length; i++) {
