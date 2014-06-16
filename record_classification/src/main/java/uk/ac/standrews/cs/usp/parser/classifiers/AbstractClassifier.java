@@ -17,7 +17,7 @@ import uk.ac.standrews.cs.usp.parser.resolver.Pair;
 public abstract class AbstractClassifier {
 
     /** The vector factory. */
-    protected static VectorFactory vectorFactory;
+    protected VectorFactory vectorFactory;
 
     /**
      * Creates an {@link AbstractClassifier} with the specified Vector Factory.

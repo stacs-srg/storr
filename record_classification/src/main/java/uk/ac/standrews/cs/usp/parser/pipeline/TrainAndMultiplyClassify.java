@@ -5,7 +5,11 @@ import java.io.IOException;
 
 import uk.ac.standrews.cs.usp.parser.classifiers.AbstractClassifier;
 import uk.ac.standrews.cs.usp.parser.classifiers.OLR.OLRClassifier;
-import uk.ac.standrews.cs.usp.parser.datastructures.*;
+import uk.ac.standrews.cs.usp.parser.datastructures.Bucket;
+import uk.ac.standrews.cs.usp.parser.datastructures.InputFormatException;
+import uk.ac.standrews.cs.usp.parser.datastructures.ListAccuracyMetrics;
+import uk.ac.standrews.cs.usp.parser.datastructures.Record;
+import uk.ac.standrews.cs.usp.parser.datastructures.RecordFactory;
 import uk.ac.standrews.cs.usp.parser.datastructures.vectors.VectorFactory;
 
 /**
@@ -29,7 +33,7 @@ import uk.ac.standrews.cs.usp.parser.datastructures.vectors.VectorFactory;
  */
 public class TrainAndMultiplyClassify {
 
-    static VectorFactory vectorFactory;
+    private static VectorFactory vectorFactory;
 
     /**
      * Entry method for training and classifying a batch of records into multiple codes.

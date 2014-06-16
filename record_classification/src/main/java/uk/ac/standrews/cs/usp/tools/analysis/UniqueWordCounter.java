@@ -25,7 +25,7 @@ import com.google.common.io.Files;
 /**
  * The Class UniqueWordCounter.
  */
-public class UniqueWordCounter {
+public final class UniqueWordCounter {
 
     /** The Constant LUCENE_VERSION. */
     static final Version LUCENE_VERSION = Version.LUCENE_36;
@@ -48,6 +48,11 @@ public class UniqueWordCounter {
 
         getNumberOfUniqueWords(new File(args[0]), Boolean.parseBoolean(args[1]));
 
+    }
+
+    private UniqueWordCounter() {
+
+        //utility class - private constructor
     }
 
     /**

@@ -17,12 +17,25 @@ import uk.ac.standrews.cs.usp.parser.datastructures.code.Code;
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multiset;
 
+// TODO: Auto-generated Javadoc
 /**
  *
+ * This class implements the utility methods used when creating multiple classifications for TokenSets.
+ *
  * Created by fraserdunlop on 10/06/2014 at 14:02.
+ * @author jkc25
+ * @author frjd2
  */
 public class ResolverUtils {
 
+    /**
+     * Sorts a Map<K,V> by it's values.
+     *
+     * @param <K> the key type
+     * @param <V> the value type
+     * @param map the map to sort
+     * @return the sorted map
+     */
     static <K, V extends Comparable<? super V>> Map<K, V> sortByValue(final Map<K, V> map) {
 
         List<Map.Entry<K, V>> list = new LinkedList<>(map.entrySet());
@@ -42,14 +55,26 @@ public class ResolverUtils {
         return result;
     }
 
-    public static Set<CodeTriple> getBest(List<Set<CodeTriple>> triples) {
+    /**
+     * Given a List of Sets of {@link CodeTriple}s this method will return the set with the best output from the loss function as defined by the lossFuncation() method.
+     *
+     * @param triples the list of sets of {@link CodeTriple}s to evaluate with the loss function
+     * @return the set of {@link CodeTriple}s with the best return from the lossFunction method
+     */
+    public static Set<CodeTriple> getBest(final List<Set<CodeTriple>> triples) {
 
         Map<Set<CodeTriple>, Double> map = mapCodeTripleSetsToLoss(triples);
         map = sortByValue(map);
         return map.keySet().iterator().next();
     }
 
-    public static Map<Set<CodeTriple>, Double> mapCodeTripleSetsToLoss(List<Set<CodeTriple>> triples) {
+    /**
+     * Creates a Map of Sets of code triples to their loss as defined by the lossFunction() method.
+     *
+     * @param triples the triples to evaluate
+     * @return the map of sets to loss values
+     */
+    public static Map<Set<CodeTriple>, Double> mapCodeTripleSetsToLoss(final List<Set<CodeTriple>> triples) {
 
         Map<Set<CodeTriple>, Double> map = new HashMap<>();
         for (Set<CodeTriple> set : triples) {
@@ -58,7 +83,15 @@ public class ResolverUtils {
         return map;
     }
 
-    public static Double lossFunction(Set<CodeTriple> set) {
+    /**
+     * The loss function.
+     * This is currently a very simple function and can easily be replaced by something more complex.
+     * Current behviour is defined as summing all the individual confidences in the set and returning the total.
+     *
+     * @param set the set to evaluate
+     * @return the double loss value
+     */
+    public static Double lossFunction(final Set<CodeTriple> set) {
 
         List<Double> confidences = new ArrayList<>();
         for (CodeTriple triple : set) {
@@ -71,18 +104,38 @@ public class ResolverUtils {
         return confidenceSum;
     }
 
-    public static boolean isValid(Multiset<TokenSet> tokenSetSet, Multiset<TokenSet> powerSet) {
+    /**
+     * Checks if a {@link Multiset} of {@link TokenSet}s is a valid subset of the powerSet of all possible sets.
+     *
+     * @param tokenSetSet the Multiset of TokenSets whose validity as a subset you want to check
+     * @param powerSet the power set of all possible valid sets
+     * @return true, if valid subset, false otherwise
+     */
+    public static boolean isValid(final Multiset<TokenSet> tokenSetSet, final Multiset<TokenSet> powerSet) {
 
         TokenSet tokenSet = getUnion(tokenSetSet);
         return powerSet.contains(tokenSet);
     }
 
-    public static boolean tripleSetIsValid(Set<CodeTriple> triple, Multiset<TokenSet> powerSet) {
+    /**
+     * Checks if a Set of {@link CodeTriple}s is a valid subset of the powerSet of all possible sets.
+     *
+     * @param triple the triple
+     * @param powerSet the power set
+     * @return true, if successful
+     */
+    public static boolean tripleSetIsValid(final Set<CodeTriple> triple, final Multiset<TokenSet> powerSet) {
 
         return isValid(getTokenSetsFromTriple(triple), powerSet);
     }
 
-    private static Multiset<TokenSet> getTokenSetsFromTriple(Set<CodeTriple> triples) {
+    /**
+     * Gets the token sets from triple.
+     *
+     * @param triples the triples
+     * @return the token sets from triple
+     */
+    private static Multiset<TokenSet> getTokenSetsFromTriple(final Set<CodeTriple> triples) {
 
         Multiset<TokenSet> tokenSetSet = HashMultiset.create();
         for (CodeTriple triple : triples) {
@@ -91,7 +144,13 @@ public class ResolverUtils {
         return tokenSetSet;
     }
 
-    static TokenSet getUnion(Multiset<TokenSet> tokenSetSet) {
+    /**
+     * Returns the {@link TokenSet} tha tis the union of all TokenSets in the {@link Multiset}.
+     *
+     * @param tokenSetSet the tokenSet Multiset to create a union from
+     * @return the union of all sets in the Multiset
+     */
+    static TokenSet getUnion(final Multiset<TokenSet> tokenSetSet) {
 
         Multiset<String> union = HashMultiset.create();
         for (TokenSet tokenSet : tokenSetSet) {
@@ -102,6 +161,12 @@ public class ResolverUtils {
         return new TokenSet(union);
     }
 
+    /**
+     * Removes the ancestors.
+     *
+     * @param codes the codes
+     * @return the sets the
+     */
     public static Set<Code> removeAncestors(final Set<Code> codes) {
 
         Set<Code> resolvedCodes = new HashSet<>();
@@ -114,6 +179,13 @@ public class ResolverUtils {
         return resolvedCodes;
     }
 
+    /**
+     * Removes the classifications coded to.
+     *
+     * @param code the code
+     * @param codes the codes
+     * @return the sets the
+     */
     static Set<Code> removeClassificationsCodedTo(final String code, final Set<Code> codes) {
 
         Set<Code> newList = new HashSet<>();
@@ -126,6 +198,13 @@ public class ResolverUtils {
         return newList;
     }
 
+    /**
+     * Code is ancestor of code in set.
+     *
+     * @param code the code
+     * @param codes the codes
+     * @return true, if successful
+     */
     static boolean codeIsAncestorOfCodeInSet(final Code code, final Set<Code> codes) {
 
         for (Code c : codes) {
@@ -134,6 +213,12 @@ public class ResolverUtils {
         return false;
     }
 
+    /**
+     * Power set.
+     *
+     * @param originalSet the original set
+     * @return the multiset
+     */
     public static Multiset<TokenSet> powerSet(final TokenSet originalSet) {
 
         Multiset<TokenSet> sets = HashMultiset.create();
