@@ -1,0 +1,9 @@
+architect|1855|1|2200|Classified into HISCO||
+civil engineer|1855|1|2200|Classified into HISCO||
+civil engineer|1855|1|2200|Classified into HISCO||
+surveyor|1855|1|2200|Classified into HISCO||
+surveyor|1855|1|2200|Classified into HISCO||
+shipowner|1855|1|2200|Classified into HISCO||
+shipowner|1855|1|2200|Classified into HISCO||
+shipowner|1855|1|2200|Classified into HISCO||
+shipooner|1900|1|2200|Classified into HISCO||

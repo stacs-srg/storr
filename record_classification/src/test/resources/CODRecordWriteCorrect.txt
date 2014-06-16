@@ -1,0 +1,6 @@
+acute bronchitis|1855|1|F|(0) 0 - 1|R99|R99 fistula||
+acute bron|1855|1|M|(1) 2 - 5|R99|R99 fistula||
+acute bron|1855|1|M|(2) 6 - 10|R99|R99 fistula||
+"acute bron, heart disease"|1855|1|M|(3) 11 - 15|R99|R99 fistula||
+"acute bron, heart disease"|1855|1|M|(4) 16 - 45|R99|R99 fistula||
+"acute hydrocephalus, fever"|1855|1|M|(5) 56+|R99|R99 fistula||

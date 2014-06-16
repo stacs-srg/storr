@@ -1,0 +1,6 @@
+acute bronchitis|1855|1|F|(0) 0 - 1|I6191|I61.91 Intracerebral haemorrhage, unspecified|Coded to the extended historical version (codes ending .01 to .09)|
+acute bron|1855|1|M|(1) 2 - 5|I6191|I61.91 Intracerebral haemorrhage, unspecified|Coded to the extended historical version (codes ending .01 to .09)|
+acute bron|1855|1|M|(2) 6 - 10|I6191|I61.91 Intracerebral haemorrhage, unspecified|Coded to the extended historical version (codes ending .01 to .09)|
+"acute bron, heart disease"|1855|1|M|(3) 11 - 15|I6191|I61.91 Intracerebral haemorrhage, unspecified|Coded to the extended historical version (codes ending .01 to .09)|
+"acute bron, heart disease"|1855|1|M|(4) 16 - 45|I6191|I61.91 Intracerebral haemorrhage, unspecified|Coded to the extended historical version (codes ending .01 to .09)|
+"acute hydrocephalus, fever"|1855|1|M|(5) 56+|I6191|I61.91 Intracerebral haemorrhage, unspecified|Coded to the extended historical version (codes ending .01 to .09)|

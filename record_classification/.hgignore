@@ -1,0 +1,40 @@
+syntax: glob
+target
+inputFiles
+.idea
+.settings/*
+.project
+.classpath
+.DS_Store
+*.orig
+*.iml
+**/.o
+**/.so
+**/.log
+**/.DS_Store
+**/*.lda
+*.crc
+outputDirectorySetup.*
+outputDirectorySetup
+testparsedData0
+parsedDataparsedData0
+condensedResults.csv
+output*.*
+temp
+
+syntax: regexp
+^neo4j-graph-test$
+syntax: regexp
+^neo4jneighbour test$
+syntax: regexp
+^neo4j-index-test$
+
+syntax: regexp
+^log\.txt$
+
+
+
+syntax: regexp
+^src/machineLearning\.properties$
+syntax: regexp
+^src/main/resources/machineLearning\.properties$
