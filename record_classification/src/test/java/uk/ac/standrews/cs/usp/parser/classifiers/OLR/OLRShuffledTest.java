@@ -14,7 +14,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import uk.ac.standrews.cs.usp.parser.datastructures.TokenSet;
 import uk.ac.standrews.cs.usp.parser.datastructures.code.CodeFactory;
 import uk.ac.standrews.cs.usp.parser.datastructures.vectors.VectorFactory;
 import uk.ac.standrews.cs.usp.tools.configuration.MachineLearningConfiguration;
@@ -29,7 +28,8 @@ public class OLRShuffledTest {
     @Before
     public void setup() throws Exception {
 
-        //    properties.setProperty("numFeatures", "50");
+        String codeDictionary = getClass().getResource("/CodeFactoryOLRTestFile.txt").getFile();
+        CodeFactory.getInstance().loadDictionary(new File(codeDictionary));
         vectorFactory = new VectorFactory();
         properties.setProperty("numCategories", "5");
         trainingVectorList = generateTrainingVectors();
