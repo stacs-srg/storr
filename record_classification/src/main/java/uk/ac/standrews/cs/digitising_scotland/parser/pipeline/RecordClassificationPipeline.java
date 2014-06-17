@@ -24,7 +24,7 @@ import com.google.common.collect.Multiset;
  */
 public class RecordClassificationPipeline {
 
-    int WORDLIMIT = 12;
+    int WORDLIMIT = 16;
 
     private TokenClassificationCache cache;
 
@@ -49,30 +49,34 @@ public class RecordClassificationPipeline {
         if (new TokenSet(record.getCleanedDescription()).size() < WORDLIMIT) {
 
             TokenSet cleanedTokenSet = new TokenSet(record.getCleanedDescription());
-            Multiset<TokenSet> powerSet = ResolverUtils.powerSet(cleanedTokenSet);
-            powerSet.remove(new TokenSet(""));
-
-            ResolverMatrix resolverMatrix = new ResolverMatrix();
-            for (TokenSet tokenSet : powerSet) {
-                Pair<Code, Double> codeDoublePair = cache.getClassification(tokenSet);
-                resolverMatrix.add(tokenSet, codeDoublePair);
-            }
-
-            resolverMatrix.chopBelowConfidence(0.3);
-            List<Set<CodeTriple>> triples = resolverMatrix.getValidCodeTriples(powerSet);
-            Set<CodeTriple> best;
-            if(triples.size()>0) {
-               best = ResolverUtils.getBest(triples);
-            } else {
-                best = new HashSet<>();
-            }
-
-            return best;
+            return classifyTokenSet(cleanedTokenSet);
         }
         else {
             System.err.println("Record skipped: Too long");
             return new HashSet<>();
         }
+    }
+
+    private Set<CodeTriple> classifyTokenSet(TokenSet cleanedTokenSet) throws IOException {
+        Multiset<TokenSet> powerSet = ResolverUtils.powerSet(cleanedTokenSet);
+        powerSet.remove(new TokenSet(""));
+
+        ResolverMatrix resolverMatrix = new ResolverMatrix();
+        for (TokenSet tokenSet : powerSet) {
+            Pair<Code, Double> codeDoublePair = cache.getClassification(tokenSet);
+            resolverMatrix.add(tokenSet, codeDoublePair);
+        }
+
+        resolverMatrix.chopBelowConfidence(0.3);
+        List<Set<CodeTriple>> triples = resolverMatrix.getValidCodeTriples(powerSet);
+        Set<CodeTriple> best;
+        if(triples.size()>0) {
+           best = ResolverUtils.getBest(triples);
+        } else {
+            best = new HashSet<>();
+        }
+
+        return best;
     }
 
 }
