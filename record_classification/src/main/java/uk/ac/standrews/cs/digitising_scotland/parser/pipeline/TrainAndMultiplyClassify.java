@@ -94,7 +94,7 @@ public class TrainAndMultiplyClassify {
         trainingBucket = new Bucket();
         predictionBucket = new Bucket();
         for(Record record : bucket){
-            if(Math.random()<0.8){
+            if(Math.random()<0.3){
                 trainingBucket.addRecordToBucket(record);
             } else {
                 predictionBucket.addRecordToBucket(record);

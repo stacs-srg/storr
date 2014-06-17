@@ -46,37 +46,36 @@ public class RecordClassificationPipeline {
      */
     public Set<CodeTriple> classify(final Record record) throws IOException {
 
-        if (new TokenSet(record.getCleanedDescription()).size() < WORDLIMIT) {
+        int size = new TokenSet(record.getCleanedDescription()).size();
+        if (size < WORDLIMIT) {
 
             TokenSet cleanedTokenSet = new TokenSet(record.getCleanedDescription());
-            return classifyTokenSet(cleanedTokenSet);
+            Multiset<TokenSet> powerSet = ResolverUtils.powerSet(cleanedTokenSet);
+            powerSet.remove(new TokenSet(""));
+
+            ResolverMatrix resolverMatrix = new ResolverMatrix();
+            for (TokenSet tokenSet : powerSet) {
+                Pair<Code, Double> codeDoublePair = cache.getClassification(tokenSet);
+                resolverMatrix.add(tokenSet, codeDoublePair);
+            }
+            int complexityBeforeCut = resolverMatrix.complexity();
+            resolverMatrix.chopBelowConfidence(0.3);
+            int complexityAfterCut = resolverMatrix.complexity();
+            System.out.println("Description length: " +size + "\t Before cut: " + complexityBeforeCut + "\t After cut: " + complexityAfterCut);
+            List<Set<CodeTriple>> triples = resolverMatrix.getValidCodeTriples(powerSet);
+            Set<CodeTriple> best;
+            if(triples.size()>0) {
+               best = ResolverUtils.getBest(triples);
+            } else {
+                best = new HashSet<>();
+            }
+
+            return best;
         }
         else {
             System.err.println("Record skipped: Too long");
             return new HashSet<>();
         }
-    }
-
-    private Set<CodeTriple> classifyTokenSet(TokenSet cleanedTokenSet) throws IOException {
-        Multiset<TokenSet> powerSet = ResolverUtils.powerSet(cleanedTokenSet);
-        powerSet.remove(new TokenSet(""));
-
-        ResolverMatrix resolverMatrix = new ResolverMatrix();
-        for (TokenSet tokenSet : powerSet) {
-            Pair<Code, Double> codeDoublePair = cache.getClassification(tokenSet);
-            resolverMatrix.add(tokenSet, codeDoublePair);
-        }
-
-        resolverMatrix.chopBelowConfidence(0.3);
-        List<Set<CodeTriple>> triples = resolverMatrix.getValidCodeTriples(powerSet);
-        Set<CodeTriple> best;
-        if(triples.size()>0) {
-           best = ResolverUtils.getBest(triples);
-        } else {
-            best = new HashSet<>();
-        }
-
-        return best;
     }
 
 }
