@@ -41,6 +41,11 @@ public class TrainAndMultiplyClassify {
     private static Bucket trainingBucket;
     private static Bucket predictionBucket;
 
+    private TrainAndMultiplyClassify() {
+
+        //no public constructor
+    }
+
     /**
      * Entry method for training and classifying a batch of records into multiple codes.
      * 
@@ -50,15 +55,17 @@ public class TrainAndMultiplyClassify {
     public static void main(final String[] args) throws Exception {
 
         File training = new File(args[0]);
-       // File prediction = new File(args[1]);
+        // File prediction = new File(args[1]);
 
-        System.out.println("********** Training Bucket **********");
+        System.out.println("********** Generating Training Bucket **********");
 
         Bucket bucket = createTrainingBucket(training);
 
         randomlyAssignToTrainingAndPrediction(bucket);
 
         vectorFactory = new VectorFactory(trainingBucket);
+
+        System.out.println("********** Training Classifier **********");
 
         AbstractClassifier classifier = trainClassifier(trainingBucket, vectorFactory);
 
@@ -91,12 +98,14 @@ public class TrainAndMultiplyClassify {
     }
 
     private static void randomlyAssignToTrainingAndPrediction(Bucket bucket) {
+
         trainingBucket = new Bucket();
         predictionBucket = new Bucket();
-        for(Record record : bucket){
-            if(Math.random()<0.8){
+        for (Record record : bucket) {
+            if (Math.random() < 0.8) {
                 trainingBucket.addRecordToBucket(record);
-            } else {
+            }
+            else {
                 predictionBucket.addRecordToBucket(record);
             }
         }

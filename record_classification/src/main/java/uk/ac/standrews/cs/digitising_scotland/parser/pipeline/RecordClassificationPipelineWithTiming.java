@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Set;
 
 import uk.ac.standrews.cs.digitising_scotland.parser.classifiers.AbstractClassifier;
-import uk.ac.standrews.cs.digitising_scotland.parser.classifiers.lookup.NGramSubstrings;
 import uk.ac.standrews.cs.digitising_scotland.parser.datastructures.Record;
 import uk.ac.standrews.cs.digitising_scotland.parser.datastructures.TokenSet;
 import uk.ac.standrews.cs.digitising_scotland.parser.datastructures.code.Code;
@@ -15,6 +14,8 @@ import uk.ac.standrews.cs.digitising_scotland.parser.resolver.Pair;
 import uk.ac.standrews.cs.digitising_scotland.parser.resolver.ResolverMatrix;
 import uk.ac.standrews.cs.digitising_scotland.parser.resolver.ResolverUtils;
 import uk.ac.standrews.cs.digitising_scotland.parser.resolver.TokenClassificationCache;
+import uk.ac.standrews.cs.digitising_scotland.tools.Timer;
+import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
 
 import com.google.common.collect.Multiset;
 
@@ -23,18 +24,18 @@ import com.google.common.collect.Multiset;
  * @author jkc25, frjd2
  *
  */
-public class RecordClassificationPipeline {
+public class RecordClassificationPipelineWithTiming {
 
-    private static final int WORDLIMIT = 8;
+    private static final int WORDLIMIT = 10;
 
     private TokenClassificationCache cache;
 
     /**
-     * Constructs a new {@link RecordClassificationPipeline} with the specified {@link AbstractClassifier} used
+     * Constructs a new {@link RecordClassificationPipelineWithTiming} with the specified {@link AbstractClassifier} used
      * to perform the classification duties.
      * @param classifier {@link AbstractClassifier} used for machine learning classification.
      */
-    public RecordClassificationPipeline(final AbstractClassifier classifier) {
+    public RecordClassificationPipelineWithTiming(final AbstractClassifier classifier) {
 
         this.cache = new TokenClassificationCache(classifier);
     }
@@ -47,30 +48,46 @@ public class RecordClassificationPipeline {
      */
     public Set<CodeTriple> classify(final Record record) throws IOException {
 
-        TokenSet cleanedTokenSet = new TokenSet(record.getCleanedDescription());
-        return classifyTokenSet(cleanedTokenSet);
+        if (new TokenSet(record.getCleanedDescription()).size() < WORDLIMIT) {
 
+            TokenSet cleanedTokenSet = new TokenSet(record.getCleanedDescription());
+            return classifyTokenSet(cleanedTokenSet);
+        }
+        else {
+            System.err.println("Record skipped: Too long");
+            return new HashSet<>();
+        }
     }
 
     private Set<CodeTriple> classifyTokenSet(final TokenSet cleanedTokenSet) throws IOException {
 
+        StringBuilder sb = new StringBuilder();
+        Timer t = new Timer();
+        t.start();
         Multiset<TokenSet> powerSet = ResolverUtils.powerSet(cleanedTokenSet);
         powerSet.remove(new TokenSet(""));
+        t.stop();
+        sb.append("tokenSet size:\t" + cleanedTokenSet.size() + "\t ResolverUtils.powerSet:\t" + t.elapsedTime() + "\t");
 
+        t = new Timer();
+        t.start();
         ResolverMatrix resolverMatrix = new ResolverMatrix();
-        if (cleanedTokenSet.size() < WORDLIMIT) {
-            populateMatrix(powerSet, resolverMatrix);
+        for (TokenSet tokenSet : powerSet) {
+            Pair<Code, Double> codeDoublePair = cache.getClassification(tokenSet);
+            resolverMatrix.add(tokenSet, codeDoublePair);
         }
-        else {
-            NGramSubstrings ngs = new NGramSubstrings(cleanedTokenSet);
-            Multiset<TokenSet> ngramSet = ngs.getGramMultiset();
-            populateMatrix(ngramSet, resolverMatrix);
+        t.stop();
+        sb.append("Add tokens to resolversMatrix:\t" + t.elapsedTime() + "\t" + "resolverMatrix size:\t" + resolverMatrix.complexity() + "\t");
 
-        }
-
+        t = new Timer();
+        t.start();
         resolverMatrix.chopBelowConfidence(0.3);
         List<Set<CodeTriple>> triples = resolverMatrix.getValidCodeTriples(powerSet);
+        t.stop();
+        sb.append("resolverMatrix cut :\t" + resolverMatrix.complexity() + "\t" + "getValidCodeTriples:\t" + t.elapsedTime() + "\t");
 
+        t = new Timer();
+        t.start();
         Set<CodeTriple> best;
         if (triples.size() > 0) {
             best = ResolverUtils.getBest(triples);
@@ -78,16 +95,11 @@ public class RecordClassificationPipeline {
         else {
             best = new HashSet<>();
         }
+        t.stop();
+        sb.append("getBest:\t" + t.elapsedTime() + "\n");
+        Utils.writeToFile(sb.toString(), "executionTimes.txt", true);
 
         return best;
-    }
-
-    private void populateMatrix(Multiset<TokenSet> tokenSetSet, ResolverMatrix resolverMatrix) throws IOException {
-
-        for (TokenSet tokenSet : tokenSetSet) {
-            Pair<Code, Double> codeDoublePair = cache.getClassification(tokenSet);
-            resolverMatrix.add(tokenSet, codeDoublePair);
-        }
     }
 
 }
