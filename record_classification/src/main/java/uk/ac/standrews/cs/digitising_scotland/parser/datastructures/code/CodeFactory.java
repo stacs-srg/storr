@@ -30,7 +30,9 @@ public final class CodeFactory {
     private CodeFactory() {
 
         Properties properties = MachineLearningConfiguration.getDefaultProperties();
-        inputFile = new File(getClass().getResource(properties.getProperty("codeDictionaryFile")).getFile());
+        String property = properties.getProperty("codeDictionaryFile");
+        String path = System.getProperty("user.dir") + "/" + property;
+        inputFile = new File(path);
     }
 
     /**

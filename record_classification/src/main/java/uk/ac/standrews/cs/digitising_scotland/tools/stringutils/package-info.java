@@ -4,3 +4,4 @@
  *
  */
 package uk.ac.standrews.cs.digitising_scotland.tools.stringutils;
+

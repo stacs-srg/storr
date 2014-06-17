@@ -13,8 +13,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
-import uk.ac.standrews.cs.digitising_scotland.parser.classifiers.OLR.OLR;
-import uk.ac.standrews.cs.digitising_scotland.parser.datastructures.TokenSet;
 import uk.ac.standrews.cs.digitising_scotland.parser.datastructures.vectors.VectorFactory;
 import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearningConfiguration;
 

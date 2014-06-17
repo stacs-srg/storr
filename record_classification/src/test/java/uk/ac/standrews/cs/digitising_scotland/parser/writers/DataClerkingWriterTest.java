@@ -13,7 +13,6 @@ import uk.ac.standrews.cs.digitising_scotland.parser.classifiers.ClassifierTesti
 import uk.ac.standrews.cs.digitising_scotland.parser.datastructures.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.parser.datastructures.Record;
 import uk.ac.standrews.cs.digitising_scotland.parser.datastructures.code.CodeNotValidException;
-import uk.ac.standrews.cs.digitising_scotland.parser.writers.DataClerkingWriter;
 
 public class DataClerkingWriterTest {
 
@@ -27,14 +26,14 @@ public class DataClerkingWriterTest {
     @AfterClass
     public static void cleanUp() {
 
-        //File file = new File(occBucketFile);
-        //    Assert.assertTrue(file.delete());
-        //        file = new File(codBucketFile);
-        //        Assert.assertTrue(file.delete());
-        //        file = new File(hicodBucketFile);
-        //        Assert.assertTrue(file.delete());
-        //        file = new File(multipleCODBucketFile);
-        // Assert.assertTrue(file.delete());
+        File file = new File(occBucketFile);
+        Assert.assertTrue(file.delete());
+        file = new File(codBucketFile);
+        Assert.assertTrue(file.delete());
+        file = new File(hicodBucketFile);
+        Assert.assertTrue(file.delete());
+        file = new File(multipleCODBucketFile);
+        Assert.assertTrue(file.delete());
     }
 
     @Test

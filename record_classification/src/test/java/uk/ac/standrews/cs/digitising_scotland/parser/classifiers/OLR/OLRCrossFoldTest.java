@@ -14,8 +14,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import uk.ac.standrews.cs.digitising_scotland.parser.classifiers.OLR.OLRCrossFold;
-import uk.ac.standrews.cs.digitising_scotland.parser.datastructures.TokenSet;
 import uk.ac.standrews.cs.digitising_scotland.parser.datastructures.code.CodeFactory;
 import uk.ac.standrews.cs.digitising_scotland.parser.datastructures.vectors.VectorFactory;
 import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearningConfiguration;

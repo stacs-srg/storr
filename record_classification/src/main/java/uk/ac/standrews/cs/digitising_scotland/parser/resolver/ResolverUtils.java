@@ -136,7 +136,7 @@ public final class ResolverUtils {
     }
 
     /**
-     * Creates a Multiset of the token sets belonging to a set of {@link CodeTriple}s
+     * Creates a Multiset of the token sets belonging to a set of {@link CodeTriple}s.
      *
      * @param triples the triples
      * @return the token sets from triple
