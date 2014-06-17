@@ -5,10 +5,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import uk.ac.standrews.cs.digitising_scotland.parser.datastructures.CODOrignalData;
-import uk.ac.standrews.cs.digitising_scotland.parser.datastructures.InputFormatException;
-import uk.ac.standrews.cs.digitising_scotland.parser.datastructures.OriginalData;
-
 /**
  * The Class OrignalDataTest tests the creation of OriginalData objects.
  */
