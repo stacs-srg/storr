@@ -30,7 +30,7 @@
 							<transformers>
 								<transformer
 									implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-									<mainClass>uk.ac.standrews.cs.usp.parser.pipeline.CODParser</mainClass>
+									<mainClass>uk.ac.standrews.cs.digitising_scotland.parser.pipeline.CODParser</mainClass>
 								</transformer>
 							</transformers>
 						</configuration>
