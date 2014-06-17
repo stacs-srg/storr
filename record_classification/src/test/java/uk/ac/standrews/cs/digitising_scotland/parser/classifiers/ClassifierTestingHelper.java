@@ -78,11 +78,11 @@ public class ClassifierTestingHelper {
      * Give bucket testing hicod codes.
      *
      * @param bucket the bucket
-     * @param code 
+     * @param code the code to give to the records in the bucket
      * @return the bucket
      * @throws URISyntaxException the URI syntax exception
      */
-    public Bucket giveBucketTestingHICODCodes(final Bucket bucket, String code) throws URISyntaxException {
+    public Bucket giveBucketTestingHICODCodes(final Bucket bucket, final String code) throws URISyntaxException {
 
         for (Record record : bucket) {
             Set<CodeTriple> codeTriples = new HashSet<CodeTriple>();

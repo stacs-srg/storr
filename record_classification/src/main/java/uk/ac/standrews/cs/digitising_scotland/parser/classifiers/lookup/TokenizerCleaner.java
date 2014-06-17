@@ -19,45 +19,40 @@ import org.apache.lucene.util.Version;
  */
 public final class TokenizerCleaner {
 
-	private TokenizerCleaner() {
+    private TokenizerCleaner() {
 
-	}
+    }
 
-	/**
-	 * Tokenise the specified String, clean it and concatenate tokens to form a
-	 * single string.
-	 * 
-	 * @param description
-	 *            string to be cleaned
-	 * @return cleaned string
-	 */
-	public static String clean(final String description) {
+    /**
+     * Tokenise the specified String, clean it and concatenate tokens to form a
+     * single string.
+     * 
+     * @param description
+     *            string to be cleaned
+     * @return cleaned string
+     */
+    public static String clean(final String description) {
 
-		String concatenatedTokens = null;
-		try {
-			concatenatedTokens = tokeniseAndConcatenateTokens(description);
-		} catch (IOException e) {
-			System.out.println("Error: Unable to clean description.");
-			e.printStackTrace();
-		}
-		return concatenatedTokens;
-	}
+        String concatenatedTokens = null;
+        try {
+            concatenatedTokens = tokeniseAndConcatenateTokens(description);
+        }
+        catch (IOException e) {
+            System.out.println("Error: Unable to clean description.");
+            e.printStackTrace();
+        }
+        return concatenatedTokens;
+    }
 
-	private static String tokeniseAndConcatenateTokens(final String description)
-			throws IOException {
+    private static String tokeniseAndConcatenateTokens(final String description) throws IOException {
 
-		TokenStream streamForCleaning = new StandardTokenizer(
-				Version.LUCENE_36, new StringReader(description));
-		String[] stopWords = { "chronic", "acute", "1", "2", "after", "before",
-				"dead", "death" };
-		CharArraySet stopSet = StopFilter.makeStopSet(Version.LUCENE_36,
-				stopWords, true);
-		StopFilter filter = new StopFilter(Version.LUCENE_36,
-				streamForCleaning, stopSet);
-		String concatenatedTokens = Concatenator.concatenate(filter,
-				CharTermAttribute.class, " ");
-		streamForCleaning.close();
-		return concatenatedTokens;
-	}
+        TokenStream streamForCleaning = new StandardTokenizer(Version.LUCENE_36, new StringReader(description));
+        String[] stopWords = {"chronic", "acute", "1", "2", "after", "before", "dead", "death"};
+        CharArraySet stopSet = StopFilter.makeStopSet(Version.LUCENE_36, stopWords, true);
+        StopFilter filter = new StopFilter(Version.LUCENE_36, streamForCleaning, stopSet);
+        String concatenatedTokens = Concatenator.concatenate(filter, CharTermAttribute.class, " ");
+        streamForCleaning.close();
+        return concatenatedTokens;
+    }
 
 }

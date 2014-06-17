@@ -11,10 +11,6 @@ import org.junit.Test;
 import uk.ac.standrews.cs.digitising_scotland.parser.datastructures.TokenSet;
 import uk.ac.standrews.cs.digitising_scotland.parser.datastructures.code.Code;
 import uk.ac.standrews.cs.digitising_scotland.parser.datastructures.code.CodeFactory;
-import uk.ac.standrews.cs.digitising_scotland.parser.resolver.CodeTriple;
-import uk.ac.standrews.cs.digitising_scotland.parser.resolver.Pair;
-import uk.ac.standrews.cs.digitising_scotland.parser.resolver.ResolverMatrix;
-import uk.ac.standrews.cs.digitising_scotland.parser.resolver.ResolverUtils;
 
 import com.google.common.collect.Multiset;
 

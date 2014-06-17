@@ -4,9 +4,6 @@ import org.apache.mahout.math.Vector;
 import org.junit.Assert;
 import org.junit.Test;
 
-import uk.ac.standrews.cs.digitising_scotland.parser.datastructures.TokenSet;
-import uk.ac.standrews.cs.digitising_scotland.parser.datastructures.vectors.VectorFactory;
-
 /**
  * Simple tests that check that the toString values of the vectors created are what we would expect.
  * Created by fraserdunlop on 28/04/2014 at 10:52.

@@ -30,8 +30,13 @@ import java.sql.Statement;
  */
 public class DBManipulation {
 
-    private static final String CREATE_DB_SYNTAX = "CREATE DATABASE IF NOT EXISTS";
-    private static final String DROP_DB_SYNTAX = "DROP DATABASE";
+    private static final String CREATE_DB_SYNTAX = "CREATE DATABASE IF NOT EXISTS ";
+    private static final String DROP_DB_SYNTAX = "DROP DATABASE ";
+
+    private static final String SELECT_ALL_SYNTAX = "SELECT COUNT(*) FROM ";
+    private static final String SELECT_SCHEMA_SYNTAX = "SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '";
+    private static final String SELECT_TABLE_SYNTAX1 = "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '";
+    private static final String SELECT_TABLE_SYNTAX2 = "' AND TABLE_NAME = '";
 
     public static final Object NULL_DATE = new Object();
 
@@ -39,7 +44,7 @@ public class DBManipulation {
      * Configures the parameters for a given prepared statement.
      * The constant value {@link #NULL_DATE} should be used to set a date parameter to null.
      *
-     * @param statement the statement to be configured
+     * @param statement  the statement to be configured
      * @param parameters a sequence of integer, string or date values
      * @throws SQLException if a value does not have one of the allowed types
      */
@@ -78,7 +83,7 @@ public class DBManipulation {
 
         try (Statement statement = connection.createStatement()) {
 
-            ResultSet size_result = statement.executeQuery("SELECT COUNT(*) FROM " + database_name + "." + table_name);
+            ResultSet size_result = statement.executeQuery(SELECT_ALL_SYNTAX + database_name + "." + table_name);
 
             if (!size_result.first()) {
                 throw new SQLException("No rows returned in count");
@@ -91,31 +96,29 @@ public class DBManipulation {
 
         try (Statement statement = connection.createStatement()) {
 
-            ResultSet check_result = statement.executeQuery("SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '" + database_name + "'");
+            ResultSet check_result = statement.executeQuery(SELECT_SCHEMA_SYNTAX + database_name + "'");
 
             return check_result.first() && check_result.getString(1).equals(database_name);
         }
-    }
-
-    public static void createDatabaseIfDoesNotExist(Connection connection, String database_name) throws SQLException {
-
-        executeStatement(connection, CREATE_DB_SYNTAX + " " + database_name);
-    }
-
-    public static void dropDatabase(Connection connection, String database_name) throws SQLException {
-
-        executeStatement(connection, DROP_DB_SYNTAX + " " + database_name);
     }
 
     public static boolean tableExists(Connection connection, String database_name, String table_name) throws SQLException {
 
         try (Statement statement = connection.createStatement()) {
 
-            String sql = "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '" + database_name + "' AND TABLE_NAME = '" + table_name + "'";
-            System.out.println("query: " + sql);
-            ResultSet check_result = statement.executeQuery(sql);
+            ResultSet check_result = statement.executeQuery(SELECT_TABLE_SYNTAX1 + database_name + SELECT_TABLE_SYNTAX2 + table_name + "'");
 
             return check_result.first() && check_result.getString(1).equalsIgnoreCase(table_name);
         }
+    }
+
+    public static void createDatabaseIfDoesNotExist(Connection connection, String database_name) throws SQLException {
+
+        executeStatement(connection, CREATE_DB_SYNTAX + database_name);
+    }
+
+    public static void dropDatabase(Connection connection, String database_name) throws SQLException {
+
+        executeStatement(connection, DROP_DB_SYNTAX + database_name);
     }
 }

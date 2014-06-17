@@ -58,7 +58,7 @@ public class UtilsTest {
         File testNumberOfLines = new File(filePath);
         Utils.writeToFile(("line1 \n" + "line2 \n" + "line3 +\n"), "target/test-classes/testNumberOfLines.txt", true);
         try {
-            Assert.assertEquals(6, Utils.getNumberOfLines(testNumberOfLines));
+            Assert.assertEquals(3, Utils.getNumberOfLines(testNumberOfLines));
             if (!testNumberOfLines.delete()) {
                 System.err.println("Could not delete " + testNumberOfLines.getAbsolutePath());
             }

@@ -15,9 +15,6 @@ import uk.ac.standrews.cs.digitising_scotland.parser.datastructures.Record;
 import uk.ac.standrews.cs.digitising_scotland.parser.datastructures.TokenSet;
 import uk.ac.standrews.cs.digitising_scotland.parser.datastructures.code.Code;
 import uk.ac.standrews.cs.digitising_scotland.parser.datastructures.code.CodeFactory;
-import uk.ac.standrews.cs.digitising_scotland.parser.resolver.Pair;
-import uk.ac.standrews.cs.digitising_scotland.parser.resolver.ResolverUtils;
-import uk.ac.standrews.cs.digitising_scotland.parser.resolver.TokenClassificationCache;
 
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multiset;
