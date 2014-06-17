@@ -16,6 +16,8 @@
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.database;
 
+import uk.ac.standrews.cs.digitising_scotland.population_model.config.PopulationProperties;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -29,12 +31,7 @@ import java.sql.SQLException;
  */
 public class DBConnector {
 
-    // TODO provide convenient mechanism to use a different database for tests
-
     private static final String CONNECTION_STRING_PREFIX = "jdbc:mysql://";
-    private static final String DEFAULT_ADDRESS = "localhost";
-    private static final String DEFAULT_USERNAME = "root";
-    private static final String DEFAULT_PASSWORD = "";
 
     private final String username;
     private final String password;
@@ -55,7 +52,7 @@ public class DBConnector {
      */
     public DBConnector(final String database_name) {
 
-        this(DEFAULT_ADDRESS, 0, DEFAULT_USERNAME, DEFAULT_PASSWORD, database_name);
+        this(PopulationProperties.DEFAULT_DB_ADDRESS, 0, PopulationProperties.DEFAULT_DB_USERNAME, PopulationProperties.DEFAULT_DB_PASSWORD, database_name);
     }
 
     /**

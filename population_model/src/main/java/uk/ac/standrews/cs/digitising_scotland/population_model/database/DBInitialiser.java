@@ -40,17 +40,37 @@ public class DBInitialiser {
     private static final String SQL_TYPE_STRING_50 = "varchar(50)";
     private static final String SQL_TYPE_STRING_100 = "varchar(100)";
 
+    private static final String ACCESS_DENIED_PREFIX = "Access denied";
+
     /**
      * Sets up a database ready to contain population data. A new database is created
      * if it does not already exist. Any existing population tables are dropped, and new empty tables are created.
      *
      * @throws IOException
      */
-    public void setupDB() throws SQLException, IOException {
+    public void setupDB() throws SQLException {
 
-        createDB();
-        dropExistingTables();
-        createTables();
+        try {
+            createDB();
+            dropExistingTables();
+            createTables();
+        }
+        catch (SQLException e) {
+            throw addExceptionExplanation(e);
+        }
+    }
+
+    private SQLException addExceptionExplanation(SQLException e) {
+
+        if (e.getMessage().startsWith(ACCESS_DENIED_PREFIX)) {
+            return new SQLException(getAccessDeniedHint());
+        }
+        return e;
+    }
+
+    private String getAccessDeniedHint() {
+
+        return "Database access denied: make sure that local database user '" + PopulationProperties.DEFAULT_DB_USERNAME + "' exists, and has full access privileges from 'localhost'.";
     }
 
     private void createDB() throws SQLException {
