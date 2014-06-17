@@ -77,7 +77,7 @@ public class TrainAndMultiplyClassify {
         accuracyMetrics.prettyPrint();
     }
 
-    private static void writeRecords(Bucket classifiedBucket) throws IOException {
+    private static void writeRecords(final Bucket classifiedBucket) throws IOException {
 
         DataClerkingWriter writer = new DataClerkingWriter(new File("target/NRSData.txt"));
         for (Record record : classifiedBucket) {
