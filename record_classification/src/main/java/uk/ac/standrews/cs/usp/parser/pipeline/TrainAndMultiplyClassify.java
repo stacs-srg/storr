@@ -34,6 +34,8 @@ import uk.ac.standrews.cs.usp.parser.datastructures.vectors.VectorFactory;
 public class TrainAndMultiplyClassify {
 
     private static VectorFactory vectorFactory;
+    private static Bucket trainingBucket;
+    private static Bucket predictionBucket;
 
     /**
      * Entry method for training and classifying a batch of records into multiple codes.
@@ -44,17 +46,19 @@ public class TrainAndMultiplyClassify {
     public static void main(final String[] args) throws Exception {
 
         File training = new File(args[0]);
-        File prediction = new File(args[1]);
+       // File prediction = new File(args[1]);
 
         System.out.println("********** Training Bucket **********");
 
         Bucket bucket = createTrainingBucket(training);
 
-        vectorFactory = new VectorFactory(bucket);
+        randomlyAssignToTrainingAndPrediction(bucket);
 
-        AbstractClassifier classifier = trainClassifier(bucket, vectorFactory);
+        vectorFactory = new VectorFactory(trainingBucket);
 
-        Bucket predicitionBucket = createPredictionBucket(prediction);
+        AbstractClassifier classifier = trainClassifier(trainingBucket, vectorFactory);
+
+        //Bucket predicitionBucket = createPredictionBucket(prediction);
 
         RecordClassificationPipeline recordClassifier = new RecordClassificationPipeline(classifier);
 
@@ -62,13 +66,25 @@ public class TrainAndMultiplyClassify {
 
         System.out.println("********** Classifying Bucket **********");
 
-        Bucket classifiedBucket = bucketClassifier.classify(predicitionBucket);
+        Bucket classifiedBucket = bucketClassifier.classify(predictionBucket);
 
         ListAccuracyMetrics accuracyMetrics = new ListAccuracyMetrics(classifiedBucket);
 
         System.out.println("********** **********");
         System.out.println(classifiedBucket);
         accuracyMetrics.prettyPrint();
+    }
+
+    private static void randomlyAssignToTrainingAndPrediction(Bucket bucket) {
+        trainingBucket = new Bucket();
+        predictionBucket = new Bucket();
+        for(Record record : bucket){
+            if(Math.random()<0.5){
+                trainingBucket.addRecordToBucket(record);
+            } else {
+                predictionBucket.addRecordToBucket(record);
+            }
+        }
     }
 
     private static Bucket createPredictionBucket(final File prediction) {
