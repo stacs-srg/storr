@@ -39,273 +39,338 @@ import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
 import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearningConfiguration;
 
 /**
- * Class has methods for training and classifying using the Mahout Naive Bayes Classifier.
- * The most two important methods are train() and classify().
+ * Class has methods for training and classifying using the Mahout Naive Bayes
+ * Classifier. The most two important methods are train() and classify().
  * 
  * @author jkc25
- *
+ * 
  */
 public class NaiveBayesClassifier extends AbstractClassifier {
 
-    private Configuration conf;
-    private FileSystem fs;
-    private Properties properties = MachineLearningConfiguration.getDefaultProperties();
-    private NaiveBayesModel model = null;
+	private Configuration conf;
+	private FileSystem fs;
+	private Properties properties = MachineLearningConfiguration
+			.getDefaultProperties();
+	private NaiveBayesModel model = null;
 
-    /**
-     * Create Naive Bayes classifier with default properties.
-     * @param vectorFactory This is the vector factory used when creating vectors for each record.
-     */
-    public NaiveBayesClassifier(final VectorFactory vectorFactory) {
+	/**
+	 * Create Naive Bayes classifier with default properties.
+	 * 
+	 * @param vectorFactory
+	 *            This is the vector factory used when creating vectors for each
+	 *            record.
+	 */
+	public NaiveBayesClassifier(final VectorFactory vectorFactory) {
 
-        super(vectorFactory);
-        try {
-            conf = new Configuration();
-            fs = FileSystem.get(conf);
-        }
-        catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-    }
+		super(vectorFactory);
+		try {
+			conf = new Configuration();
+			fs = FileSystem.get(conf);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 
-    /**
-     * Create Naive Bayes classifier with custom properties.
-     * @param customProperties Customised properties file.
-     * @param vectorFactory This is the vector factory used when creating vectors for each record.
+	/**
+	 * Create Naive Bayes classifier with custom properties.
+	 * 
+	 * @param customProperties
+	 *            Customised properties file.
+	 * @param vectorFactory
+	 *            This is the vector factory used when creating vectors for each
+	 *            record.
+	 */
+	public NaiveBayesClassifier(final String customProperties,
+			final VectorFactory vectorFactory) {
 
-     */
-    public NaiveBayesClassifier(final String customProperties, final VectorFactory vectorFactory) {
+		this(vectorFactory);
+		MachineLearningConfiguration mlc = new MachineLearningConfiguration();
+		properties = mlc.extendDefaultProperties(customProperties);
+	}
 
-        this(vectorFactory);
-        MachineLearningConfiguration mlc = new MachineLearningConfiguration();
-        properties = mlc.extendDefaultProperties(customProperties);
-    }
+	@Override
+	public void train(final Bucket trainingBucket) throws Exception {
 
-    @Override
-    public void train(final Bucket trainingBucket) throws Exception {
+		File trainingVectorsDirectory = new File(
+				properties.getProperty("trainingVectorsDirectory"));
+		String trainingVectorFile = trainingVectorsDirectory.getAbsolutePath()
+				+ "/part-m-00000";
+		String naiveBayesModelPath = properties
+				.getProperty("naiveBayesModelPath");
 
-        File trainingVectorsDirectory = new File(properties.getProperty("trainingVectorsDirectory"));
-        String trainingVectorFile = trainingVectorsDirectory.getAbsolutePath() + "/part-m-00000";
-        String naiveBayesModelPath = properties.getProperty("naiveBayesModelPath");
+		CustomVectorWriter vectorWriter = createVectorWriter(trainingVectorFile);
+		writeTrainingVectorsToDisk(trainingBucket, vectorWriter);
+		vectorWriter.close();
+		writeLabelIndex(trainingBucket);
+		model = trainNaiveBayes(trainingVectorFile, naiveBayesModelPath);
+	}
 
-        CustomVectorWriter vectorWriter = createVectorWriter(trainingVectorFile);
-        writeTrainingVectorsToDisk(trainingBucket, vectorWriter);
-        vectorWriter.close();
-        writeLabelIndex(trainingBucket);
-        model = trainNaiveBayes(trainingVectorFile, naiveBayesModelPath);
-    }
+	private void writeLabelIndex(final Bucket trainingBucket) {
 
-    private void writeLabelIndex(final Bucket trainingBucket) {
+		Collection<String> seen = new HashSet<String>();
 
-        Collection<String> seen = new HashSet<String>();
+		for (Record record : trainingBucket) {
+			Set<CodeTriple> codeTriple = record.getOriginalData()
+					.getGoldStandardCodeTriples();
+			for (CodeTriple codeTriple2 : codeTriple) {
+				String theLabel = codeTriple2.getCode().getCodeAsString();
+				if (!seen.contains(theLabel)) {
+					Utils.writeToFile(theLabel + ", ", "labelindex.csv", true);
+					seen.add(theLabel);
+				}
+			}
 
-        for (Record record : trainingBucket) {
-            Set<CodeTriple> codeTriple = record.getOriginalData().getGoldStandardCodeTriples();
-            for (CodeTriple codeTriple2 : codeTriple) {
-                String theLabel = codeTriple2.getCode().getCodeAsString();
-                if (!seen.contains(theLabel)) {
-                    Utils.writeToFile(theLabel + ", ", "labelindex.csv", true);
-                    seen.add(theLabel);
-                }
-            }
+		}
 
-        }
+	}
 
-    }
+	/**
+	 * Writes each vector in the bucket using {@link CustomVectorWriter}
+	 * vectorWriter.
+	 * 
+	 * @param bucket
+	 *            {@link Bucket} containing the vectors you want to write.
+	 * @param vectorWriter
+	 *            {@link CustomVectorWriter} instantiated with output path and
+	 *            types.
+	 * @throws IOException
+	 *             IO Error
+	 */
+	private void writeTrainingVectorsToDisk(final Bucket bucket,
+			final CustomVectorWriter vectorWriter) throws IOException {
 
-    /**
-     * Writes each vector in the bucket using {@link CustomVectorWriter} vectorWriter.
-     * @param bucket {@link Bucket} containing the vectors you want to write.
-     * @param vectorWriter {@link CustomVectorWriter} instantiated with output path and types.
-     * @throws IOException IO Error
-     */
-    private void writeTrainingVectorsToDisk(final Bucket bucket, final CustomVectorWriter vectorWriter) throws IOException {
+		for (Record record : bucket) {
 
-        for (Record record : bucket) {
+			List<NamedVector> vectors = vectorFactory
+					.generateVectorsFromRecord(record);
+			for (Vector vector : vectors) {
+				vectorWriter.write(vector);
+			}
 
-            List<NamedVector> vectors = vectorFactory.generateVectorsFromRecord(record);
-            for (Vector vector : vectors) {
-                vectorWriter.write(vector);
-            }
+		}
+	}
 
-        }
-    }
+	/**
+	 * Creates a {@link CustomVectorWriter} to write vectors to disk.
+	 * {@link CustomVectorWriter} writes out {@link Text},
+	 * {@link VectorWritable} pairs into the file specified.
+	 * 
+	 * @param trainingVectorLocation
+	 *            location to write vectors to.
+	 * @return {@link Writer} with trainingVectorLocation as it's output path
+	 *         and {@link Text}, {@link VectorWritable} as its types.
+	 * @throws IOException
+	 *             I/O Error
+	 */
+	private CustomVectorWriter createVectorWriter(
+			final String trainingVectorLocation) throws IOException {
 
-    /**
-     * Creates a {@link CustomVectorWriter} to write vectors to disk.
-     * {@link CustomVectorWriter} writes out {@link Text}, {@link VectorWritable} pairs into the file specified.
-     * @param trainingVectorLocation location to write vectors to.
-     * @return {@link Writer} with trainingVectorLocation as it's output path and {@link Text}, {@link VectorWritable} as its types.
-     * @throws IOException I/O Error
-     */
-    private CustomVectorWriter createVectorWriter(final String trainingVectorLocation) throws IOException {
+		SequenceFile.Writer writer = new SequenceFile.Writer(fs, conf,
+				new Path(trainingVectorLocation), Text.class,
+				VectorWritable.class);
+		CustomVectorWriter c = new CustomVectorWriter(writer);
+		return c;
+	}
 
-        SequenceFile.Writer writer = new SequenceFile.Writer(fs, conf, new Path(trainingVectorLocation), Text.class, VectorWritable.class);
-        CustomVectorWriter c = new CustomVectorWriter(writer);
-        return c;
-    }
+	@Override
+	public Record classify(final Record record) throws IOException {
 
-    @Override
-    public Record classify(final Record record) throws IOException {
+		Record classifiedRecord = record;
+		Set<CodeTriple> resultSet = new HashSet<>();
+		List<NamedVector> vectors = vectorFactory
+				.generateVectorsFromRecord(record);
 
-        Record classifiedRecord = record;
-        Set<CodeTriple> resultSet = new HashSet<>();
-        List<NamedVector> vectors = vectorFactory.generateVectorsFromRecord(record);
+		for (NamedVector namedVector : vectors) {
+			resultSet.add(getClassification(record, namedVector));
+		}
 
-        for (NamedVector namedVector : vectors) {
-            resultSet.add(getClassification(record, namedVector));
-        }
+		classifiedRecord.addAllCodeTriples(resultSet);
+		return classifiedRecord;
+	}
 
-        classifiedRecord.addAllCodeTriples(resultSet);
-        return classifiedRecord;
-    }
+	private CodeTriple getClassification(final Record record,
+			final NamedVector namedVector) throws IOException {
 
-    private CodeTriple getClassification(final Record record, final NamedVector namedVector) throws IOException {
+		Dictionary dictionary = buildDictionaryFromLabelMap(properties
+				.getProperty("labelindex"));
 
-        Dictionary dictionary = buildDictionaryFromLabelMap(properties.getProperty("labelindex"));
+		AbstractNaiveBayesClassifier classifier = getClassifier();
 
-        AbstractNaiveBayesClassifier classifier = getClassifier();
+		Vector resultVector = classifier.classifyFull(namedVector);
 
-        Vector resultVector = classifier.classifyFull(namedVector);
+		ClassifierResult cr = getClassifierResult(resultVector, dictionary);
 
-        ClassifierResult cr = getClassifierResult(resultVector, dictionary);
+		Code code = getCode(resultVector.maxValueIndex());
 
-        Code code = getCode(resultVector.maxValueIndex());
+		double confidence = getConfidence(cr.getLogLikelihood());
 
-        double confidence = getConfidence(cr.getLogLikelihood());
+		return new CodeTriple(code,
+				new TokenSet(record.getCleanedDescription()), confidence);
+	}
 
-        return new CodeTriple(code, new TokenSet(record.getCleanedDescription()), confidence);
-    }
+	/**
+	 * Builds a {@link ClassifierResult} from a result vector and the dictionary
+	 * of interger/classifications.
+	 * 
+	 * @param result
+	 *            result vector from the Naive Bayes Classifier.
+	 * @param dictionary
+	 *            Dictionary containing the mapping of Integers to
+	 *            classifications (labels)
+	 * @return {@link ClassifierResult} containing the details of the
+	 *         classification
+	 */
+	private ClassifierResult getClassifierResult(final Vector result,
+			final Dictionary dictionary) {
 
-    /**
-     * Builds a {@link ClassifierResult} from a result vector and the dictionary of interger/classifications.
-     * @param result result vector from the Naive Bayes Classifier.
-     * @param dictionary Dictionary containing the mapping of Integers to classifications (labels)
-     * @return {@link ClassifierResult} containing the details of the classification
-     */
-    private ClassifierResult getClassifierResult(final Vector result, final Dictionary dictionary) {
+		int categoryOfClassification = result.maxValueIndex();
+		ClassifierResult cr = new ClassifierResult(dictionary.values().get(
+				categoryOfClassification));
+		return cr;
+	}
 
-        int categoryOfClassification = result.maxValueIndex();
-        ClassifierResult cr = new ClassifierResult(dictionary.values().get(categoryOfClassification));
-        return cr;
-    }
+	/**
+	 * Builds a {@link StandardNaiveBayesClassifier}.
+	 * 
+	 * @return StandardNaiveBayesClassifier built from the model stored in
+	 *         "target/naiveBayesModelPath"
+	 * @throws IOException
+	 *             if the model cannot be read
+	 */
+	private AbstractNaiveBayesClassifier getClassifier() throws IOException {
 
-    /**
-     * Builds a {@link StandardNaiveBayesClassifier}.
-     * @return StandardNaiveBayesClassifier built from the model stored in "target/naiveBayesModelPath"
-     * @throws IOException if the model cannot be read
-     */
-    private AbstractNaiveBayesClassifier getClassifier() throws IOException {
+		if (model == null) {
+			model = getModel();
+		}
 
-        if (model == null) {
-            model = getModel();
-        }
+		AbstractNaiveBayesClassifier classifier = new StandardNaiveBayesClassifier(
+				model);
 
-        AbstractNaiveBayesClassifier classifier = new StandardNaiveBayesClassifier(model);
+		return classifier;
+	}
 
-        return classifier;
-    }
+	/**
+	 * Reads and returns the Naive Bayes model from the disk.
+	 * 
+	 * @return {@link NaiveBayesModel} from disk
+	 * @throws IOException
+	 *             if the model cannot be read
+	 */
+	private NaiveBayesModel getModel() throws IOException {
 
-    /**
-     * Reads and returns the Naive Bayes model from the disk.
-     * @return {@link NaiveBayesModel} from disk
-     * @throws IOException if the model cannot be read
-     */
-    private NaiveBayesModel getModel() throws IOException {
+		Configuration conf = new Configuration();
+		String modelLocation = "target/naiveBayesModelPath";
+		NaiveBayesModel model = NaiveBayesModel.materialize(new Path(
+				modelLocation), conf);
+		return model;
+	}
 
-        Configuration conf = new Configuration();
-        String modelLocation = "target/naiveBayesModelPath";
-        NaiveBayesModel model = NaiveBayesModel.materialize(new Path(modelLocation), conf);
-        return model;
-    }
+	/**
+	 * Builds a {@link Dictionary} from a label map. Usually used to read the
+	 * labelindex written by Mahout {@link BayesUtils}.
+	 * 
+	 * @param labelMapPath
+	 *            location of the label index written by the mahout
+	 *            trainNaiveByaes job return dictionary {@link Dictionary}
+	 *            containing all label/class mappings
+	 */
+	private Dictionary buildDictionaryFromLabelMap(final String labelMapPath) {
 
-    /**
-     * Builds a {@link Dictionary} from a label map. Usually used to read the labelindex written by Mahout {@link BayesUtils}.
-     * @param labelMapPath location of the label index written by the mahout trainNaiveByaes job
-     * return dictionary {@link Dictionary} containing all label/class mappings
-     */
-    private Dictionary buildDictionaryFromLabelMap(final String labelMapPath) {
+		Configuration conf = new Configuration();
+		Dictionary dictionary = new Dictionary();
+		Map<Integer, String> labelMap = BayesUtils.readLabelIndex(conf,
+				new Path(labelMapPath));
 
-        Configuration conf = new Configuration();
-        Dictionary dictionary = new Dictionary();
-        Map<Integer, String> labelMap = BayesUtils.readLabelIndex(conf, new Path(labelMapPath));
+		for (int i = 0; i < labelMap.size(); i++) {
+			dictionary.intern(labelMap.get(i).trim());
+		}
 
-        for (int i = 0; i < labelMap.size(); i++) {
-            dictionary.intern(labelMap.get(i).trim());
-        }
+		return dictionary;
+	}
 
-        return dictionary;
-    }
+	/**
+	 * TODO - finish writing this method Generates a confidence value from a log
+	 * likelihood.
+	 * 
+	 * @param logLikelihood
+	 * @return confidence score
+	 */
+	private double getConfidence(final double logLikelihood) {
 
-    /**
-     * TODO - finish writing this method
-     * Generates a confidence value from a log likelihood.
-     * @param logLikelihood
-     * @return confidence score
-     */
-    private double getConfidence(final double logLikelihood) {
+		// TODO FIXME return real confidence... might be hard as this is Bayes
+		// double confidence = Math.pow(logLikelihood, 2);
+		// confidence = Math.sqrt(confidence);
 
-        //TODO FIXME return real confidence... might be hard as this is Bayes
-        //        double confidence = Math.pow(logLikelihood, 2);
-        //        confidence = Math.sqrt(confidence);
+		return 0.5;
+	}
 
-        return 0.5;
-    }
+	/**
+	 * Gets an Occ Code from the {@link CodeFactory}.
+	 * 
+	 * @param resultOfClassification
+	 *            the string representation of the classification code
+	 * @return Code code representation of the resultOfClassification
+	 * @throws IOException
+	 *             if resultOfClassification is not a valid code or CodeFactory
+	 *             cannot read the code list.
+	 */
+	private Code getCode(final int resultOfClassification) throws IOException {
 
-    /**
-     * Gets an Occ Code from the {@link CodeFactory}.
-     * @param resultOfClassification the string representation of the classification code
-     * @return Code code representation of the resultOfClassification
-     * @throws IOException if resultOfClassification is not a valid code or CodeFactory cannot read the code list.
-     */
-    private Code getCode(final int resultOfClassification) throws IOException {
+		return CodeFactory.getInstance().getCode(resultOfClassification);
 
-        Code code = CodeFactory.getInstance().getCode(resultOfClassification);
-        return code;
-    }
+	}
 
-    /**
-     * Trains a Naive Bayes model with the vectors supplied.
-     * 
-     * @param trainingVectorLocation
-     * @param naiveBayesModelPath
-     * @return model {@link NaiveBayesModel} the trained model
-     * @throws Exception
-     */
-    private NaiveBayesModel trainNaiveBayes(final String trainingVectorLocation, final String naiveBayesModelPath) throws Exception {
+	/**
+	 * Trains a Naive Bayes model with the vectors supplied.
+	 * 
+	 * @param trainingVectorLocation
+	 * @param naiveBayesModelPath
+	 * @return model {@link NaiveBayesModel} the trained model
+	 * @throws Exception
+	 */
+	private NaiveBayesModel trainNaiveBayes(
+			final String trainingVectorLocation,
+			final String naiveBayesModelPath) throws Exception {
 
-        //-i  = training vector location, -el = extract label index, -li- place to store labelindex
-        //-o = model output path, -ow = overwrite existing vectors
-        String[] args = new String[]{"-i", trainingVectorLocation, "-o", naiveBayesModelPath, "-el", "-li", properties.getProperty("labelindex"), "-ow"};
+		// -i = training vector location, -el = extract label index, -li- place
+		// to store labelindex
+		// -o = model output path, -ow = overwrite existing vectors
+		String[] args = new String[] { "-i", trainingVectorLocation, "-o",
+				naiveBayesModelPath, "-el", "-li",
+				properties.getProperty("labelindex"), "-ow" };
 
-        TrainNaiveBayesJob.main(args);
+		TrainNaiveBayesJob.main(args);
 
-        return getModel();
-    }
+		return getModel();
+	}
 
-    @Override
-    public void getModelFromDefaultLocation() {
+	@Override
+	public void getModelFromDefaultLocation() {
 
-        try {
-            model = getModel();
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+		try {
+			model = getModel();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
-    @Override
-    public Pair<Code, Double> classify(final TokenSet tokenSet) throws IOException {
+	@Override
+	public Pair<Code, Double> classify(final TokenSet tokenSet)
+			throws IOException {
 
-        Pair<Code, Double> pair;
-        NamedVector vector = vectorFactory.createNamedVectorFromString(tokenSet.toString(), "unknown");
-        int classificationID = getClassifier().classifyFull(vector).maxValueIndex();
-        Code code = CodeFactory.getInstance().getCode(classificationID);
-        //  double confidence = Math.exp(getClassifier().logLikelihood(classificationID, vector)); THIS WONT WORK - Need to fudge it
-        double confidence = 0.1;
+		Pair<Code, Double> pair;
+		NamedVector vector = vectorFactory.createNamedVectorFromString(
+				tokenSet.toString(), "unknown");
+		int classificationID = getClassifier().classifyFull(vector)
+				.maxValueIndex();
+		Code code = CodeFactory.getInstance().getCode(classificationID);
+		// double confidence =
+		// Math.exp(getClassifier().logLikelihood(classificationID, vector));
+		// THIS WONT WORK - Need to fudge it
+		double confidence = 0.1;
 
-        pair = new Pair<>(code, confidence);
-        return pair;
-    }
+		pair = new Pair<>(code, confidence);
+		return pair;
+	}
 }
