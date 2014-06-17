@@ -16,20 +16,20 @@ import uk.ac.standrews.cs.digitising_scotland.parser.writers.DataClerkingWriter;
 /**
  * This class integrates the training of machine learning models and the classification of records using those models.
  * The classification process is as follows:
- * <br>
+ * <br><br>
  * The gold standard training file is read in from the command line and a {@link Bucket} of {@link Record}s are created from this file.
  * A {@link VectorFactory} is then created to manage the creation of vectors for these records. The vectorFactory also manages
  * the mapping of vectors IDs to words, ie the vector dictionary.
- * <br>
+ * <br><br>
  * An {@link AbstractClassifier} is then created from the training bucket and the model(s) are trained and saved to disk.
- * <br>
+ * <br><br>
  * The records to be classified are held in a file with the correct format as specified by NRS. One record per line.
  * This class initiates the reading of these records. These are stored as {@link Record} objects inside a {@link Bucket}.
- *<br>
+ *<br><br>
  * After the records have been created and stored in a bucket, classification can begin. This is carried out by the
  * {@link BucketClassifier} class which in turn implements the {@link RecordClassificationPipeline}. Please see this class for
  * implementation details.
- * <br>
+ * <br><br>
  * Some initial metrics are then printed to the console and classified records are written to file (target/NRSData.txt).
  * 
  * @author jkc25, frjd2
