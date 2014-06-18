@@ -82,7 +82,7 @@ public class RecordClassificationPipelineWithTiming {
         t = new Timer();
         t.start();
         resolverMatrix.chopBelowConfidence(0.3);
-        List<Set<CodeTriple>> triples = resolverMatrix.getValidCodeTriples(powerSet);
+        List<Set<CodeTriple>> triples = resolverMatrix.getValidCodeTriples(cleanedTokenSet);
         t.stop();
         sb.append("resolverMatrix cut :\t" + resolverMatrix.complexity() + "\t" + "getValidCodeTriples:\t" + t.elapsedTime() + "\t");
 

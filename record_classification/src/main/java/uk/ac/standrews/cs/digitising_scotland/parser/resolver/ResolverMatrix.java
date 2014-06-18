@@ -65,16 +65,16 @@ public class ResolverMatrix {
      * A {@link CodeTriple} is defined as being valid if the union of the Set of TokenSets is a subset of the specified powerSet.
      * Any null entries in the matrix are not returned.
      * 
-     * @param powerSet the power set of valid tokenSets
+     * @param originalSet the power set of valid tokenSets
      * @return List<Set<CodeTriple>> the List of Sets of valid {@link CodeTriple}s
      */
-    public List<Set<CodeTriple>> getValidCodeTriples(final Multiset<TokenSet> powerSet) {
+    public List<Set<CodeTriple>> getValidCodeTriples(final TokenSet originalSet) {
 
         resolveHierarchies();
         List<Set<CodeTriple>> merged = new ArrayList<>();
         merged.add(null);
         for (Code code : matrix.keySet()) {
-            merge(merged, matrix.get(code), code, powerSet);
+            merge(merged, matrix.get(code), code, originalSet);
         }
         merged.remove(null);
         return merged;
@@ -120,9 +120,8 @@ public class ResolverMatrix {
      * @param merged the merged
      * @param pairs the pairs
      * @param code the code
-     * @param powerSet the power set
      */
-    private void merge(final List<Set<CodeTriple>> merged, final List<Pair<TokenSet, Double>> pairs, final Code code, final Multiset<TokenSet> powerSet) {
+    private void merge(final List<Set<CodeTriple>> merged, final List<Pair<TokenSet, Double>> pairs, final Code code, final TokenSet originalSet) {
 
         List<Set<CodeTriple>> temporaryMerge = new ArrayList<>();
         for (Set<CodeTriple> tripleSet : merged) {
@@ -133,7 +132,7 @@ public class ResolverMatrix {
                     tempTripleSet.addAll(tripleSet);
                 }
                 tempTripleSet.add(tempCodeTriple);
-                if (ResolverUtils.tripleSetIsValid(tempTripleSet, powerSet)) {
+                if (ResolverUtils.tripleSetIsValid(tempTripleSet, originalSet)) {
                     temporaryMerge.add(tempTripleSet);
                 }
             }

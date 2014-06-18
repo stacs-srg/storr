@@ -25,7 +25,7 @@ import com.google.common.collect.Multiset;
  */
 public class RecordClassificationPipeline {
 
-    private static final int WORDLIMIT = 6;
+    private static final int WORDLIMIT = 1;
 
     private TokenClassificationCache cache;
 
@@ -54,11 +54,11 @@ public class RecordClassificationPipeline {
 
     private Set<CodeTriple> classifyTokenSet(final TokenSet cleanedTokenSet) throws IOException {
 
-        Multiset<TokenSet> powerSet = ResolverUtils.powerSet(cleanedTokenSet);
-        powerSet.remove(new TokenSet(""));
 
         ResolverMatrix resolverMatrix = new ResolverMatrix();
         if (cleanedTokenSet.size() < WORDLIMIT) {
+            Multiset<TokenSet> powerSet = ResolverUtils.powerSet(cleanedTokenSet);
+            powerSet.remove(new TokenSet(""));
             populateMatrix(powerSet, resolverMatrix);
         }
         else {
@@ -69,7 +69,7 @@ public class RecordClassificationPipeline {
         }
 
         resolverMatrix.chopBelowConfidence(0.3);
-        List<Set<CodeTriple>> triples = resolverMatrix.getValidCodeTriples(powerSet);
+        List<Set<CodeTriple>> triples = resolverMatrix.getValidCodeTriples(cleanedTokenSet);
 
         Set<CodeTriple> best;
         if (triples.size() > 0) {

@@ -21,13 +21,13 @@ import com.google.common.collect.Multiset;
 /**
  * This class creates and stores the nGrams created from a record and provides
  * methods to access those nGrams.
- * 
+ *
  * @author frjd2
- * 
+ *
  *         TODO error and exception handling TODO general tidying and
  *         refactoring for neatness and readability
- * 
- * 
+ *
+ *
  */
 public class NGramSubstrings implements Iterable<TokenSet> {
 
@@ -36,7 +36,7 @@ public class NGramSubstrings implements Iterable<TokenSet> {
     /**
      * Initalises and {@link NGramSubstrings} object with the input string split
      * into grams.
-     * 
+     *
      * @param inputString
      *            the input string to create Ngrams from.
      * @throws IOException
@@ -50,7 +50,7 @@ public class NGramSubstrings implements Iterable<TokenSet> {
     /**
      * Initalises and {@link NGramSubstrings} object with the input string split
      * into grams.
-     * 
+     *
      * @param inputTokenSet
      *            the input tokenSet to create Ngrams from.
      * @throws IOException
@@ -64,7 +64,7 @@ public class NGramSubstrings implements Iterable<TokenSet> {
     /**
      * Initalises and {@link NGramSubstrings} object with the original data of
      * the record split into grams.
-     * 
+     *
      * @param record
      *            the input record to create Ngrams from.
      * @throws IOException
@@ -79,7 +79,7 @@ public class NGramSubstrings implements Iterable<TokenSet> {
     /**
      * Returns the nGrams for this {@link NGramSubstrings} class as a List of
      * Strings.
-     * 
+     *
      * @return List<String> nGrams created for the original string or Record
      */
     public List<TokenSet> getGrams() {
@@ -90,7 +90,7 @@ public class NGramSubstrings implements Iterable<TokenSet> {
     /**
      * Returns the nGrams for this {@link NGramSubstrings} class as a List of
      * Strings.
-     * 
+     *
      * @return List<String> nGrams created for the original string or Record
      */
     public Multiset<TokenSet> getGramMultiset() {
@@ -103,13 +103,13 @@ public class NGramSubstrings implements Iterable<TokenSet> {
 
     /**
      * Splits a string into nGrams.
-     * 
+     *
      * @param stringToSplit
      *            - the string to be split into nGrams
      * @return ArrayList<String> - an ArrayList of NGrams
      * @throws IOException
      *             If the stream cannot read the stringToSplit
-     * 
+     *
      */
     private List<TokenSet> splitIntoNGrams(final String stringToSplit) throws IOException {
 
@@ -126,7 +126,7 @@ public class NGramSubstrings implements Iterable<TokenSet> {
 
     /**
      * Checks for a null stream and closes it.
-     * 
+     *
      * @param stream
      *            Stream to close
      * @throws IOException
@@ -142,7 +142,7 @@ public class NGramSubstrings implements Iterable<TokenSet> {
 
     /**
      * Constructs a {@link StandardTokenizer} from this string.
-     * 
+     *
      * @param string
      *            String to create Tokenizer from.
      * @return {@link StandardTokenizer} from string
