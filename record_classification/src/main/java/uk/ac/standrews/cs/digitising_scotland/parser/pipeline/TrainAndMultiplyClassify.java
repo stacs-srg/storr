@@ -6,6 +6,7 @@ import java.io.IOException;
 import uk.ac.standrews.cs.digitising_scotland.parser.classifiers.AbstractClassifier;
 import uk.ac.standrews.cs.digitising_scotland.parser.classifiers.OLR.OLRClassifier;
 import uk.ac.standrews.cs.digitising_scotland.parser.datastructures.Bucket;
+import uk.ac.standrews.cs.digitising_scotland.parser.datastructures.FormatConverter;
 import uk.ac.standrews.cs.digitising_scotland.parser.datastructures.InputFormatException;
 import uk.ac.standrews.cs.digitising_scotland.parser.datastructures.ListAccuracyMetrics;
 import uk.ac.standrews.cs.digitising_scotland.parser.datastructures.Record;
@@ -139,7 +140,7 @@ public class TrainAndMultiplyClassify {
     private static Bucket createTrainingBucket(final File training) throws IOException, InputFormatException {
 
         Bucket bucket = new Bucket();
-        Iterable<Record> records = RecordFactory.makeCodedRecordsFromFile(training);
+        Iterable<Record> records = FormatConverter.convert(training);
         bucket.addCollectionOfRecords(records);
         return bucket;
     }

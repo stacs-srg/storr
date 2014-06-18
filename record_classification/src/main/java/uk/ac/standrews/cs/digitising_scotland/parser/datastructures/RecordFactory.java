@@ -6,7 +6,9 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import uk.ac.standrews.cs.digitising_scotland.parser.datastructures.code.Code;
 import uk.ac.standrews.cs.digitising_scotland.parser.datastructures.code.CodeFactory;
@@ -121,6 +123,43 @@ public abstract class RecordFactory {
                 Record newRecord = createRecord(thisCode, originalData);
                 recordList.add(newRecord);
             }
+
+        }
+        br.close();
+        return recordList;
+    }
+
+    /**
+     * Creates a list of {@link Record} objects from a file where the records have been human coded previously.
+     *
+     * @param inputFile file containing original record data. Format should be.... TODO
+     * @return List<Record> of {@link Record} from the file.
+     * @throws IOException Signals that an I/O exception has occurred.
+     * @throws InputFormatException the input format exception
+     */
+    public static List<Record> makeMultipleCodedRecordsFromFile(final File inputFile) throws IOException, InputFormatException {
+
+        List<Record> recordList = new ArrayList<Record>();
+        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(inputFile), ENCODING));
+        String line;
+
+        while ((line = br.readLine()) != null) {
+            String[] lineSplit = line.split("\\|");
+            int year = Integer.parseInt(lineSplit[1]);
+            int imageQuality = Integer.parseInt(lineSplit[2]);
+            int ageGroup = Integer.parseInt(lineSplit[3]);
+            int sex = Integer.parseInt(lineSplit[4]);
+            String description = lineSplit[5];
+            OriginalData originalData = new CODOrignalData(description, year, ageGroup, sex, imageQuality, inputFile.getPath());
+            Set<CodeTriple> goldStandardClassification = new HashSet<>();
+
+            for (int i = 6; i < lineSplit.length; i = i + 2) {
+                Code thisCode = CodeFactory.getInstance().getCode(lineSplit[i].trim());
+                TokenSet tokenSet = new TokenSet(lineSplit[i++].trim());
+                CodeTriple newCodeTriple = new CodeTriple(thisCode, tokenSet, 1.0);
+                goldStandardClassification.add(newCodeTriple);
+            }
+            originalData.setGoldStandardClassification(goldStandardClassification);
 
         }
         br.close();

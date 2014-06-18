@@ -31,6 +31,7 @@ public class OriginalData implements java.io.Serializable {
 
         if (imageQuality < 0 || imageQuality > 1) { throw new NumberFormatException("image quality must be 0 or 1, currently: " + imageQuality + "\ndescription: " + description); }
         this.description = description;
+        this.description.intern();
         this.year = year;
         this.imageQuality = imageQuality;
         this.fileName = fileName;

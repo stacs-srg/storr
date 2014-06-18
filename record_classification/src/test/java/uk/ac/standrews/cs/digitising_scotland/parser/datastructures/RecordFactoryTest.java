@@ -10,17 +10,28 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
-import uk.ac.standrews.cs.digitising_scotland.parser.datastructures.Bucket;
-import uk.ac.standrews.cs.digitising_scotland.parser.datastructures.CODOrignalData;
-import uk.ac.standrews.cs.digitising_scotland.parser.datastructures.InputFormatException;
-import uk.ac.standrews.cs.digitising_scotland.parser.datastructures.Record;
-import uk.ac.standrews.cs.digitising_scotland.parser.datastructures.RecordFactory;
 import uk.ac.standrews.cs.digitising_scotland.parser.datastructures.code.CodeFactory;
+import uk.ac.standrews.cs.digitising_scotland.parser.resolver.CodeTriple;
 
 /**
  * The Class RecordFactoryTest tests the creation of {@link Record} from the {@link RecordFactory}.
  */
 public class RecordFactoryTest {
+
+    @Test
+    public void makeMultipleCodedTrainingRecords() throws IOException, InputFormatException {
+
+        File inputFile = new File("ModData/modDataSample11.txt");
+        List<Record> records = FormatConverter.convert(inputFile);
+
+        for (Record record : records) {
+            System.out.print(record.getOriginalData().getDescription() + "\t");
+            for (CodeTriple codeT : record.getOriginalData().getGoldStandardCodeTriples()) {
+                System.out.print(codeT + "\t");
+            }
+            System.out.println();
+        }
+    }
 
     /**
      * Tests creating occupation records from the file occupationTestFormatPipe.

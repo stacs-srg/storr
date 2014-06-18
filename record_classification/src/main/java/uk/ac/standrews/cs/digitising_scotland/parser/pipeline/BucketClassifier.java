@@ -35,9 +35,13 @@ public class BucketClassifier {
      */
     public Bucket classify(final Bucket bucket) throws IOException {
 
+        int count = 0;
+        int total = bucket.size();
         for (Record record : bucket) {
+            System.out.println("classifying record " + count + " of " + total);
             Set<CodeTriple> result = recordClassifier.classify(record);
             record.addAllCodeTriples(result);
+            count++;
         }
 
         return bucket;

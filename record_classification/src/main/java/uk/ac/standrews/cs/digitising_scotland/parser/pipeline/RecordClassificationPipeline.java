@@ -25,7 +25,7 @@ import com.google.common.collect.Multiset;
  */
 public class RecordClassificationPipeline {
 
-    private static final int WORDLIMIT = 8;
+    private static final int WORDLIMIT = 6;
 
     private TokenClassificationCache cache;
 
