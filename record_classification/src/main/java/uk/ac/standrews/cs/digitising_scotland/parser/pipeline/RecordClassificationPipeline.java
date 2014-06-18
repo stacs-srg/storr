@@ -54,11 +54,11 @@ public class RecordClassificationPipeline {
 
     private Set<CodeTriple> classifyTokenSet(final TokenSet cleanedTokenSet) throws IOException {
 
-        Multiset<TokenSet> powerSet = ResolverUtils.powerSet(cleanedTokenSet);
-        powerSet.remove(new TokenSet(""));
 
         ResolverMatrix resolverMatrix = new ResolverMatrix();
         if (cleanedTokenSet.size() < WORDLIMIT) {
+            Multiset<TokenSet> powerSet = ResolverUtils.powerSet(cleanedTokenSet);
+            powerSet.remove(new TokenSet(""));
             populateMatrix(powerSet, resolverMatrix);
         }
         else {
