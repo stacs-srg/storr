@@ -132,8 +132,10 @@ public final class ResolverUtils {
      */
     public static boolean tripleSetIsValid(final Set<CodeTriple> triple, final TokenSet originalTokenSet) {
         TokenSet union = getUnion(getTokenSetsFromTriple(triple));
-        if(!originalTokenSet.containsAll(union))
-            return false;
+        return originalTokenSet.containsAll(union) && noTokenAppearsInUnionMoreOftenThanInOriginalSet(originalTokenSet, union);
+    }
+
+    private static boolean noTokenAppearsInUnionMoreOftenThanInOriginalSet(TokenSet originalTokenSet, TokenSet union) {
         for (String token : union){
             TokenSet originalCopy = new TokenSet(originalTokenSet);
             TokenSet unionCopy = new TokenSet(union);
