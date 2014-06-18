@@ -127,12 +127,22 @@ public final class ResolverUtils {
      * is a a member of powerSet.
      *
      * @param triple a set of {@link CodeTriple}s
-     * @param powerSet the power set of the token set from the original data
+     * @param originalTokenSet the token set from the original data
      * @return true, if successful
      */
-    public static boolean tripleSetIsValid(final Set<CodeTriple> triple, final Multiset<TokenSet> powerSet) {
-
-        return isValid(getTokenSetsFromTriple(triple), powerSet);
+    public static boolean tripleSetIsValid(final Set<CodeTriple> triple, final TokenSet originalTokenSet) {
+        TokenSet union = getUnion(getTokenSetsFromTriple(triple));
+        if(!originalTokenSet.containsAll(union))
+            return false;
+        for (String token : union){
+            TokenSet originalCopy = new TokenSet(originalTokenSet);
+            TokenSet unionCopy = new TokenSet(union);
+            originalCopy.retainAll(new TokenSet(token));
+            unionCopy.retainAll(new TokenSet(token));
+            if(unionCopy.size() > originalCopy.size())
+                return false;
+        }
+        return true;
     }
 
     /**

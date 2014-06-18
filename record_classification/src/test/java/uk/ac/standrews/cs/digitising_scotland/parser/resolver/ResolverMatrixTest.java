@@ -1,6 +1,7 @@
 package uk.ac.standrews.cs.digitising_scotland.parser.resolver;
 
 import java.io.File;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -32,6 +33,46 @@ public class ResolverMatrixTest {
     }
 
     @Test
+    public void tripleSetIsValidTest(){
+        TokenSet originalSet = new TokenSet("the brown dog brown dog dog");
+        Code code = CodeFactory.getInstance().getCode(0);
+        CodeTriple codeTriple = new CodeTriple(code,new TokenSet("brown dog"), 1.0);
+        Set<CodeTriple> tripleSet = new HashSet<>();
+        tripleSet.add(codeTriple);
+        Assert.assertTrue(ResolverUtils.tripleSetIsValid(tripleSet, originalSet));
+    }
+
+    @Test
+    public void tripleSetIsValidTest2(){
+        TokenSet originalSet = new TokenSet("the brown dog brown dog dog");
+        Code code = CodeFactory.getInstance().getCode(0);
+        CodeTriple codeTriple = new CodeTriple(code,new TokenSet("the the the brown dog"), 1.0);
+        Set<CodeTriple> tripleSet = new HashSet<>();
+        tripleSet.add(codeTriple);
+        Assert.assertFalse(ResolverUtils.tripleSetIsValid(tripleSet, originalSet));
+    }
+
+    @Test
+    public void tripleSetIsValidTest3(){
+        TokenSet originalSet = new TokenSet("the brown dog brown dog dog");
+        Code code = CodeFactory.getInstance().getCode(0);
+        CodeTriple codeTriple = new CodeTriple(code,new TokenSet("the brown dog brown dog dog"), 1.0);
+        Set<CodeTriple> tripleSet = new HashSet<>();
+        tripleSet.add(codeTriple);
+        Assert.assertTrue(ResolverUtils.tripleSetIsValid(tripleSet, originalSet));
+    }
+
+    @Test
+    public void tripleSetIsValidTest4(){
+        TokenSet originalSet = new TokenSet("the brown dog brown dog dog");
+        Code code = CodeFactory.getInstance().getCode(0);
+        CodeTriple codeTriple = new CodeTriple(code,new TokenSet("the brown dog brown dog dog bat"), 1.0);
+        Set<CodeTriple> tripleSet = new HashSet<>();
+        tripleSet.add(codeTriple);
+        Assert.assertFalse(ResolverUtils.tripleSetIsValid(tripleSet, originalSet));
+    }
+
+    @Test
     public void getValidCodeTriplesTest() {
 
         addMockEntryToMatrix("brown", 0, 0.5);
@@ -42,12 +83,12 @@ public class ResolverMatrixTest {
         addMockEntryToMatrix("white", 3, 0.8);
         addMockEntryToMatrix("brown", 4, 0.85);
         addMockEntryToMatrix("white", 4, 0.83);
-        Multiset<TokenSet> powerSet = ResolverUtils.powerSet(new TokenSet("brown white"));
-        List<Set<CodeTriple>> validTriples = matrix.getValidCodeTriples(powerSet);
+        TokenSet originalSet = new TokenSet("brown white");
+        List<Set<CodeTriple>> validTriples = matrix.getValidCodeTriples(originalSet);
         Assert.assertEquals(20, validTriples.size());
         addMockEntryToMatrix("blue", 2, 0.83);
-        powerSet = ResolverUtils.powerSet(new TokenSet("brown white blue"));
-        validTriples = matrix.getValidCodeTriples(powerSet);
+        TokenSet originalSet1 = new TokenSet("brown white blue");
+        validTriples = matrix.getValidCodeTriples(originalSet1);
         Assert.assertEquals(41, validTriples.size());
         for (Set<CodeTriple> set : validTriples) {
             Assert.assertEquals(1.5, ResolverUtils.lossFunction(set), 1.5);
