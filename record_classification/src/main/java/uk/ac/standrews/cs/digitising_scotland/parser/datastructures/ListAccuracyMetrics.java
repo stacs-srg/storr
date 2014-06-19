@@ -161,7 +161,7 @@ public class ListAccuracyMetrics {
                 }
             }
 
-            propGoldPredicted += (count / goldStandardTriples.size());
+            propGoldPredicted += (count / (double) goldStandardTriples.size());
         }
         return propGoldPredicted / bucket.size();
     }

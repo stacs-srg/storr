@@ -5,15 +5,13 @@ import org.junit.Before;
 import org.junit.Test;
 
 import uk.ac.standrews.cs.digitising_scotland.parser.classifiers.ClassifierTestingHelper;
-import uk.ac.standrews.cs.digitising_scotland.parser.datastructures.Bucket;
-import uk.ac.standrews.cs.digitising_scotland.parser.datastructures.ListAccuracyMetrics;
 
 /**
  * The Class ListAccuracyMetricsTest.
  */
 public class ListAccuracyMetricsTest {
 
-    Bucket trainingBucket;
+    private Bucket trainingBucket;
 
     /**
      * Sets the up.

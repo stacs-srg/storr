@@ -98,7 +98,7 @@ public final class FormatConverter {
         for (int k = i; k <= j; k++) {
             if (lineSplit[k].length() != 0) {
                 if (k != i) {
-                    description = description + "," + lineSplit[k];
+                    description = description + ", " + lineSplit[k];
                 }
                 else {
                     description = lineSplit[k];

@@ -14,7 +14,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import uk.ac.standrews.cs.digitising_scotland.parser.classifiers.OLR.OLRShuffled;
 import uk.ac.standrews.cs.digitising_scotland.parser.datastructures.code.CodeFactory;
 import uk.ac.standrews.cs.digitising_scotland.parser.datastructures.vectors.VectorFactory;
 import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearningConfiguration;
@@ -130,7 +129,6 @@ public class OLRShuffledTest {
 
         BufferedReader br = getBufferedReaderOfCodeDictionaryFile();
         String line;
-        ArrayList<NamedVector> trainingVectorList = new ArrayList<NamedVector>();
         while ((line = br.readLine()) != null) {
             vectorFactory.updateDictionary(line.split("\t")[1]);
         }

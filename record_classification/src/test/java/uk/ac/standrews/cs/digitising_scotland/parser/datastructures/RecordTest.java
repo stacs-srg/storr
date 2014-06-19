@@ -9,17 +9,11 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import uk.ac.standrews.cs.digitising_scotland.parser.datastructures.CODOrignalData;
-import uk.ac.standrews.cs.digitising_scotland.parser.datastructures.InputFormatException;
-import uk.ac.standrews.cs.digitising_scotland.parser.datastructures.OriginalData;
-import uk.ac.standrews.cs.digitising_scotland.parser.datastructures.Record;
-import uk.ac.standrews.cs.digitising_scotland.parser.datastructures.TokenSet;
 import uk.ac.standrews.cs.digitising_scotland.parser.datastructures.code.Code;
 import uk.ac.standrews.cs.digitising_scotland.parser.datastructures.code.CodeFactory;
 import uk.ac.standrews.cs.digitising_scotland.parser.datastructures.code.CodeNotValidException;
 import uk.ac.standrews.cs.digitising_scotland.parser.resolver.CodeTriple;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class RecordTest tests the creation of Records and their subclasses, parameters etc.
  * 

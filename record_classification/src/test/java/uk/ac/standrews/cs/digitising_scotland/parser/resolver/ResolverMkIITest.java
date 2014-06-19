@@ -113,7 +113,7 @@ public class ResolverMkIITest {
 
     }
 
-    class mockClassifier extends AbstractClassifier {
+    static class mockClassifier extends AbstractClassifier {
 
         @Override
         public void train(final Bucket bucket) throws Exception {

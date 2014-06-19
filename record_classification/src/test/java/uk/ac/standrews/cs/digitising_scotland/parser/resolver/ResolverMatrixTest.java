@@ -99,7 +99,6 @@ public class ResolverMatrixTest {
     /**
      * Gets the valid code triples test.
      *
-     * @return the valid code triples test
      */
     @Test
     public void getValidCodeTriplesTest() {
