@@ -54,7 +54,6 @@ public class RecordClassificationPipeline {
 
     private Set<CodeTriple> classifyTokenSet(final TokenSet cleanedTokenSet) throws IOException {
 
-
         ResolverMatrix resolverMatrix = new ResolverMatrix();
         if (cleanedTokenSet.size() < WORDLIMIT) {
             Multiset<TokenSet> powerSet = ResolverUtils.powerSet(cleanedTokenSet);
@@ -82,7 +81,7 @@ public class RecordClassificationPipeline {
         return best;
     }
 
-    private void populateMatrix(Multiset<TokenSet> tokenSetSet, ResolverMatrix resolverMatrix) throws IOException {
+    private void populateMatrix(final Multiset<TokenSet> tokenSetSet, final ResolverMatrix resolverMatrix) throws IOException {
 
         for (TokenSet tokenSet : tokenSetSet) {
             Pair<Code, Double> codeDoublePair = cache.getClassification(tokenSet);

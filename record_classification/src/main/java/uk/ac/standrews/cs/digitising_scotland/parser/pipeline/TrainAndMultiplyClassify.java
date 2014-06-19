@@ -36,7 +36,7 @@ import uk.ac.standrews.cs.digitising_scotland.parser.writers.DataClerkingWriter;
  * @author jkc25, frjd2
  *
  */
-public class TrainAndMultiplyClassify {
+public final class TrainAndMultiplyClassify {
 
     private static VectorFactory vectorFactory;
     private static Bucket trainingBucket;
@@ -98,7 +98,7 @@ public class TrainAndMultiplyClassify {
         writer.close();
     }
 
-    private static void randomlyAssignToTrainingAndPrediction(Bucket bucket) {
+    private static void randomlyAssignToTrainingAndPrediction(final Bucket bucket) {
 
         trainingBucket = new Bucket();
         predictionBucket = new Bucket();

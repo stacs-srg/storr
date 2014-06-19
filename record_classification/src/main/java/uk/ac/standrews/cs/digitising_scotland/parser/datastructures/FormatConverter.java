@@ -2,8 +2,9 @@ package uk.ac.standrews.cs.digitising_scotland.parser.datastructures;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -36,7 +37,8 @@ public final class FormatConverter {
      */
     public static List<Record> convert(final File inputFile) throws IOException, InputFormatException {
 
-        BufferedReader br = new BufferedReader(new FileReader(inputFile));
+        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(inputFile), "UTF8"));
+
         String line = "";
         List<Record> recordList = new ArrayList<>();
 
@@ -65,7 +67,7 @@ public final class FormatConverter {
         return recordList;
     }
 
-    private static void populateGoldStandardSet(String[] lineSplit, HashSet<CodeTriple> goldStandard) {
+    private static void populateGoldStandardSet(final String[] lineSplit, final HashSet<CodeTriple> goldStandard) {
 
         for (int i = 6; i < 31; i = i + 3) {
             if (lineSplit[i].length() != 0) {
