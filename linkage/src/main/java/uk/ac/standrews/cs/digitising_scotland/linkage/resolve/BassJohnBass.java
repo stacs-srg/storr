@@ -1,9 +1,7 @@
 package uk.ac.standrews.cs.digitising_scotland.linkage.resolve;
 
 import org.json.JSONException;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.LXP;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.Repository;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.RepositoryException;
+import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.*;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.*;
 import uk.ac.standrews.cs.digitising_scotland.linkage.EventImporter;
 import uk.ac.standrews.cs.digitising_scotland.linkage.RecordFormatException;
@@ -21,9 +19,11 @@ import java.io.IOException;
  */
 public class BassJohnBass {
 
-    private static String input_repo_path = "src/test/resources/BDM_repo";          // input repository containing event records
-    private static String linkage_repo_path = "src/test/resources/linkage_repo";    // repository for linked records
-    private static String blocked_people_repo_path = "src/test/resources/blocked_people_repo";    // repository for blocked records
+    private static String store_path = "src/test/resources/STORE";
+
+    private static String input_repo_name = "BDM_repo";          // input repository containing event records
+    private static String linkage_repo_name = "linkage_repo";    // repository for linked records
+    private static String blocked_people_repo_name = "blocked_people_repo";    // repository for blocked records
 
     private static String source_base_path = "src/test/resources/BDMSet1";          // Path to source of vital event records in Digitising Scotland format
     private static String births_name = "birth_records";                            // Name of bucket containing birth records (inputs).
@@ -36,6 +36,8 @@ public class BassJohnBass {
     private final IRepository input_repo;
     private final IRepository linkage_repo;
     private final IRepository blocked_people_repo;
+    private final Store store
+            ;
 
     // input buckets containing BDM records in LXP format
 
@@ -45,11 +47,13 @@ public class BassJohnBass {
     private IIndexedBucket identity;            // Bucket containing identities of equivalent people in records
     private int id = 0;
 
-    public BassJohnBass() throws RepositoryException, RecordFormatException, JSONException, IOException, PersistentObjectException {
+    public BassJohnBass() throws RepositoryException, RecordFormatException, JSONException, IOException, PersistentObjectException, StoreException {
 
-        input_repo = new Repository(input_repo_path);
-        linkage_repo = new Repository(linkage_repo_path);
-        blocked_people_repo = new Repository(blocked_people_repo_path);
+        store = new Store(store_path);
+
+        input_repo = store.makeRepository(input_repo_name);
+        linkage_repo = store.makeRepository(linkage_repo_name);
+        blocked_people_repo = store.makeRepository(blocked_people_repo_name);
 
         births = input_repo.makeBucket(births_name);
 
