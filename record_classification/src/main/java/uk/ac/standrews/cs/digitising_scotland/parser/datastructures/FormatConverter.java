@@ -13,12 +13,28 @@ import uk.ac.standrews.cs.digitising_scotland.parser.datastructures.code.CodeFac
 import uk.ac.standrews.cs.digitising_scotland.parser.resolver.CodeTriple;
 import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
 
-public class FormatConverter {
+/**
+ * The Class FormatConverter converts a comma separated text file in the format that is used by the modern cod data
+ * to a list of Record objects.
+ * @author jkc25
+ */
+public final class FormatConverter {
 
-    public static List<Record> convert(File inputFile) throws IOException, InputFormatException {
+    static final int CODLINELENGTH = 38;
 
-        File codeFile = new File("ModData/testCodeMap.txt");
-        CodeFactory.getInstance().loadDictionary(codeFile);
+    private FormatConverter() {
+
+    }
+
+    /**
+     * Converts the data in the inputFile (one record per line, comma separated) into {@link Record}s.
+     *
+     * @param inputFile the input file to be read
+     * @return the list of records
+     * @throws IOException Signals that an I/O exception has occurred.
+     * @throws InputFormatException the input format exception
+     */
+    public static List<Record> convert(final File inputFile) throws IOException, InputFormatException {
 
         BufferedReader br = new BufferedReader(new FileReader(inputFile));
         String line = "";
@@ -61,7 +77,15 @@ public class FormatConverter {
         return recordList;
     }
 
-    private static String formDescription(String[] lineSplit, int i, int j) {
+    /**
+     * Form description.
+     *
+     * @param lineSplit the line split
+     * @param i the i
+     * @param j the j
+     * @return the string
+     */
+    private static String formDescription(final String[] lineSplit, final int i, final int j) {
 
         String description = "";
 
@@ -80,30 +104,53 @@ public class FormatConverter {
 
     }
 
-    private static int convertAgeGroup(String lineSplit) {
+    /**
+     * Convert age group.
+     *
+     * @param lineSplit the line split
+     * @return the int
+     */
+    private static int convertAgeGroup(final String lineSplit) {
 
         int group = Integer.parseInt(lineSplit);
-        if (group > 5) return 5;
+        if (group > 5) { return 5; }
 
         return group;
     }
 
-    private static int convertSex(String lineSplit) {
+    /**
+     * Convert sex.
+     *
+     * @param lineSplit the line split
+     * @return the int
+     */
+    private static int convertSex(final String lineSplit) {
 
         if (lineSplit.equals("M")) { return 1; }
         return 0;
     }
 
-    private static String removeQuotes(String string) {
+    /**
+     * Removes the quotes.
+     *
+     * @param string the string
+     * @return the string
+     */
+    private static String removeQuotes(final String string) {
 
-        string = string.replaceAll("\"", "").trim();
+        String noQuotes = string.replaceAll("\"", "").trim();
 
-        return string;
+        return noQuotes;
     }
 
-    private static void checkLineLength(String[] lineSplit) {
+    /**
+     * Check line length, for modern cod data it should be 38.
+     *
+     * @param lineSplit the line split
+     */
+    private static void checkLineLength(final String[] lineSplit) {
 
-        if (lineSplit.length != 38) {
+        if (lineSplit.length != CODLINELENGTH) {
             System.err.println("Line is wrong length, should be 38, is " + lineSplit.length);
         }
     }

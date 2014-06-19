@@ -21,7 +21,12 @@ public class RecordFactoryTest {
     @Test
     public void makeMultipleCodedTrainingRecords() throws IOException, InputFormatException {
 
-        File inputFile = new File("ModData/modDataSample11.txt");
+        File codeFile = new File("/testCodeMap.txt");
+        CodeFactory.getInstance().loadDictionary(codeFile);
+
+        String file = getClass().getResource("/multipleCauseRecordsTest.csv").getFile();
+        File inputFile = new File(file);
+
         List<Record> records = FormatConverter.convert(inputFile);
 
         for (Record record : records) {
