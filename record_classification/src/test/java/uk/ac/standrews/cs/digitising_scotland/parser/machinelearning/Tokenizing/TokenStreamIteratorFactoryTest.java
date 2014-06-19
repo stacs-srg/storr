@@ -9,11 +9,19 @@ import org.junit.rules.ExpectedException;
 import uk.ac.standrews.cs.digitising_scotland.parser.machinelearning.tokenizing.TokenStreamIterator;
 import uk.ac.standrews.cs.digitising_scotland.parser.machinelearning.tokenizing.TokenStreamIteratorFactory;
 
+/**
+ * The Class TokenStreamIteratorFactoryTest unit tests the {@link TokenStreamIterator}.
+ */
 public class TokenStreamIteratorFactoryTest {
 
+    /** The expected exception. */
     @Rule
     public ExpectedException expectedEx = ExpectedException.none();
 
+    /**
+     * Tests the {@link TokenStreamIteratorFactory} by creating a {@link TokenStreamIterator} and asserting that output is
+     * as expected.
+     */
     @Test
     public void testFactory() {
 
@@ -34,6 +42,9 @@ public class TokenStreamIteratorFactoryTest {
 
     }
 
+    /**
+     * Tests that getting an index from the {@link TokenStreamIterator} returns the correct token.
+     */
     @Test
     public void testGetIndex() {
 
@@ -52,6 +63,9 @@ public class TokenStreamIteratorFactoryTest {
 
     }
 
+    /**
+     * Tests that getting the next token from the {@link TokenStreamIterator} returns the correct token.
+     */
     @Test
     public void testHasNext() {
 
@@ -74,6 +88,9 @@ public class TokenStreamIteratorFactoryTest {
 
     }
 
+    /**
+     * Tests removing a token and checks that iterator subsequently returns correct tokens.
+     */
     @Test
     public void testRemove() {
 
