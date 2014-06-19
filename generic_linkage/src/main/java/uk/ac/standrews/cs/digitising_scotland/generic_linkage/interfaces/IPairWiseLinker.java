@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.digitising_scotland.linkage.resolve;
+package uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces;
 
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXPOutputStream;
 
@@ -9,11 +9,11 @@ public interface IPairWiseLinker {
 
     void pairwiseLink();
 
-    boolean compare(Pair pair);
+    boolean compare(IPair pair);
 
     /**
      * Adds a matched result to a result collection.
      * @param pair
      */
-    void addToResults(final Pair pair, final ILXPOutputStream results);
+    void addToResults(final IPair pair, final ILXPOutputStream results);
 }

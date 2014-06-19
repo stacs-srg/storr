@@ -28,4 +28,5 @@ public interface IBlocker {
      * @return the names of the buckets into which the record should be blocked
      */
     String[] determineBlockedBucketNamesForRecord(ILXP record);
+
 }

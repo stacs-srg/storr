@@ -4,11 +4,8 @@ import org.json.JSONException;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.LXP;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.Repository;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.RepositoryException;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IBucket;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXP;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXPInputStream;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXPOutputStream;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IRepository;
+import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.stream_operations.sharder.AbstractPairwiseLinker;
+import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.*;
 import uk.ac.standrews.cs.digitising_scotland.linkage.EventImporter;
 import uk.ac.standrews.cs.digitising_scotland.linkage.RecordFormatException;
 import uk.ac.standrews.cs.digitising_scotland.linkage.blocking.BlockingPFPLMFFFoverBDMrecords;
@@ -122,8 +119,7 @@ public class BirthDeathResolver {
             super(input, output);
         }
 
-        @Override
-        public boolean compare(final Pair pair) {
+        public boolean compare(final IPair pair) {
 
             // TODO we need to sort out naming and project linkage for fieldnames etc. - come back and look at properly.
 
@@ -144,8 +140,7 @@ public class BirthDeathResolver {
             return Math.abs(DateManipulation.differenceInYears(dob1, dob2)) <= 1;   // within 1 year of each other (very liberal)
         }
 
-        @Override
-        public void addToResults(final Pair pair, final ILXPOutputStream results) {
+        public void addToResults(final IPair pair, final ILXPOutputStream results) {
 
             ILXP first = pair.first();
             ILXP second = pair.second();

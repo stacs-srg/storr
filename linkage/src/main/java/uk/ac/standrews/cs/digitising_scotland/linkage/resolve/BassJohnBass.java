@@ -5,11 +5,13 @@ import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.*;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.*;
 import uk.ac.standrews.cs.digitising_scotland.linkage.EventImporter;
 import uk.ac.standrews.cs.digitising_scotland.linkage.RecordFormatException;
+import uk.ac.standrews.cs.digitising_scotland.linkage.blocking.BlockingFirstLastSexOverPerson;
 import uk.ac.standrews.cs.digitising_scotland.linkage.labels.*;
 import uk.ac.standrews.cs.digitising_scotland.linkage.visualise.IdentityVisualiser;
 import uk.ac.standrews.cs.nds.persistence.PersistentObjectException;
 
 import java.io.IOException;
+import java.util.Iterator;
 
 
 /**
@@ -72,8 +74,10 @@ public class BassJohnBass {
         populateMaximalPeople();
 
         try {
-            BlockedMaximalPersonResolver r = new BlockedMaximalPersonResolver(people, blocked_people_repo, identity);
-            r.match();
+
+            IBlocker blocker = new BlockingFirstLastSexOverPerson( people, blocked_people_repo );
+            blocker.apply();
+            pairwiseLinkBlockedRecords();
 
         } catch (RepositoryException e) {
             e.printStackTrace();
@@ -81,6 +85,17 @@ public class BassJohnBass {
         System.out.println("Identity table:");
         IdentityVisualiser v = new IdentityVisualiser( identity, people );
         v.show();
+    }
+
+    private void pairwiseLinkBlockedRecords() {
+
+        Iterator<IBucket> blocked_people_iterator = blocked_people_repo.getIterator();
+
+        while (blocked_people_iterator.hasNext()) {
+            IBucket blocked_records = blocked_people_iterator.next();
+            PersonLinker bdl = new PersonLinker(blocked_records.getInputStream(), identity.getOutputStream());
+            bdl.pairwiseLink();
+        }
     }
 
     /**
