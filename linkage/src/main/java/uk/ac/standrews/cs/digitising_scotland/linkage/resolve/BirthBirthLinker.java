@@ -11,10 +11,14 @@ import uk.ac.standrews.cs.digitising_scotland.linkage.labels.SameAsLabels;
 
 /**
  * Created by al on 19/06/2014.
+ *
+ * Links ILXP records with labels drawn from @link uk.ac.standrews.cs.digitising_scotland.linkage.labels.PersonLabels
+ * Attempts to find birth records with the same person in different roles (e.g. mother-baby and father-baby).
+ *
  */
-public class PersonLinker extends AbstractPairwiseLinker {
+public class BirthBirthLinker extends AbstractPairwiseLinker {
 
-    public PersonLinker(final ILXPInputStream input, final ILXPOutputStream output) {
+    public BirthBirthLinker(final ILXPInputStream input, final ILXPOutputStream output) {
 
         super(input, output);
     }
@@ -25,12 +29,15 @@ public class PersonLinker extends AbstractPairwiseLinker {
         ILXP first = pair.first();
         ILXP second = pair.second();
 
-        // Cannot match baby-baby: only one birth only baby-father and baby-mother - different roles.
+        // Return true if we have person in different roles
 
-        if( first.get(PersonLabels.ROLE).equals("baby") && second.get(PersonLabels.ROLE).equals("baby") ) {
-            return false;
+        if( ( first.get(PersonLabels.ROLE).equals("baby") && second.get(PersonLabels.ROLE).equals("mother") ) ||
+            ( first.get(PersonLabels.ROLE).equals("mother") && second.get(PersonLabels.ROLE).equals("baby") ) ||
+            ( first.get(PersonLabels.ROLE).equals("baby") && second.get(PersonLabels.ROLE).equals("father") ) ||
+            ( first.get(PersonLabels.ROLE).equals("father") && second.get(PersonLabels.ROLE).equals("baby") ) ) {
+            return true;
         }
-        return true;  // make rest match for now.
+        return false;
     }
 
     @Override
@@ -38,8 +45,6 @@ public class PersonLinker extends AbstractPairwiseLinker {
 
         ILXP first = pair.first();
         ILXP second = pair.second();
-
-        System.out.println("Matched : " + first + "with:" + second);
 
         ILXP result_record = new LXP();
         result_record.put(SameAsLabels.first, first.getId() );

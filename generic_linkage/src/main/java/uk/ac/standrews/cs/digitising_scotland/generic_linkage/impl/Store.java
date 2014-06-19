@@ -27,7 +27,7 @@ public class Store implements IStore {
 
     public static IStore instance;
 
-    private int id = 0;
+    private int id = 1;
 
     public Store( String store_path ) throws StoreException, IOException {
         this.store_path = store_path;
