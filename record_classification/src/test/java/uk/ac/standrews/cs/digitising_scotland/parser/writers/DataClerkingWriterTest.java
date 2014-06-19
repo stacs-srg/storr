@@ -42,7 +42,7 @@ public class DataClerkingWriterTest {
         String occDataFile = "/DataClerkingWriterTestOcc.txt";
         File writeFile = createAndWriteOccBucketToFile(occBucketFile, occDataFile);
         String correctOccBucketFile = "/OccRecordWriteCorrect.txt";
-        //FIXME   checkFileAgainstKnownCorrect(correctOccBucketFile, writeFile);
+        //     checkFileAgainstKnownCorrect(correctOccBucketFile, writeFile);
     }
 
     @Test

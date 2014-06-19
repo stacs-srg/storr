@@ -51,30 +51,36 @@ public final class FormatConverter {
             int sex = convertSex(removeQuotes(lineSplit[35]));
             String description = formDescription(lineSplit, 1, 4);
             int year = Integer.parseInt(removeQuotes(lineSplit[37]));
+
             CODOrignalData originalData = new CODOrignalData(description, year, ageGroup, sex, imageQuality, inputFile.getName());
             HashSet<CodeTriple> goldStandard = new HashSet<>();
-
-            for (int i = 6; i < 31; i = i + 3) {
-                if (lineSplit[i].length() != 0) {
-                    int causeIdentifier = Integer.parseInt(lineSplit[i]);
-
-                    if (causeIdentifier != 6) {
-                        Code code = CodeFactory.getInstance().getCode(removeQuotes(lineSplit[i + 2]));
-
-                        TokenSet tokenSet = new TokenSet(lineSplit[causeIdentifier]);
-
-                        CodeTriple codeTriple = new CodeTriple(code, tokenSet, 1.0);
-                        goldStandard.add(codeTriple);
-                    }
-                }
-            }
+            populateGoldStandardSet(lineSplit, goldStandard);
 
             Record r = new Record(originalData);
             r.getOriginalData().setGoldStandardClassification(goldStandard);
             recordList.add(r);
         }
+
         br.close();
         return recordList;
+    }
+
+    private static void populateGoldStandardSet(String[] lineSplit, HashSet<CodeTriple> goldStandard) {
+
+        for (int i = 6; i < 31; i = i + 3) {
+            if (lineSplit[i].length() != 0) {
+                int causeIdentifier = Integer.parseInt(lineSplit[i]);
+
+                if (causeIdentifier != 6) {
+                    Code code = CodeFactory.getInstance().getCode(removeQuotes(lineSplit[i + 2]));
+
+                    TokenSet tokenSet = new TokenSet(lineSplit[causeIdentifier]);
+
+                    CodeTriple codeTriple = new CodeTriple(code, tokenSet, 1.0);
+                    goldStandard.add(codeTriple);
+                }
+            }
+        }
     }
 
     /**

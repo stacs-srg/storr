@@ -6,8 +6,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearningConfiguration;
-
 /**
  * This Class, MachineLearningConfigurationTest, aims to test the creation and use of properties files
  * that are used to confiure the behaviour of the learners.
