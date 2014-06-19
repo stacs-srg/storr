@@ -56,7 +56,7 @@ public final class Utils {
     public static File getStorageName(final File baseDirectory, final String prefix) {
 
         int highest = calculateHighestFolderNumber(baseDirectory, prefix);
-        String newName = prefix + (highest + 1);
+        String newName = prefix + highest + 1;
         return new File(newName);
     }
 
@@ -94,7 +94,7 @@ public final class Utils {
     public static File getLastStorageName(final File baseDirectory, final String prefix) {
 
         int highest = calculateHighestFolderNumber(baseDirectory, prefix);
-        String newName = prefix + (highest);
+        String newName = prefix + highest;
         return new File(newName);
     }
 
@@ -344,7 +344,7 @@ public final class Utils {
                 }
             }
         }
-        return (directory.delete());
+        return directory.delete();
     }
 
     /**
@@ -389,7 +389,7 @@ public final class Utils {
 
             public int compare(final Map.Entry<K, V> o1, final Map.Entry<K, V> o2) {
 
-                return (o2.getValue()).compareTo(o1.getValue());
+                return o2.getValue().compareTo(o1.getValue());
             }
         });
 
@@ -415,7 +415,7 @@ public final class Utils {
 
             public int compare(final Map.Entry<K, V> o1, final Map.Entry<K, V> o2) {
 
-                return (o1.getValue()).compareTo(o2.getValue());
+                return o1.getValue().compareTo(o2.getValue());
             }
         });
 
@@ -439,7 +439,7 @@ public final class Utils {
             return startPosition;
         }
         else {
-            return (startPosition - (startPosition % (100 - percentTestFiles)));
+            return startPosition - (startPosition % (100 - percentTestFiles));
         }
 
     }
