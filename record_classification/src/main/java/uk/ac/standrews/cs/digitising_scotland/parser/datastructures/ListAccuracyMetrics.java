@@ -72,6 +72,8 @@ public class ListAccuracyMetrics {
 
     private int moreThanTwoClassifications;
 
+    private double propWronglyPredicted;
+
     /**
      * Instantiates a new list accuracy metrics.
      *
@@ -95,6 +97,7 @@ public class ListAccuracyMetrics {
         numConfidenceOfOne = calculateNumConfidenceOfOne(bucket);
         numConfidenceNotOne = calculateNumConfidenceNotOne(bucket);
         propGoldPredicted = calculatePropGoldStandardCorrectlyPredicted(bucket);
+        propWronglyPredicted = calculateProportionWronglyPredicted(bucket);
         countNumClassifications(bucket);
 
     }
@@ -111,6 +114,7 @@ public class ListAccuracyMetrics {
         System.out.println("Number of classifications with confidence of 1: " + numConfidenceOfOne);
         System.out.println("Number of classifications with confidence < 1: " + numConfidenceNotOne);
         System.out.println("Proportion of gold standard codes predicted: " + propGoldPredicted);
+        System.out.println("Proportion of incorrect gold standard codes predicted: " + propWronglyPredicted);
         System.out.println("Number unclassified: " + unclassified);
         System.out.println("Singly classified: " + singleClassification);
         System.out.println("Doubly classified: " + twoClassifications);
@@ -164,6 +168,32 @@ public class ListAccuracyMetrics {
             propGoldPredicted += (count / (double) goldStandardTriples.size());
         }
         return propGoldPredicted / bucket.size();
+    }
+
+    private double calculateProportionWronglyPredicted(final Bucket bucket) {
+
+        double wronglyPredicted = 0.;
+        double totalPredictions = 0;
+
+        for (Record record : bucket) {
+
+            Set<CodeTriple> setCodeTriples = record.getCodeTriples();
+            Set<CodeTriple> goldStandardTriples = record.getGoldStandardClassificationSet();
+
+            if (goldStandardTriples.size() < 1) {
+                break;
+            }
+
+            for (CodeTriple codeTriple : setCodeTriples) {
+
+                totalPredictions++;
+                if (!goldStandardTriples.contains(codeTriple)) {
+                    wronglyPredicted++;
+                }
+            }
+        }
+
+        return (wronglyPredicted / totalPredictions);
     }
 
     private int calculateNumConfidenceOfOne(final Bucket bucket) {
