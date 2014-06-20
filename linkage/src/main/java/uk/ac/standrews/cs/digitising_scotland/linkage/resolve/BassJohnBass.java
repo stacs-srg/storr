@@ -5,11 +5,13 @@ import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.*;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.*;
 import uk.ac.standrews.cs.digitising_scotland.linkage.EventImporter;
 import uk.ac.standrews.cs.digitising_scotland.linkage.RecordFormatException;
+import uk.ac.standrews.cs.digitising_scotland.linkage.blocking.BlockingFirstLastSexOverPerson;
 import uk.ac.standrews.cs.digitising_scotland.linkage.labels.*;
 import uk.ac.standrews.cs.digitising_scotland.linkage.visualise.IdentityVisualiser;
 import uk.ac.standrews.cs.nds.persistence.PersistentObjectException;
 
 import java.io.IOException;
+import java.util.Iterator;
 
 
 /**
@@ -30,6 +32,8 @@ public class BassJohnBass {
     private static String people_name = "people";                                   // Name of bucket containing maximal people extracted from birth records
     private static String relationships_name = "relationships";                     // Name of bucket containing relationships between people extracted from birth records
     private static String identities_name = "identity";                             // Name of bucket containing equivalent identities of people
+    private static String lineage_name = "lineage";                                 // Name of bucket of pais of (mother/father- baby links).
+
 
     private static String births_source_path = source_base_path + "/" + births_name + ".txt";
 
@@ -45,6 +49,8 @@ public class BassJohnBass {
     private IBucket people;              // Bucket containing people extracted from birth records
     private IBucket relationships;       // Bucket containing relationships between people
     private IIndexedBucket identity;            // Bucket containing identities of equivalent people in records
+    private IIndexedBucket lineage;            // Bucket containing pairs of pontentially linked parents and children
+
     private int id = 0;
 
     public BassJohnBass() throws RepositoryException, RecordFormatException, JSONException, IOException, PersistentObjectException, StoreException {
@@ -61,8 +67,8 @@ public class BassJohnBass {
 
         relationships = linkage_repo.makeBucket(relationships_name); // linkage_repo.makeIndexedBucket(relationships_name);
 
-        identity = linkage_repo.makeIndexedBucket(identities_name);
-        identity.addIndex(SameAsLabels.first);
+        lineage = linkage_repo.makeIndexedBucket(lineage_name);
+        lineage.addIndex(SameAsLabels.first);
 
         // import the birth records
         EventImporter importer = new EventImporter();
@@ -72,15 +78,33 @@ public class BassJohnBass {
         populateMaximalPeople();
 
         try {
-            BlockedMaximalPersonResolver r = new BlockedMaximalPersonResolver(people, blocked_people_repo, identity);
-            r.match();
+
+            IBlocker blocker = new BlockingFirstLastSexOverPerson( people, blocked_people_repo );
+            blocker.apply();
+            pairwiseLinkBlockedRecords(blocked_people_repo, lineage );
 
         } catch (RepositoryException e) {
             e.printStackTrace();
         }
         System.out.println("Identity table:");
-        IdentityVisualiser v = new IdentityVisualiser( identity, people );
+        IdentityVisualiser v = new IdentityVisualiser( lineage, people );
         v.show();
+    }
+
+    private void pairwiseLinkBlockedRecords( IRepository from, IBucket to ) {
+
+        Iterator<IBucket> blocked_people_iterator = from.getIterator();
+
+
+        while (blocked_people_iterator.hasNext()) {
+            IBucket blocked_records = blocked_people_iterator.next();
+
+            // Iterating over buckets of people with same first and last name and the same sex.
+
+
+            BirthBirthLinker bdl = new BirthBirthLinker(blocked_records.getInputStream(), to.getOutputStream());
+            bdl.pairwiseLink();
+        }
     }
 
     /**

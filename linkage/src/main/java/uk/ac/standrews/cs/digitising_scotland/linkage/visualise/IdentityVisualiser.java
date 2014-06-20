@@ -26,7 +26,7 @@ public class IdentityVisualiser {
         Set<String> keys = index.keySet();
 
         for ( String key : keys ) {
-            System.out.println( "key = " + key);
+            System.out.println( "key = " + key );
             ILXPInputStream stream = index.records(key);
 
             boolean first = true;
