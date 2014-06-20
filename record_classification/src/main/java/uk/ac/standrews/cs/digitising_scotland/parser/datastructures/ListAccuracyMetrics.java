@@ -2,6 +2,7 @@ package uk.ac.standrews.cs.digitising_scotland.parser.datastructures;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Set;
 
 import uk.ac.standrews.cs.digitising_scotland.parser.resolver.CodeTriple;
@@ -40,7 +41,7 @@ public class ListAccuracyMetrics {
      */
     private int numConfidenceNotOne;
 
-    private int codedBySubStringMatch;
+    private int codedExactMatch;
 
     /**
      * The micro precision.
@@ -98,8 +99,29 @@ public class ListAccuracyMetrics {
         numConfidenceNotOne = calculateNumConfidenceNotOne(bucket);
         propGoldPredicted = calculatePropGoldStandardCorrectlyPredicted(bucket);
         propWronglyPredicted = calculateProportionWronglyPredicted(bucket);
+        codedExactMatch = calculateExactMatch(bucket);
         countNumClassifications(bucket);
 
+    }
+
+    private int calculateExactMatch(final Bucket bucket) {
+
+        int exactMatch = 0;
+
+        for (Record record : bucket) {
+            final Iterator<CodeTriple> iterator = record.getCodeTriples().iterator();
+            double totalConfidence = 0;
+            while (iterator.hasNext()) {
+                CodeTriple codeTriple = (CodeTriple) iterator.next();
+                totalConfidence += codeTriple.getConfidence();
+            }
+
+            if (totalConfidence / (double) record.getCodeTriples().size() % 2 == 0) {
+                exactMatch++;
+            }
+        }
+
+        return exactMatch;
     }
 
     /**
@@ -116,6 +138,7 @@ public class ListAccuracyMetrics {
         System.out.println("Proportion of gold standard codes predicted: " + propGoldPredicted);
         System.out.println("Proportion of incorrect gold standard codes predicted: " + propWronglyPredicted);
         System.out.println("Number unclassified: " + unclassified);
+        System.out.println("Number coded by exact match: " + codedExactMatch);
         System.out.println("Singly classified: " + singleClassification);
         System.out.println("Doubly classified: " + twoClassifications);
         System.out.println("Multiply classified: " + moreThanTwoClassifications);
@@ -238,9 +261,10 @@ public class ListAccuracyMetrics {
         for (Record record : bucket) {
             Set<CodeTriple> setCodeTriples = record.getCodeTriples();
             for (CodeTriple codeTriple : setCodeTriples) {
-                totalConfidence += codeTriple.getConfidence();
-                totalMeasurments++;
-
+                if (codeTriple.getConfidence() < 2) {
+                    totalConfidence += codeTriple.getConfidence();
+                    totalMeasurments++;
+                }
             }
         }
 
@@ -447,12 +471,12 @@ public class ListAccuracyMetrics {
 
     public int getCodedBySubStringMatch() {
 
-        return codedBySubStringMatch;
+        return codedExactMatch;
     }
 
     public void setCodedBySubStringMatch(final int codedBySubStringMatch) {
 
-        this.codedBySubStringMatch = codedBySubStringMatch;
+        this.codedExactMatch = codedBySubStringMatch;
     }
 
 }

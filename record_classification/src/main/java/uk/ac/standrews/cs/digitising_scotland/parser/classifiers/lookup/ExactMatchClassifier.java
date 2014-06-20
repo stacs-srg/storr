@@ -27,7 +27,7 @@ import cc.mallet.classify.Classification;
  */
 public class ExactMatchClassifier extends AbstractClassifier {
 
-    private Map<TokenSet, Code> lookupTable;
+    private Map<TokenSet, CodeTriple> lookupTable;
     private String modelFileName = "target/lookupTable";
 
     /**
@@ -71,12 +71,11 @@ public class ExactMatchClassifier extends AbstractClassifier {
     public Record classify(final Record record) throws IOException {
 
         TokenSet cleanDescriptionTokenSet = new TokenSet(record.getCleanedDescription());
-        Code code = lookupTable.get(cleanDescriptionTokenSet);
-        if (code == null) {
+        CodeTriple result = lookupTable.get(cleanDescriptionTokenSet);
+        if (result == null) {
             return record;
         }
         else {
-            CodeTriple result = new CodeTriple(code, cleanDescriptionTokenSet, 1.0);
             record.addCodeTriples(result);
             return record;
 
@@ -108,7 +107,7 @@ public class ExactMatchClassifier extends AbstractClassifier {
     private void addRecordToLookupTable(final Record record) {
 
         for (CodeTriple codeTriple : record.getOriginalData().getGoldStandardCodeTriples()) {
-            lookupTable.put(codeTriple.getTokenSet(), codeTriple.getCode());
+            lookupTable.put(codeTriple.getTokenSet(), codeTriple);
         }
 
     }
@@ -142,7 +141,7 @@ public class ExactMatchClassifier extends AbstractClassifier {
 
         try {
 
-            Map<TokenSet, Code> recoveredMap = (Map<TokenSet, Code>) input.readObject();
+            Map<TokenSet, CodeTriple> recoveredMap = (Map<TokenSet, CodeTriple>) input.readObject();
             lookupTable = recoveredMap;
         }
         finally {
@@ -205,7 +204,13 @@ public class ExactMatchClassifier extends AbstractClassifier {
     @Override
     public Pair<Code, Double> classify(final TokenSet tokenSet) throws IOException {
 
-        throw new UnsupportedOperationException("cannot call calssify(TokenSet) with ExactMatchClassifier");
-    }
+        CodeTriple result = lookupTable.get(tokenSet);
+        if (result != null) {
+            return new Pair<Code, Double>(result.getCode(), result.getConfidence());
 
+        }
+        else {
+            return null;
+        }
+    }
 }

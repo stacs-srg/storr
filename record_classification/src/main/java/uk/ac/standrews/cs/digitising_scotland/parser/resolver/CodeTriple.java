@@ -6,18 +6,34 @@ import uk.ac.standrews.cs.digitising_scotland.parser.datastructures.TokenSet;
 import uk.ac.standrews.cs.digitising_scotland.parser.datastructures.code.Code;
 
 /**
+ * This class represents a classification, either gold standard or from a classifier.
+ * The class contains 3 variables, the {@link Code}, the {@link TokenSet} that relates to the code and finally
+ * the confidence of that code. 
+ * <br><br>
+ * @author jkc25, frjd2
  * Created by fraserdunlop on 11/06/2014 at 10:51.
  */
 public class CodeTriple implements Serializable {
 
-    /**
-     * 
-     */
+    /** The Constant serialVersionUID. */
     private static final long serialVersionUID = 7683621012309471383L;
+
+    /** The code of the classification. */
     private final Code code;
+
+    /** The token set representing the string that relates to the code. */
     private final TokenSet tokenSet;
+
+    /** The confidence of the classification. */
     private final Double confidence;
 
+    /**
+     * Instantiates a new code triple.
+     *
+     * @param code the code
+     * @param tokenSet the token set
+     * @param confidence the confidence
+     */
     public CodeTriple(final Code code, final TokenSet tokenSet, final Double confidence) {
 
         this.code = code;
@@ -25,21 +41,39 @@ public class CodeTriple implements Serializable {
         this.confidence = confidence;
     }
 
+    /**
+     * Gets the code.
+     *
+     * @return the code
+     */
     public Code getCode() {
 
         return code;
     }
 
+    /**
+     * Gets the token set.
+     *
+     * @return the token set
+     */
     public TokenSet getTokenSet() {
 
         return tokenSet;
     }
 
+    /**
+     * Gets the confidence.
+     *
+     * @return the confidence
+     */
     public Double getConfidence() {
 
         return confidence;
     }
 
+    /* (non-Javadoc)
+     * @see java.lang.Object#hashCode()
+     */
     @Override
     public int hashCode() {
 
@@ -51,6 +85,9 @@ public class CodeTriple implements Serializable {
         return result;
     }
 
+    /* (non-Javadoc)
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
     @Override
     public boolean equals(final Object obj) {
 
@@ -73,6 +110,9 @@ public class CodeTriple implements Serializable {
         return true;
     }
 
+    /* (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
     @Override
     public String toString() {
 

@@ -10,18 +10,35 @@ import uk.ac.standrews.cs.digitising_scotland.parser.datastructures.Record;
 import uk.ac.standrews.cs.digitising_scotland.parser.datastructures.vectors.VectorFactory;
 import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
 
+/**
+ * The Class CombinedTrainAndClassifyRun has only a run and a main method that trains a set of classifiers (using {@link TrainClassifiers})
+ * and then classifies the using {@link Classifier} and compares the results to those gotten using {@link TrainAndClassify}.
+ */
 public class CombinedTrainAndClassifyRun {
 
+    /**
+     * The main method.
+     *
+     * @param args the arguments
+     * @throws Exception the exception
+     */
     public static void main(final String[] args) throws Exception {
-
-        CombinedTrainAndClassifyRun c = new CombinedTrainAndClassifyRun();
-        c.run();
-    }
-
-    public void run() throws Exception {
 
         String trainingFile = "kilmarnockBasedCoDTrainingPipe.txt";
         String testingFile = "kilmarnockBasedCoDToBeClassified.txt";
+        CombinedTrainAndClassifyRun c = new CombinedTrainAndClassifyRun();
+        c.run(trainingFile, testingFile);
+    }
+
+    /**
+     * Runs the classifier comparison.
+     * @param trainingFile File to train on.
+     * @param testingFile  File to test on.
+     *
+     * @throws Exception the exception
+     */
+    public void run(final String trainingFile, final String testingFile) throws Exception {
+
         TrainClassifiers trainer = new TrainClassifiers();
 
         Bucket trainingBucket = trainer.createCleanedBucketFromFile(trainingFile);
@@ -50,6 +67,9 @@ public class CombinedTrainAndClassifyRun {
         cleanUp();
     }
 
+    /**
+     * Clean up.
+     */
     public void cleanUp() {
 
         Assert.assertTrue(new File("target/OLRModel").delete());

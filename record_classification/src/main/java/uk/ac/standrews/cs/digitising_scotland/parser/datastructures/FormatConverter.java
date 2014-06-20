@@ -22,6 +22,12 @@ import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
 public final class FormatConverter {
 
     static final int CODLINELENGTH = 38;
+    private static final int idPosition = 0;
+    private static final int agePosition = 34;
+    private static final int sexPosition = 35;
+    private static final int descriptionStart = 1;
+    private static final int descriptionEnd = 4;
+    private static final int yearPosition = 37;
 
     private FormatConverter() {
 
@@ -47,12 +53,12 @@ public final class FormatConverter {
 
             checkLineLength(lineSplit);
 
-            int id = Integer.parseInt(lineSplit[0]);
+            int id = Integer.parseInt(lineSplit[idPosition]);
             int imageQuality = 1;
-            int ageGroup = convertAgeGroup(removeQuotes(lineSplit[34]));
-            int sex = convertSex(removeQuotes(lineSplit[35]));
-            String description = formDescription(lineSplit, 1, 4);
-            int year = Integer.parseInt(removeQuotes(lineSplit[37]));
+            int ageGroup = convertAgeGroup(removeQuotes(lineSplit[agePosition]));
+            int sex = convertSex(removeQuotes(lineSplit[sexPosition]));
+            String description = formDescription(lineSplit, descriptionStart, descriptionEnd);
+            int year = Integer.parseInt(removeQuotes(lineSplit[yearPosition]));
 
             CODOrignalData originalData = new CODOrignalData(description, year, ageGroup, sex, imageQuality, inputFile.getName());
             HashSet<CodeTriple> goldStandard = new HashSet<>();
@@ -86,24 +92,24 @@ public final class FormatConverter {
     }
 
     /**
-     * Form description.
+     * Concatenates strings  between the start and end points of an array with a ',' delimiter.
      *
-     * @param lineSplit the line split
-     * @param i the i
-     * @param j the j
-     * @return the string
+     * @param stringArray the String array with consecutive strings to concatenate
+     * @param startPosition the first index to concatenate
+     * @param endPosition the last index to concatenate
+     * @return the concatenated string, comma separated
      */
-    private static String formDescription(final String[] lineSplit, final int i, final int j) {
+    private static String formDescription(final String[] stringArray, final int startPosition, final int endPosition) {
 
         String description = "";
 
-        for (int k = i; k <= j; k++) {
-            if (lineSplit[k].length() != 0) {
-                if (k != i) {
-                    description = description + ", " + lineSplit[k];
+        for (int currentPosition = startPosition; currentPosition <= endPosition; currentPosition++) {
+            if (stringArray[currentPosition].length() != 0) {
+                if (currentPosition != startPosition) {
+                    description = description + ", " + stringArray[currentPosition];
                 }
                 else {
-                    description = lineSplit[k];
+                    description = stringArray[currentPosition];
                 }
             }
         }
@@ -113,12 +119,14 @@ public final class FormatConverter {
     }
 
     /**
-     * Convert age group.
+     * Converts a string representation of an age group to the format needed by NRS.
      *
      * @param lineSplit the line split
      * @return the int
      */
     private static int convertAgeGroup(final String lineSplit) {
+
+        //     * TODO make sure this is the correct format
 
         int group = Integer.parseInt(lineSplit);
         if (group > 5) { return 5; }
@@ -127,22 +135,22 @@ public final class FormatConverter {
     }
 
     /**
-     * Convert sex.
+     * Converts sex from M or F characters to 1 or 0. 1 is male, 0 is female.
      *
-     * @param lineSplit the line split
-     * @return the int
+     * @param sexIndicator the string to convert to binary, 1 (male) or 0 (female)
+     * @return the int associated with the sex
      */
-    private static int convertSex(final String lineSplit) {
+    private static int convertSex(final String sexIndicator) {
 
-        if (lineSplit.equals("M")) { return 1; }
+        if (sexIndicator.equals("M")) { return 1; }
         return 0;
     }
 
     /**
-     * Removes the quotes.
+     * Removes quotes from a string.
      *
-     * @param string the string
-     * @return the string
+     * @param string the string to remove quotes from
+     * @return the string with quotes removed
      */
     private static String removeQuotes(final String string) {
 

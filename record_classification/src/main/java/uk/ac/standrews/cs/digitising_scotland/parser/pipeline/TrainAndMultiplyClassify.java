@@ -1,10 +1,14 @@
 package uk.ac.standrews.cs.digitising_scotland.parser.pipeline;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 
 import uk.ac.standrews.cs.digitising_scotland.parser.classifiers.AbstractClassifier;
 import uk.ac.standrews.cs.digitising_scotland.parser.classifiers.OLR.OLRClassifier;
+import uk.ac.standrews.cs.digitising_scotland.parser.classifiers.lookup.ExactMatchClassifier;
 import uk.ac.standrews.cs.digitising_scotland.parser.datastructures.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.parser.datastructures.FormatConverter;
 import uk.ac.standrews.cs.digitising_scotland.parser.datastructures.InputFormatException;
@@ -13,6 +17,7 @@ import uk.ac.standrews.cs.digitising_scotland.parser.datastructures.Record;
 import uk.ac.standrews.cs.digitising_scotland.parser.datastructures.RecordFactory;
 import uk.ac.standrews.cs.digitising_scotland.parser.datastructures.vectors.VectorFactory;
 import uk.ac.standrews.cs.digitising_scotland.parser.writers.DataClerkingWriter;
+import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
 
 /**
  * This class integrates the training of machine learning models and the classification of records using those models.
@@ -70,9 +75,12 @@ public final class TrainAndMultiplyClassify {
 
         AbstractClassifier classifier = trainClassifier(trainingBucket, vectorFactory);
 
+        ExactMatchClassifier exactMatchClassifier = new ExactMatchClassifier();
+        exactMatchClassifier.train(trainingBucket);
+
         //Bucket predicitionBucket = createPredictionBucket(prediction);
 
-        RecordClassificationPipeline recordClassifier = new RecordClassificationPipeline(classifier);
+        RecordClassificationPipeline recordClassifier = new RecordClassificationPipeline(classifier, exactMatchClassifier);
 
         BucketClassifier bucketClassifier = new BucketClassifier(recordClassifier);
 
@@ -140,9 +148,28 @@ public final class TrainAndMultiplyClassify {
     private static Bucket createTrainingBucket(final File training) throws IOException, InputFormatException {
 
         Bucket bucket = new Bucket();
-        Iterable<Record> records = FormatConverter.convert(training);
+        Iterable<Record> records;
+        boolean longFormat = checkFileType(training);
+
+        if (longFormat) {
+            records = FormatConverter.convert(training);
+        }
+        else {
+            records = RecordFactory.makeCodedRecordsFromFile(training);
+        }
         bucket.addCollectionOfRecords(records);
+
         return bucket;
+    }
+
+    private static boolean checkFileType(final File inputFile) throws IOException {
+
+        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(inputFile), "UTF8"));
+        String line = br.readLine();
+        br.close();
+        if (line.split(Utils.getCSVComma()).length == 38) { return true; }
+
+        return false;
     }
 
 }
