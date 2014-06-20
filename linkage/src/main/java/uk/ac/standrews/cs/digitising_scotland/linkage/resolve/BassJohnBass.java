@@ -7,7 +7,7 @@ import uk.ac.standrews.cs.digitising_scotland.linkage.EventImporter;
 import uk.ac.standrews.cs.digitising_scotland.linkage.RecordFormatException;
 import uk.ac.standrews.cs.digitising_scotland.linkage.blocking.BlockingFirstLastSexOverPerson;
 import uk.ac.standrews.cs.digitising_scotland.linkage.labels.*;
-import uk.ac.standrews.cs.digitising_scotland.linkage.visualise.IdentityVisualiser;
+import uk.ac.standrews.cs.digitising_scotland.linkage.visualise.IndexedBucketVisualiser;
 import uk.ac.standrews.cs.nds.persistence.PersistentObjectException;
 
 import java.io.IOException;
@@ -29,6 +29,7 @@ public class BassJohnBass {
 
     private static String source_base_path = "src/test/resources/BDMSet1";          // Path to source of vital event records in Digitising Scotland format
     private static String births_name = "birth_records";                            // Name of bucket containing birth records (inputs).
+    private static String marriages_name = "marriage_records";                      // Name of bucket containing marriage records (inputs).
     private static String people_name = "people";                                   // Name of bucket containing maximal people extracted from birth records
     private static String relationships_name = "relationships";                     // Name of bucket containing relationships between people extracted from birth records
     private static String identities_name = "identity";                             // Name of bucket containing equivalent identities of people
@@ -36,6 +37,7 @@ public class BassJohnBass {
 
 
     private static String births_source_path = source_base_path + "/" + births_name + ".txt";
+    private static String marriages_source_path = source_base_path + "/" + marriages_name + ".txt";
 
     private final IRepository input_repo;
     private final IRepository linkage_repo;
@@ -46,6 +48,7 @@ public class BassJohnBass {
     // input buckets containing BDM records in LXP format
 
     private IBucket births;                     // Bucket containing birth records (inputs).
+    private IBucket marriages;                     // Bucket containing marriage records (inputs).
     private IBucket people;              // Bucket containing people extracted from birth records
     private IBucket relationships;       // Bucket containing relationships between people
     private IIndexedBucket identity;            // Bucket containing identities of equivalent people in records
@@ -62,6 +65,7 @@ public class BassJohnBass {
         blocked_people_repo = store.makeRepository(blocked_people_repo_name);
 
         births = input_repo.makeBucket(births_name);
+        marriages = input_repo.makeBucket(marriages_name);
 
         people = linkage_repo.makeBucket(people_name); // linkage_repo.makeIndexedBucket(people_name);
 
@@ -70,12 +74,12 @@ public class BassJohnBass {
         lineage = linkage_repo.makeIndexedBucket(lineage_name);
         lineage.addIndex(SameAsLabels.first);
 
-        // import the birth records
+        // import the birth,death, marriage records
         EventImporter importer = new EventImporter();
         importer.importBirths(births, births_source_path);
+        importer.importMarriages(marriages, marriages_source_path);
 
-        // populate the people and relationships bucket
-        populateMaximalPeople();
+        createPeopleAndRelationshipsFromBirths();
 
         try {
 
@@ -87,7 +91,7 @@ public class BassJohnBass {
             e.printStackTrace();
         }
         System.out.println("Identity table:");
-        IdentityVisualiser v = new IdentityVisualiser( lineage, people );
+        IndexedBucketVisualiser v = new IndexedBucketVisualiser( lineage, people );
         v.show();
     }
 
@@ -111,7 +115,7 @@ public class BassJohnBass {
      * Populates the maximal_people_repo with 1 person from each birth record.
      * For each birth record there will be 1 person created - mother, father baby
      */
-    private void populateMaximalPeople() {
+    private void createPeopleAndRelationshipsFromBirths() {
 
         ILXPOutputStream people_stream = people.getOutputStream();
         ILXPOutputStream relationships_stream = relationships.getOutputStream();
@@ -141,18 +145,18 @@ public class BassJohnBass {
         if( dad_id != -1 ) { // no father
             ILXP is_father = new LXP();
             is_father.put("TYPE", FatherOfLabels.TYPE);
-            is_father.put(FatherOfLabels.child_id, child_id);
-            is_father.put(FatherOfLabels.father_id, dad_id);
-            is_father.put(FatherOfLabels.birth_record_id, birth_record.getId());
+            is_father.put(FatherOfLabels.child_id, Integer.toString(child_id));
+            is_father.put(FatherOfLabels.father_id, Integer.toString(dad_id));
+            is_father.put(FatherOfLabels.birth_record_id, Integer.toString(birth_record.getId()));
             relationships_stream.add(is_father);
         }
 
         if( mum_id != -1 ) {
             ILXP is_mother = new LXP();
             is_mother.put("TYPE", MotherOfLabels.TYPE);
-            is_mother.put(MotherOfLabels.child_id, child_id);
-            is_mother.put(MotherOfLabels.mother_id, mum_id);
-            is_mother.put(MotherOfLabels.birth_record_id, birth_record.getId());
+            is_mother.put(MotherOfLabels.child_id, Integer.toString(child_id));
+            is_mother.put(MotherOfLabels.mother_id, Integer.toString(mum_id));
+            is_mother.put(MotherOfLabels.birth_record_id, Integer.toString(birth_record.getId()));
             relationships_stream.add(is_mother);
         }
 
@@ -170,7 +174,7 @@ public class BassJohnBass {
 
         person.put("TYPE", PersonLabels.TYPE);
 
-        person.put(PersonLabels.ORIGINAL_RECORD_ID, birth_record.getId());
+        person.put(PersonLabels.ORIGINAL_RECORD_ID, Integer.toString(birth_record.getId()));
         person.put(PersonLabels.ORIGINAL_RECORD_TYPE, birth_record.get(BirthLabels.TYPE_LABEL));  //<<<<<<<<<<<<<<<<<< Problem....
         person.put(PersonLabels.ROLE, "baby");
 
@@ -226,7 +230,7 @@ public class BassJohnBass {
 
         person.put("TYPE", PersonLabels.TYPE);
 
-        person.put(PersonLabels.ORIGINAL_RECORD_ID, birth_record.getId());
+        person.put(PersonLabels.ORIGINAL_RECORD_ID, Integer.toString(birth_record.getId()));
         person.put(PersonLabels.ORIGINAL_RECORD_TYPE, birth_record.get(BirthLabels.TYPE_LABEL));
         person.put(PersonLabels.ROLE, "father");
 
@@ -261,7 +265,7 @@ public class BassJohnBass {
 
         person.put("TYPE", PersonLabels.TYPE);
 
-        person.put(PersonLabels.ORIGINAL_RECORD_ID, birth_record.getId());
+        person.put(PersonLabels.ORIGINAL_RECORD_ID, Integer.toString(birth_record.getId()));
         person.put(PersonLabels.ORIGINAL_RECORD_TYPE, birth_record.get(BirthLabels.TYPE_LABEL));
         person.put(PersonLabels.ROLE, "mother");
         person.put(PersonLabels.FORENAME, birth_record.get(BirthLabels.MOTHERS_FORENAME));
