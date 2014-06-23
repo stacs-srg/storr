@@ -1,14 +1,14 @@
 package uk.ac.standrews.cs.digitising_scotland.linkage.labels;
 
 import java.util.Arrays;
-import java.util.Iterator;
+import java.util.List;
 
 /**
  * Created by al on 19/05/2014.
  */
 public class MarriageLabels extends CommonLabels {
 
-    public static final String TYPE = "Marriage";
+    public static final String TYPE = MarriageLabels.class.getName();
 
     public static final String GROOM_SURNAME = "groom_surname";
     public static final String GROOM_FORENAME = "groom_forename";
@@ -47,7 +47,7 @@ public class MarriageLabels extends CommonLabels {
     public static final String BRIDE_MOTHER_DECEASED = "bride_mother_deceased";
     public static final String BRIDE_FATHER_OCCUPATION = "bride_father_occupation";
 
-    public static final Iterable<String> MARRIAGE_FIELD_NAMES = Arrays.asList(ID, GROOM_SURNAME, GROOM_FORENAME, BRIDE_SURNAME, BRIDE_FORENAME, YEAR_OF_REGISTRATION,
+    public static final List<String> MARRIAGE_FIELD_NAMES = Arrays.asList(ID, GROOM_SURNAME, GROOM_FORENAME, BRIDE_SURNAME, BRIDE_FORENAME, YEAR_OF_REGISTRATION,
             REGISTRATION_DISTRICT_NUMBER, ENTRY, MARRIAGE_YEAR, CHANGED_GROOM_SURNAME, CHANGED_GROOM_FORENAME,
             CHANGED_BRIDE_SURNAME, CHANGED_BRIDE_FORENAME, GROOM_DID_NOT_SIGN,
             BRIDE_DID_NOT_SIGN, MARRIAGE_DAY, MARRIAGE_MONTH, DENOMINATION, GROOM_ADDRESS,
@@ -59,7 +59,7 @@ public class MarriageLabels extends CommonLabels {
             BRIDE_FATHER_DECEASED, BRIDE_MOTHERS_FORENAME, BRIDE_MOTHERS_MAIDEN_SURNAME, BRIDE_MOTHER_DECEASED,
             BRIDE_FATHER_OCCUPATION, CORRECTED_ENTRY, IMAGE_QUALITY);
 
-    public Iterator<String> iterator() {
-        return MARRIAGE_FIELD_NAMES.iterator();
+    public List<String> getLabels() {
+        return MARRIAGE_FIELD_NAMES;
     }
 }

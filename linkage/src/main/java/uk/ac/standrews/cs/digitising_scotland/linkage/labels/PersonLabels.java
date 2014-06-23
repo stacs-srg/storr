@@ -1,14 +1,17 @@
 package uk.ac.standrews.cs.digitising_scotland.linkage.labels;
 
+import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.types.Type;
+import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILabels;
+
 import java.util.Arrays;
-import java.util.Iterator;
+import java.util.List;
 
 /**
  * Created by al on 30/05/2014.
  */
-public class PersonLabels implements Iterable<String> {
+public class PersonLabels implements ILabels {
 
-    public static final String TYPE = "Person";
+    public static final String TYPE = PersonLabels.class.getName();
 
     public static final String SURNAME = "surname";
     public static final String FORENAME = "forename";
@@ -30,12 +33,22 @@ public class PersonLabels implements Iterable<String> {
     public final static String ROLE = "role";
     public final static String OCCUPATION = "occupation";
 
-    public static final Iterable<String> FIELD_NAMES = Arrays.asList(SURNAME,FORENAME,SEX,FATHERS_FORENAME,FATHERS_SURNAME, FATHERS_OCCUPATION, MOTHERS_FORENAME, MOTHERS_SURNAME,
+    public static final List<String> FIELD_NAMES = Arrays.asList(SURNAME,FORENAME,SEX,FATHERS_FORENAME,FATHERS_SURNAME, FATHERS_OCCUPATION, MOTHERS_FORENAME, MOTHERS_SURNAME,
             MOTHERS_MAIDEN_SURNAME, CHANGED_SURNAME, CHANGED_FORENAME, CHANGED_MOTHERS_MAIDEN_SURNAME, ORIGINAL_RECORD_ID,ORIGINAL_RECORD_TYPE, ROLE,OCCUPATION);
 
     @Override
-    public Iterator<String> iterator() {
-        return FIELD_NAMES.iterator();
+    public List<String> getLabels() {
+        return FIELD_NAMES;
+    }
+
+    @Override
+    public Type getType(String label) {
+        if(getLabels().contains(label)) {
+            return Type.STRING;
+        } else {
+            return Type.UNKNOWN;
+        }
+
     }
 
 }

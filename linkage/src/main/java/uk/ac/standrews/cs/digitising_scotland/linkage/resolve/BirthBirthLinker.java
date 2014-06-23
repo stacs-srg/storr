@@ -47,8 +47,8 @@ public class BirthBirthLinker extends AbstractPairwiseLinker {
         ILXP second = pair.second();
 
         ILXP result_record = new LXP();
-        result_record.put(SameAsLabels.first, first.getId() );
-        result_record.put(SameAsLabels.second, second.getId() );
+        result_record.put(SameAsLabels.first, Integer.toString(first.getId()));
+        result_record.put(SameAsLabels.second, Integer.toString(second.getId()));
         result_record.put(SameAsLabels.relationship, first.get(PersonLabels.ROLE) + "-" + second.get(PersonLabels.ROLE) );
         result_record.put(SameAsLabels.resolver, this.getClass().toString());
 
