@@ -10,6 +10,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import uk.ac.standrews.cs.digitising_scotland.parser.classifiers.AbstractClassifier;
 import uk.ac.standrews.cs.digitising_scotland.parser.datastructures.Bucket;
@@ -27,7 +28,7 @@ import cc.mallet.classify.Classification;
  */
 public class ExactMatchClassifier extends AbstractClassifier {
 
-    private Map<TokenSet, CodeTriple> lookupTable;
+    private Map<String, Set<CodeTriple>> lookupTable;
     private String modelFileName = "target/lookupTable";
 
     /**
@@ -70,13 +71,12 @@ public class ExactMatchClassifier extends AbstractClassifier {
     @Override
     public Record classify(final Record record) throws IOException {
 
-        TokenSet cleanDescriptionTokenSet = new TokenSet(record.getCleanedDescription());
-        CodeTriple result = lookupTable.get(cleanDescriptionTokenSet);
+        Set<CodeTriple> result = lookupTable.get(record.getCleanedDescription());
         if (result == null) {
             return record;
         }
         else {
-            record.addCodeTriples(result);
+            record.addAllCodeTriples(result);
             return record;
 
         }
@@ -106,9 +106,7 @@ public class ExactMatchClassifier extends AbstractClassifier {
      */
     private void addRecordToLookupTable(final Record record) {
 
-        for (CodeTriple codeTriple : record.getOriginalData().getGoldStandardCodeTriples()) {
-            lookupTable.put(codeTriple.getTokenSet(), codeTriple);
-        }
+        lookupTable.put(record.getOriginalData().getDescription(), record.getOriginalData().getGoldStandardCodeTriples());
 
     }
 
@@ -141,7 +139,7 @@ public class ExactMatchClassifier extends AbstractClassifier {
 
         try {
 
-            Map<TokenSet, CodeTriple> recoveredMap = (Map<TokenSet, CodeTriple>) input.readObject();
+            Map<String, Set<CodeTriple>> recoveredMap = (Map<String, Set<CodeTriple>>) input.readObject();
             lookupTable = recoveredMap;
         }
         finally {
@@ -201,12 +199,27 @@ public class ExactMatchClassifier extends AbstractClassifier {
         return true;
     }
 
+    public Set<CodeTriple> classifyTokenSetToCodeTripleSet(final TokenSet tokenSet) throws IOException {
+
+        Set<CodeTriple> result = lookupTable.get(tokenSet.toString());
+
+        if (result != null) {
+            return result;
+
+        }
+        else {
+            return null;
+        }
+    }
+
     @Override
     public Pair<Code, Double> classify(final TokenSet tokenSet) throws IOException {
 
-        CodeTriple result = lookupTable.get(tokenSet);
+        Set<CodeTriple> result = lookupTable.get(tokenSet.toString());
+
         if (result != null) {
-            return new Pair<Code, Double>(result.getCode(), result.getConfidence());
+            CodeTriple current = result.iterator().next();
+            return new Pair<Code, Double>(current.getCode(), current.getConfidence());
 
         }
         else {

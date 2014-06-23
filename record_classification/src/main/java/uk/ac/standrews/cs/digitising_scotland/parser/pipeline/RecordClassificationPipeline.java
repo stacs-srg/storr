@@ -67,14 +67,9 @@ public class RecordClassificationPipeline {
         TokenSet cleanedTokenSet = new TokenSet(record.getCleanedDescription());
 
         if (exactMatchClassifier != null) {
-            Pair<Code, Double> exactMatchResult = exactMatchClassifier.classify(cleanedTokenSet);
+            Set<CodeTriple> exactMatchResult = exactMatchClassifier.classifyTokenSetToCodeTripleSet(cleanedTokenSet);
 
-            if (exactMatchResult != null) {
-                CodeTriple result = new CodeTriple(exactMatchResult.getLeft(), cleanedTokenSet, 2.0);
-                HashSet<CodeTriple> hashSet = new HashSet<>();
-                hashSet.add(result);
-                return hashSet;
-            }
+            return exactMatchResult;
         }
 
         return classifyTokenSet(cleanedTokenSet);
