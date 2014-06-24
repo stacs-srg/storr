@@ -13,6 +13,7 @@ pom-template.xml
 .classpath
 .project
 .settings
+.pmd
 
 syntax: regexp
 ^record_classification/ModData/25000\.txt$
