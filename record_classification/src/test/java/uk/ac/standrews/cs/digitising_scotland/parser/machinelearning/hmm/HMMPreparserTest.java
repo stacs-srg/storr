@@ -5,10 +5,14 @@ import java.util.ArrayList;
 import org.junit.Assert;
 import org.junit.Test;
 
-import uk.ac.standrews.cs.digitising_scotland.parser.machinelearning.hmm.HMMPreparser;
-
+/**
+ * The Class HMMPreparserTests tests the basic functionality of the {@link HMMPreparser} class.
+ */
 public class HMMPreparserTest {
 
+    /**
+     * Test remove quotes.
+     */
     @Test
     public void testRemoveQuotes() {
 
@@ -18,6 +22,9 @@ public class HMMPreparserTest {
         Assert.assertEquals("Remove these quotes", parsedString);
     }
 
+    /**
+     * Tests separate punctuation comma.
+     */
     @Test
     public void testSeperatePuncutationComma() {
 
@@ -27,6 +34,9 @@ public class HMMPreparserTest {
         Assert.assertEquals("The quick brown fox , jumped", parsedString);
     }
 
+    /**
+     * Test separate punctuation  semi colon.
+     */
     @Test
     public void testSeperatePuncutationSemiColon() {
 
@@ -36,6 +46,9 @@ public class HMMPreparserTest {
         Assert.assertEquals("The quick brown fox ; jumped", parsedString);
     }
 
+    /**
+     * Test separate punctuation c comma semi.
+     */
     @Test
     public void testSeperatePuncutationCommaSemi() {
 
@@ -45,6 +58,9 @@ public class HMMPreparserTest {
         Assert.assertEquals("The quick , brown fox ; jumped", parsedString);
     }
 
+    /**
+     * Test split into multiple lines.
+     */
     @Test
     public void testSplitIntoMultipuleLines() {
 
@@ -56,6 +72,9 @@ public class HMMPreparserTest {
         hmmp.splitIntoMultipuleLines(testString);
     }
 
+    /**
+     * Test tokenise.
+     */
     @Test
     public void testTokenise() {
 

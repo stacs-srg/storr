@@ -1,8 +1,8 @@
 package uk.ac.standrews.cs.digitising_scotland.parser.datastructures;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import uk.ac.standrews.cs.digitising_scotland.parser.resolver.CodeTriple;
@@ -41,6 +41,7 @@ public class ListAccuracyMetrics {
      */
     private int numConfidenceNotOne;
 
+    /** The coded exact match. */
     private int codedExactMatch;
 
     /**
@@ -63,16 +64,22 @@ public class ListAccuracyMetrics {
      */
     private double macroRecall;
 
+    /** The prop gold predicted. */
     private double propGoldPredicted;
 
+    /** The unclassified. */
     private int unclassified;
 
+    /** The single classification. */
     private int singleClassification;
 
+    /** The two classifications. */
     private int twoClassifications;
 
+    /** The more than two classifications. */
     private int moreThanTwoClassifications;
 
+    /** The prop wrongly predicted. */
     private double propWronglyPredicted;
 
     /**
@@ -80,9 +87,9 @@ public class ListAccuracyMetrics {
      *
      * @param listOfRecrods the list of recrods
      */
-    public ListAccuracyMetrics(final ArrayList<Record> listOfRecrods) {
+    public ListAccuracyMetrics(final List<Record> listOfRecrods) {
 
-        // TODO Auto-generated constructor stub
+        this(new Bucket(listOfRecrods));
     }
 
     /**
@@ -104,6 +111,12 @@ public class ListAccuracyMetrics {
 
     }
 
+    /**
+     * Calculate exact match.
+     *
+     * @param bucket the bucket
+     * @return the int
+     */
     private int calculateExactMatch(final Bucket bucket) {
 
         int exactMatch = 0;
@@ -145,6 +158,11 @@ public class ListAccuracyMetrics {
 
     }
 
+    /**
+     * Count num classifications.
+     *
+     * @param bucket the bucket
+     */
     private void countNumClassifications(final Bucket bucket) {
 
         unclassified = 0;
@@ -169,6 +187,12 @@ public class ListAccuracyMetrics {
         }
     }
 
+    /**
+     * Calculate prop gold standard correctly predicted.
+     *
+     * @param bucket the bucket
+     * @return the double
+     */
     private double calculatePropGoldStandardCorrectlyPredicted(final Bucket bucket) {
 
         double propGoldPredicted = 0.;
@@ -188,11 +212,17 @@ public class ListAccuracyMetrics {
                 }
             }
 
-            propGoldPredicted += (count / (double) goldStandardTriples.size());
+            propGoldPredicted += count / (double) goldStandardTriples.size();
         }
         return propGoldPredicted / bucket.size();
     }
 
+    /**
+     * Calculate proportion wrongly predicted.
+     *
+     * @param bucket the bucket
+     * @return the double
+     */
     private double calculateProportionWronglyPredicted(final Bucket bucket) {
 
         double wronglyPredicted = 0.;
@@ -216,9 +246,15 @@ public class ListAccuracyMetrics {
             }
         }
 
-        return (wronglyPredicted / totalPredictions);
+        return wronglyPredicted / totalPredictions;
     }
 
+    /**
+     * Calculate num confidence of one.
+     *
+     * @param bucket the bucket
+     * @return the int
+     */
     private int calculateNumConfidenceOfOne(final Bucket bucket) {
 
         int totallookup = 0;
@@ -236,6 +272,12 @@ public class ListAccuracyMetrics {
         return totallookup;
     }
 
+    /**
+     * Calculate num confidence not one.
+     *
+     * @param bucket the bucket
+     * @return the int
+     */
     private int calculateNumConfidenceNotOne(final Bucket bucket) {
 
         int totalMi = 0;
@@ -253,6 +295,12 @@ public class ListAccuracyMetrics {
         return totalMi;
     }
 
+    /**
+     * Calculate average confidence.
+     *
+     * @param bucket the bucket
+     * @return the double
+     */
     private double calculateAverageConfidence(final Bucket bucket) {
 
         double totalConfidence = 0;
@@ -271,6 +319,12 @@ public class ListAccuracyMetrics {
         return totalConfidence / totalMeasurments;
     }
 
+    /**
+     * Calculate unique records.
+     *
+     * @param bucket the bucket
+     * @return the int
+     */
     private int calculateUniqueRecords(final Bucket bucket) {
 
         HashMap<Record, Integer> tempMap = new HashMap<>();
@@ -469,11 +523,21 @@ public class ListAccuracyMetrics {
         this.macroRecall = macroRecall;
     }
 
+    /**
+     * Gets the coded by sub string match.
+     *
+     * @return the coded by sub string match
+     */
     public int getCodedBySubStringMatch() {
 
         return codedExactMatch;
     }
 
+    /**
+     * Sets the coded by sub string match.
+     *
+     * @param codedBySubStringMatch the new coded by sub string match
+     */
     public void setCodedBySubStringMatch(final int codedBySubStringMatch) {
 
         this.codedExactMatch = codedBySubStringMatch;

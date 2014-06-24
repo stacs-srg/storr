@@ -3,57 +3,68 @@ package uk.ac.standrews.cs.digitising_scotland.parser.preprocessor;
 import org.junit.Assert;
 import org.junit.Test;
 
-import uk.ac.standrews.cs.digitising_scotland.parser.preprocessor.LevenshteinDistance;
-
+/**
+ * The Class LevenshteinDistanceTest tests the calculation of Levenshtein distances with various strings.
+ */
 public class LevenshteinDistanceTest {
 
+    /**
+     * Tests calculation of distance betweem two strings with distance of 4. Shorest string first.
+     */
     @Test
     public void testDistanceOf4SmallFirst() {
 
-        String testString1 = "This is a test String";
-        String testString2 = "This is not a test String";
-
-        int distance = LevenshteinDistance.computeEditDistance(testString1, testString2);
+        final String shortString = "This is a test String";
+        final String longString = "This is not a test String";
+        final int distance = LevenshteinDistance.computeEditDistance(shortString, longString);
         Assert.assertEquals(4, distance);
     }
 
+    /**
+     * Tests calculation of distance between two strings with distance of 4, longest string first.
+     */
     @Test
     public void testDistanceOf4BigFirst() {
 
-        String testString2 = "This is a test String";
-        String testString1 = "This is not a test String";
-
-        int distance = LevenshteinDistance.computeEditDistance(testString1, testString2);
+        final String shortString = "This is a test String";
+        final String longString = "This is not a test String";
+        final int distance = LevenshteinDistance.computeEditDistance(longString, shortString);
         Assert.assertEquals(4, distance);
     }
 
+    /**
+     * Tests calculation of distance between two strings with equall length string.
+     */
     @Test
     public void testDistanceEqual() {
 
-        String testString1 = "This is a test String";
-        String testString2 = "This is a test String";
-
-        int distance = LevenshteinDistance.computeEditDistance(testString1, testString2);
+        final String testString1 = "This is a test String";
+        final String testString2 = "This is a test String";
+        final int distance = LevenshteinDistance.computeEditDistance(testString1, testString2);
         Assert.assertEquals(0, distance);
     }
 
+    /**
+     * Tests when similarity is equal.
+     */
     @Test
     public void testSimilarityEqual() {
 
-        String testString1 = "This is a test String";
-        String testString2 = "This is a test String";
-
-        double distance = LevenshteinDistance.similarity(testString1, testString2);
+        final String testString1 = "This is a test String";
+        final String testString2 = "This is a test String";
+        final double distance = LevenshteinDistance.similarity(testString1, testString2);
         Assert.assertEquals(1.00, distance, 0.0001);
     }
 
+    /**
+     * Tests when similarity is not equal.
+     */
     @Test
     public void testSimilarityNotEqual() {
 
-        String testString1 = "1234";
-        String testString2 = "123";
-
-        double distance = LevenshteinDistance.similarity(testString1, testString2);
+        final String testString1 = "1234";
+        final String testString2 = "123";
+        final double distance = LevenshteinDistance.similarity(testString1, testString2);
         Assert.assertEquals(0.75, distance, 0.0001);
     }
 
