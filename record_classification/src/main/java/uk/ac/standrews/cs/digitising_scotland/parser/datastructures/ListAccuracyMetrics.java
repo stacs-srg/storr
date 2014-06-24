@@ -226,7 +226,6 @@ public class ListAccuracyMetrics {
     private double calculateProportionWronglyPredicted(final Bucket bucket) {
 
         double wronglyPredicted = 0.;
-        double totalPredictions = 0;
 
         for (Record record : bucket) {
 
@@ -237,16 +236,19 @@ public class ListAccuracyMetrics {
                 break;
             }
 
-            for (CodeTriple codeTriple : setCodeTriples) {
+            int count = 0;
 
-                totalPredictions++;
-                if (!goldStandardTriples.contains(codeTriple)) {
-                    wronglyPredicted++;
+            for (CodeTriple classification : setCodeTriples) {
+                for (CodeTriple goldTriple : goldStandardTriples) {
+                    if (goldTriple.getCode() != classification.getCode()) {
+                        count++;
+                    }
                 }
             }
-        }
 
-        return wronglyPredicted / totalPredictions;
+            wronglyPredicted += count / (double) setCodeTriples.size();
+        }
+        return wronglyPredicted / bucket.size();
     }
 
     /**

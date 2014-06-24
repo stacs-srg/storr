@@ -18,6 +18,7 @@ import uk.ac.standrews.cs.digitising_scotland.parser.datastructures.RecordFactor
 import uk.ac.standrews.cs.digitising_scotland.parser.datastructures.vectors.VectorFactory;
 import uk.ac.standrews.cs.digitising_scotland.parser.writers.DataClerkingWriter;
 import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
+import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearningConfiguration;
 
 /**
  * This class integrates the training of machine learning models and the classification of records using those models.
@@ -72,6 +73,8 @@ public final class TrainAndMultiplyClassify {
         vectorFactory = new VectorFactory(trainingBucket);
 
         System.out.println("********** Training Classifier **********");
+        System.out.println("Training with a dictionary size of: " + MachineLearningConfiguration.getDefaultProperties().getProperty("numFeatures"));
+        System.out.println("Training with this number of output classes: " + MachineLearningConfiguration.getDefaultProperties().getProperty("numCategories"));
 
         AbstractClassifier classifier = trainClassifier(trainingBucket, vectorFactory);
 
