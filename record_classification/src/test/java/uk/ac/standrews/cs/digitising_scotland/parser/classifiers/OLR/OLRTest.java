@@ -37,6 +37,9 @@ public class OLRTest {
 
         vectorFactory = new VectorFactory(); //FIXME
         vectors = createVectors();
+        MachineLearningConfiguration.getDefaultProperties().setProperty("numFeatures", "20");
+        MachineLearningConfiguration.getDefaultProperties().setProperty("numCategories", "20");
+
     }
 
     /**

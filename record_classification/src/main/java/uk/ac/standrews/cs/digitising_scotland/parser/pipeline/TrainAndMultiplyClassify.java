@@ -170,9 +170,9 @@ public final class TrainAndMultiplyClassify {
         BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(inputFile), "UTF8"));
         String line = br.readLine();
         br.close();
-        if (line.split(Utils.getCSVComma()).length == 38) { return true; }
-
+        if (line != null) {
+            if (line.split(Utils.getCSVComma()).length == 38) { return true; }
+        }
         return false;
     }
-
 }
