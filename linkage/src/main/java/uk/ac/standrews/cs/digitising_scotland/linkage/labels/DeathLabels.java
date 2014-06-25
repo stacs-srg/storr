@@ -1,14 +1,14 @@
 package uk.ac.standrews.cs.digitising_scotland.linkage.labels;
 
 import java.util.Arrays;
-import java.util.Iterator;
+import java.util.List;
 
 /**
  * Created by al on 19/05/2014.
  */
 public class DeathLabels extends CommonLabels {
 
-    public static final String TYPE = "Death";
+    public static final String TYPE = DeathLabels.class.getName();
 
     public static final String DEATH_YEAR = "death_year";
     public static final String AGE_AT_DEATH = "age_at_death";
@@ -28,7 +28,7 @@ public class DeathLabels extends CommonLabels {
     public static final String COD_C = "cod_c";
     public static final String CERTIFYING_DOCTOR = "certifying_doctor";
 
-    public static final Iterable<String> DEATH_FIELD_NAMES = Arrays.asList(ID, SURNAME, FORENAME, SEX, YEAR_OF_REGISTRATION, REGISTRATION_DISTRICT_NUMBER,
+    public static final List<String> DEATH_FIELD_NAMES = Arrays.asList(ID, SURNAME, FORENAME, SEX, YEAR_OF_REGISTRATION, REGISTRATION_DISTRICT_NUMBER,
             REGISTRATION_DISTRICT_SUFFIX, ENTRY, DEATH_YEAR, AGE_AT_DEATH, MOTHERS_MAIDEN_SURNAME, CHANGED_SURNAME, CHANGED_FORENAME, CHANGED_DEATH_AGE,
             DATE_OF_BIRTH, OCCUPATION, MARITAL_STATUS, SPOUSES_NAMES, SPOUSES_OCCUPATIONS,   // TODO check fieldname spouses_occupations - wrong in exporter - population project
             DEATH_MONTH, DEATH_DAY,
@@ -36,8 +36,9 @@ public class DeathLabels extends CommonLabels {
             MOTHERS_SURNAME, CHANGED_MOTHERS_MAIDEN_SURNAME,
             MOTHER_DECEASED, COD_A, COD_B, COD_C, CERTIFYING_DOCTOR, CORRECTED_ENTRY, IMAGE_QUALITY);
 
-    public Iterator<String> iterator() {
-        return DEATH_FIELD_NAMES.iterator();
+    public List<String> getLabels() {
+        return DEATH_FIELD_NAMES;
     }
+
 
 }

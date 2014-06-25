@@ -1,8 +1,6 @@
-package uk.ac.standrews.cs.digitising_scotland.linkage.resolve;
+package uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.stream_operations.sharder;
 
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXP;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXPInputStream;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXPOutputStream;
+import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.*;
 import uk.ac.standrews.cs.nds.util.ErrorHandling;
 
 import java.util.ArrayList;
@@ -41,16 +39,16 @@ public abstract class AbstractPairwiseLinker implements IPairWiseLinker {
      */
     private void linkRecords(final List<ILXP> records) {
 
-        for (Pair pair : allPairs(records)) {
+        for (IPair pair : allPairs(records)) {
             if (compare(pair)) {
                 addToResults(pair, output);
             }
         }
     }
 
-    private Iterable<Pair> allPairs(final List<ILXP> records) {
+    private Iterable<IPair> allPairs(final List<ILXP> records) {
 
-        List<Pair> all = new ArrayList<>();
+        List<IPair> all = new ArrayList<>();
 
         ILXP[] recordsArray = records.toArray(new ILXP[0]);
 
@@ -63,12 +61,12 @@ public abstract class AbstractPairwiseLinker implements IPairWiseLinker {
         return all;
     }
 
-    public abstract boolean compare(Pair pair);
+    public abstract boolean compare(IPair pair);
 
     /**
      * Adds a matched result to a result collection.
      *
      * @param pair
      */
-    public abstract void addToResults(Pair pair, ILXPOutputStream results);
+    public abstract void addToResults(IPair pair, ILXPOutputStream results);
 }

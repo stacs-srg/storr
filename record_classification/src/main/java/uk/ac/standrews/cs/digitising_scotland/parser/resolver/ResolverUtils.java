@@ -131,18 +131,19 @@ public final class ResolverUtils {
      * @return true, if successful
      */
     public static boolean tripleSetIsValid(final Set<CodeTriple> triple, final TokenSet originalTokenSet) {
+
         TokenSet union = getUnion(getTokenSetsFromTriple(triple));
         return originalTokenSet.containsAll(union) && noTokenAppearsInUnionMoreOftenThanInOriginalSet(originalTokenSet, union);
     }
 
-    private static boolean noTokenAppearsInUnionMoreOftenThanInOriginalSet(TokenSet originalTokenSet, TokenSet union) {
-        for (String token : union){
+    private static boolean noTokenAppearsInUnionMoreOftenThanInOriginalSet(final TokenSet originalTokenSet, final TokenSet union) {
+
+        for (String token : union) {
             TokenSet originalCopy = new TokenSet(originalTokenSet);
             TokenSet unionCopy = new TokenSet(union);
             originalCopy.retainAll(new TokenSet(token));
             unionCopy.retainAll(new TokenSet(token));
-            if(unionCopy.size() > originalCopy.size())
-                return false;
+            if (unionCopy.size() > originalCopy.size()) { return false; }
         }
         return true;
     }
@@ -229,6 +230,21 @@ public final class ResolverUtils {
             if (code.isAncestor(c)) { return true; }
         }
         return false;
+    }
+
+    /**
+     * Finds if the specified code is an anscetor of a code in the set of codes, and returns which one.
+     *
+     * @param code the code
+     * @param codes the codes
+     * @return true, if codes contains child of code
+     */
+    static Code whichCodeIsAncestorOfCodeInSet(final Code code, final Set<Code> codes) {
+
+        for (Code c : codes) {
+            if (code.isAncestor(c)) { return c; }
+        }
+        return null;
     }
 
     /**

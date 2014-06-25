@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import uk.ac.standrews.cs.digitising_scotland.parser.classifiers.AbstractClassifier;
+import uk.ac.standrews.cs.digitising_scotland.parser.classifiers.lookup.ExactMatchClassifier;
 import uk.ac.standrews.cs.digitising_scotland.parser.classifiers.lookup.NGramSubstrings;
 import uk.ac.standrews.cs.digitising_scotland.parser.datastructures.Record;
 import uk.ac.standrews.cs.digitising_scotland.parser.datastructures.TokenSet;
@@ -28,6 +29,7 @@ public class RecordClassificationPipeline {
     private static final int WORDLIMIT = 1;
 
     private TokenClassificationCache cache;
+    private ExactMatchClassifier exactMatchClassifier;
 
     /**
      * Constructs a new {@link RecordClassificationPipeline} with the specified {@link AbstractClassifier} used
@@ -37,6 +39,21 @@ public class RecordClassificationPipeline {
     public RecordClassificationPipeline(final AbstractClassifier classifier) {
 
         this.cache = new TokenClassificationCache(classifier);
+        this.exactMatchClassifier = null;
+    }
+
+    /**
+     * Constructs a new {@link RecordClassificationPipeline} with an {@link ExactMatchClassifier} used to
+     * perform an exact match lookup before the specified {@link AbstractClassifier} is used
+     * to perform the classification duties.
+     * @param classifier {@link AbstractClassifier} used for machine learning classification
+     * @param exactMatchClassifier {@link ExactMatchClassifier} used to carry out an exact match classification
+
+     */
+    public RecordClassificationPipeline(final AbstractClassifier classifier, final ExactMatchClassifier exactMatchClassifier) {
+
+        this.cache = new TokenClassificationCache(classifier);
+        this.exactMatchClassifier = exactMatchClassifier;
     }
 
     /**
@@ -48,12 +65,17 @@ public class RecordClassificationPipeline {
     public Set<CodeTriple> classify(final Record record) throws IOException {
 
         TokenSet cleanedTokenSet = new TokenSet(record.getCleanedDescription());
+
+        if (exactMatchClassifier != null) {
+            Set<CodeTriple> exactMatchResult = exactMatchClassifier.classifyTokenSetToCodeTripleSet(cleanedTokenSet);
+            if (exactMatchResult != null) { return exactMatchResult; }
+        }
+
         return classifyTokenSet(cleanedTokenSet);
 
     }
 
     private Set<CodeTriple> classifyTokenSet(final TokenSet cleanedTokenSet) throws IOException {
-
 
         ResolverMatrix resolverMatrix = new ResolverMatrix();
         if (cleanedTokenSet.size() < WORDLIMIT) {
@@ -82,7 +104,7 @@ public class RecordClassificationPipeline {
         return best;
     }
 
-    private void populateMatrix(Multiset<TokenSet> tokenSetSet, ResolverMatrix resolverMatrix) throws IOException {
+    private void populateMatrix(final Multiset<TokenSet> tokenSetSet, final ResolverMatrix resolverMatrix) throws IOException {
 
         for (TokenSet tokenSet : tokenSetSet) {
             Pair<Code, Double> codeDoublePair = cache.getClassification(tokenSet);

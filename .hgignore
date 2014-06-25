@@ -13,3 +13,11 @@ pom-template.xml
 .classpath
 .project
 .settings
+.pmd
+
+syntax: regexp
+^record_classification/ModData/25000\.txt$
+syntax: regexp
+^record_classification/ModData/modDataSample11\.txt$
+syntax: regexp
+^record_classification/ModData/testCodeMap\.txt$

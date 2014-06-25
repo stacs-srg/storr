@@ -31,170 +31,157 @@ import uk.ac.standrews.cs.digitising_scotland.parser.resolver.Pair;
  */
 public class NGramClassifier extends AbstractClassifier implements Serializable {
 
-	private static final long serialVersionUID = 832228090104039831L;
-	private LookupTableClassifier lookupTableClassifier;
-	private String defaultModelLocation = "target/nGramModel";
+    private static final long serialVersionUID = 832228090104039831L;
+    private LookupTableClassifier lookupTableClassifier;
+    private String defaultModelLocation = "target/nGramModel";
 
-	/**
-	 * Constructs a new {@link NGramClassifier} with an empty lookup table. To
-	 * construct the lookup table the user needs to call train().
-	 */
-	public NGramClassifier() {
-		this(new Bucket());
-	}
+    /**
+     * Constructs a new {@link NGramClassifier} with an empty lookup table. To
+     * construct the lookup table the user needs to call train().
+     */
+    public NGramClassifier() {
 
-	/**
-	 * Constructs a new {@link NGramClassifier} and uses the Bucket suppled to
-	 * build the look up table. This is the equivalent of calling train().
-	 * 
-	 * @param bucket
-	 *            {@link Bucket} of training records
-	 */
-	public NGramClassifier(final Bucket bucket) {
+        this(new Bucket());
+    }
 
-		lookupTableClassifier = new LookupTableClassifier(bucket);
-		try {
-			writeModel(defaultModelLocation);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
+    /**
+     * Constructs a new {@link NGramClassifier} and uses the Bucket suppled to
+     * build the look up table. This is the equivalent of calling train().
+     * 
+     * @param bucket
+     *            {@link Bucket} of training records
+     */
+    public NGramClassifier(final Bucket bucket) {
 
-	@Override
-	public void train(final Bucket bucket) throws Exception {
+        lookupTableClassifier = new LookupTableClassifier(bucket);
+        try {
+            writeModel(defaultModelLocation);
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
-		for (Record record : bucket) {
-			lookupTableClassifier.addRecordToLookupTable(record);
-		}
-		writeModel(defaultModelLocation);
-	}
+    @Override
+    public void train(final Bucket bucket) throws Exception {
 
-	@Override
-	public Record classify(final Record record) throws IOException {
+        for (Record record : bucket) {
+            lookupTableClassifier.addRecordToLookupTable(record);
+        }
+        writeModel(defaultModelLocation);
+    }
 
-		Set<CodeTriple> resultSet = classifyGrams(record);
-		record.addAllCodeTriples(resultSet);
-		return record;
-	}
+    @Override
+    public Record classify(final Record record) throws IOException {
 
-	/**
-	 * Classifies the {@link NGramSubstrings} of a Description using a
-	 * {@link LookupTableClassifier}.
-	 * 
-	 * @param record
-	 *            - The Description of the record to be classified.
-	 * @return {@link ClassificationSet} of the {@link NGramSubstrings} of the
-	 *         Description.
-	 * @throws IOException
-	 *             if a failure occurs while reading tokens from the
-	 *             {@link TokenStream}. Error handling should be refactored.
-	 */
-	private Set<CodeTriple> classifyGrams(final Record record)
-			throws IOException {
+        Set<CodeTriple> resultSet = classifyGrams(record);
+        record.addAllCodeTriples(resultSet);
+        return record;
+    }
 
-		NGramSubstrings grams = new NGramSubstrings(
-				record.getCleanedDescription());
-		return lookupTableClassifier.classify(grams, record);
-	}
+    /**
+     * Classifies the {@link NGramSubstrings} of a Description using a
+     * {@link LookupTableClassifier}.
+     * 
+     * @param record
+     *            - The Description of the record to be classified.
+     * @return {@link ClassificationSet} of the {@link NGramSubstrings} of the
+     *         Description.
+     * @throws IOException
+     *             if a failure occurs while reading tokens from the
+     *             {@link TokenStream}. Error handling should be refactored.
+     */
+    private Set<CodeTriple> classifyGrams(final Record record) throws IOException {
 
-	/**
-	 * Writes model to file. File name is fileName.ser
-	 * 
-	 * @param fileName
-	 *            name of file to write model to
-	 * @throws IOException
-	 *             if model location cannot be read
-	 */
-	public void writeModel(final String fileName) throws IOException {
+        NGramSubstrings grams = new NGramSubstrings(record.getCleanedDescription());
+        return lookupTableClassifier.classify(grams, record);
+    }
 
-		FileOutputStream fos = new FileOutputStream(fileName + ".ser");
-		ObjectOutputStream oos = new ObjectOutputStream(fos);
-		write(oos);
-	}
+    /**
+     * Writes model to file. File name is fileName.ser
+     * 
+     * @param fileName
+     *            name of file to write model to
+     * @throws IOException
+     *             if model location cannot be read
+     */
+    public void writeModel(final String fileName) throws IOException {
 
-	private void write(final ObjectOutputStream oos) throws IOException {
+        FileOutputStream fos = new FileOutputStream(fileName + ".ser");
+        ObjectOutputStream oos = new ObjectOutputStream(fos);
+        write(oos);
+    }
 
-		oos.writeObject(lookupTableClassifier);
-		oos.close();
-	}
+    private void write(final ObjectOutputStream oos) throws IOException {
 
-	protected void readModel(final String fileName) throws IOException,
-			ClassNotFoundException {
+        oos.writeObject(lookupTableClassifier);
+        oos.close();
+    }
 
-		ObjectInput input = null;
-		try (InputStream file = new FileInputStream(fileName + ".ser")) {
-			InputStream buffer = new BufferedInputStream(file);
-			input = new ObjectInputStream(buffer);
-			lookupTableClassifier = (LookupTableClassifier) input.readObject();
-		} finally {
-			if (input != null) {
-				input.close();
-			}
-		}
-	}
+    protected void readModel(final String fileName) throws IOException, ClassNotFoundException {
 
-	@Override
-	public void getModelFromDefaultLocation() {
+        ObjectInput input = null;
+        try (InputStream file = new FileInputStream(fileName + ".ser")) {
+            InputStream buffer = new BufferedInputStream(file);
+            input = new ObjectInputStream(buffer);
+            lookupTableClassifier = (LookupTableClassifier) input.readObject();
+        }
+        finally {
+            closeStream(input);
+        }
+    }
 
-		try {
-			readModel(defaultModelLocation);
-		} catch (ClassNotFoundException | IOException e) {
-			e.printStackTrace();
-		}
-	}
+    private void closeStream(final ObjectInput stream) throws IOException {
 
-	@Override
-	public int hashCode() {
+        if (stream != null) {
+            stream.close();
+        }
+    }
 
-		final int prime = 31;
-		int result = 1;
-		result = prime
-				* result
-				+ ((defaultModelLocation == null) ? 0 : defaultModelLocation
-						.hashCode());
-		result = prime
-				* result
-				+ ((lookupTableClassifier == null) ? 0 : lookupTableClassifier
-						.hashCode());
-		return result;
-	}
+    @Override
+    public void getModelFromDefaultLocation() {
 
-	@Override
-	public boolean equals(final Object obj) {
+        try {
+            readModel(defaultModelLocation);
+        }
+        catch (ClassNotFoundException | IOException e) {
+            e.printStackTrace();
+        }
+    }
 
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null) {
-			return false;
-		}
-		if (getClass() != obj.getClass()) {
-			return false;
-		}
-		NGramClassifier other = (NGramClassifier) obj;
-		if (defaultModelLocation == null) {
-			if (other.defaultModelLocation != null) {
-				return false;
-			}
-		} else if (!defaultModelLocation.equals(other.defaultModelLocation)) {
-			return false;
-		}
-		if (lookupTableClassifier == null) {
-			if (other.lookupTableClassifier != null) {
-				return false;
-			}
-		} else if (!lookupTableClassifier.equals(other.lookupTableClassifier)) {
-			return false;
-		}
-		return true;
-	}
+    @Override
+    public int hashCode() {
 
-	@Override
-	public Pair<Code, Double> classify(final TokenSet tokenSet)
-			throws IOException {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((defaultModelLocation == null) ? 0 : defaultModelLocation.hashCode());
+        result = prime * result + ((lookupTableClassifier == null) ? 0 : lookupTableClassifier.hashCode());
+        return result;
+    }
 
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public boolean equals(final Object obj) {
+
+        if (this == obj) { return true; }
+        if (obj == null) { return false; }
+        if (getClass() != obj.getClass()) { return false; }
+        NGramClassifier other = (NGramClassifier) obj;
+        if (defaultModelLocation == null) {
+            if (other.defaultModelLocation != null) { return false; }
+        }
+        else if (!defaultModelLocation.equals(other.defaultModelLocation)) { return false; }
+        if (lookupTableClassifier == null) {
+            if (other.lookupTableClassifier != null) { return false; }
+        }
+        else if (!lookupTableClassifier.equals(other.lookupTableClassifier)) { return false; }
+        return true;
+    }
+
+    @Override
+    public Pair<Code, Double> classify(final TokenSet tokenSet) throws IOException {
+
+        // TODO Auto-generated method stub
+        return null;
+    }
 
 }

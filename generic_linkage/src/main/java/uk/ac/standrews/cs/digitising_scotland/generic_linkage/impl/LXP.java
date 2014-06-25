@@ -57,11 +57,6 @@ public class LXP extends HashMap<String, String> implements ILXP {
     }
 
     @Override
-    public void put(String key, int value) {
-        put(key, Integer.toString(value));
-    }
-
-    @Override
     public String get(String key) {
         return super.get(key);
     }

@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
@@ -21,15 +23,83 @@ public class RecordFactoryTest {
     @Test
     public void makeMultipleCodedTrainingRecords() throws IOException, InputFormatException {
 
-        File inputFile = new File("ModData/modDataSample11.txt");
+        File codeFile = new File(getClass().getResource("/testCodeMap.txt").getFile());
+        CodeFactory.getInstance().loadDictionary(codeFile);
+
+        String file = getClass().getResource("/multipleCauseRecordsTest.csv").getFile();
+        File inputFile = new File(file);
+
         List<Record> records = FormatConverter.convert(inputFile);
 
-        for (Record record : records) {
-            System.out.print(record.getOriginalData().getDescription() + "\t");
-            for (CodeTriple codeT : record.getOriginalData().getGoldStandardCodeTriples()) {
-                System.out.print(codeT + "\t");
+        for (int i = 0; i < records.size(); i++) {
+            if (i == 0) {
+                CODOrignalData originalData = (CODOrignalData) records.get(i).getOriginalData();
+                Assert.assertEquals(originalData.getDescription(), "Pulmonary Embolism, Old Age");
+                Assert.assertEquals(originalData.getYear(), 2014);
+                Assert.assertEquals(originalData.getSex(), 1);
+                Assert.assertEquals(originalData.getAgeGroup(), 5);
+
+                Collection<CodeTriple> knownCorrect = new HashSet<>();
+                knownCorrect.add(new CodeTriple(CodeFactory.getInstance().getCode("I269"), new TokenSet("Pulmonary Embolism"), 1.0));
+                knownCorrect.add(new CodeTriple(CodeFactory.getInstance().getCode("R54"), new TokenSet("Old Age"), 1.0));
+
+                originalData.getGoldStandardCodeTriples().containsAll(knownCorrect);
             }
-            System.out.println();
+
+            if (i == 1) {
+                CODOrignalData originalData = (CODOrignalData) records.get(i).getOriginalData();
+                Assert.assertEquals(originalData.getDescription(), "Chest Infection");
+                Assert.assertEquals(originalData.getYear(), 2000);
+                Assert.assertEquals(originalData.getSex(), 0);
+                Assert.assertEquals(originalData.getAgeGroup(), 5);
+
+                Collection<CodeTriple> knownCorrect = new HashSet<>();
+                knownCorrect.add(new CodeTriple(CodeFactory.getInstance().getCode("J988"), new TokenSet("Chest Infection"), 1.0));
+
+                originalData.getGoldStandardCodeTriples().containsAll(knownCorrect);
+            }
+
+            if (i == 2) {
+                CODOrignalData originalData = (CODOrignalData) records.get(i).getOriginalData();
+                Assert.assertEquals(originalData.getDescription(), "Old Age");
+                Assert.assertEquals(originalData.getYear(), 2011);
+                Assert.assertEquals(originalData.getSex(), 1);
+                Assert.assertEquals(originalData.getAgeGroup(), 5);
+
+                Collection<CodeTriple> knownCorrect = new HashSet<>();
+                knownCorrect.add(new CodeTriple(CodeFactory.getInstance().getCode("R54"), new TokenSet("Old Age"), 1.0));
+
+                originalData.getGoldStandardCodeTriples().containsAll(knownCorrect);
+            }
+
+            if (i == 3) {
+                CODOrignalData originalData = (CODOrignalData) records.get(i).getOriginalData();
+                Assert.assertEquals(originalData.getDescription(), "Coronary Artery Disease, Myelodysplasia Syndrome");
+                Assert.assertEquals(originalData.getYear(), 2000);
+                Assert.assertEquals(originalData.getSex(), 0);
+                Assert.assertEquals(originalData.getAgeGroup(), 5);
+
+                Collection<CodeTriple> knownCorrect = new HashSet<>();
+                knownCorrect.add(new CodeTriple(CodeFactory.getInstance().getCode("I251"), new TokenSet("Coronary Artery Disease"), 1.0));
+                knownCorrect.add(new CodeTriple(CodeFactory.getInstance().getCode("D469"), new TokenSet("Myelodysplasia Syndrome"), 1.0));
+
+                originalData.getGoldStandardCodeTriples().containsAll(knownCorrect);
+            }
+
+            if (i == 4) {
+                CODOrignalData originalData = (CODOrignalData) records.get(i).getOriginalData();
+                Assert.assertEquals(originalData.getDescription(), "Low Platelet and Anaemia");
+                Assert.assertEquals(originalData.getYear(), 1999);
+                Assert.assertEquals(originalData.getSex(), 0);
+                Assert.assertEquals(originalData.getAgeGroup(), 2);
+
+                Collection<CodeTriple> knownCorrect = new HashSet<>();
+                knownCorrect.add(new CodeTriple(CodeFactory.getInstance().getCode("D649"), new TokenSet("Low Platelet and Anaemia"), 1.0));
+                knownCorrect.add(new CodeTriple(CodeFactory.getInstance().getCode("D696"), new TokenSet("Low Platelet and Anaemia"), 1.0));
+
+                originalData.getGoldStandardCodeTriples().containsAll(knownCorrect);
+            }
+
         }
     }
 

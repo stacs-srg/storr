@@ -40,7 +40,7 @@ public abstract class CrossFoldedDataStructure {
 
     private static ArrayList<NamedVector>[][] initialize(final int folds) {
 
-        ArrayList[][] crossFoldedData = new ArrayList[folds][2];
+        ArrayList<NamedVector>[][] crossFoldedData = new ArrayList[folds][2];
 
         for (int i = 0; i < folds; i++) {
             for (int j = 0; j < 2; j++) {

@@ -42,7 +42,7 @@ public class DataClerkingWriterTest {
         String occDataFile = "/DataClerkingWriterTestOcc.txt";
         File writeFile = createAndWriteOccBucketToFile(occBucketFile, occDataFile);
         String correctOccBucketFile = "/OccRecordWriteCorrect.txt";
-        //FIXME   checkFileAgainstKnownCorrect(correctOccBucketFile, writeFile);
+        //     checkFileAgainstKnownCorrect(correctOccBucketFile, writeFile);
     }
 
     @Test
@@ -117,36 +117,33 @@ public class DataClerkingWriterTest {
         Assert.assertArrayEquals(f2, f1);
     }
 
-    private Bucket addCODCodes(Bucket bucket) throws URISyntaxException {
+    private Bucket addCODCodes(final Bucket bucket) throws URISyntaxException {
 
-        bucket = helper.giveBucketTestingCODCodes(bucket);
-        return bucket;
+        return helper.giveBucketTestingCODCodes(bucket);
     }
 
-    private Bucket addHICODCodes(Bucket bucket) throws URISyntaxException {
+    private Bucket addHICODCodes(final Bucket bucket) throws URISyntaxException {
 
-        bucket = helper.giveBucketTestingHICODCodes(bucket, "I6191");
-        return bucket;
+        return helper.giveBucketTestingHICODCodes(bucket, "I6191");
     }
 
-    private Bucket addMultipleCODCodes(Bucket bucket) throws URISyntaxException {
+    private Bucket addMultipleCODCodes(final Bucket bucket) throws URISyntaxException {
 
         String code = "R99";
-        bucket = helper.giveBucketTestingHICODCodes(bucket, code);
+        helper.giveBucketTestingHICODCodes(bucket, code);
 
         code = "I6191";
-        bucket = helper.giveBucketTestingHICODCodes(bucket, code);
+        helper.giveBucketTestingHICODCodes(bucket, code);
 
         code = "X59";
-        bucket = helper.giveBucketTestingHICODCodes(bucket, code);
+        helper.giveBucketTestingHICODCodes(bucket, code);
 
         return bucket;
     }
 
-    private Bucket addOccCodes(Bucket bucket) throws IOException, CodeNotValidException, URISyntaxException {
+    private Bucket addOccCodes(final Bucket bucket) throws IOException, CodeNotValidException, URISyntaxException {
 
-        bucket = helper.giveBucketTestingOccCodes(bucket);
-        return bucket;
+        return helper.giveBucketTestingOccCodes(bucket);
     }
 
     private void writeToFile(final DataClerkingWriter dataClerkingWriter, final Bucket bucket) throws IOException {

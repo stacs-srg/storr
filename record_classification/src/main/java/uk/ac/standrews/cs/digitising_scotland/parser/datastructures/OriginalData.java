@@ -12,11 +12,22 @@ import uk.ac.standrews.cs.digitising_scotland.parser.resolver.CodeTriple;
  */
 public class OriginalData implements java.io.Serializable {
 
+    /** The Constant serialVersionUID. */
     private static final long serialVersionUID = -1453338613207961366L;
+
+    /** The description. */
     private String description;
+
+    /** The year. */
     private int year;
+
+    /** The image quality. */
     private int imageQuality;
+
+    /** The file name. */
     private String fileName;
+
+    /** The gold standard classification. */
     private Set<CodeTriple> goldStandardClassification;
 
     /**
@@ -31,12 +42,13 @@ public class OriginalData implements java.io.Serializable {
 
         if (imageQuality < 0 || imageQuality > 1) { throw new NumberFormatException("image quality must be 0 or 1, currently: " + imageQuality + "\ndescription: " + description); }
         this.description = description;
-        this.description.intern();
         this.year = year;
         this.imageQuality = imageQuality;
         this.fileName = fileName;
         goldStandardClassification = new HashSet<CodeTriple>();
         checkNotNull();
+        this.description = description.intern();
+
     }
 
     /**
@@ -69,6 +81,11 @@ public class OriginalData implements java.io.Serializable {
         return imageQuality;
     }
 
+    /**
+     * Check not null.
+     *
+     * @throws InputFormatException the input format exception
+     */
     private void checkNotNull() throws InputFormatException {
 
         if (description == null) { throw new InputFormatException("description passed to constructor cannot be null"); }
@@ -85,12 +102,18 @@ public class OriginalData implements java.io.Serializable {
         return fileName;
     }
 
+    /* (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
     @Override
     public String toString() {
 
         return "OriginalData [description=" + description + ", year=" + year + ", imageQuality=" + imageQuality + ", fileName=" + fileName + "]";
     }
 
+    /* (non-Javadoc)
+     * @see java.lang.Object#hashCode()
+     */
     @Override
     public int hashCode() {
 
@@ -104,6 +127,9 @@ public class OriginalData implements java.io.Serializable {
         return result;
     }
 
+    /* (non-Javadoc)
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
     @Override
     public boolean equals(final Object obj) {
 
@@ -128,11 +154,21 @@ public class OriginalData implements java.io.Serializable {
         return true;
     }
 
+    /**
+     * Gets the gold standard code triples.
+     *
+     * @return Set<CodeTriple> the gold standard code triples
+     */
     public Set<CodeTriple> getGoldStandardCodeTriples() {
 
         return goldStandardClassification;
     }
 
+    /**
+     * Sets the gold standard classification.
+     *
+     * @param goldStandardClassification the new gold standard classification
+     */
     public void setGoldStandardClassification(final Set<CodeTriple> goldStandardClassification) {
 
         this.goldStandardClassification = goldStandardClassification;

@@ -10,23 +10,23 @@ import java.util.Set;
 /**
  * Created by al on 06/06/2014.
  */
-public class IdentityVisualiser {
+public class IndexedBucketVisualiser {
 
-    private final IIndexedBucket identity;
+    private final IIndexedBucket indexed;
     private final IBucket people;
 
-    public IdentityVisualiser( IIndexedBucket identity, IBucket people ) {
-        this.identity = identity;
+    public IndexedBucketVisualiser(IIndexedBucket bucket, IBucket people) {
+        this.indexed = bucket;
         this.people = people;
     }
 
     public void show() throws IOException, PersistentObjectException {
 
-        IIndex index = identity.getIndex(SameAsLabels.first);
+        IIndex index = indexed.getIndex(SameAsLabels.first);
         Set<String> keys = index.keySet();
 
         for ( String key : keys ) {
-            System.out.println( "key = " + key);
+            System.out.println( "key = " + key );
             ILXPInputStream stream = index.records(key);
 
             boolean first = true;

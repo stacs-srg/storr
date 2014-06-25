@@ -54,9 +54,9 @@ public class Record {
     public String getCleanedDescription() {
 
         if (cleanedDescription == null) {
-            cleanedDescription = TokenizerCleaner.clean(originalData.getDescription());
+            cleanedDescription = TokenizerCleaner.clean(originalData.getDescription()).intern();
         }
-        cleanedDescription.intern();
+
         return cleanedDescription;
     }
 

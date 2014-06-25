@@ -1,17 +1,17 @@
 package uk.ac.standrews.cs.digitising_scotland.linkage.resolve;
 
 import org.json.JSONException;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.LXP;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.Repository;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.RepositoryException;
+import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.*;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.*;
 import uk.ac.standrews.cs.digitising_scotland.linkage.EventImporter;
 import uk.ac.standrews.cs.digitising_scotland.linkage.RecordFormatException;
+import uk.ac.standrews.cs.digitising_scotland.linkage.blocking.BlockingFirstLastSexOverPerson;
 import uk.ac.standrews.cs.digitising_scotland.linkage.labels.*;
-import uk.ac.standrews.cs.digitising_scotland.linkage.visualise.IdentityVisualiser;
+import uk.ac.standrews.cs.digitising_scotland.linkage.visualise.IndexedBucketVisualiser;
 import uk.ac.standrews.cs.nds.persistence.PersistentObjectException;
 
 import java.io.IOException;
+import java.util.Iterator;
 
 
 /**
@@ -21,69 +21,101 @@ import java.io.IOException;
  */
 public class BassJohnBass {
 
-    private static String input_repo_path = "src/test/resources/BDM_repo";          // input repository containing event records
-    private static String linkage_repo_path = "src/test/resources/linkage_repo";    // repository for linked records
-    private static String blocked_people_repo_path = "src/test/resources/blocked_people_repo";    // repository for blocked records
+    private static String store_path = "src/test/resources/STORE";
+
+    private static String input_repo_name = "BDM_repo";          // input repository containing event records
+    private static String linkage_repo_name = "linkage_repo";    // repository for linked records
+    private static String blocked_people_repo_name = "blocked_people_repo";    // repository for blocked records
 
     private static String source_base_path = "src/test/resources/BDMSet1";          // Path to source of vital event records in Digitising Scotland format
     private static String births_name = "birth_records";                            // Name of bucket containing birth records (inputs).
+    private static String marriages_name = "marriage_records";                      // Name of bucket containing marriage records (inputs).
     private static String people_name = "people";                                   // Name of bucket containing maximal people extracted from birth records
     private static String relationships_name = "relationships";                     // Name of bucket containing relationships between people extracted from birth records
     private static String identities_name = "identity";                             // Name of bucket containing equivalent identities of people
+    private static String lineage_name = "lineage";                                 // Name of bucket of pais of (mother/father- baby links).
+
 
     private static String births_source_path = source_base_path + "/" + births_name + ".txt";
+    private static String marriages_source_path = source_base_path + "/" + marriages_name + ".txt";
 
     private final IRepository input_repo;
     private final IRepository linkage_repo;
     private final IRepository blocked_people_repo;
+    private final Store store
+            ;
 
     // input buckets containing BDM records in LXP format
 
     private IBucket births;                     // Bucket containing birth records (inputs).
+    private IBucket marriages;                     // Bucket containing marriage records (inputs).
     private IBucket people;              // Bucket containing people extracted from birth records
     private IBucket relationships;       // Bucket containing relationships between people
     private IIndexedBucket identity;            // Bucket containing identities of equivalent people in records
+    private IIndexedBucket lineage;            // Bucket containing pairs of pontentially linked parents and children
+
     private int id = 0;
 
-    public BassJohnBass() throws RepositoryException, RecordFormatException, JSONException, IOException, PersistentObjectException {
+    public BassJohnBass() throws RepositoryException, RecordFormatException, JSONException, IOException, PersistentObjectException, StoreException {
 
-        input_repo = new Repository(input_repo_path);
-        linkage_repo = new Repository(linkage_repo_path);
-        blocked_people_repo = new Repository(blocked_people_repo_path);
+        store = new Store(store_path);
+
+        input_repo = store.makeRepository(input_repo_name);
+        linkage_repo = store.makeRepository(linkage_repo_name);
+        blocked_people_repo = store.makeRepository(blocked_people_repo_name);
 
         births = input_repo.makeBucket(births_name);
+        marriages = input_repo.makeBucket(marriages_name);
 
         people = linkage_repo.makeBucket(people_name); // linkage_repo.makeIndexedBucket(people_name);
 
         relationships = linkage_repo.makeBucket(relationships_name); // linkage_repo.makeIndexedBucket(relationships_name);
 
-        identity = linkage_repo.makeIndexedBucket(identities_name);
-        identity.addIndex(SameAsLabels.first);
+        lineage = linkage_repo.makeIndexedBucket(lineage_name);
+        lineage.addIndex(SameAsLabels.first);
 
-        // import the birth records
+        // import the birth,death, marriage records
         EventImporter importer = new EventImporter();
         importer.importBirths(births, births_source_path);
+        importer.importMarriages(marriages, marriages_source_path);
 
-        // populate the people and relationships bucket
-        populateMaximalPeople();
+        createPeopleAndRelationshipsFromBirths();
 
         try {
-            BlockedMaximalPersonResolver r = new BlockedMaximalPersonResolver(people, blocked_people_repo, identity);
-            r.match();
+
+            IBlocker blocker = new BlockingFirstLastSexOverPerson( people, blocked_people_repo );
+            blocker.apply();
+            pairwiseLinkBlockedRecords(blocked_people_repo, lineage );
 
         } catch (RepositoryException e) {
             e.printStackTrace();
         }
         System.out.println("Identity table:");
-        IdentityVisualiser v = new IdentityVisualiser( identity, people );
+        IndexedBucketVisualiser v = new IndexedBucketVisualiser( lineage, people );
         v.show();
+    }
+
+    private void pairwiseLinkBlockedRecords( IRepository from, IBucket to ) {
+
+        Iterator<IBucket> blocked_people_iterator = from.getIterator();
+
+
+        while (blocked_people_iterator.hasNext()) {
+            IBucket blocked_records = blocked_people_iterator.next();
+
+            // Iterating over buckets of people with same first and last name and the same sex.
+
+
+            BirthBirthLinker bdl = new BirthBirthLinker(blocked_records.getInputStream(), to.getOutputStream());
+            bdl.pairwiseLink();
+        }
     }
 
     /**
      * Populates the maximal_people_repo with 1 person from each birth record.
      * For each birth record there will be 1 person created - mother, father baby
      */
-    private void populateMaximalPeople() {
+    private void createPeopleAndRelationshipsFromBirths() {
 
         ILXPOutputStream people_stream = people.getOutputStream();
         ILXPOutputStream relationships_stream = relationships.getOutputStream();
@@ -113,18 +145,18 @@ public class BassJohnBass {
         if( dad_id != -1 ) { // no father
             ILXP is_father = new LXP();
             is_father.put("TYPE", FatherOfLabels.TYPE);
-            is_father.put(FatherOfLabels.child_id, child_id);
-            is_father.put(FatherOfLabels.father_id, dad_id);
-            is_father.put(FatherOfLabels.birth_record_id, birth_record.getId());
+            is_father.put(FatherOfLabels.child_id, Integer.toString(child_id));
+            is_father.put(FatherOfLabels.father_id, Integer.toString(dad_id));
+            is_father.put(FatherOfLabels.birth_record_id, Integer.toString(birth_record.getId()));
             relationships_stream.add(is_father);
         }
 
         if( mum_id != -1 ) {
             ILXP is_mother = new LXP();
             is_mother.put("TYPE", MotherOfLabels.TYPE);
-            is_mother.put(MotherOfLabels.child_id, child_id);
-            is_mother.put(MotherOfLabels.mother_id, mum_id);
-            is_mother.put(MotherOfLabels.birth_record_id, birth_record.getId());
+            is_mother.put(MotherOfLabels.child_id, Integer.toString(child_id));
+            is_mother.put(MotherOfLabels.mother_id, Integer.toString(mum_id));
+            is_mother.put(MotherOfLabels.birth_record_id, Integer.toString(birth_record.getId()));
             relationships_stream.add(is_mother);
         }
 
@@ -142,7 +174,7 @@ public class BassJohnBass {
 
         person.put("TYPE", PersonLabels.TYPE);
 
-        person.put(PersonLabels.ORIGINAL_RECORD_ID, birth_record.getId());
+        person.put(PersonLabels.ORIGINAL_RECORD_ID, Integer.toString(birth_record.getId()));
         person.put(PersonLabels.ORIGINAL_RECORD_TYPE, birth_record.get(BirthLabels.TYPE_LABEL));  //<<<<<<<<<<<<<<<<<< Problem....
         person.put(PersonLabels.ROLE, "baby");
 
@@ -198,7 +230,7 @@ public class BassJohnBass {
 
         person.put("TYPE", PersonLabels.TYPE);
 
-        person.put(PersonLabels.ORIGINAL_RECORD_ID, birth_record.getId());
+        person.put(PersonLabels.ORIGINAL_RECORD_ID, Integer.toString(birth_record.getId()));
         person.put(PersonLabels.ORIGINAL_RECORD_TYPE, birth_record.get(BirthLabels.TYPE_LABEL));
         person.put(PersonLabels.ROLE, "father");
 
@@ -233,7 +265,7 @@ public class BassJohnBass {
 
         person.put("TYPE", PersonLabels.TYPE);
 
-        person.put(PersonLabels.ORIGINAL_RECORD_ID, birth_record.getId());
+        person.put(PersonLabels.ORIGINAL_RECORD_ID, Integer.toString(birth_record.getId()));
         person.put(PersonLabels.ORIGINAL_RECORD_TYPE, birth_record.get(BirthLabels.TYPE_LABEL));
         person.put(PersonLabels.ROLE, "mother");
         person.put(PersonLabels.FORENAME, birth_record.get(BirthLabels.MOTHERS_FORENAME));

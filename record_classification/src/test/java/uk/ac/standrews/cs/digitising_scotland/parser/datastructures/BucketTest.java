@@ -8,12 +8,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import uk.ac.standrews.cs.digitising_scotland.parser.datastructures.Bucket;
-import uk.ac.standrews.cs.digitising_scotland.parser.datastructures.InputFormatException;
-import uk.ac.standrews.cs.digitising_scotland.parser.datastructures.OriginalData;
-import uk.ac.standrews.cs.digitising_scotland.parser.datastructures.Record;
-import uk.ac.standrews.cs.digitising_scotland.parser.datastructures.RecordFactory;
-
 /**
  * This Class, BucketTest, tests the construction of {@link Bucket} objects.
  */

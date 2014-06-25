@@ -33,6 +33,12 @@ public final class CodeFactory {
         String property = properties.getProperty("codeDictionaryFile");
         String path = System.getProperty("user.dir") + "/" + property;
         inputFile = new File(path);
+
+        if (doOnce) {
+            tryInitCodeMap();
+        }
+
+        MachineLearningConfiguration.getDefaultProperties().setProperty("numCategories", String.valueOf(codeMap.size()));
     }
 
     /**
@@ -138,6 +144,15 @@ public final class CodeFactory {
 
         br.close();
 
+    }
+
+    /**
+     * Returns the total number of output classes based on the size of the code map.
+     * @return the number of output classes in the codeMap.
+     */
+    public int getNumberOfOutputClasses() {
+
+        return codeMap.size();
     }
 
     private boolean isCauseOfDeath() throws IOException {

@@ -140,7 +140,7 @@ public class SpellingMistakeFactory {
      */
     private int randomInt(final int min, final int max) {
 
-        return (min + (int) (Math.random() * ((max - min) + 1)));
+        return min + (int) (Math.random() * (max - min + 1));
     }
 
     /**

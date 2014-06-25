@@ -8,10 +8,9 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import uk.ac.standrews.cs.digitising_scotland.parser.datastructures.code.Code;
-import uk.ac.standrews.cs.digitising_scotland.parser.datastructures.code.CodeFactory;
-import uk.ac.standrews.cs.digitising_scotland.parser.datastructures.code.CodeNotValidException;
-
+/**
+ * The Class OccCodeTest contains unit tests for testing the creation and use of {@link OccCode}s.
+ */
 public class OccCodeTest {
 
     private Code code1;
@@ -19,9 +18,15 @@ public class OccCodeTest {
     private Code code3;
     private Code code4;
 
+    /** The expected exception. */
     @Rule
     public ExpectedException expectedEx = ExpectedException.none();
 
+    /**
+     * Setup, run before each test. Sets the {@link CodeFactory} code map and sets code1 and code2 to use code 2100.
+     *
+     * @throws Exception the exception
+     */
     @Before
     public void setUp() throws Exception {
 
@@ -32,26 +37,44 @@ public class OccCodeTest {
 
     }
 
+    /**
+     * Tests that two codes are equal when they should be.
+     *
+     * @throws CodeNotValidException the code not valid exception
+     */
     @Test
     public void checkEqualMethodtest() throws CodeNotValidException {
 
         Assert.assertEquals(code1, code2);
     }
 
+    /**
+     * Checks code 1 and code 2 are the same object as the CodeFactory should only keep one copy of each identical code.
+     *
+     * @throws CodeNotValidException the code not valid exception
+     */
     @Test
     public void checkSameObject() throws CodeNotValidException {
 
         Assert.assertSame(code1, code2);
     }
 
+    /**
+     * Check error handling on non existent code.
+     *
+     * @throws CodeNotValidException the code not valid exception
+     */
     @Test
-    public void checkErrorHandlingOnNonExistantCode() throws CodeNotValidException {
+    public void checkErrorHandlingOnNonExistentCode() throws CodeNotValidException {
 
         expectedEx.expect(CodeNotValidException.class);
         expectedEx.expectMessage("999999" + " is not a valid code, or is not in the code dictionary");
         code3 = CodeFactory.getInstance().getCodeFromMap("999999");
     }
 
+    /**
+     * Tests getting coding level in the hierarchy. Longer codes are deeper.
+     */
     @Test
     public void testGetCodingLevel() {
 
@@ -62,6 +85,9 @@ public class OccCodeTest {
 
     }
 
+    /**
+     * Tests that codes can tell if they are a descendant of another code correctly.
+     */
     @Test
     public void testIsDescendent() {
 

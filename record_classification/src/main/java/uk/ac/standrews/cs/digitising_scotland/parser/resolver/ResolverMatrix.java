@@ -11,8 +11,6 @@ import uk.ac.standrews.cs.digitising_scotland.parser.classifiers.AbstractClassif
 import uk.ac.standrews.cs.digitising_scotland.parser.datastructures.TokenSet;
 import uk.ac.standrews.cs.digitising_scotland.parser.datastructures.code.Code;
 
-import com.google.common.collect.Multiset;
-
 /**
  * ResolverMatrix stores mappings between {@link Code}s and the list of {@link Pair}<TokenSet, Double> objects
  * that were classified as that code.
@@ -30,7 +28,7 @@ import com.google.common.collect.Multiset;
 public class ResolverMatrix {
 
     /** The Code, List<Pair> matrix. */
-    private Map<Code, List<Pair<TokenSet, Double>>> matrix;
+    private Map<Code, List<CodeTriple>> matrix;
 
     /**
      * Instantiates a new empty resolver matrix.
@@ -54,9 +52,9 @@ public class ResolverMatrix {
         Code code = codeDoublePair.getLeft();
         Double confidence = codeDoublePair.getRight();
         if (matrix.get(code) == null) {
-            matrix.put(code, new ArrayList<Pair<TokenSet, Double>>());
+            matrix.put(code, new ArrayList<CodeTriple>());
         }
-        matrix.get(code).add(new Pair<>(tokenSet, confidence));
+        matrix.get(code).add(new CodeTriple(code, tokenSet, confidence));
     }
 
     /**
@@ -106,10 +104,12 @@ public class ResolverMatrix {
 
         Set<Code> keySet = new HashSet<>();
         keySet.addAll(matrix.keySet());
-        Set<Code> resolved = ResolverUtils.removeAncestors(keySet);
+
         for (Code code : keySet) {
-            if (!resolved.contains(code)) {
-                matrix.remove(code);
+            Code anscestor = ResolverUtils.whichCodeIsAncestorOfCodeInSet(code, keySet);
+            if (anscestor != null) {
+                matrix.get(code).addAll(matrix.get(anscestor));
+                matrix.remove(anscestor);
             }
         }
     }
@@ -118,15 +118,15 @@ public class ResolverMatrix {
      * Helper method used to enumerate all values in the matrix.
      *
      * @param merged the merged
-     * @param pairs the pairs
+     * @param codeTriples the pairs
      * @param code the code
      */
-    private void merge(final List<Set<CodeTriple>> merged, final List<Pair<TokenSet, Double>> pairs, final Code code, final TokenSet originalSet) {
+    private void merge(final List<Set<CodeTriple>> merged, final List<CodeTriple> codeTriples, final Code code, final TokenSet originalSet) {
 
         List<Set<CodeTriple>> temporaryMerge = new ArrayList<>();
         for (Set<CodeTriple> tripleSet : merged) {
-            for (Pair<TokenSet, Double> pair : pairs) {
-                CodeTriple tempCodeTriple = new CodeTriple(code, pair.getLeft(), pair.getRight());
+            for (CodeTriple triple : codeTriples) {
+                CodeTriple tempCodeTriple = new CodeTriple(code, triple.getTokenSet(), triple.getConfidence());
                 Set<CodeTriple> tempTripleSet = new HashSet<>();
                 if (tripleSet != null) {
                     tempTripleSet.addAll(tripleSet);
@@ -158,14 +158,44 @@ public class ResolverMatrix {
     public void chopBelowConfidence(final Double confidence) {
 
         for (Code code : matrix.keySet()) {
-            List<Pair<TokenSet, Double>> oldList = matrix.get(code);
-            List<Pair<TokenSet, Double>> newList = new ArrayList<>();
-            for (Pair<TokenSet, Double> pair : oldList) {
-                if (pair.getRight() >= confidence) {
-                    newList.add(pair);
+            List<CodeTriple> oldList = matrix.get(code);
+            List<CodeTriple> newList = new ArrayList<>();
+            for (CodeTriple triple : oldList) {
+                if (triple.getConfidence() >= confidence) {
+                    newList.add(triple);
                 }
             }
             matrix.put(code, newList);
         }
     }
+
+    @Override
+    public int hashCode() {
+
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((matrix == null) ? 0 : matrix.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+
+        if (this == obj) { return true; }
+        if (obj == null) { return false; }
+        if (getClass() != obj.getClass()) { return false; }
+        ResolverMatrix other = (ResolverMatrix) obj;
+        if (matrix == null) {
+            if (other.matrix != null) { return false; }
+        }
+        else if (!matrix.equals(other.matrix)) { return false; }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+
+        return "ResolverMatrix [matrix=" + matrix + "]";
+    }
+
 }

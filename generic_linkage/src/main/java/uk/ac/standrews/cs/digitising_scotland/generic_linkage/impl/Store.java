@@ -1,8 +1,10 @@
 package uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl;
 
+import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXP;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IRepository;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IStore;
 import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
+import uk.ac.standrews.cs.nds.persistence.PersistentObjectException;
 import uk.ac.standrews.cs.nds.util.ErrorHandling;
 
 import java.io.*;
@@ -27,7 +29,7 @@ public class Store implements IStore {
 
     public static IStore instance;
 
-    private int id = 0;
+    private int id = 1;
 
     public Store( String store_path ) throws StoreException, IOException {
         this.store_path = store_path;
@@ -99,6 +101,13 @@ public class Store implements IStore {
             ErrorHandling.exceptionError( e,"Saving id" );
         }
         return next_id;
+    }
+
+    @Override
+    public ILXP get(int id) throws IOException, PersistentObjectException {
+        // TODO Write me!
+
+        return null;
     }
 
     private void initId() throws IOException {
