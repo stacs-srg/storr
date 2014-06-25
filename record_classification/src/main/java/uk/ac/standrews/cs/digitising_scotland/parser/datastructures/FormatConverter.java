@@ -17,7 +17,7 @@ public class FormatConverter {
 
     public static List<Record> convert(File inputFile) throws IOException, InputFormatException {
 
-        File codeFile = new File("ModData/testCodeMap.txt");
+        File codeFile = new File("/Users/fraserdunlop/IdeaProjects/digitising_scotland/record_classification/ModData/testCodeMap.txt");
         CodeFactory.getInstance().loadDictionary(codeFile);
 
         BufferedReader br = new BufferedReader(new FileReader(inputFile));

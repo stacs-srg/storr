@@ -210,7 +210,6 @@ public class ListAccuracyMetrics {
             for (CodeTriple codeTriple : setCodeTriples) {
                 totalConfidence += codeTriple.getConfidence();
                 totalMeasurments++;
-
             }
         }
 
