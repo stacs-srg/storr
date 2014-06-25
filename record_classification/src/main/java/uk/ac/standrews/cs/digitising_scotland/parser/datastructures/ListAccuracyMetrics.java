@@ -82,6 +82,8 @@ public class ListAccuracyMetrics {
     /** The prop wrongly predicted. */
     private double propWronglyPredicted;
 
+    private int[] numberOfCodesNotCoded;
+
     /**
      * Instantiates a new list accuracy metrics.
      *
@@ -107,8 +109,47 @@ public class ListAccuracyMetrics {
         propGoldPredicted = calculatePropGoldStandardCorrectlyPredicted(bucket);
         propWronglyPredicted = calculateProportionWronglyPredicted(bucket);
         codedExactMatch = calculateExactMatch(bucket);
+        numberOfCodesNotCoded = calculateBreakDownOfMatches(bucket);
         countNumClassifications(bucket);
 
+    }
+
+    /**
+     * Calculate exact match.
+     *
+     * @param bucket the bucket
+     * @return the int
+     */
+    private int[] calculateBreakDownOfMatches(final Bucket bucket) {
+
+        int[] missedCodesCounter = new int[16];
+        for (int i = 0; i < missedCodesCounter.length; i++) {
+            missedCodesCounter[i] = 0;
+        }
+
+        for (Record record : bucket) {
+
+            Set<CodeTriple> goldStandrdSet = record.getGoldStandardClassificationSet();
+            final Set<CodeTriple> codedTriples = record.getCodeTriples();
+            int missedCodeCount = 0;
+            for (CodeTriple goldTriple : goldStandrdSet) {
+
+                int matchCount = 0;
+
+                for (CodeTriple classification : codedTriples) {
+                    if (goldTriple.getCode() == classification.getCode()) {
+                        matchCount++;
+                    }
+                }
+                if (matchCount == 0) {
+                    missedCodeCount++;
+                }
+            }
+
+            missedCodesCounter[missedCodeCount]++;
+        }
+
+        return missedCodesCounter;
     }
 
     /**
@@ -155,7 +196,20 @@ public class ListAccuracyMetrics {
         System.out.println("Singly classified: " + singleClassification);
         System.out.println("Doubly classified: " + twoClassifications);
         System.out.println("Multiply classified: " + moreThanTwoClassifications);
+        printNumberOfCodesMissed();
+    }
 
+    private void printNumberOfCodesMissed() {
+
+        for (int i = 0; i < numberOfCodesNotCoded.length; i++) {
+            if (i == 0) {
+                System.out.println("Number of records coded exactly: " + numberOfCodesNotCoded[i]);
+            }
+            else {
+                System.out.println("Number of records with " + i + " missed: " + numberOfCodesNotCoded[i]);
+
+            }
+        }
     }
 
     /**
