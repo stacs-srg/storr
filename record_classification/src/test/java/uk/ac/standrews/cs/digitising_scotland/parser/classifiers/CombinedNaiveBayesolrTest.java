@@ -11,8 +11,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import uk.ac.standrews.cs.digitising_scotland.parser.classifiers.ClassificationPipeline;
-import uk.ac.standrews.cs.digitising_scotland.parser.classifiers.NaiveBayesClassifier;
 import uk.ac.standrews.cs.digitising_scotland.parser.classifiers.OLR.OLRClassifier;
 import uk.ac.standrews.cs.digitising_scotland.parser.datastructures.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.parser.datastructures.Record;
@@ -53,6 +51,8 @@ public class CombinedNaiveBayesolrTest {
         if (tempFiles.exists()) {
             FileUtils.deleteDirectory(tempFiles);
         }
+        MachineLearningConfiguration.getDefaultProperties().setProperty("numFeatures", "6");
+        MachineLearningConfiguration.getDefaultProperties().setProperty("numCategories", "6");
 
     }
 

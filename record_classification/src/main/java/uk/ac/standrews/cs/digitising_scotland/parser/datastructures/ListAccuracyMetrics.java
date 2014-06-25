@@ -129,7 +129,7 @@ public class ListAccuracyMetrics {
                 totalConfidence += codeTriple.getConfidence();
             }
 
-            if (totalConfidence / (double) record.getCodeTriples().size() % 2 == 0) {
+            if ((totalConfidence / (double) record.getCodeTriples().size()) % 2 == 0) {
                 exactMatch++;
             }
         }
@@ -225,7 +225,7 @@ public class ListAccuracyMetrics {
      */
     private double calculateProportionWronglyPredicted(final Bucket bucket) {
 
-        double wronglyPredicted = 0.;
+        double wronglyPredicted = 0.0;
 
         for (Record record : bucket) {
 
@@ -236,7 +236,7 @@ public class ListAccuracyMetrics {
                 break;
             }
 
-            int count = 0;
+            double count = 0;
 
             for (CodeTriple classification : setCodeTriples) {
                 for (CodeTriple goldTriple : goldStandardTriples) {
@@ -246,7 +246,9 @@ public class ListAccuracyMetrics {
                 }
             }
 
-            wronglyPredicted += count / (double) setCodeTriples.size();
+            if (count != 0 && setCodeTriples.size() != 0) {
+                wronglyPredicted += count / (double) setCodeTriples.size();
+            }
         }
         return wronglyPredicted / bucket.size();
     }

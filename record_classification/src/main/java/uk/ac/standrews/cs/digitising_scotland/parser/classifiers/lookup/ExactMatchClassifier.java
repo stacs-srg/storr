@@ -9,6 +9,7 @@ import java.io.ObjectInput;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -204,12 +205,23 @@ public class ExactMatchClassifier extends AbstractClassifier {
         Set<CodeTriple> result = lookupTable.get(tokenSet.toString());
 
         if (result != null) {
+            result = setConfidenceLevels(result, 2.0);
             return result;
 
         }
         else {
             return null;
         }
+    }
+
+    private Set<CodeTriple> setConfidenceLevels(final Set<CodeTriple> result, final double i) {
+
+        Set<CodeTriple> newResults = new HashSet<CodeTriple>();
+        for (CodeTriple codeTriple : result) {
+            CodeTriple newCodeT = new CodeTriple(codeTriple.getCode(), codeTriple.getTokenSet(), i);
+            newResults.add(newCodeT);
+        }
+        return newResults;
     }
 
     @Override
