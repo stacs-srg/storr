@@ -106,7 +106,7 @@ public final class CodeFactory {
     protected Code getCodeFromMap(final String code) throws CodeNotValidException {
 
         Code codeFromMap = codeMap.get(code);
-        if (codeFromMap == null) { throw new CodeNotValidException(code + " is not a valid code, or is not in the code dictionary"); }
+        if (codeFromMap == null) { throw new CodeNotValidException(code + " is not a valid code, or is not in the code dictionary(" + inputFile.getAbsolutePath() + ")"); }
         return codeFromMap;
     }
 
