@@ -391,19 +391,19 @@ public class CodeMetrics {
     public String getStatsPerCode(final int id) {
 
         StringBuilder sb = new StringBuilder();
-        sb.append(CodeFactory.getInstance().getCode(id).getCodeAsString() + ", ");
-        sb.append(truePositive[id] + ", ");
-        sb.append(trueNegative[id] + ", ");
-        sb.append(falsePositive[id] + ", ");
-        sb.append(falseNegative[id] + ", ");
+        sb.append(CodeFactory.getInstance().getCode(id).getCodeAsString()).append(", ");
+        sb.append(truePositive[id]).append(", ");
+        sb.append(trueNegative[id]).append(", ");
+        sb.append(falsePositive[id]).append(", ");
+        sb.append(falseNegative[id]).append(", ");
 
-        sb.append(precision[id] + ", ");
-        sb.append(recall[id] + ", ");
-        sb.append(specificity[id] + ", ");
-        sb.append(negativePredictiveValue[id] + ", ");
-        sb.append(falsePositiveRate[id] + ", ");
-        sb.append(accuracy[id] + ", ");
-        sb.append(f1[id] + ", ");
+        sb.append(precision[id]).append(", ");
+        sb.append(recall[id]).append(", ");
+        sb.append(specificity[id]).append(", ");
+        sb.append(negativePredictiveValue[id]).append(", ");
+        sb.append(falsePositiveRate[id]).append(", ");
+        sb.append(accuracy[id]).append(", ");
+        sb.append(f1[id]).append(", ");
         sb.append(mcc[id]);
 
         return sb.toString();
