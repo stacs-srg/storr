@@ -30,6 +30,11 @@ For more information on the machine learning algorithms used, please see the [al
 
 ### Classification
 
+The classification process involves firstly looking up a record in the prebuilt lookup table. If the record is not in the lookup table then
+the machine learning models are used to classify the record.
+
+The full machine learning algorithm for classification to multiple records can be found on the [algorithms information](algorithms-information.html) page.
 
 ### Output
 
+Output is currently being sent to "target/NRSOutput.txt" and is pipe delimited, one record per line. 

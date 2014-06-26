@@ -6,8 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import uk.ac.standrews.cs.digitising_scotland.parser.resolver.CodeTriple;
-
-// TODO: Auto-generated Javadoc
+import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
 
 /**
  * Class representing the statistics about a bucket of Records.
@@ -84,6 +83,8 @@ public class ListAccuracyMetrics {
 
     private int[] numberOfCodesNotCoded;
 
+    private double incorretPredictions;
+
     /**
      * Instantiates a new list accuracy metrics.
      *
@@ -107,11 +108,10 @@ public class ListAccuracyMetrics {
         numConfidenceOfOne = calculateNumConfidenceOfOne(bucket);
         numConfidenceNotOne = calculateNumConfidenceNotOne(bucket);
         propGoldPredicted = calculatePropGoldStandardCorrectlyPredicted(bucket);
-        propWronglyPredicted = calculateProportionWronglyPredicted(bucket);
         codedExactMatch = calculateExactMatch(bucket);
         numberOfCodesNotCoded = calculateBreakDownOfMatches(bucket);
         countNumClassifications(bucket);
-
+        writeStats(bucket);
     }
 
     /**
@@ -269,42 +269,6 @@ public class ListAccuracyMetrics {
             propGoldPredicted += count / (double) goldStandardTriples.size();
         }
         return propGoldPredicted / bucket.size();
-    }
-
-    /**
-     * Calculate proportion wrongly predicted.
-     *
-     * @param bucket the bucket
-     * @return the double
-     */
-    private double calculateProportionWronglyPredicted(final Bucket bucket) {
-
-        double wronglyPredicted = 0.0;
-
-        for (Record record : bucket) {
-
-            Set<CodeTriple> setCodeTriples = record.getCodeTriples();
-            Set<CodeTriple> goldStandardTriples = record.getGoldStandardClassificationSet();
-
-            if (goldStandardTriples.size() < 1) {
-                break;
-            }
-
-            double count = 0;
-
-            for (CodeTriple classification : setCodeTriples) {
-                for (CodeTriple goldTriple : goldStandardTriples) {
-                    if (goldTriple.getCode() != classification.getCode()) {
-                        count++;
-                    }
-                }
-            }
-
-            if (count != 0 && setCodeTriples.size() != 0) {
-                wronglyPredicted += count / (double) setCodeTriples.size();
-            }
-        }
-        return wronglyPredicted / bucket.size();
     }
 
     /**
@@ -600,4 +564,16 @@ public class ListAccuracyMetrics {
         this.codedExactMatch = codedBySubStringMatch;
     }
 
+    public void writeStats(Bucket bucket) {
+
+        StringBuilder sb = new StringBuilder();
+        CodeMetrics metrics = new CodeMetrics(bucket);
+        sb.append("code, precision, recall, specificity, npv, fpr, accuracy, f1, mcc\n");
+
+        for (int i = 0; i < metrics.numberOfCodes(); i++) {
+            sb.append(metrics.getStatsPerCode(i) + "\n");
+        }
+
+        Utils.writeToFile(sb.toString(), "codeStats.txt");
+    }
 }
