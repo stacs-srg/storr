@@ -30,7 +30,7 @@ public class ResolverMatrixTest {
     @Before
     public void setup() {
 
-        File codeFile = new File("target/test-classes/CodeFactoryTestFile.txt");
+        File codeFile = new File("record_classification/src/test/resources/CodeFactoryTestFile.txt");
         CodeFactory.getInstance().loadDictionary(codeFile);
         matrix = new ResolverMatrix();
 
