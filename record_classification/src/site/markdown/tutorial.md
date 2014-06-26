@@ -25,7 +25,11 @@ is acceptable, but the file must contain an empty section where that data should
 
 ### Training
 
+Training consists of building lookup tables from the training data and training the machine learning models. 
+For more information on the machine learning algorithms used, please see the [algorithms information](algorithms-information.html) page.
+
 ### Classification
+
 
 ### Output
 
