@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import uk.ac.standrews.cs.digitising_scotland.parser.resolver.CodeTriple;
+import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
 
 /**
  * Class representing the statistics about a bucket of Records.
@@ -110,7 +111,7 @@ public class ListAccuracyMetrics {
         codedExactMatch = calculateExactMatch(bucket);
         numberOfCodesNotCoded = calculateBreakDownOfMatches(bucket);
         countNumClassifications(bucket);
-
+        writeStats(bucket);
     }
 
     /**
@@ -564,4 +565,16 @@ public class ListAccuracyMetrics {
         this.codedExactMatch = codedBySubStringMatch;
     }
 
+    public void writeStats(Bucket bucket) {
+
+        StringBuilder sb = new StringBuilder();
+        CodeMetrics metrics = new CodeMetrics(bucket);
+        sb.append("code, precision, recall, specificity, npv, fpr, accuracy, f1, mcc\n");
+
+        for (int i = 0; i < metrics.numberOfCodes(); i++) {
+            sb.append(metrics.getStatsPerCode(i) + "\n");
+        }
+
+        Utils.writeToFile(sb.toString(), "codeStats.txt");
+    }
 }
