@@ -569,7 +569,7 @@ public class ListAccuracyMetrics {
 
         StringBuilder sb = new StringBuilder();
         CodeMetrics metrics = new CodeMetrics(bucket);
-        sb.append("code, precision, recall, specificity, npv, fpr, accuracy, f1, mcc\n");
+        sb.append("code, true pos, true neg, false, false neg, precision, recall, specificity, npv, fpr, accuracy, f1, mcc\n");
 
         for (int i = 0; i < metrics.numberOfCodes(); i++) {
             sb.append(metrics.getStatsPerCode(i) + "\n");
