@@ -211,7 +211,7 @@ public class CodeMetrics {
     private void calculateTrueNeg() {
 
         for (int i = 0; i < trueNegative.length; i++) {
-            trueNegative[i] = totalPredictions[i] - truePositive[i] - falseNegative[i] - falsePositive[i];
+            trueNegative[i] = sum(totalPredictions) - truePositive[i] - falseNegative[i] - falsePositive[i];
         }
     }
 
