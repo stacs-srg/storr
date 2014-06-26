@@ -6,23 +6,59 @@ import uk.ac.standrews.cs.digitising_scotland.parser.datastructures.code.Code;
 import uk.ac.standrews.cs.digitising_scotland.parser.datastructures.code.CodeFactory;
 import uk.ac.standrews.cs.digitising_scotland.parser.resolver.CodeTriple;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class CodeMetrics.
+ */
 public class CodeMetrics {
 
+    /** The false positive. */
     private double[] falsePositive;
+
+    /** The true negative. */
     private double[] trueNegative;
+
+    /** The false negative. */
     private double[] falseNegative;
+
+    /** The true positive. */
     private double[] truePositive;
+
+    /** The total predictions. */
     private double[] totalPredictions;
+
+    /** The precision. */
     private double[] precision;
+
+    /** The recall. */
     private double[] recall;
+
+    /** The specificity. */
     private double[] specificity;
+
+    /** The negative predictive value. */
     private double[] negativePredictiveValue;
+
+    /** The false positive rate. */
     private double[] falsePositiveRate;
+
+    /** The accuracy. */
     private double[] accuracy;
+
+    /** The f1. */
     private double[] f1;
+
+    /** The mcc. */
     private double[] mcc;
+
+    /** The number of output classes. */
     private final int numberOfOutputClasses;
 
+    /**
+     * Instantiates a new code metrics.
+     *
+     * @param bucket the bucket
+     */
     public CodeMetrics(final Bucket bucket) {
 
         numberOfOutputClasses = CodeFactory.getInstance().getNumberOfOutputClasses();
@@ -44,6 +80,9 @@ public class CodeMetrics {
         geneateHigherOrderStats();
     }
 
+    /**
+     * Geneate higher order stats.
+     */
     private void geneateHigherOrderStats() {
 
         generatePrecision();
@@ -56,6 +95,9 @@ public class CodeMetrics {
         generateMathewsCorrelation();
     }
 
+    /**
+     * Generate recall.
+     */
     private void generateRecall() {
 
         // tp/tp+fn
@@ -64,6 +106,9 @@ public class CodeMetrics {
 
     }
 
+    /**
+     * Generate precision.
+     */
     private void generatePrecision() {
 
         // tp/tp+fp
@@ -71,6 +116,9 @@ public class CodeMetrics {
         precision = division(truePositive, tpfp);
     }
 
+    /**
+     * Generate specificity.
+     */
     private void generateSpecificity() {
 
         // tn/fp+tn
@@ -78,6 +126,9 @@ public class CodeMetrics {
         specificity = division(trueNegative, fptn);
     }
 
+    /**
+     * Generate negative predictive value.
+     */
     private void generateNegativePredictiveValue() {
 
         // tn/tn+fn
@@ -85,6 +136,9 @@ public class CodeMetrics {
         negativePredictiveValue = division(trueNegative, tnfn);
     }
 
+    /**
+     * Generate false postitive rate.
+     */
     private void generateFalsePostitiveRate() {
 
         // fp/fp+tn
@@ -92,6 +146,9 @@ public class CodeMetrics {
         falsePositiveRate = division(falsePositive, fptn);
     }
 
+    /**
+     * Generate accuracy.
+     */
     private void generateAccuracy() {
 
         // tp+tn/total p + total negative
@@ -99,6 +156,9 @@ public class CodeMetrics {
         accuracy = division(tptn, totalPredictions);
     }
 
+    /**
+     * Generate f1 score.
+     */
     private void generateF1Score() {
 
         // 2*tp/(2*tp+fp+fn)
@@ -107,6 +167,9 @@ public class CodeMetrics {
         f1 = division(twotp, add(twotp, fpfn));
     }
 
+    /**
+     * Generate mathews correlation.
+     */
     private void generateMathewsCorrelation() {
 
         double[] tptn = multiply(truePositive, trueNegative);
@@ -142,6 +205,9 @@ public class CodeMetrics {
         calculateTrueNeg();
     }
 
+    /**
+     * Calculate true neg.
+     */
     private void calculateTrueNeg() {
 
         for (int i = 0; i < trueNegative.length; i++) {
@@ -149,6 +215,12 @@ public class CodeMetrics {
         }
     }
 
+    /**
+     * True pos and false neg.
+     *
+     * @param setCodeTriples the set code triples
+     * @param goldStandardTriples the gold standard triples
+     */
     private void truePosAndFalseNeg(final Set<CodeTriple> setCodeTriples, final Set<CodeTriple> goldStandardTriples) {
 
         for (CodeTriple goldStanardCode : goldStandardTriples) {
@@ -163,6 +235,12 @@ public class CodeMetrics {
 
     }
 
+    /**
+     * Total and false pos.
+     *
+     * @param setCodeTriples the set code triples
+     * @param goldStandardTriples the gold standard triples
+     */
     private void totalAndFalsePos(final Set<CodeTriple> setCodeTriples, final Set<CodeTriple> goldStandardTriples) {
 
         for (CodeTriple predictedCode : setCodeTriples) {
@@ -189,6 +267,12 @@ public class CodeMetrics {
         return false;
     }
 
+    /**
+     * Sum.
+     *
+     * @param array the array
+     * @return the double
+     */
     private double sum(final double[] array) {
 
         double sum = 0;
@@ -200,9 +284,10 @@ public class CodeMetrics {
 
     /**
      * Performs element-wise addition.
-     * @param array1
-     * @param array2
-     * @return
+     *
+     * @param array1 the array1
+     * @param array2 the array2
+     * @return the double[]
      */
     private double[] add(final double[] array1, final double[] array2) {
 
@@ -217,9 +302,10 @@ public class CodeMetrics {
 
     /**
      * Performs element-wise subtraction.
-     * @param array1
-     * @param array2
-     * @return
+     *
+     * @param array1 the array1
+     * @param array2 the array2
+     * @return the double[]
      */
     private double[] subtract(final double[] array1, final double[] array2) {
 
@@ -234,9 +320,10 @@ public class CodeMetrics {
 
     /**
      * Performs element-wise division.
-     * @param numerator
-     * @param denominator
-     * @return
+     *
+     * @param numerator the numerator
+     * @param denominator the denominator
+     * @return the double[]
      */
     private double[] division(final double[] numerator, final double[] denominator) {
 
@@ -251,9 +338,10 @@ public class CodeMetrics {
 
     /**
      * Performs element-wise multiplication of arrays.
-     * @param array1
-     * @param array2
-     * @return
+     *
+     * @param array1 the array1
+     * @param array2 the array2
+     * @return the double[]
      */
     private double[] multiply(final double[] array1, final double[] array2) {
 
@@ -268,9 +356,10 @@ public class CodeMetrics {
 
     /**
      * Performs element-wise multiplication of arrays.
-     * @param array1
-     * @param array2
-     * @return
+     *
+     * @param array1 the array1
+     * @param exponent the exponent
+     * @return the double[]
      */
     private double[] pow(final double[] array1, final double exponent) {
 
@@ -282,15 +371,32 @@ public class CodeMetrics {
         return result;
     }
 
-    public String getStatsPerCode(Code code) {
+    /**
+     * Gets the stats per code.
+     *
+     * @param code the code
+     * @return the stats per code
+     */
+    public String getStatsPerCode(final Code code) {
 
         return getStatsPerCode(code.getID());
     }
 
-    public String getStatsPerCode(int id) {
+    /**
+     * Gets the stats per code.
+     *
+     * @param id the id
+     * @return the stats per code
+     */
+    public String getStatsPerCode(final int id) {
 
         StringBuilder sb = new StringBuilder();
         sb.append(CodeFactory.getInstance().getCode(id).getCodeAsString() + ", ");
+        sb.append(truePositive[id] + ", ");
+        sb.append(trueNegative[id] + ", ");
+        sb.append(falsePositive[id] + ", ");
+        sb.append(falseNegative[id] + ", ");
+
         sb.append(precision[id] + ", ");
         sb.append(recall[id] + ", ");
         sb.append(specificity[id] + ", ");
@@ -303,61 +409,121 @@ public class CodeMetrics {
         return sb.toString();
     }
 
+    /**
+     * Gets the incorret predictions.
+     *
+     * @return the incorret predictions
+     */
     public double getIncorretPredictions() {
 
         return sum(falsePositive);
     }
 
+    /**
+     * Gets the missed gold standard.
+     *
+     * @return the missed gold standard
+     */
     public double getMissedGoldStandard() {
 
         return sum(falseNegative);
     }
 
+    /**
+     * Gets the hit gold standard.
+     *
+     * @return the hit gold standard
+     */
     public double getHitGoldStandard() {
 
         return sum(truePositive);
     }
 
+    /**
+     * Gets the precision.
+     *
+     * @return the precision
+     */
     public double[] getPrecision() {
 
         return precision;
     }
 
+    /**
+     * Gets the recall.
+     *
+     * @return the recall
+     */
     public double[] getRecall() {
 
         return recall;
     }
 
+    /**
+     * Gets the specificity.
+     *
+     * @return the specificity
+     */
     public double[] getSpecificity() {
 
         return specificity;
     }
 
+    /**
+     * Gets the negative predictive value.
+     *
+     * @return the negative predictive value
+     */
     public double[] getNegativePredictiveValue() {
 
         return negativePredictiveValue;
     }
 
+    /**
+     * Gets the false positive rate.
+     *
+     * @return the false positive rate
+     */
     public double[] getFalsePositiveRate() {
 
         return falsePositiveRate;
     }
 
+    /**
+     * Gets the accuracy.
+     *
+     * @return the accuracy
+     */
     public double[] getAccuracy() {
 
         return accuracy;
     }
 
+    /**
+     * Gets the f1.
+     *
+     * @return the f1
+     */
     public double[] getF1() {
 
         return f1;
     }
 
+    /**
+     * Gets the mcc.
+     *
+     * @return the mcc
+     */
     public double[] getMcc() {
 
         return mcc;
     }
 
+    /**
+     * Number of codes.
+     *
+     * @return the int
+     */
     public int numberOfCodes() {
 
         return numberOfOutputClasses;
