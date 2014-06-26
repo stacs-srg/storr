@@ -331,10 +331,9 @@ public class ListAccuracyMetrics {
         for (Record record : bucket) {
             Set<CodeTriple> setCodeTriples = record.getCodeTriples();
             for (CodeTriple codeTriple : setCodeTriples) {
-                if (codeTriple.getConfidence() < 2) {
-                    totalConfidence += codeTriple.getConfidence();
-                    totalMeasurments++;
-                }
+                totalConfidence += codeTriple.getConfidence();
+                totalMeasurments++;
+
             }
         }
 
