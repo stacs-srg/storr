@@ -26,9 +26,9 @@ import java.util.Map;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.output.FileWriterWithEncoding;
 
-import uk.ac.standrews.cs.digitising_scotland.parser.datastructures.Bucket;
-import uk.ac.standrews.cs.digitising_scotland.parser.datastructures.Record;
-import uk.ac.standrews.cs.digitising_scotland.parser.writers.DataClerkingWriter;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Bucket;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Record;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.writers.DataClerkingWriter;
 
 import com.google.common.io.Files;
 
