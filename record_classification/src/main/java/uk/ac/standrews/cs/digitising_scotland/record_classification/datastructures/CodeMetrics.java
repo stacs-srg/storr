@@ -446,7 +446,7 @@ public class CodeMetrics {
      */
     public double[] getPrecision() {
 
-        return precision;
+        return precision.clone();
     }
 
     /**
@@ -456,7 +456,7 @@ public class CodeMetrics {
      */
     public double[] getRecall() {
 
-        return recall;
+        return recall.clone();
     }
 
     /**
@@ -466,7 +466,7 @@ public class CodeMetrics {
      */
     public double[] getSpecificity() {
 
-        return specificity;
+        return specificity.clone();
     }
 
     /**
@@ -476,7 +476,7 @@ public class CodeMetrics {
      */
     public double[] getNegativePredictiveValue() {
 
-        return negativePredictiveValue;
+        return negativePredictiveValue.clone();
     }
 
     /**
@@ -486,7 +486,7 @@ public class CodeMetrics {
      */
     public double[] getFalsePositiveRate() {
 
-        return falsePositiveRate;
+        return falsePositiveRate.clone();
     }
 
     /**
@@ -496,7 +496,7 @@ public class CodeMetrics {
      */
     public double[] getAccuracy() {
 
-        return accuracy;
+        return accuracy.clone();
     }
 
     /**
@@ -506,7 +506,7 @@ public class CodeMetrics {
      */
     public double[] getF1() {
 
-        return f1;
+        return f1.clone();
     }
 
     /**
@@ -516,7 +516,7 @@ public class CodeMetrics {
      */
     public double[] getMcc() {
 
-        return mcc;
+        return mcc.clone();
     }
 
     /**
