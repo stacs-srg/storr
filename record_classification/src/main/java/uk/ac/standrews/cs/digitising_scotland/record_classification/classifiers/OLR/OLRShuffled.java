@@ -89,6 +89,7 @@ public class OLRShuffled implements Runnable {
     private void train() {
 
         for (int rep = 0; rep < reps; rep++) {
+            System.out.println("Performing rep " + rep); //debug line
             shuffleAndTrainOnAllVectors();
         }
     }
