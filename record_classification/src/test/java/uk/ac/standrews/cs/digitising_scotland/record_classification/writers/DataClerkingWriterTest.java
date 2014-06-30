@@ -13,27 +13,26 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeNotValidException;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.writers.DataClerkingWriter;
 
 public class DataClerkingWriterTest {
 
     private ClassifierTestingHelper helper = new ClassifierTestingHelper();
-    private static final String occBucketFile = "target/OccRecordWriteTest.txt";
-    private static final String codDataFile = "/DataClerkingWriterTestCOD.txt";
-    static final String codBucketFile = "target/CODRecordWriteTest.txt";
-    private static final String hicodBucketFile = "target/HICODRecordWriteTest.txt";
-    private static final String multipleCODBucketFile = "target/MultipleCODRecordWriteTest.txt";
+    private static final String OCCBUCKET = "target/OccRecordWriteTest.txt";
+    private static final String CODDATA = "/DataClerkingWriterTestCOD.txt";
+    private static final String CODBUCKET = "target/CODRecordWriteTest.txt";
+    private static final String HICODBUCKET = "target/HICODRecordWriteTest.txt";
+    private static final String MULTICODBUCKET = "target/MultipleCODRecordWriteTest.txt";
 
     @AfterClass
     public static void cleanUp() {
 
-        File file = new File(occBucketFile);
+        File file = new File(OCCBUCKET);
         Assert.assertTrue(file.delete());
-        file = new File(codBucketFile);
+        file = new File(CODBUCKET);
         Assert.assertTrue(file.delete());
-        file = new File(hicodBucketFile);
+        file = new File(HICODBUCKET);
         Assert.assertTrue(file.delete());
-        file = new File(multipleCODBucketFile);
+        file = new File(MULTICODBUCKET);
         Assert.assertTrue(file.delete());
     }
 
@@ -41,7 +40,7 @@ public class DataClerkingWriterTest {
     public void testWriteOcc() throws Exception {
 
         String occDataFile = "/DataClerkingWriterTestOcc.txt";
-        File writeFile = createAndWriteOccBucketToFile(occBucketFile, occDataFile);
+        File writeFile = createAndWriteOccBucketToFile(OCCBUCKET, occDataFile);
         String correctOccBucketFile = "/OccRecordWriteCorrect.txt";
         //     checkFileAgainstKnownCorrect(correctOccBucketFile, writeFile);
     }
@@ -49,7 +48,7 @@ public class DataClerkingWriterTest {
     @Test
     public void testWriteCOD() throws Exception {
 
-        File writeFile = createAndWriteCODBucketToFile(codBucketFile, codDataFile);
+        File writeFile = createAndWriteCODBucketToFile(CODBUCKET, CODDATA);
         String correctCODBucketFile = "/CODRecordWriteCorrect.txt";
         checkFileAgainstKnownCorrect(correctCODBucketFile, writeFile);
     }
@@ -57,7 +56,7 @@ public class DataClerkingWriterTest {
     @Test
     public void testWriteHICOD() throws Exception {
 
-        File writeFile = createAndWriteHICODBucketToFile(hicodBucketFile, codDataFile);
+        File writeFile = createAndWriteHICODBucketToFile(HICODBUCKET, CODDATA);
         String correctHICODBucketFile = "/HICODRecordWriteCorrect.txt";
         checkFileAgainstKnownCorrect(correctHICODBucketFile, writeFile);
     }
@@ -65,7 +64,7 @@ public class DataClerkingWriterTest {
     @Test
     public void testWriteMultipleCOD() throws Exception {
 
-        File writeFile = createAndWriteMultipleCODBucketToFile(multipleCODBucketFile, codDataFile);
+        File writeFile = createAndWriteMultipleCODBucketToFile(MULTICODBUCKET, CODDATA);
         String correctMultipleCODBucketFile = "/MultipleCODWriteCorrect.txt";
         checkFileAgainstKnownCorrect(correctMultipleCODBucketFile, writeFile);
     }

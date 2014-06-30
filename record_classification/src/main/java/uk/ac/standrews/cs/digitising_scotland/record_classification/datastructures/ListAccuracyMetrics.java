@@ -83,8 +83,6 @@ public class ListAccuracyMetrics {
 
     private int[] numberOfCodesNotCoded;
 
-    private double incorretPredictions;
-
     /**
      * Instantiates a new list accuracy metrics.
      *

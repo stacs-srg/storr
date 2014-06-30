@@ -70,7 +70,6 @@ public class RecordClassificationPipeline {
             Set<CodeTriple> exactMatchResult = exactMatchClassifier.classifyTokenSetToCodeTripleSet(cleanedTokenSet);
             if (exactMatchResult != null) { return exactMatchResult; }
         }
-
         return classifyTokenSet(cleanedTokenSet);
 
     }
