@@ -252,5 +252,10 @@ public class CompactPopulationAdapter implements IPopulation {
         public int compareTo(IPartnership other) {
             return id - other.getId();
         }
+
+        @Override
+        public boolean equals(Object other) {
+            return other instanceof IPartnership && compareTo((IPartnership)other) == 0;
+        }
     }
 }

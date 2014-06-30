@@ -187,7 +187,7 @@ public class CompactPartnership implements Comparable<CompactPartnership> {
     @Override
     public boolean equals(final Object o) {
 
-        return this == o || !(o == null || !(o instanceof IPartnership)) && compareTo((CompactPartnership) o) == 0;
+        return this == o || !(o == null || !(o instanceof CompactPartnership)) && compareTo((CompactPartnership) o) == 0;
     }
 
     @Override

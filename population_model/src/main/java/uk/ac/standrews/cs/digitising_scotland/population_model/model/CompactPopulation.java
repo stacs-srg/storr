@@ -172,6 +172,7 @@ public class CompactPopulation {
         this(population_size, null);
     }
 
+    @SuppressFBWarnings(value = "EI_EXPOSE_REP", justification = "too expensive...")
     public CompactPopulation(CompactPerson[] people, final int earliest_date, final int latest_date) {
 
         this.people = people;
