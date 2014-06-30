@@ -328,10 +328,17 @@ public class CodeMetrics {
     private double[] division(final double[] numerator, final double[] denominator) {
 
         if (numerator.length != denominator.length) { throw new RuntimeException("Cannot add arrays of different length, array1 length: " + numerator.length + " array2 length: " + denominator.length); }
-        double[] divisionResult = new double[numerator.length];
 
+        double[] divisionResult = new double[numerator.length];
         for (int i = 0; i < divisionResult.length; i++) {
-            divisionResult[i] = numerator[i] / denominator[i];
+            final double divResult = numerator[i] / denominator[i];
+
+            if (Double.isNaN(divResult)) {
+                divisionResult[i] = 0;
+            }
+            else {
+                divisionResult[i] = divResult;
+            }
         }
         return divisionResult;
     }
