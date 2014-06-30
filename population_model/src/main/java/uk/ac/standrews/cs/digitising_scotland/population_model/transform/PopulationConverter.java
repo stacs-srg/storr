@@ -49,31 +49,23 @@ public class PopulationConverter {
 
     public void convert() throws Exception {
 
-        for (Object member : population.getPopulation()) {
+        for (IPerson person : population.getPeople()) {
 
-            if (member instanceof IPerson) {
+            writer.recordIndividual(person);
+            progressStep();
+        }
 
-                writer.recordIndividual((IPerson) member);
-                progressStep();
-            }
-            else {
-                if (member instanceof IPartnership) {
+        for (IPartnership partnership : population.getPartnerships()) {
 
-                    System.out.println("recording partnerhsip: " + ((IPartnership) member).getId());
-                    writer.recordPartnership((IPartnership) member);
-                    progressStep();
-                }
-                else {
-                    throw new RuntimeException("unexpected population member type: " + member.getClass().getSimpleName());
-                }
-            }
+            writer.recordPartnership(partnership);
+            progressStep();
         }
     }
 
     private void initialiseProgressIndicator() {
 
         if (progress_indicator != null) {
-            progress_indicator.setTotalSteps(population.size() * 2);
+            progress_indicator.setTotalSteps(population.getNumberOfPeople() + population.getNumberOfPartnerships());
         }
     }
 

@@ -32,8 +32,8 @@ public class CompactPartnership implements Comparable<CompactPartnership> {
 
     private int id;
 
-    protected int partner1;
-    protected int partner2;
+    protected int partner1_index;
+    protected int partner2_index;
     protected int marriage_date;
     protected List<Integer> children;
     private boolean marked;  // TODO remove eventually
@@ -41,18 +41,32 @@ public class CompactPartnership implements Comparable<CompactPartnership> {
     /**
      * Creates a partnership with a given marriage date.
      *
-     * @param partner1      the first partner's index in the People array
-     * @param partner2      the second partner's index in the People array
+     * @param partner1_index      the first partner's index in the People array
+     * @param partner2_index      the second partner's index in the People array
      * @param marriage_date the marriage date
      */
-    public CompactPartnership(final int partner1, final int partner2, final int marriage_date) {
+    public CompactPartnership(final int partner1_index, final int partner2_index, final int marriage_date) {
 
-        this.partner1 = partner1;
-        this.partner2 = partner2;
+        this.partner1_index = partner1_index;
+        this.partner2_index = partner2_index;
         this.marriage_date = marriage_date;
 
         id = IDFactory.getNextID();
         marked = false;
+    }
+
+    /**
+     * Creates a new partnership with the given people, and links each person to the partnership.
+     *
+     * @param partner1      the index of first partner
+     * @param partner2      the index of second partner
+     * @param marriage_date the marriage date
+     */
+    public CompactPartnership(final CompactPerson partner1, final int partner1_index, final CompactPerson partner2, final int partner2_index, final int marriage_date) {
+
+        this(partner1_index, partner2_index, marriage_date);
+        addPartnershipToPartner(partner1);
+        addPartnershipToPartner(partner2);
     }
 
     /**
@@ -83,7 +97,7 @@ public class CompactPartnership implements Comparable<CompactPartnership> {
      */
     public int getPartner(final int p) {
 
-        return partner1 == p ? partner2 : partner2 == p ? partner1 : -1;
+        return partner1_index == p ? partner2_index : partner2_index == p ? partner1_index : -1;
     }
 
     /**
@@ -93,7 +107,7 @@ public class CompactPartnership implements Comparable<CompactPartnership> {
      */
     public int getPartner1() {
 
-        return partner1;
+        return partner1_index;
     }
 
     /**
@@ -103,7 +117,7 @@ public class CompactPartnership implements Comparable<CompactPartnership> {
      */
     public int getPartner2() {
 
-        return partner2;
+        return partner2_index;
     }
 
     /**
@@ -113,7 +127,7 @@ public class CompactPartnership implements Comparable<CompactPartnership> {
      */
     public void setPartner1(final int partner1) {
 
-        this.partner1 = partner1;
+        this.partner1_index = partner1;
     }
 
     /**
@@ -123,7 +137,7 @@ public class CompactPartnership implements Comparable<CompactPartnership> {
      */
     public void setPartner2(final int partner2) {
 
-        this.partner2 = partner2;
+        this.partner2_index = partner2;
     }
 
     /**
@@ -162,20 +176,6 @@ public class CompactPartnership implements Comparable<CompactPartnership> {
         return false;
     }
 
-    /**
-     * Creates a new partnership with the given people, and links each person to the partnership.
-     *
-     * @param partner1      the index of first partner
-     * @param partner2      the index of second partner
-     * @param marriage_date the marriage date
-     */
-    public static void createPartnership(final CompactPerson partner1, final int partner1_index, final CompactPerson partner2, final int partner2_index, final int marriage_date) {
-
-        final CompactPartnership partnership = new CompactPartnership(partner1_index, partner2_index, marriage_date);
-        addPartnership(partner1, partnership);
-        addPartnership(partner2, partnership);
-    }
-
     public int compareTo(final CompactPartnership other) {
 
         // No need to override hashCode() since this does conform to the assumption that (p1.compareTo(p2) == 0) == (p1.equals(p2)) i.e. it only returns zero for equal objects.
@@ -196,14 +196,16 @@ public class CompactPartnership implements Comparable<CompactPartnership> {
         return id;
     }
 
-    private static void addPartnership(final CompactPerson person, final CompactPartnership partnership) {
+    private void addPartnershipToPartner(final CompactPerson person) {
 
-        if (person.getPartnerships() == null) {
-            person.setPartnerships(new ArrayList<CompactPartnership>());
+        synchronized (person) {
+            if (person.getPartnerships() == null) {
+                person.setPartnerships(new ArrayList<CompactPartnership>());
+            }
+            List<CompactPartnership> partnerships = person.getPartnerships();
+            partnerships.add(this);
+            Collections.sort(partnerships);
         }
-        List<CompactPartnership> partnerships = person.getPartnerships();
-        partnerships.add(partnership);
-        Collections.sort(partnerships);
     }
 
     /**

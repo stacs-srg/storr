@@ -147,116 +147,6 @@ public class CompactPopulationAdapter implements IPopulation {
     }
 
     @Override
-    public Iterable<Object> getPopulation() {
-
-        return new Iterable<Object>() {
-
-            @Override
-            public Iterator<Object> iterator() {
-
-                unmarkAllPartnerships();
-                return new PopulationIterator();
-            }
-
-            class PopulationIterator implements Iterator<Object> {
-
-                int person_index = -1;
-                Iterator<CompactPartnership> partnerships = null;
-                boolean return_person_next_time = true;
-                Object next_object = null;
-
-                PopulationIterator() {
-                    advanceToNext();
-                }
-
-                @Override
-                public boolean hasNext() {
-
-                    return next_object != null;
-                }
-
-                @Override
-                public Object next() {
-
-                    if (!hasNext()) throw new NoSuchElementException();
-                    Object result = getNextPersonOrPartnership();
-                    advanceToNext();
-                    return result;
-                }
-
-                private Object getNextPersonOrPartnership() {
-
-                    if (next_object instanceof CompactPartnership) {
-                        return convertToPartnershipWithIds((CompactPartnership) next_object);
-                    }
-                    else {
-                        return next_object;
-                    }
-                }
-
-                @Override
-                public void remove() {
-
-                    throw new UnsupportedOperationException("remove");
-                }
-
-                private void advanceToNext() {
-
-                    readNextUnmarkedPersonOrPartnership();
-                    markPartnership();
-                }
-
-                private void readNextUnmarkedPersonOrPartnership() {
-
-                    do {
-                        readNextPersonOrPartnership();
-                    }
-                    while (nextObjectIsMarkedPartnership());
-                }
-
-                private boolean nextObjectIsMarkedPartnership() {
-
-                    return next_object instanceof CompactPartnership && ((CompactPartnership) next_object).isMarked();
-                }
-
-                private void readNextPersonOrPartnership() {
-
-                    if (return_person_next_time || !partnerships.hasNext()) {
-                        readNextPerson();
-
-                    } else {
-                        readNextPartnership();
-                    }
-                }
-
-                private void markPartnership() {
-
-                    if (next_object instanceof CompactPartnership) {
-                        ((CompactPartnership) next_object).setMarked(true);
-                    }
-                }
-
-                private void readNextPerson() {
-
-                    if (++person_index < people.length) {
-
-                        next_object = people[person_index];
-                        partnerships = getPartnerships(person_index);
-                        return_person_next_time = !partnerships.hasNext();
-
-                    } else {
-                        next_object = null;
-                    }
-                }
-
-                private void readNextPartnership() {
-                    next_object = partnerships.next();
-                }
-            }
-        };
-    }
-
-    @Override
     public IPerson findPerson(int id) {
         return population.findPerson(id);
     }
@@ -268,8 +158,13 @@ public class CompactPopulationAdapter implements IPopulation {
     }
 
     @Override
-    public int size() {
-        return people.length;
+    public int getNumberOfPeople() {
+        return population.getNumberOfPeople();
+    }
+
+    @Override
+    public int getNumberOfPartnerships() {
+        return population.getNumberOfPartnerships();
     }
 
     private Iterator<CompactPartnership> getPartnerships(int person_index) {
