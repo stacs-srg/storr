@@ -34,7 +34,7 @@ public class CompactPopulationAdapter implements IPopulation {
     private final CompactPopulation population;
     private final CompactPerson[] people;
 
-    public CompactPopulationAdapter(CompactPopulation population) {
+    public CompactPopulationAdapter(final CompactPopulation population) {
 
         this.population = population;
         people = population.getPeopleArray();
@@ -147,12 +147,12 @@ public class CompactPopulationAdapter implements IPopulation {
     }
 
     @Override
-    public IPerson findPerson(int id) {
+    public IPerson findPerson(final int id) {
         return population.findPerson(id);
     }
 
     @Override
-    public IPartnership findPartnership(int id) {
+    public IPartnership findPartnership(final int id) {
 
         return convertToPartnershipWithIds(population.findPartnership(id));
     }
@@ -167,7 +167,7 @@ public class CompactPopulationAdapter implements IPopulation {
         return population.getNumberOfPartnerships();
     }
 
-    private Iterator<CompactPartnership> getPartnerships(int person_index) {
+    private Iterator<CompactPartnership> getPartnerships(final int person_index) {
 
         List<CompactPartnership> partnerships = person_index < people.length ? people[person_index].getPartnerships() : null;
         return (partnerships == null ? new ArrayList<CompactPartnership>() : partnerships).iterator();
@@ -185,7 +185,7 @@ public class CompactPopulationAdapter implements IPopulation {
         }
     }
 
-    private IPartnership convertToPartnershipWithIds(CompactPartnership partnership) {
+    private IPartnership convertToPartnershipWithIds(final CompactPartnership partnership) {
 
         return partnership != null ? new PartnershipWithIds(partnership) : null;
     }
@@ -198,11 +198,11 @@ public class CompactPopulationAdapter implements IPopulation {
         private Date marriage_date;
         private List<Integer> children;
 
-        private int populationIndexToId(int index) {
+        private int populationIndexToId(final int index) {
             return population.getPerson(index).getId();
         }
 
-        PartnershipWithIds(CompactPartnership compact_partnership) {
+        PartnershipWithIds(final CompactPartnership compact_partnership) {
 
             id = compact_partnership.getId();
             partner1_id = populationIndexToId(compact_partnership.getPartner1());
@@ -212,7 +212,7 @@ public class CompactPopulationAdapter implements IPopulation {
             children = copyChildren(compact_partnership.getChildren());
         }
 
-        private List<Integer> copyChildren(List<Integer> original_children) {
+        private List<Integer> copyChildren(final List<Integer> original_children) {
 
             List<Integer> children = new ArrayList<>();
             if (original_children != null) {
@@ -249,12 +249,12 @@ public class CompactPopulationAdapter implements IPopulation {
         }
 
         @Override
-        public int compareTo(IPartnership other) {
+        public int compareTo(final IPartnership other) {
             return id - other.getId();
         }
 
         @Override
-        public boolean equals(Object other) {
+        public boolean equals(final Object other) {
             return other instanceof IPartnership && compareTo((IPartnership)other) == 0;
         }
     }
