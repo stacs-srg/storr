@@ -100,8 +100,19 @@ public final class TrainAndMultiplyClassify {
         System.out.println("********** **********");
         System.out.println(classifiedBucket);
         accuracyMetrics.prettyPrint();
-        accuracyMetrics.writeStats(bucket, experimentalFolderName + "/Data/codeStats.csv");
+        final String dataPath = experimentalFolderName + "/Data/codeStats.csv";
+        accuracyMetrics.writeStats(bucket, dataPath);
 
+        runRscript(dataPath);
+
+    }
+
+    private static void runRscript(final String dataPath) throws IOException {
+
+        String imageOutputPath = experimentalFolderName + "/Reports/graph.svg";
+        String command = "Rscript R/CodeStatsPlotter.R " + dataPath + " " + imageOutputPath;
+        System.out.println("Running: " + command);
+        Runtime.getRuntime().exec(command);
     }
 
     private static ExactMatchClassifier trainExactMatchClassifier() throws Exception {
