@@ -36,17 +36,22 @@ public class CompactPersonAdapter {
 
     public static final String OCCUPATION_DISTRIBUTION_KEY = "occupation_distribution_filename";
     public static final String CAUSE_OF_DEATH_DISTRIBUTION_KEY = "cause_of_death_distribution_filename";
+    public static final String ADDRESS_DISTRIBUTION_KEY = "address_distribution_filename";
 
     private final MaleFirstNameDistribution male_first_name_distribution;
     private final FemaleFirstNameDistribution female_first_name_distribution;
     private final SurnameDistribution surname_distribution;
     private final FileBasedEnumeratedDistribution occupation_distribution;
     private final FileBasedEnumeratedDistribution cause_of_death_distribution;
+    private final FileBasedEnumeratedDistribution address_distribution;
+
+    private String current_surname;
 
     public CompactPersonAdapter() throws IOException, InconsistentWeightException {
 
         final String occupation_distribution_file_name = PopulationProperties.getProperties().getProperty(OCCUPATION_DISTRIBUTION_KEY);
         final String cause_of_death_distribution_file_name = PopulationProperties.getProperties().getProperty(CAUSE_OF_DEATH_DISTRIBUTION_KEY);
+        final String address_distribution_file_name = PopulationProperties.getProperties().getProperty(ADDRESS_DISTRIBUTION_KEY);
 
         Random random = RandomFactory.getRandom();
 
@@ -55,11 +60,19 @@ public class CompactPersonAdapter {
         surname_distribution = new SurnameDistribution(random);
         occupation_distribution = new FileBasedEnumeratedDistribution(occupation_distribution_file_name, random);
         cause_of_death_distribution = new FileBasedEnumeratedDistribution(cause_of_death_distribution_file_name, random);
+        address_distribution = new FileBasedEnumeratedDistribution(address_distribution_file_name, random);
+
+        generateNextSurname();
     }
 
     public IPerson convertToFullPerson(CompactPerson person) {
 
-        return person != null ? new FullPerson(person) : null;
+        return person != null ? new FullPerson(person, current_surname) : null;
+    }
+
+    public void generateNextSurname() {
+
+        current_surname = surname_distribution.getSample();
     }
 
     private class FullPerson implements IPerson {
@@ -67,7 +80,6 @@ public class CompactPersonAdapter {
         private int id;
         private String first_name;
         private String surname;
-        private String maiden_name;
         private char sex;
         private Date date_of_birth;
         private Date date_of_death;
@@ -76,13 +88,20 @@ public class CompactPersonAdapter {
         private String address;
         private String string_rep;
 
-        public FullPerson(CompactPerson person) {
+        public FullPerson(CompactPerson person, String surname) {
 
             id = person.getId();
             sex = person.getSex();
 
+            first_name = person.isMale() ? male_first_name_distribution.getSample() : female_first_name_distribution.getSample();
+            this.surname = surname;
+
             date_of_birth = DateManipulation.daysToDate(person.getDateOfBirth());
-            date_of_death = DateManipulation.daysToDate(person.getDateOfDeath());
+            date_of_death = person.getDateOfDeath() != -1 ? DateManipulation.daysToDate(person.getDateOfDeath()) : null;
+
+            occupation = occupation_distribution.getSample();
+            cause_of_death = person.getDateOfDeath() != -1 ? cause_of_death_distribution.getSample() : null;
+            address = address_distribution.getSample();
 
             string_rep = person.toString();
         }
@@ -130,11 +149,6 @@ public class CompactPersonAdapter {
         @Override
         public String getAddress() {
             return address;
-        }
-
-        @Override
-        public String getMaidenName() {
-            return maiden_name;
         }
 
         @Override

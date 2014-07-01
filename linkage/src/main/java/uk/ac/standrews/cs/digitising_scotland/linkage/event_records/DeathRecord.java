@@ -10,7 +10,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 /**
- * A representation of a Birth Record in the form used by the Digitising Scotland Project.
+ * A representation of a Death Record in the form used by the Digitising Scotland Project.
  *
  * @author Alan Dearle (alan.dearle@st-andrews.ac.uk)
  * @author Graham Kirby (graham.kirby@st-andrews.ac.uk)
