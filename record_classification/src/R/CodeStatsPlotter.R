@@ -2,15 +2,12 @@
 #Output image file name should be the second
 args <- commandArgs(TRUE)
 print(args[1])
+
 #Reading in the data
 codeStats <- read.csv(toString(args[1]))
-#codeStats <- read.csv("~/downloads/codeSats5.csv")
-attach(codeStats)
-install.packages("RSvgDevice",repos="http://star-www.st-andrews.ac.uk/cran/")
-library(RSvgDevice)
+
 #Opening a png printing device
-svg(file=toString(args[2]),width=10,height=10)
-#png("testGraph.png")
+png(file=toString(args[2]),width=800,height=800)
 
 #Plotting
 pairs(codeStats, gap=0, diag.panel = function (x, ...) {
