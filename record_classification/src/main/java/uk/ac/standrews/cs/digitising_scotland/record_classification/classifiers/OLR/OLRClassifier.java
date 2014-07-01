@@ -38,8 +38,17 @@ public class OLRClassifier extends AbstractClassifier {
     /** The properties. */
     private final Properties properties;
 
-    /** The Constant MODELPATH. */
-    private static final String MODELPATH = "target/olrModelPath";
+    /** The Constant MODELPATH. Default is target/olrModelPath, but can be overwritten. */
+    private static String modelPath = "target/olrModelPath";
+
+    /**
+     * Overrides the default path and sets to the path provided.
+     * @param modelPath New path to write model to
+     */
+    public void setModelPath(final String modelPath) {
+
+        OLRClassifier.modelPath = modelPath;
+    }
 
     /**
      * Constructor.
@@ -94,7 +103,7 @@ public class OLRClassifier extends AbstractClassifier {
     private void writeModel() {
 
         try {
-            serializeModel(MODELPATH);
+            serializeModel(modelPath);
         }
         catch (IOException e) {
             // TODO Auto-generated catch block
@@ -206,7 +215,7 @@ public class OLRClassifier extends AbstractClassifier {
     public void getModelFromDefaultLocation() {
 
         try {
-            model = deSerializeModel(MODELPATH).model;
+            model = deSerializeModel(modelPath).model;
         }
         catch (IOException e) {
             // TODO Auto-generated catch block

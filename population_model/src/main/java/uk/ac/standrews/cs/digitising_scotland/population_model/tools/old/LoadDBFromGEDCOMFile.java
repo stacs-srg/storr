@@ -14,11 +14,11 @@
  * You should have received a copy of the GNU General Public License along with population_model. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-package uk.ac.standrews.cs.digitising_scotland.population_model.tools;
+package uk.ac.standrews.cs.digitising_scotland.population_model.tools.old;
 
 import org.gedcom4j.parser.GedcomParserException;
 import uk.ac.standrews.cs.nds.util.CommandLineArgs;
-import uk.ac.standrews.cs.digitising_scotland.population_model.transform.GEDCOMToDBWriter;
+import uk.ac.standrews.cs.digitising_scotland.population_model.transform.old.GEDCOMToDBWriter;
 
 import java.io.IOException;
 import java.sql.SQLException;

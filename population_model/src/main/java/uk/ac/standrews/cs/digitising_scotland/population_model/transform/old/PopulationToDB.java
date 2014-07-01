@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License along with population_model. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-package uk.ac.standrews.cs.digitising_scotland.population_model.transform;
+package uk.ac.standrews.cs.digitising_scotland.population_model.transform.old;
 
 import uk.ac.standrews.cs.digitising_scotland.population_model.config.PopulationProperties;
 import uk.ac.standrews.cs.digitising_scotland.population_model.database.DBConnector;
@@ -183,7 +183,7 @@ public class PopulationToDB implements AutoCloseable {
             DBManipulation.configurePreparedStatement(
                     statement,
                     compact_person.getId(),
-                    compact_person.getSex(),
+                    String.valueOf(compact_person.getSex()),
                     compact_person.isMale() ? male_first_name_distribution.getSample() : female_first_name_distribution.getSample(),
                     surname,
                     DateManipulation.daysToSQLDate(compact_person.getDateOfBirth()),

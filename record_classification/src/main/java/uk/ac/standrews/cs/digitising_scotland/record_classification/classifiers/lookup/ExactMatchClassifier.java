@@ -33,6 +33,15 @@ public class ExactMatchClassifier extends AbstractClassifier {
     private String modelFileName = "target/lookupTable";
 
     /**
+     * Can be used to overwrite the default file path for model writing.
+     * @param modelFileName new model path
+     */
+    public void setModelFileName(final String modelFileName) {
+
+        this.modelFileName = modelFileName;
+    }
+
+    /**
      * Creates a new {@link ExactMatchClassifier} and creates an empty lookup table.
      */
     public ExactMatchClassifier() {

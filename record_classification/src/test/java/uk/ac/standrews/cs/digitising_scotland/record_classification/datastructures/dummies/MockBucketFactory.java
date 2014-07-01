@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Dummies;
+package uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.dummies;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Bucket;
 
@@ -8,9 +8,10 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
  */
 public class MockBucketFactory {
 
-    public Bucket generateBucketWithDummyRecords(final int numRecords){
+    public Bucket generateBucketWithDummyRecords(final int numRecords) {
+
         Bucket bucket = new Bucket();
-        for (int i = 0 ; i < numRecords ; i ++){
+        for (int i = 0; i < numRecords; i++) {
             bucket.addRecordToBucket(new DummyRecord());
         }
         return bucket;

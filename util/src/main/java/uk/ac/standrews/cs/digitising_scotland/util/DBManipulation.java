@@ -16,6 +16,8 @@
  */
 package uk.ac.standrews.cs.digitising_scotland.util;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -79,6 +81,7 @@ public class DBManipulation {
         }
     }
 
+    @SuppressFBWarnings(value = "RCN_REDUNDANT_NULLCHECK_OF_NULL_VALUE", justification = "spurious warning")
     public static int countRows(Connection connection, String database_name, String table_name) throws SQLException {
 
         try (Statement statement = connection.createStatement()) {
@@ -92,6 +95,7 @@ public class DBManipulation {
         }
     }
 
+    @SuppressFBWarnings(value = "SQL_NONCONSTANT_STRING_PASSED_TO_EXECUTE", justification = "spurious warning")
     public static boolean databaseExists(Connection connection, String database_name) throws SQLException {
 
         try (Statement statement = connection.createStatement()) {
@@ -102,6 +106,7 @@ public class DBManipulation {
         }
     }
 
+    @SuppressFBWarnings(value = {"RCN_REDUNDANT_NULLCHECK_OF_NULL_VALUE", "SQL_NONCONSTANT_STRING_PASSED_TO_EXECUTE"}, justification = "spurious warnings")
     public static boolean tableExists(Connection connection, String database_name, String table_name) throws SQLException {
 
         try (Statement statement = connection.createStatement()) {

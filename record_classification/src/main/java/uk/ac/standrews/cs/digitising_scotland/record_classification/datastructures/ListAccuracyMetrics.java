@@ -83,7 +83,19 @@ public class ListAccuracyMetrics {
 
     private int[] numberOfCodesNotCoded;
 
-    private double incorretPredictions;
+    /**
+     * Default fileName is "target/codeStats.csv", but can be overwritten using setFileName().
+     */
+    private String fileName = "target/codeStats.csv";
+
+    /**
+     * Overrides the default file path.
+     * @param fileName new file name
+     */
+    public void setFileName(final String fileName) {
+
+        this.fileName = fileName;
+    }
 
     /**
      * Instantiates a new list accuracy metrics.
@@ -111,7 +123,6 @@ public class ListAccuracyMetrics {
         codedExactMatch = calculateExactMatch(bucket);
         numberOfCodesNotCoded = calculateBreakDownOfMatches(bucket);
         countNumClassifications(bucket);
-        writeStats(bucket);
     }
 
     /**
@@ -564,16 +575,21 @@ public class ListAccuracyMetrics {
         this.codedExactMatch = codedBySubStringMatch;
     }
 
-    public void writeStats(Bucket bucket) {
+    /**
+     * Creates and writes all the accumulated statistics to the specified file.
+     * @param bucket The bucket to analyse and write
+     * @param fileName The path to where we want to write the file
+     */
+    public void writeStats(final Bucket bucket, final String fileName) {
 
         StringBuilder sb = new StringBuilder();
         CodeMetrics metrics = new CodeMetrics(bucket);
-        sb.append("code, true pos, true neg, false, false neg, precision, recall, specificity, npv, fpr, accuracy, f1, mcc\n");
+        sb.append("Code, True Positive, True Negative, False Positive, False Negative, Precision, Recall, Specificity, Negative Predictive Value, False Positive Rate, Accuracy, F1, MCC\n");
 
         for (int i = 0; i < metrics.numberOfCodes(); i++) {
             sb.append(metrics.getStatsPerCode(i) + "\n");
         }
 
-        Utils.writeToFile(sb.toString(), "codeStats.txt");
+        Utils.writeToFile(sb.toString(), fileName);
     }
 }

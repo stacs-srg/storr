@@ -21,6 +21,7 @@ import uk.ac.standrews.cs.digitising_scotland.population_model.generation.distri
 import uk.ac.standrews.cs.digitising_scotland.population_model.generation.distributions.NegativeWeightException;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.CompactPopulation;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IDFactory;
+import uk.ac.standrews.cs.digitising_scotland.population_model.transform.old.PopulationToFile;
 
 import java.io.IOException;
 import java.nio.file.Paths;

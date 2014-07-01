@@ -42,17 +42,6 @@ public interface IPopulation {
     Iterable<IPartnership> getPartnerships();
 
     /**
-     * Allows iteration over the people and partnerships in the population.
-     * Each object returned is an instance of either {@link IPerson} or {@link IPartnership}.
-     * The order is determined by the underlying population implementation.
-     * Where it is required to retrieve all the people and partnerships,
-     * this method may be considerably more efficient than the others.
-     *
-     * @return an iterable sequence of people and partnerships
-     */
-    Iterable<Object> getPopulation();
-
-    /**
      * Retrieves a person by id.
      * @param id the id
      * @return the corresponding person
@@ -70,5 +59,11 @@ public interface IPopulation {
      * Returns the number of people in the population.
      * @return the number of people in the population
      */
-    int size();
+    int getNumberOfPeople();
+
+    /**
+     * Returns the number of people in the population.
+     * @return the number of people in the population
+     */
+    int getNumberOfPartnerships();
 }

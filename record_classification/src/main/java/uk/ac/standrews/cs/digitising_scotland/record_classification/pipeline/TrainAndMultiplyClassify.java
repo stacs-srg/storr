@@ -47,6 +47,7 @@ public final class TrainAndMultiplyClassify {
     private static VectorFactory vectorFactory;
     private static Bucket trainingBucket;
     private static Bucket predictionBucket;
+    private static String experimentalFolderName;
 
     private TrainAndMultiplyClassify() {
 
@@ -60,6 +61,8 @@ public final class TrainAndMultiplyClassify {
      * @throws Exception If exception occurs
      */
     public static void main(final String[] args) throws Exception {
+
+        setupExperimentalFolders();
 
         File training = new File(args[0]);
         // File prediction = new File(args[1]);
@@ -76,10 +79,9 @@ public final class TrainAndMultiplyClassify {
         System.out.println("Training with a dictionary size of: " + MachineLearningConfiguration.getDefaultProperties().getProperty("numFeatures"));
         System.out.println("Training with this number of output classes: " + MachineLearningConfiguration.getDefaultProperties().getProperty("numCategories"));
 
-        AbstractClassifier classifier = trainClassifier(trainingBucket, vectorFactory);
+        AbstractClassifier classifier = trainOLRClassifier(trainingBucket, vectorFactory);
 
-        ExactMatchClassifier exactMatchClassifier = new ExactMatchClassifier();
-        exactMatchClassifier.train(trainingBucket);
+        ExactMatchClassifier exactMatchClassifier = trainExactMatchClassifier();
 
         //Bucket predicitionBucket = createPredictionBucket(prediction);
 
@@ -98,11 +100,32 @@ public final class TrainAndMultiplyClassify {
         System.out.println("********** **********");
         System.out.println(classifiedBucket);
         accuracyMetrics.prettyPrint();
+        accuracyMetrics.writeStats(bucket, experimentalFolderName + "/Data/codeStats.csv");
+
+    }
+
+    private static ExactMatchClassifier trainExactMatchClassifier() throws Exception {
+
+        ExactMatchClassifier exactMatchClassifier = new ExactMatchClassifier();
+        exactMatchClassifier.setModelFileName(experimentalFolderName + "/Models/lookupTable");
+        exactMatchClassifier.train(trainingBucket);
+        return exactMatchClassifier;
+    }
+
+    private static void setupExperimentalFolders() {
+
+        experimentalFolderName = getExperimentalFolderName();
+        File experimentalFolder = new File(experimentalFolderName);
+        experimentalFolder.mkdirs();
+        new File(experimentalFolderName + "/Reports").mkdirs();
+        new File(experimentalFolderName + "/Data").mkdirs();
+        new File(experimentalFolderName + "/Models").mkdirs();
+
     }
 
     private static void writeRecords(final Bucket classifiedBucket) throws IOException {
 
-        DataClerkingWriter writer = new DataClerkingWriter(new File("target/NRSData.txt"));
+        DataClerkingWriter writer = new DataClerkingWriter(new File(experimentalFolderName + "/Data/NRSData.txt"));
         for (Record record : classifiedBucket) {
             writer.write(record);
         }
@@ -141,9 +164,10 @@ public final class TrainAndMultiplyClassify {
         return toClassify;
     }
 
-    private static AbstractClassifier trainClassifier(final Bucket bucket, final VectorFactory vectorFactory) throws Exception {
+    private static AbstractClassifier trainOLRClassifier(final Bucket bucket, final VectorFactory vectorFactory) throws Exception {
 
         AbstractClassifier olrClassifier = new OLRClassifier(vectorFactory);
+        ((OLRClassifier) olrClassifier).setModelPath(experimentalFolderName + "/Models/olrModel");
         olrClassifier.train(bucket);
         return olrClassifier;
     }
@@ -174,5 +198,23 @@ public final class TrainAndMultiplyClassify {
             if (line.split(Utils.getCSVComma()).length == 38) { return true; }
         }
         return false;
+    }
+
+    protected static String getExperimentalFolderName() {
+
+        //all experimental data stored in folder called experimentX, where X is an integer.
+        int highestFolderCount = 0;
+        File[] allFiles = new File(".").listFiles();
+        for (File file : allFiles) {
+            if (file.isDirectory() && file.getName().contains("Experiment")) {
+
+                int currentFolder = Integer.parseInt(file.getName().subSequence(10, 11).toString());
+                if (currentFolder > highestFolderCount) {
+                    highestFolderCount = currentFolder;
+                }
+            }
+        }
+        highestFolderCount++;
+        return "Experiment" + highestFolderCount;
     }
 }

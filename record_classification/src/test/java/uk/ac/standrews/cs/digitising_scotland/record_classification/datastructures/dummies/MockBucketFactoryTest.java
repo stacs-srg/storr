@@ -1,10 +1,11 @@
-package uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Dummies;
+package uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.dummies;
+
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Bucket;
-import static org.junit.Assert.*;
 
 /**
  * Testing mock bucket factory.
@@ -15,12 +16,14 @@ public class MockBucketFactoryTest {
     private MockBucketFactory mockBucketFactory;
 
     @Before
-    public void setup(){
+    public void setup() {
+
         mockBucketFactory = new MockBucketFactory();
     }
 
     @Test
-    public void dummyBucket_HasCorrectSizeTest(){
+    public void dummyBucket_HasCorrectSizeTest() {
+
         Bucket dummyBucket = mockBucketFactory.generateBucketWithDummyRecords(10);
         assertEquals(10, dummyBucket.size());
     }
