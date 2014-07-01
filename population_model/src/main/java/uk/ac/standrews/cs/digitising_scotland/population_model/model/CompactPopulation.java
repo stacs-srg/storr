@@ -106,6 +106,7 @@ public class CompactPopulation {
     private ProgressIndicator progress_indicator;
 
     private CompactPerson[] people;
+    private int number_of_partnerships = 0;
 
     // TODO make into enum
     public interface Condition {
@@ -171,6 +172,7 @@ public class CompactPopulation {
         this(population_size, null);
     }
 
+    @SuppressFBWarnings(value = "EI_EXPOSE_REP", justification = "too expensive...")
     public CompactPopulation(CompactPerson[] people, final int earliest_date, final int latest_date) {
 
         this.people = people;
@@ -327,9 +329,9 @@ public class CompactPopulation {
      * @return the male member of this partnership.
      * * Assumes that the two partners are of different sexes.
      */
-    public int husband(final CompactPartnership partnership) {
+    private int getHusbandIndex(final CompactPartnership partnership) {
 
-        return people[partnership.partner1].isMale() ? partnership.partner1 : partnership.partner2;
+        return people[partnership.partner1_index].isMale() ? partnership.partner1_index : partnership.partner2_index;
     }
 
     /**
@@ -338,14 +340,14 @@ public class CompactPopulation {
      * @return the female member of this partnership.
      * Assumes that the two partners are of different sexes.
      */
-    public int wife(final CompactPartnership partnership) {
+    private int getWifeIndex(final CompactPartnership partnership) {
 
-        return !people[partnership.partner1].isMale() ? partnership.partner1 : partnership.partner2;
+        return !people[partnership.partner1_index].isMale() ? partnership.partner1_index : partnership.partner2_index;
     }
 
     public boolean parentsHaveSensibleAgesAtChildBirth(final CompactPartnership partnership, final int child_index) {
 
-        return parentsHaveSensibleAgesAtChildBirth(husband(partnership), wife(partnership), child_index);
+        return parentsHaveSensibleAgesAtChildBirth(getHusbandIndex(partnership), getWifeIndex(partnership), child_index);
     }
 
     public boolean parentsHaveSensibleAgesAtChildBirth(final int father_index, final int mother_index, final int child_index) {
@@ -360,6 +362,14 @@ public class CompactPopulation {
     public boolean parentsHaveSensibleAgesAtChildBirth(final CompactPerson father, final CompactPerson mother, final CompactPerson child) {
 
         return motherAliveAtBirth(mother, child) && motherNotTooYoungAtBirth(mother, child) && motherNotTooOldAtBirth(mother, child) && fatherAliveAtConception(father, child) && fatherNotTooYoungAtBirth(father, child) && fatherNotTooOldAtBirth(father, child);
+    }
+
+    public int getNumberOfPeople() {
+        return people.length;
+    }
+
+    public int getNumberOfPartnerships() {
+        return number_of_partnerships;
     }
 
     /**
@@ -444,7 +454,8 @@ public class CompactPopulation {
             final int partner_index = findPartner(first_partner_index, start_index, marriage_date);
 
             if (partner_index != -1) {
-                CompactPartnership.createPartnership(people[first_partner_index], first_partner_index, people[partner_index], partner_index, marriage_date);
+                new CompactPartnership(people[first_partner_index], first_partner_index, people[partner_index], partner_index, marriage_date);
+                number_of_partnerships++;
             }
 
             return partner_index;
@@ -489,7 +500,7 @@ public class CompactPopulation {
 
         int previous_child_birth_date = 0;
 
-        int start_index = Math.max(partnership.partner1, partnership.partner2) + 1; // the index at which we start to search for possible children.
+        int start_index = Math.max(partnership.partner1_index, partnership.partner2_index) + 1; // the index at which we start to search for possible children.
 
         for (int i = 0; i < number_of_children; i++) {
 
@@ -532,8 +543,8 @@ public class CompactPopulation {
 
     private int findSuitableChild(final CompactPartnership partnership, final int start_search_index, final int earliest_birth_date, final int latest_birth_date) {
 
-        final int husband_index = husband(partnership);
-        final int wife_index = wife(partnership);
+        final int husband_index = getHusbandIndex(partnership);
+        final int wife_index = getWifeIndex(partnership);
 
         final Condition conditions = new Condition() {
 
@@ -613,7 +624,7 @@ public class CompactPopulation {
     private boolean marriedToAnyChildrenOf(final int person_index, final CompactPartnership partnership) {
 
         // Iterate over all partnerships of the people in the given partnership.
-        for (final int partner : new Integer[]{partnership.partner1, partnership.partner2}) {
+        for (final int partner : new Integer[]{partnership.partner1_index, partnership.partner2_index}) {
             for (final CompactPartnership partnership2 : people[partner].getPartnerships()) {
 
                 final List<Integer> children = partnership2.getChildren();

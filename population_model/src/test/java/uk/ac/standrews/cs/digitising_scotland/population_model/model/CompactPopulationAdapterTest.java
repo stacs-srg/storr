@@ -74,7 +74,6 @@ public class CompactPopulationAdapterTest {
 
         checkPersonIteration(population);
         checkPartnershipIteration(population);
-        checkPopulationIteration(population);
     }
 
     @Test(expected = NoSuchElementException.class)
@@ -89,13 +88,6 @@ public class CompactPopulationAdapterTest {
 
         IPopulation population = makePopulation(0);
         population.getPartnerships().iterator().next();
-    }
-
-    @Test(expected = NoSuchElementException.class)
-    public void getNextObjectFromEmptyPopulation() {
-
-        IPopulation population = makePopulation(0);
-        population.getPopulation().iterator().next();
     }
 
     @Test
@@ -115,7 +107,6 @@ public class CompactPopulationAdapterTest {
 
         checkPersonIteration(population, people);
         checkPartnershipIteration(population);
-        checkPopulationIteration(population, people);
     }
 
     @Test
@@ -132,7 +123,6 @@ public class CompactPopulationAdapterTest {
 
         checkPersonIteration(population, people);
         checkPartnershipIteration(population, partnership);
-        checkPopulationIteration(population, people[0], people[1], partnership, people[2]);
     }
 
     @Test
@@ -162,7 +152,6 @@ public class CompactPopulationAdapterTest {
 
         checkPersonIteration(population, people);
         checkPartnershipIteration(population, partnership1, partnership2, partnership3);
-        checkPopulationIteration(population, people[0], partnership1, people[1], people[2], partnership2, partnership3);
     }
 
     @Test
@@ -193,12 +182,6 @@ public class CompactPopulationAdapterTest {
     public void tooManyPartnershipIterations() {
 
         doTooManyIterations(makePopulationWithThreePartnerships().getPartnerships().iterator(), 3);
-    }
-
-    @Test(expected = NoSuchElementException.class)
-    public void tooManyObjectIterations() {
-
-        doTooManyIterations(makePopulationWithThreePartnerships().getPopulation().iterator(), 6);
     }
 
     private IPopulation makePopulation(int population_size) {
@@ -275,29 +258,6 @@ public class CompactPopulationAdapterTest {
         }
 
         assertFalse(partnership_iterator.hasNext());
-    }
-
-    private void checkPopulationIteration(IPopulation population, Object... objects) {
-
-        Iterator<Object> population_iterator = population.getPopulation().iterator();
-
-        for (int i = 0; i < objects.length; i++) {
-
-            assertTrue(population_iterator.hasNext());
-            assertEqualPopulationMembers(population_iterator.next(), objects[i]);
-        }
-
-        assertFalse(population_iterator.hasNext());
-    }
-
-    private void assertEqualPopulationMembers(Object member1, Object member2) {
-
-        if (member1 instanceof IPerson) {
-            assertEquals(member1, member2);
-        }
-        else {
-            assertEqualIds((IPartnership)member1, (CompactPartnership)member2);
-        }
     }
 
     private void doTooManyIterations(Iterator<?> iterator, int number_available) {
