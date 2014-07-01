@@ -14,7 +14,7 @@ pom-template.xml
 .project
 .settings
 .pmd
-Experiment?
+Experiment*
 
 syntax: regexp
 ^record_classification/ModData/25000\.txt$

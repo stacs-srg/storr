@@ -109,10 +109,19 @@ public final class TrainAndMultiplyClassify {
 
     private static void runRscript(final String dataPath) throws IOException {
 
-        String imageOutputPath = experimentalFolderName + "/Reports/graph.svg";
-        String command = "Rscript R/CodeStatsPlotter.R " + dataPath + " " + imageOutputPath;
+        System.out.println("Working Directory = " + System.getProperty("user.dir"));
+        String imageOutputPath = experimentalFolderName + "/Reports/graph.png";
+        String command = "Rscript src/R/CodeStatsPlotter.R " + dataPath + " " + imageOutputPath;
         System.out.println("Running: " + command);
-        Runtime.getRuntime().exec(command);
+        Process proc = Runtime.getRuntime().exec(command);
+        try {
+            int exitVal = proc.waitFor();
+            System.out.println("RScript exitValue: " + exitVal);
+        }
+        catch (InterruptedException e) {
+            System.out.println(proc.getErrorStream());
+            e.printStackTrace();
+        }
     }
 
     private static ExactMatchClassifier trainExactMatchClassifier() throws Exception {
@@ -219,7 +228,7 @@ public final class TrainAndMultiplyClassify {
         for (File file : allFiles) {
             if (file.isDirectory() && file.getName().contains("Experiment")) {
 
-                int currentFolder = Integer.parseInt(file.getName().subSequence(10, 11).toString());
+                int currentFolder = Integer.parseInt(file.getName().subSequence(10, file.getName().length()).toString());
                 if (currentFolder > highestFolderCount) {
                     highestFolderCount = currentFolder;
                 }
