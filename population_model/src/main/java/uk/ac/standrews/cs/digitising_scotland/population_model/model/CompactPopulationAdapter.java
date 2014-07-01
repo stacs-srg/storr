@@ -16,6 +16,9 @@
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.model;
 
+import uk.ac.standrews.cs.digitising_scotland.population_model.generation.distributions.InconsistentWeightException;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -29,11 +32,16 @@ public class CompactPopulationAdapter implements IPopulation {
 
     private final CompactPopulation population;
     private final CompactPerson[] people;
+    private final CompactPersonAdapter compact_person_adapter;
+    private final CompactPartnershipAdapter compact_partnership_adapter;
 
-    public CompactPopulationAdapter(final CompactPopulation population) {
+    public CompactPopulationAdapter(final CompactPopulation population) throws IOException, InconsistentWeightException {
 
         this.population = population;
         people = population.getPeopleArray();
+
+        compact_person_adapter = new CompactPersonAdapter();
+        compact_partnership_adapter = new CompactPartnershipAdapter();
     }
 
     @Override
@@ -66,7 +74,7 @@ public class CompactPopulationAdapter implements IPopulation {
                 public IPerson next() {
 
                     if (!hasNext()) throw new NoSuchElementException();
-                    IPerson result = CompactPersonAdapter.convertToFullPerson(next_person);
+                    IPerson result = compact_person_adapter.convertToFullPerson(next_person);
                     advanceToNext();
                     return result;
                 }
@@ -117,7 +125,7 @@ public class CompactPopulationAdapter implements IPopulation {
                 public IPartnership next() {
 
                     if (!hasNext()) throw new NoSuchElementException();
-                    IPartnership result = CompactPartnershipAdapter.convertToFullPartnership(next_partnership, population);
+                    IPartnership result = compact_partnership_adapter.convertToFullPartnership(next_partnership, population);
                     advanceToNext();
                     return result;
                 }
@@ -181,13 +189,13 @@ public class CompactPopulationAdapter implements IPopulation {
     @Override
     public IPerson findPerson(final int id) {
 
-        return CompactPersonAdapter.convertToFullPerson(population.findPerson(id));
+        return compact_person_adapter.convertToFullPerson(population.findPerson(id));
     }
 
     @Override
     public IPartnership findPartnership(final int id) {
 
-        return CompactPartnershipAdapter.convertToFullPartnership(population.findPartnership(id), population);
+        return compact_partnership_adapter.convertToFullPartnership(population.findPartnership(id), population);
     }
 
     @Override
@@ -217,5 +225,4 @@ public class CompactPopulationAdapter implements IPopulation {
             }
         }
     }
-
 }

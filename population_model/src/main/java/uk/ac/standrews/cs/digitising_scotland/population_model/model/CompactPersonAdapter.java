@@ -16,21 +16,53 @@
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.model;
 
+import uk.ac.standrews.cs.digitising_scotland.population_model.config.PopulationProperties;
+import uk.ac.standrews.cs.digitising_scotland.population_model.generation.distributions.FemaleFirstNameDistribution;
+import uk.ac.standrews.cs.digitising_scotland.population_model.generation.distributions.FileBasedEnumeratedDistribution;
+import uk.ac.standrews.cs.digitising_scotland.population_model.generation.distributions.InconsistentWeightException;
+import uk.ac.standrews.cs.digitising_scotland.population_model.generation.distributions.MaleFirstNameDistribution;
+import uk.ac.standrews.cs.digitising_scotland.population_model.generation.distributions.SurnameDistribution;
+import uk.ac.standrews.cs.digitising_scotland.population_model.generation.util.RandomFactory;
 import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
 
+import java.io.IOException;
 import java.util.Date;
+import java.util.Random;
 
 /**
  * Created by graham on 01/07/2014.
  */
 public class CompactPersonAdapter {
 
-    public static IPerson convertToFullPerson(CompactPerson person) {
+    public static final String OCCUPATION_DISTRIBUTION_KEY = "occupation_distribution_filename";
+    public static final String CAUSE_OF_DEATH_DISTRIBUTION_KEY = "cause_of_death_distribution_filename";
+
+    private final MaleFirstNameDistribution male_first_name_distribution;
+    private final FemaleFirstNameDistribution female_first_name_distribution;
+    private final SurnameDistribution surname_distribution;
+    private final FileBasedEnumeratedDistribution occupation_distribution;
+    private final FileBasedEnumeratedDistribution cause_of_death_distribution;
+
+    public CompactPersonAdapter() throws IOException, InconsistentWeightException {
+
+        final String occupation_distribution_file_name = PopulationProperties.getProperties().getProperty(OCCUPATION_DISTRIBUTION_KEY);
+        final String cause_of_death_distribution_file_name = PopulationProperties.getProperties().getProperty(CAUSE_OF_DEATH_DISTRIBUTION_KEY);
+
+        Random random = RandomFactory.getRandom();
+
+        male_first_name_distribution = new MaleFirstNameDistribution(random);
+        female_first_name_distribution = new FemaleFirstNameDistribution(random);
+        surname_distribution = new SurnameDistribution(random);
+        occupation_distribution = new FileBasedEnumeratedDistribution(occupation_distribution_file_name, random);
+        cause_of_death_distribution = new FileBasedEnumeratedDistribution(cause_of_death_distribution_file_name, random);
+    }
+
+    public IPerson convertToFullPerson(CompactPerson person) {
 
         return person != null ? new FullPerson(person) : null;
     }
 
-    private static class FullPerson implements IPerson {
+    private class FullPerson implements IPerson {
 
         private int id;
         private String first_name;
