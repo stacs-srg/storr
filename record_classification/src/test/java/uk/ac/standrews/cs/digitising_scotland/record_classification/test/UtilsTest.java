@@ -36,8 +36,9 @@ public class UtilsTest {
     @Test
     public void testWriteAndNumberOfLines() {
 
-        File testNumberOfLines = new File(getClass().getResource("/testNumberOfLines.txt").getFile());
-        Utils.writeToFile("line1 \n" + "line2 \n" + "line3 +\n", "target/test-classes/testNumberOfLines.txt");
+       // File testNumberOfLines = new File(getClass().getResource("testNumberOfLines.txt").getFile());
+        File testNumberOfLines = new File("testNumberOfLines.txt");
+        Utils.writeToFile("line1 \n" + "line2 \n" + "line3 +\n", "testNumberOfLines.txt");
         try {
             Assert.assertEquals(3, Utils.getNumberOfLines(testNumberOfLines));
         }
@@ -54,9 +55,9 @@ public class UtilsTest {
     @Test
     public void testWriteAndNumberOfLinesAppend() {
 
-        String filePath = getClass().getResource("/testNumberOfLines.txt").getFile();
-        File testNumberOfLines = new File(filePath);
-        Utils.writeToFile(("line1 \n" + "line2 \n" + "line3 \n"), "target/test-classes/testNumberOfLines.txt", true);
+      //  String filePath = getClass().getResource("testNumberOfLines.txt").getFile();
+        File testNumberOfLines = new File("testNumberOfLines.txt");
+        Utils.writeToFile(("line1 \n" + "line2 \n" + "line3 \n"), "testNumberOfLines.txt", true);
         try {
             Assert.assertEquals(6, Utils.getNumberOfLines(testNumberOfLines));
             if (!testNumberOfLines.delete()) {
@@ -76,7 +77,7 @@ public class UtilsTest {
     @Test
     public void testWriteAndNumberOfLinesArr() {
 
-        String name = "target/test-classes/testNumberOfLines.txt";
+        String name = "record_classification/target/test-classes/testNumberOfLines.txt";
         File testNumberOfLines = new File(name);
         int[][] data = {{0, 0, 0}, {1, 1, 1}};
         Utils.writeToFile(data, name);

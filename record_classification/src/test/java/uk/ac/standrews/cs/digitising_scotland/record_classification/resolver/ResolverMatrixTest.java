@@ -33,11 +33,7 @@ public class ResolverMatrixTest {
      */
     @Before
     public void setup() {
-
-        File codeFile = new File("src/test/resources/CodeFactoryTestFile.txt");
-        CodeFactory.getInstance().loadDictionary(codeFile);
         matrix = new ResolverMatrix();
-
     }
 
     /**
