@@ -16,11 +16,7 @@
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.model;
 
-import uk.ac.standrews.cs.digitising_scotland.util.ArrayIterator;
-import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
-
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -48,7 +44,43 @@ public class CompactPopulationAdapter implements IPopulation {
             @Override
             public Iterator<IPerson> iterator() {
 
-                return new ArrayIterator<IPerson>(people);
+                return new PersonIterator();
+            }
+
+            class PersonIterator implements Iterator<IPerson> {
+
+                int person_index = 0;
+                CompactPerson next_person = null;
+
+                PersonIterator() {
+                    advanceToNext();
+                }
+
+                @Override
+                public boolean hasNext() {
+
+                    return next_person != null;
+                }
+
+                @Override
+                public IPerson next() {
+
+                    if (!hasNext()) throw new NoSuchElementException();
+                    IPerson result = CompactPersonAdapter.convertToFullPerson(next_person);
+                    advanceToNext();
+                    return result;
+                }
+
+                @Override
+                public void remove() {
+
+                    throw new UnsupportedOperationException("remove");
+                }
+
+                private void advanceToNext() {
+
+                    next_person = person_index == people.length ? null : people[person_index++];
+                }
             }
         };
     }
@@ -85,7 +117,7 @@ public class CompactPopulationAdapter implements IPopulation {
                 public IPartnership next() {
 
                     if (!hasNext()) throw new NoSuchElementException();
-                    IPartnership result = convertToPartnershipWithIds(next_partnership);
+                    IPartnership result = CompactPartnershipAdapter.convertToFullPartnership(next_partnership, population);
                     advanceToNext();
                     return result;
                 }
@@ -148,13 +180,14 @@ public class CompactPopulationAdapter implements IPopulation {
 
     @Override
     public IPerson findPerson(final int id) {
-        return population.findPerson(id);
+
+        return CompactPersonAdapter.convertToFullPerson(population.findPerson(id));
     }
 
     @Override
     public IPartnership findPartnership(final int id) {
 
-        return convertToPartnershipWithIds(population.findPartnership(id));
+        return CompactPartnershipAdapter.convertToFullPartnership(population.findPartnership(id), population);
     }
 
     @Override
@@ -185,77 +218,4 @@ public class CompactPopulationAdapter implements IPopulation {
         }
     }
 
-    private IPartnership convertToPartnershipWithIds(final CompactPartnership partnership) {
-
-        return partnership != null ? new PartnershipWithIds(partnership) : null;
-    }
-
-    private class PartnershipWithIds implements IPartnership {
-
-        private int id;
-        private int partner1_id;
-        private int partner2_id;
-        private Date marriage_date;
-        private List<Integer> children;
-
-        private int populationIndexToId(final int index) {
-            return population.getPerson(index).getId();
-        }
-
-        PartnershipWithIds(final CompactPartnership compact_partnership) {
-
-            id = compact_partnership.getId();
-            partner1_id = populationIndexToId(compact_partnership.getPartner1());
-            partner2_id = populationIndexToId(compact_partnership.getPartner2());
-            marriage_date = DateManipulation.daysToDate(compact_partnership.getMarriageDate());
-
-            children = copyChildren(compact_partnership.getChildren());
-        }
-
-        private List<Integer> copyChildren(final List<Integer> original_children) {
-
-            List<Integer> children = new ArrayList<>();
-            if (original_children != null) {
-                for (Integer child_index : original_children) {
-                    children.add(populationIndexToId(child_index));
-                }
-            }
-            return children;
-        }
-
-        @Override
-        public int getId() {
-            return id;
-        }
-
-        @Override
-        public int getPartner1Id() {
-            return partner1_id;
-        }
-
-        @Override
-        public int getPartner2Id() {
-            return partner2_id;
-        }
-
-        @Override
-        public Date getMarriageDate() {
-            return marriage_date;
-        }
-
-        @Override
-        public List<Integer> getChildren() {
-            return children;
-        }
-
-        @Override
-        public int compareTo(final IPartnership other) {
-            return id - other.getId();
-        }
-
-        @Override
-        public boolean equals(final Object other) {
-            return other instanceof IPartnership && compareTo((IPartnership)other) == 0;
-        }
-    }
 }

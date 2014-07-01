@@ -183,7 +183,7 @@ public class PopulationToDB implements AutoCloseable {
             DBManipulation.configurePreparedStatement(
                     statement,
                     compact_person.getId(),
-                    compact_person.getSex(),
+                    String.valueOf(compact_person.getSex()),
                     compact_person.isMale() ? male_first_name_distribution.getSample() : female_first_name_distribution.getSample(),
                     surname,
                     DateManipulation.daysToSQLDate(compact_person.getDateOfBirth()),

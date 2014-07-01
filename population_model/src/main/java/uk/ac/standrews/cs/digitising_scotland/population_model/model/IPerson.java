@@ -47,10 +47,4 @@ public interface IPerson {
     String getAddress();
 
     String getMaidenName();
-
-    //What are these supposed to do?
-
-//    int getPartnership();
-//
-//    int getParentsPartnership();
 }

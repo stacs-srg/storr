@@ -231,7 +231,7 @@ public class CompactPopulationAdapterTest {
         CompactPerson[] people = makePeople(population_size);
         IPopulation population = new CompactPopulationAdapter(new CompactPopulation(people, 0, 0));
 
-        assertEquals(people[population_size - 1], population.findPerson(people[population_size - 1].getId()));
+        assertEquals(people[population_size - 1].getId(), population.findPerson(people[population_size - 1].getId()).getId());
     }
 
     private void checkPersonIteration(IPopulation population, CompactPerson... people) {
@@ -241,7 +241,7 @@ public class CompactPopulationAdapterTest {
         for (CompactPerson person : people) {
 
             assertTrue(person_iterator.hasNext());
-            assertEquals(person_iterator.next(), person);
+            assertEquals(person_iterator.next().getId(), person.getId());
         }
 
         assertFalse(person_iterator.hasNext());

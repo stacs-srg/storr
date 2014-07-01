@@ -17,9 +17,7 @@
 package uk.ac.standrews.cs.digitising_scotland.population_model.model;
 
 import uk.ac.standrews.cs.digitising_scotland.util.BitManipulation;
-import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -30,7 +28,7 @@ import java.util.List;
  * @author Alan Dearle (alan.dearle@st-andrews.ac.uk)
  * @author Graham Kirby (graham.kirby@st-andrews.ac.uk)
  */
-public class CompactPerson implements IPerson {
+public class CompactPerson {
 
     private int id;
 
@@ -206,54 +204,4 @@ public class CompactPerson implements IPerson {
 
         this.partnership_list = partnership_list;
     }
-
-    @Override
-    public String getFirstName() {
-        return "N/A";
-    }
-
-    @Override
-    public String getSurname() {
-        return "N/A";
-    }
-
-    @Override
-    public Date getBirthDate() {
-        return DateManipulation.daysToDate(getDateOfBirth());
-    }
-
-    @Override
-    public java.util.Date getDeathDate() {
-        return DateManipulation.daysToDate(getDateOfDeath());
-    }
-
-    @Override
-    public String getOccupation() {
-        return "N/A";
-    }
-
-    @Override
-    public String getCauseOfDeath() {
-        return "N/A";
-    }
-
-    @Override
-    public String getAddress() {
-        return "N/A";
-    }
-
-    @Override
-    public String getMaidenName() {
-        return null;
-    }
-//
-//    @Override
-//    public int getPartnership() {
-//        return 0;
-//    }
-//
-//    @Override
-//    public int getParentsPartnership() {
-//        return 0;
-//    }
 }
