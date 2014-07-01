@@ -17,7 +17,9 @@
 package uk.ac.standrews.cs.digitising_scotland.population_model.model;
 
 import org.junit.Test;
+import uk.ac.standrews.cs.digitising_scotland.population_model.generation.distributions.InconsistentWeightException;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -28,47 +30,47 @@ import static org.junit.Assert.*;
 public class CompactPopulationAdapterTest {
 
     @Test
-    public void findPersonInEmptyPopulation() {
+    public void findPersonInEmptyPopulation() throws IOException, InconsistentWeightException {
 
         IPopulation population = makePopulation(0);
         assertNull(population.findPerson(0));
     }
 
     @Test
-    public void findPartnershipInEmptyPopulation() {
+    public void findPartnershipInEmptyPopulation() throws IOException, InconsistentWeightException {
 
         IPopulation population = makePopulation(0);
         assertNull(population.findPartnership(0));
     }
 
     @Test
-    public void findNonExistentPerson() {
+    public void findNonExistentPerson() throws IOException, InconsistentWeightException {
 
         IPopulation population = makePopulation(1);
         assertNull(population.findPerson(-1));
     }
 
     @Test
-    public void findNonExistentPartnership() {
+    public void findNonExistentPartnership() throws IOException, InconsistentWeightException {
 
         IPopulation population = makePopulation(1);
         assertNull(population.findPartnership(-1));
     }
 
     @Test
-    public void findOnlyPersonInPopulation() {
+    public void findOnlyPersonInPopulation() throws IOException, InconsistentWeightException {
 
         findLastPerson(1);
     }
 
     @Test
-    public void findLastPersonInPopulation() {
+    public void findLastPersonInPopulation() throws IOException, InconsistentWeightException {
 
         findLastPerson(10);
     }
 
     @Test
-    public void iterateOverEmptyPopulation() {
+    public void iterateOverEmptyPopulation() throws IOException, InconsistentWeightException {
 
         IPopulation population = makePopulation(0);
 
@@ -77,30 +79,30 @@ public class CompactPopulationAdapterTest {
     }
 
     @Test(expected = NoSuchElementException.class)
-    public void getNextPersonFromEmptyPopulation() {
+    public void getNextPersonFromEmptyPopulation() throws IOException, InconsistentWeightException {
 
         IPopulation population = makePopulation(0);
         population.getPeople().iterator().next();
     }
 
     @Test(expected = NoSuchElementException.class)
-    public void getNextPartnershipFromEmptyPopulation() {
+    public void getNextPartnershipFromEmptyPopulation() throws IOException, InconsistentWeightException {
 
         IPopulation population = makePopulation(0);
         population.getPartnerships().iterator().next();
     }
 
     @Test
-    public void iterateOverPopulationSizeOne() {
+    public void iterateOverPopulationSizeOne() throws IOException, InconsistentWeightException {
         iterateOverPopulationWithoutPartnerships(1);
     }
 
     @Test
-    public void iterateOverPopulationSize3() {
+    public void iterateOverPopulationSize3() throws IOException, InconsistentWeightException {
         iterateOverPopulationWithoutPartnerships(3);
     }
 
-    public void iterateOverPopulationWithoutPartnerships(int population_size) {
+    public void iterateOverPopulationWithoutPartnerships(int population_size) throws IOException, InconsistentWeightException {
 
         CompactPerson[] people = makePeople(population_size);
         IPopulation population = new CompactPopulationAdapter(new CompactPopulation(people, 0, 0));
@@ -110,7 +112,7 @@ public class CompactPopulationAdapterTest {
     }
 
     @Test
-    public void iterateOverPopulationWithOnePartnership() {
+    public void iterateOverPopulationWithOnePartnership() throws IOException, InconsistentWeightException {
 
         CompactPerson[] people = makePeople(3);
 
@@ -126,7 +128,7 @@ public class CompactPopulationAdapterTest {
     }
 
     @Test
-    public void findPartnershipInPopulationWithOnePartnership() {
+    public void findPartnershipInPopulationWithOnePartnership() throws IOException, InconsistentWeightException {
 
         CompactPerson[] people = makePeople(3);
 
@@ -141,7 +143,7 @@ public class CompactPopulationAdapterTest {
     }
 
     @Test
-    public void iterateOverPopulationWithThreePartnerships() {
+    public void iterateOverPopulationWithThreePartnerships() throws IOException, InconsistentWeightException {
 
         CompactPartnership partnership1 = new CompactPartnership(0, 0, 0);
         CompactPartnership partnership2 = new CompactPartnership(0, 0, 0);
@@ -155,7 +157,7 @@ public class CompactPopulationAdapterTest {
     }
 
     @Test
-    public void findPartnershipInPopulationWithThreePartnerships() {
+    public void findPartnershipInPopulationWithThreePartnerships() throws IOException, InconsistentWeightException {
 
         CompactPartnership partnership1 = new CompactPartnership(0, 0, 0);
         CompactPartnership partnership2 = new CompactPartnership(0, 0, 0);
@@ -173,18 +175,18 @@ public class CompactPopulationAdapterTest {
     }
 
     @Test(expected = NoSuchElementException.class)
-    public void tooManyPersonIterations() {
+    public void tooManyPersonIterations() throws IOException, InconsistentWeightException {
 
         doTooManyIterations(makePopulationWithThreePartnerships().getPeople().iterator(), 3);
     }
 
     @Test(expected = NoSuchElementException.class)
-    public void tooManyPartnershipIterations() {
+    public void tooManyPartnershipIterations() throws IOException, InconsistentWeightException {
 
         doTooManyIterations(makePopulationWithThreePartnerships().getPartnerships().iterator(), 3);
     }
 
-    private IPopulation makePopulation(int population_size) {
+    private IPopulation makePopulation(int population_size) throws IOException, InconsistentWeightException {
 
         return new CompactPopulationAdapter(new CompactPopulation(makePeople(population_size), 0, 0));
     }
@@ -198,7 +200,7 @@ public class CompactPopulationAdapterTest {
         return result;
     }
 
-    private IPopulation makePopulationWithThreePartnerships() {
+    private IPopulation makePopulationWithThreePartnerships() throws IOException, InconsistentWeightException {
 
         CompactPartnership partnership1 = new CompactPartnership(0, 0, 0);
         CompactPartnership partnership2 = new CompactPartnership(0, 0, 0);
@@ -226,7 +228,7 @@ public class CompactPopulationAdapterTest {
         return population;
     }
 
-    private void findLastPerson(int population_size) {
+    private void findLastPerson(int population_size) throws IOException, InconsistentWeightException {
 
         CompactPerson[] people = makePeople(population_size);
         IPopulation population = new CompactPopulationAdapter(new CompactPopulation(people, 0, 0));
