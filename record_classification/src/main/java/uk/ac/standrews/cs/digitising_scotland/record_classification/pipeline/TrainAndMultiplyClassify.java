@@ -135,11 +135,16 @@ public final class TrainAndMultiplyClassify {
     private static void setupExperimentalFolders() {
 
         experimentalFolderName = getExperimentalFolderName();
-        File experimentalFolder = new File(experimentalFolderName);
-        experimentalFolder.mkdirs();
-        new File(experimentalFolderName + "/Reports").mkdirs();
-        new File(experimentalFolderName + "/Data").mkdirs();
-        new File(experimentalFolderName + "/Models").mkdirs();
+
+        String[] paths = {"/Reports", "/Data", "/Models"};
+        for (String string : paths) {
+            final String pathname = experimentalFolderName + string;
+
+            if (!new File(pathname).mkdirs()) {
+                System.err.println("Problem creating output folder: " + pathname);
+
+            }
+        }
 
     }
 

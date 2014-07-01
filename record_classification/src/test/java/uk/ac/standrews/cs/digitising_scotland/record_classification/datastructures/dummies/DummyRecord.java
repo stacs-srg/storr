@@ -51,7 +51,7 @@ public class DummyRecord extends Record {
     @Override
     public String toString() {
 
-        return null;
+        return "";
     }
 
     @Override
