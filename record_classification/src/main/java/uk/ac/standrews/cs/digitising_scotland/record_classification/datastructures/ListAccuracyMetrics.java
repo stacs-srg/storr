@@ -83,7 +83,19 @@ public class ListAccuracyMetrics {
 
     private int[] numberOfCodesNotCoded;
 
+    /**
+     * Default fileName is "target/codeStats.csv", but can be overwritten using setFileName().
+     */
     private String fileName = "target/codeStats.csv";
+
+    /**
+     * Overrides the default file path.
+     * @param fileName new file name
+     */
+    public void setFileName(final String fileName) {
+
+        this.fileName = fileName;
+    }
 
     /**
      * Instantiates a new list accuracy metrics.
@@ -111,7 +123,6 @@ public class ListAccuracyMetrics {
         codedExactMatch = calculateExactMatch(bucket);
         numberOfCodesNotCoded = calculateBreakDownOfMatches(bucket);
         countNumClassifications(bucket);
-        writeStats(bucket, fileName);
     }
 
     /**
