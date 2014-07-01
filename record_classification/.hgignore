@@ -21,6 +21,7 @@ parsedDataparsedData0
 condensedResults.csv
 output*.*
 temp
+Experiment?
 
 syntax: regexp
 ^neo4j-graph-test$
