@@ -22,6 +22,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import uk.ac.standrews.cs.digitising_scotland.population_model.generation.distributions.InconsistentWeightException;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.CompactPopulation;
+import uk.ac.standrews.cs.digitising_scotland.population_model.transform.old.PopulationToGraphviz;
 
 import java.io.IOException;
 import java.nio.file.Path;

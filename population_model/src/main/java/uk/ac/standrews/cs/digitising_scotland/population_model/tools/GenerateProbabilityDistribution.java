@@ -40,6 +40,7 @@ public class GenerateProbabilityDistribution {
 
             FileDistributionGenerator analyser = new FileDistributionGenerator();
             analyser.analyseData(input_file_path, output_file_path);
+
         } else {
             usage();
         }

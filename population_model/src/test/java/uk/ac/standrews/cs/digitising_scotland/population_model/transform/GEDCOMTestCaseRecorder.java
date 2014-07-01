@@ -20,6 +20,8 @@ import uk.ac.standrews.cs.digitising_scotland.population_model.generation.distri
 import uk.ac.standrews.cs.digitising_scotland.population_model.generation.distributions.NegativeDeviationException;
 import uk.ac.standrews.cs.digitising_scotland.population_model.generation.distributions.NegativeWeightException;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.CompactPopulation;
+import uk.ac.standrews.cs.digitising_scotland.population_model.transform.old.PopulationToFile;
+import uk.ac.standrews.cs.digitising_scotland.population_model.transform.old.PopulationToGEDCOM;
 
 import java.io.IOException;
 

@@ -24,7 +24,7 @@ import uk.ac.standrews.cs.digitising_scotland.population_model.config.Population
 import uk.ac.standrews.cs.digitising_scotland.population_model.generation.distributions.FileBasedEnumeratedDistribution;
 import uk.ac.standrews.cs.digitising_scotland.population_model.generation.distributions.InconsistentWeightException;
 import uk.ac.standrews.cs.digitising_scotland.population_model.generation.util.RandomFactory;
-import uk.ac.standrews.cs.digitising_scotland.population_model.transform.PopulationToDB;
+import uk.ac.standrews.cs.digitising_scotland.population_model.transform.old.PopulationToDB;
 import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
 import uk.ac.standrews.cs.nds.util.ErrorHandling;
 
