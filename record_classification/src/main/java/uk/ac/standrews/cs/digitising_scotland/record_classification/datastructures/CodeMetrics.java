@@ -153,7 +153,9 @@ public class CodeMetrics {
 
         // tp+tn/total p + total negative
         double[] tptn = add(truePositive, trueNegative);
-        accuracy = division(tptn, totalPredictions);
+        double[] fpfn = add(falsePositive, falseNegative);
+        double[] denominator = add(tptn, fpfn);
+        accuracy = division(tptn, denominator);
     }
 
     /**
