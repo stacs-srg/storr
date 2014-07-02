@@ -1,7 +1,9 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.AnalysisMetrics;
 
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeFactory;
+import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
 
 /**
  * The Class CodeMetrics.
@@ -448,5 +450,23 @@ public class CodeMetrics {
 
         return numberOfOutputClasses;
     }
+
+
+    /**
+     * Creates and writes all the accumulated statistics to the specified file.
+     * @param fileName The path to where we want to write the file
+     */
+    public void writeStats(final String fileName) {
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("Code, True Positive, True Negative, False Positive, False Negative, Precision, Recall, Specificity, Negative Predictive Value, False Positive Rate, Accuracy, F1, MCC\n");
+
+        for (int i = 0; i < numberOfCodes(); i++) {
+            sb.append(getStatsPerCode(i)).append("\n");
+        }
+
+        Utils.writeToFile(sb.toString(), fileName);
+    }
+
 
 }

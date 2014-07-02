@@ -9,6 +9,9 @@ import java.io.InputStreamReader;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.AbstractClassifier;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.OLR.OLRClassifier;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.lookup.ExactMatchClassifier;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.AnalysisMetrics.CodeMetrics;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.AnalysisMetrics.SoftConfusionMatrix;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.AnalysisMetrics.StrictConfusionMatrix;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.FormatConverter;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.InputFormatException;
@@ -100,19 +103,21 @@ public final class TrainAndMultiplyClassify {
         System.out.println("********** **********");
         System.out.println(classifiedBucket);
         accuracyMetrics.prettyPrint();
-        final String dataPath = experimentalFolderName + "/Data/codeStats.csv";
-        accuracyMetrics.writeStats(bucket, dataPath);
-        accuracyMetrics.generateMarkDownSummary(experimentalFolderName);
-        System.out.println("Working Directory = " + System.getProperty("user.dir"));
-
-        runRscript(dataPath);
-        runMarkdownToHTMLScript(experimentalFolderName);
+        final String strictCodeStatsPath = experimentalFolderName + "/Data/strictCodeStats.csv";
+        final String softCodeStatsPath = experimentalFolderName + "/Data/softCodeStats.csv";
+        CodeMetrics strictCodeMetrics = new CodeMetrics(new StrictConfusionMatrix(bucket));
+        strictCodeMetrics.writeStats(strictCodeStatsPath);
+        CodeMetrics softCodeMetrics = new CodeMetrics(new SoftConfusionMatrix(bucket));
+        softCodeMetrics.writeStats(softCodeStatsPath);
+        runRscript(strictCodeStatsPath,"strictCodeStats");
+        runRscript(softCodeStatsPath,"softCodeStats");
 
     }
 
-    private static void runRscript(final String dataPath) throws IOException {
+    private static void runRscript(final String dataPath, final String imageName) throws IOException {
 
-        String imageOutputPath = experimentalFolderName + "/Reports/graph.png";
+        System.out.println("Working Directory = " + System.getProperty("user.dir"));
+        String imageOutputPath = experimentalFolderName + "/Reports/" + imageName + ".png";
         String command = "Rscript src/R/CodeStatsPlotter.R " + dataPath + " " + imageOutputPath;
         System.out.println("Running: " + command);
         Process proc = Runtime.getRuntime().exec(command);
@@ -126,50 +131,6 @@ public final class TrainAndMultiplyClassify {
         }
     }
 
-    private static String executeCommand(String command) {
-
-        StringBuffer output = new StringBuffer();
-
-        Process p;
-        try {
-            p = Runtime.getRuntime().exec(command);
-            p.waitFor();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
-
-            String line = "";
-            while ((line = reader.readLine()) != null) {
-                output.append(line + "\n");
-            }
-
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return output.toString();
-
-    }
-
-    private static void runMarkdownToHTMLScript(final String dataPath) throws IOException {
-
-        String markdown = "#!/bin/bash\n" + "markdown " + System.getProperty("user.dir") + "/" + dataPath + "/Reports/summary.md > " + System.getProperty("user.dir") + "/" + dataPath + "/Reports/summary.html";
-        final String generateScript = dataPath + "/Reports/generateHTML.sh";
-        Utils.writeToFile(markdown, generateScript);
-        Runtime.getRuntime().exec("chmod +x " + generateScript);
-
-        String command = "pwd";
-        System.out.println("Running: " + command);
-        String output = executeCommand(command);
-        System.out.println(output);
-
-        command = "./" + dataPath + "/Reports/generateHTML.sh";
-        System.out.println("Running: " + command);
-        output = executeCommand(command);
-
-        System.out.println(output);
-
-    }
-
     private static ExactMatchClassifier trainExactMatchClassifier() throws Exception {
 
         ExactMatchClassifier exactMatchClassifier = new ExactMatchClassifier();
@@ -181,16 +142,11 @@ public final class TrainAndMultiplyClassify {
     private static void setupExperimentalFolders() {
 
         experimentalFolderName = getExperimentalFolderName();
-
-        String[] paths = {"/Reports", "/Data", "/Models"};
-        for (String string : paths) {
-            final String pathname = experimentalFolderName + string;
-
-            if (!new File(pathname).mkdirs()) {
-                System.err.println("Problem creating output folder: " + pathname);
-
-            }
-        }
+        File experimentalFolder = new File(experimentalFolderName);
+        experimentalFolder.mkdirs();
+        new File(experimentalFolderName + "/Reports").mkdirs();
+        new File(experimentalFolderName + "/Data").mkdirs();
+        new File(experimentalFolderName + "/Models").mkdirs();
 
     }
 

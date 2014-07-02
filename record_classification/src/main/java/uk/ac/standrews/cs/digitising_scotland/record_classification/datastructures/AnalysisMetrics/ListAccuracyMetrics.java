@@ -597,22 +597,4 @@ public class ListAccuracyMetrics {
 
         this.codedExactMatch = codedBySubStringMatch;
     }
-
-    /**
-     * Creates and writes all the accumulated statistics to the specified file.
-     * @param bucket The bucket to analyse and write
-     * @param fileName The path to where we want to write the file
-     */
-    public void writeStats(final Bucket bucket, final String fileName) {
-
-        StringBuilder sb = new StringBuilder();
-        CodeMetrics metrics = new CodeMetrics(new StrictConfusionMatrix(bucket));
-        sb.append("Code, True Positive, True Negative, False Positive, False Negative, Precision, Recall, Specificity, Negative Predictive Value, False Positive Rate, Accuracy, F1, MCC\n");
-
-        for (int i = 0; i < metrics.numberOfCodes(); i++) {
-            sb.append(metrics.getStatsPerCode(i) + "\n");
-        }
-
-        Utils.writeToFile(sb.toString(), fileName);
-    }
 }
