@@ -34,8 +34,10 @@ import uk.ac.standrews.cs.nds.util.QuickSort;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 /**
  * Model of synthetic population.
@@ -178,6 +180,22 @@ public class CompactPopulation {
         this.people = people;
         this.earliest_date = earliest_date;
         this.latest_date = latest_date;
+        
+        setNumberOfPartnerships();
+    }
+
+    private void setNumberOfPartnerships() {
+
+        Set<CompactPartnership> partnerships = new HashSet<>();
+        for (CompactPerson person : people) {
+            List<CompactPartnership> partnerships1 = person.getPartnerships();
+            if (partnerships1 != null) {
+                for (CompactPartnership partnership : partnerships1) {
+                    partnerships.add(partnership);
+                }
+            }
+        }
+        number_of_partnerships = partnerships.size();
     }
 
     /**
@@ -345,9 +363,10 @@ public class CompactPopulation {
         return !people[partnership.partner1_index].isMale() ? partnership.partner1_index : partnership.partner2_index;
     }
 
-    public boolean parentsHaveSensibleAgesAtChildBirth(final CompactPartnership partnership, final int child_index) {
+    public boolean parentsHaveSensibleAgesAtChildBirth(final CompactPartnership partnership, final int child_id) {
 
-        return parentsHaveSensibleAgesAtChildBirth(getHusbandIndex(partnership), getWifeIndex(partnership), child_index);
+        final CompactPerson child = findPerson(child_id);
+        return parentsHaveSensibleAgesAtChildBirth(people[getHusbandIndex(partnership)], people[getWifeIndex(partnership)], child);
     }
 
     public boolean parentsHaveSensibleAgesAtChildBirth(final int father_index, final int mother_index, final int child_index) {

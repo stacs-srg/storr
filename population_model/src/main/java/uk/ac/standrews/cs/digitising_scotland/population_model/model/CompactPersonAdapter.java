@@ -26,7 +26,9 @@ import uk.ac.standrews.cs.digitising_scotland.population_model.generation.util.R
 import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -87,6 +89,7 @@ public class CompactPersonAdapter {
         private String cause_of_death;
         private String address;
         private String string_rep;
+        private List<Integer> partnerships;
 
         public FullPerson(CompactPerson person, String surname) {
 
@@ -102,6 +105,7 @@ public class CompactPersonAdapter {
             occupation = occupation_distribution.getSample();
             cause_of_death = person.getDateOfDeath() != -1 ? cause_of_death_distribution.getSample() : null;
             address = address_distribution.getSample();
+            partnerships = getPartnershipIds(person);
 
             string_rep = person.toString();
         }
@@ -152,6 +156,11 @@ public class CompactPersonAdapter {
         }
 
         @Override
+        public List<Integer> getPartnerships() {
+            return partnerships;
+        }
+
+        @Override
         public boolean equals(final Object other) {
             return other instanceof IPerson && ((IPerson)other).getId() == id;
         }
@@ -162,5 +171,18 @@ public class CompactPersonAdapter {
         }
 
         public String toString() { return string_rep; }
+
+        private List<Integer> getPartnershipIds(CompactPerson person) {
+
+            List<CompactPartnership> original_partnerships = person.getPartnerships();
+            if (original_partnerships != null) {
+                List<Integer> result = new ArrayList<>();
+                for (CompactPartnership partnership : original_partnerships) {
+                    result.add(partnership.getId());
+                }
+                return result;
+            }
+            return null;
+        }
     }
 }

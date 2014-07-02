@@ -43,6 +43,8 @@ public class CompactPopulationAdapter implements IPopulation {
     private final Map<Integer, IPerson> person_cache;
     private final Map<Integer, IPartnership> partnership_cache;
 
+    private String description;
+
     public CompactPopulationAdapter(final CompactPopulation population) throws IOException, InconsistentWeightException {
 
         this.population = population;
@@ -55,6 +57,16 @@ public class CompactPopulationAdapter implements IPopulation {
         partnership_cache = new HashMap<>();
 
         consistent_across_iterations = default_consistent_across_iterations;
+        description = super.toString();
+    }
+
+    @Override
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String toString() {
+        return description;
     }
 
     public static void setDefaultConsistentAcrossIterations(boolean default_consistent_across_iterations) {
@@ -291,7 +303,8 @@ public class CompactPopulationAdapter implements IPopulation {
     @Override
     public IPerson findPerson(final int id) {
 
-        return getFullPerson(population.findPerson(id));
+        CompactPerson person = population.findPerson(id);
+        return getFullPerson(person);
     }
 
     @Override
