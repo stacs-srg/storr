@@ -112,7 +112,9 @@ public final class TrainAndMultiplyClassify {
         softCodeMetrics.writeStats(softCodeStatsPath);
         runRscript(strictCodeStatsPath, "strictCodeStats");
         runRscript(softCodeStatsPath, "softCodeStats");
-        accuracyMetrics.generateMarkDownSummary(experimentalFolderName);
+        accuracyMetrics.generateMarkDownSummary(experimentalFolderName, "strictCodeStats");
+        accuracyMetrics.generateMarkDownSummary(experimentalFolderName, "softCodeStats");
+
     }
 
     private static void runRscript(final String dataPath, final String imageName) throws IOException {

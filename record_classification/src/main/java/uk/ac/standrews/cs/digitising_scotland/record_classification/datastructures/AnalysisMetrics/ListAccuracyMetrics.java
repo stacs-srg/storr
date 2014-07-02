@@ -201,7 +201,7 @@ public class ListAccuracyMetrics {
     /**
      * Prints the statistics generated with pretty formatting.
      */
-    public void generateMarkDownSummary(final String pathToExperiemntFolder) {
+    public void generateMarkDownSummary(final String pathToExperiemntFolder, final String pathToGraph) {
 
         StringBuilder sb = new StringBuilder();
         sb.append("#Classification Report    \n" + "##Summary    \n");
@@ -221,11 +221,11 @@ public class ListAccuracyMetrics {
         sb.append(printNumberOfCodesMissed());
         sb.append("    \n\n");
         sb.append("##Graphs    \n");
-        sb.append("![Graph Matrix][graph]     \n");
+        sb.append("![Graph Matrix][" + pathToGraph + "]     \n");
         sb.append("   \n\n");
-        sb.append("[graph]: " + "graph.png \"Graph Matrix\"    \n");
-        sb.append("![Graph](graph.png)");
-        Utils.writeToFile(sb.toString(), pathToExperiemntFolder + "/Reports/summary.md");
+        sb.append("[" + pathToGraph + "]: " + pathToGraph + ".png \"Graph Matrix\"    \n");
+        //sb.append("![Graph](graph.png)");
+        Utils.writeToFile(sb.toString(), pathToExperiemntFolder + "/Reports/summary.md", true);
 
     }
 
