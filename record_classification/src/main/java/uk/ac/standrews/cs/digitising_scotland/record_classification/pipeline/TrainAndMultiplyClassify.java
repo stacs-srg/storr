@@ -115,11 +115,9 @@ public final class TrainAndMultiplyClassify {
     }
 
     private static void runRscript(final String dataPath, final String imageName) throws IOException {
-
         String imageOutputPath = experimentalFolderName + "/Reports/" + imageName + ".png";
         String command = "Rscript src/R/CodeStatsPlotter.R " + dataPath + " " + imageOutputPath;
-        executeCommand(command);
-
+        System.out.println(executeCommand(command));
     }
 
     private static String executeCommand(final String command) {
