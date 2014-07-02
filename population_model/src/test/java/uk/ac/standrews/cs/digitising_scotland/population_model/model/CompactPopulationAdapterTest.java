@@ -17,10 +17,16 @@
 package uk.ac.standrews.cs.digitising_scotland.population_model.model;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
 import uk.ac.standrews.cs.digitising_scotland.population_model.generation.distributions.InconsistentWeightException;
+import uk.ac.standrews.cs.digitising_scotland.population_model.generation.distributions.NegativeDeviationException;
+import uk.ac.standrews.cs.digitising_scotland.population_model.generation.distributions.NegativeWeightException;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -29,7 +35,22 @@ import java.util.Set;
 
 import static org.junit.Assert.*;
 
+@RunWith(Parameterized.class)
 public class CompactPopulationAdapterTest {
+
+    private final boolean consistent_across_iterations;
+
+    @Parameterized.Parameters
+    public static Collection<Object[]> generateData() {
+
+        return Arrays.asList(new Object[][]{{false}, {true}});
+    }
+
+    public CompactPopulationAdapterTest(final boolean consistent_across_iterations) {
+
+        this.consistent_across_iterations = consistent_across_iterations;
+        CompactPopulationAdapter.setDefaultConsistentAcrossIterations(consistent_across_iterations);
+    }
 
     @Test
     public void findPersonInEmptyPopulation() throws IOException, InconsistentWeightException {
@@ -205,18 +226,127 @@ public class CompactPopulationAdapterTest {
     }
 
     @Test
-    public void iteratorDoesntRepeat() throws IOException, InconsistentWeightException {
+    public void iteratorDoesntRepeatInPopulationWithSinglePeople() throws IOException, InconsistentWeightException {
 
-//        IPopulation population1 = makePopulation(100);
-//        assertDoesntRepeat(population1);
-//
-//        IPopulation population2 = makePopulationWithThreePartnerships();
-//        assertDoesntRepeat(population2);
+        assertDoesntRepeat(makePopulation(100));
+    }
 
-        CompactPerson[] people = makePeopleInTwoFamilies();
+    @Test
+    public void iteratorDoesntRepeatInSmallPopulationWithPartnerships() throws IOException, InconsistentWeightException {
 
-        IPopulation population3 = new CompactPopulationAdapter(new CompactPopulation(people, 0, 0));
-        assertDoesntRepeat(population3);
+        assertDoesntRepeat(makePopulationWithThreePartnerships());
+    }
+
+    @Test
+    public void iteratorDoesntRepeatInSmallPopulationWithFamilies() throws IOException, InconsistentWeightException {
+
+        assertDoesntRepeat(new CompactPopulationAdapter(new CompactPopulation(makePeopleInTwoFamilies(), 0, 0)));
+    }
+
+    @Test
+    public void iteratorDoesntRepeatInLargePopulation() throws IOException, InconsistentWeightException, NegativeDeviationException, NegativeWeightException {
+
+        assertDoesntRepeat(new CompactPopulationAdapter(new CompactPopulation(1000)));
+    }
+
+    @Test
+    public void peopleRetrievedConsistently() throws IOException, InconsistentWeightException, NegativeDeviationException, NegativeWeightException {
+
+        CompactPopulationAdapter population = new CompactPopulationAdapter(new CompactPopulation(1000));
+
+        Iterator<IPerson> person_iterator = population.getPeople().iterator();
+
+        // Check consistency after iteration.
+        for (int i = 0; i < 30; i++) {
+            person_iterator.next();
+        }
+
+        IPerson[] sample = new IPerson[]{person_iterator.next(), person_iterator.next(), person_iterator.next(), person_iterator.next(), person_iterator.next()};
+        assertRetrievedConsistently(sample, population);
+
+        // Check consistency during iteration.
+
+        for (IPerson person : population.getPeople()) {
+            assertRetrievedConsistently(person, population);
+        }
+    }
+
+    @Test
+    public void partnershipsRetrievedConsistently() throws IOException, InconsistentWeightException, NegativeDeviationException, NegativeWeightException {
+
+        CompactPopulationAdapter population = new CompactPopulationAdapter(new CompactPopulation(1000));
+
+        Iterator<IPartnership> partnership_iterator = population.getPartnerships().iterator();
+
+        // Check consistency after iteration.
+        for (int i = 0; i < 10; i++) {
+            partnership_iterator.next();
+        }
+
+        IPartnership[] sample = new IPartnership[]{partnership_iterator.next(), partnership_iterator.next(), partnership_iterator.next(), partnership_iterator.next(), partnership_iterator.next()};
+        assertRetrievedConsistently(sample, population);
+
+        // Check consistency during iteration.
+
+        for (IPartnership partnership : population.getPartnerships()) {
+            assertRetrievedConsistently(partnership, population);
+        }
+    }
+
+    private void assertRetrievedConsistently(IPerson[] sample, IPopulation population) {
+
+        for (IPerson person : sample) {
+            assertRetrievedConsistently(person, population);
+        }
+    }
+
+    private void assertRetrievedConsistently(IPerson person, IPopulation population) {
+
+        int id = person.getId();
+        IPerson retrieved_person = population.findPerson(id);
+
+        assertEquals(id, retrieved_person.getId());
+
+        if (consistent_across_iterations) {
+
+            assertEquals(person.getFirstName(), retrieved_person.getFirstName());
+            assertEquals(person.getSurname(), retrieved_person.getSurname());
+            assertEquals(person.getSex(), retrieved_person.getSex());
+            assertEquals(person.getAddress(), retrieved_person.getAddress());
+            assertEquals(person.getBirthDate(), retrieved_person.getBirthDate());
+            assertEquals(person.getDeathDate(), retrieved_person.getDeathDate());
+            assertEquals(person.getOccupation(), retrieved_person.getOccupation());
+            assertEquals(person.getCauseOfDeath(), retrieved_person.getCauseOfDeath());
+        }
+    }
+
+
+    private void assertRetrievedConsistently(IPartnership[] sample, IPopulation population) {
+
+        for (IPartnership partnership : sample) {
+            assertRetrievedConsistently(partnership, population);
+        }
+    }
+
+    private void assertRetrievedConsistently(IPartnership partnership, IPopulation population) {
+
+        int id = partnership.getId();
+        IPartnership retrieved_person = population.findPartnership(id);
+
+        assertEquals(id, retrieved_person.getId());
+
+        if (consistent_across_iterations) {
+
+            assertEquals(partnership.getPartner1Id(), retrieved_person.getPartner1Id());
+            assertEquals(partnership.getPartner2Id(), retrieved_person.getPartner2Id());
+            assertEquals(partnership.getMarriageDate(), retrieved_person.getMarriageDate());
+            assertChildrenEqual(partnership.getChildren(), retrieved_person.getChildren());
+        }
+    }
+
+    private void assertChildrenEqual(List<Integer> children1, List<Integer> children2) {
+
+        assertArrayEquals(children1.toArray(new Integer[]{}), children2.toArray(new Integer[]{}));
     }
 
     private void assertDoesntRepeat(IPopulation population) {
