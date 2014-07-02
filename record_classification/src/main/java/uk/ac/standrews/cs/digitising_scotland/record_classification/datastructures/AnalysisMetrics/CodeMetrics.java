@@ -48,13 +48,14 @@ public class CodeMetrics {
 
     /** The number of output classes. */
     private final int numberOfOutputClasses;
+    private AbstractConfusionMatrix confusionMatrix;
 
     /**
      * Instantiates a new code metrics.
      *
      */
     public CodeMetrics(AbstractConfusionMatrix confusionMatrix) {
-
+        this.confusionMatrix = confusionMatrix;
         falsePositive = confusionMatrix.getFalsePositive();
         trueNegative = confusionMatrix.getTrueNegative();
         falseNegative = confusionMatrix.getFalseNegative();
@@ -467,6 +468,8 @@ public class CodeMetrics {
 
         Utils.writeToFile(sb.toString(), fileName);
     }
-
+    public double getTotalCorrectlyPredicted(){
+        return confusionMatrix.getTotalCorrectlyPredicted();
+    }
 
 }

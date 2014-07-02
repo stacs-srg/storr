@@ -109,6 +109,8 @@ public final class TrainAndMultiplyClassify {
         CodeMetrics softCodeMetrics = new CodeMetrics(new SoftConfusionMatrix(bucket));
         strictCodeMetrics.writeStats(strictCodeStatsPath);
         softCodeMetrics.writeStats(softCodeStatsPath);
+        System.out.println("Strict correctly predicted: " + strictCodeMetrics.getTotalCorrectlyPredicted());
+        System.out.println("Soft correctly predicted: " + softCodeMetrics.getTotalCorrectlyPredicted());
         runRscript(strictCodeStatsPath, "strictCodeStats");
         runRscript(softCodeStatsPath, "softCodeStats");
         accuracyMetrics.generateMarkDownSummary(experimentalFolderName);
@@ -116,7 +118,7 @@ public final class TrainAndMultiplyClassify {
 
     private static void runRscript(final String dataPath, final String imageName) throws IOException {
         String imageOutputPath = experimentalFolderName + "/Reports/" + imageName + ".png";
-        String command = "Rscript src/R/CodeStatsPlotter.R " + dataPath + " " + imageOutputPath;
+        String command = "Rscript /Users/fraserdunlop/IdeaProjects/digitising_scotland/record_classification/src/R/CodeStatsPlotter.R " + dataPath + " " + imageOutputPath;
         System.out.println(executeCommand(command));
     }
 
