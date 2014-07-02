@@ -204,4 +204,8 @@ public class CompactPerson {
 
         this.partnership_list = partnership_list;
     }
+
+    public CompactPartnership getParents() {
+        return null;
+    }
 }

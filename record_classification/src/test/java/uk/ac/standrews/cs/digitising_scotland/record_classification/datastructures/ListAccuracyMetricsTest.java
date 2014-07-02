@@ -5,8 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.ClassifierTestingHelper;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Bucket;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.ListAccuracyMetrics;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.AnalysisMetrics.ListAccuracyMetrics;
 
 import java.net.URISyntaxException;
 

@@ -21,9 +21,11 @@ import uk.ac.standrews.cs.digitising_scotland.population_model.generation.distri
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Set;
 
 import static org.junit.Assert.*;
 
@@ -128,6 +130,22 @@ public class CompactPopulationAdapterTest {
     }
 
     @Test
+    public void iterateOverPopulationWithTwoFamilies() throws IOException, InconsistentWeightException {
+
+        CompactPerson[] people = makePeopleInTwoFamilies();
+        List<CompactPartnership> partnerships1 = people[0].getPartnerships();
+        CompactPartnership partnership = partnerships1.get(0);
+        CompactPartnership partnership1 = people[2].getPartnerships().get(0);
+        CompactPartnership[] partnerships = new CompactPartnership[]{partnership, partnership1};
+        IPopulation population = new CompactPopulationAdapter(new CompactPopulation(people, 0, 0));
+
+        CompactPerson[] people_in_expected_order = new CompactPerson[]{people[0], people[4], people[6], people[1], people[2], people[3], people[5], people[7]};
+
+        checkPersonIteration(population, people_in_expected_order);
+        checkPartnershipIteration(population, partnerships);
+    }
+
+    @Test
     public void findPartnershipInPopulationWithOnePartnership() throws IOException, InconsistentWeightException {
 
         CompactPerson[] people = makePeople(3);
@@ -186,6 +204,36 @@ public class CompactPopulationAdapterTest {
         doTooManyIterations(makePopulationWithThreePartnerships().getPartnerships().iterator(), 3);
     }
 
+    @Test
+    public void iteratorDoesntRepeat() throws IOException, InconsistentWeightException {
+
+//        IPopulation population1 = makePopulation(100);
+//        assertDoesntRepeat(population1);
+//
+//        IPopulation population2 = makePopulationWithThreePartnerships();
+//        assertDoesntRepeat(population2);
+
+        CompactPerson[] people = makePeopleInTwoFamilies();
+
+        IPopulation population3 = new CompactPopulationAdapter(new CompactPopulation(people, 0, 0));
+        assertDoesntRepeat(population3);
+    }
+
+    private void assertDoesntRepeat(IPopulation population) {
+
+        Set<Integer> people = new HashSet<>();
+        for (IPerson person : population.getPeople()) {
+            assertFalse(people.contains(person.getId()));
+            people.add(person.getId());
+        }
+
+        Set<Integer> partnerships = new HashSet<>();
+        for (IPartnership partnership : population.getPartnerships()) {
+            assertFalse(partnerships.contains(partnership.getId()));
+            partnerships.add(partnership.getId());
+        }
+    }
+
     private IPopulation makePopulation(int population_size) throws IOException, InconsistentWeightException {
 
         return new CompactPopulationAdapter(new CompactPopulation(makePeople(population_size), 0, 0));
@@ -224,6 +272,52 @@ public class CompactPopulationAdapterTest {
         partnerships2.add(partnership3);
         partnerships2.add(partnership1); // Two people may share a partnership.
         population[2].setPartnerships(partnerships2);
+
+        return population;
+    }
+
+    private CompactPerson[] makePeopleInTwoFamilies() throws IOException, InconsistentWeightException {
+
+        CompactPerson fatherA = new CompactPerson(0, true);
+        CompactPerson wifeA = new CompactPerson(0, false);
+        CompactPerson child1A = new CompactPerson(0, false);
+        CompactPerson child2A = new CompactPerson(0, true);
+
+        CompactPerson fatherB = new CompactPerson(0, true);
+        CompactPerson wifeB = new CompactPerson(0, false);
+        CompactPerson child1B = new CompactPerson(0, true);
+        CompactPerson child2B = new CompactPerson(0, false);
+
+        CompactPerson[] population = new CompactPerson[]{fatherA, wifeA, wifeB, fatherB, child1A, child1B, child2A, child2B};
+
+        CompactPartnership partnershipA = new CompactPartnership(0, 1, 0);
+        CompactPartnership partnershipB = new CompactPartnership(2, 3, 0);
+
+        List<CompactPartnership> partnershipsHusbandA = new ArrayList<>();
+        List<CompactPartnership> partnershipsWifeA = new ArrayList<>();
+        List<CompactPartnership> partnershipsHusbandB = new ArrayList<>();
+        List<CompactPartnership> partnershipsWifeB = new ArrayList<>();
+
+        partnershipsHusbandA.add(partnershipA);
+        partnershipsWifeA.add(partnershipA);
+        partnershipsHusbandB.add(partnershipB);
+        partnershipsWifeB.add(partnershipB);
+
+        fatherA.setPartnerships(partnershipsHusbandA);
+        wifeA.setPartnerships(partnershipsWifeA);
+        fatherB.setPartnerships(partnershipsHusbandB);
+        wifeB.setPartnerships(partnershipsWifeB);
+
+        List<Integer> childrenA = new ArrayList<>();
+        List<Integer> childrenB = new ArrayList<>();
+
+        childrenA.add(4);
+        childrenA.add(6);
+        childrenB.add(5);
+        childrenB.add(7);
+
+        partnershipA.setChildren(childrenA);
+        partnershipB.setChildren(childrenB);
 
         return population;
     }

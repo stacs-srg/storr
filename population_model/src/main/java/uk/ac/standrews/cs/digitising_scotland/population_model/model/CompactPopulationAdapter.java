@@ -52,6 +52,7 @@ public class CompactPopulationAdapter implements IPopulation {
             @Override
             public Iterator<IPerson> iterator() {
 
+                unmarkAllPeople();
                 return new PersonIterator();
             }
 
@@ -59,6 +60,7 @@ public class CompactPopulationAdapter implements IPopulation {
 
                 int person_index = 0;
                 CompactPerson next_person = null;
+                List<CompactPerson> descendants = new ArrayList<>();
 
                 PersonIterator() {
                     advanceToNext();
@@ -87,7 +89,86 @@ public class CompactPopulationAdapter implements IPopulation {
 
                 private void advanceToNext() {
 
-                    next_person = person_index == people.length ? null : people[person_index++];
+                    if (!descendants.isEmpty()) {
+
+                        // Another person available with same surname.
+                        next_person = descendants.remove(0);
+
+                    } else {
+
+                        // New person that doesn't inherit surname from father.
+                        compact_person_adapter.generateNextSurname();
+
+                        if (person_index >= people.length) {
+                            recordNoMorePeople();
+
+                        } else {
+
+                            advanceToNextUnmarkedPerson();
+                            checkChildren();
+                        }
+                    }
+
+                    markPerson(next_person);
+                }
+
+                private void advanceToNextUnmarkedPerson() {
+
+                    do {
+                        next_person = people[person_index++];
+                    }
+                    while (person_index < people.length && next_person.isMarked());
+                }
+
+                private void checkChildren() {
+
+                    if (reachedEnd()) {
+                        recordNoMorePeople();
+
+                    } else {
+                        recordChildrenWithSameSurnameIfMale(next_person);
+                    }
+                }
+
+                private boolean reachedEnd() {
+
+                    return person_index == people.length && next_person.isMarked();
+                }
+
+                private void recordNoMorePeople() {
+
+                    next_person = null;
+                }
+
+                private void recordChildrenWithSameSurnameIfMale(CompactPerson person) {
+
+                    if (person.isMale()) {
+
+                        List<CompactPartnership> partnerships = person.getPartnerships();
+                        if (partnerships != null) {
+
+                            for (final CompactPartnership partnership : partnerships) {
+
+                                List<Integer> children = partnership.getChildren();
+                                if (children != null) {
+
+                                    for (final int child_index : children) {
+
+                                        CompactPerson child = population.getPerson(child_index);
+                                        descendants.add(child);
+                                        recordChildrenWithSameSurnameIfMale(child);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                private void markPerson(CompactPerson person) {
+
+                    if (person != null) {
+                        person.setMarked(true);
+                    }
                 }
             }
         };
@@ -212,6 +293,13 @@ public class CompactPopulationAdapter implements IPopulation {
 
         List<CompactPartnership> partnerships = person_index < people.length ? people[person_index].getPartnerships() : null;
         return (partnerships == null ? new ArrayList<CompactPartnership>() : partnerships).iterator();
+    }
+
+    private void unmarkAllPeople() {
+
+        for (CompactPerson person : people) {
+            person.setMarked(false);
+        }
     }
 
     private void unmarkAllPartnerships() {

@@ -1,10 +1,7 @@
-package uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures;
-
-import java.util.Set;
+package uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.AnalysisMetrics;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeFactory;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.CodeTriple;
 
 /**
  * The Class CodeMetrics.
@@ -22,9 +19,6 @@ public class CodeMetrics {
 
     /** The true positive. */
     private double[] truePositive;
-
-    /** The total predictions. */
-    private double[] totalPredictions;
 
     /** The precision. */
     private double[] precision;
@@ -56,16 +50,15 @@ public class CodeMetrics {
     /**
      * Instantiates a new code metrics.
      *
-     * @param bucket the bucket
      */
-    public CodeMetrics(final Bucket bucket) {
+    public CodeMetrics(AbstractConfusionMatrix confusionMatrix) {
+
+        falsePositive = confusionMatrix.getFalsePositive();
+        trueNegative = confusionMatrix.getTrueNegative();
+        falseNegative = confusionMatrix.getFalseNegative();
+        truePositive = confusionMatrix.getTruePositive();
 
         numberOfOutputClasses = CodeFactory.getInstance().getNumberOfOutputClasses();
-        falsePositive = new double[numberOfOutputClasses];
-        trueNegative = new double[numberOfOutputClasses];
-        falseNegative = new double[numberOfOutputClasses];
-        truePositive = new double[numberOfOutputClasses];
-        totalPredictions = new double[numberOfOutputClasses];
         precision = new double[numberOfOutputClasses];
         recall = new double[numberOfOutputClasses];
         specificity = new double[numberOfOutputClasses];
@@ -75,7 +68,6 @@ public class CodeMetrics {
         f1 = new double[numberOfOutputClasses];
         mcc = new double[numberOfOutputClasses];
 
-        countStats(bucket);
         geneateHigherOrderStats();
     }
 
@@ -187,85 +179,6 @@ public class CodeMetrics {
 
         mcc = division(numerator, denominator);
 
-    }
-
-    /**
-     * Calculate proportion wrongly predicted.
-     *
-     * @param bucket the bucket
-     * @return the double
-     */
-    private void countStats(final Bucket bucket) {
-
-        for (Record record : bucket) {
-            Set<CodeTriple> setCodeTriples = record.getCodeTriples();
-            Set<CodeTriple> goldStandardTriples = record.getGoldStandardClassificationSet();
-            totalAndFalsePos(setCodeTriples, goldStandardTriples);
-            truePosAndFalseNeg(setCodeTriples, goldStandardTriples);
-        }
-        calculateTrueNeg();
-    }
-
-    /**
-     * Calculate true neg.
-     */
-    private void calculateTrueNeg() {
-
-        for (int i = 0; i < trueNegative.length; i++) {
-            trueNegative[i] = sum(totalPredictions) - truePositive[i] - falseNegative[i] - falsePositive[i];
-        }
-    }
-
-    /**
-     * True pos and false neg.
-     *
-     * @param setCodeTriples the set code triples
-     * @param goldStandardTriples the gold standard triples
-     */
-    private void truePosAndFalseNeg(final Set<CodeTriple> setCodeTriples, final Set<CodeTriple> goldStandardTriples) {
-
-        for (CodeTriple goldStanardCode : goldStandardTriples) {
-            final Code code = goldStanardCode.getCode();
-            if (contains(code, setCodeTriples)) {
-                truePositive[code.getID()]++;
-            }
-            else {
-                falseNegative[code.getID()]++;
-            }
-        }
-
-    }
-
-    /**
-     * Total and false pos.
-     *
-     * @param setCodeTriples the set code triples
-     * @param goldStandardTriples the gold standard triples
-     */
-    private void totalAndFalsePos(final Set<CodeTriple> setCodeTriples, final Set<CodeTriple> goldStandardTriples) {
-
-        for (CodeTriple predictedCode : setCodeTriples) {
-            final Code code = predictedCode.getCode();
-            totalPredictions[code.getID()]++;
-            if (!contains(code, goldStandardTriples)) {
-                falsePositive[code.getID()]++;
-            }
-        }
-
-    }
-
-    /**
-     * Returns true is a code is in the specified set of CodeTriples.
-     * @param code code to check for
-     * @param setCodeTriples set to check in
-     * @return true if present
-     */
-    private boolean contains(final Code code, final Set<CodeTriple> setCodeTriples) {
-
-        for (CodeTriple codeTriple : setCodeTriples) {
-            if (codeTriple.getCode() == code) { return true; }
-        }
-        return false;
     }
 
     /**
@@ -404,7 +317,6 @@ public class CodeMetrics {
         sb.append(trueNegative[id]).append(", ");
         sb.append(falsePositive[id]).append(", ");
         sb.append(falseNegative[id]).append(", ");
-
         sb.append(precision[id]).append(", ");
         sb.append(recall[id]).append(", ");
         sb.append(specificity[id]).append(", ");

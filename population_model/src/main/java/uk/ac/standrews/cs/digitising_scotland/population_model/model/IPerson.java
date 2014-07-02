@@ -45,6 +45,4 @@ public interface IPerson {
     String getCauseOfDeath();
 
     String getAddress();
-
-    String getMaidenName();
 }

@@ -2,8 +2,8 @@ package uk.ac.standrews.cs.digitising_scotland.record_classification.datastructu
 
 import org.junit.Test;
 
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Bucket;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.CodeMetrics;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.AnalysisMetrics.CodeMetrics;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.AnalysisMetrics.StrictConfusionMatrix;
 
 public class CodeMetricsTest {
 
@@ -11,7 +11,7 @@ public class CodeMetricsTest {
     public void test() {
 
         Bucket testingBucket = new Bucket();
-        CodeMetrics metrics = new CodeMetrics(testingBucket);
+        CodeMetrics metrics = new CodeMetrics(new StrictConfusionMatrix(testingBucket));
         metrics.getHitGoldStandard();
         metrics.getIncorretPredictions();
         metrics.getMissedGoldStandard();

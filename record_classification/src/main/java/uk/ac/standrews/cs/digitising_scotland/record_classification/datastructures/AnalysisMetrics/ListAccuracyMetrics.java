@@ -1,10 +1,12 @@
-package uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures;
+package uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.AnalysisMetrics;
 
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Bucket;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.CodeTriple;
 import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
 
@@ -604,7 +606,7 @@ public class ListAccuracyMetrics {
     public void writeStats(final Bucket bucket, final String fileName) {
 
         StringBuilder sb = new StringBuilder();
-        CodeMetrics metrics = new CodeMetrics(bucket);
+        CodeMetrics metrics = new CodeMetrics(new StrictConfusionMatrix(bucket));
         sb.append("Code, True Positive, True Negative, False Positive, False Negative, Precision, Recall, Specificity, Negative Predictive Value, False Positive Rate, Accuracy, F1, MCC\n");
 
         for (int i = 0; i < metrics.numberOfCodes(); i++) {
