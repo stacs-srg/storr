@@ -205,7 +205,6 @@ public class ListAccuracyMetrics {
 
         StringBuilder sb = new StringBuilder();
         sb.append("#Classification Report    \n" + "##Summary    \n");
-
         sb.append("Unique records: " + uniqueRecords + "   \n");
         sb.append("Total aggregated: " + totalAggregatedRecords + "   \n");
         sb.append("Average confidence: " + averageConfidence + "    \n");

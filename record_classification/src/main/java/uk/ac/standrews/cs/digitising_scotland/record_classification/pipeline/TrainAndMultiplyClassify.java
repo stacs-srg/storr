@@ -9,15 +9,15 @@ import java.io.InputStreamReader;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.AbstractClassifier;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.OLR.OLRClassifier;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.lookup.ExactMatchClassifier;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.AnalysisMetrics.CodeMetrics;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.AnalysisMetrics.SoftConfusionMatrix;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.AnalysisMetrics.StrictConfusionMatrix;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.FormatConverter;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.InputFormatException;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.AnalysisMetrics.ListAccuracyMetrics;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.RecordFactory;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.AnalysisMetrics.CodeMetrics;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.AnalysisMetrics.ListAccuracyMetrics;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.AnalysisMetrics.SoftConfusionMatrix;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.AnalysisMetrics.StrictConfusionMatrix;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.vectors.VectorFactory;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.writers.DataClerkingWriter;
 import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
@@ -109,26 +109,45 @@ public final class TrainAndMultiplyClassify {
         strictCodeMetrics.writeStats(strictCodeStatsPath);
         CodeMetrics softCodeMetrics = new CodeMetrics(new SoftConfusionMatrix(bucket));
         softCodeMetrics.writeStats(softCodeStatsPath);
-        runRscript(strictCodeStatsPath,"strictCodeStats");
-        runRscript(softCodeStatsPath,"softCodeStats");
-
+        runRscript(strictCodeStatsPath, "strictCodeStats");
+        runRscript(softCodeStatsPath, "softCodeStats");
+        accuracyMetrics.generateMarkDownSummary(experimentalFolderName);
     }
 
     private static void runRscript(final String dataPath, final String imageName) throws IOException {
 
-        System.out.println("Working Directory = " + System.getProperty("user.dir"));
         String imageOutputPath = experimentalFolderName + "/Reports/" + imageName + ".png";
         String command = "Rscript src/R/CodeStatsPlotter.R " + dataPath + " " + imageOutputPath;
-        System.out.println("Running: " + command);
-        Process proc = Runtime.getRuntime().exec(command);
+        executeCommand(command);
+
+    }
+
+    private static String executeCommand(final String command) {
+
+        StringBuffer output = new StringBuffer();
+        Process p;
         try {
-            int exitVal = proc.waitFor();
-            System.out.println("RScript exitValue: " + exitVal);
+            p = Runtime.getRuntime().exec(command);
+            int exitVal = p.waitFor();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+
+            String line = "";
+
+            while ((line = reader.readLine()) != null) {
+                output.append(line + "\n");
+            }
+
+            if (exitVal != 0) {
+                System.out.println("ExitValue: " + exitVal);
+            }
+
         }
-        catch (InterruptedException e) {
-            System.out.println(proc.getErrorStream());
+        catch (Exception e) {
             e.printStackTrace();
         }
+
+        return output.toString();
+
     }
 
     private static ExactMatchClassifier trainExactMatchClassifier() throws Exception {
