@@ -12,7 +12,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.FormatConverter;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.InputFormatException;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.ListAccuracyMetrics;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.AnalysisMetrics.ListAccuracyMetrics;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.RecordFactory;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.vectors.VectorFactory;
