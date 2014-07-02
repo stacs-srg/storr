@@ -118,7 +118,7 @@ public final class TrainAndMultiplyClassify {
 
         String imageOutputPath = experimentalFolderName + "/Reports/" + imageName + ".png";
         String command = "Rscript src/R/CodeStatsPlotter.R " + dataPath + " " + imageOutputPath;
-        executeCommand(command);
+        System.out.println(executeCommand(command));
 
     }
 

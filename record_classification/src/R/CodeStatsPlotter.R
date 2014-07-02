@@ -1,7 +1,6 @@
 #Data file name should be first argument
 #Output image file name should be the second
 args <- commandArgs(TRUE)
-print(args[1])
 
 #Reading in the data
 codeStats <- read.csv(toString(args[1]))
@@ -17,4 +16,4 @@ pairs(codeStats, gap=0, diag.panel = function (x, ...) {
         rug(x)})
 
 #Closing the png printing device
-dev.off()
+#dev.off()
