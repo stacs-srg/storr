@@ -86,20 +86,6 @@ public class ListAccuracyMetrics {
     private int[] numberOfCodesNotCoded;
 
     /**
-     * Default fileName is "target/codeStats.csv", but can be overwritten using setFileName().
-     */
-    private String fileName = "target/codeStats.csv";
-
-    /**
-     * Overrides the default file path.
-     * @param fileName new file name
-     */
-    public void setFileName(final String fileName) {
-
-        this.fileName = fileName;
-    }
-
-    /**
      * Instantiates a new list accuracy metrics.
      *
      * @param listOfRecrods the list of recrods
@@ -212,17 +198,51 @@ public class ListAccuracyMetrics {
         printNumberOfCodesMissed();
     }
 
-    private void printNumberOfCodesMissed() {
+    /**
+     * Prints the statistics generated with pretty formatting.
+     */
+    public void generateMarkDownSummary(final String pathToExperiemntFolder) {
 
+        StringBuilder sb = new StringBuilder();
+        sb.append("#Classification Report    \n" + "##Summary    \n");
+        sb.append("Unique records: " + uniqueRecords + "   \n");
+        sb.append("Total aggregated: " + totalAggregatedRecords + "   \n");
+        sb.append("Average confidence: " + averageConfidence + "    \n");
+        sb.append("Total number of classifications: " + (numConfidenceNotOne + numConfidenceOfOne) + "   \n");
+        sb.append("Number of classifications with confidence of 1: " + numConfidenceOfOne + "    \n");
+        sb.append("Number of classifications with confidence < 1: " + numConfidenceNotOne + "   \n");
+        sb.append("Proportion of gold standard codes predicted: " + propGoldPredicted + "    \n");
+        sb.append("Proportion of incorrect gold standard codes predicted: " + propWronglyPredicted + "    \n");
+        sb.append("Number unclassified: " + unclassified + "    \n");
+        sb.append("Number coded by exact match: " + codedExactMatch + "    \n");
+        sb.append("Singly classified: " + singleClassification + "    \n");
+        sb.append("Doubly classified: " + twoClassifications + "   \n");
+        sb.append("Multiply classified: " + moreThanTwoClassifications + "    \n");
+        sb.append(printNumberOfCodesMissed());
+        sb.append("    \n\n");
+        sb.append("##Graphs    \n");
+        sb.append("![Graph Matrix][graph]     \n");
+        sb.append("   \n\n");
+        sb.append("[graph]: " + "graph.png \"Graph Matrix\"    \n");
+        sb.append("![Graph](graph.png)");
+        Utils.writeToFile(sb.toString(), pathToExperiemntFolder + "/Reports/summary.md");
+
+    }
+
+    private String printNumberOfCodesMissed() {
+
+        StringBuilder sb = new StringBuilder();
         for (int i = 0; i < numberOfCodesNotCoded.length; i++) {
             if (i == 0) {
-                System.out.println("Number of records coded exactly: " + numberOfCodesNotCoded[i]);
+                sb.append("Number of records coded exactly: " + numberOfCodesNotCoded[i] + "    \n");
             }
             else {
-                System.out.println("Number of records with " + i + " missed: " + numberOfCodesNotCoded[i]);
+                sb.append("Number of records with " + i + " missed: " + numberOfCodesNotCoded[i] + "    \n");
 
             }
         }
+        sb.append("    ");
+        return sb.toString();
     }
 
     /**
