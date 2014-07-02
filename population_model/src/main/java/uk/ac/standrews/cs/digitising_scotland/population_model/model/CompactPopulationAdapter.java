@@ -20,8 +20,10 @@ import uk.ac.standrews.cs.digitising_scotland.population_model.generation.distri
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 
 /**
@@ -35,6 +37,12 @@ public class CompactPopulationAdapter implements IPopulation {
     private final CompactPersonAdapter compact_person_adapter;
     private final CompactPartnershipAdapter compact_partnership_adapter;
 
+    private boolean consistent_across_iterations;
+    private static boolean default_consistent_across_iterations = false;
+
+    private final Map<Integer, IPerson> person_cache;
+    private final Map<Integer, IPartnership> partnership_cache;
+
     public CompactPopulationAdapter(final CompactPopulation population) throws IOException, InconsistentWeightException {
 
         this.population = population;
@@ -42,6 +50,19 @@ public class CompactPopulationAdapter implements IPopulation {
 
         compact_person_adapter = new CompactPersonAdapter();
         compact_partnership_adapter = new CompactPartnershipAdapter();
+
+        person_cache = new HashMap<>();
+        partnership_cache = new HashMap<>();
+
+        consistent_across_iterations = default_consistent_across_iterations;
+    }
+
+    public static void setDefaultConsistentAcrossIterations(boolean default_consistent_across_iterations) {
+        CompactPopulationAdapter.default_consistent_across_iterations = default_consistent_across_iterations;
+    }
+
+    public void setConsistentAcrossIterations(boolean consistent_across_iterations) {
+        this.consistent_across_iterations = consistent_across_iterations;
     }
 
     @Override
@@ -76,7 +97,7 @@ public class CompactPopulationAdapter implements IPopulation {
                 public IPerson next() {
 
                     if (!hasNext()) throw new NoSuchElementException();
-                    IPerson result = compact_person_adapter.convertToFullPerson(next_person);
+                    IPerson result = getFullPerson(next_person);
                     advanceToNext();
                     return result;
                 }
@@ -206,7 +227,7 @@ public class CompactPopulationAdapter implements IPopulation {
                 public IPartnership next() {
 
                     if (!hasNext()) throw new NoSuchElementException();
-                    IPartnership result = compact_partnership_adapter.convertToFullPartnership(next_partnership, population);
+                    IPartnership result = getFullPartnership(next_partnership);
                     advanceToNext();
                     return result;
                 }
@@ -270,23 +291,73 @@ public class CompactPopulationAdapter implements IPopulation {
     @Override
     public IPerson findPerson(final int id) {
 
-        return compact_person_adapter.convertToFullPerson(population.findPerson(id));
+        return getFullPerson(population.findPerson(id));
     }
 
     @Override
     public IPartnership findPartnership(final int id) {
 
-        return compact_partnership_adapter.convertToFullPartnership(population.findPartnership(id), population);
+        return getFullPartnership(population.findPartnership(id));
     }
 
     @Override
     public int getNumberOfPeople() {
+
         return population.getNumberOfPeople();
     }
 
     @Override
     public int getNumberOfPartnerships() {
+
         return population.getNumberOfPartnerships();
+    }
+
+    private IPerson getFullPerson(final CompactPerson person) {
+
+        if (person == null) return null;
+
+        if (!consistent_across_iterations) {
+
+            return compact_person_adapter.convertToFullPerson(person);
+
+        } else {
+
+            int id = person.getId();
+
+            if (person_cache.containsKey(id)) {
+                return person_cache.get(id);
+            }
+            else {
+
+                IPerson full_person = compact_person_adapter.convertToFullPerson(person);
+                person_cache.put(id, full_person);
+                return full_person;
+            }
+        }
+    }
+
+    private IPartnership getFullPartnership(final CompactPartnership partnership) {
+
+        if (partnership == null) return null;
+
+        if (!consistent_across_iterations) {
+
+            return compact_partnership_adapter.convertToFullPartnership(partnership, population);
+
+        } else {
+
+            int id = partnership.getId();
+
+            if (partnership_cache.containsKey(id)) {
+                return partnership_cache.get(id);
+            }
+            else {
+
+                IPartnership full_partnership = compact_partnership_adapter.convertToFullPartnership(partnership, population);
+                partnership_cache.put(id, full_partnership);
+                return full_partnership;
+            }
+        }
     }
 
     private Iterator<CompactPartnership> getPartnerships(final int person_index) {
