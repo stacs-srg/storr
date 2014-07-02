@@ -142,4 +142,7 @@ public abstract class AbstractConfusionMatrix {
         return trueNegative.clone();
     }
 
+    public double getTotalCorrectlyPredicted(){
+        return sum(getTruePositive());
+    }
 }
