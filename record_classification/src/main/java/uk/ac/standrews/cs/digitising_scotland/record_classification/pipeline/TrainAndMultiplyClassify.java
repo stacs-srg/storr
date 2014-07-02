@@ -9,6 +9,9 @@ import java.io.InputStreamReader;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.AbstractClassifier;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.OLR.OLRClassifier;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.lookup.ExactMatchClassifier;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.AnalysisMetrics.CodeMetrics;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.AnalysisMetrics.SoftConfusionMatrix;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.AnalysisMetrics.StrictConfusionMatrix;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.FormatConverter;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.InputFormatException;
@@ -100,17 +103,21 @@ public final class TrainAndMultiplyClassify {
         System.out.println("********** **********");
         System.out.println(classifiedBucket);
         accuracyMetrics.prettyPrint();
-        final String dataPath = experimentalFolderName + "/Data/codeStats.csv";
-        accuracyMetrics.writeStats(bucket, dataPath);
-
-        runRscript(dataPath);
+        final String strictCodeStatsPath = experimentalFolderName + "/Data/strictCodeStats.csv";
+        final String softCodeStatsPath = experimentalFolderName + "/Data/softCodeStats.csv";
+        CodeMetrics strictCodeMetrics = new CodeMetrics(new StrictConfusionMatrix(bucket));
+        strictCodeMetrics.writeStats(strictCodeStatsPath);
+        CodeMetrics softCodeMetrics = new CodeMetrics(new SoftConfusionMatrix(bucket));
+        softCodeMetrics.writeStats(softCodeStatsPath);
+        runRscript(strictCodeStatsPath,"strictCodeStats");
+        runRscript(softCodeStatsPath,"softCodeStats");
 
     }
 
-    private static void runRscript(final String dataPath) throws IOException {
+    private static void runRscript(final String dataPath, final String imageName) throws IOException {
 
         System.out.println("Working Directory = " + System.getProperty("user.dir"));
-        String imageOutputPath = experimentalFolderName + "/Reports/graph.png";
+        String imageOutputPath = experimentalFolderName + "/Reports/" + imageName + ".png";
         String command = "Rscript src/R/CodeStatsPlotter.R " + dataPath + " " + imageOutputPath;
         System.out.println("Running: " + command);
         Process proc = Runtime.getRuntime().exec(command);
