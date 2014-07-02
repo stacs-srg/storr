@@ -1,6 +1,5 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.AnalysisMetrics;
 
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeFactory;
 import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
@@ -49,6 +48,10 @@ public class CodeMetrics {
     /** The number of output classes. */
     private final int numberOfOutputClasses;
 
+    private double microPrecision = 0;
+
+    private double microRecall = 0;
+
     /**
      * Instantiates a new code metrics.
      *
@@ -86,6 +89,31 @@ public class CodeMetrics {
         generateAccuracy();
         generateF1Score();
         generateMathewsCorrelation();
+        generateMicroPrecision();
+        generateMicroRecall();
+    }
+
+    private void generateMicroPrecision() {
+
+        // tp/tp+fp
+        double[] tpfp = add(truePositive, falsePositive);
+        double tpsum = sum(truePositive);
+        double tpfpsum = sum(tpfp);
+        microPrecision = tpsum / tpfpsum;
+    }
+
+    /**
+     * Generate micro recall.
+     */
+    private void generateMicroRecall() {
+
+        // tp/tp+fn
+        double[] tptn = add(truePositive, falseNegative);
+        double tptnSum = sum(tptn);
+        double tpSum = sum(truePositive);
+
+        microRecall = tpSum / tptnSum;
+
     }
 
     /**
@@ -451,6 +479,15 @@ public class CodeMetrics {
         return numberOfOutputClasses;
     }
 
+    public double getMicroPrecision() {
+
+        return microPrecision;
+    }
+
+    public double getMicroRecall() {
+
+        return microRecall;
+    }
 
     /**
      * Creates and writes all the accumulated statistics to the specified file.
@@ -467,6 +504,5 @@ public class CodeMetrics {
 
         Utils.writeToFile(sb.toString(), fileName);
     }
-
 
 }
