@@ -585,7 +585,7 @@ public class ListAccuracyMetrics {
     public void writeStats(final Bucket bucket, final String fileName) {
 
         StringBuilder sb = new StringBuilder();
-        CodeMetrics metrics = new CodeMetrics(new ConfusionMatrix(bucket));
+        CodeMetrics metrics = new CodeMetrics(new StrictConfusionMatrix(bucket));
         sb.append("Code, True Positive, True Negative, False Positive, False Negative, Precision, Recall, Specificity, Negative Predictive Value, False Positive Rate, Accuracy, F1, MCC\n");
 
         for (int i = 0; i < metrics.numberOfCodes(); i++) {
