@@ -44,6 +44,9 @@ public class PopulationConsistencyTest {
     private CompactPopulation population;
     private final int population_size;
 
+    // TODO change to use abstract population
+    // TODO surname consistency
+
     @Parameters
     public static Collection<Object[]> generateData() {
 
