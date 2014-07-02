@@ -8,11 +8,12 @@ import java.util.Set;
 
 /**
  *
- * Created by fraserdunlop on 02/07/2014 at 10:50.
+ * Created by fraserdunlop on 02/07/2014 at 10:59.
  */
-public class StrictConfusionMatrix extends AbstractConfusionMatrix {
+public class SoftConfusionMatrix extends AbstractConfusionMatrix{
 
-    public StrictConfusionMatrix(final Bucket bucket){
+
+    public SoftConfusionMatrix(final Bucket bucket){
         super(bucket);
     }
 
@@ -26,7 +27,7 @@ public class StrictConfusionMatrix extends AbstractConfusionMatrix {
 
         for (CodeTriple goldStanardCode : goldStandardTriples) {
             final Code code = goldStanardCode.getCode();
-            if (contains(code, setCodeTriples)) {
+            if (containsOrHasAncestors(code, setCodeTriples)) {
                 truePositive[code.getID()]++;
             }
             else {
@@ -47,10 +48,18 @@ public class StrictConfusionMatrix extends AbstractConfusionMatrix {
         for (CodeTriple predictedCode : setCodeTriples) {
             final Code code = predictedCode.getCode();
             totalPredictions[code.getID()]++;
-            if (!contains(code, goldStandardTriples)) {
+            if (!containsOrHasDescendants(code, goldStandardTriples)) {
                 falsePositive[code.getID()]++;
             }
         }
+    }
+
+    private boolean containsOrHasDescendants(Code code, Set<CodeTriple> setCodeTriples) {
+
+        for (CodeTriple codeTriple : setCodeTriples) {
+            if (codeTriple.getCode() == code || codeTriple.getCode().isDescendant(code)) { return true; }
+        }
+        return false;
     }
 
 
@@ -60,10 +69,10 @@ public class StrictConfusionMatrix extends AbstractConfusionMatrix {
      * @param setCodeTriples set to check in
      * @return true if present
      */
-    public boolean contains(final Code code, final Set<CodeTriple> setCodeTriples) {
+    public boolean containsOrHasAncestors(final Code code, final Set<CodeTriple> setCodeTriples) {
 
         for (CodeTriple codeTriple : setCodeTriples) {
-            if (codeTriple.getCode() == code) { return true; }
+            if (codeTriple.getCode() == code || codeTriple.getCode().isAncestor(code)) { return true; }
         }
         return false;
     }

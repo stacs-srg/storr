@@ -11,7 +11,7 @@ import java.util.Set;
  *
  * Created by fraserdunlop on 02/07/2014 at 10:27.
  */
-public abstract class ConfusionMatrix {
+public abstract class AbstractConfusionMatrix {
 
 
     /** The total predictions. */
@@ -29,7 +29,7 @@ public abstract class ConfusionMatrix {
     /** The true positive. */
     protected double[] truePositive;
 
-    public ConfusionMatrix(final Bucket bucket) {
+    public AbstractConfusionMatrix(final Bucket bucket) {
         int numberOfOutputClasses = CodeFactory.getInstance().getNumberOfOutputClasses();
         totalPredictions = new double[numberOfOutputClasses];
         falsePositive = new double[numberOfOutputClasses];

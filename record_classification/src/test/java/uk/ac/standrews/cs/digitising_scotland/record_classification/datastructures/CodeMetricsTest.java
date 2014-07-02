@@ -3,7 +3,6 @@ package uk.ac.standrews.cs.digitising_scotland.record_classification.datastructu
 import org.junit.Test;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.AnalysisMetrics.CodeMetrics;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.AnalysisMetrics.ConfusionMatrix;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.AnalysisMetrics.StrictConfusionMatrix;
 
 public class CodeMetricsTest {

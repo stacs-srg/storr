@@ -1,12 +1,7 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.AnalysisMetrics;
 
-import java.util.Set;
-
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Bucket;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeFactory;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.CodeTriple;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -57,7 +52,7 @@ public class CodeMetrics {
      * Instantiates a new code metrics.
      *
      */
-    public CodeMetrics(ConfusionMatrix confusionMatrix) {
+    public CodeMetrics(AbstractConfusionMatrix confusionMatrix) {
 
         falsePositive = confusionMatrix.getFalsePositive();
         trueNegative = confusionMatrix.getTrueNegative();
