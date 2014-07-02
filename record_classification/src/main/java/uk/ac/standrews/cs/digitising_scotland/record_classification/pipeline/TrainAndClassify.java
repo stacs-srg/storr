@@ -15,8 +15,6 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.preprocessor
 import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
 import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearningConfiguration;
 
-// TODO: Auto-generated Javadoc
-
 /**
  * This class is the entry class to train all the classifiers.
  * All the machine learning methods will be trained on the file specified in the program

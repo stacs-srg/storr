@@ -102,14 +102,16 @@ public final class TrainAndMultiplyClassify {
         accuracyMetrics.prettyPrint();
         final String dataPath = experimentalFolderName + "/Data/codeStats.csv";
         accuracyMetrics.writeStats(bucket, dataPath);
+        accuracyMetrics.generateMarkDownSummary(experimentalFolderName);
+        System.out.println("Working Directory = " + System.getProperty("user.dir"));
 
         runRscript(dataPath);
+        runMarkdownToHTMLScript(experimentalFolderName);
 
     }
 
     private static void runRscript(final String dataPath) throws IOException {
 
-        System.out.println("Working Directory = " + System.getProperty("user.dir"));
         String imageOutputPath = experimentalFolderName + "/Reports/graph.png";
         String command = "Rscript src/R/CodeStatsPlotter.R " + dataPath + " " + imageOutputPath;
         System.out.println("Running: " + command);
@@ -122,6 +124,50 @@ public final class TrainAndMultiplyClassify {
             System.out.println(proc.getErrorStream());
             e.printStackTrace();
         }
+    }
+
+    private static String executeCommand(String command) {
+
+        StringBuffer output = new StringBuffer();
+
+        Process p;
+        try {
+            p = Runtime.getRuntime().exec(command);
+            p.waitFor();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+
+            String line = "";
+            while ((line = reader.readLine()) != null) {
+                output.append(line + "\n");
+            }
+
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return output.toString();
+
+    }
+
+    private static void runMarkdownToHTMLScript(final String dataPath) throws IOException {
+
+        String markdown = "#!/bin/bash\n" + "markdown " + System.getProperty("user.dir") + "/" + dataPath + "/Reports/summary.md > " + System.getProperty("user.dir") + "/" + dataPath + "/Reports/summary.html";
+        final String generateScript = dataPath + "/Reports/generateHTML.sh";
+        Utils.writeToFile(markdown, generateScript);
+        Runtime.getRuntime().exec("chmod +x " + generateScript);
+
+        String command = "pwd";
+        System.out.println("Running: " + command);
+        String output = executeCommand(command);
+        System.out.println(output);
+
+        command = "./" + dataPath + "/Reports/generateHTML.sh";
+        System.out.println("Running: " + command);
+        output = executeCommand(command);
+
+        System.out.println(output);
+
     }
 
     private static ExactMatchClassifier trainExactMatchClassifier() throws Exception {
