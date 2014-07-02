@@ -106,8 +106,8 @@ public final class TrainAndMultiplyClassify {
         final String strictCodeStatsPath = experimentalFolderName + "/Data/strictCodeStats.csv";
         final String softCodeStatsPath = experimentalFolderName + "/Data/softCodeStats.csv";
         CodeMetrics strictCodeMetrics = new CodeMetrics(new StrictConfusionMatrix(bucket));
-        strictCodeMetrics.writeStats(strictCodeStatsPath);
         CodeMetrics softCodeMetrics = new CodeMetrics(new SoftConfusionMatrix(bucket));
+        strictCodeMetrics.writeStats(strictCodeStatsPath);
         softCodeMetrics.writeStats(softCodeStatsPath);
         runRscript(strictCodeStatsPath,"strictCodeStats");
         runRscript(softCodeStatsPath,"softCodeStats");
