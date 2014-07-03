@@ -32,7 +32,7 @@ import static org.junit.Assert.assertEquals;
  * @author Alan Dearle (alan.dearle@st-andrews.ac.uk)
  * @author Graham Kirby (graham.kirby@st-andrews.ac.uk)
  */
-public class SpecificAbstractPopulationStructureTest extends PopulationStructureTest {
+public class SpecificPopulationStructureTest extends PopulationStructureTest {
 
     @Test(expected = NoSuchElementException.class)
     public void getNextPersonFromEmptyPopulation() throws IOException, InconsistentWeightException {

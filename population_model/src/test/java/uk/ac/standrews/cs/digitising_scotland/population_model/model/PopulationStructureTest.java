@@ -54,12 +54,14 @@ public abstract class PopulationStructureTest {
         for (Object[] test_config : options) {
 
             Object[] expanded_config1 = new Object[test_config.length + 1];
-            for (int i = 0; i < test_config.length; i++) { expanded_config1[i] = test_config[i]; }
+            for (int i = 0; i < test_config.length; i++) {
+                expanded_config1[i] = test_config[i];
+            }
 
             Object[] expanded_config2 = expanded_config1.clone();
 
-            expanded_config1[expanded_config1.length-1] = false;
-            expanded_config2[expanded_config2.length-1] = true;
+            expanded_config1[expanded_config1.length - 1] = false;
+            expanded_config2[expanded_config2.length - 1] = true;
 
             result.add(expanded_config1);
             result.add(expanded_config2);
@@ -86,14 +88,10 @@ public abstract class PopulationStructureTest {
         IDFactory.resetId();
 
         CompactPopulation compact_population = new CompactPopulation(size);
-        CompactPerson[] people = compact_population.getPeopleArray();
         IPopulation population = new CompactPopulationAdapter(compact_population);
         population.setDescription("full-population-" + size);
 
-        int[] expected_people_id_order = null;        // Don't know what order to expect them in.
-        int[] expected_partnership_id_order = null;
-
-        return new Object[]{population, expected_people_id_order, expected_partnership_id_order};
+        return new Object[]{population, null, null};  // Don't know what order to expect them in.
     }
 
     protected static Object[] populationWithOnePartnership() throws IOException, InconsistentWeightException {
@@ -101,11 +99,7 @@ public abstract class PopulationStructureTest {
         IDFactory.resetId();
 
         CompactPerson[] people = makePeople(3);
-
-        CompactPartnership partnership = new CompactPartnership(0, 0, 0);
-        List<CompactPartnership> partnerships = new ArrayList<>();
-        partnerships.add(partnership);
-        people[1].setPartnerships(partnerships);
+        CompactPartnership partnership = createPartnership(people, 0, 1);
 
         IPopulation population = new CompactPopulationAdapter(new CompactPopulation(people, 0, 0));
         population.setDescription("population-1-partnership");
@@ -120,16 +114,17 @@ public abstract class PopulationStructureTest {
 
         IDFactory.resetId();
 
-        CompactPartnership partnership1 = new CompactPartnership(0, 0, 0);
-        CompactPartnership partnership2 = new CompactPartnership(0, 0, 0);
-        CompactPartnership partnership3 = new CompactPartnership(0, 0, 0);
+        CompactPerson[] people = makePeople(6);
 
-        CompactPerson[] people = makePopulationWithPartnerships(partnership1, partnership2, partnership3);
+        CompactPartnership partnership1 = createPartnership(people, 0, 1);
+        CompactPartnership partnership2 = createPartnership(people, 2, 3);
+        CompactPartnership partnership3 = createPartnership(people, 4, 5);
+
         IPopulation population = new CompactPopulationAdapter(new CompactPopulation(people, 0, 0));
         population.setDescription("population-3-partnerships");
 
         int[] expected_people_id_order = getIds(people);
-        int[] expected_partnership_id_order = new int[]{partnership1.getId(),partnership2.getId(),partnership3.getId()};
+        int[] expected_partnership_id_order = new int[]{partnership1.getId(), partnership2.getId(), partnership3.getId()};
 
         return new Object[]{population, expected_people_id_order, expected_partnership_id_order};
     }
@@ -155,15 +150,27 @@ public abstract class PopulationStructureTest {
     private static int[] getIds(CompactPerson[] people) {
 
         int[] ids = new int[people.length];
-        for (int i = 0; i < people.length; i++) { ids[i] = people[i].getId(); }
+        for (int i = 0; i < people.length; i++) {
+            ids[i] = people[i].getId();
+        }
         return ids;
     }
 
     private static int[] getIds(CompactPartnership[] partnerships) {
 
         int[] ids = new int[partnerships.length];
-        for (int i = 0; i < partnerships.length; i++) { ids[i] = partnerships[i].getId(); }
+        for (int i = 0; i < partnerships.length; i++) {
+            ids[i] = partnerships[i].getId();
+        }
         return ids;
+    }
+
+    private static CompactPartnership createPartnership(CompactPerson[] people, int partner1_index, int partner2_index) {
+
+        people[partner1_index].setMale(false);
+        people[partner2_index].setMale(true);
+
+        return new CompactPartnership(people[partner1_index], partner1_index, people[partner2_index], partner2_index, 0);
     }
 
     private static CompactPerson[] makePeopleInTwoFamilies() throws IOException, InconsistentWeightException, ParseException {
@@ -220,24 +227,6 @@ public abstract class PopulationStructureTest {
 
         partnershipA.setChildren(childrenA);
         partnershipB.setChildren(childrenB);
-
-        return population;
-    }
-
-    private static CompactPerson[] makePopulationWithPartnerships(CompactPartnership partnership1, CompactPartnership partnership2, CompactPartnership partnership3) {
-
-        CompactPerson[] population = makePeople(3);
-
-        List<CompactPartnership> partnerships1 = new ArrayList<>();
-        List<CompactPartnership> partnerships2 = new ArrayList<>();
-
-        partnerships1.add(partnership1);
-        population[0].setPartnerships(partnerships1);
-
-        partnerships2.add(partnership2);
-        partnerships2.add(partnership3);
-        partnerships2.add(partnership1); // Two people may share a partnership.
-        population[2].setPartnerships(partnerships2);
 
         return population;
     }

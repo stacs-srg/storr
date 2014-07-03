@@ -43,7 +43,7 @@ import static org.junit.Assert.*;
  * @author Graham Kirby (graham.kirby@st-andrews.ac.uk)
  */
 @RunWith(Parameterized.class)
-public class GeneralAbstractPopulationStructureTest extends PopulationStructureTest {
+public class GeneralPopulationStructureTest extends PopulationStructureTest {
 
     private final IPopulation population;
     private final int[] expected_people_id_order;
@@ -69,7 +69,7 @@ public class GeneralAbstractPopulationStructureTest extends PopulationStructureT
                 fullPopulation(10000));
     }
 
-    public GeneralAbstractPopulationStructureTest(IPopulation population, int[] expected_people_id_order, int[] expected_partnership_id_order, final boolean consistent_across_iterations) {
+    public GeneralPopulationStructureTest(IPopulation population, int[] expected_people_id_order, int[] expected_partnership_id_order, final boolean consistent_across_iterations) {
 
         this.population = population;
         this.expected_people_id_order = expected_people_id_order;
@@ -196,6 +196,33 @@ public class GeneralAbstractPopulationStructureTest extends PopulationStructureT
     }
 
     @Test
+    public void noSiblingPartners() {
+
+        for (IPerson person : population.getPeople()) {
+
+            assertNoneOfChildrenAreSiblingPartners(person);
+        }
+    }
+
+    @Test
+    public void noParentPartnerOfChild() {
+
+        for (IPartnership partnership : population.getPartnerships()) {
+
+            assertParentNotPartnerOfChild(partnership);
+        }
+    }
+
+    @Test
+    public void noSameSexPartnerships() {
+
+        for (IPartnership partnership : population.getPartnerships()) {
+
+            assertPartnersDifferentSex(partnership);
+        }
+    }
+
+    @Test
     public void parentsHaveSensibleAgesAtBirths() {
 
         for (IPartnership partnership : population.getPartnerships()) {
@@ -217,6 +244,66 @@ public class GeneralAbstractPopulationStructureTest extends PopulationStructureT
             IPerson child = population.findPerson(child_id);
             assertTrue(PopulationLogic.parentsHaveSensibleAgesAtChildBirth(father, mother, child));
         }
+    }
+
+    private void assertParentNotPartnerOfChild(IPartnership partnership) {
+
+        List<Integer> child_ids = partnership.getChildren();
+        if (child_ids != null) {
+
+            for (final int child_id : child_ids) {
+
+                assertFalse(child_id == partnership.getPartner1Id());
+                assertFalse(child_id == partnership.getPartner2Id());
+            }
+        }
+    }
+
+    private void assertPartnersDifferentSex(IPartnership partnership) {
+
+        IPerson partner1 = population.findPerson(partnership.getPartner1Id());
+        IPerson partner2 = population.findPerson(partnership.getPartner2Id());
+
+        assertFalse(partner1.getSex() == partner2.getSex());
+    }
+
+    private void assertNoneOfChildrenAreSiblingPartners(IPerson person) {
+
+        // Include half-siblings.
+        final Set<Integer> sibling_ids = new HashSet<>();
+
+        if (person.getPartnerships() != null) {
+            for (final int partnership_id : person.getPartnerships()) {
+                IPartnership partnership = population.findPartnership(partnership_id);
+
+                for (final int child_id : partnership.getChildren()) {
+
+                    assertNotPartnerOfAny(child_id, sibling_ids);
+                    sibling_ids.add(child_id);
+                }
+            }
+        }
+    }
+
+    private void assertNotPartnerOfAny(final int person_id, final Set<Integer> people_ids) {
+
+        for (final int another_person_id : people_ids) {
+            assertFalse(partnerOf(person_id, another_person_id));
+        }
+    }
+
+    public boolean partnerOf(final int p1_id, final int p2_id) {
+
+        final List<Integer> partnership_ids = population.findPerson(p1_id).getPartnerships();
+        if (partnership_ids != null) {
+            for (final int partnership_id : partnership_ids) {
+                IPartnership partnership = population.findPartnership(partnership_id);
+                if (partnership.getPartnerOf(p1_id) == p2_id) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     private void assertSurnameInheritedOnMaleLine(IPerson person) {
@@ -309,7 +396,7 @@ public class GeneralAbstractPopulationStructureTest extends PopulationStructureT
 
     private void assertChildrenEqual(List<Integer> children1, List<Integer> children2) {
 
-        assertArrayEquals(children1.toArray(new Integer[]{}), children2.toArray(new Integer[]{}));
+        assertArrayEquals(children1.toArray(new Integer[children1.size()]), children2.toArray(new Integer[children2.size()]));
     }
 
     private void doTooManyIterations(Iterator<?> iterator, int number_available) {
