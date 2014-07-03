@@ -18,17 +18,30 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.vectors.VectorFactory;
 import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearningConfiguration;
 
+// TODO: Auto-generated Javadoc
 /**
  *
  * Created by fraserdunlop on 06/05/2014 at 11:37.
  */
 public class OLRCrossFoldTest {
 
+    /** The properties. */
     private Properties properties = MachineLearningConfiguration.getDefaultProperties();
+
+    /** The vector factory. */
     private VectorFactory vectorFactory;
+
+    /** The training vector list. */
     private ArrayList<NamedVector> trainingVectorList = new ArrayList<NamedVector>();
+
+    /** The model. */
     private OLRCrossFold model;
 
+    /**
+     * Setup.
+     *
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
     @Before
     public void setup() throws IOException {
 
@@ -43,6 +56,12 @@ public class OLRCrossFoldTest {
 
     }
 
+    /**
+     * Generate training vectors.
+     *
+     * @return the array list
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
     private ArrayList<NamedVector> generateTrainingVectors() throws IOException {
 
         BufferedReader br = getBufferedReaderOfCodeDictionaryFile();
@@ -54,6 +73,11 @@ public class OLRCrossFoldTest {
         return trainingVectorList;
     }
 
+    /**
+     * Populate dictionary.
+     *
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
     private void populateDictionary() throws IOException {
 
         BufferedReader br = getBufferedReaderOfCodeDictionaryFile();
@@ -65,6 +89,12 @@ public class OLRCrossFoldTest {
         }
     }
 
+    /**
+     * Creates the training vector.
+     *
+     * @param line the line
+     * @return the named vector
+     */
     private NamedVector createTrainingVector(final String line) {
 
         String[] splitLine = line.split("\t");
@@ -74,12 +104,23 @@ public class OLRCrossFoldTest {
         return vectorFactory.createNamedVectorFromString(descriptionFromFile, Integer.toString(id));
     }
 
+    /**
+     * Gets the buffered reader of code dictionary file.
+     *
+     * @return the buffered reader of code dictionary file
+     * @throws FileNotFoundException the file not found exception
+     */
     private BufferedReader getBufferedReaderOfCodeDictionaryFile() throws FileNotFoundException {
 
         File file = new File(getClass().getResource("/CodeFactoryOLRTestFile.txt").getFile());
         return new BufferedReader(new FileReader(file));
     }
 
+    /**
+     * Test model.
+     *
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
     @Test
     public void testModel() throws IOException {
 
@@ -91,6 +132,11 @@ public class OLRCrossFoldTest {
 
     }
 
+    /**
+     * Test write.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testWrite() throws Exception {
 
@@ -104,6 +150,11 @@ public class OLRCrossFoldTest {
         }
     }
 
+    /**
+     * Test training de serialized model.
+     *
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
     @Test(expected = UnsupportedOperationException.class)
     public void testTrainingDeSerializedModel() throws IOException {
 
@@ -113,6 +164,12 @@ public class OLRCrossFoldTest {
 
     }
 
+    /**
+     * Test classify with code as description.
+     *
+     * @param model the model
+     * @param line the line
+     */
     private void testClassifyWithCodeAsDescription(final OLRCrossFold model, final String line) {
 
         String codeFromFile = getCodeFromLine(line);
@@ -122,16 +179,35 @@ public class OLRCrossFoldTest {
         Assert.assertEquals(id, classification);
     }
 
+    /**
+     * Gets the code id.
+     *
+     * @param codeFromFile the code from file
+     * @return the code id
+     */
     private int getCodeID(final String codeFromFile) {
 
         return CodeFactory.getInstance().getCode(codeFromFile).getID();
     }
 
+    /**
+     * Gets the classification.
+     *
+     * @param model the model
+     * @param testVector the test vector
+     * @return the classification
+     */
     private int getClassification(final OLRCrossFold model, final Vector testVector) {
 
         return model.classifyFull(testVector).maxValueIndex();
     }
 
+    /**
+     * Gets the code from line.
+     *
+     * @param line the line
+     * @return the code from line
+     */
     private String getCodeFromLine(final String line) {
 
         String[] splitLine = line.split("\t");

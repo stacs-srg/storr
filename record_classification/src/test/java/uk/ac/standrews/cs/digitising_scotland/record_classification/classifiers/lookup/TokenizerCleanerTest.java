@@ -4,8 +4,6 @@ import org.apache.lucene.analysis.standard.StandardTokenizer;
 import org.junit.Assert;
 import org.junit.Test;
 
-import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.lookup.TokenizerCleaner;
-
 /**
  * Tests cleaning of strings using {@link TokenizerCleaner} which internally uses Lucene {@link StandardTokenizer}.
  * @author jkc25

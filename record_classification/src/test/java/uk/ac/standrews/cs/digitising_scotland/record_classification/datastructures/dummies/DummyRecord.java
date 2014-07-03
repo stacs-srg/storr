@@ -32,7 +32,7 @@ public class DummyRecord extends Record {
     }
 
     @Override
-    public void setCleanedDescription(String cleanedDescription) {
+    public void setCleanedDescription(final String cleanedDescription) {
 
     }
 
@@ -61,12 +61,12 @@ public class DummyRecord extends Record {
     }
 
     @Override
-    public void addCodeTriples(CodeTriple codeTriples) {
+    public void addCodeTriples(final CodeTriple codeTriples) {
 
     }
 
     @Override
-    public void addAllCodeTriples(Collection<CodeTriple> codeTriples) {
+    public void addAllCodeTriples(final Collection<CodeTriple> codeTriples) {
 
     }
 }

@@ -2,7 +2,6 @@ package uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers
 
 import java.io.IOException;
 
-import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.AbstractClassifier;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.TokenSet;

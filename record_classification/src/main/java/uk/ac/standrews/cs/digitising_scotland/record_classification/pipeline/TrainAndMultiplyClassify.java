@@ -102,8 +102,8 @@ public final class TrainAndMultiplyClassify {
 
         System.out.println("********** **********");
 
-        System.out.println(classifiedBucket);
         accuracyMetrics.prettyPrint();
+
         final String strictCodeStatsPath = experimentalFolderName + "/Data/strictCodeStats.csv";
         final String softCodeStatsPath = experimentalFolderName + "/Data/softCodeStats.csv";
         CodeMetrics strictCodeMetrics = new CodeMetrics(new StrictConfusionMatrix(classifiedBucket));
@@ -127,7 +127,7 @@ public final class TrainAndMultiplyClassify {
     private static void runRscript(final String dataPath, final String imageName) throws IOException {
 
         String imageOutputPath = experimentalFolderName + "/Reports/" + imageName + ".png";
-        String command = "Rscript /Users/fraserdunlop/IdeaProjects/digitising_scotland/record_classification/src/R/CodeStatsPlotter.R " + dataPath + " " + imageOutputPath;
+        String command = "Rscript src/R/CodeStatsPlotter.R " + dataPath + " " + imageOutputPath;
         System.out.println(executeCommand(command));
 
     }

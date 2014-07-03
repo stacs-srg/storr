@@ -13,15 +13,23 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
-import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.OLR.OLR;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.vectors.VectorFactory;
 import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearningConfiguration;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class OLRTest.
+ */
 @RunWith(Parameterized.class)
 public class OLRTest {
 
+    /** The properties. */
     private final Properties properties;
+
+    /** The vectors. */
     private ArrayList<NamedVector> vectors;
+
+    /** The vector factory. */
     private VectorFactory vectorFactory;
 
     /**
@@ -33,6 +41,9 @@ public class OLRTest {
         this.properties = properties;
     }
 
+    /**
+     * Setup.
+     */
     @Before
     public void setup() {
 
@@ -74,6 +85,11 @@ public class OLRTest {
         return parameters;
     }
 
+    /**
+     * Test train and classify.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testTrainAndClassify() throws Exception {
 
@@ -85,6 +101,11 @@ public class OLRTest {
         Assert.assertTrue(olr.classifyFull(vectorFactory.createVectorFromString("dragon")).get(0) < 0.5);
     }
 
+    /**
+     * Test train and classify simple constructor.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testTrainAndClassifySimpleConstructor() throws Exception {
 
@@ -100,6 +121,11 @@ public class OLRTest {
         Assert.assertTrue(olr.classifyFull(vectorFactory.createVectorFromString("dragon")).get(0) < 0.5);
     }
 
+    /**
+     * Test serialize and de serialize.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testSerializeAndDeSerialize() throws Exception {
 
@@ -118,6 +144,9 @@ public class OLRTest {
         }
     }
 
+    /**
+     * Test alpha.
+     */
     @Test(expected = UnsupportedOperationException.class)
     public void testAlpha() {
 
@@ -126,6 +155,9 @@ public class OLRTest {
         olr.close();
     }
 
+    /**
+     * Test lambda.
+     */
     @Test(expected = UnsupportedOperationException.class)
     public void testLambda() {
 
@@ -134,6 +166,9 @@ public class OLRTest {
         olr.close();
     }
 
+    /**
+     * Test learning rate.
+     */
     @Test(expected = UnsupportedOperationException.class)
     public void testLearningRate() {
 
@@ -142,6 +177,11 @@ public class OLRTest {
         olr.close();
     }
 
+    /**
+     * Train olr on training vectors.
+     *
+     * @param olr the olr
+     */
     private void trainOLROnTrainingVectors(final OLR olr) {
 
         for (int i = 0; i < 10; i++) {
@@ -151,6 +191,11 @@ public class OLRTest {
         }
     }
 
+    /**
+     * Creates the vectors.
+     *
+     * @return the array list
+     */
     private ArrayList<NamedVector> createVectors() {
 
         ArrayList<String> fruits = createFruitStrings();
@@ -175,6 +220,13 @@ public class OLRTest {
         return trainingVectors;
     }
 
+    /**
+     * Make vectors.
+     *
+     * @param strings the strings
+     * @param classification the classification
+     * @return the array list
+     */
     private ArrayList<NamedVector> makeVectors(final ArrayList<String> strings, final String classification) {
 
         ArrayList<NamedVector> vectors = new ArrayList<NamedVector>();
@@ -185,11 +237,23 @@ public class OLRTest {
         return vectors;
     }
 
+    /**
+     * Creates the training vector.
+     *
+     * @param classification the classification
+     * @param string the string
+     * @return the named vector
+     */
     private NamedVector createTrainingVector(final String classification, final String string) {
 
         return vectorFactory.createNamedVectorFromString(string, classification);
     }
 
+    /**
+     * Creates the fruit strings.
+     *
+     * @return the array list
+     */
     private ArrayList<String> createFruitStrings() {
 
         ArrayList<String> fruits = new ArrayList<String>();
@@ -197,6 +261,11 @@ public class OLRTest {
         return fruits;
     }
 
+    /**
+     * Creates the animal strings.
+     *
+     * @return the array list
+     */
     private ArrayList<String> createAnimalStrings() {
 
         ArrayList<String> animals = new ArrayList<String>();
@@ -204,6 +273,11 @@ public class OLRTest {
         return animals;
     }
 
+    /**
+     * Adds the animals.
+     *
+     * @param animals the animals
+     */
     private void addAnimals(final ArrayList<String> animals) {
 
         animals.add("cat dog");
@@ -216,6 +290,11 @@ public class OLRTest {
         animals.add("dog dog");
     }
 
+    /**
+     * Adds the fruits.
+     *
+     * @param fruits the fruits
+     */
     private void addFruits(final ArrayList<String> fruits) {
 
         fruits.add("apple banana");

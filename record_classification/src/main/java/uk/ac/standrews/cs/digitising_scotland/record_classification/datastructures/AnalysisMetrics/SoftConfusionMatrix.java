@@ -1,24 +1,24 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.AnalysisMetrics;
 
+import java.util.Set;
+
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.CodeTriple;
-
-import java.util.Set;
 
 /**
  *
  * Created by fraserdunlop on 02/07/2014 at 10:59.
  */
-public class SoftConfusionMatrix extends AbstractConfusionMatrix{
+public class SoftConfusionMatrix extends AbstractConfusionMatrix {
 
+    public SoftConfusionMatrix(final Bucket bucket) {
 
-    public SoftConfusionMatrix(final Bucket bucket){
         super(bucket);
     }
 
     /**
-     * True pos and false neg.
+     * True positive and false negative.
      *
      * @param setCodeTriples the set code triples
      * @param goldStandardTriples the gold standard triples
@@ -54,14 +54,13 @@ public class SoftConfusionMatrix extends AbstractConfusionMatrix{
         }
     }
 
-    private boolean containsOrHasDescendants(Code code, Set<CodeTriple> setCodeTriples) {
+    private boolean containsOrHasDescendants(final Code code, final Set<CodeTriple> setCodeTriples) {
 
         for (CodeTriple codeTriple : setCodeTriples) {
             if (codeTriple.getCode() == code || codeTriple.getCode().isDescendant(code)) { return true; }
         }
         return false;
     }
-
 
     /**
      * Returns true is a code is in the specified set of CodeTriples.

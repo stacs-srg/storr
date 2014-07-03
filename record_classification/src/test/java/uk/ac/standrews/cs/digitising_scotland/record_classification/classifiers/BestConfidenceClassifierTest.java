@@ -9,8 +9,6 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 
-import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.BestConfidenceClassifier;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.NaiveBayesClassifier;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.RecordFactory;

@@ -13,20 +13,35 @@ import org.junit.Before;
 import org.junit.Test;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.ClassifierTestingHelper;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.OLR.OLRClassifier;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.RecordFactory;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeFactory;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.vectors.VectorFactory;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class OLRClassifierTest.
+ */
 public class OLRClassifierTest {
 
+    /** The bucket a. */
     private Bucket bucketA;
+
+    /** The os. */
     private OutputStream os;
+
+    /** The original out. */
     private PrintStream originalOut;
+
+    /** The helper. */
     private ClassifierTestingHelper helper = new ClassifierTestingHelper();
 
+    /**
+     * Setup.
+     *
+     * @throws Exception the exception
+     */
     @Before
     public void setup() throws Exception {
 
@@ -34,6 +49,9 @@ public class OLRClassifierTest {
         divertOutputStream();
     }
 
+    /**
+     * Divert output stream.
+     */
     private void divertOutputStream() {
 
         originalOut = System.out;
@@ -42,12 +60,20 @@ public class OLRClassifierTest {
         System.setOut(ps);
     }
 
+    /**
+     * Tear down.
+     */
     @After
     public void tearDown() {
 
         System.setOut(originalOut);
     }
 
+    /**
+     * Test classify with empty model.
+     *
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
     @Test
     public void testClassifyWithEmptyModel() throws IOException {
 
@@ -56,6 +82,12 @@ public class OLRClassifierTest {
         Assert.assertEquals("Model has not been trained.", os.toString().trim());
     }
 
+    /**
+     * Test classify with de serialized model.
+     *
+     * @throws InterruptedException the interrupted exception
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
     @Test
     public void testClassifyWithDeSerializedModel() throws InterruptedException, IOException {
 
@@ -76,6 +108,12 @@ public class OLRClassifierTest {
 
     }
 
+    /**
+     * Creates the training bucket.
+     *
+     * @return the bucket
+     * @throws Exception the exception
+     */
     private Bucket createTrainingBucket() throws Exception {
 
         File codeFile = new File(getClass().getResource("/CodeFactoryTestFile.txt").getFile());

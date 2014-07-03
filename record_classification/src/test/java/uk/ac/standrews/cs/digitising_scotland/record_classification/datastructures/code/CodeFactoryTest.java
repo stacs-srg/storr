@@ -7,12 +7,18 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeFactory;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeNotValidException;
-
+// TODO: Auto-generated Javadoc
+/**
+ * The Class CodeFactoryTest.
+ */
 public class CodeFactoryTest {
 
     //TODO more comprehensive tests
+    /**
+     * Sets the up.
+     *
+     * @throws Exception the exception
+     */
     @Before
     public void setUp() throws Exception {
 
@@ -20,6 +26,12 @@ public class CodeFactoryTest {
         CodeFactory.getInstance().loadDictionary(codeFile);
     }
 
+    /**
+     * Test id generation.
+     *
+     * @throws IOException Signals that an I/O exception has occurred.
+     * @throws CodeNotValidException the code not valid exception
+     */
     @Test
     public void testIDGeneration() throws IOException, CodeNotValidException {
 
@@ -30,12 +42,24 @@ public class CodeFactoryTest {
         Assert.assertEquals(4, CodeFactory.getInstance().getCode("6700").getID());
     }
 
+    /**
+     * Test map init and code recall.
+     *
+     * @throws IOException Signals that an I/O exception has occurred.
+     * @throws CodeNotValidException the code not valid exception
+     */
     @Test
     public void testMapInitAndCodeRecall() throws IOException, CodeNotValidException {
 
         Assert.assertEquals("2100", CodeFactory.getInstance().getCode("2100").getCodeAsString());
     }
 
+    /**
+     * Test map init and description recall.
+     *
+     * @throws IOException Signals that an I/O exception has occurred.
+     * @throws CodeNotValidException the code not valid exception
+     */
     @Test
     public void testMapInitAndDescriptionRecall() throws IOException, CodeNotValidException {
 

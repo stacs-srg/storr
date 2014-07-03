@@ -58,7 +58,7 @@ public class CodeMetrics {
      * Instantiates a new code metrics.
      *
      */
-    public CodeMetrics(AbstractConfusionMatrix confusionMatrix) {
+    public CodeMetrics(final AbstractConfusionMatrix confusionMatrix) {
 
         this.confusionMatrix = confusionMatrix;
         falsePositive = confusionMatrix.getFalsePositive();

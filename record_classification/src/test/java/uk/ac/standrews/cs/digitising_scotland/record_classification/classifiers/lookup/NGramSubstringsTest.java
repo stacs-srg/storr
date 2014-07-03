@@ -6,13 +6,13 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.lookup.NGramSubstrings;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.OriginalData;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.TokenSet;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.preprocessor.DataCleaning;
 
+// TODO: Auto-generated Javadoc
 /**
  * Tests the NGramSubstring class that grams are being produced correctly.
  * @author jkc25
@@ -20,10 +20,20 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.preprocessor
  */
 public class NGramSubstringsTest {
 
+    /** The n gram substrings. */
     private NGramSubstrings nGramSubstrings;
+
+    /** The n gram substrings2. */
     private NGramSubstrings nGramSubstrings2;
+
+    /** The n gram substrings record. */
     private NGramSubstrings nGramSubstringsRecord;
 
+    /**
+     * Sets the up.
+     *
+     * @throws Exception the exception
+     */
     @Before
     public void setUp() throws Exception {
 
@@ -38,6 +48,9 @@ public class NGramSubstringsTest {
         nGramSubstringsRecord = new NGramSubstrings(record);
     }
 
+    /**
+     * Test get grams.
+     */
     @Test
     public void testGetGrams() {
 
@@ -45,6 +58,9 @@ public class NGramSubstringsTest {
         Assert.assertEquals(6, grams.size());
     }
 
+    /**
+     * Test get grams for record.
+     */
     @Test
     public void testGetGramsForRecord() {
 
@@ -52,6 +68,9 @@ public class NGramSubstringsTest {
         Assert.assertEquals(6, grams.size());
     }
 
+    /**
+     * Test equals.
+     */
     @Test
     public void testEquals() {
 

@@ -14,15 +14,33 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeNotValidException;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class DataClerkingWriterTest.
+ */
 public class DataClerkingWriterTest {
 
+    /** The helper. */
     private ClassifierTestingHelper helper = new ClassifierTestingHelper();
+
+    /** The Constant OCCBUCKET. */
     private static final String OCCBUCKET = "target/OccRecordWriteTest.txt";
+
+    /** The Constant CODDATA. */
     private static final String CODDATA = "/DataClerkingWriterTestCOD.txt";
+
+    /** The Constant CODBUCKET. */
     private static final String CODBUCKET = "target/CODRecordWriteTest.txt";
+
+    /** The Constant HICODBUCKET. */
     private static final String HICODBUCKET = "target/HICODRecordWriteTest.txt";
+
+    /** The Constant MULTICODBUCKET. */
     private static final String MULTICODBUCKET = "target/MultipleCODRecordWriteTest.txt";
 
+    /**
+     * Clean up.
+     */
     @AfterClass
     public static void cleanUp() {
 
@@ -36,6 +54,11 @@ public class DataClerkingWriterTest {
         Assert.assertTrue(file.delete());
     }
 
+    /**
+     * Test write occ.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testWriteOcc() throws Exception {
 
@@ -45,6 +68,11 @@ public class DataClerkingWriterTest {
         //     checkFileAgainstKnownCorrect(correctOccBucketFile, writeFile);
     }
 
+    /**
+     * Test write cod.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testWriteCOD() throws Exception {
 
@@ -53,6 +81,11 @@ public class DataClerkingWriterTest {
         checkFileAgainstKnownCorrect(correctCODBucketFile, writeFile);
     }
 
+    /**
+     * Test write hicod.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testWriteHICOD() throws Exception {
 
@@ -61,6 +94,11 @@ public class DataClerkingWriterTest {
         checkFileAgainstKnownCorrect(correctHICODBucketFile, writeFile);
     }
 
+    /**
+     * Test write multiple cod.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testWriteMultipleCOD() throws Exception {
 
@@ -69,6 +107,14 @@ public class DataClerkingWriterTest {
         checkFileAgainstKnownCorrect(correctMultipleCODBucketFile, writeFile);
     }
 
+    /**
+     * Creates the and write multiple cod bucket to file.
+     *
+     * @param writeFileName the write file name
+     * @param readFileName the read file name
+     * @return the file
+     * @throws Exception the exception
+     */
     private File createAndWriteMultipleCODBucketToFile(final String writeFileName, final String readFileName) throws Exception {
 
         File writeFile = new File(writeFileName);
@@ -79,6 +125,14 @@ public class DataClerkingWriterTest {
         return writeFile;
     }
 
+    /**
+     * Creates the and write hicod bucket to file.
+     *
+     * @param writeFileName the write file name
+     * @param readFileName the read file name
+     * @return the file
+     * @throws Exception the exception
+     */
     private File createAndWriteHICODBucketToFile(final String writeFileName, final String readFileName) throws Exception {
 
         File writeFile = new File(writeFileName);
@@ -89,6 +143,14 @@ public class DataClerkingWriterTest {
         return writeFile;
     }
 
+    /**
+     * Creates the and write occ bucket to file.
+     *
+     * @param writeFileName the write file name
+     * @param readFileName the read file name
+     * @return the file
+     * @throws Exception the exception
+     */
     private File createAndWriteOccBucketToFile(final String writeFileName, final String readFileName) throws Exception {
 
         File writeFile = new File(writeFileName);
@@ -99,6 +161,14 @@ public class DataClerkingWriterTest {
         return writeFile;
     }
 
+    /**
+     * Creates the and write cod bucket to file.
+     *
+     * @param writeFileName the write file name
+     * @param readFileName the read file name
+     * @return the file
+     * @throws Exception the exception
+     */
     private File createAndWriteCODBucketToFile(final String writeFileName, final String readFileName) throws Exception {
 
         File writeFile = new File(writeFileName);
@@ -109,6 +179,13 @@ public class DataClerkingWriterTest {
         return writeFile;
     }
 
+    /**
+     * Check file against known correct.
+     *
+     * @param correctFileName the correct file name
+     * @param writeFile the write file
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
     private void checkFileAgainstKnownCorrect(final String correctFileName, final File writeFile) throws IOException {
 
         File correctFile = new File(getClass().getResource(correctFileName).getFile());
@@ -117,16 +194,37 @@ public class DataClerkingWriterTest {
         Assert.assertArrayEquals(f2, f1);
     }
 
+    /**
+     * Adds the cod codes.
+     *
+     * @param bucket the bucket
+     * @return the bucket
+     * @throws URISyntaxException the URI syntax exception
+     */
     private Bucket addCODCodes(final Bucket bucket) throws URISyntaxException {
 
         return helper.giveBucketTestingCODCodes(bucket);
     }
 
+    /**
+     * Adds the hicod codes.
+     *
+     * @param bucket the bucket
+     * @return the bucket
+     * @throws URISyntaxException the URI syntax exception
+     */
     private Bucket addHICODCodes(final Bucket bucket) throws URISyntaxException {
 
         return helper.giveBucketTestingHICODCodes(bucket, "I6191");
     }
 
+    /**
+     * Adds the multiple cod codes.
+     *
+     * @param bucket the bucket
+     * @return the bucket
+     * @throws URISyntaxException the URI syntax exception
+     */
     private Bucket addMultipleCODCodes(final Bucket bucket) throws URISyntaxException {
 
         String code = "R99";
@@ -141,11 +239,27 @@ public class DataClerkingWriterTest {
         return bucket;
     }
 
+    /**
+     * Adds the occ codes.
+     *
+     * @param bucket the bucket
+     * @return the bucket
+     * @throws IOException Signals that an I/O exception has occurred.
+     * @throws CodeNotValidException the code not valid exception
+     * @throws URISyntaxException the URI syntax exception
+     */
     private Bucket addOccCodes(final Bucket bucket) throws IOException, CodeNotValidException, URISyntaxException {
 
         return helper.giveBucketTestingOccCodes(bucket);
     }
 
+    /**
+     * Write to file.
+     *
+     * @param dataClerkingWriter the data clerking writer
+     * @param bucket the bucket
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
     private void writeToFile(final DataClerkingWriter dataClerkingWriter, final Bucket bucket) throws IOException {
 
         for (Record record : bucket) {

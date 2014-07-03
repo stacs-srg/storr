@@ -13,6 +13,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeFactory;
 
+// TODO: Auto-generated Javadoc
 /**
  * Unit tests to test functionality of the {@link ResolverMatrix} class.
  * @author jkc25, frjd2
@@ -98,6 +99,7 @@ public class ResolverMatrixTest {
     /**
      * Gets the valid code triples test.
      *
+     * @return the valid code triples test
      */
     @Test
     public void getValidCodeTriplesTest() {

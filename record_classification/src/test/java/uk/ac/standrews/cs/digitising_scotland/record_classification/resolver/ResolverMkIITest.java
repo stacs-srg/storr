@@ -15,9 +15,6 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.TokenSet;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeFactory;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.Pair;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.ResolverUtils;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.TokenClassificationCache;
 
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multiset;
@@ -28,6 +25,9 @@ import com.google.common.collect.Multiset;
  */
 public class ResolverMkIITest {
 
+    /**
+     * Checks if is valid test.
+     */
     @Test
     public void isValidTest() {
 
@@ -41,6 +41,11 @@ public class ResolverMkIITest {
         Assert.assertTrue(ResolverUtils.isValid(tokenSetSet, mockPowerSet));
     }
 
+    /**
+     * Gets the union test.
+     *
+     * @return the union test
+     */
     @Test
     public void getUnionTest() {
 
@@ -55,6 +60,9 @@ public class ResolverMkIITest {
         Assert.assertEquals(12, union.size());
     }
 
+    /**
+     * Removes the ancestors test.
+     */
     @Test
     public void removeAncestorsTest() {
 
@@ -72,6 +80,9 @@ public class ResolverMkIITest {
         Assert.assertFalse(ancestorsRemoved.contains(CodeFactory.getInstance().getCode("952")));
     }
 
+    /**
+     * Power set test.
+     */
     @Test
     public void powerSetTest() {
 
@@ -86,6 +97,9 @@ public class ResolverMkIITest {
         Assert.assertEquals(16, unique.size());
     }
 
+    /**
+     * Power set multi test.
+     */
     @Test
     public void powerSetMultiTest() {
 
@@ -100,6 +114,11 @@ public class ResolverMkIITest {
         Assert.assertEquals(12, unique.size());
     }
 
+    /**
+     * Classification cache.
+     *
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
     @Test
     public void classificationCache() throws IOException {
 
@@ -116,19 +135,31 @@ public class ResolverMkIITest {
 
     }
 
+    /**
+     * The Class mockClassifier.
+     */
     static class mockClassifier extends AbstractClassifier {
 
+        /* (non-Javadoc)
+         * @see uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.AbstractClassifier#train(uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Bucket)
+         */
         @Override
         public void train(final Bucket bucket) throws Exception {
 
         }
 
+        /* (non-Javadoc)
+         * @see uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.AbstractClassifier#classify(uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Record)
+         */
         @Override
         public Record classify(final Record record) throws IOException {
 
             return null;
         }
 
+        /* (non-Javadoc)
+         * @see uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.AbstractClassifier#classify(uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.TokenSet)
+         */
         @Override
         public Pair<Code, Double> classify(final TokenSet string) throws IOException {
 
@@ -137,6 +168,9 @@ public class ResolverMkIITest {
             return new Pair<>(code, d);
         }
 
+        /* (non-Javadoc)
+         * @see uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.AbstractClassifier#getModelFromDefaultLocation()
+         */
         @Override
         public void getModelFromDefaultLocation() {
 

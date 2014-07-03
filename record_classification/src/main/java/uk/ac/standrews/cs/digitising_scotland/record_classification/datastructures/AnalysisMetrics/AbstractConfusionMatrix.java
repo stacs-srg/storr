@@ -1,18 +1,17 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.AnalysisMetrics;
 
+import java.util.Set;
+
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeFactory;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.CodeTriple;
-
-import java.util.Set;
 
 /**
  *
  * Created by fraserdunlop on 02/07/2014 at 10:27.
  */
 public abstract class AbstractConfusionMatrix {
-
 
     /** The total predictions. */
     protected double[] totalPredictions;
@@ -29,7 +28,15 @@ public abstract class AbstractConfusionMatrix {
     /** The true positive. */
     protected double[] truePositive;
 
+    protected double[][] overUnderPredictionMatrix;
+
+    /**
+     * Instantiates a new abstract confusion matrix.
+     *
+     * @param bucket the bucket
+     */
     public AbstractConfusionMatrix(final Bucket bucket) {
+
         int numberOfOutputClasses = CodeFactory.getInstance().getNumberOfOutputClasses();
         totalPredictions = new double[numberOfOutputClasses];
         falsePositive = new double[numberOfOutputClasses];
@@ -40,7 +47,7 @@ public abstract class AbstractConfusionMatrix {
     }
 
     /**
-     * True pos and false neg.
+     * True positive and false negative.
      *
      * @param setCodeTriples the set code triples
      * @param goldStandardTriples the gold standard triples
@@ -54,7 +61,6 @@ public abstract class AbstractConfusionMatrix {
      * @param goldStandardTriples the gold standard triples
      */
     protected abstract void totalAndFalsePos(final Set<CodeTriple> setCodeTriples, final Set<CodeTriple> goldStandardTriples);
-
 
     /**
      * Calculate proportion wrongly predicted.
@@ -74,7 +80,7 @@ public abstract class AbstractConfusionMatrix {
     }
 
     /**
-     * Calculate true neg.
+     * Calculate true negative.
      */
     private void calculateTrueNeg() {
 
@@ -108,7 +114,6 @@ public abstract class AbstractConfusionMatrix {
         return falsePositive.clone();
     }
 
-
     /**
      * Gets the true positive.
      *
@@ -118,7 +123,6 @@ public abstract class AbstractConfusionMatrix {
 
         return truePositive.clone();
     }
-
 
     /**
      * Gets the false negative.
@@ -130,8 +134,6 @@ public abstract class AbstractConfusionMatrix {
         return falseNegative.clone();
     }
 
-
-
     /**
      * Gets the true negative.
      *
@@ -142,7 +144,13 @@ public abstract class AbstractConfusionMatrix {
         return trueNegative.clone();
     }
 
-    public double getTotalCorrectlyPredicted(){
+    /**
+     * Gets the total correctly predicted.
+     *
+     * @return the total correctly predicted
+     */
+    public double getTotalCorrectlyPredicted() {
+
         return sum(getTruePositive());
     }
 }

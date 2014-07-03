@@ -8,12 +8,12 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.lookup.ExactMatchClassifier;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.RecordFactory;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.CodeTriple;
 
+// TODO: Auto-generated Javadoc
 /**
  * Test class to test {@link ExactMatchClassifier}.
  * @author jkc25
@@ -21,12 +21,22 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.Cod
  */
 public class ExactMatchClassifierTest {
 
+    /** The training bucket. */
     private Bucket trainingBucket;
+
+    /** The testing bucket. */
     private Bucket testingBucket;
+
+    /** The exact match classifier. */
     private ExactMatchClassifier exactMatchClassifier;
 
     // private ClassifierTestingHelper helper = new ClassifierTestingHelper(); //FIXME
 
+    /**
+     * Sets the up.
+     *
+     * @throws Exception the exception
+     */
     @Before
     public void setUp() throws Exception {
 
@@ -36,6 +46,11 @@ public class ExactMatchClassifierTest {
 
     }
 
+    /**
+     * Test train.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testTrain() throws Exception {
 
@@ -44,6 +59,11 @@ public class ExactMatchClassifierTest {
 
     }
 
+    /**
+     * Test classify record.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testClassifyRecord() throws Exception {
 
@@ -61,6 +81,11 @@ public class ExactMatchClassifierTest {
 
     }
 
+    /**
+     * Test classify bucket.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testClassifyBucket() throws Exception {
 
@@ -79,7 +104,10 @@ public class ExactMatchClassifierTest {
     }
 
     /**
-     * @throws Exception
+     * Train.
+     *
+     * @return the exact match classifier
+     * @throws Exception the exception
      */
     private ExactMatchClassifier train() throws Exception {
 
@@ -88,6 +116,12 @@ public class ExactMatchClassifierTest {
         return exactMatchClassifier;
     }
 
+    /**
+     * Creates the testing bucket.
+     *
+     * @return the bucket
+     * @throws Exception the exception
+     */
     private Bucket createTestingBucket() throws Exception {
 
         Bucket trainingBucket;
@@ -98,6 +132,12 @@ public class ExactMatchClassifierTest {
         return trainingBucket;
     }
 
+    /**
+     * Gets the training bucket.
+     *
+     * @return the training bucket
+     * @throws Exception the exception
+     */
     public Bucket getTrainingBucket() throws Exception {
 
         Bucket trainingBucket;
@@ -109,6 +149,11 @@ public class ExactMatchClassifierTest {
         return trainingBucket;
     }
 
+    /**
+     * Serialization write test.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void serializationWriteTest() throws Exception {
 
@@ -117,6 +162,11 @@ public class ExactMatchClassifierTest {
         Assert.assertTrue(new File("target/exactmatchlookuptable.ser").exists());
     }
 
+    /**
+     * Serialization read test.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void serializationReadTest() throws Exception {
 

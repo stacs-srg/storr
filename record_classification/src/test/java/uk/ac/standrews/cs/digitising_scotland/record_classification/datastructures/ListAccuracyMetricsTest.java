@@ -1,13 +1,13 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures;
 
+import java.net.URISyntaxException;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.ClassifierTestingHelper;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.AnalysisMetrics.ListAccuracyMetrics;
-
-import java.net.URISyntaxException;
 
 /**
  * The Class ListAccuracyMetricsTest.
@@ -24,6 +24,7 @@ public class ListAccuracyMetricsTest {
      */
     @Before
     public void setUp() throws Exception {
+
         cth = new ClassifierTestingHelper();
         trainingBucket = cth.getTrainingBucket("/accuracyMetricsCoDtest.txt");
     }
@@ -56,9 +57,10 @@ public class ListAccuracyMetricsTest {
 
     @Test
     public void testAverageConfidence() throws URISyntaxException {
+
         cth.giveBucketTestingCODCodes(trainingBucket);
         ListAccuracyMetrics lam = new ListAccuracyMetrics(trainingBucket);
         double averageConfidence = lam.getAverageConfidence();
-        Assert.assertEquals(1.0, averageConfidence,0.00001);
+        Assert.assertEquals(1.0, averageConfidence, 0.00001);
     }
 }

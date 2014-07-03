@@ -5,8 +5,6 @@ import org.apache.mahout.math.RandomAccessSparseVector;
 import org.junit.Assert;
 import org.junit.Test;
 
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.vectors.SimpleVectorEncoder;
-
 /**
  * Simple check that toString() on the vectors we encode gives us what we would expect.
  * Created by fraserdunlop on 23/04/2014 at 20:44.
@@ -35,7 +33,7 @@ public class SimpleVectorEncoderTest {
         Assert.assertEquals("testVector:{0:1.0,1:1.0,2:2.0}", vector.toString());
     }
 
-    private void buildDictionary(SimpleVectorEncoder encoder) {
+    private void buildDictionary(final SimpleVectorEncoder encoder) {
 
         String[] tokens = {"apple", "banana", "carrot"};
         for (String string : tokens) {

@@ -9,11 +9,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.CODOrignalData;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.InputFormatException;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.OriginalData;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Record;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.TokenSet;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeFactory;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeNotValidException;

@@ -14,18 +14,33 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.OLR.OLRShuffled;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeFactory;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.vectors.VectorFactory;
 import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearningConfiguration;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class OLRShuffledTest.
+ */
 public class OLRShuffledTest {
 
+    /** The properties. */
     private Properties properties = MachineLearningConfiguration.getDefaultProperties();
+
+    /** The vector factory. */
     private VectorFactory vectorFactory;
+
+    /** The training vector list. */
     private ArrayList<NamedVector> trainingVectorList = new ArrayList<NamedVector>();
+
+    /** The model. */
     private OLRShuffled model;
 
+    /**
+     * Setup.
+     *
+     * @throws Exception the exception
+     */
     @Before
     public void setup() throws Exception {
 
@@ -38,6 +53,11 @@ public class OLRShuffledTest {
         model.run();
     }
 
+    /**
+     * Test classify.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testClassify() throws Exception {
 
@@ -48,6 +68,9 @@ public class OLRShuffledTest {
         }
     }
 
+    /**
+     * Test default properties constructor.
+     */
     @Test
     public void testDefaultPropertiesConstructor() {
 
@@ -55,6 +78,11 @@ public class OLRShuffledTest {
         olr.run();
     }
 
+    /**
+     * Test write.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testWrite() throws Exception {
 
@@ -83,6 +111,12 @@ public class OLRShuffledTest {
     //        olrShuffled.
     //    }
 
+    /**
+     * Test classify with code as description.
+     *
+     * @param model the model
+     * @param line the line
+     */
     private void testClassifyWithCodeAsDescription(final OLRShuffled model, final String line) {
 
         String codeFromFile = getCodeFromLine(line);
@@ -92,28 +126,59 @@ public class OLRShuffledTest {
         Assert.assertEquals(id, classification);
     }
 
+    /**
+     * Gets the code id.
+     *
+     * @param codeFromFile the code from file
+     * @return the code id
+     */
     private int getCodeID(final String codeFromFile) {
 
         return CodeFactory.getInstance().getCode(codeFromFile).getID();
     }
 
+    /**
+     * Gets the classification.
+     *
+     * @param model the model
+     * @param testVector the test vector
+     * @return the classification
+     */
     private int getClassification(final OLRShuffled model, final Vector testVector) {
 
         return model.classifyFull(testVector).maxValueIndex();
     }
 
+    /**
+     * Gets the code from line.
+     *
+     * @param line the line
+     * @return the code from line
+     */
     private String getCodeFromLine(final String line) {
 
         String[] splitLine = line.split("\t");
         return splitLine[0].trim();
     }
 
+    /**
+     * Gets the buffered reader of code dictionary file.
+     *
+     * @return the buffered reader of code dictionary file
+     * @throws FileNotFoundException the file not found exception
+     */
     private BufferedReader getBufferedReaderOfCodeDictionaryFile() throws FileNotFoundException {
 
         File file = new File(getClass().getResource("/CodeFactoryOLRTestFile.txt").getFile());
         return new BufferedReader(new FileReader(file));
     }
 
+    /**
+     * Generate training vectors.
+     *
+     * @return the array list
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
     private ArrayList<NamedVector> generateTrainingVectors() throws IOException {
 
         populateDictionary();
@@ -126,6 +191,11 @@ public class OLRShuffledTest {
         return trainingVectorList;
     }
 
+    /**
+     * Populate dictionary.
+     *
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
     private void populateDictionary() throws IOException {
 
         BufferedReader br = getBufferedReaderOfCodeDictionaryFile();
@@ -135,6 +205,12 @@ public class OLRShuffledTest {
         }
     }
 
+    /**
+     * Creates the training vector.
+     *
+     * @param line the line
+     * @return the named vector
+     */
     private NamedVector createTrainingVector(final String line) {
 
         String[] splitLine = line.split("\t");

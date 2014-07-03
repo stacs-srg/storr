@@ -9,8 +9,7 @@ import org.apache.lucene.util.Version;
 import org.junit.Assert;
 import org.junit.Test;
 
-import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.lookup.Concatenator;
-
+// TODO: Auto-generated Javadoc
 /**
  * Tests the {@link Concatenator} class.
  * @author jkc25
@@ -18,6 +17,9 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.
  */
 public class ConcatenatorTest {
 
+    /**
+     * Test simple string concat.
+     */
     @Test
     public void testSimpleStringConcat() {
 
@@ -29,6 +31,9 @@ public class ConcatenatorTest {
         Assert.assertEquals("Here,is,a,String,for,testing", concatenatedString);
     }
 
+    /**
+     * Test simple string concat2.
+     */
     @Test
     public void testSimpleStringConcat2() {
 
@@ -41,6 +46,9 @@ public class ConcatenatorTest {
         System.out.println(concatenatedString);
     }
 
+    /**
+     * Test space at end of string.
+     */
     @Test
     public void testSpaceAtEndOfString() {
 
@@ -52,6 +60,9 @@ public class ConcatenatorTest {
         Assert.assertEquals("Here,is,a,String,for,testing", concatenatedString);
     }
 
+    /**
+     * Test single word.
+     */
     @Test
     public void testSingleWord() {
 
@@ -63,6 +74,9 @@ public class ConcatenatorTest {
         Assert.assertEquals("Testing", concatenatedString);
     }
 
+    /**
+     * Test new line as delimiter.
+     */
     @Test
     public void testNewLineAsDelimiter() {
 
@@ -74,6 +88,9 @@ public class ConcatenatorTest {
         Assert.assertEquals(expected, concatenatedString);
     }
 
+    /**
+     * Test empty string.
+     */
     @Test
     public void testEmptyString() {
 
