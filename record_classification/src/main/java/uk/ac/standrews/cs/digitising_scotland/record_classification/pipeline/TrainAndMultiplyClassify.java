@@ -98,12 +98,17 @@ public final class TrainAndMultiplyClassify {
         ListAccuracyMetrics accuracyMetrics = new ListAccuracyMetrics(classifiedBucket);
 
         System.out.println("********** **********");
+
         System.out.println(classifiedBucket);
         accuracyMetrics.prettyPrint();
         final String strictCodeStatsPath = experimentalFolderName + "/Data/strictCodeStats.csv";
         final String softCodeStatsPath = experimentalFolderName + "/Data/softCodeStats.csv";
         CodeMetrics strictCodeMetrics = new CodeMetrics(new StrictConfusionMatrix(classifiedBucket));
         CodeMetrics softCodeMetrics = new CodeMetrics(new SoftConfusionMatrix(classifiedBucket));
+        System.out.println("micro precision: " + strictCodeMetrics.getMicroPrecision());
+        System.out.println("micro recall: " + strictCodeMetrics.getMicroRecall());
+        System.out.println("soft micro precision: " + softCodeMetrics.getMicroPrecision());
+        System.out.println("soft micro recall: " + softCodeMetrics.getMicroRecall());
 
         strictCodeMetrics.writeStats(strictCodeStatsPath);
         softCodeMetrics.writeStats(softCodeStatsPath);

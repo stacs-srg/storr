@@ -16,36 +16,11 @@
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.model;
 
-import java.util.Date;
-import java.util.List;
-
 /**
- * Created by graham on 09/06/2014.
+ * Tests of properties of concrete population that hold for specific cases.
+ *
+ * @author Alan Dearle (alan.dearle@st-andrews.ac.uk)
+ * @author Graham Kirby (graham.kirby@st-andrews.ac.uk)
  */
-public interface IPerson {
-
-    char FEMALE = 'F';
-    char MALE = 'M';
-
-    String MALE_STRING = String.valueOf(MALE);
-
-    int getId();
-
-    String getFirstName();
-
-    String getSurname();
-
-    char getSex();
-
-    Date getBirthDate();
-
-    Date getDeathDate();
-
-    String getOccupation();
-
-    String getCauseOfDeath();
-
-    String getAddress();
-
-    List<Integer> getPartnerships();
+public class SpecificConcretePopulationStructureTest {
 }

@@ -66,4 +66,8 @@ public interface IPopulation {
      * @return the number of people in the population
      */
     int getNumberOfPartnerships();
+
+    void setDescription(String description);
+
+    void setConsistentAcrossIterations(boolean consistent_across_iterations);
 }

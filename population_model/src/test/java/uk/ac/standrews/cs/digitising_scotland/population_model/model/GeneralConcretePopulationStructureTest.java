@@ -33,27 +33,27 @@ import java.util.Set;
 import static org.junit.Assert.*;
 
 /**
- * Tests of various population properties.
- * 
+ * Tests of properties of concrete population that should hold for all populations.
+ *
  * @author Alan Dearle (alan.dearle@st-andrews.ac.uk)
  * @author Graham Kirby (graham.kirby@st-andrews.ac.uk)
  */
 @RunWith(Parameterized.class)
-public class PopulationConsistencyTest {
+public class GeneralConcretePopulationStructureTest {
+
+    // TODO test death after birth
+    // TODO move to abstract tests where possible
 
     private CompactPopulation population;
     private final int population_size;
 
-    // TODO change to use abstract population
-    // TODO surname consistency
-
-    @Parameters
+    @Parameters(name = "{0}")
     public static Collection<Object[]> generateData() {
 
         return Arrays.asList(new Object[][]{{1}, {10}, {100}, {1000}});
     }
 
-    public PopulationConsistencyTest(final int population_size) {
+    public GeneralConcretePopulationStructureTest(final int population_size) {
 
         this.population_size = population_size;
     }
@@ -96,13 +96,15 @@ public class PopulationConsistencyTest {
 
     private void assertParentsHaveSensibleAgesAtChildBirth(final CompactPopulation population) {
 
-        for (final CompactPerson p : population.getPeopleArray()) {
+        CompactPerson[] people = population.getPeopleArray();
+
+        for (final CompactPerson p : people) {
 
             if (p.getPartnerships() != null) {
                 for (final CompactPartnership partnership : p.getPartnerships()) {
 
-                    for (final int child : partnership.getChildren()) {
-                        assertTrue(population.parentsHaveSensibleAgesAtChildBirth(partnership, child));
+                    for (final int child_index : partnership.getChildren()) {
+                        assertTrue(population.parentsHaveSensibleAgesAtChildBirth(partnership, people[child_index].getId()));
                     }
                 }
             }
@@ -134,7 +136,7 @@ public class PopulationConsistencyTest {
         assertTrue(notMarriedToAnyOf(p, people));
     }
 
-    protected boolean notMarriedToAnyOf(final int p, final Set<Integer> people) {
+    private boolean notMarriedToAnyOf(final int p, final Set<Integer> people) {
 
         for (final int p2 : people) {
             if (population.married(p, p2)) { return false; }
