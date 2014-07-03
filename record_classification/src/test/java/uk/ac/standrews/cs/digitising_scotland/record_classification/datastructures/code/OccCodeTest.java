@@ -8,11 +8,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeFactory;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeNotValidException;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.OccCode;
-
 /**
  * The Class OccCodeTest contains unit tests for testing the creation and use of {@link OccCode}s.
  */

@@ -6,6 +6,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+// TODO: Auto-generated Javadoc
 /**
  * Contains a set of records and metrics associated with that bucket.
  * @author jkc25, frjd2
@@ -14,6 +15,7 @@ import java.util.Map;
 public class Bucket implements Iterable<Record> {
 
     //TODO nail down bucket behaviour - specifically what should be used as the key in this map
+    /** The records. */
     private Map<String, Record> records;
 
     /**
@@ -93,6 +95,9 @@ public class Bucket implements Iterable<Record> {
         return records.get(uID);
     }
 
+    /* (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
     @Override
     public String toString() {
 

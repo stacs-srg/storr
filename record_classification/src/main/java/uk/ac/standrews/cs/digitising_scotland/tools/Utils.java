@@ -31,6 +31,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+// TODO: Auto-generated Javadoc
 /**
  * Utility classes related to writing to files and other often used methods.
  *
@@ -38,6 +39,9 @@ import java.util.Map;
  */
 public final class Utils {
 
+    /**
+     * Instantiates a new utils.
+     */
     private Utils() {
 
         // private constructor for utility class.

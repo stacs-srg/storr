@@ -112,8 +112,8 @@ public class ClassifierTestingHelper {
      * Adds the gold standard code to classification set.
      *
      * @param record the record
-     * @param Set<CodeTriple> the classification set
      * @param goldStandardCode the gold standard code
+     * @return the record
      */
     private Record addGoldStandardCodeToRecord(final Record record, final String goldStandardCode) {
 
@@ -129,8 +129,8 @@ public class ClassifierTestingHelper {
      * Adds the gold standard code to classification set.
      *
      * @param record the record
-     * @param Set<CodeTriple> the classification set
-     * @param code the gold standard code
+     * @param codeAsString the code as string
+     * @return the record
      */
     private Record addCodeTriplesStandardCodeToRecord(final Record record, final String codeAsString) {
 

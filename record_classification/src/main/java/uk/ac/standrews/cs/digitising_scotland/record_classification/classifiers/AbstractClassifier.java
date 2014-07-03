@@ -9,6 +9,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.vectors.VectorFactory;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.Pair;
 
+// TODO: Auto-generated Javadoc
 /**
  * All classifiers should extend this abstract defining training and
  * classification methods.
@@ -101,6 +102,7 @@ public abstract class AbstractClassifier {
 
     /**
      * Reads a trained model from the default storage location for a classifier.
+     *
      */
     public abstract void getModelFromDefaultLocation();
 

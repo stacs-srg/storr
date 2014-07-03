@@ -25,8 +25,13 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.Pai
  */
 public class NaiveBayesClassifierTest {
 
+    /** The bucket a. */
     private Bucket bucketA;
+
+    /** The bucket b. */
     private Bucket bucketB;
+
+    /** The list of records. */
     private List<Record> listOfRecords;
 
     // FIXME  private ClassifierTestingHelper helper = new ClassifierTestingHelper();
@@ -104,6 +109,8 @@ public class NaiveBayesClassifierTest {
 
     /**
      * Tests the adding of vectors to records in a bucket.
+     *
+     * @param bucket the bucket
      * @throws Exception if something goes wrong....
      */
     public void addVectorsToBucket(final Bucket bucket) throws Exception {

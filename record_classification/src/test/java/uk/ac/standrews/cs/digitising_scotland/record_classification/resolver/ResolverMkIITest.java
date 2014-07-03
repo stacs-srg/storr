@@ -44,7 +44,7 @@ public class ResolverMkIITest {
     /**
      * Gets the union test.
      *
-     * @return the union test
+
      */
     @Test
     public void getUnionTest() {

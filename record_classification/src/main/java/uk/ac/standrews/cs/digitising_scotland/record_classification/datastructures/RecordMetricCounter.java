@@ -5,13 +5,29 @@ import java.util.Set;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.CodeTriple;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class RecordMetricCounter.
+ */
 public class RecordMetricCounter {
 
+    /** The incorret predictions. */
     private double incorretPredictions;
+
+    /** The correct predictions. */
     private double correctPredictions;
+
+    /** The missed gold standard. */
     private double missedGoldStandard;
+
+    /** The hit gold standard. */
     private double hitGoldStandard;
 
+    /**
+     * Instantiates a new record metric counter.
+     *
+     * @param bucket the bucket
+     */
     public RecordMetricCounter(final Bucket bucket) {
 
         countStats(bucket);
@@ -37,6 +53,13 @@ public class RecordMetricCounter {
         }
     }
 
+    /**
+     * Count hit gold standard.
+     *
+     * @param setCodeTriples the set code triples
+     * @param goldStandardTriples the gold standard triples
+     * @return the double
+     */
     private double countHitGoldStandard(final Set<CodeTriple> setCodeTriples, final Set<CodeTriple> goldStandardTriples) {
 
         double correct = 0;
@@ -50,6 +73,13 @@ public class RecordMetricCounter {
         return correct;
     }
 
+    /**
+     * Count n missed gold standard.
+     *
+     * @param setCodeTriples the set code triples
+     * @param goldStandardTriples the gold standard triples
+     * @return the double
+     */
     private double countNMissedGoldStandard(final Set<CodeTriple> setCodeTriples, final Set<CodeTriple> goldStandardTriples) {
 
         double missed = 0;
@@ -63,6 +93,13 @@ public class RecordMetricCounter {
         return missed;
     }
 
+    /**
+     * Count correct predictions.
+     *
+     * @param setCodeTriples the set code triples
+     * @param goldStandardTriples the gold standard triples
+     * @return the double
+     */
     private double countCorrectPredictions(final Set<CodeTriple> setCodeTriples, final Set<CodeTriple> goldStandardTriples) {
 
         double correct = 0;
@@ -76,6 +113,13 @@ public class RecordMetricCounter {
         return correct;
     }
 
+    /**
+     * Count num incorrect predictions.
+     *
+     * @param setCodeTriples the set code triples
+     * @param goldStandardTriples the gold standard triples
+     * @return the double
+     */
     private double countNumIncorrectPredictions(final Set<CodeTriple> setCodeTriples, final Set<CodeTriple> goldStandardTriples) {
 
         double numIncorrectPredictions = 0;
@@ -103,21 +147,41 @@ public class RecordMetricCounter {
         return false;
     }
 
+    /**
+     * Gets the incorret predictions.
+     *
+     * @return the incorret predictions
+     */
     public double getIncorretPredictions() {
 
         return incorretPredictions;
     }
 
+    /**
+     * Gets the correct predictions.
+     *
+     * @return the correct predictions
+     */
     public double getCorrectPredictions() {
 
         return correctPredictions;
     }
 
+    /**
+     * Gets the missed gold standard.
+     *
+     * @return the missed gold standard
+     */
     public double getMissedGoldStandard() {
 
         return missedGoldStandard;
     }
 
+    /**
+     * Gets the hit gold standard.
+     *
+     * @return the hit gold standard
+     */
     public double getHitGoldStandard() {
 
         return hitGoldStandard;

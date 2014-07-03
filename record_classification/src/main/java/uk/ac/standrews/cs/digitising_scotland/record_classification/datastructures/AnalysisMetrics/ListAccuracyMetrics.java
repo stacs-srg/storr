@@ -10,6 +10,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.CodeTriple;
 import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
 
+// TODO: Auto-generated Javadoc
 /**
  * Class representing the statistics about a bucket of Records.
  *
@@ -83,8 +84,10 @@ public class ListAccuracyMetrics {
     /** The prop wrongly predicted. */
     private double propWronglyPredicted;
 
+    /** The number of codes not coded. */
     private int[] numberOfCodesNotCoded;
 
+    /** The over under predicion matrix. */
     private int[][] overUnderPredicionMatrix;
 
     /**
@@ -117,6 +120,13 @@ public class ListAccuracyMetrics {
         overUnderPredicionMatrix = calculateOverPredictionMatrix(bucket, maxCodes);
     }
 
+    /**
+     * Calculate over prediction matrix.
+     *
+     * @param bucket the bucket
+     * @param maxCodes the max codes
+     * @return the int[][]
+     */
     private int[][] calculateOverPredictionMatrix(final Bucket bucket, final int maxCodes) {
 
         overUnderPredicionMatrix = new int[maxCodes + 1][maxCodes + 1];
@@ -128,6 +138,12 @@ public class ListAccuracyMetrics {
         return overUnderPredicionMatrix;
     }
 
+    /**
+     * Calculate max codes.
+     *
+     * @param bucket the bucket
+     * @return the int
+     */
     private int calculateMaxCodes(final Bucket bucket) {
 
         int maxCodes = 0;
@@ -230,7 +246,13 @@ public class ListAccuracyMetrics {
         printMatrix("Over/Under Prediction Matrix", overUnderPredicionMatrix);
     }
 
-    private void printMatrix(String message, int[][] matrix) {
+    /**
+     * Prints a matrix.
+     *
+     * @param message the message to add to the top of the matrix
+     * @param matrix the matrix to print
+     */
+    private void printMatrix(final String message, final int[][] matrix) {
 
         System.out.println(message);
         System.out.print("   ");
@@ -250,6 +272,9 @@ public class ListAccuracyMetrics {
 
     /**
      * Prints the statistics generated with pretty formatting.
+     *
+     * @param pathToExperiemntFolder the path to experiemnt folder
+     * @param pathToGraph the path to graph
      */
     public void generateMarkDownSummary(final String pathToExperiemntFolder, final String pathToGraph) {
 
@@ -279,6 +304,11 @@ public class ListAccuracyMetrics {
 
     }
 
+    /**
+     * Prints the number of codes missed.
+     *
+     * @return the string
+     */
     private String printNumberOfCodesMissed() {
 
         StringBuilder sb = new StringBuilder();

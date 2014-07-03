@@ -5,8 +5,6 @@ import java.io.File;
 import org.junit.Assert;
 import org.junit.Test;
 
-import uk.ac.standrews.cs.digitising_scotland.record_classification.lda.TopicModel;
-
 public class TopicModelTest {
 
     @Test

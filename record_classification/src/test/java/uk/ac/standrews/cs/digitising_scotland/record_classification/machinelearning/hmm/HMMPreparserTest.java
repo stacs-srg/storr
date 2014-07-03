@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import org.junit.Assert;
 import org.junit.Test;
 
-import uk.ac.standrews.cs.digitising_scotland.record_classification.machinelearning.hmm.HMMPreparser;
-
 /**
  * The Class HMMPreparserTests tests the basic functionality of the {@link HMMPreparser} class.
  */

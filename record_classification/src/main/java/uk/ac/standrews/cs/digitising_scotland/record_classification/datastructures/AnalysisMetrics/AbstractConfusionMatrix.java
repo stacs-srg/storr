@@ -7,6 +7,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeFactory;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.CodeTriple;
 
+// TODO: Auto-generated Javadoc
 /**
  *
  * Created by fraserdunlop on 02/07/2014 at 10:27.
@@ -28,6 +29,7 @@ public abstract class AbstractConfusionMatrix {
     /** The true positive. */
     protected double[] truePositive;
 
+    /** The max codes. */
     protected int maxCodes;
 
     /** Matrix shows how many records have been over or under coded. Makes to claims as to accuracy of coding */
@@ -170,6 +172,12 @@ public abstract class AbstractConfusionMatrix {
         return sum(getTruePositive());
     }
 
+    /**
+     * Update max codes.
+     *
+     * @param setCodeTriples the set code triples
+     * @param goldStandardTriples the gold standard triples
+     */
     private void updateMaxCodes(final Set<CodeTriple> setCodeTriples, final Set<CodeTriple> goldStandardTriples) {
 
         if (setCodeTriples.size() > maxCodes) {

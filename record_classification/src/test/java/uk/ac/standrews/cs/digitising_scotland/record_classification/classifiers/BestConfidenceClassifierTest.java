@@ -19,11 +19,22 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.preprocessor
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.CodeTriple;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.Pair;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class BestConfidenceClassifierTest.
+ */
 public class BestConfidenceClassifierTest {
 
+    /** The bucket a. */
     private Bucket bucketA;
+
+    /** The bucket b. */
     private Bucket bucketB;
+
+    /** The list of records. */
     private List<Record> listOfRecords;
+
+    /** The helper. */
     private ClassifierTestingHelper helper = new ClassifierTestingHelper();
 
     /**
@@ -99,6 +110,8 @@ public class BestConfidenceClassifierTest {
 
     /**
      * Tests the adding of vectors to records in a bucket.
+     *
+     * @param bucket the bucket
      * @throws Exception if something goes wrong....
      */
     public void addVectorsToBucket(final Bucket bucket) throws Exception {

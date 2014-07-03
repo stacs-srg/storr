@@ -1,10 +1,10 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.AnalysisMetrics;
 
+import java.util.Set;
+
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.CodeTriple;
-
-import java.util.Set;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -18,7 +18,8 @@ public class StrictConfusionMatrix extends AbstractConfusionMatrix {
      *
      * @param bucket the bucket
      */
-    public StrictConfusionMatrix(final Bucket bucket){
+    public StrictConfusionMatrix(final Bucket bucket) {
+
         super(bucket);
     }
 
@@ -58,7 +59,6 @@ public class StrictConfusionMatrix extends AbstractConfusionMatrix {
             }
         }
     }
-
 
     /**
      * Returns true is a code is in the specified set of CodeTriples.
