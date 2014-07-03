@@ -16,13 +16,10 @@
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.generation.analytic;
 
-import uk.ac.standrews.cs.digitising_scotland.util.ArrayIterator;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPerson;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPopulation;
 import uk.ac.standrews.cs.digitising_scotland.util.ArrayManipulation;
-import uk.ac.standrews.cs.digitising_scotland.population_model.model.CompactPartnership;
-import uk.ac.standrews.cs.digitising_scotland.population_model.model.CompactPerson;
-import uk.ac.standrews.cs.digitising_scotland.population_model.model.CompactPopulation;
 
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -31,16 +28,17 @@ import java.util.List;
  */
 public class MarriageAnalytics {
 
-    private final CompactPopulation population;
     private static final int MAX_MARRIAGES = 10;
     private static final int ONE_HUNDRED = 100;
+
     private final int[] count_marriages = new int[MAX_MARRIAGES]; // tracks marriage size
+    private final IPopulation population;
 
     /**
      * Creates an analytic instance to analyse marriages in a population.
      * @param population - the population to analyse.
      */
-    public MarriageAnalytics(final CompactPopulation population) {
+    public MarriageAnalytics(final IPopulation population) {
 
         this.population = population;
         analyseMarriages();
@@ -52,6 +50,7 @@ public class MarriageAnalytics {
 
         System.out.println("Male mariage sizes:");
         System.out.println("\t unmarried: " + count_marriages[0]);
+
         for (int i = 1; i < count_marriages.length; i++) {
             if (count_marriages[i] != 0) {
                 System.out.println("\t Married " + i + " times: " + count_marriages[i] + " = " + String.format("%.1f", count_marriages[i] / (double) sum * ONE_HUNDRED) + "%");
@@ -64,17 +63,15 @@ public class MarriageAnalytics {
      */
     public void analyseMarriages() {
 
-        Iterator people = new ArrayIterator(population.getPeopleArray());
+        for (IPerson p : population.getPeople()) {
 
-        while(people.hasNext()) {
-            CompactPerson p = (CompactPerson)people.next();
+            if (p.getSex() == IPerson.MALE) { // only look at Males to avoid counting marriages twice.
 
-            if (p.isMale()) { // only look at Makes to avoid counting marriages twice. TODO is this OK? Not sure!
-                final List<CompactPartnership> partnerships = p.getPartnerships();
-                if (partnerships == null) {
+                final List<Integer> partnership_ids = p.getPartnerships();
+                if (partnership_ids == null) {
                     count_marriages[0]++;
                 } else {
-                    count_marriages[partnerships.size()]++;
+                    count_marriages[partnership_ids.size()]++;
                 }
             }
         }

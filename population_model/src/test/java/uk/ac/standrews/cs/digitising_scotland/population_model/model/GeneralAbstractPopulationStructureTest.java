@@ -22,9 +22,11 @@ import org.junit.runners.Parameterized;
 import uk.ac.standrews.cs.digitising_scotland.population_model.generation.distributions.InconsistentWeightException;
 import uk.ac.standrews.cs.digitising_scotland.population_model.generation.distributions.NegativeDeviationException;
 import uk.ac.standrews.cs.digitising_scotland.population_model.generation.distributions.NegativeWeightException;
+import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -78,8 +80,8 @@ public class GeneralAbstractPopulationStructureTest extends PopulationStructureT
     @Test
     public void iterateOverPopulation() {
 
-        checkPersonIteration();
-        checkPartnershipIteration();
+        assertPersonIterationIsAsExpected();
+        assertPartnershipIterationIsAsExpected();
     }
 
     @Test
@@ -162,6 +164,15 @@ public class GeneralAbstractPopulationStructureTest extends PopulationStructureT
     }
 
     @Test
+    public void deathsAfterBirths() {
+
+        for (IPerson person : population.getPeople()) {
+
+            assertDeathAfterBirth(person);
+        }
+    }
+
+    @Test
     public void surnamesInheritedOnMaleLine() {
 
         for (IPerson person : population.getPeople()) {
@@ -194,6 +205,17 @@ public class GeneralAbstractPopulationStructureTest extends PopulationStructureT
                     }
                 }
             }
+        }
+    }
+
+    private void assertDeathAfterBirth(IPerson person) {
+
+        Date death_date = person.getDeathDate();
+
+        if (death_date != null) {
+
+            Date birth_date = person.getBirthDate();
+            assertTrue(DateManipulation.differenceInYears(birth_date, death_date) >= 0);
         }
     }
 
@@ -259,7 +281,7 @@ public class GeneralAbstractPopulationStructureTest extends PopulationStructureT
         }
     }
 
-    protected void checkPersonIteration() {
+    private void assertPersonIterationIsAsExpected() {
 
         if (expected_people_id_order != null) {
 
@@ -275,7 +297,7 @@ public class GeneralAbstractPopulationStructureTest extends PopulationStructureT
         }
     }
 
-    protected void checkPartnershipIteration() {
+    private void assertPartnershipIterationIsAsExpected() {
 
         if (expected_partnership_id_order != null) {
 

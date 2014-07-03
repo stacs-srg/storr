@@ -16,13 +16,11 @@
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.generation.analytic;
 
-import uk.ac.standrews.cs.digitising_scotland.util.ArrayIterator;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPartnership;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPerson;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPopulation;
 import uk.ac.standrews.cs.digitising_scotland.util.ArrayManipulation;
-import uk.ac.standrews.cs.digitising_scotland.population_model.model.CompactPartnership;
-import uk.ac.standrews.cs.digitising_scotland.population_model.model.CompactPerson;
-import uk.ac.standrews.cs.digitising_scotland.population_model.model.CompactPopulation;
 
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -32,16 +30,17 @@ import java.util.List;
  */
 public class ChildrenAnalytics {
 
-    private final CompactPopulation population;
     private static final int MAX_CHILDREN = 10;
     private static final int ONE_HUNDRED = 100;
-    private final int[] count_kids_per_marriage = new int[MAX_CHILDREN]; // tracks marriage size
+
+    private final int[] children_per_marriage = new int[MAX_CHILDREN]; // tracks family size
+    private final IPopulation population;
 
     /**
      * Creates an analytic instance to analyse children in a population.
      * @param population - the population to analyse.
      */
-    public ChildrenAnalytics(final CompactPopulation population) {
+    public ChildrenAnalytics(final IPopulation population) {
 
         this.population = population;
         analyseChildren();
@@ -49,33 +48,33 @@ public class ChildrenAnalytics {
 
     public void printAllAnalytics() {
 
-        final int sum = ArrayManipulation.sum(count_kids_per_marriage);
+        final int sum = ArrayManipulation.sum(children_per_marriage);
 
         System.out.println("Chilren per marriage mariage sizes:");
-        for (int i = 0; i < count_kids_per_marriage.length; i++) {
-            if (count_kids_per_marriage[i] != 0) {
-                System.out.println("\t" + count_kids_per_marriage[i] + " Marriages with " + i + " children" + " = " + String.format("%.1f", count_kids_per_marriage[i] / (double) sum * ONE_HUNDRED) + "%");
+        for (int i = 0; i < children_per_marriage.length; i++) {
+            if (children_per_marriage[i] != 0) {
+                System.out.println("\t" + children_per_marriage[i] + " Marriages with " + i + " children" + " = " + String.format("%.1f", children_per_marriage[i] / (double) sum * ONE_HUNDRED) + "%");
             }
         }
     }
 
     /**
-     * Analyses Children of marriages for the population.
+     * Analyses children of marriages for the population.
      */
     public void analyseChildren() {
 
-        Iterator people = new ArrayIterator(population.getPeopleArray());
+        for (IPerson person : population.getPeople()) {
 
-        while(people.hasNext()) {
-            CompactPerson p = (CompactPerson)people.next();
+            final List<Integer> partnership_ids = person.getPartnerships();
+            if (partnership_ids != null) {
 
-            final List<CompactPartnership> partnerships = p.getPartnerships();
-            if (partnerships != null) {
+                for (final int partnership_id : partnership_ids) {
 
-                for (final CompactPartnership partnership : partnerships) {
-                    if (partnership.getMarriageDate() > -1 && partnership.getChildren() != null) {
-                        final int len = partnership.getChildren().size();
-                        count_kids_per_marriage[len]++;
+                    IPartnership partnership = population.findPartnership(partnership_id);
+                    List<Integer> child_ids = partnership.getChildren();
+
+                    if (child_ids != null) {
+                        children_per_marriage[child_ids.size()]++;
                     }
                 }
             }

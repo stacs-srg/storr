@@ -84,6 +84,11 @@ public class CompactPartnershipAdapter {
         }
 
         @Override
+        public int getPartnerOf(int id) {
+            return id == partner1_id ? partner2_id : partner1_id;
+        }
+
+        @Override
         public Date getMarriageDate() {
             return marriage_date;
         }

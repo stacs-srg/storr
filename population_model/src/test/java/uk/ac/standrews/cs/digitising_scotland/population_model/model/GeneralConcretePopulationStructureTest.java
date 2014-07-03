@@ -73,28 +73,28 @@ public class GeneralConcretePopulationStructureTest {
     @Test
     public void parentsHaveSensibleAgesAtChildBirth() {
 
-        assertParentsHaveSensibleAgesAtChildBirth(population);
+        assertParentsHaveSensibleAgesAtChildBirth();
     }
 
     @Test
     public void noSiblingsMarried() {
 
-        assertNoSiblingsMarried(population);
+        assertNoSiblingsMarried();
     }
 
     @Test
     public void noParentsMarriedToChildren() {
 
-        assertNoParentsMarriedToChildren(population);
+        assertNoParentsMarriedToChildren();
     }
 
     @Test
     public void noSameSexMarriages() {
 
-        assertNoSameSexMarriages(population);
+        assertNoSameSexMarriages();
     }
 
-    private void assertParentsHaveSensibleAgesAtChildBirth(final CompactPopulation population) {
+    private void assertParentsHaveSensibleAgesAtChildBirth() {
 
         CompactPerson[] people = population.getPeopleArray();
 
@@ -111,7 +111,7 @@ public class GeneralConcretePopulationStructureTest {
         }
     }
 
-    private void assertNoSiblingsMarried(final CompactPopulation population) {
+    private void assertNoSiblingsMarried() {
 
         for (final CompactPerson p : population.getPeopleArray()) {
 
@@ -145,7 +145,7 @@ public class GeneralConcretePopulationStructureTest {
         return true;
     }
 
-    private void assertNoParentsMarriedToChildren(final CompactPopulation population) {
+    private void assertNoParentsMarriedToChildren() {
 
         for (final CompactPerson p : population.getPeopleArray()) {
 
@@ -162,7 +162,7 @@ public class GeneralConcretePopulationStructureTest {
         }
     }
 
-    private void assertNoSameSexMarriages(final CompactPopulation population) {
+    private void assertNoSameSexMarriages() {
 
         for (final CompactPerson p : population.getPeopleArray()) {
 

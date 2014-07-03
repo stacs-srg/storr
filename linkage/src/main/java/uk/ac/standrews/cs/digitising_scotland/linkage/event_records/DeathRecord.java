@@ -6,7 +6,6 @@ import uk.ac.standrews.cs.digitising_scotland.population_model.model.Person;
 import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
 
 import java.sql.Date;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 /**
@@ -126,15 +125,6 @@ public class DeathRecord extends IndividualRecord {
         }
     }
 
-    public static synchronized String formatDate(final Date date) {
-        return DOB_DATE_FORMAT.format(date);
-    }
-
-    public static synchronized java.util.Date parseDate(final String date_string) throws ParseException {
-
-        return DOB_DATE_FORMAT.parse(date_string);
-    }
-
     private void processDates(final Date birth_date, final Date death_date) {
 
         if (death_date != null) {
@@ -146,7 +136,7 @@ public class DeathRecord extends IndividualRecord {
             setDeathAge(String.valueOf(death_year - birth_year));
 
             if (death_year >= DeathRecord.FIRST_YEAR_DOB_PRESENT) {
-                setBirthDate(formatDate(birth_date));
+                setBirthDate(DateManipulation.formatDate(birth_date, DOB_DATE_FORMAT));
             }
         }
     }

@@ -30,6 +30,8 @@ public interface IPartnership extends Comparable<IPartnership> {
 
     int getPartner2Id();
 
+    int getPartnerOf(int id);
+
     Date getMarriageDate();
 
     List<Integer> getChildren();

@@ -16,14 +16,14 @@
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.generation.analytic;
 
-import uk.ac.standrews.cs.digitising_scotland.population_model.generation.analytic.ChildrenAnalytics;
-import uk.ac.standrews.cs.digitising_scotland.population_model.generation.analytic.DeathAnalytics;
-import uk.ac.standrews.cs.digitising_scotland.population_model.generation.analytic.MarriageAnalytics;
-import uk.ac.standrews.cs.digitising_scotland.population_model.generation.analytic.ParentAnalytics;
-import uk.ac.standrews.cs.digitising_scotland.population_model.generation.analytic.PopulationAnalytics;
+import uk.ac.standrews.cs.digitising_scotland.population_model.generation.distributions.InconsistentWeightException;
 import uk.ac.standrews.cs.digitising_scotland.population_model.generation.distributions.NegativeDeviationException;
 import uk.ac.standrews.cs.digitising_scotland.population_model.generation.distributions.NegativeWeightException;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.CompactPopulation;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.CompactPopulationAdapter;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPopulation;
+
+import java.io.IOException;
 
 /**
  * @author Alan Dearle (alan.dearle@st-andrews.ac.uk)
@@ -33,15 +33,14 @@ import uk.ac.standrews.cs.digitising_scotland.population_model.model.CompactPopu
  */
 public class PopulationAnalyticsTestManual {
 
-    public static void main(final String[] args) throws NegativeDeviationException, NegativeWeightException {
+    public static void main(final String[] args) throws NegativeDeviationException, NegativeWeightException, IOException, InconsistentWeightException {
 
         final int population_size = 1000;
-        final CompactPopulation population = new CompactPopulation(population_size);
+        final IPopulation population = new CompactPopulationAdapter(new CompactPopulation(population_size));
 
         new PopulationAnalytics(population).printAllAnalytics();
         new MarriageAnalytics(population).printAllAnalytics();
         new ChildrenAnalytics(population).printAllAnalytics();
         new DeathAnalytics(population).printAllAnalytics();
-        new ParentAnalytics(population).printAllAnalytics();
     }
 }
