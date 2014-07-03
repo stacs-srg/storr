@@ -17,11 +17,26 @@
 package uk.ac.standrews.cs.digitising_scotland.population_model.model;
 
 /**
- * Created by graham on 11/06/2014.
+ * Interface to be implemented by classes that process information from a population.
+ *
+ * @author Graham Kirby (graham.kirby@st-andrews.ac.uk)
+ * @see uk.ac.standrews.cs.digitising_scotland.population_model.transform.PopulationConverter
  */
 public interface IPopulationWriter extends AutoCloseable {
 
-    void recordIndividual(IPerson member) throws Exception;
+    /**
+     * Records a given person from the population.
+     *
+     * @param person the person
+     * @throws Exception if anything goes wrong
+     */
+    void recordPerson(IPerson person) throws Exception;
 
-    void recordPartnership(IPartnership member) throws Exception;
+    /**
+     * Records a given partnership from the population.
+     *
+     * @param partnership the person
+     * @throws Exception if anything goes wrong
+     */
+    void recordPartnership(IPartnership partnership) throws Exception;
 }

@@ -83,12 +83,6 @@ public class CompactPopulation {
     private static final int MAX_CHILDREN = 6;
     private static final int MAX_MARRIAGES = 3;
 
-    private static final int MINIMUM_MOTHER_AGE_AT_CHILDBIRTH = 12;
-    private static final int MAXIMUM_MOTHER_AGE_AT_CHILDBIRTH = 50;
-    private static final int MAX_GESTATION_IN_DAYS = 300;
-    private static final int MINIMUM_FATHER_AGE_AT_CHILDBIRTH = 12;
-    private static final int MAXIMUM_FATHER_AGE_AT_CHILDBIRTH = 70;
-
     private static final int[] NUMBER_OF_CHILDREN_DISTRIBUTION = new int[]{2, 3, 2, 1, 1, 1, 1};
     private static final int[] NUMBER_OF_MARRIAGES_DISTRIBUTION = new int[]{4, 20, 2, 1};
 
@@ -175,27 +169,13 @@ public class CompactPopulation {
     }
 
     @SuppressFBWarnings(value = "EI_EXPOSE_REP", justification = "too expensive...")
-    public CompactPopulation(CompactPerson[] people, final int earliest_date, final int latest_date) {
+    public CompactPopulation(final CompactPerson[] people, final int earliest_date, final int latest_date) {
 
         this.people = people;
         this.earliest_date = earliest_date;
         this.latest_date = latest_date;
-        
+
         setNumberOfPartnerships();
-    }
-
-    private void setNumberOfPartnerships() {
-
-        Set<CompactPartnership> partnerships = new HashSet<>();
-        for (CompactPerson person : people) {
-            List<CompactPartnership> partnerships1 = person.getPartnerships();
-            if (partnerships1 != null) {
-                for (CompactPartnership partnership : partnerships1) {
-                    partnerships.add(partnership);
-                }
-            }
-        }
-        number_of_partnerships = partnerships.size();
     }
 
     /**
@@ -273,7 +253,7 @@ public class CompactPopulation {
 
         int index = findPerson(-1, new Condition() {
             @Override
-            public int check(int index) {
+            public int check(final int index) {
                 return people[index].getId() == id ? Condition.POSITIVE : Condition.NEGATIVE_CONTINUE;
             }
         });
@@ -318,9 +298,8 @@ public class CompactPopulation {
                     return i;
                 case Condition.NEGATIVE_STOP:
                     return -1;
-                case Condition.NEGATIVE_CONTINUE: {
+                case Condition.NEGATIVE_CONTINUE:
                     continue;
-                }
                 default:
                     throw new RuntimeException("unexpected condition");
             }
@@ -339,34 +318,6 @@ public class CompactPopulation {
             }
         }
         return false;
-    }
-
-    /**
-     * Gets the index of the male member of this partnership.
-     *
-     * @return the male member of this partnership.
-     * * Assumes that the two partners are of different sexes.
-     */
-    private int getHusbandIndex(final CompactPartnership partnership) {
-
-        return people[partnership.partner1_index].isMale() ? partnership.partner1_index : partnership.partner2_index;
-    }
-
-    /**
-     * Gets the index of female member of this partnership.
-     *
-     * @return the female member of this partnership.
-     * Assumes that the two partners are of different sexes.
-     */
-    private int getWifeIndex(final CompactPartnership partnership) {
-
-        return !people[partnership.partner1_index].isMale() ? partnership.partner1_index : partnership.partner2_index;
-    }
-
-    public boolean parentsHaveSensibleAgesAtChildBirth(final CompactPartnership partnership, final int child_id) {
-
-        final CompactPerson child = findPerson(child_id);
-        return parentsHaveSensibleAgesAtChildBirth(people[getHusbandIndex(partnership)], people[getWifeIndex(partnership)], child);
     }
 
     public boolean parentsHaveSensibleAgesAtChildBirth(final int father_index, final int mother_index, final int child_index) {
@@ -389,6 +340,12 @@ public class CompactPopulation {
 
     public int getNumberOfPartnerships() {
         return number_of_partnerships;
+    }
+
+    @SuppressFBWarnings(value = "EI_EXPOSE_REP", justification = "too expensive...")
+    public CompactPerson[] getPeopleArray() {
+
+        return people;
     }
 
     /**
@@ -672,9 +629,39 @@ public class CompactPopulation {
         sorter.sort();
     }
 
-    @SuppressFBWarnings(value = "EI_EXPOSE_REP", justification = "too expensive...")
-    public CompactPerson[] getPeopleArray() {
+    private void setNumberOfPartnerships() {
 
-        return people;
+        Set<CompactPartnership> partnerships = new HashSet<>();
+        for (CompactPerson person : people) {
+            List<CompactPartnership> partnerships1 = person.getPartnerships();
+            if (partnerships1 != null) {
+                for (CompactPartnership partnership : partnerships1) {
+                    partnerships.add(partnership);
+                }
+            }
+        }
+        number_of_partnerships = partnerships.size();
+    }
+
+    /**
+     * Gets the index of the male member of this partnership.
+     *
+     * @return the male member of this partnership.
+     * * Assumes that the two partners are of different sexes.
+     */
+    private int getHusbandIndex(final CompactPartnership partnership) {
+
+        return people[partnership.partner1_index].isMale() ? partnership.partner1_index : partnership.partner2_index;
+    }
+
+    /**
+     * Gets the index of female member of this partnership.
+     *
+     * @return the female member of this partnership.
+     * Assumes that the two partners are of different sexes.
+     */
+    private int getWifeIndex(final CompactPartnership partnership) {
+
+        return !people[partnership.partner1_index].isMale() ? partnership.partner1_index : partnership.partner2_index;
     }
 }
