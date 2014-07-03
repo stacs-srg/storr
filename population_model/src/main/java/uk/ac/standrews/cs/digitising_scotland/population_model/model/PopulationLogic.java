@@ -41,21 +41,7 @@ public class PopulationLogic {
 
         Date child_birth_date = child.getBirthDate();
 
-
-        boolean result = parentsHaveSensibleAgesAtChildBirth(father_birth_date, father_death_date, mother_birth_date, mother_death_date, child_birth_date);
-
-        if (!result) {
-
-            System.out.println("Error case:");
-
-            System.out.println("mother birth: " + mother_birth_date);
-            System.out.println("mother death: " + mother_death_date);
-            System.out.println("father birth: " + father_birth_date);
-            System.out.println("father death: " + father_death_date);
-            System.out.println("child birth: " + child_birth_date);
-            System.out.println();
-        }
-        return result;
+        return parentsHaveSensibleAgesAtChildBirth(father_birth_date, father_death_date, mother_birth_date, mother_death_date, child_birth_date);
     }
 
     public static boolean parentsHaveSensibleAgesAtChildBirth(int father_birth_date, int father_death_date, int mother_birth_date, int mother_death_date, int child_birth_date) {

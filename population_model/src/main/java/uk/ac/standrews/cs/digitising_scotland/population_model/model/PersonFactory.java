@@ -38,6 +38,8 @@ public class PersonFactory {
     private FileBasedEnumeratedDistribution occupations;
     private FileBasedEnumeratedDistribution causes_of_death;
 
+    private static final String MALE_STRING = String.valueOf(IPerson.MALE);
+
     public PersonFactory() {
 
         Random random = RandomFactory.getRandom();
@@ -80,7 +82,7 @@ public class PersonFactory {
             throw new ParseException(e.getMessage(), 0);
         }
 
-        person.setGender(gedcom_person.sex.toString().equals(IPerson.MALE_STRING) ? IPerson.MALE : IPerson.FEMALE);
+        person.setGender(gedcom_person.sex.toString().equals(MALE_STRING) ? IPerson.MALE : IPerson.FEMALE);
 
         final List<PersonalName> names = gedcom_person.names;
 
