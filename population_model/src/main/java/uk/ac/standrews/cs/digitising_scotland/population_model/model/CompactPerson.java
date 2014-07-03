@@ -30,13 +30,13 @@ import java.util.List;
  */
 public class CompactPerson {
 
-    private int id;
 
     private static final int POSITION_OF_MALE_BIT = 0;
     private static final int POSITION_OF_PARENTS_BIT = 1;
     private static final int POSITION_OF_INCOMERS_BIT = 2;
     private static final int POSITION_OF_MARKED_BIT = 3;
 
+    protected int id;
     protected int birth_date = -1;
     protected int death_date = -1;
 
@@ -53,7 +53,12 @@ public class CompactPerson {
 
         this.birth_date = birth_date;
         setMale(male);
-        id = IDFactory.getNextID();
+    }
+
+    public CompactPerson(final int birth_date, final boolean male, final int id) {
+
+        this(birth_date, male);
+        this.id = id;
     }
 
     /**
@@ -68,7 +73,7 @@ public class CompactPerson {
 
     public CompactPartnership mostRecentPartnership() {
 
-        return getPartnerships().get(getPartnerships().size() - 1);
+        return partnership_list != null ? partnership_list.get(getPartnerships().size() - 1) : null;
     }
 
     public char getSex() {
@@ -203,9 +208,5 @@ public class CompactPerson {
     public void setPartnerships(final List<CompactPartnership> partnership_list) {
 
         this.partnership_list = partnership_list;
-    }
-
-    public CompactPartnership getParents() {
-        return null;
     }
 }

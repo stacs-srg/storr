@@ -34,7 +34,6 @@ public abstract class PopulationStructureTest {
 
     protected IPopulation makePopulation(int population_size) throws IOException, InconsistentWeightException {
 
-        IDFactory.resetId();
         return new CompactPopulationAdapter(new CompactPopulation(makePeople(population_size), 0, 0));
     }
 
@@ -43,6 +42,7 @@ public abstract class PopulationStructureTest {
         CompactPerson[] result = new CompactPerson[n];
         for (int i = 0; i < n; i++) {
             result[i] = new CompactPerson(0, true);
+            result[i].id = i + 1;
         }
         return result;
     }
@@ -71,8 +71,6 @@ public abstract class PopulationStructureTest {
 
     protected static Object[] unconnectedPopulation(int size) throws IOException, InconsistentWeightException {
 
-        IDFactory.resetId();
-
         CompactPerson[] people = makePeople(size);
         IPopulation population = new CompactPopulationAdapter(new CompactPopulation(people, 0, 0));
         population.setDescription("unconnected-population-" + size);
@@ -85,8 +83,6 @@ public abstract class PopulationStructureTest {
 
     protected static Object[] fullPopulation(int size) throws IOException, InconsistentWeightException, NegativeDeviationException, NegativeWeightException {
 
-        IDFactory.resetId();
-
         CompactPopulation compact_population = new CompactPopulation(size);
         IPopulation population = new CompactPopulationAdapter(compact_population);
         population.setDescription("full-population-" + size);
@@ -95,8 +91,6 @@ public abstract class PopulationStructureTest {
     }
 
     protected static Object[] populationWithOnePartnership() throws IOException, InconsistentWeightException {
-
-        IDFactory.resetId();
 
         CompactPerson[] people = makePeople(3);
         CompactPartnership partnership = createPartnership(people, 0, 1);
@@ -111,8 +105,6 @@ public abstract class PopulationStructureTest {
     }
 
     protected static Object[] populationWithThreePartnerships() throws IOException, InconsistentWeightException {
-
-        IDFactory.resetId();
 
         CompactPerson[] people = makePeople(6);
 
@@ -131,8 +123,6 @@ public abstract class PopulationStructureTest {
 
     protected static Object[] populationWithTwoFamilies() throws IOException, InconsistentWeightException, ParseException {
 
-        IDFactory.resetId();
-
         CompactPerson[] people = makePeopleInTwoFamilies();
         CompactPartnership partnership1 = people[0].getPartnerships().get(0);
         CompactPartnership partnership2 = people[2].getPartnerships().get(0);
@@ -141,7 +131,8 @@ public abstract class PopulationStructureTest {
         IPopulation population = new CompactPopulationAdapter(new CompactPopulation(people, 0, 0));
         population.setDescription("population-2-families");
 
-        int[] expected_people_id_order = new int[]{1, 3, 4, 2, 6, 5, 7, 8};
+        int[] expected_people_id_order = new int[]{1, 5, 6, 2, 3, 4, 7, 8};
+
         int[] expected_partnership_id_order = getIds(partnerships);
 
         return new Object[]{population, expected_people_id_order, expected_partnership_id_order};
@@ -187,15 +178,14 @@ public abstract class PopulationStructureTest {
         int child1B_birth_date = DateManipulation.dateToDays(DateManipulation.parseDate("21/08/1920", formatter));
         int child2B_birth_date = DateManipulation.dateToDays(DateManipulation.parseDate("21/08/1925", formatter));
 
-        CompactPerson fatherA = new CompactPerson(fatherA_birth_date, true);
-        CompactPerson motherA = new CompactPerson(motherA_birth_date, false);
-        CompactPerson child1A = new CompactPerson(child1A_birth_date, false);
-        CompactPerson child2A = new CompactPerson(child2A_birth_date, true);
-
-        CompactPerson fatherB = new CompactPerson(fatherB_birth_date, true);
-        CompactPerson motherB = new CompactPerson(motherB_birth_date, false);
-        CompactPerson child1B = new CompactPerson(child1B_birth_date, true);
-        CompactPerson child2B = new CompactPerson(child2B_birth_date, false);
+        CompactPerson fatherA = new CompactPerson(fatherA_birth_date, true, 1);
+        CompactPerson motherA = new CompactPerson(motherA_birth_date, false, 2);
+        CompactPerson motherB = new CompactPerson(motherB_birth_date, false, 3);
+        CompactPerson fatherB = new CompactPerson(fatherB_birth_date, true, 4);
+        CompactPerson child1A = new CompactPerson(child1A_birth_date, false, 5);
+        CompactPerson child1B = new CompactPerson(child1B_birth_date, true, 6);
+        CompactPerson child2A = new CompactPerson(child2A_birth_date, true, 7);
+        CompactPerson child2B = new CompactPerson(child2B_birth_date, false, 8);
 
         CompactPerson[] population = new CompactPerson[]{fatherA, motherA, motherB, fatherB, child1A, child1B, child2A, child2B};
 

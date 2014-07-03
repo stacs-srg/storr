@@ -49,6 +49,18 @@ public class SpecificPopulationStructureTest extends PopulationStructureTest {
     }
 
     @Test
+    public void findPerson() {
+
+        IDFactory.resetId();
+        CompactPerson[] people = makePeople(10);
+        CompactPopulation population = new CompactPopulation(people, 0, 0);
+
+        for (int i = 0; i < people.length; i++) {
+            assertEquals(people[i], population.findPerson(i+1));
+        }
+    }
+
+    @Test
     public void familyStructureIsAsExpected() throws IOException, InconsistentWeightException, ParseException {
 
         IPopulation population = (IPopulation) populationWithTwoFamilies()[0];

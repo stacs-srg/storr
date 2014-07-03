@@ -16,12 +16,13 @@
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.transform.old;
 
-import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
 import uk.ac.standrews.cs.digitising_scotland.population_model.generation.distributions.InconsistentWeightException;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.CompactPartnership;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.CompactPerson;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.CompactPopulation;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.Person;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.SearchCondition;
+import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -90,12 +91,12 @@ public class PopulationToGraphviz extends PopulationToFile {
 
         int index = population.findPersonIndex(person);
 
-        final CompactPopulation.Condition has_parents_condition = new CompactPopulation.Condition() {
+        final SearchCondition has_parents_condition = new SearchCondition() {
 
             @Override
-            public int check(final int person_index) {
+            public ConditionResult check(final int person_index) {
 
-                return population.getPerson(person_index).hasParents() ? CompactPopulation.Condition.POSITIVE : CompactPopulation.Condition.NEGATIVE_CONTINUE;
+                return population.getPerson(person_index).hasParents() ? ConditionResult.POSITIVE : ConditionResult.NEGATIVE_CONTINUE;
             }
         };
 

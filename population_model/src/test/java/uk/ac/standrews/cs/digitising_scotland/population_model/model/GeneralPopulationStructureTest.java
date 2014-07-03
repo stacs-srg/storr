@@ -64,6 +64,10 @@ public class GeneralPopulationStructureTest extends PopulationStructureTest {
                 populationWithOnePartnership(),
                 populationWithThreePartnerships(),
                 populationWithTwoFamilies(),
+                fullPopulation(1),
+                fullPopulation(2),
+                fullPopulation(3),
+                fullPopulation(10),
                 fullPopulation(100),
                 fullPopulation(1000),
                 fullPopulation(10000));
@@ -94,24 +98,19 @@ public class GeneralPopulationStructureTest extends PopulationStructureTest {
     @Test
     public void iterateOverPopulation() {
 
-        assertPersonIterationIsAsExpected();
-        assertPartnershipIterationIsAsExpected();
-    }
-
-    @Test
-    public void iteratorDoesntRepeat() {
-
         Set<Integer> people = new HashSet<>();
         for (IPerson person : population.getPeople()) {
             assertFalse(people.contains(person.getId()));
             people.add(person.getId());
         }
+        assertEquals(population.getNumberOfPeople(), people.size());
 
         Set<Integer> partnerships = new HashSet<>();
         for (IPartnership partnership : population.getPartnerships()) {
             assertFalse(partnerships.contains(partnership.getId()));
             partnerships.add(partnership.getId());
         }
+        assertEquals(population.getNumberOfPartnerships(), partnerships.size());
     }
 
     @Test(expected = NoSuchElementException.class)
@@ -403,38 +402,6 @@ public class GeneralPopulationStructureTest extends PopulationStructureTest {
 
         for (int i = 0; i < number_available + 1; i++) {
             iterator.next();
-        }
-    }
-
-    private void assertPersonIterationIsAsExpected() {
-
-        if (expected_people_id_order != null) {
-
-            Iterator<IPerson> person_iterator = population.getPeople().iterator();
-
-            for (int person_id : expected_people_id_order) {
-
-                assertTrue(person_iterator.hasNext());
-                assertEquals(person_iterator.next().getId(), person_id);
-            }
-
-            assertFalse(person_iterator.hasNext());
-        }
-    }
-
-    private void assertPartnershipIterationIsAsExpected() {
-
-        if (expected_partnership_id_order != null) {
-
-            Iterator<IPartnership> partnership_iterator = population.getPartnerships().iterator();
-
-            for (int partnership_id : expected_partnership_id_order) {
-
-                assertTrue(partnership_iterator.hasNext());
-                assertEquals(partnership_iterator.next().getId(), partnership_id);
-            }
-
-            assertFalse(partnership_iterator.hasNext());
         }
     }
 }

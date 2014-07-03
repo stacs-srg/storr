@@ -31,6 +31,12 @@ public class PopulationLogic {
     private static final int MINIMUM_FATHER_AGE_AT_CHILDBIRTH = 12;
     private static final int MAXIMUM_FATHER_AGE_AT_CHILDBIRTH = 70;
 
+    private static final int INTER_CHILD_INTERVAL = 3;
+    private static final int TIME_BEFORE_FIRST_CHILD = 1;
+
+    private static final int MAXIMUM_AGE_DIFFERENCE_IN_PARTNERSHIP = 15;
+    private static final int MINIMUM_PERIOD_BETWEEN_PARTNERSHIPS = 7;
+
     public static boolean parentsHaveSensibleAgesAtChildBirth(final IPerson father, final IPerson mother, final IPerson child) {
 
         Date mother_birth_date = mother.getBirthDate();
@@ -62,6 +68,20 @@ public class PopulationLogic {
                 fatherAliveAtConception(father_death_date, child_birth_date) &&
                 fatherNotTooYoungAtBirth(father_birth_date, child_birth_date) &&
                 fatherNotTooOldAtBirth(father_birth_date, child_birth_date);
+    }
+
+    public static int earliestAcceptableBirthDate(final int marriage_date, final int previous_child_birth_date) {
+
+        return previous_child_birth_date == 0 ? DateManipulation.addYears(marriage_date, TIME_BEFORE_FIRST_CHILD) : DateManipulation.addYears(previous_child_birth_date, INTER_CHILD_INTERVAL);
+    }
+
+    public static boolean partnerAgeDifferenceIsReasonable(final int person_birth_date, final int candidate_birth_date) {
+
+        return Math.abs(DateManipulation.differenceInYears(person_birth_date, candidate_birth_date)) <= MAXIMUM_AGE_DIFFERENCE_IN_PARTNERSHIP;
+    }
+
+    public static boolean longEnoughBetweenMarriages(int candidate_marriage_date, int previous_marriage_date) {
+        return DateManipulation.differenceInYears(previous_marriage_date, candidate_marriage_date) > MINIMUM_PERIOD_BETWEEN_PARTNERSHIPS;
     }
 
     private static boolean motherAliveAtBirth(final Date mother_death_date, final Date child_birth_date) {
