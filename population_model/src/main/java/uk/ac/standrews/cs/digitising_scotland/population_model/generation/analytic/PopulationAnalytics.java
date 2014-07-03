@@ -16,44 +16,65 @@
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.generation.analytic;
 
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPartnership;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPerson;
-import uk.ac.standrews.cs.digitising_scotland.util.ArrayIterator;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPopulation;
 import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
-import uk.ac.standrews.cs.digitising_scotland.population_model.model.CompactPartnership;
-import uk.ac.standrews.cs.digitising_scotland.population_model.model.CompactPerson;
-import uk.ac.standrews.cs.digitising_scotland.population_model.model.CompactPopulation;
 
-import java.util.Iterator;
+import java.util.Date;
 import java.util.List;
 
 /**
  * An analytic class to analyse the entire population.
+ *
  * @author Alan Dearle (alan.dearle@st-andrews.ac.uk)
  */
 public class PopulationAnalytics {
 
-    private final CompactPopulation population;
+    private final IPopulation population;
     private static final int ONE_HUNDRED = 100;
 
     /**
      * Creates an analytic instance to analyse the entire population.
+     *
      * @param population - the population to analyse.
      */
-    public PopulationAnalytics(final CompactPopulation population) {
+    public PopulationAnalytics(final IPopulation population) {
 
         this.population = population;
     }
 
     public void printAllAnalytics() {
 
-        final int size = population.size();
-        final int number_males = population.numberMales();
-        final int number_females = population.numberFemales();
+        final int size = population.getNumberOfPeople();
+        final int number_males = countMales();
+        final int number_females = countFemales();
 
         System.out.println("Population size = " + size);
         System.out.println("Number of males = " + number_males + " = " + String.format("%.1f", number_males / (double) size * ONE_HUNDRED) + "%");
         System.out.println("Number of males = " + number_females + " = " + String.format("%.1f", number_females / (double) size * ONE_HUNDRED) + "%");
 
+        printAllBirthDates();
+        printAllDeathDates();
+        printAllDates();
+    }
+
+    private int countMales() {
+
+        int count = 0;
+        for (IPerson person : population.getPeople()) {
+            if (person.getSex() == IPerson.MALE) count++;
+        }
+        return count;
+    }
+
+    private int countFemales() {
+
+        int count = 0;
+        for (IPerson person : population.getPeople()) {
+            if (person.getSex() == IPerson.FEMALE) count++;
+        }
+        return count;
     }
 
     // -------------------------------------------------------------------------------------------------------
@@ -61,42 +82,50 @@ public class PopulationAnalytics {
     /**
      * Prints the dates of birth of all people.
      */
-    public void printAllDatesOfBirth() {
+    public void printAllBirthDates() {
 
-        final Iterator<IPerson> people = new ArrayIterator(population.getPeopleArray());
-
-        while (people.hasNext()) {
-            CompactPerson p = (CompactPerson)people.next();
-           System.out.println(DateManipulation.daysToString(p.getDateOfBirth()));
+        for (IPerson person : population.getPeople()) {
+            printBirthDate(person);
+            System.out.println();
         }
+    }
+
+    private void printBirthDate(IPerson person) {
+
+        System.out.print(DateManipulation.formatDate(person.getBirthDate()));
     }
 
     /**
      * Prints the dates of death of all people.
      */
-    public void printAllDatesOfDeath() {
+    public void printAllDeathDates() {
 
-        final Iterator<IPerson> people = new ArrayIterator(population.getPeopleArray());
+        for (IPerson person : population.getPeople()) {
+            printDeathDate(person);
+            System.out.println();
+        }
+    }
 
-        while (people.hasNext()) {
-            final CompactPerson p = (CompactPerson)people.next();
-            if (p.getDateOfDeath() >= 0) {
-                System.out.println(DateManipulation.daysToString(p.getDateOfDeath()));
-            }
+    private void printDeathDate(IPerson person) {
+
+        Date death_date = person.getDeathDate();
+        if (death_date != null) {
+            System.out.print(DateManipulation.formatDate(death_date));
         }
     }
 
     /**
      * Prints the dates of birth of children in a partnership.
+     *
      * @param partnership the partnership
      */
-    public void printChildren(final CompactPartnership partnership) {
+    public void printChildren(final IPartnership partnership) {
 
         if (partnership.getChildren() != null) {
-            for (final int child : partnership.getChildren()) {
-                final CompactPerson kid = population.getPerson(child);
-                System.out.println("\t\tChild born: " + DateManipulation.daysToString(kid.getDateOfBirth()));
+            for (final int child_index : partnership.getChildren()) {
 
+                final IPerson child = population.findPerson(child_index);
+                System.out.println("\t\tChild born: " + DateManipulation.formatDate(child.getBirthDate()));
             }
         }
     }
@@ -104,39 +133,41 @@ public class PopulationAnalytics {
     /**
      * Prints the details of partnerships and children for a given person.
      */
-    public void printMarriages(final int person_index) {
+    public void printPartnerships(IPerson person) {
 
-        final CompactPerson p = population.getPerson(person_index);
-        final List<CompactPartnership> partnerships = p.getPartnerships();
-        if (partnerships != null) {
-            for (final CompactPartnership partnership : partnerships) {
-                if (partnership.getMarriageDate() > -1) {
-                    final int partner_index = partnership.getPartner(person_index);
-                    final CompactPerson partner = population.getPerson(partner_index);
-                    System.out.println("\tMarriage to " + partner.getSex() + " born: " + DateManipulation.daysToString(partner.getDateOfBirth()) + " on " + DateManipulation.daysToString(partnership.getMarriageDate()));
-                    printChildren(partnership);
+        final List<Integer> partnership_ids = person.getPartnerships();
+        if (partnership_ids != null) {
+            for (final int partnership_id : partnership_ids) {
+
+                IPartnership partnership = population.findPartnership(partnership_id);
+
+                final int partner_id = partnership.getPartnerOf(person.getId());
+                final IPerson partner = population.findPerson(partner_id);
+                System.out.println("\tPartner born: " + DateManipulation.formatDate(partner.getBirthDate()));
+
+                Date marriage_date = partnership.getMarriageDate();
+                if (marriage_date != null) {
+                    System.out.println("\tMarriage on " + DateManipulation.formatDate(marriage_date));
                 }
+
+                printChildren(partnership);
             }
         }
     }
 
     /**
-      * Prints all significant dates for the population.
-      */
+     * Prints all significant dates for the population.
+     */
     public void printAllDates() {
 
-        int index = 0;
-        final Iterator<IPerson> people = new ArrayIterator(population.getPeopleArray());
+        for (IPerson person : population.getPeople()) {
 
-        while (people.hasNext()) {
-            final CompactPerson p = (CompactPerson)people.next();
-
-            System.out.print(p.getSex() + " Born: " + DateManipulation.daysToString(p.getDateOfBirth()));
-            if (p.getDateOfDeath() >= 0) {
-                System.out.print(", Died: " + DateManipulation.daysToString(p.getDateOfDeath()));
-            }
+            System.out.print(person.getSex() + " Born: ");
+            printBirthDate(person);
+            System.out.print(", Died: ");
+            printDeathDate(person);
             System.out.println();
-            printMarriages(index++);
+            printPartnerships(person);
         }
     }
 }

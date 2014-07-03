@@ -44,7 +44,6 @@ public class BabyFatherResolver {
 
     private IBucket births;
     private IBucket matches;
-    private int matched_id = 0;
 
     public BabyFatherResolver() throws RepositoryException {
 
@@ -101,7 +100,7 @@ public class BabyFatherResolver {
     /**
      * ************************* Pairwise linker ***************************
      */
-    private class BabyFatherLinker extends AbstractPairwiseLinker {
+    private static class BabyFatherLinker extends AbstractPairwiseLinker {
 
         public BabyFatherLinker(final ILXPInputStream input, final ILXPOutputStream output) {
 

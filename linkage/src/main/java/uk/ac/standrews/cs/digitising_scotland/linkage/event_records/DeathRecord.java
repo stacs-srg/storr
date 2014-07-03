@@ -5,7 +5,7 @@ import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPerson;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.Person;
 import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
 
-import java.sql.Date;
+import java.util.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
@@ -122,31 +122,6 @@ public class DeathRecord extends IndividualRecord {
                     setMothersSurname(parent.getSurname());
                     setMothersMaidenSurname(parent.getMaidenName());
                 }
-            }
-        }
-    }
-
-    public static synchronized String formatDate(final Date date) {
-        return DOB_DATE_FORMAT.format(date);
-    }
-
-    public static synchronized java.util.Date parseDate(final String date_string) throws ParseException {
-
-        return DOB_DATE_FORMAT.parse(date_string);
-    }
-
-    private void processDates(final Date birth_date, final Date death_date) {
-
-        if (death_date != null) {
-
-            int birth_year = DateManipulation.dateToYear(birth_date);
-            int death_year = DateManipulation.dateToYear(death_date);
-
-            setDeathYear(String.valueOf(death_year));
-            setDeathAge(String.valueOf(death_year - birth_year));
-
-            if (death_year >= DeathRecord.FIRST_YEAR_DOB_PRESENT) {
-                setBirthDate(formatDate(birth_date));
             }
         }
     }
@@ -299,5 +274,26 @@ public class DeathRecord extends IndividualRecord {
                 death_cause_a, death_cause_b, death_cause_c, certifying_doctor, entry_corrected, image_quality);
 
         return builder.toString();
+    }
+
+    public static Date parseDate(String date_string) throws ParseException {
+
+        return DateManipulation.parseDate(date_string, DOB_DATE_FORMAT);
+    }
+
+    private void processDates(final Date birth_date, final Date death_date) {
+
+        if (death_date != null) {
+
+            int birth_year = DateManipulation.dateToYear(birth_date);
+            int death_year = DateManipulation.dateToYear(death_date);
+
+            setDeathYear(String.valueOf(death_year));
+            setDeathAge(String.valueOf(death_year - birth_year));
+
+            if (death_year >= DeathRecord.FIRST_YEAR_DOB_PRESENT) {
+                setBirthDate(DateManipulation.formatDate(birth_date, DOB_DATE_FORMAT));
+            }
+        }
     }
 }

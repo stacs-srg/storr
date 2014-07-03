@@ -63,24 +63,23 @@ public class DateTest {
         assertEquals(following_first_january_in_days, DateManipulation.dateToDays(START_YEAR + 1, 0, 1));
     }
 
-
     @Test
     public void daysToString() {
 
         // 1st, 2nd, 3rd, 31st January of start year.
-        assertEquals("1 Jan " + START_YEAR, DateManipulation.daysToString(0));
-        assertEquals("2 Jan " + START_YEAR, DateManipulation.daysToString(1));
-        assertEquals("3 Jan " + START_YEAR, DateManipulation.daysToString(2));
+        assertEquals("01 Jan " + START_YEAR, DateManipulation.daysToString(0));
+        assertEquals("02 Jan " + START_YEAR, DateManipulation.daysToString(1));
+        assertEquals("03 Jan " + START_YEAR, DateManipulation.daysToString(2));
         assertEquals("31 Jan " + START_YEAR, DateManipulation.daysToString(30));
 
         // 1st February of start year.
-        assertEquals("1 Feb " + START_YEAR, DateManipulation.daysToString(first_february_in_days));
+        assertEquals("01 Feb " + START_YEAR, DateManipulation.daysToString(first_february_in_days));
 
         // 1st March of start year.
-        assertEquals("1 Mar " + START_YEAR, DateManipulation.daysToString(first_march_in_days));
+        assertEquals("01 Mar " + START_YEAR, DateManipulation.daysToString(first_march_in_days));
 
         // 1st January of year after start year.
-        assertEquals("1 Jan " + (START_YEAR + 1), DateManipulation.daysToString(following_first_january_in_days));
+        assertEquals("01 Jan " + (START_YEAR + 1), DateManipulation.daysToString(following_first_january_in_days));
     }
 
     @Test

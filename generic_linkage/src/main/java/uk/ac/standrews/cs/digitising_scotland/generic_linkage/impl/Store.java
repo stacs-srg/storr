@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXP;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IRepository;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IStore;
@@ -7,7 +8,10 @@ import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
 import uk.ac.standrews.cs.nds.persistence.PersistentObjectException;
 import uk.ac.standrews.cs.nds.util.ErrorHandling;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -26,18 +30,22 @@ public class Store implements IStore {
     private final File store_root_directory;
     private final File repo_directory;
     private final File id_file;
+    private final Path id_file_path;
 
-    public static IStore instance;
+    static IStore instance;
 
     private int id = 1;
 
-    public Store( String store_path ) throws StoreException, IOException {
+    @SuppressFBWarnings(value = "ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD")
+    public Store(String store_path) throws StoreException, IOException {
+
         this.store_path = store_path;
         this.repo_path = store_path + File.separator + REPO_DIR_NAME;
 
         store_root_directory = new File(store_path);
         repo_directory = new File(repo_path);
-        id_file = new File( store_path + File.separator + ID_FILE_NAME );
+        id_file = new File(store_path + File.separator + ID_FILE_NAME);
+        id_file_path = Paths.get(id_file.getAbsolutePath());
 
         checkCreate(store_root_directory);
         checkCreate(repo_directory);
@@ -49,8 +57,8 @@ public class Store implements IStore {
     }
 
     public static IStore getInstance() {
-        if( instance == null ) {
-            ErrorHandling.hardError( "No Store specified" );
+        if (instance == null) {
+            ErrorHandling.hardError("No Store specified");
             return null;
         }
         return instance;
@@ -88,8 +96,8 @@ public class Store implements IStore {
     }
 
     @Override
-    public Iterator<IRepository> getIterator()  {
-        return new RepoIterator(this,repo_directory);
+    public Iterator<IRepository> getIterator() {
+        return new RepoIterator(this, repo_directory);
     }
 
     @Override
@@ -98,7 +106,7 @@ public class Store implements IStore {
         try {
             saveId();
         } catch (IOException e) {
-            ErrorHandling.exceptionError( e,"Saving id" );
+            ErrorHandling.exceptionError(e, "Saving id");
         }
         return next_id;
     }
@@ -113,24 +121,29 @@ public class Store implements IStore {
     }
 
     private void initId() throws IOException {
-        BufferedReader bf = new BufferedReader(new FileReader(id_file));
-        String line = bf.readLine();
-        id = Integer.valueOf(line);
-        bf.close();
+
+
+        try (BufferedReader reader = Files.newBufferedReader(id_file_path, FileManipulation.FILE_CHARSET)) {
+
+            String line = reader.readLine();
+            if (line == null) throw new IOException("couldn't read id");
+            id = Integer.valueOf(line);
+        }
     }
 
     private void saveId() throws IOException {
-        BufferedWriter bw = new BufferedWriter(new FileWriter(id_file));
-        bw.write(Integer.toString(id));
-        bw.newLine();
-        bw.flush();
-        bw.close();
+
+        try (BufferedWriter writer = Files.newBufferedWriter(id_file_path, FileManipulation.FILE_CHARSET)) {
+
+            writer.write(Integer.toString(id));
+            writer.newLine();
+        }
     }
 
     private void checkCreateId() throws IOException, StoreException {
-        if( ! id_file.exists() ) { // only create this file if it doesn't exist
+        if (!id_file.exists()) { // only create this file if it doesn't exist
 
-            if( !id_file.createNewFile() ) {
+            if (!id_file.createNewFile()) {
                 throw new StoreException("ID file " + id_file.getAbsolutePath() + " does not exist and cannot be created");
             }
         }
@@ -138,7 +151,7 @@ public class Store implements IStore {
     }
 
 
-    private void checkCreate( File root_dir ) throws StoreException {
+    private void checkCreate(File root_dir) throws StoreException {
         if (!root_dir.exists()) {  // only create if it doesn't exist - try and make the directory
 
             if (!root_dir.mkdir()) {
@@ -170,7 +183,7 @@ public class Store implements IStore {
         }
     }
 
-    private class RepoIterator implements Iterator<IRepository> {
+    private static class RepoIterator implements Iterator<IRepository> {
 
         private final Iterator<File> file_iterator;
         private final IStore store;

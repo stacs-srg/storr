@@ -120,7 +120,7 @@ public class Repository implements IRepository {
         return new BucketIterator(this, repo_directory);
     }
 
-    private class BucketIterator implements Iterator<IBucket> {
+    private static class BucketIterator implements Iterator<IBucket> {
 
         private final Iterator<File> file_iterator;
         private final Repository repository;

@@ -1,15 +1,14 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.AbstractClassifier;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.OLR.OLRClassifier;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.lookup.ExactMatchClassifier;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.AnalysisMetrics.*;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.AnalysisMetrics.AbstractConfusionMatrix;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.AnalysisMetrics.CodeMetrics;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.AnalysisMetrics.InvertedSoftConfusionMatrix;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.AnalysisMetrics.ListAccuracyMetrics;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.AnalysisMetrics.SoftConfusionMatrix;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.AnalysisMetrics.StrictConfusionMatrix;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.FormatConverter;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.InputFormatException;
@@ -19,6 +18,13 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.writers.DataClerkingWriter;
 import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
 import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearningConfiguration;
+import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 
 /**
  * This class integrates the training of machine learning models and the classification of records using those models.
@@ -32,15 +38,14 @@ import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearnin
  * <br><br>
  * The records to be classified are held in a file with the correct format as specified by NRS. One record per line.
  * This class initiates the reading of these records. These are stored as {@link Record} objects inside a {@link Bucket}.
- *<br><br>
+ * <br><br>
  * After the records have been created and stored in a bucket, classification can begin. This is carried out by the
  * {@link BucketClassifier} class which in turn implements the {@link RecordClassificationPipeline}. Please see this class for
  * implementation details.
  * <br><br>
  * Some initial metrics are then printed to the console and classified records are written to file (target/NRSData.txt).
- * 
- * @author jkc25, frjd2
  *
+ * @author jkc25, frjd2
  */
 public final class TrainAndMultiplyClassify {
 
@@ -56,11 +61,13 @@ public final class TrainAndMultiplyClassify {
 
     /**
      * Entry method for training and classifying a batch of records into multiple codes.
-     * 
+     *
      * @param args <file1> training file <file2> file to classify
      * @throws Exception If exception occurs
      */
     public static void main(final String[] args) throws Exception {
+
+        // TODO split this up!
 
         setupExperimentalFolders();
 
@@ -125,15 +132,15 @@ public final class TrainAndMultiplyClassify {
         runRscript(softCodeStatsPath, "softCodeStats");
         accuracyMetrics.generateMarkDownSummary(experimentalFolderName, "strictCodeStats");
         accuracyMetrics.generateMarkDownSummary(experimentalFolderName, "softCodeStats");
-
     }
 
     private static void runRscript(final String dataPath, final String imageName) throws IOException {
 
+        // TODO this doesn't look too portable!
+
         String imageOutputPath = experimentalFolderName + "/Reports/" + imageName + ".png";
         String command = "Rscript src/R/CodeStatsPlotter.R " + dataPath + " " + imageOutputPath;
         System.out.println(executeCommand(command));
-
     }
 
     private static String executeCommand(final String command) {
@@ -143,25 +150,24 @@ public final class TrainAndMultiplyClassify {
         try {
             p = Runtime.getRuntime().exec(command);
             int exitVal = p.waitFor();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
 
-            String line = "";
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream(), FileManipulation.FILE_CHARSET))) {
 
-            while ((line = reader.readLine()) != null) {
-                output.append(line + "\n");
+                String line;
+
+                while ((line = reader.readLine()) != null) {
+                    output.append(line + "\n");
+                }
             }
 
             if (exitVal != 0) {
                 System.out.println("ExitValue: " + exitVal);
             }
-
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
         return output.toString();
-
     }
 
     private static ExactMatchClassifier trainExactMatchClassifier() throws Exception {
@@ -175,12 +181,12 @@ public final class TrainAndMultiplyClassify {
     private static void setupExperimentalFolders() {
 
         experimentalFolderName = getExperimentalFolderName();
-        File experimentalFolder = new File(experimentalFolderName);
-        experimentalFolder.mkdirs();
-        new File(experimentalFolderName + "/Reports").mkdirs();
-        new File(experimentalFolderName + "/Data").mkdirs();
-        new File(experimentalFolderName + "/Models").mkdirs();
 
+        if (!(new File(experimentalFolderName).mkdirs() &&
+                new File(experimentalFolderName + "/Reports").mkdirs() &&
+                new File(experimentalFolderName + "/Data").mkdirs() &&
+                new File(experimentalFolderName + "/Models").mkdirs()))
+            throw new RuntimeException("couldn't create experimental folder");
     }
 
     private static void writeRecords(final Bucket classifiedBucket) throws IOException {
@@ -197,10 +203,9 @@ public final class TrainAndMultiplyClassify {
         trainingBucket = new Bucket();
         predictionBucket = new Bucket();
         for (Record record : bucket) {
-            if (Math.random() < 0.8) {
+            if (Math.random() < 0.8) { // TODO Magic number
                 trainingBucket.addRecordToBucket(record);
-            }
-            else {
+            } else {
                 predictionBucket.addRecordToBucket(record);
             }
         }
@@ -211,13 +216,9 @@ public final class TrainAndMultiplyClassify {
         Bucket toClassify = null;
         try {
             toClassify = new Bucket(RecordFactory.makeCodedRecordsFromFile(prediction));
-        }
-        catch (IOException e) {
-            // TODO Auto-generated catch block
+        } catch (IOException e) {
             e.printStackTrace();
-        }
-        catch (InputFormatException e) {
-            // TODO Auto-generated catch block
+        } catch (InputFormatException e) {
             e.printStackTrace();
         }
 
@@ -240,8 +241,7 @@ public final class TrainAndMultiplyClassify {
 
         if (longFormat) {
             records = FormatConverter.convert(training);
-        }
-        else {
+        } else {
             records = RecordFactory.makeCodedRecordsFromFile(training);
         }
         bucket.addCollectionOfRecords(records);
@@ -255,7 +255,9 @@ public final class TrainAndMultiplyClassify {
         String line = br.readLine();
         br.close();
         if (line != null) {
-            if (line.split(Utils.getCSVComma()).length == 38) { return true; }
+            if (line.split(Utils.getCSVComma()).length == 38) {
+                return true;
+            }
         }
         return false;
     }

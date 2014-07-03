@@ -112,7 +112,7 @@ public class BirthDeathResolver {
      * ************************* Pairwise linker ***************************
      */
 
-    private class BirthDeathLinker extends AbstractPairwiseLinker {
+    private static class BirthDeathLinker extends AbstractPairwiseLinker {
 
         public BirthDeathLinker(final ILXPInputStream input, final ILXPOutputStream output) {
 

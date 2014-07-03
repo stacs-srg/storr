@@ -51,10 +51,8 @@ public class BassJohnBass {
     private IBucket marriages;                     // Bucket containing marriage records (inputs).
     private IBucket people;              // Bucket containing people extracted from birth records
     private IBucket relationships;       // Bucket containing relationships between people
-    private IIndexedBucket identity;            // Bucket containing identities of equivalent people in records
-    private IIndexedBucket lineage;            // Bucket containing pairs of pontentially linked parents and children
-
-    private int id = 0;
+//    private IIndexedBucket identity;            // Bucket containing identities of equivalent people in records
+    private IIndexedBucket lineage;            // Bucket containing pairs of potentially linked parents and children
 
     public BassJohnBass() throws RepositoryException, RecordFormatException, JSONException, IOException, PersistentObjectException, StoreException {
 
@@ -104,7 +102,6 @@ public class BassJohnBass {
             IBucket blocked_records = blocked_people_iterator.next();
 
             // Iterating over buckets of people with same first and last name and the same sex.
-
 
             BirthBirthLinker bdl = new BirthBirthLinker(blocked_records.getInputStream(), to.getOutputStream());
             bdl.pairwiseLink();

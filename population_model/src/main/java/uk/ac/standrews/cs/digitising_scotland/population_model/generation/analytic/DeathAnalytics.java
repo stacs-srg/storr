@@ -16,13 +16,12 @@
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.generation.analytic;
 
-import uk.ac.standrews.cs.digitising_scotland.util.ArrayIterator;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPerson;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPopulation;
 import uk.ac.standrews.cs.digitising_scotland.util.ArrayManipulation;
 import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
-import uk.ac.standrews.cs.digitising_scotland.population_model.model.CompactPerson;
-import uk.ac.standrews.cs.digitising_scotland.population_model.model.CompactPopulation;
 
-import java.util.Iterator;
+import java.util.Date;
 
 /**
  * An analytic class to analyse the distribution of deaths.
@@ -30,35 +29,20 @@ import java.util.Iterator;
  */
 public class DeathAnalytics {
 
-    private final CompactPopulation population;
     private static final int MAX_AGE_AT_DEATH = 110;
     private static final int ONE_HUNDRED = 100;
+
     private final int[] age_at_death = new int[MAX_AGE_AT_DEATH]; // tracks age of death over population
+    private final IPopulation population;
 
     /**
      * Creates an analytic instance to analyse deaths in a population.
      * @param population - the population to analyse.
      */
-    public DeathAnalytics(final CompactPopulation population) {
+    public DeathAnalytics(final IPopulation population) {
 
         this.population = population;
         analyseDeaths();
-    }
-
-    /**
-     * Analyses deaths in the population.
-     */
-    private void analyseDeaths() {
-
-        Iterator people = new ArrayIterator(population.getPeopleArray());
-
-        while(people.hasNext()) {
-            CompactPerson p = (CompactPerson)people.next();
-            final int age_at_death_in_years = DateManipulation.differenceInYears(p.getDateOfBirth(), p.getDateOfDeath());
-            if (age_at_death_in_years >= 0 && age_at_death_in_years < age_at_death.length) {
-                age_at_death[age_at_death_in_years]++;
-            }
-        }
     }
 
     public void printAllAnalytics() {
@@ -68,6 +52,26 @@ public class DeathAnalytics {
         System.out.println("Death distribution:");
         for (int i = 1; i < age_at_death.length; i++) {
             System.out.println("\tDeaths at age: " + i + " = " + age_at_death[i] + " = " + String.format("%.1f", age_at_death[i] / (double) sum * ONE_HUNDRED) + "%");
+        }
+    }
+
+    /**
+     * Analyses deaths in the population.
+     */
+    public void analyseDeaths() {
+
+        for (IPerson p : population.getPeople()) {
+
+            Date death_date = p.getDeathDate();
+
+            if (death_date != null) {
+
+                Date birth_date = p.getBirthDate();
+                final int age_at_death_in_years = DateManipulation.differenceInYears(birth_date, death_date);
+                if (age_at_death_in_years >= 0 && age_at_death_in_years < age_at_death.length) {
+                    age_at_death[age_at_death_in_years]++;
+                }
+            }
         }
     }
 }

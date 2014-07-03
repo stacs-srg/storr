@@ -17,6 +17,7 @@
 package uk.ac.standrews.cs.digitising_scotland.util;
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -43,6 +44,7 @@ public class DateManipulation {
     private static final Map<String, Integer> CALENDAR_MONTHS;
 
     public static final int START_YEAR = 1600;
+    public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd MMM yyyy");
 
     static {
 
@@ -61,6 +63,7 @@ public class DateManipulation {
         CALENDAR_MONTHS = CALENDAR.getDisplayNames(Calendar.MONTH, Calendar.SHORT, Locale.getDefault());
         START_IN_MILLIS = CALENDAR.getTimeInMillis();
     }
+
 
     /**
      * Calculates the number of days elapsed between 1st January of the {@link #START_YEAR} and the given date.
@@ -106,6 +109,7 @@ public class DateManipulation {
 
             CALENDAR.set(year, month, day);
             return new java.sql.Date(CALENDAR.getTimeInMillis());
+
         } catch (final UnknownMonthException e) {
             throw new ParseException(e.getMessage(), 0);
         }
@@ -129,9 +133,22 @@ public class DateManipulation {
      */
     public static synchronized String daysToString(final int days) {
 
-        setCalendarToDate(days);
-        final String month_name = CALENDAR.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.getDefault());
-        return CALENDAR.get(Calendar.DAY_OF_MONTH) + " " + month_name + " " + CALENDAR.get(Calendar.YEAR);
+        return formatDate(daysToDate(days), DATE_FORMAT);
+    }
+
+    public static synchronized String formatDate(final Date date, SimpleDateFormat formatter) {
+
+        return formatter.format(date);
+    }
+
+    public static synchronized String formatDate(final Date date) {
+
+        return formatDate(date, DATE_FORMAT);
+    }
+
+    public static synchronized Date parseDate(final String date_string, SimpleDateFormat formatter) throws ParseException {
+
+        return formatter.parse(date_string);
     }
 
     /**
