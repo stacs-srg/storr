@@ -166,34 +166,34 @@ public abstract class PopulationStructureTest {
     private static CompactPerson[] makePeopleInTwoFamilies() throws IOException, InconsistentWeightException {
 
         CompactPerson fatherA = new CompactPerson(0, true);
-        CompactPerson wifeA = new CompactPerson(0, false);
+        CompactPerson motherA = new CompactPerson(0, false);
         CompactPerson child1A = new CompactPerson(0, false);
         CompactPerson child2A = new CompactPerson(0, true);
 
         CompactPerson fatherB = new CompactPerson(0, true);
-        CompactPerson wifeB = new CompactPerson(0, false);
+        CompactPerson motherB = new CompactPerson(0, false);
         CompactPerson child1B = new CompactPerson(0, true);
         CompactPerson child2B = new CompactPerson(0, false);
 
-        CompactPerson[] population = new CompactPerson[]{fatherA, wifeA, wifeB, fatherB, child1A, child1B, child2A, child2B};
+        CompactPerson[] population = new CompactPerson[]{fatherA, motherA, motherB, fatherB, child1A, child1B, child2A, child2B};
 
         CompactPartnership partnershipA = new CompactPartnership(0, 1, 0);
         CompactPartnership partnershipB = new CompactPartnership(2, 3, 0);
 
-        List<CompactPartnership> partnershipsHusbandA = new ArrayList<>();
-        List<CompactPartnership> partnershipsWifeA = new ArrayList<>();
-        List<CompactPartnership> partnershipsHusbandB = new ArrayList<>();
-        List<CompactPartnership> partnershipsWifeB = new ArrayList<>();
+        List<CompactPartnership> partnershipsFatherA = new ArrayList<>();
+        List<CompactPartnership> partnershipsMotherA = new ArrayList<>();
+        List<CompactPartnership> partnershipsFatherB = new ArrayList<>();
+        List<CompactPartnership> partnershipsMotherB = new ArrayList<>();
 
-        partnershipsHusbandA.add(partnershipA);
-        partnershipsWifeA.add(partnershipA);
-        partnershipsHusbandB.add(partnershipB);
-        partnershipsWifeB.add(partnershipB);
+        partnershipsFatherA.add(partnershipA);
+        partnershipsMotherA.add(partnershipA);
+        partnershipsFatherB.add(partnershipB);
+        partnershipsMotherB.add(partnershipB);
 
-        fatherA.setPartnerships(partnershipsHusbandA);
-        wifeA.setPartnerships(partnershipsWifeA);
-        fatherB.setPartnerships(partnershipsHusbandB);
-        wifeB.setPartnerships(partnershipsWifeB);
+        fatherA.setPartnerships(partnershipsFatherA);
+        motherA.setPartnerships(partnershipsMotherA);
+        fatherB.setPartnerships(partnershipsFatherB);
+        motherB.setPartnerships(partnershipsMotherB);
 
         List<Integer> childrenA = new ArrayList<>();
         List<Integer> childrenB = new ArrayList<>();

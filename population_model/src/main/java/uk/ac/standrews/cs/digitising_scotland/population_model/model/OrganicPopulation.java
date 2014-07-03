@@ -16,8 +16,7 @@
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.model;
 
-import uk.ac.standrews.cs.digitising_scotland.population_model.generation.distributions.NegativeDeviationException;
-import uk.ac.standrews.cs.digitising_scotland.population_model.generation.distributions.NegativeWeightException;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import uk.ac.standrews.cs.digitising_scotland.util.PercentageProgressIndicator;
 import uk.ac.standrews.cs.digitising_scotland.util.ProgressIndicator;
 
@@ -74,8 +73,11 @@ public class OrganicPopulation {
     private static final double PROBABILITY_OF_BEING_INCOMER = 0.125;
     private ProgressIndicator progress_indicator;
 
+    @SuppressFBWarnings(value = "URF_UNREAD_FIELD")
     private CompactPerson[] people;
+    @SuppressFBWarnings(value = "UUF_UNUSED_FIELD")
     private CompactPerson[] peopleToBeMarriedToday;
+    @SuppressFBWarnings(value = "UUF_UNUSED_FIELD")
     private CompactPartnership[] partnershipsToHaveOffspringToday;
 
     public void initialize(){
@@ -84,9 +86,8 @@ public class OrganicPopulation {
             seedPopulation = new CompactPopulation(SEED_SIZE, progress_indicator);
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.printf("Faild to create seed population.");
+            System.out.printf("Failed to create seed population.");
         }
         people = seedPopulation.getPeopleArray();
     }
-
 }

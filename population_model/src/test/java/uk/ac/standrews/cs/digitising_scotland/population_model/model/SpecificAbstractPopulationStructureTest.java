@@ -48,38 +48,53 @@ public class SpecificAbstractPopulationStructureTest extends PopulationStructure
     }
 
     @Test
-    public void familyStructure() throws IOException, InconsistentWeightException {
+    public void familyStructureIsAsExpected() throws IOException, InconsistentWeightException {
 
         IPopulation population = (IPopulation) populationWithTwoFamilies()[0];
 
-        IPerson fatherA = population.findPerson(1);
-        List<Integer> partnership1_ids = fatherA.getPartnerships();
-        assertEquals(1, partnership1_ids.size());
+        final int fatherA_id = 1;
+        final int motherA_id = 2;
+        final int child1A_id = 3;
+        final int child2A_id = 4;
 
-        int partnership1_id = partnership1_ids.get(0);
+        final int fatherB_id = 5;
+        final int motherB_id = 6;
+        final int child1B_id = 7;
+        final int child2B_id = 8;
 
-        IPartnership partnership1 = population.findPartnership(partnership1_id);
-        assertEquals(partnership1.getPartner1Id(), 1);
-        assertEquals(partnership1.getPartner2Id(), 2);
+        // Check that father of family A has one partnership.
+        IPerson fatherA = population.findPerson(fatherA_id);
+        List<Integer> partnershipA_ids = fatherA.getPartnerships();
+        assertEquals(1, partnershipA_ids.size());
 
-        List<Integer> child_ids_partnership1 = partnership1.getChildren();
-        assertEquals(2, child_ids_partnership1.size());
-        assertEquals(3, (int) child_ids_partnership1.get(0));
-        assertEquals(4, (int) child_ids_partnership1.get(1));
+        // Check that partnership points to father and mother of family A.
+        int partnershipA_id = partnershipA_ids.get(0);
+        IPartnership partnershipA = population.findPartnership(partnershipA_id);
+        assertEquals(partnershipA.getPartner1Id(), fatherA_id);
+        assertEquals(partnershipA.getPartner2Id(), motherA_id);
 
-        IPerson fatherB = population.findPerson(5);
-        List<Integer> partnership2_ids = fatherB.getPartnerships();
-        assertEquals(1, partnership2_ids.size());
+        // Check that the family has the expected two children.
+        List<Integer> child_ids_partnershipA = partnershipA.getChildren();
+        assertEquals(2, child_ids_partnershipA.size());
+        assertEquals(child1A_id, (int) child_ids_partnershipA.get(0));
+        assertEquals(child2A_id, (int) child_ids_partnershipA.get(1));
 
-        int partnership2_id = partnership2_ids.get(0);
+        // Check that father of family B has one partnership.
+        IPerson fatherB = population.findPerson(fatherB_id);
+        List<Integer> partnershipB_ids = fatherB.getPartnerships();
+        assertEquals(1, partnershipB_ids.size());
 
-        IPartnership partnership2 = population.findPartnership(partnership2_id);
-        assertEquals(partnership2.getPartner1Id(), 6);
-        assertEquals(partnership2.getPartner2Id(), 5);
+        // Check that partnership points to father and mother of family B.
+        // The order of the partners within the partnership is as originally created.
+        int partnershipB_id = partnershipB_ids.get(0);
+        IPartnership partnershipB = population.findPartnership(partnershipB_id);
+        assertEquals(partnershipB.getPartner1Id(), motherB_id);
+        assertEquals(partnershipB.getPartner2Id(), fatherB_id);
 
-        List<Integer> child_ids_partnership2 = partnership2.getChildren();
-        assertEquals(2, child_ids_partnership2.size());
-        assertEquals(7, (int) child_ids_partnership2.get(0));
-        assertEquals(8, (int) child_ids_partnership2.get(1));
+        // Check that the family has the expected two children.
+        List<Integer> child_ids_partnershipB = partnershipB.getChildren();
+        assertEquals(2, child_ids_partnershipB.size());
+        assertEquals(child1B_id, (int) child_ids_partnershipB.get(0));
+        assertEquals(child2B_id, (int) child_ids_partnershipB.get(1));
     }
 }
