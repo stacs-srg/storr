@@ -9,15 +9,12 @@ import java.io.InputStreamReader;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.AbstractClassifier;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.OLR.OLRClassifier;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.lookup.ExactMatchClassifier;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.AnalysisMetrics.*;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.FormatConverter;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.InputFormatException;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.RecordFactory;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.AnalysisMetrics.CodeMetrics;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.AnalysisMetrics.ListAccuracyMetrics;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.AnalysisMetrics.SoftConfusionMatrix;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.AnalysisMetrics.StrictConfusionMatrix;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.vectors.VectorFactory;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.writers.DataClerkingWriter;
 import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
@@ -112,6 +109,13 @@ public final class TrainAndMultiplyClassify {
         softCodeMetrics.writeStats(softCodeStatsPath);
         System.out.println("Strict correctly predicted: " + strictCodeMetrics.getTotalCorrectlyPredicted());
         System.out.println("Soft correctly predicted: " + softCodeMetrics.getTotalCorrectlyPredicted());
+
+        AbstractConfusionMatrix invertedConfusionMatrix = new InvertedSoftConfusionMatrix(classifiedBucket);
+        double totalCorrectlyPredicted = invertedConfusionMatrix.getTotalCorrectlyPredicted();
+        System.out.println("Number of predictions too specific: " + totalCorrectlyPredicted);
+        System.out.println("Proportion of predictions too specific: " + totalCorrectlyPredicted / invertedConfusionMatrix.getTotalPredicted());
+
+
         runRscript(strictCodeStatsPath, "strictCodeStats");
         runRscript(softCodeStatsPath, "softCodeStats");
         accuracyMetrics.generateMarkDownSummary(experimentalFolderName, "strictCodeStats");

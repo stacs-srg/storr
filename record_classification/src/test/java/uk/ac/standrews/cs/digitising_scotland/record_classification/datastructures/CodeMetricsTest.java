@@ -9,13 +9,10 @@ public class CodeMetricsTest {
 
     @Test
     public void test() {
-
         Bucket testingBucket = new Bucket();
         CodeMetrics metrics = new CodeMetrics(new StrictConfusionMatrix(testingBucket));
         metrics.getHitGoldStandard();
         metrics.getIncorretPredictions();
         metrics.getMissedGoldStandard();
-
     }
-
 }
