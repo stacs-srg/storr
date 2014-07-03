@@ -17,6 +17,7 @@
 package uk.ac.standrews.cs.digitising_scotland.population_model.model;
 
 import java.sql.Date;
+import java.util.List;
 
 /*
  * An intermediate representation of a person.
@@ -134,6 +135,11 @@ public class Person implements IPerson {
     public String getAddress() {
 
         return address;
+    }
+
+    @Override
+    public List<Integer> getPartnerships() {
+        throw new RuntimeException("unimplemented");
     }
 
     public void setAddress(final String address) {
