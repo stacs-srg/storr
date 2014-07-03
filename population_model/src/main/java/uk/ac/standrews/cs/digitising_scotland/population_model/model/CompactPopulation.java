@@ -378,9 +378,9 @@ public class CompactPopulation {
         return parentsHaveSensibleAgesAtChildBirth(father, mother, child);
     }
 
-    public boolean parentsHaveSensibleAgesAtChildBirth(final CompactPerson father, final CompactPerson mother, final CompactPerson child) {
+    public static boolean parentsHaveSensibleAgesAtChildBirth(final CompactPerson father, final CompactPerson mother, final CompactPerson child) {
 
-        return motherAliveAtBirth(mother, child) && motherNotTooYoungAtBirth(mother, child) && motherNotTooOldAtBirth(mother, child) && fatherAliveAtConception(father, child) && fatherNotTooYoungAtBirth(father, child) && fatherNotTooOldAtBirth(father, child);
+        return PopulationLogic.parentsHaveSensibleAgesAtChildBirth(father.birth_date, father.death_date, mother.birth_date, mother.death_date, child.birth_date);
     }
 
     public int getNumberOfPeople() {
@@ -409,10 +409,10 @@ public class CompactPopulation {
         for (final CompactPerson person : people) {
 
             final int age_at_death_in_days = age_at_death_distribution.getSample();
-            final int date_of_death = person.date_of_birth + age_at_death_in_days;
+            final int date_of_death = person.birth_date + age_at_death_in_days;
 
             if (DateManipulation.daysToYear(date_of_death) <= END_YEAR) {
-                person.date_of_death = date_of_death;
+                person.death_date = date_of_death;
             }
 
             progressStep();
@@ -446,7 +446,7 @@ public class CompactPopulation {
     private void createMarriages(final int index, final int number_of_marriages) {
 
         final CompactPerson person = getPeopleArray()[index];
-        int marriage_date = (int) (person.date_of_birth + age_at_first_marriage_distribution.getSample());
+        int marriage_date = (int) (person.birth_date + age_at_first_marriage_distribution.getSample());
 
         int start_index = index + 1;
 
@@ -535,7 +535,7 @@ public class CompactPopulation {
             final CompactPerson child = people[child_index];
 
             children.add(child_index);
-            previous_child_birth_date = child.date_of_birth;
+            previous_child_birth_date = child.birth_date;
             child.setHasParents();
             start_index = child_index + 1; // start looking beyond the last child already chosen.
         }
@@ -572,72 +572,14 @@ public class CompactPopulation {
 
                 final CompactPerson p = people[child_index];
 
-                if (p.date_of_birth >= latest_birth_date)
+                if (p.birth_date >= latest_birth_date)
                     return Condition.NEGATIVE_STOP;
 
-                return !p.isIncomer() && p.date_of_birth > earliest_birth_date && p.date_of_birth < latest_birth_date && !p.hasParents() && parentsHaveSensibleAgesAtChildBirth(husband_index, wife_index, child_index) && !marriedToAnyChildrenOf(child_index, partnership) ? Condition.POSITIVE : Condition.NEGATIVE_CONTINUE;
+                return !p.isIncomer() && p.birth_date > earliest_birth_date && p.birth_date < latest_birth_date && !p.hasParents() && parentsHaveSensibleAgesAtChildBirth(husband_index, wife_index, child_index) && !marriedToAnyChildrenOf(child_index, partnership) ? Condition.POSITIVE : Condition.NEGATIVE_CONTINUE;
             }
         };
 
         return findPerson(start_search_index, conditions);
-    }
-
-    private static boolean motherAliveAtBirth(final CompactPerson mother, final CompactPerson child) {
-
-        return dateNotAfter(child.date_of_birth, mother.date_of_death);
-    }
-
-    private static boolean motherNotTooYoungAtBirth(final CompactPerson mother, final CompactPerson child) {
-
-        final int mothers_age_at_birth = parentsAgeAtChildBirth(mother, child);
-
-        return notLessThan(mothers_age_at_birth, MINIMUM_MOTHER_AGE_AT_CHILDBIRTH);
-    }
-
-    private static boolean motherNotTooOldAtBirth(final CompactPerson mother, final CompactPerson child) {
-
-        final int mothers_age_at_birth = parentsAgeAtChildBirth(mother, child);
-
-        return notGreaterThan(mothers_age_at_birth, MAXIMUM_MOTHER_AGE_AT_CHILDBIRTH);
-    }
-
-    private static boolean fatherAliveAtConception(final CompactPerson father, final CompactPerson child) {
-
-        return dateNotAfter(child.date_of_birth, father.date_of_death + MAX_GESTATION_IN_DAYS);
-    }
-
-    private static boolean fatherNotTooYoungAtBirth(final CompactPerson father, final CompactPerson child) {
-
-        final int fathers_age_at_birth = parentsAgeAtChildBirth(father, child);
-
-        return notLessThan(fathers_age_at_birth, MINIMUM_FATHER_AGE_AT_CHILDBIRTH);
-    }
-
-    private static boolean fatherNotTooOldAtBirth(final CompactPerson father, final CompactPerson child) {
-
-        final int fathers_age_at_birth = parentsAgeAtChildBirth(father, child);
-
-        return notGreaterThan(fathers_age_at_birth, MAXIMUM_FATHER_AGE_AT_CHILDBIRTH);
-    }
-
-    private static int parentsAgeAtChildBirth(final CompactPerson parent, final CompactPerson child) {
-
-        return DateManipulation.differenceInYears(parent.date_of_birth, child.date_of_birth);
-    }
-
-    private static boolean notLessThan(final int i1, final int i2) {
-
-        return i1 >= i2;
-    }
-
-    private static boolean notGreaterThan(final int i1, final int i2) {
-
-        return i1 <= i2;
-    }
-
-    private static boolean dateNotAfter(final int date1, final int date2) {
-
-        return notGreaterThan(date1, date2);
     }
 
     private boolean marriedToAnyChildrenOf(final int person_index, final CompactPartnership partnership) {
@@ -688,7 +630,7 @@ public class CompactPopulation {
 
     private boolean ageDifferenceNotTooGreat(final CompactPerson person, final CompactPerson candidate_partner) {
 
-        return Math.abs(DateManipulation.differenceInYears(person.date_of_birth, candidate_partner.date_of_birth)) <= PARTNERSHIP_AGE_DIFFERENCE_LIMIT;
+        return Math.abs(DateManipulation.differenceInYears(person.birth_date, candidate_partner.birth_date)) <= PARTNERSHIP_AGE_DIFFERENCE_LIMIT;
     }
 
     private boolean notPreviouslyPartners(final CompactPerson person, final int index, final CompactPerson candidate_partner) {
@@ -724,7 +666,7 @@ public class CompactPopulation {
             @Override
             public int compare(final CompactPerson p1, final CompactPerson p2) {
 
-                return p1.date_of_birth - p2.date_of_birth;
+                return p1.birth_date - p2.birth_date;
             }
         });
         sorter.sort();

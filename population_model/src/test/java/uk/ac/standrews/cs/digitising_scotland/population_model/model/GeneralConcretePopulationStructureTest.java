@@ -69,11 +69,7 @@ public class GeneralConcretePopulationStructureTest {
         assertEquals(population_size, population.getPeopleArray().length);
     }
 
-    @Test
-    public void parentsHaveSensibleAgesAtChildBirth() {
 
-        assertParentsHaveSensibleAgesAtChildBirth();
-    }
 
     @Test
     public void noSiblingsMarried() {

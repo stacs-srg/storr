@@ -19,8 +19,11 @@ package uk.ac.standrews.cs.digitising_scotland.population_model.model;
 import uk.ac.standrews.cs.digitising_scotland.population_model.generation.distributions.InconsistentWeightException;
 import uk.ac.standrews.cs.digitising_scotland.population_model.generation.distributions.NegativeDeviationException;
 import uk.ac.standrews.cs.digitising_scotland.population_model.generation.distributions.NegativeWeightException;
+import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -131,7 +134,7 @@ public abstract class PopulationStructureTest {
         return new Object[]{population, expected_people_id_order, expected_partnership_id_order};
     }
 
-    protected static Object[] populationWithTwoFamilies() throws IOException, InconsistentWeightException {
+    protected static Object[] populationWithTwoFamilies() throws IOException, InconsistentWeightException, ParseException {
 
         IDFactory.resetId();
 
@@ -163,17 +166,29 @@ public abstract class PopulationStructureTest {
         return ids;
     }
 
-    private static CompactPerson[] makePeopleInTwoFamilies() throws IOException, InconsistentWeightException {
+    private static CompactPerson[] makePeopleInTwoFamilies() throws IOException, InconsistentWeightException, ParseException {
 
-        CompactPerson fatherA = new CompactPerson(0, true);
-        CompactPerson motherA = new CompactPerson(0, false);
-        CompactPerson child1A = new CompactPerson(0, false);
-        CompactPerson child2A = new CompactPerson(0, true);
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 
-        CompactPerson fatherB = new CompactPerson(0, true);
-        CompactPerson motherB = new CompactPerson(0, false);
-        CompactPerson child1B = new CompactPerson(0, true);
-        CompactPerson child2B = new CompactPerson(0, false);
+        int fatherA_birth_date = DateManipulation.dateToDays(DateManipulation.parseDate("21/08/1888", formatter));
+        int motherA_birth_date = DateManipulation.dateToDays(DateManipulation.parseDate("01/01/1890", formatter));
+        int child1A_birth_date = DateManipulation.dateToDays(DateManipulation.parseDate("17/11/1910", formatter));
+        int child2A_birth_date = DateManipulation.dateToDays(DateManipulation.parseDate("31/12/1913", formatter));
+
+        int fatherB_birth_date = DateManipulation.dateToDays(DateManipulation.parseDate("21/07/1860", formatter));
+        int motherB_birth_date = DateManipulation.dateToDays(DateManipulation.parseDate("23/02/1891", formatter));
+        int child1B_birth_date = DateManipulation.dateToDays(DateManipulation.parseDate("21/08/1920", formatter));
+        int child2B_birth_date = DateManipulation.dateToDays(DateManipulation.parseDate("21/08/1925", formatter));
+
+        CompactPerson fatherA = new CompactPerson(fatherA_birth_date, true);
+        CompactPerson motherA = new CompactPerson(motherA_birth_date, false);
+        CompactPerson child1A = new CompactPerson(child1A_birth_date, false);
+        CompactPerson child2A = new CompactPerson(child2A_birth_date, true);
+
+        CompactPerson fatherB = new CompactPerson(fatherB_birth_date, true);
+        CompactPerson motherB = new CompactPerson(motherB_birth_date, false);
+        CompactPerson child1B = new CompactPerson(child1B_birth_date, true);
+        CompactPerson child2B = new CompactPerson(child2B_birth_date, false);
 
         CompactPerson[] population = new CompactPerson[]{fatherA, motherA, motherB, fatherB, child1A, child1B, child2A, child2B};
 

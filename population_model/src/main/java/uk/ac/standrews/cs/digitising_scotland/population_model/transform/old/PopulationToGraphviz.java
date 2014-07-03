@@ -16,7 +16,6 @@
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.transform.old;
 
-import uk.ac.standrews.cs.digitising_scotland.population_model.transform.old.PopulationToFile;
 import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
 import uk.ac.standrews.cs.digitising_scotland.population_model.generation.distributions.InconsistentWeightException;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.CompactPartnership;
@@ -117,12 +116,12 @@ public class PopulationToGraphviz extends PopulationToFile {
 
     private String getIndividualNodeAttributes(final CompactPerson person) {
 
-        final int date_of_death = person.getDateOfDeath();
+        final int date_of_death = person.getDeathDate();
 
         StringBuilder builder = new StringBuilder();
 
         builder.append(" [label=\"b: ");
-        builder.append(formatter.format(DateManipulation.daysToDate(person.getDateOfBirth())));
+        builder.append(formatter.format(DateManipulation.daysToDate(person.getBirthDate())));
         if (date_of_death > -1) {
             builder.append("\\nd: ");
             builder.append(formatter.format(DateManipulation.daysToDate(date_of_death)));

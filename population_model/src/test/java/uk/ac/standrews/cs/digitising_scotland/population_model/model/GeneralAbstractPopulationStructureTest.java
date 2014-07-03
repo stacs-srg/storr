@@ -25,6 +25,7 @@ import uk.ac.standrews.cs.digitising_scotland.population_model.generation.distri
 import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
@@ -51,7 +52,7 @@ public class GeneralAbstractPopulationStructureTest extends PopulationStructureT
 
     // The name string gives informative labels in the JUnit output.
     @Parameterized.Parameters(name = "{0}, {3}")
-    public static Collection<Object[]> generateData() throws IOException, InconsistentWeightException, NegativeDeviationException, NegativeWeightException {
+    public static Collection<Object[]> generateData() throws IOException, InconsistentWeightException, NegativeDeviationException, NegativeWeightException, ParseException {
 
         // This takes the options for each population type, and adds it with both 'true' and 'false' for the 'consistent' flag.
         return expandWithBooleanOptions(
@@ -63,7 +64,9 @@ public class GeneralAbstractPopulationStructureTest extends PopulationStructureT
                 populationWithOnePartnership(),
                 populationWithThreePartnerships(),
                 populationWithTwoFamilies(),
-                fullPopulation(1000));
+                fullPopulation(100),
+                fullPopulation(1000),
+                fullPopulation(10000));
     }
 
     public GeneralAbstractPopulationStructureTest(IPopulation population, int[] expected_people_id_order, int[] expected_partnership_id_order, final boolean consistent_across_iterations) {
@@ -189,6 +192,30 @@ public class GeneralAbstractPopulationStructureTest extends PopulationStructureT
         for (IPerson person : population.getPeople()) {
 
             assertSurnameInheritedOnMaleLine(person);
+        }
+    }
+
+    @Test
+    public void parentsHaveSensibleAgesAtBirths() {
+
+        for (IPartnership partnership : population.getPartnerships()) {
+
+            assertParentsHaveSensibleAgesAtBirth(partnership);
+        }
+    }
+
+    private void assertParentsHaveSensibleAgesAtBirth(IPartnership partnership) {
+
+        IPerson partner1 = population.findPerson(partnership.getPartner1Id());
+        IPerson partner2 = population.findPerson(partnership.getPartner2Id());
+
+        IPerson father = partner1.getSex() == IPerson.MALE ? partner1 : partner2;
+        IPerson mother = partner1.getSex() == IPerson.MALE ? partner2 : partner1;
+
+        for (final int child_id : partnership.getChildren()) {
+
+            IPerson child = population.findPerson(child_id);
+            assertTrue(PopulationLogic.parentsHaveSensibleAgesAtChildBirth(father, mother, child));
         }
     }
 

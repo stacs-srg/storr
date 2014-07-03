@@ -1,11 +1,11 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.AnalysisMetrics;
 
-import java.util.Set;
-
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeFactory;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.CodeTriple;
+
+import java.util.Set;
 
 /**
  *
@@ -31,7 +31,7 @@ public abstract class AbstractConfusionMatrix {
     protected int maxCodes;
 
     /** Matrix shows how many records have been over or under coded. Makes to claims as to accuracy of coding */
-    protected double[][] overUnderPredictionMatrix;
+//    protected double[][] overUnderPredictionMatrix;
 
     /**
      * Instantiates a new abstract confusion matrix.
@@ -48,7 +48,6 @@ public abstract class AbstractConfusionMatrix {
         truePositive = new double[numberOfOutputClasses];
         maxCodes = 0;
         countStats(bucket);
-
     }
 
     /**

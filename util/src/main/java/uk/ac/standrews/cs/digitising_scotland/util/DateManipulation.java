@@ -247,6 +247,11 @@ public class DateManipulation {
         return addYears(days, -years);
     }
 
+    public static synchronized Date addDays(final Date date, final int days) {
+
+        return daysToDate(dateToDays(date) + days);
+    }
+
     public static synchronized int dateToDay(final Date date) {
 
         setCalendarToDate(date);
@@ -272,6 +277,16 @@ public class DateManipulation {
      * @param days2 the second date
      * @return the difference between the dates in years
      */
+    public static synchronized int differenceInDays(final int days1, final int days2) {
+
+        return days2 - days1;
+    }
+
+    public static synchronized int differenceInDays(final Date date1, final Date date2) {
+
+        return differenceInDays(dateToDays(date1), dateToDays(date2));
+    }
+
     public static synchronized int differenceInYears(final int days1, final int days2) {
 
         return daysToYear(days2) - daysToYear(days1);

@@ -60,8 +60,8 @@ public class PersonFactory {
 
         // TODO investigate usage of this method and the COD and occupation fields.
 
-        return new Person(compact_person.getId(), compact_person.isMale() ? IPerson.MALE : IPerson.FEMALE, DateManipulation.daysToSQLDate(compact_person.getDateOfBirth()),
-                DateManipulation.daysToSQLDate(compact_person.getDateOfDeath()), "Occupation", "Cause of death", "Address");
+        return new Person(compact_person.getId(), compact_person.isMale() ? IPerson.MALE : IPerson.FEMALE, DateManipulation.daysToSQLDate(compact_person.getBirthDate()),
+                DateManipulation.daysToSQLDate(compact_person.getDeathDate()), "Occupation", "Cause of death", "Address");
     }
 
     public Person createPerson(final Individual gedcom_person) throws ParseException {

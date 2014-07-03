@@ -20,6 +20,7 @@ import org.junit.Test;
 import uk.ac.standrews.cs.digitising_scotland.population_model.generation.distributions.InconsistentWeightException;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -48,7 +49,7 @@ public class SpecificAbstractPopulationStructureTest extends PopulationStructure
     }
 
     @Test
-    public void familyStructureIsAsExpected() throws IOException, InconsistentWeightException {
+    public void familyStructureIsAsExpected() throws IOException, InconsistentWeightException, ParseException {
 
         IPopulation population = (IPopulation) populationWithTwoFamilies()[0];
 

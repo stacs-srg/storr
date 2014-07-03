@@ -37,8 +37,8 @@ public class CompactPerson {
     private static final int POSITION_OF_INCOMERS_BIT = 2;
     private static final int POSITION_OF_MARKED_BIT = 3;
 
-    protected int date_of_birth = -1;
-    protected int date_of_death = -1;
+    protected int birth_date = -1;
+    protected int death_date = -1;
 
     private List<CompactPartnership> partnership_list;
     private byte bits = 0; // Used to store various boolean properties.
@@ -46,12 +46,12 @@ public class CompactPerson {
     /**
      * Creates a person.
      *
-     * @param date_of_birth the date of birth represented in days elapsed from the start of the simulation
-     * @param male          true if the person is male
+     * @param birth_date the date of birth represented in days elapsed from the start of the simulation
+     * @param male       true if the person is male
      */
-    public CompactPerson(final int date_of_birth, final boolean male) {
+    public CompactPerson(final int birth_date, final boolean male) {
 
-        this.date_of_birth = date_of_birth;
+        this.birth_date = birth_date;
         setMale(male);
         id = IDFactory.getNextID();
     }
@@ -154,14 +154,14 @@ public class CompactPerson {
      *
      * @return the date of birth.
      */
-    public int getDateOfBirth() {
+    public int getBirthDate() {
 
-        return date_of_birth;
+        return birth_date;
     }
 
-    public int getDateOfDeath() {
+    public int getDeathDate() {
 
-        return date_of_death;
+        return death_date;
     }
 
     @Override
@@ -171,10 +171,10 @@ public class CompactPerson {
 
         builder.append(getClass().getSimpleName());
         builder.append("{");
-        builder.append(getDateOfBirth());
+        builder.append(getBirthDate());
         builder.append("-");
-        if (getDateOfDeath() != -1) {
-            builder.append(getDateOfDeath());
+        if (getDeathDate() != -1) {
+            builder.append(getDeathDate());
         }
         if (getPartnerships() != null) {
             builder.append(", p:");
