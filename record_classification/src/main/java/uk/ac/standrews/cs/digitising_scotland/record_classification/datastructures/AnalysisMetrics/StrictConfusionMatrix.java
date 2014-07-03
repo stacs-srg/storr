@@ -6,12 +6,18 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.Cod
 
 import java.util.Set;
 
+// TODO: Auto-generated Javadoc
 /**
  *
  * Created by fraserdunlop on 02/07/2014 at 10:50.
  */
 public class StrictConfusionMatrix extends AbstractConfusionMatrix {
 
+    /**
+     * Instantiates a new strict confusion matrix.
+     *
+     * @param bucket the bucket
+     */
     public StrictConfusionMatrix(final Bucket bucket){
         super(bucket);
     }

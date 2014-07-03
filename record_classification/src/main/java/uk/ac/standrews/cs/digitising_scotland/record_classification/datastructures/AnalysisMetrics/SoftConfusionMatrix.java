@@ -6,12 +6,18 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.CodeTriple;
 
+// TODO: Auto-generated Javadoc
 /**
  *
  * Created by fraserdunlop on 02/07/2014 at 10:59.
  */
 public class SoftConfusionMatrix extends AbstractConfusionMatrix {
 
+    /**
+     * Instantiates a new soft confusion matrix.
+     *
+     * @param bucket the bucket
+     */
     public SoftConfusionMatrix(final Bucket bucket) {
 
         super(bucket);
@@ -54,6 +60,13 @@ public class SoftConfusionMatrix extends AbstractConfusionMatrix {
         }
     }
 
+    /**
+     * Contains or has descendants.
+     *
+     * @param code the code
+     * @param setCodeTriples the set code triples
+     * @return true, if successful
+     */
     private boolean containsOrHasDescendants(final Code code, final Set<CodeTriple> setCodeTriples) {
 
         for (CodeTriple codeTriple : setCodeTriples) {
