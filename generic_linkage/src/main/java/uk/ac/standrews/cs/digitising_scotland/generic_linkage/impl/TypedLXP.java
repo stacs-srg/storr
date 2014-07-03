@@ -50,7 +50,8 @@ public class TypedLXP extends LXP implements ITypedLXP  {
     public ILXP getReferend(String key) throws TypedLXPException {
 
         if( compatible_field_type( key, Type.REFERENCE ) ) {
-            int ref = getRef(key);
+//            int ref =
+                    getRef(key);
             // make into an ILXP by lookup in store!
             return null;
         }

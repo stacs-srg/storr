@@ -1,10 +1,6 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Properties;
-
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.AbstractClassifier;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.ClassificationPipeline;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Bucket;
@@ -14,6 +10,11 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.preprocessor.DataCleaning;
 import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
 import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearningConfiguration;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Properties;
 
 /**
  * This class is the entry class to train all the classifiers.
@@ -32,6 +33,7 @@ public class TrainAndClassify {
     /**
      * The properties.
      */
+    @SuppressFBWarnings(value = "URF_UNREAD_FIELD")
     private Properties properties = MachineLearningConfiguration.getDefaultProperties();
 
     /**

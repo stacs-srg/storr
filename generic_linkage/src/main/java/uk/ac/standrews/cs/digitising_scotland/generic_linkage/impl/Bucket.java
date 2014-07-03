@@ -2,7 +2,10 @@ package uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl;
 
 import org.json.JSONException;
 import org.json.JSONWriter;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.*;
+import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IBucket;
+import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXP;
+import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXPInputStream;
+import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXPOutputStream;
 import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
 import uk.ac.standrews.cs.nds.persistence.PersistentObjectException;
 import uk.ac.standrews.cs.nds.rpc.stream.JSONReader;
@@ -30,7 +33,7 @@ public class Bucket implements IBucket {
      * @param name      the name of the bucket (also used as directory name)
      * @param base_path the path of the parent directory
      */
-    public Bucket(final String name, final String base_path ) throws IOException {
+    public Bucket(final String name, final String base_path) throws IOException {
 
         this.name = name;
         this.base_path = base_path;
@@ -44,7 +47,7 @@ public class Bucket implements IBucket {
     @Override
     public ILXP get(final int id) throws PersistentObjectException, IOException {
 
-        try ( BufferedReader reader = Files.newBufferedReader(Paths.get(filePath(id)), FileManipulation.FILE_CHARSET) ) {
+        try (BufferedReader reader = Files.newBufferedReader(Paths.get(filePath(id)), FileManipulation.FILE_CHARSET)) {
 
             return new LXP(id, new JSONReader(reader));
         }
@@ -86,7 +89,7 @@ public class Bucket implements IBucket {
     @Override
     public ILXPInputStream getInputStream() {
 
-            return new BucketBackedInputStream();
+        return new BucketBackedInputStream();
     }
 
     @Override
