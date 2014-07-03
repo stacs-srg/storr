@@ -29,12 +29,6 @@ public abstract class AbstractConfusionMatrix {
     /** The true positive. */
     protected double[] truePositive;
 
-    /** The max codes. */
-    protected int maxCodes;
-
-    /** Matrix shows how many records have been over or under coded. Makes to claims as to accuracy of coding */
-    protected double[][] overUnderPredictionMatrix;
-
     /**
      * Instantiates a new abstract confusion matrix.
      *
@@ -48,7 +42,6 @@ public abstract class AbstractConfusionMatrix {
         trueNegative = new double[numberOfOutputClasses];
         falseNegative = new double[numberOfOutputClasses];
         truePositive = new double[numberOfOutputClasses];
-        maxCodes = 0;
         countStats(bucket);
 
     }
@@ -82,7 +75,6 @@ public abstract class AbstractConfusionMatrix {
             Set<CodeTriple> goldStandardTriples = record.getGoldStandardClassificationSet();
             totalAndFalsePos(setCodeTriples, goldStandardTriples);
             truePosAndFalseNeg(setCodeTriples, goldStandardTriples);
-            updateMaxCodes(setCodeTriples, goldStandardTriples);
         }
         calculateTrueNeg();
     }
@@ -172,19 +164,4 @@ public abstract class AbstractConfusionMatrix {
         return sum(getTruePositive());
     }
 
-    /**
-     * Update max codes.
-     *
-     * @param setCodeTriples the set code triples
-     * @param goldStandardTriples the gold standard triples
-     */
-    private void updateMaxCodes(final Set<CodeTriple> setCodeTriples, final Set<CodeTriple> goldStandardTriples) {
-
-        if (setCodeTriples.size() > maxCodes) {
-            maxCodes = setCodeTriples.size();
-        }
-        if (goldStandardTriples.size() > maxCodes) {
-            maxCodes = goldStandardTriples.size();
-        }
-    }
 }

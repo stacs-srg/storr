@@ -209,6 +209,12 @@ public class ExactMatchClassifier extends AbstractClassifier {
         return true;
     }
 
+    /**
+     * Classifies a {@link TokenSet} to a set of {@link CodeTriple}s using the classifiers lookup table.
+     * @param tokenSet to classify
+     * @return Set<CodeTripe> code triples from lookup table
+     * @throws IOException Indicates an I/O error
+     */
     public Set<CodeTriple> classifyTokenSetToCodeTripleSet(final TokenSet tokenSet) throws IOException {
 
         Set<CodeTriple> result = lookupTable.get(tokenSet.toString());
