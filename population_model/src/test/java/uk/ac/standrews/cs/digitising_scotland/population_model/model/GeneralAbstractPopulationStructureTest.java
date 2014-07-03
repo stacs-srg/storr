@@ -49,10 +49,21 @@ public class GeneralAbstractPopulationStructureTest extends PopulationStructureT
     private final int[] expected_partnership_id_order;
     private final boolean consistent_across_iterations;
 
+    // The name string gives informative labels in the JUnit output.
     @Parameterized.Parameters(name = "{0}, {3}")
     public static Collection<Object[]> generateData() throws IOException, InconsistentWeightException, NegativeDeviationException, NegativeWeightException {
 
-        return expandWithBooleanOptions(unconnectedPopulation(0), unconnectedPopulation(1), unconnectedPopulation(3), unconnectedPopulation(100), populationWithOnePartnership(), populationWithThreePartnerships(), populationWithTwoFamilies(), fullPopulation(1000));
+        // This takes the options for each population type, and adds it with both 'true' and 'false' for the 'consistent' flag.
+        return expandWithBooleanOptions(
+
+                unconnectedPopulation(0),
+                unconnectedPopulation(1),
+                unconnectedPopulation(3),
+                unconnectedPopulation(100),
+                populationWithOnePartnership(),
+                populationWithThreePartnerships(),
+                populationWithTwoFamilies(),
+                fullPopulation(1000));
     }
 
     public GeneralAbstractPopulationStructureTest(IPopulation population, int[] expected_people_id_order, int[] expected_partnership_id_order, final boolean consistent_across_iterations) {

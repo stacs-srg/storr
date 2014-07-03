@@ -9,6 +9,7 @@ Graham Kirby, Alan Dearle and Jamie Carson at the School of Computer Science at 
 package uk.ac.standrews.cs.digitising_scotland.tools;
 
 import com.google.common.io.Files;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.output.FileWriterWithEncoding;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Bucket;
@@ -290,6 +291,7 @@ public final class Utils {
      * @return number of lines.
      * @throws IOException Will throw is we can't din the file.
      */
+    @SuppressFBWarnings(value = "RV_DONT_JUST_NULL_CHECK_READLINE")
     public static int getNumberOfLines(final File file) throws IOException {
 
         try (BufferedReader reader = java.nio.file.Files.newBufferedReader(Paths.get(file.getAbsolutePath()), FileManipulation.FILE_CHARSET)) {
@@ -310,21 +312,13 @@ public final class Utils {
      */
     public static boolean deleteDirectory(final File directory) {
 
-        if (directory.exists()) {
-            File[] files = directory.listFiles();
-            if (null != files) {
-                for (int i = 0; i < files.length; i++) {
-                    if (files[i].isDirectory()) {
-                        deleteDirectory(files[i]);
-                    } else {
-                        if (!files[i].delete()) {
-                            System.err.println(files[i].getAbsolutePath() + " could not be deleted");
-                        }
-                    }
-                }
-            }
+        try {
+            FileManipulation.deleteDirectory(directory.getAbsolutePath());
+            return true;
         }
-        return directory.delete();
+        catch (IOException e) {
+            return false;
+        }
     }
 
     /**

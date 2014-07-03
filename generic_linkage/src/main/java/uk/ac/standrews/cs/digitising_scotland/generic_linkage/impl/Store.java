@@ -32,7 +32,7 @@ public class Store implements IStore {
     private final File id_file;
     private final Path id_file_path;
 
-    protected static IStore instance;
+    static IStore instance;
 
     private int id = 1;
 

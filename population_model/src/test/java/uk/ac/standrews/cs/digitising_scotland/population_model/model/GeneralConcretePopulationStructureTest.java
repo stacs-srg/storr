@@ -41,7 +41,6 @@ import static org.junit.Assert.*;
 @RunWith(Parameterized.class)
 public class GeneralConcretePopulationStructureTest {
 
-    // TODO test death after birth
     // TODO move to abstract tests where possible
 
     private CompactPopulation population;

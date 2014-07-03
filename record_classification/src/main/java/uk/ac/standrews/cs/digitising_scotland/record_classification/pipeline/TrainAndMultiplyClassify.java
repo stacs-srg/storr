@@ -181,10 +181,9 @@ public final class TrainAndMultiplyClassify {
     private static void setupExperimentalFolders() {
 
         experimentalFolderName = getExperimentalFolderName();
-        File experimentalFolder = new File(experimentalFolderName);
-        experimentalFolder.mkdirs();
 
-        if (!(new File(experimentalFolderName + "/Reports").mkdirs() &&
+        if (!(new File(experimentalFolderName).mkdirs() &&
+                new File(experimentalFolderName + "/Reports").mkdirs() &&
                 new File(experimentalFolderName + "/Data").mkdirs() &&
                 new File(experimentalFolderName + "/Models").mkdirs()))
             throw new RuntimeException("couldn't create experimental folder");
