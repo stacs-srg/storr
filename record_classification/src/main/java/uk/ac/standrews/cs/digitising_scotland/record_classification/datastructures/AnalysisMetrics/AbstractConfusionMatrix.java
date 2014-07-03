@@ -155,6 +155,16 @@ public abstract class AbstractConfusionMatrix {
      *
      * @return the total correctly predicted
      */
+    public double getTotalPredicted() {
+
+        return sum(totalPredictions);
+    }
+
+    /**
+     * Gets the total correctly predicted.
+     *
+     * @return the total correctly predicted
+     */
     public double getTotalCorrectlyPredicted() {
 
         return sum(getTruePositive());

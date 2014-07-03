@@ -85,6 +85,8 @@ public class ListAccuracyMetrics {
 
     private int[] numberOfCodesNotCoded;
 
+    private int[][] overUnderPredicionMatrix;
+
     /**
      * Instantiates a new list accuracy metrics.
      *
@@ -111,6 +113,35 @@ public class ListAccuracyMetrics {
         codedExactMatch = calculateExactMatch(bucket);
         numberOfCodesNotCoded = calculateBreakDownOfMatches(bucket);
         countNumClassifications(bucket);
+        int maxCodes = calculateMaxCodes(bucket);
+        overUnderPredicionMatrix = calculateOverPredictionMatrix(bucket, maxCodes);
+    }
+
+    private int[][] calculateOverPredictionMatrix(final Bucket bucket, final int maxCodes) {
+
+        overUnderPredicionMatrix = new int[maxCodes + 1][maxCodes + 1];
+        for (Record record : bucket) {
+            int goldStandardSize = record.getGoldStandardClassificationSet().size();
+            int actualSize = record.getCodeTriples().size();
+            overUnderPredicionMatrix[actualSize][goldStandardSize]++;
+        }
+        return overUnderPredicionMatrix;
+    }
+
+    private int calculateMaxCodes(final Bucket bucket) {
+
+        int maxCodes = 0;
+        for (Record record : bucket) {
+
+            if (record.getGoldStandardClassificationSet().size() > maxCodes) {
+                maxCodes = record.getGoldStandardClassificationSet().size();
+            }
+            if (record.getCodeTriples().size() > maxCodes) {
+                maxCodes = record.getCodeTriples().size();
+            }
+        }
+
+        return maxCodes;
     }
 
     /**
@@ -196,6 +227,25 @@ public class ListAccuracyMetrics {
         System.out.println("Doubly classified: " + twoClassifications);
         System.out.println("Multiply classified: " + moreThanTwoClassifications);
         printNumberOfCodesMissed();
+        printMatrix("Over/Under Prediction Matrix", overUnderPredicionMatrix);
+    }
+
+    private void printMatrix(String message, int[][] matrix) {
+
+        System.out.println(message);
+        System.out.print("   ");
+        for (int i = 0; i < matrix.length; i++) {
+            System.out.print(i + "\t");
+        }
+        System.out.println();
+        for (int i = 0; i < matrix.length; i++) {
+            System.out.print(i + "  ");
+
+            for (int j = 0; j < matrix.length; j++) {
+                System.out.print(matrix[i][j] + "\t");
+            }
+            System.out.println();
+        }
     }
 
     /**
