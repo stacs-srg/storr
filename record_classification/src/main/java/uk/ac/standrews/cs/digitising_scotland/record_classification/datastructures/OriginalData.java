@@ -3,6 +3,7 @@ package uk.ac.standrews.cs.digitising_scotland.record_classification.datastructu
 import java.util.HashSet;
 import java.util.Set;
 
+import uk.ac.standrews.cs.digitising_scotland.record_classification.exceptions.InputFormatException;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.CodeTriple;
 
 // TODO: Auto-generated Javadoc

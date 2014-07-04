@@ -11,6 +11,8 @@ import java.util.List;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeFactory;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.exceptions.InputFormatException;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.CodeTriple;
 import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
 

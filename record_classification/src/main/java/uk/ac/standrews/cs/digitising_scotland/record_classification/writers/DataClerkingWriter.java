@@ -10,8 +10,8 @@ import java.util.Set;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.CODOrignalData;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.CodeTriple;
 
 // TODO: Auto-generated Javadoc

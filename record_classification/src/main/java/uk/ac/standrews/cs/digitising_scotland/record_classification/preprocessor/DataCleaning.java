@@ -1,7 +1,7 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.preprocessor;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Bucket;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Record;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 
 /**
  * Reads a {@link Bucket} and performs data cleaning such as spelling correction and feature selection on the descriptions in each {@link Record}.

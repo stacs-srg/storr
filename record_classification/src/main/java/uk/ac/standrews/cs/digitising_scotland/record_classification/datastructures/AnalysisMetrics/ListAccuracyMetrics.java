@@ -6,11 +6,10 @@ import java.util.List;
 import java.util.Set;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Bucket;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Record;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.CodeTriple;
 import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
 
-// TODO: Auto-generated Javadoc
 /**
  * Class representing the statistics about a bucket of Records.
  *
@@ -252,22 +251,40 @@ public class ListAccuracyMetrics {
      * @param message the message to add to the top of the matrix
      * @param matrix the matrix to print
      */
-    private void printMatrix(final String message, final int[][] matrix) {
+    private String printMatrix(final String message, final int[][] matrix) {
 
-        System.out.println(message);
-        System.out.print("   ");
+        StringBuilder sb = new StringBuilder();
+
+        sb.append(message + "\n");
+        sb.append("   ");
+        sb.append("\n" + getMatrixAsString(matrix));
+        System.out.println(sb.toString());
+        return sb.toString();
+    }
+
+    /**
+     * Prints a matrix.
+     *
+     * @param message the message to add to the top of the matrix
+     * @param matrix the matrix to print
+     */
+    private String getMatrixAsString(final int[][] matrix) {
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("\t");
         for (int i = 0; i < matrix.length; i++) {
-            System.out.print(i + "\t");
+            sb.append(i + "\t");
         }
-        System.out.println();
+        sb.append("\n");
         for (int i = 0; i < matrix.length; i++) {
-            System.out.print(i + "  ");
+            sb.append(i + "\t");
 
             for (int j = 0; j < matrix.length; j++) {
-                System.out.print(matrix[i][j] + "\t");
+                sb.append(matrix[i][j] + "\t");
             }
-            System.out.println();
+            sb.append("\n");
         }
+        return sb.toString();
     }
 
     /**
@@ -294,6 +311,8 @@ public class ListAccuracyMetrics {
         sb.append("Doubly classified: " + twoClassifications + "   \n");
         sb.append("Multiply classified: " + moreThanTwoClassifications + "    \n");
         sb.append(printNumberOfCodesMissed());
+        sb.append("Over/Under Matrix    \n");
+        sb.append(getMatrixAsString(overUnderPredicionMatrix));
         sb.append("    \n\n");
         sb.append("##Graphs    \n");
         sb.append("![Graph Matrix][" + pathToGraph + "]     \n");

@@ -5,6 +5,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import uk.ac.standrews.cs.digitising_scotland.record_classification.exceptions.InputFormatException;
+
 /**
  * The Class OrignalDataTest tests the creation of OriginalData objects.
  */

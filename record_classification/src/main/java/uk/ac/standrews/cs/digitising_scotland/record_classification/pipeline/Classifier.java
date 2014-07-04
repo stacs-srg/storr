@@ -10,9 +10,9 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.lookup.ExactMatchClassifier;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.lookup.NGramClassifier;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Bucket;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.InputFormatException;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.RecordFactory;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.RecordFactory;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.vectors.VectorFactory;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.exceptions.InputFormatException;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.preprocessor.DataCleaning;
 
 // TODO: Auto-generated Javadoc

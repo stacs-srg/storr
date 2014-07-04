@@ -3,10 +3,10 @@ package uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers
 import java.io.IOException;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Bucket;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.TokenSet;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeFactory;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.Pair;
 
 // TODO: Auto-generated Javadoc

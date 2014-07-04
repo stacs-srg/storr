@@ -1,7 +1,8 @@
-package uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures;
+package uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records;
 
 import java.util.Set;
 
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.CodeTriple;
 

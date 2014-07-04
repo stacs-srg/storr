@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.Set;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.OriginalData;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Record;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.CodeTriple;
 
 /**

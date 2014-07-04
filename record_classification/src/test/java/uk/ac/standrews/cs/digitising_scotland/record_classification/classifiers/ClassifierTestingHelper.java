@@ -8,12 +8,12 @@ import java.util.List;
 import java.util.Set;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Bucket;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Record;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.RecordFactory;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.TokenSet;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeFactory;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeNotValidException;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.RecordFactory;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.preprocessor.DataCleaning;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.CodeTriple;
 

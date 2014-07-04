@@ -1,30 +1,31 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.AbstractClassifier;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.OLR.OLRClassifier;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.lookup.ExactMatchClassifier;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Bucket;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.BucketFilter;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.FormatConverter;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.AnalysisMetrics.AbstractConfusionMatrix;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.AnalysisMetrics.CodeMetrics;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.AnalysisMetrics.InvertedSoftConfusionMatrix;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.AnalysisMetrics.ListAccuracyMetrics;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.AnalysisMetrics.SoftConfusionMatrix;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.AnalysisMetrics.StrictConfusionMatrix;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Bucket;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.FormatConverter;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.InputFormatException;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Record;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.RecordFactory;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.RecordFactory;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.vectors.VectorFactory;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.exceptions.InputFormatException;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.writers.DataClerkingWriter;
 import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
 import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearningConfiguration;
 import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
 
 /**
  * This class integrates the training of machine learning models and the classification of records using those models.
@@ -102,11 +103,23 @@ public final class TrainAndMultiplyClassify {
 
         writeRecords(classifiedBucket);
 
-        ListAccuracyMetrics accuracyMetrics = new ListAccuracyMetrics(classifiedBucket);
+        ListAccuracyMetrics accuracyMetricsAllRecords = new ListAccuracyMetrics(classifiedBucket);
+        ListAccuracyMetrics accuracyMetricsUniqueRecords = new ListAccuracyMetrics(BucketFilter.uniqueRecordsOnly(classifiedBucket));
 
         System.out.println("********** **********");
 
-        accuracyMetrics.prettyPrint();
+        System.out.println("All Records");
+        accuracyMetricsAllRecords.prettyPrint();
+
+        generateStats(classifiedBucket, accuracyMetricsAllRecords);
+
+        System.out.println("\nUnique Records");
+        accuracyMetricsUniqueRecords.prettyPrint();
+        generateStats(classifiedBucket, accuracyMetricsUniqueRecords);
+
+    }
+
+    private static void generateStats(final Bucket classifiedBucket, final ListAccuracyMetrics accuracyMetricsAllRecords) throws IOException {
 
         final String strictCodeStatsPath = experimentalFolderName + "/Data/strictCodeStats.csv";
         final String softCodeStatsPath = experimentalFolderName + "/Data/softCodeStats.csv";
@@ -127,11 +140,10 @@ public final class TrainAndMultiplyClassify {
         System.out.println("Number of predictions too specific: " + totalCorrectlyPredicted);
         System.out.println("Proportion of predictions too specific: " + totalCorrectlyPredicted / invertedConfusionMatrix.getTotalPredicted());
 
-
         runRscript(strictCodeStatsPath, "strictCodeStats");
         runRscript(softCodeStatsPath, "softCodeStats");
-        accuracyMetrics.generateMarkDownSummary(experimentalFolderName, "strictCodeStats");
-        accuracyMetrics.generateMarkDownSummary(experimentalFolderName, "softCodeStats");
+        accuracyMetricsAllRecords.generateMarkDownSummary(experimentalFolderName, "strictCodeStats");
+        accuracyMetricsAllRecords.generateMarkDownSummary(experimentalFolderName, "softCodeStats");
     }
 
     private static void runRscript(final String dataPath, final String imageName) throws IOException {
@@ -163,7 +175,8 @@ public final class TrainAndMultiplyClassify {
             if (exitVal != 0) {
                 System.out.println("ExitValue: " + exitVal);
             }
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -182,11 +195,7 @@ public final class TrainAndMultiplyClassify {
 
         experimentalFolderName = getExperimentalFolderName();
 
-        if (!(new File(experimentalFolderName).mkdirs() &&
-                new File(experimentalFolderName + "/Reports").mkdirs() &&
-                new File(experimentalFolderName + "/Data").mkdirs() &&
-                new File(experimentalFolderName + "/Models").mkdirs()))
-            throw new RuntimeException("couldn't create experimental folder");
+        if (!(new File(experimentalFolderName).mkdirs() && new File(experimentalFolderName + "/Reports").mkdirs() && new File(experimentalFolderName + "/Data").mkdirs() && new File(experimentalFolderName + "/Models").mkdirs())) { throw new RuntimeException("couldn't create experimental folder"); }
     }
 
     private static void writeRecords(final Bucket classifiedBucket) throws IOException {
@@ -205,7 +214,8 @@ public final class TrainAndMultiplyClassify {
         for (Record record : bucket) {
             if (Math.random() < 0.8) { // TODO Magic number
                 trainingBucket.addRecordToBucket(record);
-            } else {
+            }
+            else {
                 predictionBucket.addRecordToBucket(record);
             }
         }
@@ -216,9 +226,11 @@ public final class TrainAndMultiplyClassify {
         Bucket toClassify = null;
         try {
             toClassify = new Bucket(RecordFactory.makeCodedRecordsFromFile(prediction));
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             e.printStackTrace();
-        } catch (InputFormatException e) {
+        }
+        catch (InputFormatException e) {
             e.printStackTrace();
         }
 
@@ -241,7 +253,8 @@ public final class TrainAndMultiplyClassify {
 
         if (longFormat) {
             records = FormatConverter.convert(training);
-        } else {
+        }
+        else {
             records = RecordFactory.makeCodedRecordsFromFile(training);
         }
         bucket.addCollectionOfRecords(records);
@@ -255,9 +268,7 @@ public final class TrainAndMultiplyClassify {
         String line = br.readLine();
         br.close();
         if (line != null) {
-            if (line.split(Utils.getCSVComma()).length == 38) {
-                return true;
-            }
+            if (line.split(Utils.getCSVComma()).length == 38) { return true; }
         }
         return false;
     }

@@ -6,6 +6,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
+
 // TODO: Auto-generated Javadoc
 /**
  * Contains a set of records and metrics associated with that bucket.
