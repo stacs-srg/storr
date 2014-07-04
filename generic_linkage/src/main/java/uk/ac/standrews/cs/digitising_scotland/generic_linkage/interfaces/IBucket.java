@@ -44,4 +44,11 @@ public interface IBucket {
      * @return the name of the bucket
      */
     String getName();
+
+    /**
+     * @param id - an id to lookup
+     * @return true if the bucket contains the given id
+     */
+    boolean contains(int id);
+
 }

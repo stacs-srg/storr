@@ -1,7 +1,7 @@
 package uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl;
 
 import org.json.JSONException;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IIndex;
+import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IBucketIndex;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IIndexedBucket;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXP;
 
@@ -22,7 +22,7 @@ import java.util.Set;
  */
 public class IndexedBucket extends Bucket implements IIndexedBucket {
 
-    private Map<String, IIndex> indexes = new HashMap<>();
+    private Map<String, IBucketIndex> indexes = new HashMap<>();
 
     private static final String INDEX = "INDEX";
     private static final String INDEX_DIR_NAME = "INDICES";
@@ -52,7 +52,7 @@ public class IndexedBucket extends Bucket implements IIndexedBucket {
         Iterator<File> iterator = FileIteratorFactory.createFileIterator(index, true, false);
         while (iterator.hasNext()) {
             File next = iterator.next();
-            indexes.put(next.getName(), new Index(next.getName(), next.toPath(), this));
+            indexes.put(next.getName(), new BucketIndex(next.getName(), next.toPath(), this));
         }
     }
 
@@ -65,12 +65,12 @@ public class IndexedBucket extends Bucket implements IIndexedBucket {
             throw new IOException("index exists");
         } else {
             Files.createDirectory(path); // create a directory to store the index
-            indexes.put(label, new Index(label, path, this)); // keep the in memory index list up to date
+            indexes.put(label, new BucketIndex(label, path, this)); // keep the in memory index list up to date
         }
     }
 
     @Override
-    public IIndex getIndex(final String label) {
+    public IBucketIndex getIndex(final String label) {
         return indexes.get(label);
     }
 
@@ -80,7 +80,7 @@ public class IndexedBucket extends Bucket implements IIndexedBucket {
         Set<String> keys = indexes.keySet(); // all the keys currently being indexed
         for (String key : keys) {
             if (record.containsKey(key)) { // we are indexing this key
-                IIndex index = indexes.get(key); // so get the index
+                IBucketIndex index = indexes.get(key); // so get the index
                 index.add(record); // and add this record to the index for that key
             }
         }

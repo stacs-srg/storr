@@ -1,6 +1,6 @@
 package uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl;
 
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IIndex;
+import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IBucketIndex;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXP;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXPInputStream;
 
@@ -21,7 +21,7 @@ import static uk.ac.standrews.cs.digitising_scotland.util.FileManipulation.FILE_
 /**
  * Created by al on 23/05/2014.
  */
-public class Index implements IIndex {
+public class BucketIndex implements IBucketIndex {
 
     private final Path dir;
     private final IndexedBucket indexed_bucket;
@@ -37,7 +37,7 @@ public class Index implements IIndex {
      * @param dir            - the dir holding the index
      * @param indexed_bucket - the bucket being indexed
      */
-    public Index(final String label, final Path dir, final IndexedBucket indexed_bucket) {
+    public BucketIndex(final String label, final Path dir, final IndexedBucket indexed_bucket) {
 
         this.label = label; // the label being indexed
         this.dir = dir; // the path to the dir being used to hold the index
