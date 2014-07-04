@@ -16,7 +16,6 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.AnalysisMetrics.CodeMetrics;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.AnalysisMetrics.InvertedSoftConfusionMatrix;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.AnalysisMetrics.ListAccuracyMetrics;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.AnalysisMetrics.SoftConfusionMatrix;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.AnalysisMetrics.StrictConfusionMatrix;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.RecordFactory;
@@ -119,33 +118,38 @@ public final class TrainAndMultiplyClassify {
 
     }
 
-    private static void generateStats(final Bucket classifiedBucket, final ListAccuracyMetrics accuracyMetricsAllRecords) throws IOException {
+    private static void generateStats(final Bucket bucket, final ListAccuracyMetrics accuracyMetrics) throws IOException {
+
+        final String matrixDataPath = experimentalFolderName + "/Data/classificationCountMatrix.csv";
+        final String matrixImagePath = "classificationMatrix";
 
         final String strictCodeStatsPath = experimentalFolderName + "/Data/strictCodeStats.csv";
+        final String strictCodePath = "strictCodeStats";
+        printCodeMetrics(bucket, accuracyMetrics, strictCodeStatsPath, strictCodePath);
+
         final String softCodeStatsPath = experimentalFolderName + "/Data/softCodeStats.csv";
-        CodeMetrics strictCodeMetrics = new CodeMetrics(new StrictConfusionMatrix(classifiedBucket));
-        CodeMetrics softCodeMetrics = new CodeMetrics(new SoftConfusionMatrix(classifiedBucket));
-        System.out.println("micro precision: " + strictCodeMetrics.getMicroPrecision());
-        System.out.println("micro recall: " + strictCodeMetrics.getMicroRecall());
-        System.out.println("soft micro precision: " + softCodeMetrics.getMicroPrecision());
-        System.out.println("soft micro recall: " + softCodeMetrics.getMicroRecall());
+        final String softCodePath = "softCodeStats";
+        printCodeMetrics(bucket, accuracyMetrics, softCodeStatsPath, softCodePath);
 
-        strictCodeMetrics.writeStats(strictCodeStatsPath);
-        softCodeMetrics.writeStats(softCodeStatsPath);
-        System.out.println("Strict correctly predicted: " + strictCodeMetrics.getTotalCorrectlyPredicted());
-        System.out.println("Soft correctly predicted: " + softCodeMetrics.getTotalCorrectlyPredicted());
-
-        AbstractConfusionMatrix invertedConfusionMatrix = new InvertedSoftConfusionMatrix(classifiedBucket);
+        AbstractConfusionMatrix invertedConfusionMatrix = new InvertedSoftConfusionMatrix(bucket);
         double totalCorrectlyPredicted = invertedConfusionMatrix.getTotalCorrectlyPredicted();
         System.out.println("Number of predictions too specific: " + totalCorrectlyPredicted);
         System.out.println("Proportion of predictions too specific: " + totalCorrectlyPredicted / invertedConfusionMatrix.getTotalPredicted());
 
-        runRscript("src/R/CodeStatsPlotter.R", strictCodeStatsPath, "strictCodeStats");
-        runRscript("src/R/CodeStatsPlotter.R", softCodeStatsPath, "softCodeStats");
-        runRscript("src/R/HeatMapPlotter.R", experimentalFolderName + "/Data/classificationCountMatrix.csv", "classificationMatrix");
+        runRscript("src/R/CodeStatsPlotter.R", strictCodeStatsPath, strictCodePath);
+        runRscript("src/R/CodeStatsPlotter.R", softCodeStatsPath, softCodePath);
+        runRscript("src/R/HeatMapPlotter.R", matrixDataPath, matrixImagePath);
 
-        accuracyMetricsAllRecords.generateMarkDownSummary(experimentalFolderName, "strictCodeStats");
-        accuracyMetricsAllRecords.generateMarkDownSummary(experimentalFolderName, "softCodeStats");
+    }
+
+    private static String printCodeMetrics(final Bucket bucket, final ListAccuracyMetrics accuracyMetrics, final String strictCodeStatsPath, final String codeStatsPath) {
+
+        CodeMetrics codeMetrics = new CodeMetrics(new StrictConfusionMatrix(bucket));
+        codeMetrics.printMicroStats();
+        codeMetrics.writeStats(strictCodeStatsPath);
+        System.out.println(strictCodeStatsPath + ": " + codeMetrics.getTotalCorrectlyPredicted());
+        accuracyMetrics.generateMarkDownSummary(experimentalFolderName, codeStatsPath);
+        return strictCodeStatsPath;
     }
 
     private static void runRscript(final String pathToRScript, final String dataPath, final String imageName) throws IOException {
