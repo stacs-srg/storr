@@ -257,7 +257,7 @@ public class ListAccuracyMetrics {
 
         sb.append(message + "\n");
         sb.append("   ");
-        sb.append("\n" + getMatrixAsString(matrix));
+        sb.append("\n" + getMatrixAsString(matrix, "\t", true));
         System.out.println(sb.toString());
         return sb.toString();
     }
@@ -265,22 +265,30 @@ public class ListAccuracyMetrics {
     /**
      * Prints a matrix.
      *
-     * @param message the message to add to the top of the matrix
      * @param matrix the matrix to print
      */
-    private String getMatrixAsString(final int[][] matrix) {
+    public String getMatrixAsString(final int[][] matrix, final String delimiter, final boolean printLabels) {
 
         StringBuilder sb = new StringBuilder();
-        sb.append("\t");
-        for (int i = 0; i < matrix.length; i++) {
-            sb.append(i + "\t");
+
+        if (printLabels) {
+            for (int i = 0; i <= matrix.length; i++) {
+                sb.append(i + delimiter);
+            }
+            sb.append("\n");
         }
-        sb.append("\n");
+
         for (int i = 0; i < matrix.length; i++) {
-            sb.append(i + "\t");
+            if (printLabels) {
+                sb.append(i + delimiter);
+            }
 
             for (int j = 0; j < matrix.length; j++) {
-                sb.append(matrix[i][j] + "\t");
+                sb.append(matrix[i][j]);
+
+                if (j < matrix.length - 1) {
+                    sb.append(delimiter);
+                }
             }
             sb.append("\n");
         }
@@ -312,7 +320,7 @@ public class ListAccuracyMetrics {
         sb.append("Multiply classified: " + moreThanTwoClassifications + "    \n");
         sb.append(printNumberOfCodesMissed());
         sb.append("Over/Under Matrix    \n");
-        sb.append(getMatrixAsString(overUnderPredicionMatrix));
+        sb.append(getMatrixAsString(overUnderPredicionMatrix, "\t", true));
         sb.append("    \n\n");
         sb.append("##Graphs    \n");
         sb.append("![Graph Matrix][" + pathToGraph + "]     \n");
@@ -320,6 +328,7 @@ public class ListAccuracyMetrics {
         sb.append("[" + pathToGraph + "]: " + pathToGraph + ".png \"Graph Matrix\"    \n");
         //sb.append("![Graph](graph.png)");
         Utils.writeToFile(sb.toString(), pathToExperiemntFolder + "/Reports/summary.md", true);
+        Utils.writeToFile(getMatrixAsString(overUnderPredicionMatrix, ",", false), pathToExperiemntFolder + "/Data/classificationCountMatrix.csv");
 
     }
 

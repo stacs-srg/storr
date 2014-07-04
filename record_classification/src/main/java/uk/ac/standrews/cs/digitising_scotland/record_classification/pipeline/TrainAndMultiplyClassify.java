@@ -140,18 +140,20 @@ public final class TrainAndMultiplyClassify {
         System.out.println("Number of predictions too specific: " + totalCorrectlyPredicted);
         System.out.println("Proportion of predictions too specific: " + totalCorrectlyPredicted / invertedConfusionMatrix.getTotalPredicted());
 
-        runRscript(strictCodeStatsPath, "strictCodeStats");
-        runRscript(softCodeStatsPath, "softCodeStats");
+        runRscript("src/R/CodeStatsPlotter.R", strictCodeStatsPath, "strictCodeStats");
+        runRscript("src/R/CodeStatsPlotter.R", softCodeStatsPath, "softCodeStats");
+        runRscript("src/R/HeatMapPlotter.R", experimentalFolderName + "/Data/classificationCountMatrix.csv", "classificationMatrix");
+
         accuracyMetricsAllRecords.generateMarkDownSummary(experimentalFolderName, "strictCodeStats");
         accuracyMetricsAllRecords.generateMarkDownSummary(experimentalFolderName, "softCodeStats");
     }
 
-    private static void runRscript(final String dataPath, final String imageName) throws IOException {
+    private static void runRscript(final String pathToRScript, final String dataPath, final String imageName) throws IOException {
 
         // TODO this doesn't look too portable!
 
         String imageOutputPath = experimentalFolderName + "/Reports/" + imageName + ".png";
-        String command = "Rscript src/R/CodeStatsPlotter.R " + dataPath + " " + imageOutputPath;
+        String command = "Rscript " + pathToRScript + " " + dataPath + " " + imageOutputPath;
         System.out.println(executeCommand(command));
     }
 
