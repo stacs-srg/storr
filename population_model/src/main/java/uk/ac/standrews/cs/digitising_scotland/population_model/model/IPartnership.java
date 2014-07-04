@@ -20,19 +20,46 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Created by graham on 09/06/2014.
+ * Interface for partnership objects.
+ *
+ * @author Graham Kirby (graham.kirby@st-andrews.ac.uk)
  */
 public interface IPartnership extends Comparable<IPartnership> {
 
+    /**
+     * Gets the partnership's unique identifier.
+     * @return the partnership's unique identifier
+     */
     int getId();
 
+    /**
+     * Gets the identifier of the first person in the partnership.
+     * @return the identifier of the first person
+     */
     int getPartner1Id();
 
+    /**
+     * Gets the identifier of the second person in the partnership.
+     * @return the identifier of the second person
+     */
     int getPartner2Id();
 
+    /**
+     * Gets the identifier of the partner of the person with the given identifier, or -1 if neither member
+     * of this partnership has the given identifier.
+     * @return the identifier of the partner of the person with the given identifier
+     */
     int getPartnerOf(int id);
 
+    /**
+     * Gets the date of the marriage between the partners in this partnership, or null if they are not married.
+     * @return the date of the marriage of this partnership
+     */
     Date getMarriageDate();
 
+    /**
+     * Gets the identifiers of the partnership's children, or null if none are recorded.
+     * @return the identifiers of the partnership's children
+     */
     List<Integer> getChildren();
 }

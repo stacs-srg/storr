@@ -8,12 +8,12 @@ import java.util.List;
 import java.util.Set;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Bucket;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Record;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.RecordFactory;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.TokenSet;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeFactory;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeNotValidException;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.RecordFactory;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.preprocessor.DataCleaning;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.CodeTriple;
 
@@ -112,8 +112,8 @@ public class ClassifierTestingHelper {
      * Adds the gold standard code to classification set.
      *
      * @param record the record
-     * @param Set<CodeTriple> the classification set
      * @param goldStandardCode the gold standard code
+     * @return the record
      */
     private Record addGoldStandardCodeToRecord(final Record record, final String goldStandardCode) {
 
@@ -129,8 +129,8 @@ public class ClassifierTestingHelper {
      * Adds the gold standard code to classification set.
      *
      * @param record the record
-     * @param Set<CodeTriple> the classification set
-     * @param code the gold standard code
+     * @param codeAsString the code as string
+     * @return the record
      */
     private Record addCodeTriplesStandardCodeToRecord(final Record record, final String codeAsString) {
 

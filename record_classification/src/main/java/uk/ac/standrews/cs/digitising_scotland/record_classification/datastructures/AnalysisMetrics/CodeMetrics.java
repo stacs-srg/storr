@@ -4,6 +4,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeFactory;
 import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
 
+// TODO: Auto-generated Javadoc
 /**
  * The Class CodeMetrics.
  */
@@ -48,15 +49,19 @@ public class CodeMetrics {
     /** The number of output classes. */
     private final int numberOfOutputClasses;
 
+    /** The confusion matrix. */
     private AbstractConfusionMatrix confusionMatrix;
 
+    /** The micro precision. */
     private double microPrecision = 0;
 
+    /** The micro recall. */
     private double microRecall = 0;
 
     /**
      * Instantiates a new code metrics.
      *
+     * @param confusionMatrix the confusion matrix
      */
     public CodeMetrics(final AbstractConfusionMatrix confusionMatrix) {
 
@@ -96,6 +101,9 @@ public class CodeMetrics {
         generateMicroRecall();
     }
 
+    /**
+     * Generate micro precision.
+     */
     private void generateMicroPrecision() {
 
         // tp/tp+fp
@@ -482,11 +490,21 @@ public class CodeMetrics {
         return numberOfOutputClasses;
     }
 
+    /**
+     * Gets the micro precision.
+     *
+     * @return the micro precision
+     */
     public double getMicroPrecision() {
 
         return microPrecision;
     }
 
+    /**
+     * Gets the micro recall.
+     *
+     * @return the micro recall
+     */
     public double getMicroRecall() {
 
         return microRecall;
@@ -508,6 +526,11 @@ public class CodeMetrics {
         Utils.writeToFile(sb.toString(), fileName);
     }
 
+    /**
+     * Gets the total correctly predicted.
+     *
+     * @return the total correctly predicted
+     */
     public double getTotalCorrectlyPredicted() {
 
         return confusionMatrix.getTotalCorrectlyPredicted();

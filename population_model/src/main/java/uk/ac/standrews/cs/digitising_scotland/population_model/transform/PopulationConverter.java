@@ -51,7 +51,7 @@ public class PopulationConverter {
 
         for (IPerson person : population.getPeople()) {
 
-            writer.recordIndividual(person);
+            writer.recordPerson(person);
             progressStep();
         }
 

@@ -3,10 +3,11 @@ package uk.ac.standrews.cs.digitising_scotland.record_classification.datastructu
 import java.util.Set;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Bucket;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeFactory;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.CodeTriple;
 
+// TODO: Auto-generated Javadoc
 /**
  *
  * Created by fraserdunlop on 02/07/2014 at 10:27.
@@ -28,11 +29,6 @@ public abstract class AbstractConfusionMatrix {
     /** The true positive. */
     protected double[] truePositive;
 
-    protected int maxCodes;
-
-    /** Matrix shows how many records have been over or under coded. Makes to claims as to accuracy of coding */
-    protected double[][] overUnderPredictionMatrix;
-
     /**
      * Instantiates a new abstract confusion matrix.
      *
@@ -46,7 +42,6 @@ public abstract class AbstractConfusionMatrix {
         trueNegative = new double[numberOfOutputClasses];
         falseNegative = new double[numberOfOutputClasses];
         truePositive = new double[numberOfOutputClasses];
-        maxCodes = 0;
         countStats(bucket);
 
     }
@@ -80,7 +75,6 @@ public abstract class AbstractConfusionMatrix {
             Set<CodeTriple> goldStandardTriples = record.getGoldStandardClassificationSet();
             totalAndFalsePos(setCodeTriples, goldStandardTriples);
             truePosAndFalseNeg(setCodeTriples, goldStandardTriples);
-            updateMaxCodes(setCodeTriples, goldStandardTriples);
         }
         calculateTrueNeg();
     }
@@ -170,13 +164,4 @@ public abstract class AbstractConfusionMatrix {
         return sum(getTruePositive());
     }
 
-    private void updateMaxCodes(final Set<CodeTriple> setCodeTriples, final Set<CodeTriple> goldStandardTriples) {
-
-        if (setCodeTriples.size() > maxCodes) {
-            maxCodes = setCodeTriples.size();
-        }
-        if (goldStandardTriples.size() > maxCodes) {
-            maxCodes = goldStandardTriples.size();
-        }
-    }
 }

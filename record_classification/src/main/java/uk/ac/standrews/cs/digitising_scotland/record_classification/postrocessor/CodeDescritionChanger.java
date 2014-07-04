@@ -11,13 +11,19 @@ import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
 
 import com.google.common.base.Charsets;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class CodeDescritionChanger.
+ */
 public class CodeDescritionChanger {
 
+    /** The code mapping. */
     private HashMap<String, String> codeMapping;
 
     /**
      * Main method. Runs the code description changer on file "outputFile.csv".
-     * @param args
+     *
+     * @param args the arguments
      */
     public static void main(final String[] args) {
 
@@ -32,6 +38,14 @@ public class CodeDescritionChanger {
 
     }
 
+    /**
+     * Change description to code.
+     *
+     * @param inputFile the input file
+     * @param base the base
+     * @return the file
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
     public File changeDescriptionToCode(final File inputFile, final File base) throws IOException {
 
         File buildCodesFromThis = new File("hiscoMapping.txt");
@@ -62,6 +76,13 @@ public class CodeDescritionChanger {
         return outputFile;
     }
 
+    /**
+     * Gets the codes.
+     *
+     * @param buildCodesFromThis the build codes from this
+     * @return the codes
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
     private HashMap<String, String> getCodes(final File buildCodesFromThis) throws IOException {
 
         BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(buildCodesFromThis), "UTF8"));

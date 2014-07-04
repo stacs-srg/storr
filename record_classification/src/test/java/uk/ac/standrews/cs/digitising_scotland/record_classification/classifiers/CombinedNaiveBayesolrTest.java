@@ -13,12 +13,13 @@ import org.junit.Test;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.OLR.OLRClassifier;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Bucket;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Record;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.RecordFactory;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.RecordFactory;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.vectors.VectorFactory;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.preprocessor.DataCleaning;
 import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearningConfiguration;
 
+// TODO: Auto-generated Javadoc
 /**
  * Class tests the interaction between the Naive Bayes and the olr Clasifiers when run together in a pipeline.
  * @author jkc25
@@ -26,15 +27,31 @@ import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearnin
  */
 public class CombinedNaiveBayesolrTest {
 
+    /** The bucket a. */
     private Bucket bucketA;
+
+    /** The bucket b. */
     private Bucket bucketB;
+
+    /** The list of records. */
     private List<Record> listOfRecords;
+
+    /** The nbc. */
     private NaiveBayesClassifier nbc;
+
+    /** The olr. */
     private OLRClassifier olr;
+
+    /** The pipeline. */
     private ClassificationPipeline pipeline;
+
+    /** The properties. */
     private Properties properties;
+
+    /** The helper. */
     private ClassifierTestingHelper helper = new ClassifierTestingHelper();
 
+    /** The done once. */
     private static boolean doneOnce = false;
 
     /**
@@ -58,6 +75,8 @@ public class CombinedNaiveBayesolrTest {
 
     /**
      * Initialise classifiers, pipeline and properties file.
+     *
+     * @throws Exception the exception
      */
     public void init() throws Exception {
 
@@ -103,7 +122,7 @@ public class CombinedNaiveBayesolrTest {
     /**
      * Simple file exists assertion.
      *
-     * @param fileName
+     * @param fileName the file name
      */
     private void checkFileExsits(final String fileName) {
 
@@ -131,6 +150,12 @@ public class CombinedNaiveBayesolrTest {
         olr.train(bucketB);
     }
 
+    /**
+     * Creates the training bucket.
+     *
+     * @return the bucket
+     * @throws Exception the exception
+     */
     private Bucket createTrainingBucket() throws Exception {
 
         File inputFileTraining = new File(getClass().getResource("/occupationTestFormatPipe.txt").getFile());

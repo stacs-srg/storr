@@ -65,6 +65,7 @@ public class CompactPartnership implements Comparable<CompactPartnership> {
     public CompactPartnership(final CompactPerson partner1, final int partner1_index, final CompactPerson partner2, final int partner2_index, final int marriage_date) {
 
         this(partner1_index, partner2_index, marriage_date);
+
         addPartnershipToPartner(partner1);
         addPartnershipToPartner(partner2);
     }

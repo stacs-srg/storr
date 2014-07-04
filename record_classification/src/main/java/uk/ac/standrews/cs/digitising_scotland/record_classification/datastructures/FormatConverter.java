@@ -11,9 +11,12 @@ import java.util.List;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeFactory;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.exceptions.InputFormatException;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.CodeTriple;
 import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
 
+// TODO: Auto-generated Javadoc
 /**
  * The Class FormatConverter converts a comma separated text file in the format that is used by the modern cod data
  * to a list of Record objects.
@@ -21,14 +24,30 @@ import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
  */
 public final class FormatConverter {
 
+    /** The Constant CODLINELENGTH. */
     static final int CODLINELENGTH = 38;
+
+    /** The Constant idPosition. */
     private static final int idPosition = 0;
+
+    /** The Constant agePosition. */
     private static final int agePosition = 34;
+
+    /** The Constant sexPosition. */
     private static final int sexPosition = 35;
+
+    /** The Constant descriptionStart. */
     private static final int descriptionStart = 1;
+
+    /** The Constant descriptionEnd. */
     private static final int descriptionEnd = 4;
+
+    /** The Constant yearPosition. */
     private static final int yearPosition = 37;
 
+    /**
+     * Instantiates a new format converter.
+     */
     private FormatConverter() {
 
     }
@@ -73,6 +92,12 @@ public final class FormatConverter {
         return recordList;
     }
 
+    /**
+     * Populate gold standard set.
+     *
+     * @param lineSplit the line split
+     * @param goldStandard the gold standard
+     */
     private static void populateGoldStandardSet(final String[] lineSplit, final HashSet<CodeTriple> goldStandard) {
 
         for (int i = 6; i < 31; i = i + 3) {

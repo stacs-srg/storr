@@ -10,10 +10,10 @@ import org.junit.Before;
 import org.junit.Test;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Bucket;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Record;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.RecordFactory;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.TokenSet;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.RecordFactory;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.vectors.VectorFactory;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.preprocessor.DataCleaning;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.CodeTriple;
@@ -25,8 +25,13 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.Pai
  */
 public class NaiveBayesClassifierTest {
 
+    /** The bucket a. */
     private Bucket bucketA;
+
+    /** The bucket b. */
     private Bucket bucketB;
+
+    /** The list of records. */
     private List<Record> listOfRecords;
 
     // FIXME  private ClassifierTestingHelper helper = new ClassifierTestingHelper();
@@ -104,6 +109,8 @@ public class NaiveBayesClassifierTest {
 
     /**
      * Tests the adding of vectors to records in a bucket.
+     *
+     * @param bucket the bucket
      * @throws Exception if something goes wrong....
      */
     public void addVectorsToBucket(final Bucket bucket) throws Exception {

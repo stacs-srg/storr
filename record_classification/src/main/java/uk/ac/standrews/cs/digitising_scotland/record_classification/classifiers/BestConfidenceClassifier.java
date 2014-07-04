@@ -5,13 +5,14 @@ import java.util.Properties;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.OLR.OLRClassifier;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Bucket;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.TokenSet;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.vectors.VectorFactory;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.Pair;
 import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearningConfiguration;
 
+// TODO: Auto-generated Javadoc
 /**
  * Implements the best confidence voting scheme for machine learning
  * classifiers.
@@ -21,8 +22,13 @@ import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearnin
  */
 public class BestConfidenceClassifier extends AbstractClassifier {
 
+    /** The properties. */
     private Properties properties;
+
+    /** The naive bayes classifier. */
     private NaiveBayesClassifier naiveBayesClassifier;
+
+    /** The olr classifier. */
     private OLRClassifier olrClassifier;
 
     /**
@@ -43,11 +49,9 @@ public class BestConfidenceClassifier extends AbstractClassifier {
     /**
      * Constructs a {@link BestConfidenceClassifier} with a custom properties
      * file that extends the default.
-     * 
-     * @param vectorFactory
-     *            vector factory
-     * @param customPropertiesFile
-     *            String with path to custom {@link Properties} file
+     *
+     * @param customPropertiesFile            String with path to custom {@link Properties} file
+     * @param vectorFactory            vector factory
      */
     public BestConfidenceClassifier(final String customPropertiesFile, final VectorFactory vectorFactory) {
 
@@ -57,6 +61,9 @@ public class BestConfidenceClassifier extends AbstractClassifier {
         this.olrClassifier = new OLRClassifier(customPropertiesFile, vectorFactory);
     }
 
+    /* (non-Javadoc)
+     * @see uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.AbstractClassifier#train(uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Bucket)
+     */
     @Override
     public void train(final Bucket bucket) throws Exception {
 
@@ -64,6 +71,9 @@ public class BestConfidenceClassifier extends AbstractClassifier {
         olrClassifier.train(bucket);
     }
 
+    /* (non-Javadoc)
+     * @see uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.AbstractClassifier#classify(uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Record)
+     */
     @Override
     public Record classify(final Record record) throws IOException {
 
@@ -94,6 +104,9 @@ public class BestConfidenceClassifier extends AbstractClassifier {
         return classifiedBucket;
     }
 
+    /* (non-Javadoc)
+     * @see uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.AbstractClassifier#getModelFromDefaultLocation()
+     */
     @Override
     public void getModelFromDefaultLocation() {
 
@@ -102,6 +115,9 @@ public class BestConfidenceClassifier extends AbstractClassifier {
 
     }
 
+    /* (non-Javadoc)
+     * @see uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.AbstractClassifier#classify(uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.TokenSet)
+     */
     @Override
     public Pair<Code, Double> classify(final TokenSet tokenSet) throws IOException {
 
@@ -116,11 +132,21 @@ public class BestConfidenceClassifier extends AbstractClassifier {
         }
     }
 
+    /**
+     * Gets the properties.
+     *
+     * @return the properties
+     */
     public Properties getProperties() {
 
         return properties;
     }
 
+    /**
+     * Sets the properties.
+     *
+     * @param properties the new properties
+     */
     public void setProperties(final Properties properties) {
 
         this.properties = properties;

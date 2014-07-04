@@ -1,5 +1,8 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures;
 
+import uk.ac.standrews.cs.digitising_scotland.record_classification.exceptions.InputFormatException;
+
+// TODO: Auto-generated Javadoc
 /**
  * Represents cause of death data from from NRS. As data is supplied this cannot be changed once set.
  * @author jkc25
@@ -7,8 +10,13 @@ package uk.ac.standrews.cs.digitising_scotland.record_classification.datastructu
  */
 public class CODOrignalData extends OriginalData {
 
+    /** The Constant serialVersionUID. */
     private static final long serialVersionUID = 148704864605209743L;
+
+    /** The age group. */
     private int ageGroup;
+
+    /** The sex. */
     private int sex;
 
     /**
@@ -50,6 +58,9 @@ public class CODOrignalData extends OriginalData {
         return sex;
     }
 
+    /* (non-Javadoc)
+     * @see uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.OriginalData#hashCode()
+     */
     @Override
     public int hashCode() {
 
@@ -60,6 +71,9 @@ public class CODOrignalData extends OriginalData {
         return result;
     }
 
+    /* (non-Javadoc)
+     * @see uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.OriginalData#equals(java.lang.Object)
+     */
     @Override
     public boolean equals(final Object obj) {
 

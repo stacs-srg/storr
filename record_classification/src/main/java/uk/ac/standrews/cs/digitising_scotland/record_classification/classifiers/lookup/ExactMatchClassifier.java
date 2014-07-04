@@ -15,9 +15,9 @@ import java.util.Set;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.AbstractClassifier;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Bucket;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.TokenSet;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.CodeTriple;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.Pair;
 import cc.mallet.classify.Classification;
@@ -209,6 +209,12 @@ public class ExactMatchClassifier extends AbstractClassifier {
         return true;
     }
 
+    /**
+     * Classifies a {@link TokenSet} to a set of {@link CodeTriple}s using the classifiers lookup table.
+     * @param tokenSet to classify
+     * @return Set<CodeTripe> code triples from lookup table
+     * @throws IOException Indicates an I/O error
+     */
     public Set<CodeTriple> classifyTokenSetToCodeTripleSet(final TokenSet tokenSet) throws IOException {
 
         Set<CodeTriple> result = lookupTable.get(tokenSet.toString());

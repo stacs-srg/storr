@@ -12,9 +12,12 @@ public class TrainAndMultiplyClassifyTest {
 
         File experiment0 = new File("Experiment0");
         File experiment1 = new File("Experiment1");
-        experiment0.mkdirs();
-        experiment1.mkdirs();
-
+        if (!experiment0.mkdirs()) {
+            System.err.println("Could not create experiment0 Folder");
+        }
+        if (!experiment1.mkdirs()) {
+            System.err.println("Could not create experiment1 Folder");
+        }
         Assert.assertEquals("Experiment2", TrainAndMultiplyClassify.getExperimentalFolderName());
     }
 

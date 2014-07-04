@@ -3,12 +3,13 @@ package uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers
 import java.io.IOException;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Bucket;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.TokenSet;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeFactory;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.Pair;
 
+// TODO: Auto-generated Javadoc
 /**
  * Deterministic mock classifier object. Used for testing.
  * Classify(tokenSet) will return the first code in the map with a confidence of 0.8 if
@@ -20,6 +21,9 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.Pai
  */
 public class MockClassifier extends AbstractClassifier {
 
+    /* (non-Javadoc)
+     * @see uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.AbstractClassifier#train(uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Bucket)
+     */
     @Override
     public void train(final Bucket bucket) throws Exception {
 
@@ -27,12 +31,18 @@ public class MockClassifier extends AbstractClassifier {
 
     }
 
+    /* (non-Javadoc)
+     * @see uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.AbstractClassifier#classify(uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Record)
+     */
     @Override
     public Record classify(final Record record) throws IOException {
 
         return record;
     }
 
+    /* (non-Javadoc)
+     * @see uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.AbstractClassifier#classify(uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.TokenSet)
+     */
     @Override
     public Pair<Code, Double> classify(final TokenSet tokenSet) throws IOException {
 
@@ -49,6 +59,9 @@ public class MockClassifier extends AbstractClassifier {
         }
     }
 
+    /* (non-Javadoc)
+     * @see uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.AbstractClassifier#getModelFromDefaultLocation()
+     */
     @Override
     public void getModelFromDefaultLocation() {
 

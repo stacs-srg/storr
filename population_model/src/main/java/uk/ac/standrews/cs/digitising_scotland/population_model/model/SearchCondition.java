@@ -17,10 +17,14 @@
 package uk.ac.standrews.cs.digitising_scotland.population_model.model;
 
 /**
- * Tests of properties of concrete population that hold for specific cases.
- *
- * @author Alan Dearle (alan.dearle@st-andrews.ac.uk)
- * @author Graham Kirby (graham.kirby@st-andrews.ac.uk)
+ * Created by graham on 03/07/2014.
  */
-public class SpecificConcretePopulationStructureTest {
+public interface SearchCondition {
+
+    ConditionResult check(int index);
+
+    public static enum ConditionResult {
+
+        POSITIVE, NEGATIVE_CONTINUE, NEGATIVE_STOP
+    }
 }

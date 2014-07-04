@@ -9,11 +9,14 @@ Graham Kirby, Alan Dearle and Jamie Carson at the School of Computer Science at 
 package uk.ac.standrews.cs.digitising_scotland.tools;
 
 import com.google.common.io.Files;
+
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.output.FileWriterWithEncoding;
+
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Bucket;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Record;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.writers.DataClerkingWriter;
 import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
 
@@ -31,6 +34,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+// TODO: Auto-generated Javadoc
 /**
  * Utility classes related to writing to files and other often used methods.
  *
@@ -38,6 +42,9 @@ import java.util.Map;
  */
 public final class Utils {
 
+    /**
+     * Instantiates a new utils.
+     */
     private Utils() {
 
         // private constructor for utility class.

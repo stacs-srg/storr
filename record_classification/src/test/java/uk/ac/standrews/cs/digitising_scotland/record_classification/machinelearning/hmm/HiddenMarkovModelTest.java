@@ -6,7 +6,6 @@ import java.util.Arrays;
 import org.junit.Assert;
 import org.junit.Test;
 
-import uk.ac.standrews.cs.digitising_scotland.record_classification.machinelearning.hmm.HiddenMarkovModel;
 import cc.mallet.types.Alphabet;
 
 public class HiddenMarkovModelTest {

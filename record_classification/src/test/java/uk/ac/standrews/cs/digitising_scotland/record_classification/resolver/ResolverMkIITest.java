@@ -11,10 +11,10 @@ import org.junit.Test;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.AbstractClassifier;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Bucket;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.TokenSet;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeFactory;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multiset;
@@ -44,7 +44,7 @@ public class ResolverMkIITest {
     /**
      * Gets the union test.
      *
-     * @return the union test
+
      */
     @Test
     public void getUnionTest() {

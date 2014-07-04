@@ -15,6 +15,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
+// TODO: Auto-generated Javadoc
 /**
  * Adds a spelling mistake to a string by swapping the two 'middle' characters in a randomly string.
  * 

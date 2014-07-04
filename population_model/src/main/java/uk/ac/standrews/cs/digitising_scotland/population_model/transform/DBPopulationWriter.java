@@ -67,7 +67,7 @@ public class DBPopulationWriter implements IPopulationWriter {
         connection.close();
     }
 
-    public void recordIndividual(final IPerson person) throws SQLException {
+    public void recordPerson(final IPerson person) throws SQLException {
 
         DBManipulation.configurePreparedStatement(
                 record_person_statement,
