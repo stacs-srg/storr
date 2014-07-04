@@ -20,32 +20,79 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Created by graham on 09/06/2014.
+ * Interface for person objects.
+ *
+ * @author Graham Kirby (graham.kirby@st-andrews.ac.uk)
  */
 public interface IPerson {
 
+    /**
+     * Representation of female sex.
+     */
     char FEMALE = 'F';
+
+    /**
+     * Representation of male sex.
+     */
     char MALE = 'M';
 
-    String MALE_STRING = String.valueOf(MALE);
-
+    /**
+     * Gets the person's unique identifier.
+     * @return the person's unique identifier
+     */
     int getId();
 
+    /**
+     * Gets the person's first name.
+     * @return the person's first name
+     */
     String getFirstName();
 
+    /**
+     * Gets the person's surname (family name).
+     * @return the person's surname
+     */
     String getSurname();
 
+    /**
+     * Gets the person's sex, either {@link #FEMALE} or {@link #MALE}.
+     * @return the person's sex
+     */
     char getSex();
 
+    /**
+     * Gets the person's date of birth.
+     * @return the person's date of birth
+     */
     Date getBirthDate();
 
+    /**
+     * Gets the person's date of death, or null if they are living.
+     * @return the person's date of death
+     */
     Date getDeathDate();
 
+    /**
+     * Gets the person's occupation, or null if not recorded.
+     * @return the person's occupation
+     */
     String getOccupation();
 
+    /**
+     * Gets the cause of the person's death, or null if not recorded.
+     * @return the cause of the person's death
+     */
     String getCauseOfDeath();
 
+    /**
+     * Gets the person's address, or null if not recorded.
+     * @return the person's address
+     */
     String getAddress();
 
+    /**
+     * Gets the identifiers of the person's partnerships, or null if none are recorded.
+     * @return the identifiers of the person's partnerships
+     */
     List<Integer> getPartnerships();
 }

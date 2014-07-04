@@ -20,6 +20,7 @@ import org.junit.Test;
 import uk.ac.standrews.cs.digitising_scotland.population_model.generation.distributions.InconsistentWeightException;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -31,7 +32,7 @@ import static org.junit.Assert.assertEquals;
  * @author Alan Dearle (alan.dearle@st-andrews.ac.uk)
  * @author Graham Kirby (graham.kirby@st-andrews.ac.uk)
  */
-public class SpecificAbstractPopulationStructureTest extends PopulationStructureTest {
+public class SpecificPopulationStructureTest extends PopulationStructureTest {
 
     @Test(expected = NoSuchElementException.class)
     public void getNextPersonFromEmptyPopulation() throws IOException, InconsistentWeightException {
@@ -48,19 +49,21 @@ public class SpecificAbstractPopulationStructureTest extends PopulationStructure
     }
 
     @Test
-    public void familyStructureIsAsExpected() throws IOException, InconsistentWeightException {
+    public void findPerson() {
+
+        IDFactory.resetId();
+        CompactPerson[] people = makePeople(10);
+        CompactPopulation population = new CompactPopulation(people, 0, 0);
+
+        for (int i = 0; i < people.length; i++) {
+            assertEquals(people[i], population.findPerson(i+1));
+        }
+    }
+
+    @Test
+    public void familyStructureIsAsExpected() throws IOException, InconsistentWeightException, ParseException {
 
         IPopulation population = (IPopulation) populationWithTwoFamilies()[0];
-
-        final int fatherA_id = 1;
-        final int motherA_id = 2;
-        final int child1A_id = 3;
-        final int child2A_id = 4;
-
-        final int fatherB_id = 5;
-        final int motherB_id = 6;
-        final int child1B_id = 7;
-        final int child2B_id = 8;
 
         // Check that father of family A has one partnership.
         IPerson fatherA = population.findPerson(fatherA_id);

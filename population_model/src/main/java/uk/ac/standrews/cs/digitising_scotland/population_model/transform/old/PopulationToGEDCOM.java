@@ -16,7 +16,6 @@
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.transform.old;
 
-import uk.ac.standrews.cs.digitising_scotland.population_model.transform.old.PopulationToFile;
 import uk.ac.standrews.cs.digitising_scotland.util.ArrayIterator;
 import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
 import uk.ac.standrews.cs.digitising_scotland.population_model.generation.distributions.InconsistentWeightException;
@@ -80,11 +79,11 @@ public class PopulationToGEDCOM extends PopulationToFile {
         writer.println("1 NAME " + person.getFirstName() + " /" + person.getSurname() + "/");
         writer.println("1 SEX " + person.getSex());
         writer.println("1 BIRT");
-        writer.println("2 DATE " + DateManipulation.daysToString(compact_person.getDateOfBirth()));
+        writer.println("2 DATE " + DateManipulation.daysToString(compact_person.getBirthDate()));
 
-        if (compact_person.getDateOfDeath() > 0) {
+        if (compact_person.getDeathDate() > 0) {
             writer.println("1 DEAT");
-            writer.println("2 DATE " + DateManipulation.daysToString(compact_person.getDateOfDeath()));
+            writer.println("2 DATE " + DateManipulation.daysToString(compact_person.getDeathDate()));
         }
 
         final List<String> families_where_parent = getIdsOfFamiliesWhereSpouse(compact_person);

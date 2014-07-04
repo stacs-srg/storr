@@ -85,7 +85,7 @@ public class CompactPartnershipAdapter {
 
         @Override
         public int getPartnerOf(int id) {
-            return id == partner1_id ? partner2_id : partner1_id;
+            return id == partner1_id ? partner2_id : id == partner2_id ? partner1_id : -1;
         }
 
         @Override

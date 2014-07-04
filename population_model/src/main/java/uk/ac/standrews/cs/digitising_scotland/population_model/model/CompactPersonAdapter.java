@@ -99,11 +99,11 @@ public class CompactPersonAdapter {
             first_name = person.isMale() ? male_first_name_distribution.getSample() : female_first_name_distribution.getSample();
             this.surname = surname;
 
-            date_of_birth = DateManipulation.daysToDate(person.getDateOfBirth());
-            date_of_death = person.getDateOfDeath() != -1 ? DateManipulation.daysToDate(person.getDateOfDeath()) : null;
+            date_of_birth = DateManipulation.daysToDate(person.getBirthDate());
+            date_of_death = person.getDeathDate() != -1 ? DateManipulation.daysToDate(person.getDeathDate()) : null;
 
             occupation = occupation_distribution.getSample();
-            cause_of_death = person.getDateOfDeath() != -1 ? cause_of_death_distribution.getSample() : null;
+            cause_of_death = person.getDeathDate() != -1 ? cause_of_death_distribution.getSample() : null;
             address = address_distribution.getSample();
             partnerships = getPartnershipIds(person);
 

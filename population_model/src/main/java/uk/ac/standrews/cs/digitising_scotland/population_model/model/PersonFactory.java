@@ -38,6 +38,8 @@ public class PersonFactory {
     private FileBasedEnumeratedDistribution occupations;
     private FileBasedEnumeratedDistribution causes_of_death;
 
+    private static final String MALE_STRING = String.valueOf(IPerson.MALE);
+
     public PersonFactory() {
 
         Random random = RandomFactory.getRandom();
@@ -60,8 +62,8 @@ public class PersonFactory {
 
         // TODO investigate usage of this method and the COD and occupation fields.
 
-        return new Person(compact_person.getId(), compact_person.isMale() ? IPerson.MALE : IPerson.FEMALE, DateManipulation.daysToSQLDate(compact_person.getDateOfBirth()),
-                DateManipulation.daysToSQLDate(compact_person.getDateOfDeath()), "Occupation", "Cause of death", "Address");
+        return new Person(compact_person.getId(), compact_person.isMale() ? IPerson.MALE : IPerson.FEMALE, DateManipulation.daysToSQLDate(compact_person.getBirthDate()),
+                DateManipulation.daysToSQLDate(compact_person.getDeathDate()), "Occupation", "Cause of death", "Address");
     }
 
     public Person createPerson(final Individual gedcom_person) throws ParseException {
@@ -80,7 +82,7 @@ public class PersonFactory {
             throw new ParseException(e.getMessage(), 0);
         }
 
-        person.setGender(gedcom_person.sex.toString().equals(IPerson.MALE_STRING) ? IPerson.MALE : IPerson.FEMALE);
+        person.setGender(gedcom_person.sex.toString().equals(MALE_STRING) ? IPerson.MALE : IPerson.FEMALE);
 
         final List<PersonalName> names = gedcom_person.names;
 
