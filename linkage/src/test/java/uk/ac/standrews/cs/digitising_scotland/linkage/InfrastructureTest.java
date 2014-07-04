@@ -175,7 +175,7 @@ public class InfrastructureTest {
         EventImporter importer = new EventImporter();
         int counter1 = importer.importBirths(b, BIRTH_RECORDS_PATH);
 
-        IIndex index = b.getIndex(BirthLabels.SURNAME);
+        IBucketIndex index = b.getIndex(BirthLabels.SURNAME);
 
         Set<String> keys = index.keySet();
         int counter2 = 0;

@@ -7,7 +7,7 @@ import java.util.Set;
 /**
  * Created by al on 23/05/2014.
  */
-public interface IIndex {
+public interface IBucketIndex {
 
     Set<String> keySet() throws IOException;
 

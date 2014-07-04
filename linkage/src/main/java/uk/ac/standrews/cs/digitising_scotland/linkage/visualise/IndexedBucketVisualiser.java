@@ -26,7 +26,7 @@ public class IndexedBucketVisualiser {
 
     public void show() throws IOException, PersistentObjectException {
 
-        IIndex index = indexed.getIndex(SameAsLabels.first);
+        IBucketIndex index = indexed.getIndex(SameAsLabels.first);
         Set<String> keys = index.keySet();
 
         for (String key : keys) {

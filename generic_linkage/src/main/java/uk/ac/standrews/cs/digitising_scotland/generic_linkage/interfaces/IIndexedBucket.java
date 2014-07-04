@@ -9,5 +9,5 @@ public interface IIndexedBucket extends IBucket {
 
     void addIndex(String label) throws IOException;
 
-    IIndex getIndex(String label);
+    IBucketIndex getIndex(String label);
 }

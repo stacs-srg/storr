@@ -102,6 +102,13 @@ public class Bucket implements IBucket {
         return this.name;
     }
 
+    @Override
+    public boolean contains(int id) {
+        Path p = Paths.get(filePath(id));
+        File f = p.toFile();
+        return f.exists();
+    }
+
     private Iterator<File> getFileIterator() {
         return FileIteratorFactory.createFileIterator(directory, true, false);
     }
