@@ -65,16 +65,6 @@ public class SpecificPopulationStructureTest extends PopulationStructureTest {
 
         IPopulation population = (IPopulation) populationWithTwoFamilies()[0];
 
-        final int fatherA_id = 1;
-        final int motherA_id = 2;
-        final int child1A_id = 3;
-        final int child2A_id = 4;
-
-        final int fatherB_id = 5;
-        final int motherB_id = 6;
-        final int child1B_id = 7;
-        final int child2B_id = 8;
-
         // Check that father of family A has one partnership.
         IPerson fatherA = population.findPerson(fatherA_id);
         List<Integer> partnershipA_ids = fatherA.getPartnerships();

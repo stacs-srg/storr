@@ -32,6 +32,15 @@ import java.util.List;
  */
 public abstract class PopulationStructureTest {
 
+    protected static int fatherA_id = 1;
+    protected static int motherA_id = 2;
+    protected static int motherB_id = 3;
+    protected static int fatherB_id = 4;
+    protected static int child1A_id = 5;
+    protected static int child1B_id = 6;
+    protected static int child2A_id = 7;
+    protected static int child2B_id = 8;
+
     protected IPopulation makePopulation(int population_size) throws IOException, InconsistentWeightException {
 
         return new CompactPopulationAdapter(new CompactPopulation(makePeople(population_size), 0, 0));
@@ -178,14 +187,14 @@ public abstract class PopulationStructureTest {
         int child1B_birth_date = DateManipulation.dateToDays(DateManipulation.parseDate("21/08/1920", formatter));
         int child2B_birth_date = DateManipulation.dateToDays(DateManipulation.parseDate("21/08/1925", formatter));
 
-        CompactPerson fatherA = new CompactPerson(fatherA_birth_date, true, 1);
-        CompactPerson motherA = new CompactPerson(motherA_birth_date, false, 2);
-        CompactPerson motherB = new CompactPerson(motherB_birth_date, false, 3);
-        CompactPerson fatherB = new CompactPerson(fatherB_birth_date, true, 4);
-        CompactPerson child1A = new CompactPerson(child1A_birth_date, false, 5);
-        CompactPerson child1B = new CompactPerson(child1B_birth_date, true, 6);
-        CompactPerson child2A = new CompactPerson(child2A_birth_date, true, 7);
-        CompactPerson child2B = new CompactPerson(child2B_birth_date, false, 8);
+        CompactPerson fatherA = new CompactPerson(fatherA_birth_date, true, fatherA_id);
+        CompactPerson motherA = new CompactPerson(motherA_birth_date, false, motherA_id);
+        CompactPerson motherB = new CompactPerson(motherB_birth_date, false, motherB_id);
+        CompactPerson fatherB = new CompactPerson(fatherB_birth_date, true, fatherB_id);
+        CompactPerson child1A = new CompactPerson(child1A_birth_date, false, child1A_id);
+        CompactPerson child1B = new CompactPerson(child1B_birth_date, true, child1B_id);
+        CompactPerson child2A = new CompactPerson(child2A_birth_date, true, child2A_id);
+        CompactPerson child2B = new CompactPerson(child2B_birth_date, false, child2B_id);
 
         CompactPerson[] population = new CompactPerson[]{fatherA, motherA, motherB, fatherB, child1A, child1B, child2A, child2B};
 
