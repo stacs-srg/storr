@@ -10,15 +10,19 @@ public class TrainAndMultiplyClassifyTest {
     @Test
     public void test() {
 
-        File experiment0 = new File("Target/Experiment0");
-        File experiment1 = new File("Target/Experiment1");
+        File experiment0 = new File("target/Experiment0");
+        File experiment1 = new File("target/Experiment1");
+        System.out.println(experiment0.getAbsolutePath());
         if (!experiment0.mkdirs()) {
             System.err.println("Could not create experiment0 Folder");
         }
         if (!experiment1.mkdirs()) {
             System.err.println("Could not create experiment1 Folder");
         }
-        Assert.assertEquals("Experiment2", TrainAndMultiplyClassify.getExperimentalFolderName("Target/Experiments"));
+        final String experimentalFolderName = TrainAndMultiplyClassify.getExperimentalFolderName("target");
+        Assert.assertEquals("target/Experiment2", experimentalFolderName);
+        experiment0.delete();
+        experiment1.delete();
     }
 
 }
