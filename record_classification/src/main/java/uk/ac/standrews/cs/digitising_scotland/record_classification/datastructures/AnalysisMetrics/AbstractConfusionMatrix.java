@@ -7,9 +7,9 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.CodeTriple;
 
-// TODO: Auto-generated Javadoc
 /**
- *
+ * Contains a count of total predictions, false positives,
+ * false negatives, true positives and true negatives for a bucket.
  * Created by fraserdunlop on 02/07/2014 at 10:27.
  */
 public abstract class AbstractConfusionMatrix {
@@ -66,7 +66,6 @@ public abstract class AbstractConfusionMatrix {
      * Calculate proportion wrongly predicted.
      *
      * @param bucket the bucket
-     * @return the double
      */
     private void countStats(final Bucket bucket) {
 

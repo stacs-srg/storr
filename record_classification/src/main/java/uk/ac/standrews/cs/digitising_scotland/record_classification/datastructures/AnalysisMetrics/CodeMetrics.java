@@ -4,9 +4,11 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeFactory;
 import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class CodeMetrics.
+ * Contains the standard higher order statistics that can be calculated from
+ * a confusion matrix. Specifically, precision, recall, specificity, negative
+ * predictive value, false positive rate, accuracy, micro precision, micro recall,
+ * F1 score and Mathews' correlation coefficient.
  */
 public class CodeMetrics {
 
@@ -81,19 +83,19 @@ public class CodeMetrics {
         f1 = new double[numberOfOutputClasses];
         mcc = new double[numberOfOutputClasses];
 
-        geneateHigherOrderStats();
+        generateHigherOrderStats();
     }
 
     /**
-     * Geneate higher order stats.
+     * Generate higher order stats.
      */
-    private void geneateHigherOrderStats() {
+    private void generateHigherOrderStats() {
 
         generatePrecision();
         generateRecall();
         generateSpecificity();
         generateNegativePredictiveValue();
-        generateFalsePostitiveRate();
+        generateFalsePositiveRate();
         generateAccuracy();
         generateF1Score();
         generateMathewsCorrelation();
@@ -171,7 +173,7 @@ public class CodeMetrics {
     /**
      * Generate false postitive rate.
      */
-    private void generateFalsePostitiveRate() {
+    private void generateFalsePositiveRate() {
 
         // fp/fp+tn
         double[] fptn = add(falsePositive, trueNegative);

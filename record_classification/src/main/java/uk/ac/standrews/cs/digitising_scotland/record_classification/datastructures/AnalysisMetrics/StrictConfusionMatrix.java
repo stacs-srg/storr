@@ -6,9 +6,9 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.CodeTriple;
 
-// TODO: Auto-generated Javadoc
 /**
- *
+ * This is the 'classic' true confusion matrix. Predictions are only correct if they
+ * exactly match the gold standard code.
  * Created by fraserdunlop on 02/07/2014 at 10:50.
  */
 public class StrictConfusionMatrix extends AbstractConfusionMatrix {
