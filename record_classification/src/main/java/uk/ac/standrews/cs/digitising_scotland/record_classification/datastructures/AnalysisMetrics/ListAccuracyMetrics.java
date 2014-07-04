@@ -10,6 +10,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.CodeTriple;
 import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
 
+// TODO: Auto-generated Javadoc
 /**
  * Class representing the statistics about a bucket of Records.
  *
@@ -250,6 +251,7 @@ public class ListAccuracyMetrics {
      *
      * @param message the message to add to the top of the matrix
      * @param matrix the matrix to print
+     * @return the string
      */
     private String printMatrix(final String message, final int[][] matrix) {
 
@@ -263,16 +265,21 @@ public class ListAccuracyMetrics {
     }
 
     /**
-     * Prints a matrix.
+     * Prints a matrix with values separated by the chosen delimiter. The row/column ID can be printed or
+     * not as required by using printLabels.
      *
      * @param matrix the matrix to print
+     * @param delimiter the delimiter
+     * @param printLabels the print labels
+     * @return the matrix as string
      */
     public String getMatrixAsString(final int[][] matrix, final String delimiter, final boolean printLabels) {
 
         StringBuilder sb = new StringBuilder();
 
         if (printLabels) {
-            for (int i = 0; i <= matrix.length; i++) {
+            sb.append("\t");
+            for (int i = 0; i < matrix.length; i++) {
                 sb.append(i + delimiter);
             }
             sb.append("\n");
