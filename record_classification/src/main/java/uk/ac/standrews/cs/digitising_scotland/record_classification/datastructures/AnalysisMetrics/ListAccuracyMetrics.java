@@ -10,7 +10,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.CodeTriple;
 import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
 
-// TODO: Auto-generated Javadoc
+// TODO: Tidying!
 /**
  * Class representing the statistics about a bucket of Records.
  *
@@ -88,7 +88,7 @@ public class ListAccuracyMetrics {
     private int[] numberOfCodesNotCoded;
 
     /** The over under predicion matrix. */
-    private int[][] overUnderPredicionMatrix;
+    private int[][] overUnderPredictionMatrix;
 
     /**
      * Instantiates a new list accuracy metrics.
@@ -117,7 +117,7 @@ public class ListAccuracyMetrics {
         numberOfCodesNotCoded = calculateBreakDownOfMatches(bucket);
         countNumClassifications(bucket);
         int maxCodes = calculateMaxCodes(bucket);
-        overUnderPredicionMatrix = calculateOverPredictionMatrix(bucket, maxCodes);
+        overUnderPredictionMatrix = calculateOverPredictionMatrix(bucket, maxCodes);
     }
 
     /**
@@ -129,13 +129,13 @@ public class ListAccuracyMetrics {
      */
     private int[][] calculateOverPredictionMatrix(final Bucket bucket, final int maxCodes) {
 
-        overUnderPredicionMatrix = new int[maxCodes + 1][maxCodes + 1];
+        overUnderPredictionMatrix = new int[maxCodes + 1][maxCodes + 1];
         for (Record record : bucket) {
             int goldStandardSize = record.getGoldStandardClassificationSet().size();
             int actualSize = record.getCodeTriples().size();
-            overUnderPredicionMatrix[actualSize][goldStandardSize]++;
+            overUnderPredictionMatrix[actualSize][goldStandardSize]++;
         }
-        return overUnderPredicionMatrix;
+        return overUnderPredictionMatrix;
     }
 
     /**
@@ -212,7 +212,7 @@ public class ListAccuracyMetrics {
             final Iterator<CodeTriple> iterator = record.getCodeTriples().iterator();
             double totalConfidence = 0;
             while (iterator.hasNext()) {
-                CodeTriple codeTriple = (CodeTriple) iterator.next();
+                CodeTriple codeTriple = iterator.next();
                 totalConfidence += codeTriple.getConfidence();
             }
 
@@ -243,7 +243,7 @@ public class ListAccuracyMetrics {
         System.out.println("Doubly classified: " + twoClassifications);
         System.out.println("Multiply classified: " + moreThanTwoClassifications);
         printNumberOfCodesMissed();
-        printMatrix("Over/Under Prediction Matrix", overUnderPredicionMatrix);
+        printMatrix("Over/Under Prediction Matrix", overUnderPredictionMatrix);
     }
 
     /**
@@ -257,9 +257,9 @@ public class ListAccuracyMetrics {
 
         StringBuilder sb = new StringBuilder();
 
-        sb.append(message + "\n");
+        sb.append(message).append("\n");
         sb.append("   ");
-        sb.append("\n" + getMatrixAsString(matrix, "\t", true));
+        sb.append("\n").append(getMatrixAsString(matrix, "\t", true));
         System.out.println(sb.toString());
         return sb.toString();
     }
@@ -280,14 +280,14 @@ public class ListAccuracyMetrics {
         if (printLabels) {
             sb.append("\t");
             for (int i = 0; i < matrix.length; i++) {
-                sb.append(i + delimiter);
+                sb.append(i).append(delimiter);
             }
             sb.append("\n");
         }
 
         for (int i = 0; i < matrix.length; i++) {
             if (printLabels) {
-                sb.append(i + delimiter);
+                sb.append(i).append(delimiter);
             }
 
             for (int j = 0; j < matrix.length; j++) {
@@ -312,30 +312,30 @@ public class ListAccuracyMetrics {
 
         StringBuilder sb = new StringBuilder();
         sb.append("#Classification Report    \n" + "##Summary    \n");
-        sb.append("Unique records: " + uniqueRecords + "   \n");
-        sb.append("Total aggregated: " + totalAggregatedRecords + "   \n");
-        sb.append("Average confidence: " + averageConfidence + "    \n");
-        sb.append("Total number of classifications: " + (numConfidenceNotOne + numConfidenceOfOne) + "   \n");
-        sb.append("Number of classifications with confidence of 1: " + numConfidenceOfOne + "    \n");
-        sb.append("Number of classifications with confidence < 1: " + numConfidenceNotOne + "   \n");
-        sb.append("Proportion of gold standard codes predicted: " + propGoldPredicted + "    \n");
-        sb.append("Proportion of incorrect gold standard codes predicted: " + propWronglyPredicted + "    \n");
-        sb.append("Number unclassified: " + unclassified + "    \n");
-        sb.append("Number coded by exact match: " + codedExactMatch + "    \n");
-        sb.append("Singly classified: " + singleClassification + "    \n");
-        sb.append("Doubly classified: " + twoClassifications + "   \n");
-        sb.append("Multiply classified: " + moreThanTwoClassifications + "    \n");
+        sb.append("Unique records: ").append(uniqueRecords).append("   \n");
+        sb.append("Total aggregated: ").append(totalAggregatedRecords).append("   \n");
+        sb.append("Average confidence: ").append(averageConfidence).append("    \n");
+        sb.append("Total number of classifications: ").append(numConfidenceNotOne + numConfidenceOfOne).append("   \n");
+        sb.append("Number of classifications with confidence of 1: ").append(numConfidenceOfOne).append("    \n");
+        sb.append("Number of classifications with confidence < 1: ").append(numConfidenceNotOne).append("   \n");
+        sb.append("Proportion of gold standard codes predicted: ").append(propGoldPredicted).append("    \n");
+        sb.append("Proportion of incorrect gold standard codes predicted: ").append(propWronglyPredicted).append("    \n");
+        sb.append("Number unclassified: ").append(unclassified).append("    \n");
+        sb.append("Number coded by exact match: ").append(codedExactMatch).append("    \n");
+        sb.append("Singly classified: ").append(singleClassification).append("    \n");
+        sb.append("Doubly classified: ").append(twoClassifications).append("   \n");
+        sb.append("Multiply classified: ").append(moreThanTwoClassifications).append("    \n");
         sb.append(printNumberOfCodesMissed());
         sb.append("Over/Under Matrix    \n");
-        sb.append(getMatrixAsString(overUnderPredicionMatrix, "\t", true));
+        sb.append(getMatrixAsString(overUnderPredictionMatrix, "\t", true));
         sb.append("    \n\n");
         sb.append("##Graphs    \n");
-        sb.append("![Graph Matrix][" + pathToGraph + "]     \n");
+        sb.append("![Graph Matrix][").append(pathToGraph).append("]     \n");
         sb.append("   \n\n");
-        sb.append("[" + pathToGraph + "]: " + pathToGraph + ".png \"Graph Matrix\"    \n");
+        sb.append("[").append(pathToGraph).append("]: ").append(pathToGraph).append(".png \"Graph Matrix\"    \n");
         //sb.append("![Graph](graph.png)");
         Utils.writeToFile(sb.toString(), pathToExperiemntFolder + "/Reports/summary.md", true);
-        Utils.writeToFile(getMatrixAsString(overUnderPredicionMatrix, ",", false), pathToExperiemntFolder + "/Data/classificationCountMatrix.csv");
+        Utils.writeToFile(getMatrixAsString(overUnderPredictionMatrix, ",", false), pathToExperiemntFolder + "/Data/classificationCountMatrix.csv");
 
     }
 
@@ -349,10 +349,10 @@ public class ListAccuracyMetrics {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < numberOfCodesNotCoded.length; i++) {
             if (i == 0) {
-                sb.append("Number of records coded exactly: " + numberOfCodesNotCoded[i] + "    \n");
+                sb.append("Number of records coded exactly: ").append(numberOfCodesNotCoded[i]).append("    \n");
             }
             else {
-                sb.append("Number of records with " + i + " missed: " + numberOfCodesNotCoded[i] + "    \n");
+                sb.append("Number of records with ").append(i).append(" missed: ").append(numberOfCodesNotCoded[i]).append("    \n");
 
             }
         }
@@ -474,18 +474,18 @@ public class ListAccuracyMetrics {
     private double calculateAverageConfidence(final Bucket bucket) {
 
         double totalConfidence = 0;
-        double totalMeasurments = 0;
+        double totalMeasurements = 0;
 
         for (Record record : bucket) {
             Set<CodeTriple> setCodeTriples = record.getCodeTriples();
             for (CodeTriple codeTriple : setCodeTriples) {
                 totalConfidence += codeTriple.getConfidence();
-                totalMeasurments++;
+                totalMeasurements++;
 
             }
         }
 
-        return totalConfidence / totalMeasurments;
+        return totalConfidence / totalMeasurements;
     }
 
     /**
