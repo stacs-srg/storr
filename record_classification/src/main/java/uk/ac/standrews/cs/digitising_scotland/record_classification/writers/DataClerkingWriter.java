@@ -163,7 +163,7 @@ public class DataClerkingWriter implements Closeable, AutoCloseable {
     private String getExplanation(final String codeAsString) {
 
         if (codeAsString.length() == 5) {
-            if (!String.valueOf(codeAsString.charAt(4)).equals("0")) { return "Coded to the extended historical version (codes ending .01 to .09)"; } //TODO test
+            if (!String.valueOf(codeAsString.charAt(4)).equals("0")) { return "Coded to the extended historical version (codes ending .01 to .09)"; }
         }
 
         return "";

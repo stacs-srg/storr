@@ -38,7 +38,6 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.Pai
 import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
 import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearningConfiguration;
 
-// TODO: Auto-generated Javadoc
 /**
  * Class has methods for training and classifying using the Mahout Naive Bayes
  * Classifier. The most two important methods are train() and classify().
@@ -48,10 +47,10 @@ import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearnin
  */
 public class NaiveBayesClassifier extends AbstractClassifier {
 
-    /** The conf. */
+    /** The {@link Configuration}. */
     private Configuration conf;
 
-    /** The fs. */
+    /** The {@link FileSystem}. */
     private FileSystem fs;
 
     /** The properties. */
@@ -75,7 +74,6 @@ public class NaiveBayesClassifier extends AbstractClassifier {
             fs = FileSystem.get(conf);
         }
         catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }

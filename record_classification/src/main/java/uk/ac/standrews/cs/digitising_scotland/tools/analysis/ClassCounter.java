@@ -40,7 +40,6 @@ public class ClassCounter {
      */
     public static void main(final String[] args) {
 
-        // TODO Auto-generated method stub
         ClassCounter c = new ClassCounter(new File("kilm8000.txt"));
         System.out.println(c.count());
 
@@ -114,11 +113,9 @@ public class ClassCounter {
             e.printStackTrace();
         }
         catch (FileNotFoundException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         finally {
@@ -127,7 +124,6 @@ public class ClassCounter {
                     br.close();
                 }
                 catch (IOException e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
             }

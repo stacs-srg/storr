@@ -1,29 +1,10 @@
-/*
- * Understanding Scotland's People (USP) project.
-The aim of the project is to produce a linked pedigree for all publicly available Scottish birth/death/marriage records from 1855 to the present day.
-Digitisation of the records is being carried out by the ESRC-funded Digitising | | Scotland project, run by University of St Andrews and National Records of Scotland.
-The project is led by Chris Dibben at the Longitudinal Studies Centre at St Andrews. The other project members are Lee Williamson (also at the Longitudinal Studies Centre)
-Graham Kirby, Alan Dearle and Jamie Carson at the School of Computer Science at St Andrews; and Eilidh Garret and Alice Reid at the Department of Geography at Cambridge.
- */
-
 package uk.ac.standrews.cs.digitising_scotland.tools;
-
-import com.google.common.io.Files;
-
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.output.FileWriterWithEncoding;
-
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Bucket;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.writers.DataClerkingWriter;
-import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.nio.file.Paths;
 import java.util.Arrays;
@@ -34,7 +15,18 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-// TODO: Auto-generated Javadoc
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.output.FileWriterWithEncoding;
+
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Bucket;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.writers.DataClerkingWriter;
+import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
+
+import com.google.common.io.Files;
+
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 /**
  * Utility classes related to writing to files and other often used methods.
  *
@@ -42,9 +34,6 @@ import java.util.Map;
  */
 public final class Utils {
 
-    /**
-     * Instantiates a new utils.
-     */
     private Utils() {
 
         // private constructor for utility class.
@@ -124,11 +113,13 @@ public final class Utils {
                             }
                         }
                         moveFiles(toMove[i].listFiles(), newFolder);
-                    } else {
+                    }
+                    else {
                         Files.copy(toMove[i], new File(toHere.getAbsolutePath() + "/" + toMove[i].getName()));
                     }
 
-                } catch (IOException e) {
+                }
+                catch (IOException e) {
                     e.printStackTrace();
                 }
             }
@@ -147,14 +138,17 @@ public final class Utils {
             if (toMove[i].isFile()) {
                 try {
                     FileUtils.moveFile(toMove[i], toHere);
-                } catch (IOException e) {
+                }
+                catch (IOException e) {
 
                     e.printStackTrace();
                 }
-            } else {
+            }
+            else {
                 try {
                     FileUtils.moveDirectory(toMove[i], toHere);
-                } catch (IOException e) {
+                }
+                catch (IOException e) {
                     e.printStackTrace();
                 }
             }
@@ -235,7 +229,8 @@ public final class Utils {
             // Close the output stream
             out.flush();
             out.close();
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -256,7 +251,8 @@ public final class Utils {
             out.flush();
             // Close the output stream
             out.close();
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             e.printStackTrace();
         }
 
@@ -285,7 +281,8 @@ public final class Utils {
 
             // Close the output stream
             out.close();
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
 
             e.printStackTrace();
         }
@@ -346,7 +343,8 @@ public final class Utils {
                 if (file.isDirectory()) {
                     count++;
                     count = countFiles(file.getAbsolutePath(), count);
-                } else {
+                }
+                else {
                     count++;
                 }
             }
@@ -418,7 +416,8 @@ public final class Utils {
 
         if (startPosition <= (100 - percentTestFiles)) {
             return startPosition;
-        } else {
+        }
+        else {
             return startPosition - (startPosition % (100 - percentTestFiles));
         }
 
@@ -435,7 +434,8 @@ public final class Utils {
             if (bufferedReader != null) {
                 bufferedReader.close();
             }
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -457,4 +457,31 @@ public final class Utils {
         System.out.println(bucketToWrite);
     }
 
+    public static String executeCommand(final String command) {
+
+        StringBuffer output = new StringBuffer();
+        Process p;
+        try {
+            p = Runtime.getRuntime().exec(command);
+            int exitVal = p.waitFor();
+
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream(), FileManipulation.FILE_CHARSET))) {
+
+                String line;
+
+                while ((line = reader.readLine()) != null) {
+                    output.append(line + "\n");
+                }
+            }
+
+            if (exitVal != 0) {
+                System.out.println("ExitValue: " + exitVal);
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return output.toString();
+    }
 }

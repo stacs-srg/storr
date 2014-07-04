@@ -2,7 +2,6 @@ package uk.ac.standrews.cs.digitising_scotland.record_classification.datastructu
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.exceptions.InputFormatException;
 
-// TODO: Auto-generated Javadoc
 /**
  * Represents cause of death data from from NRS. As data is supplied this cannot be changed once set.
  * @author jkc25

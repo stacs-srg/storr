@@ -12,7 +12,6 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.preprocessor.DataCleaning;
 
-// TODO: Auto-generated Javadoc
 /**
  * Tests the NGramSubstring class that grams are being produced correctly.
  * @author jkc25

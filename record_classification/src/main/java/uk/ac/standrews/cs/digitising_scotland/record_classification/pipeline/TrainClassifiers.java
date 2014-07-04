@@ -17,9 +17,8 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.exceptions.InputFormatException;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.preprocessor.DataCleaning;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class TrainClassifiers.
+ * The Class TrainClassifiers trains a set of classifiers.
  */
 public class TrainClassifiers {
 

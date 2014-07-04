@@ -12,7 +12,6 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.Pair;
 import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearningConfiguration;
 
-// TODO: Auto-generated Javadoc
 /**
  * Implements the best confidence voting scheme for machine learning
  * classifiers.
@@ -133,7 +132,7 @@ public class BestConfidenceClassifier extends AbstractClassifier {
     }
 
     /**
-     * Gets the properties.
+     * Gets the properties file associated with this classifier.
      *
      * @return the properties
      */
@@ -143,7 +142,7 @@ public class BestConfidenceClassifier extends AbstractClassifier {
     }
 
     /**
-     * Sets the properties.
+     * Sets the properties file.
      *
      * @param properties the new properties
      */

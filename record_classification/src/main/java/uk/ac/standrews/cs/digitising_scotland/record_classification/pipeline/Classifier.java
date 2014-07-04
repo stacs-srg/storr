@@ -15,9 +15,8 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.exceptions.InputFormatException;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.preprocessor.DataCleaning;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class Classifier.
+ * The Class Classifier is a legacy class that will classify an uncoded batch of records stored in a file, 1 record per line.
  */
 public class Classifier {
 

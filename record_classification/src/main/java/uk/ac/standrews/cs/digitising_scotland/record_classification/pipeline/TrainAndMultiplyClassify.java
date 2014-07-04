@@ -24,7 +24,6 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.exceptions.I
 import uk.ac.standrews.cs.digitising_scotland.record_classification.writers.DataClerkingWriter;
 import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
 import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearningConfiguration;
-import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
 
 /**
  * This class integrates the training of machine learning models and the classification of records using those models.
@@ -102,26 +101,28 @@ public final class TrainAndMultiplyClassify {
 
         writeRecords(classifiedBucket);
 
-        ListAccuracyMetrics accuracyMetricsAllRecords = new ListAccuracyMetrics(classifiedBucket);
-        ListAccuracyMetrics accuracyMetricsUniqueRecords = new ListAccuracyMetrics(BucketFilter.uniqueRecordsOnly(classifiedBucket));
-
         System.out.println("********** **********");
 
         System.out.println("All Records");
-        accuracyMetricsAllRecords.prettyPrint();
-
-        generateStats(classifiedBucket, accuracyMetricsAllRecords);
+        generateAndPrintStats(classifiedBucket);
 
         System.out.println("\nUnique Records");
-        accuracyMetricsUniqueRecords.prettyPrint();
-        generateStats(classifiedBucket, accuracyMetricsUniqueRecords);
+        generateAndPrintStats(BucketFilter.uniqueRecordsOnly(classifiedBucket));
 
+    }
+
+    private static void generateAndPrintStats(final Bucket classifiedBucket) throws IOException {
+
+        ListAccuracyMetrics accuracyMetrics = new ListAccuracyMetrics(classifiedBucket);
+        accuracyMetrics.prettyPrint();
+        generateStats(classifiedBucket, accuracyMetrics);
     }
 
     private static void generateStats(final Bucket bucket, final ListAccuracyMetrics accuracyMetrics) throws IOException {
 
         final String matrixDataPath = experimentalFolderName + "/Data/classificationCountMatrix.csv";
         final String matrixImagePath = "classificationMatrix";
+        final String reportspath = experimentalFolderName + "/Reports/";
 
         final String strictCodeStatsPath = experimentalFolderName + "/Data/strictCodeStats.csv";
         final String strictCodePath = "strictCodeStats";
@@ -136,9 +137,9 @@ public final class TrainAndMultiplyClassify {
         System.out.println("Number of predictions too specific: " + totalCorrectlyPredicted);
         System.out.println("Proportion of predictions too specific: " + totalCorrectlyPredicted / invertedConfusionMatrix.getTotalPredicted());
 
-        runRscript("src/R/CodeStatsPlotter.R", strictCodeStatsPath, strictCodePath);
-        runRscript("src/R/CodeStatsPlotter.R", softCodeStatsPath, softCodePath);
-        runRscript("src/R/HeatMapPlotter.R", matrixDataPath, matrixImagePath);
+        runRscript("src/R/CodeStatsPlotter.R", strictCodeStatsPath, reportspath, strictCodePath);
+        runRscript("src/R/CodeStatsPlotter.R", softCodeStatsPath, reportspath, softCodePath);
+        runRscript("src/R/HeatMapPlotter.R", matrixDataPath, reportspath, matrixImagePath);
 
     }
 
@@ -152,41 +153,29 @@ public final class TrainAndMultiplyClassify {
         return strictCodeStatsPath;
     }
 
-    private static void runRscript(final String pathToRScript, final String dataPath, final String imageName) throws IOException {
+    private static void runRscript(final String pathToRScript, final String dataPath, final String reportsPath, final String imageName) throws IOException {
 
         // TODO this doesn't look too portable!
 
-        String imageOutputPath = experimentalFolderName + "/Reports/" + imageName + ".png";
+        if (!isRinstalled()) { return; }
+
+        String imageOutputPath = reportsPath + imageName + ".png";
         String command = "Rscript " + pathToRScript + " " + dataPath + " " + imageOutputPath;
-        System.out.println(executeCommand(command));
+        System.out.println(Utils.executeCommand(command));
     }
 
-    private static String executeCommand(final String command) {
+    private static boolean isRinstalled() {
 
-        StringBuffer output = new StringBuffer();
-        Process p;
-        try {
-            p = Runtime.getRuntime().exec(command);
-            int exitVal = p.waitFor();
+        final String pathToScript = Utils.class.getResource("/scripts/checkScript.sh").getFile();
+        String checkSystemForR = "sh " + pathToScript + " RScript";
+        final String executeCommand = Utils.executeCommand(checkSystemForR);
+        System.out.println(executeCommand);
 
-            try (BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream(), FileManipulation.FILE_CHARSET))) {
-
-                String line;
-
-                while ((line = reader.readLine()) != null) {
-                    output.append(line + "\n");
-                }
-            }
-
-            if (exitVal != 0) {
-                System.out.println("ExitValue: " + exitVal);
-            }
+        if (executeCommand.equals("RScript2 required but it's not installed.  Aborting.\n")) {
+            System.err.println("Stats not generated");
+            return false;
         }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return output.toString();
+        return true;
     }
 
     private static ExactMatchClassifier trainExactMatchClassifier() throws Exception {
@@ -283,9 +272,9 @@ public final class TrainAndMultiplyClassify {
 
         //all experimental data stored in folder called experimentX, where X is an integer.
         int highestFolderCount = 0;
-        File[] allFiles = new File(".").listFiles();
+        File[] allFiles = new File(baseFolder).listFiles();
         for (File file : allFiles) {
-            if (file.isDirectory() && file.getName().contains(baseFolder + "/Experiment")) {
+            if (file.isDirectory() && file.getName().contains("Experiment")) {
 
                 int currentFolder = Integer.parseInt(file.getName().subSequence(10, file.getName().length()).toString());
                 if (currentFolder > highestFolderCount) {

@@ -19,7 +19,6 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.preprocessor
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.CodeTriple;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.Pair;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class NaiveBayesClassifierTest.
  */

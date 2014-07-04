@@ -14,7 +14,6 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeNotValidException;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class DataClerkingWriterTest.
  */

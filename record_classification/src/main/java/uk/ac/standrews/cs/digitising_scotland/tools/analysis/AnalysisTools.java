@@ -369,7 +369,6 @@ public class AnalysisTools {
      */
     public int totalNumberOfClasses() {
 
-        //TODO refactor names of variables
         HashMap<String, Integer> words = new HashMap<String, Integer>();
         for (int i = 0; i < stringInput.length; i++) {
             String classification = stringInput[i][1];

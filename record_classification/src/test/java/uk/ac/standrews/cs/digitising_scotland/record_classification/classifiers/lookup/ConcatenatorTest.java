@@ -9,7 +9,6 @@ import org.apache.lucene.util.Version;
 import org.junit.Assert;
 import org.junit.Test;
 
-// TODO: Auto-generated Javadoc
 /**
  * Tests the {@link Concatenator} class.
  * @author jkc25

@@ -7,9 +7,8 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.CodeTriple;
 
-// TODO: Auto-generated Javadoc
 /**
- *
+ * Stores the analytical data related to the number of true/false positives/negatives in a classified set of data.
  * Created by fraserdunlop on 02/07/2014 at 10:27.
  */
 public abstract class AbstractConfusionMatrix {
@@ -30,9 +29,9 @@ public abstract class AbstractConfusionMatrix {
     protected double[] truePositive;
 
     /**
-     * Instantiates a new abstract confusion matrix.
+     * Instantiates a new abstract confusion matrix and populated the variables.
      *
-     * @param bucket the bucket
+     * @param bucket the bucket of classified records.
      */
     public AbstractConfusionMatrix(final Bucket bucket) {
 
@@ -47,15 +46,15 @@ public abstract class AbstractConfusionMatrix {
     }
 
     /**
-     * True positive and false negative.
+     * Calculates the true positive and false negative count.
      *
-     * @param setCodeTriples the set code triples
-     * @param goldStandardTriples the gold standard triples
+     * @param setCodeTriples the set of code triples
+     * @param goldStandardTriples the set of gold standard triples
      */
     protected abstract void truePosAndFalseNeg(final Set<CodeTriple> setCodeTriples, final Set<CodeTriple> goldStandardTriples);
 
     /**
-     * Total and false pos.
+     * Calculates the total number of predictions and false positive count.
      *
      * @param setCodeTriples the set code triples
      * @param goldStandardTriples the gold standard triples
@@ -63,7 +62,7 @@ public abstract class AbstractConfusionMatrix {
     protected abstract void totalAndFalsePos(final Set<CodeTriple> setCodeTriples, final Set<CodeTriple> goldStandardTriples);
 
     /**
-     * Calculate proportion wrongly predicted.
+     * Calculates the true/false positive/negative counts for the bucket.
      *
      * @param bucket the bucket
      * @return the double
@@ -80,7 +79,7 @@ public abstract class AbstractConfusionMatrix {
     }
 
     /**
-     * Calculate true negative.
+     * Calculates true negative.
      */
     private void calculateTrueNeg() {
 
@@ -90,10 +89,10 @@ public abstract class AbstractConfusionMatrix {
     }
 
     /**
-     * Sum.
+     * Sums all the values in a array.
      *
-     * @param array the array
-     * @return the double
+     * @param array the array to sum
+     * @return the double total of all values
      */
     private double sum(final double[] array) {
 

@@ -29,7 +29,6 @@ public class ZipUsingJavaUtil {
             }
         }
         catch (Exception e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }

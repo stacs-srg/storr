@@ -125,7 +125,6 @@ public class DictionaryStatHelper {
             return Utils.getNumberOfLines(input);
         }
         catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         return 0;

@@ -9,7 +9,6 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.CodeTriple;
 
-// TODO: Auto-generated Javadoc
 /**
  * Contains the classifiers (that extend {@link AbstractClassifier}) that we
  * desire to use plus a classify method that allows us to classify the record
