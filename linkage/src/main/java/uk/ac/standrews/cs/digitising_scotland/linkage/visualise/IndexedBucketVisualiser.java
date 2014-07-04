@@ -1,10 +1,6 @@
 package uk.ac.standrews.cs.digitising_scotland.linkage.visualise;
 
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IBucket;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IIndex;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IIndexedBucket;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXP;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXPInputStream;
+import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.*;
 import uk.ac.standrews.cs.digitising_scotland.linkage.labels.SameAsLabels;
 import uk.ac.standrews.cs.nds.persistence.PersistentObjectException;
 
