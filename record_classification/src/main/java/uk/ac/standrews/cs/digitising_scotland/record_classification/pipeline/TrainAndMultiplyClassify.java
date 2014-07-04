@@ -69,7 +69,7 @@ public final class TrainAndMultiplyClassify {
 
         // TODO split this up!
 
-        setupExperimentalFolders();
+        setupExperimentalFolders("Experiments");
 
         File training = new File(args[0]);
         // File prediction = new File(args[1]);
@@ -197,9 +197,9 @@ public final class TrainAndMultiplyClassify {
         return exactMatchClassifier;
     }
 
-    private static void setupExperimentalFolders() {
+    private static void setupExperimentalFolders(final String baseFolder) {
 
-        experimentalFolderName = getExperimentalFolderName();
+        experimentalFolderName = getExperimentalFolderName(baseFolder);
 
         if (!(new File(experimentalFolderName).mkdirs() && new File(experimentalFolderName + "/Reports").mkdirs() && new File(experimentalFolderName + "/Data").mkdirs() && new File(experimentalFolderName + "/Models").mkdirs())) { throw new RuntimeException("couldn't create experimental folder"); }
     }
@@ -279,13 +279,13 @@ public final class TrainAndMultiplyClassify {
         return false;
     }
 
-    protected static String getExperimentalFolderName() {
+    protected static String getExperimentalFolderName(final String baseFolder) {
 
         //all experimental data stored in folder called experimentX, where X is an integer.
         int highestFolderCount = 0;
         File[] allFiles = new File(".").listFiles();
         for (File file : allFiles) {
-            if (file.isDirectory() && file.getName().contains("Experiment")) {
+            if (file.isDirectory() && file.getName().contains(baseFolder + "/Experiment")) {
 
                 int currentFolder = Integer.parseInt(file.getName().subSequence(10, file.getName().length()).toString());
                 if (currentFolder > highestFolderCount) {
@@ -294,6 +294,6 @@ public final class TrainAndMultiplyClassify {
             }
         }
         highestFolderCount++;
-        return "Experiment" + highestFolderCount;
+        return baseFolder + "/Experiment" + highestFolderCount;
     }
 }
