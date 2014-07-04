@@ -6,8 +6,11 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.CodeTriple;
 
-// TODO: Auto-generated Javadoc
 /**
+ * Exists to count the number of predicted codes that are too specific. i.e. A1234
+ * predicted when the true gold standard code was A123. False positive, false negative
+ * and true negative getters all throw unsupported operation exceptions because they
+ * are meaningless given this correctness function.
  * Created by fraserdunlop on 03/07/2014 at 10:09.
  */
 public class InvertedSoftConfusionMatrix extends AbstractConfusionMatrix {
@@ -30,8 +33,8 @@ public class InvertedSoftConfusionMatrix extends AbstractConfusionMatrix {
      */
     protected void truePosAndFalseNeg(final Set<CodeTriple> setCodeTriples, final Set<CodeTriple> goldStandardTriples) {
 
-        for (CodeTriple goldStanardCode : goldStandardTriples) {
-            final Code code = goldStanardCode.getCode();
+        for (CodeTriple goldStandardCode : goldStandardTriples) {
+            final Code code = goldStandardCode.getCode();
             if (hasDescendants(code, setCodeTriples)) {
                 truePositive[code.getID()]++;
             }
@@ -67,8 +70,8 @@ public class InvertedSoftConfusionMatrix extends AbstractConfusionMatrix {
         return false;
     }
 
-    /* (non-Javadoc)
-     * @see uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.AnalysisMetrics.AbstractConfusionMatrix#getFalsePositive()
+    /**
+     * Unsupported operation! Throws exception!
      */
     @Override
     public double[] getFalsePositive() {
@@ -76,8 +79,8 @@ public class InvertedSoftConfusionMatrix extends AbstractConfusionMatrix {
         throw new UnsupportedOperationException();
     }
 
-    /* (non-Javadoc)
-     * @see uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.AnalysisMetrics.AbstractConfusionMatrix#getFalseNegative()
+    /**
+     * Unsupported operation! Throws exception!
      */
     @Override
     public double[] getFalseNegative() {
@@ -85,13 +88,11 @@ public class InvertedSoftConfusionMatrix extends AbstractConfusionMatrix {
         throw new UnsupportedOperationException();
     }
 
-    /* (non-Javadoc)
-     * @see uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.AnalysisMetrics.AbstractConfusionMatrix#getTrueNegative()
+    /**
+     * Unsupported operation! Throws exception!
      */
     @Override
     public double[] getTrueNegative() {
-
         throw new UnsupportedOperationException();
     }
-
 }

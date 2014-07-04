@@ -6,9 +6,10 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.CodeTriple;
 
-// TODO: Auto-generated Javadoc
 /**
- *
+ * This confusion matrix counts predictions as correct if they are either exactly
+ * correct or an ancestor of the correct code (a more general code that is in the
+ * same branch of the hierarchy).
  * Created by fraserdunlop on 02/07/2014 at 10:59.
  */
 public class SoftConfusionMatrix extends AbstractConfusionMatrix {
@@ -61,8 +62,8 @@ public class SoftConfusionMatrix extends AbstractConfusionMatrix {
     }
 
     /**
-     * Contains or has descendants.
-     *
+     * Returns true is a code is in the specified set of CodeTriples or is an ancestor
+     * of one of the codes in the specified set of CodeTriples.
      * @param code the code
      * @param setCodeTriples the set code triples
      * @return true, if successful
@@ -76,7 +77,8 @@ public class SoftConfusionMatrix extends AbstractConfusionMatrix {
     }
 
     /**
-     * Returns true is a code is in the specified set of CodeTriples.
+     * Returns true is a code is in the specified set of CodeTriples or is a descendant
+     * of one of the codes in the specified set of CodeTriples.
      * @param code code to check for
      * @param setCodeTriples set to check in
      * @return true if present
