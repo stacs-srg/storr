@@ -538,4 +538,10 @@ public class CodeMetrics {
         return confusionMatrix.getTotalCorrectlyPredicted();
     }
 
+    public void printMicroStats() {
+
+        System.out.println("micro precision: " + getMicroPrecision());
+        System.out.println("micro recall: " + getMicroRecall());
+    }
+
 }
