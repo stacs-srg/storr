@@ -17,7 +17,6 @@
 package uk.ac.standrews.cs.digitising_scotland.population_model.model;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import uk.ac.standrews.cs.digitising_scotland.util.PercentageProgressIndicator;
 import uk.ac.standrews.cs.digitising_scotland.util.ProgressIndicator;
 
 /**
@@ -80,14 +79,5 @@ public class OrganicPopulation {
     @SuppressFBWarnings(value = "UUF_UNUSED_FIELD")
     private CompactPartnership[] partnershipsToHaveOffspringToday;
 
-    public void initialize(){
-        progress_indicator = new PercentageProgressIndicator(5);
-        try {
-            seedPopulation = new CompactPopulation(SEED_SIZE, progress_indicator);
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.printf("Failed to create seed population.");
-        }
-        people = seedPopulation.getPeopleArray();
-    }
+
 }
