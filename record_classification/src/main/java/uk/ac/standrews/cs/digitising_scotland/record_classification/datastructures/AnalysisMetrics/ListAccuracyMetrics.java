@@ -203,7 +203,8 @@ public class ListAccuracyMetrics {
 	}
 
 	/**
-	 * Calculate exact match.
+	 * Calculates the number of records in the bucket coded by the exact match
+	 * classifier.
 	 * 
 	 * @param bucket
 	 *            the bucket
