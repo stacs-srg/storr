@@ -9,6 +9,7 @@ public class CoDCode extends Code {
 
     /** The Constant serialVersionUID. Used for serialization.*/
     private static final long serialVersionUID = -5117020872028294902L;
+    private static final int MAX_CODE_LENGTH = 7;
 
     /**
      * Instantiates a new cause of death code. Used for testing only. In production level code {@link Code}s should
@@ -40,6 +41,7 @@ public class CoDCode extends Code {
      * @return true, if is valid
      */
     private boolean isValid() {
-        return super.getCodeAsString().length() <= 5 && super.getCodeAsString().substring(0, 1).matches("[a-zA-Z]");
+
+        return super.getCodeAsString().length() <= MAX_CODE_LENGTH && super.getCodeAsString().substring(0, 1).matches("[a-zA-Z]");
     }
 }

@@ -176,6 +176,7 @@ public final class CodeFactory {
         inputFile = codeFile;
         try {
             initCodeMap();
+            MachineLearningConfiguration.getDefaultProperties().setProperty("numCategories", String.valueOf(codeMap.size()));
         }
         catch (IOException e) {
             // TODO Auto-generated catch block

@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.HashMap;
+import java.util.Set;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.AbstractClassifier;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.OLR.OLRClassifier;
@@ -18,10 +20,12 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.BucketFilter;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.BucketUtils;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeFactory;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.RecordFactory;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.vectors.VectorFactory;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.exceptions.InputFormatException;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.CodeTriple;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.writers.DataClerkingWriter;
 import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
 import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearningConfiguration;
@@ -88,9 +92,11 @@ public final class TrainAndMultiplyClassify {
         // File prediction = new File(args[1]);
 
         System.out.println("********** Generating Training Bucket **********");
+        Bucket bucket = createBucketOfRecords(training);
 
-        Bucket bucket = createTrainingBucket(training);
+        generateActualCodeMappings(bucket);
 
+        bucket = createBucketOfRecords(training);
         randomlyAssignToTrainingAndPrediction(bucket);
 
         vectorFactory = new VectorFactory(trainingBucket);
@@ -129,6 +135,27 @@ public final class TrainAndMultiplyClassify {
         System.out.println("\nUnique Records");
         generateAndPrintStats(BucketFilter.uniqueRecordsOnly(allClassified));
 
+    }
+
+    private static void generateActualCodeMappings(final Bucket bucket) {
+
+        HashMap<String, Integer> codeMapping = new HashMap<>();
+        for (Record record : bucket) {
+            for (CodeTriple ct : record.getGoldStandardClassificationSet()) {
+                codeMapping.put(ct.getCode().getCodeAsString(), 1);
+            }
+        }
+
+        StringBuilder sb = new StringBuilder();
+        Set<String> keySet = codeMapping.keySet();
+
+        for (String key : keySet) {
+            sb.append(key + "\t" + key + "\n");
+        }
+        //    sb.append("\n");
+        File codeFile = new File("target/customCodeMap.txt");
+        Utils.writeToFile(sb.toString(), codeFile.getAbsolutePath());
+        CodeFactory.getInstance().loadDictionary(codeFile);
     }
 
     private static void generateAndPrintStats(final Bucket classifiedBucket) throws IOException {
@@ -261,7 +288,7 @@ public final class TrainAndMultiplyClassify {
         return olrClassifier;
     }
 
-    private static Bucket createTrainingBucket(final File training) throws IOException, InputFormatException {
+    private static Bucket createBucketOfRecords(final File training) throws IOException, InputFormatException {
 
         Bucket bucket = new Bucket();
         Iterable<Record> records;
