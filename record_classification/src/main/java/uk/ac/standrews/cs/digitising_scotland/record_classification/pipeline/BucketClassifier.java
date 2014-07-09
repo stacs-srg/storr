@@ -8,20 +8,20 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.CodeTriple;
 
 /**
- * The Class BucketClassifier provides convenience methods for classifying all records in a bucket with the {@link RecordClassificationPipeline}.
+ * The Class BucketClassifier provides convenience methods for classifying all records in a bucket with the {@link MachineLearningClassificationPipeline}.
  * 
  */
 public class BucketClassifier {
 
     /** The record classifier. */
-    private RecordClassificationPipeline recordClassifier;
+    private MachineLearningClassificationPipeline recordClassifier;
 
     /**
      * Instantiates a new bucket classifier.
      *
      * @param recordClassifier the record classifier
      */
-    public BucketClassifier(final RecordClassificationPipeline recordClassifier) {
+    public BucketClassifier(final MachineLearningClassificationPipeline recordClassifier) {
 
         this.recordClassifier = recordClassifier;
     }

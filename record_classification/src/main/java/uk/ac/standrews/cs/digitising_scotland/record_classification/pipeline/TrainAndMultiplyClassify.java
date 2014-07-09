@@ -17,6 +17,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.AnalysisMetrics.StrictConfusionMatrix;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.BucketFilter;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.BucketUtils;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.RecordFactory;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.vectors.VectorFactory;
@@ -46,7 +47,7 @@ import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearnin
  * <br>
  * After the records have been created and stored in a bucket, classification
  * can begin. This is carried out by the {@link BucketClassifier} class which in
- * turn implements the {@link RecordClassificationPipeline}. Please see this
+ * turn implements the {@link MachineLearningClassificationPipeline}. Please see this
  * class for implementation details. <br>
  * <br>
  * Some initial metrics are then printed to the console and classified records
@@ -56,7 +57,7 @@ import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearnin
  */
 public final class TrainAndMultiplyClassify {
 
-    private final static double TRAINING_PCT = 0.8;
+    private static final double TRAINING_PCT = 0.8;
 
     private static VectorFactory vectorFactory;
     private static Bucket trainingBucket;
@@ -104,23 +105,29 @@ public final class TrainAndMultiplyClassify {
 
         // Bucket predicitionBucket = createPredictionBucket(prediction);
 
-        RecordClassificationPipeline recordClassifier = new RecordClassificationPipeline(classifier, exactMatchClassifier);
+        ExactMatchPipeline exactMatchPipeline = new ExactMatchPipeline(exactMatchClassifier);
+        MachineLearningClassificationPipeline machineLearningClassifier = new MachineLearningClassificationPipeline(classifier);
 
-        BucketClassifier bucketClassifier = new BucketClassifier(recordClassifier);
+        Bucket exactMatched = exactMatchPipeline.classify(predictionBucket);
+        Bucket notExactMatched = BucketUtils.getComplement(predictionBucket, exactMatched);
+        Bucket machineLearned = machineLearningClassifier.classify(notExactMatched);
+        Bucket allClassified = BucketUtils.getUnion(machineLearned, exactMatched);
+
+        //  BucketClassifier bucketClassifier = new BucketClassifier(recordClassifier);
 
         System.out.println("********** Classifying Bucket **********");
 
-        Bucket classifiedBucket = bucketClassifier.classify(predictionBucket);
+        //  Bucket classifiedBucket = bucketClassifier.classify(predictionBucket);
 
-        writeRecords(classifiedBucket);
+        writeRecords(allClassified);
 
         System.out.println("********** **********");
 
         System.out.println("All Records");
-        generateAndPrintStats(classifiedBucket);
+        generateAndPrintStats(allClassified);
 
         System.out.println("\nUnique Records");
-        generateAndPrintStats(BucketFilter.uniqueRecordsOnly(classifiedBucket));
+        generateAndPrintStats(BucketFilter.uniqueRecordsOnly(allClassified));
 
     }
 
