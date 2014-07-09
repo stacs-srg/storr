@@ -4,6 +4,7 @@ import org.junit.Test;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.AnalysisMetrics.CodeMetrics;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.AnalysisMetrics.StrictConfusionMatrix;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
 
 /**
  * The Class CodeMetricsTest.

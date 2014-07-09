@@ -1,6 +1,6 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.dummies;
 
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Bucket;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
 
 /**
  * Generates mock buckets for use in testing.

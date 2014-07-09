@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures;
+package uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket;
 
 import java.util.ArrayList;
 import java.util.List;

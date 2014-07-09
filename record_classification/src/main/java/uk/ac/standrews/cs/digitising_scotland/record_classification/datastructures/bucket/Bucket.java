@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures;
+package uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -61,6 +61,30 @@ public class Bucket implements Iterable<Record> {
         for (Record record : records) {
             addRecordToBucket(record);
         }
+    }
+
+    /**
+     * Checks if the specified record is in this bucket. Will return true if and only if the record is a member of the bucket.
+     * @param record record to check for membership.
+     * @return true if this record is a member, false otherwise
+     */
+    public boolean contains(final Record record) {
+
+        return records.containsValue(record);
+    }
+
+    /**
+     * Removes the record from this bucket if it is present (optional operation).
+     *  More formally, if this map contains a mapping from key k to value v such that (key==null ? k==null : key.equals(k)), that mapping is removed.
+     *  (The map can contain at most one such mapping.)
+     *
+     *  Returns the value to which this map previously associated the key, or null if the map contained no mapping for the key.
+     * @param record Record to remove
+     * @return the previous record associated with the record, or null if there was no record for the record.
+     */
+    public Record remove(final Record record) {
+
+        return records.remove(record.getUid());
     }
 
     /**
