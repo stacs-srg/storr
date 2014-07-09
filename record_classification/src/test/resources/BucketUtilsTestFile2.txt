@@ -1,0 +1,2 @@
+4211|1855|1|1|1|sf|4359|1855|1|1|1|pneu|4460|1855|1|1|1|fever|4557|1855|1|1|1|"acute bron, fever"|4658|1855|1|1|1|"crushed to death"|4712|1855|1|1|1|"teething"|
+4112|1855|1|1|1|"acute hydrocephalus, fever"|

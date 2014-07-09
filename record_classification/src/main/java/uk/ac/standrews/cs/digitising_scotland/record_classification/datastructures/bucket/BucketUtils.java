@@ -17,7 +17,7 @@ public class BucketUtils {
      * @param bucketB Second bucket
      * @return the union of buckets A and B.
      */
-    public Bucket getUnion(final Bucket bucketA, final Bucket bucketB) {
+    public static Bucket getUnion(final Bucket bucketA, final Bucket bucketB) {
 
         final Bucket union = new Bucket();
         union.addCollectionOfRecords(bucketA);
@@ -33,7 +33,7 @@ public class BucketUtils {
      * @param bucketB the second bucket
      * @return the intersection between bucket A and B
      */
-    public Bucket getIntersection(final Bucket bucketA, final Bucket bucketB) {
+    public static Bucket getIntersection(final Bucket bucketA, final Bucket bucketB) {
 
         Bucket interesection = new Bucket();
         for (Record record : bucketA) {
@@ -45,13 +45,13 @@ public class BucketUtils {
     }
 
     /**
-     * Calculates the complement. The compliment of bucketB in BucketA is all the records of A that are not members of A.
+     * Calculates the complement. The compliment of bucketB in BucketA is all the records of A that are not members of B.
      * This is equivalent of performing BucketA-BucketB on a set level.
      * @param bucketA the bucket to 'subtract' from
      * @param bucketB the bucket to 'subtract'
      * @return the complement
      */
-    public Bucket getComplement(final Bucket bucketA, final Bucket bucketB) {
+    public static Bucket getComplement(final Bucket bucketA, final Bucket bucketB) {
 
         Bucket compliment = new Bucket();
         compliment.addCollectionOfRecords(bucketA);
@@ -70,7 +70,7 @@ public class BucketUtils {
      * @param bucketB the bucket b
      * @return true, if is disjoint
      */
-    public boolean isDisjoint(final Bucket bucketA, final Bucket bucketB) {
+    public static boolean isDisjoint(final Bucket bucketA, final Bucket bucketB) {
 
         return getIntersection(bucketA, bucketB).size() == 0;
     }
@@ -82,8 +82,11 @@ public class BucketUtils {
      * @param bucketB the bucket b
      * @return true, if is subset
      */
-    public boolean isSubset(final Bucket bucketA, final Bucket bucketB) {
+    public static boolean isSubset(final Bucket bucketA, final Bucket bucketB) {
 
+        for (Record record : bucketA) {
+            if (!bucketB.contains(record)) { return false; }
+        }
         return true;
     }
 
