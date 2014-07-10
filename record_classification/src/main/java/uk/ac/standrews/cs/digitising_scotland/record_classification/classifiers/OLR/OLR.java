@@ -140,7 +140,6 @@ public class OLR {
         for (int category = 0; category < numCategories - 1; category++) {
             updateBetaCategory(instance, gradient, category);
         }
-        // System.out.println(beta);
     }
 
     private void updateBetaCategory(final Vector instance, final Vector gradient, final int category) {
@@ -189,7 +188,8 @@ public class OLR {
 
         if (weArePerTermAnnealing) {
             return perTermLearningRate(feature);
-        } else {
+        }
+        else {
             return currentLearningRate();
         }
     }

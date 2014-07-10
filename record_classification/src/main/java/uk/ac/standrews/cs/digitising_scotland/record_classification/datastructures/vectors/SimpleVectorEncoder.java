@@ -103,10 +103,7 @@ public class SimpleVectorEncoder extends AbstractVectorEncoder {
         int currentMaxTokenIndexValue = in.readInt();
         for (int i = 0; i < currentMaxTokenIndexValue; i++) {
             int readint = in.readInt();
-            if (i != readint) {
-                System.out.println("i " + i + " readInt: " + readint);
-                throw new RuntimeException("error reading SimpleVectorEncoder dictionary");
-            }
+            if (i != readint) { throw new RuntimeException("error reading SimpleVectorEncoder dictionary"); }
             updateDictionary(in.readUTF());
         }
 

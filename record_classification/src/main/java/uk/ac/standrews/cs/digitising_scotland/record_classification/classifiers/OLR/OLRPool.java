@@ -33,7 +33,6 @@ public class OLRPool implements Runnable {
     private int poolSize;
     private int numSurvivors;
     private ArrayList<NamedVector> testingVectorList = Lists.newArrayList();
-
     private ArrayList<OLRShuffled> survivors;
 
     /**
