@@ -26,6 +26,7 @@ public final class CodeFactory {
     private File inputFile;
     private int currentMaxID;
     private static final String ENCODING = "UTF-8";
+    public int codeMapNullCounter = 0;
 
     private CodeFactory() {
 
@@ -108,9 +109,8 @@ public final class CodeFactory {
         //FIXME Remember, we've hacked this to perform scale testing. Need to check with Lee about 0's on end of codes.
         Code codeFromMap = codeMap.get(code);
         if (codeFromMap == null) {
-            if (code.charAt(code.length() - 1) == '0') {
-                codeFromMap = codeMap.get(code.substring(0, code.length() - 1));
-            }
+            codeFromMap = codeMap.get(code.substring(0, code.length() - 1));
+            if (codeFromMap != null) codeMapNullCounter++;
         }
         if (codeFromMap == null) { throw new CodeNotValidException(code + " is not a valid code, or is not in the code dictionary(" + inputFile.getAbsolutePath() + ")"); }
 

@@ -104,6 +104,7 @@ public final class TrainAndMultiplyClassify {
         System.out.println("********** Training Classifier **********");
         System.out.println("Training with a dictionary size of: " + MachineLearningConfiguration.getDefaultProperties().getProperty("numFeatures"));
         System.out.println("Training with this number of output classes: " + MachineLearningConfiguration.getDefaultProperties().getProperty("numCategories"));
+        System.out.println("Codes that were null and weren't adter chopping: " + CodeFactory.getInstance().codeMapNullCounter);
 
         AbstractClassifier classifier = trainOLRClassifier(trainingBucket, vectorFactory);
 
@@ -135,6 +136,7 @@ public final class TrainAndMultiplyClassify {
         System.out.println("\nUnique Records");
         generateAndPrintStats(BucketFilter.uniqueRecordsOnly(allClassified));
 
+        System.out.println("Codes that were null and weren't adter chopping: " + CodeFactory.getInstance().codeMapNullCounter);
     }
 
     private static void generateActualCodeMappings(final Bucket bucket) {
