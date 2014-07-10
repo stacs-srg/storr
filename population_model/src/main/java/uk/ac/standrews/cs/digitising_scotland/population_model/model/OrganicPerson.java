@@ -26,6 +26,18 @@ public class OrganicPerson implements IPerson{
         return day;
     }
 
+    public OrganicPerson(){
+        setTimeline(null);
+    }
+
+    public void setTimeline(OrganicTimeline t){
+        this.timeline = t;
+    }
+
+    public OrganicTimeline getTimeline(){
+        return timeline;
+    }
+
     /**
      *  INTERFACE METHODS
      */
