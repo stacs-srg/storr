@@ -5,9 +5,11 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -18,6 +20,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.RecordFactory;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.exceptions.InputFormatException;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.CodeTriple;
+import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
 
 /**
  * The Class RecordFactoryTest tests the creation of {@link Record} from the {@link RecordFactory}.
@@ -34,6 +37,10 @@ public class RecordFactoryTest {
         File inputFile = new File(file);
 
         List<Record> records = FormatConverter.convert(inputFile);
+
+        Bucket b = new Bucket(records);
+        generateActualCodeMappings(b);
+        records = FormatConverter.convert(inputFile);
 
         for (int i = 0; i < records.size(); i++) {
             if (i == 0) {
@@ -213,6 +220,27 @@ public class RecordFactoryTest {
 
         CodeFactory.getInstance().loadDictionary(originalCodeList);
 
+    }
+
+    private static void generateActualCodeMappings(final Bucket bucket) {
+
+        HashMap<String, Integer> codeMapping = new HashMap<>();
+        for (Record record : bucket) {
+            for (CodeTriple ct : record.getGoldStandardClassificationSet()) {
+                codeMapping.put(ct.getCode().getCodeAsString(), 1);
+            }
+        }
+
+        StringBuilder sb = new StringBuilder();
+        Set<String> keySet = codeMapping.keySet();
+
+        for (String key : keySet) {
+            sb.append(key + "\t" + key + "\n");
+        }
+        //    sb.append("\n");
+        File codeFile = new File("target/customCodeMap.txt");
+        Utils.writeToFile(sb.toString(), codeFile.getAbsolutePath());
+        CodeFactory.getInstance().loadDictionary(codeFile);
     }
 
 }

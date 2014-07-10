@@ -110,7 +110,9 @@ public final class CodeFactory {
         Code codeFromMap = codeMap.get(code);
         if (codeFromMap == null) {
             codeFromMap = codeMap.get(code.substring(0, code.length() - 1));
-            if (codeFromMap != null) codeMapNullCounter++;
+            if (codeFromMap != null) {
+                codeMapNullCounter++;
+            }
         }
         if (codeFromMap == null) { throw new CodeNotValidException(code + " is not a valid code, or is not in the code dictionary(" + inputFile.getAbsolutePath() + ")"); }
 

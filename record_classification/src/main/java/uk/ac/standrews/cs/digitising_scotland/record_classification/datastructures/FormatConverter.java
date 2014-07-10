@@ -85,7 +85,12 @@ public final class FormatConverter {
 
             Record r = new Record(originalData);
             r.getOriginalData().setGoldStandardClassification(goldStandard);
-            recordList.add(r);
+            if (goldStandard.size() == 0) {
+                System.out.println("Gold Standard Set Empty: " + r.getCleanedDescription());
+            }
+            else {
+                recordList.add(r);
+            }
         }
 
         br.close();
