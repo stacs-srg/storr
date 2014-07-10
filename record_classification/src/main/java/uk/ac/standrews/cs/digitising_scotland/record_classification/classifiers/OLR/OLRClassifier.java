@@ -1,7 +1,19 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.OLR;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Properties;
+import java.util.Set;
+
 import org.apache.mahout.math.NamedVector;
 import org.apache.mahout.math.Vector;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.AbstractClassifier;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.TokenSet;
@@ -13,16 +25,6 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.CodeTriple;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.Pair;
 import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearningConfiguration;
-
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Properties;
-import java.util.Set;
 
 /**
  * OLRClassifier
@@ -40,6 +42,8 @@ public class OLRClassifier extends AbstractClassifier {
 
     /** The Constant MODELPATH. Default is target/olrModelPath, but can be overwritten. */
     private static String modelPath = "target/olrModelPath";
+
+    private final Logger logger = LoggerFactory.getLogger(OLRClassifier.class);
 
     /**
      * Overrides the default path and sets to the path provided.
@@ -118,7 +122,7 @@ public class OLRClassifier extends AbstractClassifier {
     public Record classify(final Record record) {
 
         if (model == null) {
-            System.out.println("Model has not been trained.");
+            logger.error("Model has not been trained.");
             return record;
         }
 
@@ -146,7 +150,7 @@ public class OLRClassifier extends AbstractClassifier {
     public Bucket classify(final Bucket bucket) throws IOException {
 
         if (model == null) {
-            System.out.println("Model has not been trained.");
+            logger.error("Model has not been trained.");
             return bucket;
         }
         return super.classify(bucket);

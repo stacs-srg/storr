@@ -3,6 +3,9 @@ package uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline;
 import java.io.IOException;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.CodeTriple;
@@ -12,6 +15,8 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.Cod
  * 
  */
 public class BucketClassifier {
+
+    private final Logger logger = LoggerFactory.getLogger(BucketClassifier.class);
 
     /** The record classifier. */
     private MachineLearningClassificationPipeline recordClassifier;
@@ -38,7 +43,7 @@ public class BucketClassifier {
         int count = 0;
         int total = bucket.size();
         for (Record record : bucket) {
-            System.out.println("classifying record " + count + " of " + total);
+            logger.info("classifying record " + count + " of " + total);
             Set<CodeTriple> result = recordClassifier.classify(record);
             record.addAllCodeTriples(result);
             count++;

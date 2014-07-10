@@ -1,6 +1,13 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline;
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Properties;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.AbstractClassifier;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.ClassificationPipeline;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
@@ -10,11 +17,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.exceptions.I
 import uk.ac.standrews.cs.digitising_scotland.record_classification.preprocessor.DataCleaning;
 import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
 import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearningConfiguration;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Properties;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  * This class is the entry class to train all the classifiers.
@@ -24,6 +27,8 @@ import java.util.Properties;
  * @author jkc25
  */
 public class TrainAndClassify {
+
+    private final static Logger logger = LoggerFactory.getLogger(TrainAndClassify.class);
 
     /**
      * The training file.
@@ -189,7 +194,7 @@ public class TrainAndClassify {
             System.err.println("Usage: TrainClassifiers [-properties customProperties] trainingFile unclassifiedFile");
         }
         else {
-            System.out.println("Training Classifiers...");
+            logger.info("Training Classifiers...");
             String trainingFile = args[args.length - 2];
             String unclassifiedFile = args[args.length - 1];
 

@@ -9,6 +9,9 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeFactory;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
@@ -23,6 +26,8 @@ import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
  * @author jkc25
  */
 public final class FormatConverter {
+
+    private final static Logger logger = LoggerFactory.getLogger(FormatConverter.class);
 
     /** The Constant CODLINELENGTH. */
     static final int CODLINELENGTH = 38;
@@ -85,8 +90,9 @@ public final class FormatConverter {
 
             Record r = new Record(originalData);
             r.getOriginalData().setGoldStandardClassification(goldStandard);
+
             if (goldStandard.size() == 0) {
-                System.out.println("Gold Standard Set Empty: " + r.getCleanedDescription());
+                logger.info("Gold Standard Set Empty: " + r.getCleanedDescription());
             }
             else {
                 recordList.add(r);
