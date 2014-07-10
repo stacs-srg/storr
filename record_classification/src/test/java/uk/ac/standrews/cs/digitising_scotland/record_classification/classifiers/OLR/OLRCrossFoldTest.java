@@ -100,6 +100,8 @@ public class OLRCrossFoldTest {
         String[] splitLine = line.split("\t");
         String codeFromFile = splitLine[0].trim();
         String descriptionFromFile = splitLine[1].trim();
+        File file = new File(getClass().getResource("/CodeFactoryOLRTestFile.txt").getFile());
+        CodeFactory.getInstance().loadDictionary(file);
         int id = CodeFactory.getInstance().getCode(codeFromFile).getID();
         return vectorFactory.createNamedVectorFromString(descriptionFromFile, Integer.toString(id));
     }
