@@ -145,39 +145,6 @@ public class OLRTest {
     }
 
     /**
-     * Test alpha.
-     */
-    @Test(expected = UnsupportedOperationException.class)
-    public void testAlpha() {
-
-        OLR olr = new OLR();
-        olr.alpha(0.5);
-        olr.close();
-    }
-
-    /**
-     * Test lambda.
-     */
-    @Test(expected = UnsupportedOperationException.class)
-    public void testLambda() {
-
-        OLR olr = new OLR();
-        olr.lambda(0.5);
-        olr.close();
-    }
-
-    /**
-     * Test learning rate.
-     */
-    @Test(expected = UnsupportedOperationException.class)
-    public void testLearningRate() {
-
-        OLR olr = new OLR();
-        olr.learningRate(0.5);
-        olr.close();
-    }
-
-    /**
      * Train olr on training vectors.
      *
      * @param olr the olr
@@ -186,7 +153,7 @@ public class OLRTest {
 
         for (int i = 0; i < 10; i++) {
             for (NamedVector vector : vectors) {
-                olr.train(Integer.parseInt(vector.getName()), vector);
+                olr.train(vector);
             }
         }
     }

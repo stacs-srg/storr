@@ -138,15 +138,8 @@ public class OLRShuffled implements Runnable {
 
         Collections.shuffle(trainingVectorList);
         for (NamedVector vector : trainingVectorList) {
-            int id = getID(vector);
-            this.model.train(id, vector);
+            this.model.train(vector);
         }
-    }
-
-    private int getID(final NamedVector vector) {
-
-        String code = vector.getName();
-        return Integer.parseInt(code);
     }
 
     /**
@@ -194,7 +187,7 @@ public class OLRShuffled implements Runnable {
 
     protected int numCategories() {
 
-        return model.numCategories();
+        return model.getNumCategories();
     }
 
 }

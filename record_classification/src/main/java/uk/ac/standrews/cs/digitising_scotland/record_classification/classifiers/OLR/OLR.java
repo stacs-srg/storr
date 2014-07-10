@@ -25,26 +25,22 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Properties;
 
-import org.apache.mahout.classifier.sgd.AbstractOnlineLogisticRegression;
-import org.apache.mahout.classifier.sgd.DefaultGradient;
-import org.apache.mahout.classifier.sgd.Gradient;
 import org.apache.mahout.classifier.sgd.L1;
-import org.apache.mahout.math.DenseMatrix;
-import org.apache.mahout.math.DenseVector;
-import org.apache.mahout.math.MatrixWritable;
-import org.apache.mahout.math.Vector;
+import org.apache.mahout.math.*;
 import org.apache.mahout.math.Vector.Element;
-import org.apache.mahout.math.VectorWritable;
 
+import org.apache.mahout.math.function.Functions;
 import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearningConfiguration;
 
 /**
  * An online logistic regression model that allows standard SGD or per term annealing with the option of
  * pseudo Bayesian L1 prior regularisation.
  */
-public class OLR extends AbstractOnlineLogisticRegression {
+public class OLR {
 
-    private Gradient gradient = new DefaultGradient();
+    private L1 prior;
+    private Gradient gradient = new Gradient();
+    protected org.apache.mahout.math.Matrix beta;
 
     private Properties properties;
     //set in properties
@@ -54,6 +50,52 @@ public class OLR extends AbstractOnlineLogisticRegression {
     private boolean weArePerTermAnnealing;
     private boolean weAreRegularizing;
     private int numFeatures;
+    private int numCategories;
+    private Vector updateSteps;
+    private Vector updateCounts;
+    private int step;
+
+    public int getStep() {
+        return step;
+    }
+
+    public Vector classifyFull(Vector instance) {
+        Vector r = new DenseVector(numCategories);
+        r.viewPart(1, numCategories - 1).assign(classify(instance));
+        r.setQuick(0, 1.0 - r.zSum());
+        return r;
+    }
+
+    public double logLikelihood(int actual, Vector instance) {
+
+        Vector p = classify(instance);
+        if (actual > 0) {
+            return Math.max(-100.0, Math.log(p.get(actual - 1)));
+        } else {
+            return Math.max(-100.0, Math.log1p(-p.zSum()));
+        }
+    }
+
+
+    public int getNumCategories() {
+        return numCategories;
+    }
+
+    private class Gradient {
+        public final Vector apply(NamedVector instance) {
+
+            int actual = Integer.parseInt(instance.getName());
+            // what does the current model say?
+            Vector v = classify(instance);
+
+            Vector r = v.like();
+            if (actual != 0) {
+                r.setQuick(actual - 1, 1);
+            }
+            r.assign(v, Functions.MINUS);
+            return r;
+        }
+    }
 
     /**
      * Constructor with default properties.
@@ -79,19 +121,22 @@ public class OLR extends AbstractOnlineLogisticRegression {
     /**
      * Trains an OLR model on a instance vector with a known 'actual' output class.
      *
-     * @param actual   known 'gold standard' coding
      * @param instance feature vector
      */
-    public void train(final int actual, final Vector instance) {
+    public void train(final NamedVector instance) {
 
-        updateModelParameters(actual, instance);
+        updateModelParameters(instance);
         updateCountsAndSteps(instance);
         nextStep();
     }
 
-    private void updateModelParameters(final int actual, final Vector instance) {
+    private void nextStep() {
+        step++;
+    }
 
-        Vector gradient = this.gradient.apply(null, actual, instance, this);
+    private void updateModelParameters(final NamedVector instance) {
+
+        Vector gradient = this.gradient.apply(instance);
         for (int category = 0; category < numCategories - 1; category++) {
             updateBetaCategory(instance, gradient, category);
         }
@@ -125,6 +170,7 @@ public class OLR extends AbstractOnlineLogisticRegression {
 
     private void regularize(final int category, final int feature) {
 
+
         double lastUpdated = updateSteps.get(feature);
         double missingUpdates = getStep() - lastUpdated;
         if (missingUpdates > 0) {
@@ -155,13 +201,24 @@ public class OLR extends AbstractOnlineLogisticRegression {
      * @param instance A vector of features to be classified.
      * @return A vector of probabilities, one for each of the first n-1 categories.
      */
-    @Override
     public Vector classify(final Vector instance) {
 
         return link(classifyNoLink(instance));
     }
 
-    @Override
+    public Vector link(Vector v) {
+        double max = v.maxValue();
+        if (max >= 40) {
+            // if max > 40, we subtract the large offset first
+            // the size of the max means that 1+sum(exp(v)) = sum(exp(v)) to within round-off
+            v.assign(Functions.minus(max)).assign(Functions.EXP);
+            return v.divide(v.norm(1));
+        } else {
+            v.assign(Functions.EXP);
+            return v.divide(1 + v.norm(1));
+        }
+    }
+
     public Vector classifyNoLink(final Vector instance) {
 
         //must be overridden due to fact that superclass regularizes here
@@ -170,13 +227,11 @@ public class OLR extends AbstractOnlineLogisticRegression {
         return beta.times(instance);
     }
 
-    @Override
     public double currentLearningRate() {
 
         return mu0 * Math.pow(decayFactor, getStep());
     }
 
-    @Override
     public double perTermLearningRate(final int j) {
 
         return mu0 * Math.pow(perTermAnnealingRate, updateCounts.get(j));
@@ -212,40 +267,6 @@ public class OLR extends AbstractOnlineLogisticRegression {
         updateSteps.setQuick(j, getStep());
     }
 
-    /**
-     * Unsupported operation. This should be set in the config file.
-     *
-     * @param alpha New value of decayFactor, the exponential decay rate for the learning rate.
-     * @return this, so other configurations can be chained.
-     */
-    public OLR alpha(final double alpha) {
-
-        throw new UnsupportedOperationException("alpha could not be set to " + alpha + ". Parameter alpha set in config file.");
-    }
-
-    /**
-     * Unsupported operation. This should be set in the config file.
-     *
-     * @param lambda prior weighting
-     * @return OLR object (chainable)
-     */
-    @Override
-    public OLR lambda(final double lambda) {
-
-        throw new UnsupportedOperationException("Lambda could not be set to " + lambda + "Parameter lambda set in config file");
-    }
-
-    /**
-     * Unsupported operation. This should be set in the config file.
-     *
-     * @param learningRate New value of initial learning rate.
-     * @return This, so other configurations can be chained.
-     */
-    public OLR learningRate(final double learningRate) {
-
-        throw new UnsupportedOperationException("The learning rate could not be set to " + learningRate + ". Learning rate set in config file");
-    }
-
     private void getConfigOptions() {
 
         weArePerTermAnnealing = Boolean.parseBoolean(properties.getProperty("perTermLearning"));
@@ -259,9 +280,9 @@ public class OLR extends AbstractOnlineLogisticRegression {
 
     private void initialiseModel() {
 
-        super.updateSteps = new DenseVector(numFeatures);
-        super.updateCounts = new DenseVector(numFeatures);
-        super.beta = new DenseMatrix(numCategories - 1, numFeatures);
+        updateSteps = new DenseVector(numFeatures);
+        updateCounts = new DenseVector(numFeatures);
+        beta = new DenseMatrix(numCategories - 1, numFeatures);
     }
 
     /**
