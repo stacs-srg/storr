@@ -75,6 +75,7 @@ public class VectorFactory {
             vectors.addAll(createNamedVectorsWithGoldStandardCodes(record));
         }
         else {
+            System.out.println("Record has no gold standard: " + record.getCleanedDescription()); //FIXME debug only
             vectors.add(createNamedVectorFromString(record.getCleanedDescription(), "noGoldStandard"));
         }
         return vectors;

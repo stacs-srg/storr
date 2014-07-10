@@ -92,11 +92,11 @@ public final class TrainAndMultiplyClassify {
         // File prediction = new File(args[1]);
 
         System.out.println("********** Generating Training Bucket **********");
+        Bucket allRecords = createBucketOfRecords(training);
+
+        generateActualCodeMappings(allRecords);
+
         Bucket bucket = createBucketOfRecords(training);
-
-        generateActualCodeMappings(bucket);
-
-        bucket = createBucketOfRecords(training);
         randomlyAssignToTrainingAndPrediction(bucket);
 
         vectorFactory = new VectorFactory(trainingBucket);
