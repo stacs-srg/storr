@@ -105,8 +105,15 @@ public final class CodeFactory {
 
     protected Code getCodeFromMap(final String code) throws CodeNotValidException {
 
+        //FIXME Remember, we've hacked this to perform scale testing. Need to check with Lee about 0's on end of codes.
         Code codeFromMap = codeMap.get(code);
+        if (codeFromMap == null) {
+            if (code.charAt(code.length() - 1) == '0') {
+                codeFromMap = codeMap.get(code.substring(0, code.length() - 1));
+            }
+        }
         if (codeFromMap == null) { throw new CodeNotValidException(code + " is not a valid code, or is not in the code dictionary(" + inputFile.getAbsolutePath() + ")"); }
+
         return codeFromMap;
     }
 

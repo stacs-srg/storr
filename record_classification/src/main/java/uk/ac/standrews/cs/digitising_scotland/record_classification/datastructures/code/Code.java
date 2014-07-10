@@ -26,7 +26,7 @@ public abstract class Code implements java.io.Serializable {
         this.id = id;
         this.code = code;
         this.description = description;
-        //checkValid(); //FIX ME RE-ENABLE THIS
+        checkValid();
     }
 
     protected Code() {
