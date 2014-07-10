@@ -79,9 +79,6 @@ public class ListAccuracyMetrics {
     /** The prop wrongly predicted. */
     private double propWronglyPredicted;
 
-    /** The number of codes not coded. */
-    private int[] numberOfCodesNotCoded;
-
     /** The over under predicion matrix. */
     private int[][] overUnderPredictionMatrix;
 
