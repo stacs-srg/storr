@@ -15,20 +15,18 @@
  * <http://www.gnu.org/licenses/>.
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.model;
-
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import uk.ac.standrews.cs.digitising_scotland.util.ProgressIndicator;
-
+import java.util.ArrayList;
+import java.util.List;
 /**
  * Created by victor on 11/06/14.
  */
-public class OrganicPopulation {
+public class OrganicPopulation implements IPopulation{
 
     /**
      * Seed parameters.
      */
     CompactPopulation seedPopulation;
-    public static final int SEED_SIZE = 1000;
+    public static final int DEFAULT_SEED_SIZE = 1000;
 
     /**
      * The approximate average number of days per year.
@@ -44,40 +42,72 @@ public class OrganicPopulation {
      * The end year of the simulation.
      */
     public static final int END_YEAR = 2013;
-    public static final int NUMBER_OF_STAGES_IN_POPULATION_GENERATION = 5;
 
     private static final int DAYS_IN_DECEMBER = 31;
     private static final int DECEMBER_INDEX = 11;
 
-    private static final int AGE_AT_FIRST_MARRIAGE_STD_DEV = 3;
-    private static final int AGE_AT_FIRST_MARRIAGE_MEAN = 18;
-    private static final int MARRIAGE_SEPARATION_MEAN = 7;
-    private static final int MARRIAGE_SEPARATION_STD_DEV = 2;
-    private static final int INTER_CHILD_INTERVAL = 3;
-    private static final int TIME_BEFORE_FIRST_CHILD = 1;
-    private static final int MINIMUM_PERIOD_BETWEEN_PARTNERSHIPS = 7;
-    private static final int PARTNERSHIP_AGE_DIFFERENCE_LIMIT = 5;
-    private static final int MAX_CHILDREN = 6;
-    private static final int MAX_MARRIAGES = 3;
+    private List<OrganicPerson> people = new ArrayList<OrganicPerson>();
 
-    private static final int MINIMUM_MOTHER_AGE_AT_CHILDBIRTH = 12;
-    private static final int MAXIMUM_MOTHER_AGE_AT_CHILDBIRTH = 50;
-    private static final int MAX_GESTATION_IN_DAYS = 300;
-    private static final int MINIMUM_FATHER_AGE_AT_CHILDBIRTH = 12;
-    private static final int MAXIMUM_FATHER_AGE_AT_CHILDBIRTH = 70;
+    public void makeSeed(int size){
 
-    private static final int[] NUMBER_OF_CHILDREN_DISTRIBUTION = new int[]{2, 3, 2, 1, 1, 1, 1};
-    private static final int[] NUMBER_OF_MARRIAGES_DISTRIBUTION = new int[]{4, 20, 2, 1};
+        for(int i=0; i< size; i++){
+            people.add(new OrganicPerson());
+        }
+    }
 
-    private static final double PROBABILITY_OF_BEING_INCOMER = 0.125;
-    private ProgressIndicator progress_indicator;
-
-    @SuppressFBWarnings(value = "URF_UNREAD_FIELD")
-    private CompactPerson[] people;
-    @SuppressFBWarnings(value = "UUF_UNUSED_FIELD")
-    private CompactPerson[] peopleToBeMarriedToday;
-    @SuppressFBWarnings(value = "UUF_UNUSED_FIELD")
-    private CompactPartnership[] partnershipsToHaveOffspringToday;
+    public void makeSeed(){
+        makeSeed(DEFAULT_SEED_SIZE);
+    }
 
 
+
+    public void mainIteration(int timeStepSizeInDays){
+
+    }
+
+    /**
+     *
+     * Methods from interface.
+     *
+     */
+
+    @Override
+    public Iterable<IPerson> getPeople() {
+        return null;
+    }
+
+    @Override
+    public Iterable<IPartnership> getPartnerships() {
+        return null;
+    }
+
+    @Override
+    public IPerson findPerson(int id) {
+        return null;
+    }
+
+    @Override
+    public IPartnership findPartnership(int id) {
+        return null;
+    }
+
+    @Override
+    public int getNumberOfPeople() {
+        return 0;
+    }
+
+    @Override
+    public int getNumberOfPartnerships() {
+        return 0;
+    }
+
+    @Override
+    public void setDescription(String description) {
+
+    }
+
+    @Override
+    public void setConsistentAcrossIterations(boolean consistent_across_iterations) {
+
+    }
 }
