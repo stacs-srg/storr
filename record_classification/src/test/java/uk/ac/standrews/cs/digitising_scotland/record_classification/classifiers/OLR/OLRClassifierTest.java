@@ -70,19 +70,6 @@ public class OLRClassifierTest {
     }
 
     /**
-     * Test classify with empty model.
-     *
-     * @throws IOException Signals that an I/O exception has occurred.
-     */
-    @Test
-    public void testClassifyWithEmptyModel() throws IOException {
-
-        OLRClassifier olrClassifier = new OLRClassifier("machineLearning.properties", new VectorFactory(bucketA));
-        olrClassifier.classify(bucketA);
-        Assert.assertEquals("Model has not been trained.", os.toString().trim());
-    }
-
-    /**
      * Test classify with de serialized model.
      *
      * @throws InterruptedException the interrupted exception
