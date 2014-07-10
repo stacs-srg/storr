@@ -27,7 +27,7 @@ import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
  */
 public final class FormatConverter {
 
-    private final static Logger logger = LoggerFactory.getLogger(FormatConverter.class);
+    private static final Logger logger = LoggerFactory.getLogger(FormatConverter.class);
 
     /** The Constant CODLINELENGTH. */
     static final int CODLINELENGTH = 38;

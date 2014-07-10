@@ -2,7 +2,6 @@ package uk.ac.standrews.cs.digitising_scotland.record_classification.datastructu
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 
-// TODO: Auto-generated Javadoc
 /**
  * Methods to perform manipulation of Buckets.
  * @author jkc25

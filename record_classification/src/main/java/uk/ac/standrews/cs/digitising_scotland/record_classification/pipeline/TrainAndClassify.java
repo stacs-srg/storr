@@ -28,7 +28,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
  */
 public class TrainAndClassify {
 
-    private final static Logger logger = LoggerFactory.getLogger(TrainAndClassify.class);
+    private static final Logger logger = LoggerFactory.getLogger(TrainAndClassify.class);
 
     /**
      * The training file.

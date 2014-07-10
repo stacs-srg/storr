@@ -45,7 +45,6 @@ public class OLRShuffled implements Runnable {
     private Properties properties = MachineLearningConfiguration.getDefaultProperties();
     private int reps; //set in config
     private final Logger logger = LoggerFactory.getLogger(OLRShuffled.class);
-
     private ArrayList<NamedVector> trainingVectorList = new ArrayList<NamedVector>();
 
     //----constructors---
@@ -143,6 +142,12 @@ public class OLRShuffled implements Runnable {
         for (NamedVector vector : trainingVectorList) {
             this.model.train(vector);
         }
+    }
+
+    private int getID(final NamedVector vector) {
+
+        String code = vector.getName();
+        return Integer.parseInt(code);
     }
 
     /**
