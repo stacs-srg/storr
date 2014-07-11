@@ -89,7 +89,7 @@ public final class FormatConverter {
             HashSet<CodeTriple> goldStandard = new HashSet<>();
             populateGoldStandardSet(lineSplit, goldStandard);
 
-            Record r = new Record(originalData);
+            Record r = new Record(id, originalData);
             r.getOriginalData().setGoldStandardClassification(goldStandard);
 
             if (goldStandard.size() == 0) {

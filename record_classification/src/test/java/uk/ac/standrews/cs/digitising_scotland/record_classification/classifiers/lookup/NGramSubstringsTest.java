@@ -38,9 +38,9 @@ public class NGramSubstringsTest {
 
         nGramSubstrings = new NGramSubstrings("A test String");
         nGramSubstrings2 = new NGramSubstrings("A test String");
-
+        int id = (int) Math.rint(Math.random() * 1000);
         OriginalData originalData = new OriginalData("A test Description", 2014, 1, "testFileName");
-        Record record = new Record(originalData);
+        Record record = new Record(id, originalData);
         Bucket bucketToClean = new Bucket();
         bucketToClean.addRecordToBucket(record);
         DataCleaning.cleanData(bucketToClean);

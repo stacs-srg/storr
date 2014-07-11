@@ -76,8 +76,9 @@ public class BucketTest {
     public void testAddSingleRecord() throws InputFormatException {
 
         bucketA = new Bucket();
+        int id = (int) Math.rint(Math.random() * 1000);
         OriginalData originalData = new OriginalData("description", 1995, 1, "testFileName");
-        Record recordToInsert = new Record(originalData);
+        Record recordToInsert = new Record(id, originalData);
 
         Assert.assertEquals(0, bucketA.size());
 
@@ -117,7 +118,7 @@ public class BucketTest {
 
         bucketA = new Bucket(listOfRecords);
         for (Record record : listOfRecords) {
-            String uid = record.getUid();
+            int uid = record.getid();
             Assert.assertEquals(record, bucketA.getRecord(uid));
         }
 

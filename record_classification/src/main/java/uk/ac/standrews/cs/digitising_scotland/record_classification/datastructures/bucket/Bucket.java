@@ -17,14 +17,14 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 public class Bucket implements Iterable<Record> {
 
     /** The records. */
-    private Map<String, Record> records;
+    private Map<Integer, Record> records;
 
     /**
      * Instantiates a new empty bucket.
      */
     public Bucket() {
 
-        records = new LinkedHashMap<String, Record>();
+        records = new LinkedHashMap<Integer, Record>();
     }
 
     /**
@@ -46,7 +46,7 @@ public class Bucket implements Iterable<Record> {
      */
     public void addRecordToBucket(final Record recordToInsert) {
 
-        records.put(recordToInsert.getUid(), recordToInsert);
+        records.put(recordToInsert.getid(), recordToInsert);
     }
 
     /**
@@ -82,7 +82,7 @@ public class Bucket implements Iterable<Record> {
      */
     public Record remove(final Record record) {
 
-        return records.remove(record.getUid());
+        return records.remove(record.getid());
     }
 
     /**
@@ -109,12 +109,12 @@ public class Bucket implements Iterable<Record> {
 
     /**
      * Returns a single record that matches the String UID supplied.
-     * @param uID hashCode of the vector we are looking for
+     * @param uid hashCode of the vector we are looking for
      * @return Record with matching hashCode
      */
-    public Record getRecord(final String uID) {
+    public Record getRecord(final int uid) {
 
-        return records.get(uID);
+        return records.get(uid);
     }
 
     /* (non-Javadoc)

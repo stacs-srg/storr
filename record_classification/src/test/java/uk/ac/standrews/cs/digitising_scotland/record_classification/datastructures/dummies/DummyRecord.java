@@ -16,7 +16,7 @@ public class DummyRecord extends Record {
 
     public DummyRecord() {
 
-        super(null);
+        super((int) Math.rint(Math.random() * 1000), null);
     }
 
     @Override

@@ -3,7 +3,6 @@ package uk.ac.standrews.cs.digitising_scotland.record_classification.datastructu
 import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Set;
-import java.util.UUID;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.lookup.TokenizerCleaner;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.OriginalData;
@@ -15,7 +14,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.Cod
 public class Record {
 
     /** The u id. */
-    private final UUID uID = UUID.randomUUID();
+    private final int id;
 
     /** The original data. */
     private OriginalData originalData;
@@ -28,11 +27,12 @@ public class Record {
 
     /**
      * Instantiates a new record.
-     *
+     * @param id the unique id of this record
      * @param originalData the original data from the initial record.
      */
-    public Record(final OriginalData originalData) {
+    public Record(final int id, final OriginalData originalData) {
 
+        this.id = id;
         this.originalData = originalData;
         this.codeTriples = new LinkedHashSet<>();
     }
@@ -76,9 +76,9 @@ public class Record {
      *
      * @return unique ID
      */
-    public String getUid() {
+    public int getid() {
 
-        return uID.toString();
+        return id;
     }
 
     /**
