@@ -9,7 +9,8 @@ import java.util.Map;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 
 /**
- * Contains a set of records and metrics associated with that bucket.
+ * A Bucket is an iterable collection of {@link Record} objects. Buckets can be manipulated using the {@link BucketUtils}
+ * and {@link BucketFilter} classes. Methods for checking if a bucket contains a given record, checking it's size etc are provided.
  * @author jkc25, frjd2
  *
  */
@@ -45,8 +46,6 @@ public class Bucket implements Iterable<Record> {
      */
     public void addRecordToBucket(final Record recordToInsert) {
 
-        //TODO if bucket contains similar record consolidate records?
-        //TODO if doing this return to using hashmaps as record ID in vectors?
         records.put(recordToInsert.getUid(), recordToInsert);
     }
 
@@ -57,7 +56,6 @@ public class Bucket implements Iterable<Record> {
      */
     public void addCollectionOfRecords(final Iterable<Record> records) {
 
-        //TODO do we want this to be a merge type operation?
         for (Record record : records) {
             addRecordToBucket(record);
         }
