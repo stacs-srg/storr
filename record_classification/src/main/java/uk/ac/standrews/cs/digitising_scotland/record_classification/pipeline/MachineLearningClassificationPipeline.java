@@ -2,8 +2,10 @@ package uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.AbstractClassifier;
@@ -33,6 +35,7 @@ public class MachineLearningClassificationPipeline {
     private static final double CONFIDENCE_CHOP_LEVEL = 0.3;
 
     private TokenClassificationCache cache;
+    private Map<String, Set<CodeTriple>> recordCache;
 
     /**
      * Constructs a new {@link MachineLearningClassificationPipeline} with the specified
@@ -45,36 +48,8 @@ public class MachineLearningClassificationPipeline {
     public MachineLearningClassificationPipeline(final AbstractClassifier classifier, Bucket trainingBucket) {
 
         this.cache = new TokenClassificationCache(classifier);
+        recordCache = new HashMap<>();
         prepopulateCache(trainingBucket);
-    }
-
-    private void prepopulateCache(final Bucket trainingBucket) {
-
-        for (Record record : trainingBucket) {
-            List<CodeTriple> singles = getSinglyCodedTripes(record);
-            cache.addAll(singles);
-        }
-
-    }
-
-    protected List<CodeTriple> getSinglyCodedTripes(final Record record) {
-
-        List<CodeTriple> singles = new ArrayList<>();
-
-        final Set<CodeTriple> goldStandardClassificationSet = record.getGoldStandardClassificationSet();
-        for (CodeTriple codeTriple1 : goldStandardClassificationSet) {
-            int count = 0;
-            for (CodeTriple codeTriple2 : goldStandardClassificationSet) {
-                if (codeTriple1.getTokenSet().equals(codeTriple2.getTokenSet())) {
-                    count++;
-                }
-            }
-            if (count == 1) {
-                singles.add(codeTriple1);
-            }
-        }
-
-        return singles;
     }
 
     /**
@@ -86,13 +61,19 @@ public class MachineLearningClassificationPipeline {
     public Bucket classify(final Bucket bucket) throws IOException {
 
         Bucket classified = new Bucket();
+
         for (Record record : bucket) {
-            final Set<CodeTriple> result = classify(record);
-            if (result != null) {
-                record.addAllCodeTriples(result);
-                classified.addRecordToBucket(record);
+            Set<CodeTriple> result = recordCache.get(record.getCleanedDescription());
+            if (result == null) {
+                result = classify(record);
+                if (result != null) {
+                    record.addAllCodeTriples(result);
+                    classified.addRecordToBucket(record);
+                }
+                recordCache.put(record.getCleanedDescription(), record.getCodeTriples());
             }
         }
+
         return classified;
     }
 
@@ -149,6 +130,35 @@ public class MachineLearningClassificationPipeline {
             Pair<Code, Double> codeDoublePair = cache.getClassification(tokenSet);
             resolverMatrix.add(tokenSet, codeDoublePair);
         }
+    }
+
+    private void prepopulateCache(final Bucket trainingBucket) {
+
+        for (Record record : trainingBucket) {
+            List<CodeTriple> singles = getSinglyCodedTripes(record);
+            cache.addAll(singles);
+        }
+
+    }
+
+    protected List<CodeTriple> getSinglyCodedTripes(final Record record) {
+
+        List<CodeTriple> singles = new ArrayList<>();
+
+        final Set<CodeTriple> goldStandardClassificationSet = record.getGoldStandardClassificationSet();
+        for (CodeTriple codeTriple1 : goldStandardClassificationSet) {
+            int count = 0;
+            for (CodeTriple codeTriple2 : goldStandardClassificationSet) {
+                if (codeTriple1.getTokenSet().equals(codeTriple2.getTokenSet())) {
+                    count++;
+                }
+            }
+            if (count == 1) {
+                singles.add(codeTriple1);
+            }
+        }
+
+        return singles;
     }
 
 }

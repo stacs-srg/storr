@@ -125,7 +125,8 @@ public final class TrainAndMultiplyClassify {
         generateAndPrintStats(allClassified);
 
         System.out.println("\nUnique Records");
-        generateAndPrintStats(BucketFilter.uniqueRecordsOnly(allClassified));
+        final Bucket uniqueRecordsOnly = BucketFilter.uniqueRecordsOnly(allClassified);
+        generateAndPrintStats(uniqueRecordsOnly);
 
         System.out.println("Codes that were null and weren't adter chopping: " + CodeFactory.getInstance().codeMapNullCounter);
     }
