@@ -2,6 +2,7 @@ package uk.ac.standrews.cs.digitising_scotland.record_classification.resolver;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.AbstractClassifier;
@@ -58,5 +59,16 @@ public class TokenClassificationCache {
 
         addTokenSet(tokenSet);
         return classifications.get(tokenSet);
+    }
+
+    /**
+     * Add all CodeTriples to the cache.
+     * @param setOfCodeTriples Set to add
+     */
+    public void addAll(final List<CodeTriple> setOfCodeTriples) {
+
+        for (CodeTriple codeTriple : setOfCodeTriples) {
+            classifications.put(codeTriple.getTokenSet(), new Pair<Code, Double>(codeTriple.getCode(), codeTriple.getConfidence()));
+        }
     }
 }

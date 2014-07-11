@@ -1,6 +1,7 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -41,11 +42,47 @@ public class MachineLearningClassificationPipeline {
      *            {@link AbstractClassifier} used for machine learning
      *            classification.
      */
-    public MachineLearningClassificationPipeline(final AbstractClassifier classifier) {
+    public MachineLearningClassificationPipeline(final AbstractClassifier classifier, Bucket trainingBucket) {
 
         this.cache = new TokenClassificationCache(classifier);
+        prepopulateCache(trainingBucket);
     }
 
+    private void prepopulateCache(final Bucket trainingBucket) {
+
+        for (Record record : trainingBucket) {
+            List<CodeTriple> singles = getSinglyCodedTripes(record);
+            cache.addAll(singles);
+        }
+
+    }
+
+    protected List<CodeTriple> getSinglyCodedTripes(final Record record) {
+
+        List<CodeTriple> singles = new ArrayList<>();
+
+        final Set<CodeTriple> goldStandardClassificationSet = record.getGoldStandardClassificationSet();
+        for (CodeTriple codeTriple1 : goldStandardClassificationSet) {
+            int count = 0;
+            for (CodeTriple codeTriple2 : goldStandardClassificationSet) {
+                if (codeTriple1.getTokenSet().equals(codeTriple2.getTokenSet())) {
+                    count++;
+                }
+            }
+            if (count == 1) {
+                singles.add(codeTriple1);
+            }
+        }
+
+        return singles;
+    }
+
+    /**
+     * Classify all records in a bucket.
+     * @param bucket
+     * @return
+     * @throws IOException
+     */
     public Bucket classify(final Bucket bucket) throws IOException {
 
         Bucket classified = new Bucket();

@@ -101,30 +101,21 @@ public final class TrainAndMultiplyClassify {
 
         vectorFactory = new VectorFactory(trainingBucket);
 
-        System.out.println("********** Training Classifier **********");
-        System.out.println("Training with a dictionary size of: " + MachineLearningConfiguration.getDefaultProperties().getProperty("numFeatures"));
-        System.out.println("Training with this number of output classes: " + MachineLearningConfiguration.getDefaultProperties().getProperty("numCategories"));
-        System.out.println("Codes that were null and weren't adter chopping: " + CodeFactory.getInstance().codeMapNullCounter);
+        printStatusUpdate();
 
         AbstractClassifier classifier = trainOLRClassifier(trainingBucket, vectorFactory);
 
         ExactMatchClassifier exactMatchClassifier = trainExactMatchClassifier();
 
-        // Bucket predicitionBucket = createPredictionBucket(prediction);
-
         ExactMatchPipeline exactMatchPipeline = new ExactMatchPipeline(exactMatchClassifier);
-        MachineLearningClassificationPipeline machineLearningClassifier = new MachineLearningClassificationPipeline(classifier);
+        MachineLearningClassificationPipeline machineLearningClassifier = new MachineLearningClassificationPipeline(classifier, trainingBucket);
 
         Bucket exactMatched = exactMatchPipeline.classify(predictionBucket);
         Bucket notExactMatched = BucketUtils.getComplement(predictionBucket, exactMatched);
         Bucket machineLearned = machineLearningClassifier.classify(notExactMatched);
         Bucket allClassified = BucketUtils.getUnion(machineLearned, exactMatched);
 
-        //  BucketClassifier bucketClassifier = new BucketClassifier(recordClassifier);
-
         System.out.println("********** Classifying Bucket **********");
-
-        //  Bucket classifiedBucket = bucketClassifier.classify(predictionBucket);
 
         writeRecords(allClassified);
 
@@ -136,6 +127,14 @@ public final class TrainAndMultiplyClassify {
         System.out.println("\nUnique Records");
         generateAndPrintStats(BucketFilter.uniqueRecordsOnly(allClassified));
 
+        System.out.println("Codes that were null and weren't adter chopping: " + CodeFactory.getInstance().codeMapNullCounter);
+    }
+
+    private static void printStatusUpdate() {
+
+        System.out.println("********** Training Classifier **********");
+        System.out.println("Training with a dictionary size of: " + MachineLearningConfiguration.getDefaultProperties().getProperty("numFeatures"));
+        System.out.println("Training with this number of output classes: " + MachineLearningConfiguration.getDefaultProperties().getProperty("numCategories"));
         System.out.println("Codes that were null and weren't adter chopping: " + CodeFactory.getInstance().codeMapNullCounter);
     }
 
