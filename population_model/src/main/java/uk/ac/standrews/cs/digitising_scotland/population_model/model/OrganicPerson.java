@@ -30,6 +30,7 @@ public class OrganicPerson implements IPerson{
     private String firstName;
     private String lastName;
     private char sex;
+    private int age_in_days;
     private Date dateOfBirth;
     private Date dateOfDeath;
     private List<Integer> partnerships;
@@ -44,6 +45,24 @@ public class OrganicPerson implements IPerson{
 
     public OrganicPerson(){
         setTimeline(null);
+    }
+
+    public OrganicPerson(Date date){
+        dateOfBirth = date;
+    }
+
+    public OrganicPerson(Date date, char sex){
+        dateOfBirth = date;
+        this.sex = sex;
+    }
+
+    public OrganicPerson(char sex){
+        this.sex = sex;
+    }
+
+    public OrganicPerson(int age, char sex){
+        this.sex = sex;
+        age_in_days = age;
     }
 
     public void setTimeline(OrganicTimeline t){

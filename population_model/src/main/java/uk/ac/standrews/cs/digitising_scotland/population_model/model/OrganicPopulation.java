@@ -15,8 +15,18 @@
  * <http://www.gnu.org/licenses/>.
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.model;
+import uk.ac.standrews.cs.digitising_scotland.population_model.generation.distributions.AgeAtDeathDistribution;
+import uk.ac.standrews.cs.digitising_scotland.population_model.generation.distributions.Distribution;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+
+import uk.ac.standrews.cs.digitising_scotland.population_model.generation.distributions.UniformDistribution;
+import uk.ac.standrews.cs.digitising_scotland.population_model.generation.distributions.UniformSexDistribution;
+import uk.ac.standrews.cs.digitising_scotland.population_model.generation.util.RandomFactory;
+import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
+
 /**
  * Created by victor on 11/06/14.
  */
@@ -37,21 +47,38 @@ public class OrganicPopulation implements IPopulation{
      * The start year of the simulation.
      */
     public static final int START_YEAR = 1780;
+    private int currentDay = 0;
 
     /**
      * The end year of the simulation.
      */
     public static final int END_YEAR = 2013;
+    public int totalNumberOfDays = DateManipulation.dateToDays(END_YEAR,1,1) - DateManipulation.dateToDays(START_YEAR,1,1);
 
+    /**
+     * Additional parameters
+     */
     private static final int DAYS_IN_DECEMBER = 31;
     private static final int DECEMBER_INDEX = 11;
 
+    private static int DEFAULT_STEP_SIZE = 1 ;
+
+    Random random = RandomFactory.getRandom();
+    private Distribution<Integer> seed_age_distribution = new UniformDistribution(0,70,random);
+    private Distribution<Boolean> sex_distribution = new UniformSexDistribution(random);
+    private Distribution<Integer> age_at_death_distribution = new AgeAtDeathDistribution(random);
+
+
     private List<OrganicPerson> people = new ArrayList<OrganicPerson>();
+    private List<OrganicPartnership> partnerships = new ArrayList<OrganicPartnership>();
 
     public void makeSeed(int size){
 
-        for(int i=0; i< size; i++){
-            people.add(new OrganicPerson());
+        for(int i=0; i< size; i++) {
+            if (sex_distribution.getSample())
+                people.add(new OrganicPerson(seed_age_distribution.getSample(), 'M'));
+            else
+                people.add(new OrganicPerson(seed_age_distribution.getSample(), 'F'));
         }
     }
 
@@ -59,7 +86,9 @@ public class OrganicPopulation implements IPopulation{
         makeSeed(DEFAULT_SEED_SIZE);
     }
 
-
+    public void mainIteration(){
+        mainIteration(DEFAULT_STEP_SIZE);
+    }
 
     public void mainIteration(int timeStepSizeInDays){
 

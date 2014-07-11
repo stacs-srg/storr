@@ -16,9 +16,8 @@
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.model;
 
-import uk.ac.standrews.cs.digitising_scotland.util.BitManipulation;
-
 import java.util.List;
+import uk.ac.standrews.cs.digitising_scotland.util.BitManipulation;
 
 /**
  * A compact representation of a person, designed for minimal space overhead.

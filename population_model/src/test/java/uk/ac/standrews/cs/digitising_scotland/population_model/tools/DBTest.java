@@ -18,6 +18,7 @@ package uk.ac.standrews.cs.digitising_scotland.population_model.tools;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import uk.ac.standrews.cs.digitising_scotland.population_model.config.PopulationProperties;
 import uk.ac.standrews.cs.digitising_scotland.population_model.database.DBConnector;
