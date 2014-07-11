@@ -8,23 +8,37 @@ import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 
 /**
- * 
- * @author frjd2 & Masih
+ * The Class TokenStreamIterator.
  *
- * @param <Attribute>
+ * @author frjd2 & Masih
+ * @param <Attribute> the generic type
  */
 public class TokenStreamIterator<Attribute extends CharTermAttribute> implements Iterator<Attribute>, Closeable {
 
+    /** The tokenizer. */
     private TokenStream tokenizer;
+
+    /** The attribute type. */
     private Class<Attribute> attributeType;
+
+    /** The index. */
     private int index = -1;
 
+    /**
+     * Instantiates a new token stream iterator.
+     *
+     * @param tokenizer the tokenizer
+     * @param attributeType the attribute type
+     */
     public TokenStreamIterator(final TokenStream tokenizer, final Class<Attribute> attributeType) {
 
         this.tokenizer = tokenizer;
         this.attributeType = attributeType;
     }
 
+    /* (non-Javadoc)
+     * @see java.util.Iterator#hasNext()
+     */
     @Override
     public boolean hasNext() {
 
@@ -36,6 +50,9 @@ public class TokenStreamIterator<Attribute extends CharTermAttribute> implements
         }
     }
 
+    /* (non-Javadoc)
+     * @see java.util.Iterator#next()
+     */
     @Override
     public Attribute next() {
 
@@ -43,17 +60,30 @@ public class TokenStreamIterator<Attribute extends CharTermAttribute> implements
         return tokenizer.getAttribute(attributeType);
     }
 
+    /**
+     * Gets the index.
+     *
+     * @return the index
+     */
     public int getIndex() {
 
         return index;
     }
 
+    /**
+     * Checks if is first time.
+     *
+     * @return true, if is first time
+     */
     public boolean isFirstTime() {
 
         return index == 0;
 
     }
 
+    /* (non-Javadoc)
+     * @see java.util.Iterator#remove()
+     */
     @Override
     public void remove() {
 
@@ -61,6 +91,9 @@ public class TokenStreamIterator<Attribute extends CharTermAttribute> implements
 
     }
 
+    /* (non-Javadoc)
+     * @see java.io.Closeable#close()
+     */
     @Override
     public void close() throws IOException {
 

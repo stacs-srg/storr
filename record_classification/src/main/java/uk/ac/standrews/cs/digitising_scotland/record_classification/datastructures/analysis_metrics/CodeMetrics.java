@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.AnalysisMetrics;
+package uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.analysis_metrics;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeFactory;
@@ -42,10 +42,10 @@ public class CodeMetrics {
     /** The accuracy. */
     private double[] accuracy;
 
-    /** The f1. */
+    /** The F1 score. */
     private double[] f1;
 
-    /** The mcc. */
+    /** The Matthews correlation coefficient. */
     private double[] mcc;
 
     /** The number of output classes. */
@@ -538,6 +538,9 @@ public class CodeMetrics {
         return confusionMatrix.getTotalCorrectlyPredicted();
     }
 
+    /**
+     * Prints the micro stats, in this case, micro precision and micro recall.
+     */
     public void printMicroStats() {
 
         System.out.println("micro precision: " + getMicroPrecision());

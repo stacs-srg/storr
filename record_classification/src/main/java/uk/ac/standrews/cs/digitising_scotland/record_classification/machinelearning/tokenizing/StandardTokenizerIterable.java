@@ -9,17 +9,27 @@ import org.apache.lucene.util.Version;
 
 /**
  * Created by fraserdunlop on 24/04/2014 at 14:08.
- * TODO documentation
+ * TODO @Fraser documentation
  */
 public class StandardTokenizerIterable implements Iterable<CharTermAttribute> {
 
+    /** The tokenizer. */
     private StandardTokenizer tokenizer;
 
+    /**
+     * Instantiates a new standard tokenizer iterable.
+     *
+     * @param matchVersion the match version
+     * @param input the input
+     */
     public StandardTokenizerIterable(final Version matchVersion, final Reader input) {
 
         this.tokenizer = new StandardTokenizer(matchVersion, input);
     }
 
+    /* (non-Javadoc)
+     * @see java.lang.Iterable#iterator()
+     */
     @Override
     public Iterator<CharTermAttribute> iterator() {
 

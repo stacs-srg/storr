@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.AnalysisMetrics;
+package uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.analysis_metrics;
 
 import java.util.Set;
 
@@ -62,7 +62,7 @@ public class InvertedSoftConfusionMatrix extends AbstractConfusionMatrix {
      * @param setCodeTriples the set code triples
      * @return true, if successful
      */
-    private boolean hasDescendants(Code code, Set<CodeTriple> setCodeTriples) {
+    private boolean hasDescendants(final Code code, final Set<CodeTriple> setCodeTriples) {
 
         for (CodeTriple codeTriple : setCodeTriples) {
             if (codeTriple.getCode().isDescendant(code)) { return true; }
@@ -71,7 +71,9 @@ public class InvertedSoftConfusionMatrix extends AbstractConfusionMatrix {
     }
 
     /**
-     * Unsupported operation! Throws exception!
+     * Unsupported operation! Throws exception!.
+     *
+     * @return the false positive
      */
     @Override
     public double[] getFalsePositive() {
@@ -80,7 +82,9 @@ public class InvertedSoftConfusionMatrix extends AbstractConfusionMatrix {
     }
 
     /**
-     * Unsupported operation! Throws exception!
+     * Unsupported operation! Throws exception!.
+     *
+     * @return the false negative
      */
     @Override
     public double[] getFalseNegative() {
@@ -89,10 +93,13 @@ public class InvertedSoftConfusionMatrix extends AbstractConfusionMatrix {
     }
 
     /**
-     * Unsupported operation! Throws exception!
+     * Unsupported operation! Throws exception!.
+     *
+     * @return the true negative
      */
     @Override
     public double[] getTrueNegative() {
+
         throw new UnsupportedOperationException();
     }
 }

@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.AnalysisMetrics;
+package uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.analysis_metrics;
 
 import java.util.HashMap;
 import java.util.Iterator;
