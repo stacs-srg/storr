@@ -9,14 +9,14 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.CodeTriple;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class ExactMatchPipeline.
+ * The Class ExactMatchPipeline us a holder class for an {@link ExactMatchClassifier}.
+ * Provides convenience methods for classifying records and buckets.
  */
 public class ExactMatchPipeline {
 
     /** The exact match classifier. */
-    ExactMatchClassifier classifier;
+    private ExactMatchClassifier classifier;
 
     /**
      * Instantiates a new exact match pipeline.
@@ -29,10 +29,13 @@ public class ExactMatchPipeline {
     }
 
     /**
-     * Classify everything in a bucket.
+     * Attempt to classify everything in a bucket.
+     * If a record has an exact match is put in the classified bucket.
+     * If a record does not have an exact match then the record is discarded.
+     * The bucket with classified records is returned.
      *
-     * @param bucket the bucket
-     * @return the bucket
+     * @param bucket the bucket to classify
+     * @return the bucket of exact matched records
      * @throws IOException Signals that an I/O exception has occurred.
      */
     public Bucket classify(final Bucket bucket) throws IOException {

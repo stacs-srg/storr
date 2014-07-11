@@ -11,9 +11,9 @@ import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
 
 import com.google.common.base.Charsets;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class CodeDescritionChanger.
+ * The Class CodeDescritionChanger is a legacy class that was used to check the effect of coding to
+ *  differing levels in the heirarchy when using HISCO codes.
  */
 public class CodeDescritionChanger {
 

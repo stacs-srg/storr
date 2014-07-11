@@ -14,8 +14,6 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.CodeTriple;
 
-// TODO: Auto-generated Javadoc
-
 /**
  * Contains methods for reading and writing to file {@link Bucket}s and {@link Record}s objects ready for clerking by NRS.
  *
@@ -23,9 +21,6 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.Cod
  */
 public class DataClerkingWriter implements Closeable, AutoCloseable {
 
-    /**
-     * The writer.
-     */
     private BufferedWriter writer;
     private static final String DELIMITER = "|";
 
@@ -36,8 +31,6 @@ public class DataClerkingWriter implements Closeable, AutoCloseable {
      * @throws IOException Signals that an I/O exception has occurred.
      */
     public DataClerkingWriter(final File outputPath) throws IOException {
-
-        // writer = new BufferedWriter(new FileWriter(outputPath, true));
 
         FileOutputStream fileOutputStream = new FileOutputStream(outputPath);
         OutputStreamWriter outputStream = new OutputStreamWriter(fileOutputStream, "UTF-8");
@@ -67,7 +60,7 @@ public class DataClerkingWriter implements Closeable, AutoCloseable {
     }
 
     /**
-     * Format record.
+     * Parses the data held in a record into the expected output format.
      *
      * @param record the record
      * @return the string
@@ -126,16 +119,15 @@ public class DataClerkingWriter implements Closeable, AutoCloseable {
     private String getCodes(final Record record) {
 
         StringBuilder sb = new StringBuilder();
-
         Set<CodeTriple> classifications = record.getCodeTriples();
+
         for (CodeTriple codeTriple : classifications) {
 
             Code code = codeTriple.getCode();
             String codeAsString = code.getCodeAsString();
             String description = getDesciption(record, code);
             String explanation = getExplanation(codeAsString);
-            sb.append(codeAsString + DELIMITER + description + DELIMITER + explanation //+ classification.getProvenance().getClassifier()
-                            + DELIMITER);
+            sb.append(codeAsString + DELIMITER + description + DELIMITER + explanation + DELIMITER);
 
         }
 
@@ -145,6 +137,7 @@ public class DataClerkingWriter implements Closeable, AutoCloseable {
     private String getDesciption(final Record record, final Code code) {
 
         String description;
+
         if (record.isCoDRecord()) {
             description = code.getDescription();
         }

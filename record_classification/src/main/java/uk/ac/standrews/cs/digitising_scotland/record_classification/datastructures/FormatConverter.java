@@ -19,7 +19,6 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.exceptions.I
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.CodeTriple;
 import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class FormatConverter converts a comma separated text file in the format that is used by the modern cod data
  * to a list of Record objects.
@@ -27,28 +26,30 @@ import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
  */
 public final class FormatConverter {
 
-    private static final Logger logger = LoggerFactory.getLogger(FormatConverter.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(FormatConverter.class);
+
+    final static String charsetName = "UTF8";
 
     /** The Constant CODLINELENGTH. */
     static final int CODLINELENGTH = 38;
 
     /** The Constant idPosition. */
-    private static final int idPosition = 0;
+    private static int idPosition = 0;
 
     /** The Constant agePosition. */
-    private static final int agePosition = 34;
+    private static int agePosition = 34;
 
     /** The Constant sexPosition. */
-    private static final int sexPosition = 35;
+    private static int sexPosition = 35;
 
     /** The Constant descriptionStart. */
-    private static final int descriptionStart = 1;
+    private static int descriptionStart = 1;
 
     /** The Constant descriptionEnd. */
-    private static final int descriptionEnd = 4;
+    private static int descriptionEnd = 4;
 
     /** The Constant yearPosition. */
-    private static final int yearPosition = 37;
+    private static int yearPosition = 37;
 
     /**
      * Instantiates a new format converter.
@@ -67,7 +68,7 @@ public final class FormatConverter {
      */
     public static List<Record> convert(final File inputFile) throws IOException, InputFormatException {
 
-        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(inputFile), "UTF8"));
+        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(inputFile), charsetName));
 
         String line = "";
         List<Record> recordList = new ArrayList<>();
@@ -92,7 +93,7 @@ public final class FormatConverter {
             r.getOriginalData().setGoldStandardClassification(goldStandard);
 
             if (goldStandard.size() == 0) {
-                logger.info("Gold Standard Set Empty: " + r.getCleanedDescription());
+                LOGGER.info("Gold Standard Set Empty: " + r.getCleanedDescription());
             }
             else {
                 recordList.add(r);
