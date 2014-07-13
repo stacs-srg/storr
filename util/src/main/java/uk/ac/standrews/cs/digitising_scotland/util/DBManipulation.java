@@ -33,7 +33,7 @@ import java.sql.Statement;
 public class DBManipulation {
 
     private static final String CREATE_DB_SYNTAX = "CREATE DATABASE IF NOT EXISTS ";
-    private static final String DROP_DB_SYNTAX = "DROP DATABASE ";
+    private static final String DROP_DB_SYNTAX = "DROP DATABASE IF EXISTS ";
 
     private static final String SELECT_ALL_SYNTAX = "SELECT COUNT(*) FROM ";
     private static final String SELECT_SCHEMA_SYNTAX = "SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '";

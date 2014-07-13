@@ -16,10 +16,10 @@
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.transform;
 
-import uk.ac.standrews.cs.digitising_scotland.population_model.generation.distributions.InconsistentWeightException;
-import uk.ac.standrews.cs.digitising_scotland.population_model.generation.distributions.NegativeDeviationException;
-import uk.ac.standrews.cs.digitising_scotland.population_model.generation.distributions.NegativeWeightException;
-import uk.ac.standrews.cs.digitising_scotland.population_model.model.CompactPopulation;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.InconsistentWeightException;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.NegativeDeviationException;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.NegativeWeightException;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.in_memory.CompactPopulation;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IDFactory;
 import uk.ac.standrews.cs.digitising_scotland.population_model.transform.old.PopulationToFile;
 

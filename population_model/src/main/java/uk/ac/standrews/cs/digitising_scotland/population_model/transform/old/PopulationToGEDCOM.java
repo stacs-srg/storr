@@ -18,11 +18,11 @@ package uk.ac.standrews.cs.digitising_scotland.population_model.transform.old;
 
 import uk.ac.standrews.cs.digitising_scotland.util.ArrayIterator;
 import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
-import uk.ac.standrews.cs.digitising_scotland.population_model.generation.distributions.InconsistentWeightException;
-import uk.ac.standrews.cs.digitising_scotland.population_model.model.CompactPartnership;
-import uk.ac.standrews.cs.digitising_scotland.population_model.model.CompactPerson;
-import uk.ac.standrews.cs.digitising_scotland.population_model.model.CompactPopulation;
-import uk.ac.standrews.cs.digitising_scotland.population_model.model.Person;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.InconsistentWeightException;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.in_memory.CompactPartnership;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.in_memory.CompactPerson;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.in_memory.CompactPopulation;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.old.Person;
 
 import java.io.IOException;
 import java.io.PrintWriter;

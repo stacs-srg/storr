@@ -1,11 +1,11 @@
 package uk.ac.standrews.cs.digitising_scotland.linkage.event_records;
 
-import uk.ac.standrews.cs.digitising_scotland.population_model.model.DBBackedPartnership;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPartnership;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPerson;
-import uk.ac.standrews.cs.digitising_scotland.population_model.model.Person;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPopulation;
 import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
 
-import java.sql.Date;
+import java.util.Date;
 
 /**
  * A representation of a Birth Record in the form used by the Digitising Scotland Project.
@@ -70,12 +70,10 @@ public class BirthRecord extends IndividualRecord {
     private String informant_did_not_sign;
     private String adoption;
 
-    public BirthRecord(final Person person) {
+    public BirthRecord(final IPerson person, IPopulation population) {
 
         birth_date = new DateRecord();
         parents_marriage_date = new DateRecord();
-
-        final DBBackedPartnership family = person.getParentsFamily();
 
         // Attributes associated with individual
         setUid(String.valueOf(person.getId()));
@@ -93,10 +91,13 @@ public class BirthRecord extends IndividualRecord {
         setBirthMonth(String.valueOf(birth_month));
         setBirthYear(String.valueOf(birth_year));
 
-        if (family != null) {
+        int parents_partnership_id = person.getParentsPartnership();
+        if (parents_partnership_id != -1) {
 
-            // Attributes associated with individual's parents marriage
-            final Date marriage_date = family.getStartDate();
+            final IPartnership parents_partnership = population.findPartnership(parents_partnership_id);
+
+            // Attributes associated with individual's parents' marriage.
+            final Date marriage_date = parents_partnership.getMarriageDate();
 
             int marriage_day = DateManipulation.dateToDay(marriage_date);
             int marriage_month = DateManipulation.dateToMonth(marriage_date);
@@ -106,21 +107,7 @@ public class BirthRecord extends IndividualRecord {
             setParentsMarriageMonth(String.valueOf(marriage_month));
             setParentsMarriageYear(String.valueOf(marriage_year));
 
-            // Attributes associated with individual's parents
-            for (final Person parent : family.getPartners()) {
-
-                if (parent.getSex() == IPerson.MALE) {
-
-                    setFathersForename(parent.getFirstName());
-                    setFathersSurname(getRecordedParentsSurname(parent.getSurname(), person.getSurname()));
-                    setFathersOccupation(parent.getOccupation());
-                } else {
-
-                    setMothersForename(parent.getFirstName());
-                    setMothersSurname(getRecordedParentsSurname(parent.getSurname(), person.getSurname()));
-                    setMothersMaidenSurname(parent.getMaidenName());
-                }
-            }
+            setParentAttributes(person, population, parents_partnership);
         }
     }
 

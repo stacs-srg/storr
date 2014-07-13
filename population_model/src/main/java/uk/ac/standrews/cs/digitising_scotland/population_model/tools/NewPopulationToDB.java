@@ -16,8 +16,8 @@
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.tools;
 
-import uk.ac.standrews.cs.digitising_scotland.population_model.model.CompactPopulation;
-import uk.ac.standrews.cs.digitising_scotland.population_model.model.CompactPopulationAdapter;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.in_memory.CompactPopulation;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.in_memory.CompactPopulationAdapter;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPopulation;
 import uk.ac.standrews.cs.digitising_scotland.population_model.transform.DBPopulationWriter;
 import uk.ac.standrews.cs.digitising_scotland.population_model.transform.PopulationConverter;

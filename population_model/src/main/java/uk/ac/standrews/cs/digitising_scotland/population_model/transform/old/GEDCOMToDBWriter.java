@@ -24,9 +24,9 @@ import org.gedcom4j.parser.GedcomParser;
 import org.gedcom4j.parser.GedcomParserException;
 import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
 import uk.ac.standrews.cs.digitising_scotland.population_model.config.PopulationProperties;
-import uk.ac.standrews.cs.digitising_scotland.population_model.database.DBConnector;
-import uk.ac.standrews.cs.digitising_scotland.population_model.model.Person;
-import uk.ac.standrews.cs.digitising_scotland.population_model.model.PersonFactory;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.database.DBConnector;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.old.Person;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.old.PersonFactory;
 
 import java.io.IOException;
 import java.sql.Connection;

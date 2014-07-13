@@ -126,4 +126,8 @@ public class OrganicPerson implements IPerson{
     public List<Integer> getPartnerships() {
         return partnerships;
     }
+
+    @Override
+    public int getParentsPartnership() {
+        throw new RuntimeException("unimplemented");    }
 }

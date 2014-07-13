@@ -23,7 +23,7 @@ import java.util.Date;
 /**
  * Created by graham on 03/07/2014.
  */
-class PopulationLogic {
+public class PopulationLogic {
 
     private static final int MINIMUM_MOTHER_AGE_AT_CHILDBIRTH = 12;
     private static final int MAXIMUM_MOTHER_AGE_AT_CHILDBIRTH = 50;

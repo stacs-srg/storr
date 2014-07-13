@@ -1,13 +1,13 @@
 package uk.ac.standrews.cs.digitising_scotland.linkage.event_records;
 
-import uk.ac.standrews.cs.digitising_scotland.population_model.model.DBBackedPartnership;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPartnership;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPerson;
-import uk.ac.standrews.cs.digitising_scotland.population_model.model.Person;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPopulation;
 import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
 
-import java.util.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * A representation of a Death Record in the form used by the Digitising Scotland Project.
@@ -88,11 +88,9 @@ public class DeathRecord extends IndividualRecord {
     private String spouses_names;
     private String spouses_occupations;
 
-    public DeathRecord(final Person person) {
+    public DeathRecord(final IPerson person, IPopulation population) {
 
         death_date = new DateRecord();
-
-        final DBBackedPartnership family = person.getParentsFamily();
 
         // Attributes associated with individual
         setUid(String.valueOf(person.getId()));
@@ -103,27 +101,16 @@ public class DeathRecord extends IndividualRecord {
         setDeathCauseA(person.getCauseOfDeath());
 
         Date birth_date = person.getBirthDate();
-        Date death_date = (Date) person.getDeathDate();
+        Date death_date = person.getDeathDate();
 
         processDates(birth_date, death_date);
 
-        if (family != null) { // could refactor this with the **new** bride and groom methods...
+        int parents_partnership_id = person.getParentsPartnership();
+        if (parents_partnership_id != -1) {
 
-            // Attributes associated with individual's parents
-            for (final Person parent : family.getPartners()) {
-                if (parent.getSex() == IPerson.MALE) { // the father
-
-                    setFathersForename(parent.getFirstName());
-                    setFathersSurname(getRecordedParentsSurname(parent.getSurname(), person.getSurname()));
-                    setFathersOccupation(parent.getOccupation());
-                } else { // the mother
-
-                    setMothersForename(parent.getFirstName());
-                    setMothersSurname(parent.getSurname());
-                    setMothersMaidenSurname(parent.getMaidenName());
-                }
-            }
-        }
+            final IPartnership parents_partnership = population.findPartnership(parents_partnership_id);
+            setParentAttributes(person, population, parents_partnership);
+         }
     }
 
     public String getDeathDay() {

@@ -33,7 +33,7 @@ public class PopulationConverter {
     private final ProgressIndicator progress_indicator;
 
 
-    public PopulationConverter(final IPopulation population, final IPopulationWriter writer, final ProgressIndicator progress_indicator) {
+    public PopulationConverter(final IPopulation population, final IPopulationWriter writer, final ProgressIndicator progress_indicator) throws Exception {
 
         this.population = population;
         this.writer = writer;
@@ -42,7 +42,7 @@ public class PopulationConverter {
         initialiseProgressIndicator();
     }
 
-    public PopulationConverter(final IPopulation population, final IPopulationWriter writer) {
+    public PopulationConverter(final IPopulation population, final IPopulationWriter writer) throws Exception {
 
         this(population, writer, null);
     }
@@ -62,7 +62,7 @@ public class PopulationConverter {
         }
     }
 
-    private void initialiseProgressIndicator() {
+    private void initialiseProgressIndicator() throws Exception {
 
         if (progress_indicator != null) {
             progress_indicator.setTotalSteps(population.getNumberOfPeople() + population.getNumberOfPartnerships());

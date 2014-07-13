@@ -1,9 +1,9 @@
 package uk.ac.standrews.cs.digitising_scotland.linkage.tools;
 
-import uk.ac.standrews.cs.digitising_scotland.linkage.database.BirthRecordIterator;
-import uk.ac.standrews.cs.digitising_scotland.linkage.database.DeathRecordIterator;
-import uk.ac.standrews.cs.digitising_scotland.linkage.database.MarriageRecordIterator;
-import uk.ac.standrews.cs.digitising_scotland.linkage.database.RecordIterator;
+import uk.ac.standrews.cs.digitising_scotland.linkage.old.BirthRecordIterator;
+import uk.ac.standrews.cs.digitising_scotland.linkage.old.DeathRecordIterator;
+import uk.ac.standrews.cs.digitising_scotland.linkage.old.MarriageRecordIterator;
+import uk.ac.standrews.cs.digitising_scotland.linkage.old.RecordIterator2;
 import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
 import uk.ac.standrews.cs.digitising_scotland.util.PercentageProgressIndicator;
 import uk.ac.standrews.cs.digitising_scotland.util.ProgressIndicator;
@@ -61,7 +61,7 @@ public class GenerateEventRecords {
         TimeManipulation.reportElapsedTime(start_time);
     }
 
-    private static void exportRecords(final RecordIterator<?> records, final String records_path_string, final int number_of_progress_updates) throws IOException {
+    private static void exportRecords(final RecordIterator2<?> records, final String records_path_string, final int number_of_progress_updates) throws IOException {
 
         Path records_path = Paths.get(records_path_string);
         FileManipulation.createParentDirectoryIfDoesNotExist(records_path);

@@ -17,16 +17,16 @@
 package uk.ac.standrews.cs.digitising_scotland.population_model.transform.old;
 
 import uk.ac.standrews.cs.digitising_scotland.population_model.config.PopulationProperties;
-import uk.ac.standrews.cs.digitising_scotland.population_model.database.DBConnector;
-import uk.ac.standrews.cs.digitising_scotland.population_model.generation.distributions.FemaleFirstNameDistribution;
-import uk.ac.standrews.cs.digitising_scotland.population_model.generation.distributions.FileBasedEnumeratedDistribution;
-import uk.ac.standrews.cs.digitising_scotland.population_model.generation.distributions.InconsistentWeightException;
-import uk.ac.standrews.cs.digitising_scotland.population_model.generation.distributions.MaleFirstNameDistribution;
-import uk.ac.standrews.cs.digitising_scotland.population_model.generation.distributions.SurnameDistribution;
-import uk.ac.standrews.cs.digitising_scotland.population_model.generation.util.RandomFactory;
-import uk.ac.standrews.cs.digitising_scotland.population_model.model.CompactPartnership;
-import uk.ac.standrews.cs.digitising_scotland.population_model.model.CompactPerson;
-import uk.ac.standrews.cs.digitising_scotland.population_model.model.CompactPopulation;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.database.DBConnector;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.FemaleFirstNameDistribution;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.FileBasedEnumeratedDistribution;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.InconsistentWeightException;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.MaleFirstNameDistribution;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.SurnameDistribution;
+import uk.ac.standrews.cs.digitising_scotland.population_model.util.RandomFactory;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.in_memory.CompactPartnership;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.in_memory.CompactPerson;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.in_memory.CompactPopulation;
 import uk.ac.standrews.cs.digitising_scotland.util.ArrayIterator;
 import uk.ac.standrews.cs.digitising_scotland.util.DBManipulation;
 import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;

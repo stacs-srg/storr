@@ -17,7 +17,7 @@
 package uk.ac.standrews.cs.digitising_scotland.population_model.transform;
 
 import uk.ac.standrews.cs.digitising_scotland.population_model.config.PopulationProperties;
-import uk.ac.standrews.cs.digitising_scotland.population_model.database.DBConnector;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.database.DBConnector;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPartnership;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPerson;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPopulationWriter;
@@ -93,7 +93,7 @@ public class DBPopulationWriter implements IPopulationWriter {
         recordPartnerWithinPartnership(partnership_id, partnership.getPartner1Id());
         recordPartnerWithinPartnership(partnership_id, partnership.getPartner2Id());
 
-        for (final Integer child_id : partnership.getChildren()) {
+        for (final Integer child_id : partnership.getChildIds()) {
             recordChildWithinPartnership(partnership_id, child_id);
         }
     }

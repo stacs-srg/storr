@@ -19,7 +19,8 @@ package uk.ac.standrews.cs.digitising_scotland.population_model.nightly;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
-import uk.ac.standrews.cs.digitising_scotland.population_model.model.CompactPopulation;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.in_memory.CompactPopulation;
+import uk.ac.standrews.cs.digitising_scotland.util.PercentageProgressIndicator;
 import uk.ac.standrews.cs.test.category.Slow;
 
 /**
@@ -45,6 +46,6 @@ public class CapacityTest {
          * -d64: Will enable 64-bit JVM -Xms512m: Will set initial heap size as 512 MB -Xmx4g: Will set maximum heap size as 4 GB
          */
 
-        new CompactPopulation(POPULATION_SIZE, CompactPopulation.START_YEAR, CompactPopulation.END_YEAR, null);
+        new CompactPopulation(POPULATION_SIZE, CompactPopulation.START_YEAR, CompactPopulation.END_YEAR, new PercentageProgressIndicator(10));
     }
 }

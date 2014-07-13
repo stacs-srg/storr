@@ -15,17 +15,18 @@
  * <http://www.gnu.org/licenses/>.
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.model;
-import uk.ac.standrews.cs.digitising_scotland.population_model.generation.distributions.AgeAtDeathDistribution;
-import uk.ac.standrews.cs.digitising_scotland.population_model.generation.distributions.Distribution;
+
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.AgeAtDeathDistribution;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.Distribution;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.UniformDistribution;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.UniformSexDistribution;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.in_memory.CompactPopulation;
+import uk.ac.standrews.cs.digitising_scotland.population_model.util.RandomFactory;
+import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-
-import uk.ac.standrews.cs.digitising_scotland.population_model.generation.distributions.UniformDistribution;
-import uk.ac.standrews.cs.digitising_scotland.population_model.generation.distributions.UniformSexDistribution;
-import uk.ac.standrews.cs.digitising_scotland.population_model.generation.util.RandomFactory;
-import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
 
 /**
  * Created by victor on 11/06/14.
