@@ -46,6 +46,12 @@ public class Pair<L, R> {
         return right;
     }
 
+    @Override
+    public String toString() {
+
+        return "Pair [left=" + left + ", right=" + right + "]";
+    }
+
     /* (non-Javadoc)
      * @see java.lang.Object#hashCode()
      */
