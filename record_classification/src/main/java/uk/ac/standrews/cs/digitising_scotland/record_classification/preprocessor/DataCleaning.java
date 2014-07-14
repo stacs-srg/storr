@@ -31,8 +31,13 @@ import com.google.common.collect.Multiset;
  */
 public class DataCleaning {
 
+    /** The Constant TOKENLIMIT. */
     private static final int TOKENLIMIT = 2;
+
+    /** The Constant SIMILARITY. */
     private static final double SIMILARITY = 0.75;
+
+    /** The word multiset. */
     private Multiset<String> wordMultiset;
 
     /**
@@ -52,6 +57,12 @@ public class DataCleaning {
         return cleanedBucket;
     }
 
+    /**
+     * Performs cleaning on the goldstandard tokensets of a record.
+     *
+     * @param record the record to clean
+     * @return the record after cleaning
+     */
     private Record cleanRecord(final Record record) {
 
         Set<CodeTriple> set = record.getGoldStandardClassificationSet();
@@ -63,10 +74,16 @@ public class DataCleaning {
         return record;
     }
 
-    private TokenSet clean(final TokenSet ts) {
+    /**
+     * Performs cleaning on a {@link TokenSet}.
+     *
+     * @param tokenSet the tokenSet to clean.
+     * @return the token set after cleaning
+     */
+    private TokenSet clean(final TokenSet tokenSet) {
 
         TokenSet cleaned = new TokenSet();
-        Iterator<String> it = ts.iterator();
+        Iterator<String> it = tokenSet.iterator();
         while (it.hasNext()) {
             String token = it.next();
             if (wordMultiset.count(token) < TOKENLIMIT) {
@@ -80,19 +97,36 @@ public class DataCleaning {
         return cleaned;
     }
 
+    /**
+     * Corrects a token to the most similar higher occurrence term.
+     *
+     * @param token the token to correct
+     * @return the highest similarity match
+     */
     private String correct(final String token) {
 
         AbstractStringMetric metric = new Levenshtein();
-        List<Pair<String, Float>> possibleMatches = new ArrayList<>();
-
-        possibleMatches = getPossibleMatches(token, metric);
+        List<Pair<String, Float>> possibleMatches = getPossibleMatches(token, metric);
         sortPossibleMatches(possibleMatches);
-        System.out.println(possibleMatches);
-
         String bestMatch = getBestMatch(token, possibleMatches);
+        printDebugInfo(token, bestMatch);
         return bestMatch;
     }
 
+    private void printDebugInfo(final String token, String bestMatch) {
+
+        if (!token.equals(bestMatch)) {
+            System.out.println(token + "\t corrected to \t" + bestMatch);
+        }
+    }
+
+    /**
+     * Gets the possible matches.
+     *
+     * @param token the token
+     * @param metric the metric
+     * @return the possible matches
+     */
     private List<Pair<String, Float>> getPossibleMatches(final String token, final AbstractStringMetric metric) {
 
         List<Pair<String, Float>> possibleMatches = new ArrayList<>();
@@ -109,6 +143,13 @@ public class DataCleaning {
         return possibleMatches;
     }
 
+    /**
+     * Gets the best match.
+     *
+     * @param token the token
+     * @param possibleMatches the possible matches
+     * @return the best match
+     */
     private String getBestMatch(final String token, final List<Pair<String, Float>> possibleMatches) {
 
         String bestMatch;
@@ -121,6 +162,11 @@ public class DataCleaning {
         return bestMatch;
     }
 
+    /**
+     * Sort possible matches.
+     *
+     * @param possibleMatches the possible matches
+     */
     private void sortPossibleMatches(final List<Pair<String, Float>> possibleMatches) {
 
         Comparator<Pair<String, Float>> c = new Comparator<Pair<String, Float>>() {
@@ -155,6 +201,13 @@ public class DataCleaning {
 
     }
 
+    /**
+     * The main method.
+     *
+     * @param args the arguments
+     * @throws IOException Signals that an I/O exception has occurred.
+     * @throws InputFormatException the input format exception
+     */
     public static void main(final String[] args) throws IOException, InputFormatException {
 
         File training = new File(args[0]);
@@ -170,9 +223,7 @@ public class DataCleaning {
             Set<CodeTriple> ct = record.getGoldStandardClassificationSet();
             for (CodeTriple codeTriple : ct) {
                 TokenSet tokens = new TokenSet(codeTriple.getTokenSet());
-                System.out.print(tokens + "\t-\t");
                 tokens = cleaner.clean(tokens);
-                System.out.print(tokens + "\n");
             }
 
         }
