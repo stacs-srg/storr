@@ -1,7 +1,14 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.preprocessor;
 
+import java.util.Set;
+
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeTriple;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
+import uk.ac.standrews.cs.digitising_scotland.tools.analysis.UniqueWordCounter;
+
+import com.google.common.collect.HashMultiset;
+import com.google.common.collect.Multiset;
 
 /**
  * Reads a {@link Bucket} and performs data cleaning such as spelling correction and feature selection on the descriptions in each {@link Record}.
@@ -10,6 +17,8 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
  *
  */
 public abstract class DataCleaning {
+
+    private Multiset<String> wordMultiset;
 
     /**
      * Currently a dummy method.
@@ -28,4 +37,18 @@ public abstract class DataCleaning {
         return cleanedBucket;
     }
 
+    private void buildTokenOccurenceMap(Bucket bucket) {
+
+        wordMultiset = HashMultiset.create();
+        String line;
+
+        for (Record r : bucket) {
+            Set<CodeTriple> set = r.getGoldStandardClassificationSet();
+            for (CodeTriple codeTriple : set) {
+                line = codeTriple.getTokenSet().toString();
+                UniqueWordCounter.countWordsInLine(wordMultiset, line);
+            }
+        }
+
+    }
 }

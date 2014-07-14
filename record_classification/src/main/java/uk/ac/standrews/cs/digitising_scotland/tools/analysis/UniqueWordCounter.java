@@ -40,6 +40,9 @@ public final class UniqueWordCounter {
         getNumberOfUniqueWords(new File(args[0]));
     }
 
+    /**
+     * Instantiates a new unique word counter.
+     */
     private UniqueWordCounter() {
 
         //utility class - private constructor
@@ -49,7 +52,6 @@ public final class UniqueWordCounter {
      * Passes each line of a document through an {@link Analyzer} to remove stop words then counts the total number of unique words in that file.
      * This result is then written to file.
      * @param inputFile File to count unique words of.
-     * @param writeToFile File to write results to.
      * @return number of unique words.
      * @throws IOException io error.
      */
@@ -60,10 +62,7 @@ public final class UniqueWordCounter {
 
         String line = "";
         while ((line = br.readLine()) != null) {
-            TokenStreamIterator<CharTermAttribute> ts = TokenStreamIteratorFactory.newTokenStreamIterator(line);
-            while (ts.hasNext()) {
-                wordMultiset.add(ts.next().toString().trim().toLowerCase());
-            }
+            wordMultiset = countWordsInLine(wordMultiset, line);
         }
 
         StringBuilder sb = new StringBuilder();
@@ -74,5 +73,21 @@ public final class UniqueWordCounter {
         br.close();
 
         return 0;
+    }
+
+    /**
+     * Counts the number of words in a string.
+     *
+     * @param wordMultiset the word multiset to add words to. This keeps track of how many time each word appears.
+     * @param line the line to count. Line is split into tokens and these are added to the multiset.
+     * @return the multiset with new words added
+     */
+    public static Multiset<String> countWordsInLine(final Multiset<String> wordMultiset, final String line) {
+
+        TokenStreamIterator<CharTermAttribute> ts = TokenStreamIteratorFactory.newTokenStreamIterator(line);
+        while (ts.hasNext()) {
+            wordMultiset.add(ts.next().toString().trim().toLowerCase());
+        }
+        return wordMultiset;
     }
 }
