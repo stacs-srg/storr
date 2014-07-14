@@ -25,6 +25,7 @@ public abstract class RecordFactory {
 
     /** The Constant ENCODING. */
     private static final String ENCODING = "UTF-8";
+    private static int highestId = 0;
 
     /**
      * Creates a list of {@link Record} objects from a file where the records need to be coded.
@@ -68,7 +69,7 @@ public abstract class RecordFactory {
         int year = Integer.parseInt(lineSplit[1]);
         int imageQuality = Integer.parseInt(lineSplit[2]);
         OriginalData originalData = new OriginalData(description, year, imageQuality, inputFile.getPath());
-        int id = (int) Math.rint(Math.random() * 1000);
+        int id = highestId++;
         Record newRecord = new Record(id, originalData);
         // newRecord.addClassificationSet(getClassificationSet(line));
 
