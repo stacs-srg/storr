@@ -60,6 +60,14 @@
             <organizationUrl>http://www.st-andrews.ac.uk/</organizationUrl>
             <roles><role>Student Intern 2014</role></roles>
         </developer>
+        <developer>
+            <id/>
+            <name>Tom Dalton</name>
+            <email>tsd4@st-andrews.ac.uk</email>
+            <organization>University of St Andrews</organization>
+            <organizationUrl>http://www.st-andrews.ac.uk/</organizationUrl>
+            <roles><role>Student Intern 2014</role></roles>
+        </developer>
     </developers>
     <contributors>
         <contributor>
