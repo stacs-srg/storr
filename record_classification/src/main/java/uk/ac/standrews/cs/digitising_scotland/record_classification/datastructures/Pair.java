@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.digitising_scotland.record_classification.resolver;
+package uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures;
 
 /**
  * Generic class representing a pair of objects.

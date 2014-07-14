@@ -6,7 +6,7 @@ import java.util.Set;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.lookup.TokenizerCleaner;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.OriginalData;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.CodeTriple;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeTriple;
 
 /**
  * The Class Record. Represents a Record and all associated data, including that which is supplied by NRS.

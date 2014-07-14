@@ -1,9 +1,8 @@
-package uk.ac.standrews.cs.digitising_scotland.record_classification.resolver;
+package uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code;
 
 import java.io.Serializable;
 
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.TokenSet;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
 
 /**
  * This class represents a classification, either gold standard or from a classifier.

@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.digitising_scotland.record_classification.resolver;
+package uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -6,8 +6,9 @@ import java.util.List;
 import java.util.Map;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.AbstractClassifier;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.TokenSet;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Pair;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeTriple;
 
 /**
  * The Class TokenClassificationCache provides a caching facility to an {@link AbstractClassifier}.
