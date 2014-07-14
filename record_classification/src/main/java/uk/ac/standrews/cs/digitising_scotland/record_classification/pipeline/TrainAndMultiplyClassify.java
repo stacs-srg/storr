@@ -128,7 +128,7 @@ public final class TrainAndMultiplyClassify {
         final Bucket uniqueRecordsOnly = BucketFilter.uniqueRecordsOnly(allClassified);
         generateAndPrintStats(uniqueRecordsOnly);
 
-        System.out.println("Codes that were null and weren't adter chopping: " + CodeFactory.getInstance().codeMapNullCounter);
+        System.out.println("Codes that were null and weren't adter chopping: " + CodeFactory.getInstance().getCodeMapNullCounter());
     }
 
     private static void printStatusUpdate() {
@@ -136,7 +136,7 @@ public final class TrainAndMultiplyClassify {
         System.out.println("********** Training Classifier **********");
         System.out.println("Training with a dictionary size of: " + MachineLearningConfiguration.getDefaultProperties().getProperty("numFeatures"));
         System.out.println("Training with this number of output classes: " + MachineLearningConfiguration.getDefaultProperties().getProperty("numCategories"));
-        System.out.println("Codes that were null and weren't adter chopping: " + CodeFactory.getInstance().codeMapNullCounter);
+        System.out.println("Codes that were null and weren't adter chopping: " + CodeFactory.getInstance().getCodeMapNullCounter());
     }
 
     private static void generateActualCodeMappings(final Bucket bucket) {
