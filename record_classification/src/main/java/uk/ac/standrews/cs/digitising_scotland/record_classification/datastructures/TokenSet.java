@@ -12,14 +12,12 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.machinelearn
 import com.google.common.collect.LinkedHashMultiset;
 import com.google.common.collect.Multiset;
 
-// TODO: Auto-generated Javadoc
 /**
  *{@link TokenSet}s are used to represent a bag of tokens. Tokens in this context are strings that are whitespace delimited, ie single words.
  * TokenSets can contain multiple of the same token.
  * 
  * Created by fraserdunlop on 09/06/2014 at 10:06.
  */
-@SuppressWarnings("NullableProblems")
 public class TokenSet implements Serializable, Collection<String> {
 
     /** The Constant serialVersionUID. */

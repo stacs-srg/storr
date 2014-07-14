@@ -31,19 +31,25 @@ import com.google.common.collect.Multiset;
  */
 public class MachineLearningClassificationPipeline {
 
+    /** The Constant WORDLIMIT. */
     private static final int WORDLIMIT = 1;
+
+    /** The Constant CONFIDENCE_CHOP_LEVEL. */
     private static final double CONFIDENCE_CHOP_LEVEL = 0.3;
 
+    /** The cache. */
     private TokenClassificationCache cache;
+
+    /** The record cache. */
     private Map<String, Set<CodeTriple>> recordCache;
 
     /**
      * Constructs a new {@link MachineLearningClassificationPipeline} with the specified
      * {@link AbstractClassifier} used to perform the classification duties.
-     * 
-     * @param classifier
-     *            {@link AbstractClassifier} used for machine learning
+     *
+     * @param classifier            {@link AbstractClassifier} used for machine learning
      *            classification.
+     * @param trainingBucket the training bucket
      */
     public MachineLearningClassificationPipeline(final AbstractClassifier classifier, Bucket trainingBucket) {
 
@@ -54,9 +60,10 @@ public class MachineLearningClassificationPipeline {
 
     /**
      * Classify all records in a bucket.
-     * @param bucket
-     * @return
-     * @throws IOException
+     *
+     * @param bucket the bucket to classifiy
+     * @return bucket this is the bucket of classified records
+     * @throws IOException Signals that an I/O exception has occurred.
      */
     public Bucket classify(final Bucket bucket) throws IOException {
 
@@ -95,6 +102,13 @@ public class MachineLearningClassificationPipeline {
 
     }
 
+    /**
+     * Classify token set.
+     *
+     * @param cleanedTokenSet the cleaned token set
+     * @return the sets the
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
     private Set<CodeTriple> classifyTokenSet(final TokenSet cleanedTokenSet) throws IOException {
 
         ResolverMatrix resolverMatrix = new ResolverMatrix();
@@ -124,6 +138,13 @@ public class MachineLearningClassificationPipeline {
         return best;
     }
 
+    /**
+     * Populate matrix.
+     *
+     * @param tokenSetSet the token set set
+     * @param resolverMatrix the resolver matrix
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
     private void populateMatrix(final Multiset<TokenSet> tokenSetSet, final ResolverMatrix resolverMatrix) throws IOException {
 
         for (TokenSet tokenSet : tokenSetSet) {
@@ -132,6 +153,11 @@ public class MachineLearningClassificationPipeline {
         }
     }
 
+    /**
+     * Prepopulate cache.
+     *
+     * @param trainingBucket the training bucket
+     */
     private void prepopulateCache(final Bucket trainingBucket) {
 
         for (Record record : trainingBucket) {
@@ -141,6 +167,12 @@ public class MachineLearningClassificationPipeline {
 
     }
 
+    /**
+     * Gets the singly coded tripes.
+     *
+     * @param record the record
+     * @return the singly coded tripes
+     */
     protected List<CodeTriple> getSinglyCodedTripes(final Record record) {
 
         List<CodeTriple> singles = new ArrayList<>();

@@ -28,7 +28,7 @@ public final class FormatConverter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FormatConverter.class);
 
-    final static String charsetName = "UTF8";
+    private static final String CHARSET_NAME = "UTF8";
 
     /** The Constant CODLINELENGTH. */
     static final int CODLINELENGTH = 38;
@@ -68,7 +68,7 @@ public final class FormatConverter {
      */
     public static List<Record> convert(final File inputFile) throws IOException, InputFormatException {
 
-        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(inputFile), charsetName));
+        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(inputFile), CHARSET_NAME));
 
         String line = "";
         List<Record> recordList = new ArrayList<>();

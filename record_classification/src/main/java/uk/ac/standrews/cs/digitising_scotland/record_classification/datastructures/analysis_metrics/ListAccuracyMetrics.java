@@ -10,9 +10,11 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.CodeTriple;
 import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
 
-// TODO: Tidying!
 /**
  * Class representing the statistics about a bucket of Records.
+ * 
+ * Includes statisitics such as the number of records in the bucket, precision and recall statistics,
+ * average confidence, how many classifications have been correctly predicted etc.
  * 
  * @author jkc25
  */

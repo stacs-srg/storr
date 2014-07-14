@@ -6,7 +6,6 @@ import java.util.Set;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.exceptions.InputFormatException;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.CodeTriple;
 
-// TODO: Auto-generated Javadoc
 /**
  * Represents original data from NRS. Cannot be changed once set.
  * @author jkc25, frjd2
