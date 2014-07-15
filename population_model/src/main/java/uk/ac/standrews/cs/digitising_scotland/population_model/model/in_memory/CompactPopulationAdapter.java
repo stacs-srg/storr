@@ -372,7 +372,6 @@ public class CompactPopulationAdapter implements IPopulation {
             }
         }
         return -1;
-
     }
 
     private IPartnership getFullPartnership(final CompactPartnership partnership) {

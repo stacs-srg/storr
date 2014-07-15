@@ -16,6 +16,7 @@
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.model;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -53,7 +54,7 @@ public abstract class AbstractPartnership implements IPartnership {
 
     @Override
     public Date getMarriageDate() {
-        return marriage_date;
+        return (Date) marriage_date.clone();
     }
 
     @Override
@@ -63,6 +64,12 @@ public abstract class AbstractPartnership implements IPartnership {
 
     @Override
     public List<Integer> getPartnerIds() {
+
+        if (partner_ids == null) {
+            partner_ids = new ArrayList<>();
+            partner_ids.add(partner1_id);
+            partner_ids.add(partner2_id);
+        }
         return partner_ids;
     }
 

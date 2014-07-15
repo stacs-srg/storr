@@ -16,12 +16,11 @@
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.tools;
 
-import uk.ac.standrews.cs.digitising_scotland.population_model.model.in_memory.CompactPopulation;
-import uk.ac.standrews.cs.digitising_scotland.population_model.model.in_memory.CompactPopulationAdapter;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPopulation;
-import uk.ac.standrews.cs.digitising_scotland.population_model.model.database.DBPopulationWriter;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.PopulationConverter;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.database.DBPopulationWriter;
 import uk.ac.standrews.cs.digitising_scotland.util.PercentageProgressIndicator;
+import uk.ac.standrews.cs.digitising_scotland.util.ProgressIndicator;
 import uk.ac.standrews.cs.digitising_scotland.util.TimeManipulation;
 import uk.ac.standrews.cs.nds.util.CommandLineArgs;
 import uk.ac.standrews.cs.nds.util.Diagnostic;
@@ -31,9 +30,8 @@ import uk.ac.standrews.cs.nds.util.Diagnostic;
  *
  * @author Graham Kirby (graham.kirby@st-andrews.ac.uk)
  */
-public class NewPopulationToDB {
+public abstract class AbstractPopulationToDB {
 
-    // TODO document database dependency
 
     private static final String BATCH_SIZE_FLAG = "-b";
     private static final String NUMBER_OF_BATCHES_FLAG = "-n";
@@ -43,12 +41,9 @@ public class NewPopulationToDB {
     public static final int DEFAULT_NUMBER_OF_BATCHES = 1;
     public static final int DEFAULT_NUMBER_OF_PROGRESS_UPDATES = 10;
 
-    public static void main(final String[] args) throws Exception {
+    public abstract IPopulation getPopulation(int batch_size, ProgressIndicator indicator) throws Exception;
 
-        generatePopulation(args);
-    }
-
-    private static void generatePopulation(final String[] args) throws Exception {
+    protected void export(final String[] args) throws Exception {
 
         final int batch_size = CommandLineArgs.extractIntFromCommandLineArgs(args, BATCH_SIZE_FLAG, DEFAULT_BATCH_SIZE);
         final int number_of_batches = CommandLineArgs.extractIntFromCommandLineArgs(args, NUMBER_OF_BATCHES_FLAG, DEFAULT_NUMBER_OF_BATCHES);
@@ -74,13 +69,13 @@ public class NewPopulationToDB {
         Diagnostic.traceNoSource(number_of_batches + " batch" + (number_of_batches > 1 ? "es" : "") + " of population size " + batch_size);
     }
 
-    private static void generateBatch(final int batch_size, final int batch_number, final int number_of_progress_updates) throws Exception {
+    private void generateBatch(final int batch_size, final int batch_number, final int number_of_progress_updates) throws Exception {
 
         Diagnostic.traceNoSource("Generating batch " + (batch_number + 1));
 
         long start_time = System.currentTimeMillis();
-        final CompactPopulation population = new CompactPopulation(batch_size, new PercentageProgressIndicator(number_of_progress_updates));
-        final IPopulation population_interface = new CompactPopulationAdapter(population);
+
+        final IPopulation population_interface = getPopulation(batch_size, new PercentageProgressIndicator(number_of_progress_updates));
         final PopulationConverter converter = new PopulationConverter(population_interface, new DBPopulationWriter(), new PercentageProgressIndicator(number_of_progress_updates));
         TimeManipulation.reportElapsedTime(start_time);
 
@@ -90,9 +85,9 @@ public class NewPopulationToDB {
         TimeManipulation.reportElapsedTime(start_time);
     }
 
-    private static void usage() {
+    private void usage() {
 
-        System.out.println("Usage: java " + NewPopulationToDB.class.getSimpleName() + " " +
+        System.out.println("Usage: java " + getClass().getSimpleName() + " " +
                 BATCH_SIZE_FLAG + "<batch size> " +
                 NUMBER_OF_BATCHES_FLAG + "<number of batches> " +
                 NUMBER_OF_PROGRESS_UPDATES_FLAG + "<number of progress updates>");
