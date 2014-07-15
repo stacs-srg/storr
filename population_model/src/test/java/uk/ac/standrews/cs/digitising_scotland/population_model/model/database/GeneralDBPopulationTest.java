@@ -33,8 +33,7 @@ import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.Neg
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.NegativeWeightException;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.in_memory.CompactPopulationTestCases;
 import uk.ac.standrews.cs.digitising_scotland.population_model.util.RandomFactory;
-import uk.ac.standrews.cs.digitising_scotland.population_model.transform.DBPopulationWriter;
-import uk.ac.standrews.cs.digitising_scotland.population_model.transform.PopulationConverter;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.PopulationConverter;
 import uk.ac.standrews.cs.digitising_scotland.util.DBManipulation;
 
 import java.io.IOException;

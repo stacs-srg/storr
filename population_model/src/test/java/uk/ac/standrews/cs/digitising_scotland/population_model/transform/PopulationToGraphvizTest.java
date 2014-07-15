@@ -21,8 +21,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.InconsistentWeightException;
-import uk.ac.standrews.cs.digitising_scotland.population_model.model.in_memory.CompactPopulation;
-import uk.ac.standrews.cs.digitising_scotland.population_model.transform.old.PopulationToGraphviz;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPopulation;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.graphviz.PopulationToGraphviz;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -39,7 +39,7 @@ public class PopulationToGraphvizTest extends AbstractExporterTest {
     protected static final String INTENDED_SUFFIX = "_intended.dot";
     private static final String ACTUAL_SUFFIX = "_test.dot";
 
-    public PopulationToGraphvizTest(final CompactPopulation population, final String file_name) {
+    public PopulationToGraphvizTest(final IPopulation population, final String file_name) {
 
         super(population, file_name);
     }

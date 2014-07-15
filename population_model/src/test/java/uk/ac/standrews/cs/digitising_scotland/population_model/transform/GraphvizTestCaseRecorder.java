@@ -19,9 +19,9 @@ package uk.ac.standrews.cs.digitising_scotland.population_model.transform;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.InconsistentWeightException;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.NegativeDeviationException;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.NegativeWeightException;
-import uk.ac.standrews.cs.digitising_scotland.population_model.model.in_memory.CompactPopulation;
-import uk.ac.standrews.cs.digitising_scotland.population_model.transform.old.PopulationToFile;
-import uk.ac.standrews.cs.digitising_scotland.population_model.transform.old.PopulationToGraphviz;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPopulation;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.PopulationToFile;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.graphviz.PopulationToGraphviz;
 
 import java.io.IOException;
 
@@ -39,7 +39,7 @@ public class GraphvizTestCaseRecorder extends AbstractTestCaseRecorder {
     }
 
     @Override
-    protected PopulationToFile getExporter(final CompactPopulation population, final String path_string) throws IOException, InconsistentWeightException {
+    protected PopulationToFile getExporter(final IPopulation population, final String path_string) throws IOException, InconsistentWeightException {
 
         return new PopulationToGraphviz(population, path_string);
     }

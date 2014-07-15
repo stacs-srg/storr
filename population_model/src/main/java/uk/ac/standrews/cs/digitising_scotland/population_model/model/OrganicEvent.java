@@ -21,4 +21,5 @@ package uk.ac.standrews.cs.digitising_scotland.population_model.model;
  */
 public class OrganicEvent {
 
+    // TODO move Organic classes to organic package
 }

@@ -14,23 +14,25 @@
  * You should have received a copy of the GNU General Public License along with population_model. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-package uk.ac.standrews.cs.digitising_scotland.population_model.tools.old;
+package uk.ac.standrews.cs.digitising_scotland.population_model.tools;
 
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.NegativeDeviationException;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.NegativeWeightException;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPopulation;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.in_memory.CompactPopulationAdapter;
 import uk.ac.standrews.cs.nds.util.CommandLineArgs;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.InconsistentWeightException;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.in_memory.CompactPopulation;
-import uk.ac.standrews.cs.digitising_scotland.population_model.transform.old.PopulationToGraphviz;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.gedcom.PopulationToGEDCOM;
 
 import java.io.IOException;
 
 /**
- * Manual test of Graphviz export.
- * 
+ * Generates a population and exports to a GEDCOM file.
+ *
  * @author Graham Kirby (graham.kirby@st-andrews.ac.uk)
  */
-public class GeneratePopulationInGraphvizFile {
+public class GeneratePopulationInGEDCOMFile {
 
     private static final String FILE_FLAG = "f";
     private static final String SIZE_FLAG = "s";
@@ -44,8 +46,9 @@ public class GeneratePopulationInGraphvizFile {
 
             int population_size = Integer.parseInt(population_size_string);
             final CompactPopulation population = new CompactPopulation(population_size);
+            final IPopulation population_interface = new CompactPopulationAdapter(population);
 
-            final PopulationToGraphviz exporter = new PopulationToGraphviz(population, path_string);
+            final PopulationToGEDCOM exporter = new PopulationToGEDCOM(population_interface, path_string);
             System.out.println("exporting...");
 
             exporter.export();
@@ -58,6 +61,6 @@ public class GeneratePopulationInGraphvizFile {
 
     private static void usage() {
 
-        System.out.println("Usage: java GeneratePopulationInGraphvizFile -f<file path> -s<population size>");
+        System.out.println("Usage: java GeneratePopulationInGEDCOMFile -f<file path> -s<population size>");
     }
 }
