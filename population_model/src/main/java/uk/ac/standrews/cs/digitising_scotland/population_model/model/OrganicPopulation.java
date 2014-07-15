@@ -141,6 +141,7 @@ public class OrganicPopulation implements IPopulation{
     public IPartnership findPartnership(int id) {
         return null;
     }
+    
 
     @Override
     public int getNumberOfPeople() {
