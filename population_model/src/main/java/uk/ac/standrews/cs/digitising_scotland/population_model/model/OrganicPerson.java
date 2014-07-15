@@ -35,7 +35,7 @@ public class OrganicPerson implements IPerson{
     private Date dateOfDeath;
     private List<Integer> partnerships;
 
-    private int daysToLive = DateManipulation.dateToDays(dateOfDeath) -  DateManipulation.dateToDays(dateOfBirth);
+//    private int daysToLive = DateManipulation.dateToDays(dateOfDeath) -  DateManipulation.dateToDays(dateOfBirth);
     private OrganicTimeline timeline = null;
 
     public int getDayOfLife(Date date){

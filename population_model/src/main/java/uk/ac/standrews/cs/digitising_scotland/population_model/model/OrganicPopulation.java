@@ -27,6 +27,7 @@ import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.Date;
 
 /**
  * Created by victor on 11/06/14.
@@ -76,15 +77,35 @@ public class OrganicPopulation implements IPopulation{
     public void makeSeed(int size){
 
         for(int i=0; i< size; i++) {
+
+            Date currentDateOfBirth;
+            int age = seed_age_distribution.getSample();
+            int auxiliary = (int)((age-1)*(DAYS_PER_YEAR))+RandomFactory.getRandomInt(1, (int)DAYS_PER_YEAR);
+            auxiliary = DateManipulation.dateToDays(START_YEAR,1,1)-auxiliary;
+
+            currentDateOfBirth = DateManipulation.daysToDate(auxiliary);
+
+
             if (sex_distribution.getSample())
-                people.add(new OrganicPerson(seed_age_distribution.getSample(), 'M'));
+                people.add(new OrganicPerson(currentDateOfBirth, 'M'));
             else
-                people.add(new OrganicPerson(seed_age_distribution.getSample(), 'F'));
+                people.add(new OrganicPerson(currentDateOfBirth, 'F'));
         }
     }
 
     public void makeSeed(){
         makeSeed(DEFAULT_SEED_SIZE);
+    }
+
+    public void generate_timelines(){
+        for(int i=0; i< people.size();i++){
+            if(people.get(i).getTimeline() == null){
+                OrganicPerson currentPerson = people.get(i);
+                OrganicTimeline currentTimeline;
+                currentTimeline = new OrganicTimeline(currentPerson.getBirthDate(), age_at_death_distribution.getSample());
+                currentPerson.setTimeline(currentTimeline);
+            }
+        }
     }
 
     public void mainIteration(){
@@ -120,10 +141,11 @@ public class OrganicPopulation implements IPopulation{
     public IPartnership findPartnership(int id) {
         return null;
     }
+    
 
     @Override
     public int getNumberOfPeople() {
-        return 0;
+        return people.size();
     }
 
     @Override
@@ -139,5 +161,16 @@ public class OrganicPopulation implements IPopulation{
     @Override
     public void setConsistentAcrossIterations(boolean consistent_across_iterations) {
 
+    }
+
+    //Testing purposes
+    public static void main(String[] args){
+        System.out.println("--------MAIN HERE---------");
+        OrganicPopulation op= new OrganicPopulation();
+        op.makeSeed();
+        op.generate_timelines();
+        for(int i=0;i<op.getNumberOfPeople();i++){
+            System.out.println(op.people.get(i).getBirthDate());
+        }
     }
 }

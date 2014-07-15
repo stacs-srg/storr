@@ -31,6 +31,12 @@ public class RandomFactory {
     private static boolean deterministic = true;
     private static boolean configured = false;
 
+    public static int getRandomInt(int low, int high){
+        Random rand = new Random();
+        int randomNum = rand.nextInt((high - low) + 1) + low;
+        return randomNum;
+    }
+
     public static synchronized Random getRandom() {
 
         if (!configured) {

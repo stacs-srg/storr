@@ -19,8 +19,9 @@ package uk.ac.standrews.cs.digitising_scotland.population_model.transform;
 import org.junit.runners.Parameterized.Parameters;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.NegativeDeviationException;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.NegativeWeightException;
-import uk.ac.standrews.cs.digitising_scotland.population_model.model.in_memory.CompactPopulation;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IDFactory;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPopulation;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.in_memory.CompactPopulation;
 import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
 
 import java.io.BufferedReader;
@@ -40,7 +41,7 @@ public abstract class AbstractExporterTest {
 
     protected static final String TEST_DIRECTORY_PATH_STRING = "src/test/resources/";
 
-    protected final CompactPopulation population;
+    protected final IPopulation population;
     protected final String file_name_root;
 
     protected static final int[] TEST_CASE_POPULATION_SIZES = new int[]{10, 30, 50, 200};
@@ -53,7 +54,7 @@ public abstract class AbstractExporterTest {
         }
     }
 
-    public AbstractExporterTest(final CompactPopulation population, final String file_name_root) {
+    public AbstractExporterTest(final IPopulation population, final String file_name_root) {
 
         this.population = population;
         this.file_name_root = file_name_root;

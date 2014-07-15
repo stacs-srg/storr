@@ -28,10 +28,28 @@ public class OrganicTimeline {
 
     private Date startDate;
     private Date endDate;
-    private int duration = DateManipulation.dateToDays(endDate) - DateManipulation.dateToDays(startDate);
+    private int duration;// = DateManipulation.dateToDays(endDate) - DateManipulation.dateToDays(startDate);
     private int currentDay;
 
     private HashMap<Integer, OrganicEvent> events = new HashMap<Integer, OrganicEvent>();
+
+    public OrganicTimeline(Date date){
+        startDate = date;
+    }
+
+    public OrganicTimeline(Date date1, Date date2){
+        startDate = date1;
+        endDate = date2;
+    }
+
+    public OrganicTimeline(Date date, int days){
+        startDate = date;
+        duration = days;
+        //endDate = DateManipulation.daysToDate(DateManipulation.dateToDays(startDate) + days);
+    }
+
+    public OrganicTimeline(){
+    }
 
     public void addEvent(int day, OrganicEvent event){
         events.put(day, event);
@@ -52,6 +70,11 @@ public class OrganicTimeline {
 
         if(removalKey != -1)
             events.remove(removalKey);
+    }
+
+    public boolean isDateAvailable(Date date){
+        int day = DateManipulation.dateToDays(date) - DateManipulation.dateToDays(startDate);
+        return events.containsKey(day);
     }
 
     public Date getStartDate() {

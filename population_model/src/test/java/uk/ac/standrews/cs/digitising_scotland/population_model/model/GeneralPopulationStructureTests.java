@@ -204,6 +204,28 @@ public abstract class GeneralPopulationStructureTests {
         }
     }
 
+    @Test
+    public void parentsAndChildrenConsistent() {
+
+        for (IPartnership partnership : population.getPartnerships()) {
+
+            assertParentsAndChildrenConsistent(partnership);
+        }
+    }
+
+    private void assertParentsAndChildrenConsistent(IPartnership partnership) {
+
+        List<Integer> child_ids = partnership.getChildIds();
+        if (child_ids != null) {
+
+            for (int child_id : child_ids) {
+
+                IPerson child = population.findPerson(child_id);
+                assertEquals(child.getParentsPartnership(), partnership.getId());
+            }
+        }
+    }
+
     private void assertParentsHaveSensibleAgesAtBirth(IPartnership partnership) throws Exception {
 
         IPerson partner1 = population.findPerson(partnership.getPartner1Id());
