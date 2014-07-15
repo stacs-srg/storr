@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License along with population_model. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-package uk.ac.standrews.cs.digitising_scotland.population_model.transform;
+package uk.ac.standrews.cs.digitising_scotland.population_model.model.gedcom;
 
 import org.junit.Ignore;
 import org.junit.Test;
@@ -23,6 +23,7 @@ import org.junit.runners.Parameterized;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.InconsistentWeightException;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPopulation;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.gedcom.PopulationToGEDCOM;
+import uk.ac.standrews.cs.digitising_scotland.population_model.transform.AbstractExporterTest;
 
 import java.io.IOException;
 import java.nio.file.Path;

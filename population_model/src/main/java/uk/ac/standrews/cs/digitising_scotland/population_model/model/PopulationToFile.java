@@ -99,7 +99,15 @@ public abstract class PopulationToFile {
         }
     }
 
-    protected String padId(final int index) {
+    protected String individualLabel(int person_id) {
+        return "p" + padId(person_id);
+    }
+
+    protected String familyLabel(int partnership_id) {
+        return "m" + padId(partnership_id);
+    }
+
+    private String padId(final int index) {
 
         return formatter.format(index);
     }

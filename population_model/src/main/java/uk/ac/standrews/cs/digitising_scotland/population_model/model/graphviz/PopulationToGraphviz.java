@@ -71,7 +71,7 @@ public class PopulationToGraphviz extends PopulationToFile {
     @Override
     protected void outputIndividual(final PrintWriter writer, IPerson person) {
 
-        writer.println(personLabel(person.getId()) + getIndividualNodeAttributes(person));
+        writer.println(individualLabel(person.getId()) + getIndividualNodeAttributes(person));
 
         List<Integer> partnership_ids = person.getPartnerships();
         if (partnership_ids != null) {
@@ -93,7 +93,7 @@ public class PopulationToGraphviz extends PopulationToFile {
         if (!personHasParents(person)) {
             final int id_of_next_person_with_parents = findIdOfClosestPersonWithParents(person);
             if (id_of_next_person_with_parents != -1) {
-                writer.println("{ rank = same; " + personLabel(person.getId()) + " " + personLabel(id_of_next_person_with_parents) + "; }");
+                writer.println("{ rank = same; " + individualLabel(person.getId()) + " " + individualLabel(id_of_next_person_with_parents) + "; }");
             }
         }
     }
@@ -177,19 +177,11 @@ public class PopulationToGraphviz extends PopulationToFile {
         final int partner1_id = partnership.getPartner1Id();
         final int partner2_id = partnership.getPartner2Id();
 
-        writer.println(personLabel(partner1_id) + ARC + partnershipLabel(partnership_id) + FAMILY_ARC_ATTRIBUTES);
-        writer.println(partnershipLabel(partnership_id) + ARC + personLabel(partner2_id) + FAMILY_ARC_ATTRIBUTES);
-        writer.println(partnershipLabel(partnership_id) + getFamilyNodeAttributes(partnership));
+        writer.println(individualLabel(partner1_id) + ARC + familyLabel(partnership_id) + FAMILY_ARC_ATTRIBUTES);
+        writer.println(familyLabel(partnership_id) + ARC + individualLabel(partner2_id) + FAMILY_ARC_ATTRIBUTES);
+        writer.println(familyLabel(partnership_id) + getFamilyNodeAttributes(partnership));
 
-        writer.println("{ rank = same; " + personLabel(partner1_id) + " " + personLabel(partner2_id) + " " + partnershipLabel(partnership_id) + "; }");
-    }
-
-    private String personLabel(int person_id) {
-        return "p" + person_id;
-    }
-
-    private String partnershipLabel(int partnership_id) {
-        return "m" + partnership_id;
+        writer.println("{ rank = same; " + individualLabel(partner1_id) + " " + individualLabel(partner2_id) + " " + familyLabel(partnership_id) + "; }");
     }
 
     private void outputChildren(final PrintWriter writer, final IPartnership partnership) {
@@ -200,7 +192,7 @@ public class PopulationToGraphviz extends PopulationToFile {
             final int partnership_id = partnership.getId();
 
             for (final int child_id : child_ids) {
-                writer.println(partnershipLabel(partnership_id) + ARC + personLabel(child_id));
+                writer.println(familyLabel(partnership_id) + ARC + individualLabel(child_id));
             }
         }
     }

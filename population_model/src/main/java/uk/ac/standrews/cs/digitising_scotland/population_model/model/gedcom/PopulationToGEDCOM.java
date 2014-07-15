@@ -41,15 +41,15 @@ public class PopulationToGEDCOM extends PopulationToFile {
 
     private static final String CHAR_SET = "ASCII";
     private static final String GEDCOM_FORM = "LINEAGE-LINKED";
-    private static final String GEDCOM_VERSION = "5.5";
+    private static final String GEDCOM_VERSION = "5.5.1";
     private static final String SOURCE_SOFTWARE = "Digitising_Scotland";
     private static final String SUBMITTER = "Digitising Scotland Project";
 
     /**
      * Initialises the exporter. This includes potentially expensive scanning of the population graph.
      *
-     * @param population the population
-     * @param path_string       the path for the output file
+     * @param population  the population
+     * @param path_string the path for the output file
      * @throws IOException if the file does not exist and cannot be created
      */
     public PopulationToGEDCOM(final IPopulation population, final String path_string) {
@@ -72,7 +72,7 @@ public class PopulationToGEDCOM extends PopulationToFile {
     @Override
     protected void outputIndividual(final PrintWriter writer, final IPerson person) {
 
-        writer.println("0 @" + padId(person.getId()) + "@ INDI");
+        writer.println("0 @" + individualLabel(person.getId()) + "@ INDI");
         writer.println("1 NAME " + person.getFirstName() + " /" + person.getSurname() + "/");
         writer.println("1 SEX " + person.getSex());
         writer.println("1 BIRT");
@@ -85,13 +85,17 @@ public class PopulationToGEDCOM extends PopulationToFile {
         }
 
         final List<Integer> partnership_ids = person.getPartnerships();
-        final int parents_partnership_id = person.getParentsPartnership();
 
-        for (final int partnership_id : partnership_ids) {
-            writer.println("1 FAMS @" + partnership_id + "@");
+        if (partnership_ids != null) {
+            for (final int partnership_id : partnership_ids) {
+                writer.println("1 FAMS @" + familyLabel(partnership_id) + "@");
+            }
         }
 
-        writer.println("1 FAMC @" + parents_partnership_id + "@");
+        final int parents_partnership_id = person.getParentsPartnership();
+        if (parents_partnership_id != -1) {
+            writer.println("1 FAMC @" + familyLabel(parents_partnership_id) + "@");
+        }
     }
 
     @Override
@@ -101,7 +105,7 @@ public class PopulationToGEDCOM extends PopulationToFile {
 
             final int partnership_id = partnership.getId();
 
-            writer.println("0 @" + padId(partnership_id) + "@ FAM");
+            writer.println("0 @" + familyLabel(partnership_id) + "@ FAM");
             if (partnership.getMarriageDate() != null) {
                 writer.println("1 MARR");
                 writer.println("2 DATE " + DateManipulation.formatDate(partnership.getMarriageDate()));
@@ -113,13 +117,13 @@ public class PopulationToGEDCOM extends PopulationToFile {
             IPerson father = partner1.getSex() == IPerson.MALE ? partner1 : partner2;
             IPerson mother = partner1.getSex() == IPerson.FEMALE ? partner1 : partner2;
 
-            writer.println("1 HUSB @" + padId(father.getId()) + "@");
-            writer.println("1 WIFE @" + padId(mother.getId()) + "@");
+            writer.println("1 HUSB @" + individualLabel(father.getId()) + "@");
+            writer.println("1 WIFE @" + individualLabel(mother.getId()) + "@");
 
             List<Integer> child_ids = partnership.getChildIds();
             if (child_ids != null) {
                 for (final int child_id : child_ids) {
-                    writer.println("1 CHIL @" + padId(child_id) + "@");
+                    writer.println("1 CHIL @" + individualLabel(child_id) + "@");
                 }
             }
         }
