@@ -24,7 +24,7 @@ import java.util.List;
 /**
  * Created by victor on 08/07/14.
  */
-public class OrganicPerson implements IPerson{
+public class OrganicPerson implements IPerson {
 
     private int id;
     private String firstName;
@@ -35,46 +35,47 @@ public class OrganicPerson implements IPerson{
     private Date dateOfDeath;
     private List<Integer> partnerships;
 
-//    private int daysToLive = DateManipulation.dateToDays(dateOfDeath) -  DateManipulation.dateToDays(dateOfBirth);
+    //    private int daysToLive = DateManipulation.dateToDays(dateOfDeath) -  DateManipulation.dateToDays(dateOfBirth);
     private OrganicTimeline timeline = null;
 
-    public int getDayOfLife(Date date){
-        int day = DateManipulation.dateToDays(date) -  DateManipulation.dateToDays(dateOfBirth);;
+    public int getDayOfLife(Date date) {
+        int day = DateManipulation.dateToDays(date) - DateManipulation.dateToDays(dateOfBirth);
+        ;
         return day;
     }
 
-    public OrganicPerson(){
+    public OrganicPerson() {
         setTimeline(null);
     }
 
-    public OrganicPerson(Date date){
+    public OrganicPerson(Date date) {
         dateOfBirth = date;
     }
 
-    public OrganicPerson(Date date, char sex){
+    public OrganicPerson(Date date, char sex) {
         dateOfBirth = date;
         this.sex = sex;
     }
 
-    public OrganicPerson(char sex){
+    public OrganicPerson(char sex) {
         this.sex = sex;
     }
 
-    public OrganicPerson(int age, char sex){
+    public OrganicPerson(int age, char sex) {
         this.sex = sex;
         age_in_days = age;
     }
 
-    public void setTimeline(OrganicTimeline t){
+    public void setTimeline(OrganicTimeline t) {
         this.timeline = t;
     }
 
-    public OrganicTimeline getTimeline(){
+    public OrganicTimeline getTimeline() {
         return timeline;
     }
 
     /**
-     *  INTERFACE METHODS
+     * INTERFACE METHODS
      */
 
     @Override
@@ -129,5 +130,6 @@ public class OrganicPerson implements IPerson{
 
     @Override
     public int getParentsPartnership() {
-        throw new RuntimeException("unimplemented");    }
+        throw new RuntimeException("unimplemented");
+    }
 }

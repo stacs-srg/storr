@@ -32,7 +32,7 @@ import java.util.Date;
 /**
  * Created by victor on 11/06/14.
  */
-public class OrganicPopulation implements IPopulation{
+public class OrganicPopulation implements IPopulation {
 
     /**
      * Seed parameters.
@@ -55,7 +55,7 @@ public class OrganicPopulation implements IPopulation{
      * The end year of the simulation.
      */
     public static final int END_YEAR = 2013;
-    public int totalNumberOfDays = DateManipulation.dateToDays(END_YEAR,1,1) - DateManipulation.dateToDays(START_YEAR,1,1);
+    public int totalNumberOfDays = DateManipulation.dateToDays(END_YEAR, 1, 1) - DateManipulation.dateToDays(START_YEAR, 1, 1);
 
     /**
      * Additional parameters
@@ -63,10 +63,10 @@ public class OrganicPopulation implements IPopulation{
     private static final int DAYS_IN_DECEMBER = 31;
     private static final int DECEMBER_INDEX = 11;
 
-    private static int DEFAULT_STEP_SIZE = 1 ;
+    private static int DEFAULT_STEP_SIZE = 1;
 
     Random random = RandomFactory.getRandom();
-    private Distribution<Integer> seed_age_distribution = new UniformDistribution(0,70,random);
+    private Distribution<Integer> seed_age_distribution = new UniformDistribution(0, 70, random);
     private Distribution<Boolean> sex_distribution = new UniformSexDistribution(random);
     private Distribution<Integer> age_at_death_distribution = new AgeAtDeathDistribution(random);
 
@@ -74,16 +74,18 @@ public class OrganicPopulation implements IPopulation{
     private List<OrganicPerson> people = new ArrayList<OrganicPerson>();
     private List<OrganicPartnership> partnerships = new ArrayList<OrganicPartnership>();
 
-    public void makeSeed(int size){
+    public void makeSeed(int size) {
 
-        for(int i=0; i< size; i++) {
+        for (int i = 0; i < size; i++) {
 
             Date currentDateOfBirth;
             int age = seed_age_distribution.getSample();
-            int auxiliary = (int)((age-1)*(DAYS_PER_YEAR))+RandomFactory.getRandomInt(1, (int)DAYS_PER_YEAR);
-            auxiliary = DateManipulation.dateToDays(START_YEAR,1,1)-auxiliary;
+            int auxiliary = (int) ((age - 1) * (DAYS_PER_YEAR)) + RandomFactory.getRandomInt(1, (int) DAYS_PER_YEAR);
+            auxiliary = DateManipulation.dateToDays(START_YEAR, 1, 1) - auxiliary;
 
             currentDateOfBirth = DateManipulation.daysToDate(auxiliary);
+            auxiliary = age_at_death_distribution.getSample();
+            Date currentDateOfDeath;
 
 
             if (sex_distribution.getSample())
@@ -93,13 +95,13 @@ public class OrganicPopulation implements IPopulation{
         }
     }
 
-    public void makeSeed(){
+    public void makeSeed() {
         makeSeed(DEFAULT_SEED_SIZE);
     }
 
-    public void generate_timelines(){
-        for(int i=0; i< people.size();i++){
-            if(people.get(i).getTimeline() == null){
+    public void generate_timelines() {
+        for (int i = 0; i < people.size(); i++) {
+            if (people.get(i).getTimeline() == null) {
                 OrganicPerson currentPerson = people.get(i);
                 OrganicTimeline currentTimeline;
                 currentTimeline = new OrganicTimeline(currentPerson.getBirthDate(), age_at_death_distribution.getSample());
@@ -108,18 +110,16 @@ public class OrganicPopulation implements IPopulation{
         }
     }
 
-    public void mainIteration(){
+    public void mainIteration() {
         mainIteration(DEFAULT_STEP_SIZE);
     }
 
-    public void mainIteration(int timeStepSizeInDays){
+    public void mainIteration(int timeStepSizeInDays) {
 
     }
 
     /**
-     *
      * Methods from interface.
-     *
      */
 
     @Override
@@ -164,13 +164,13 @@ public class OrganicPopulation implements IPopulation{
     }
 
     //Testing purposes
-    public static void main(String[] args){
+    public static void main(String[] args) {
         System.out.println("--------MAIN HERE---------");
-        OrganicPopulation op= new OrganicPopulation();
+        OrganicPopulation op = new OrganicPopulation();
         op.makeSeed();
         op.generate_timelines();
-        for(int i=0;i<op.getNumberOfPeople();i++){
-            System.out.println(op.people.get(i).getBirthDate());
+        for (int i = 0; i < op.getNumberOfPeople(); i++) {
+            System.out.println(op.people.get(i).getDeathDate());
         }
     }
 }

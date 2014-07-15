@@ -33,46 +33,46 @@ public class OrganicTimeline {
 
     private HashMap<Integer, OrganicEvent> events = new HashMap<Integer, OrganicEvent>();
 
-    public OrganicTimeline(Date date){
+    public OrganicTimeline(Date date) {
         startDate = date;
     }
 
-    public OrganicTimeline(Date date1, Date date2){
+    public OrganicTimeline(Date date1, Date date2) {
         startDate = date1;
         endDate = date2;
     }
 
-    public OrganicTimeline(Date date, int days){
+    public OrganicTimeline(Date date, int days) {
         startDate = date;
         duration = days;
         //endDate = DateManipulation.daysToDate(DateManipulation.dateToDays(startDate) + days);
     }
 
-    public OrganicTimeline(){
+    public OrganicTimeline() {
     }
 
-    public void addEvent(int day, OrganicEvent event){
+    public void addEvent(int day, OrganicEvent event) {
         events.put(day, event);
     }
 
-    public void removeEvent(int day){
+    public void removeEvent(int day) {
         events.remove(day);
     }
 
-    public void removeEvent(OrganicEvent event){
+    public void removeEvent(OrganicEvent event) {
         int removalKey = -1;
-        for(int key : events.keySet()){
-            if(events.get(key).equals(event)){
+        for (int key : events.keySet()) {
+            if (events.get(key).equals(event)) {
                 removalKey = key;
                 break;
             }
         }
 
-        if(removalKey != -1)
+        if (removalKey != -1)
             events.remove(removalKey);
     }
 
-    public boolean isDateAvailable(Date date){
+    public boolean isDateAvailable(Date date) {
         int day = DateManipulation.dateToDays(date) - DateManipulation.dateToDays(startDate);
         return events.containsKey(day);
     }
