@@ -62,6 +62,13 @@ public class PopulationLogic {
 
     public static boolean parentsHaveSensibleAgesAtChildBirth(Date father_birth_date, Date father_death_date, Date mother_birth_date, Date mother_death_date, Date child_birth_date) {
 
+//        System.out.println();
+//        System.out.println("father_birth_date: " + father_birth_date);
+//        System.out.println("father_death_date: " + father_death_date);
+//        System.out.println("mother_birth_date: " + mother_birth_date);
+//        System.out.println("mother_death_date: " + mother_death_date);
+//        System.out.println("child_birth_date: " + child_birth_date);
+
         return motherAliveAtBirth(mother_death_date, child_birth_date) &&
                 motherNotTooYoungAtBirth(mother_birth_date, child_birth_date) &&
                 motherNotTooOldAtBirth(mother_birth_date, child_birth_date) &&

@@ -17,15 +17,9 @@
 package uk.ac.standrews.cs.digitising_scotland.population_model.model.in_memory;
 
 import org.junit.runners.Parameterized;
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.InconsistentWeightException;
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.NegativeDeviationException;
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.NegativeWeightException;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.GeneralPopulationStructureTests;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPopulation;
-import uk.ac.standrews.cs.digitising_scotland.population_model.model.in_memory.CompactPopulationTestCases;
 
-import java.io.IOException;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -37,7 +31,7 @@ public class GeneralCompactPopulationTest extends GeneralPopulationStructureTest
 
     // The name string gives informative labels in the JUnit output.
     @Parameterized.Parameters(name = "{0}, {1}")
-    public static Collection<Object[]> generateData() throws IOException, InconsistentWeightException, NegativeDeviationException, NegativeWeightException, ParseException {
+    public static Collection<Object[]> generateData() throws Exception {
 
         return expandWithBooleanOptions(CompactPopulationTestCases.getTestPopulations());
     }

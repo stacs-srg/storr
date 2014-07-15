@@ -28,18 +28,13 @@ import uk.ac.standrews.cs.digitising_scotland.population_model.model.GeneralPopu
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPartnership;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPerson;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPopulation;
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.InconsistentWeightException;
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.NegativeDeviationException;
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.NegativeWeightException;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.PopulationConverter;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.in_memory.CompactPopulationTestCases;
 import uk.ac.standrews.cs.digitising_scotland.population_model.util.RandomFactory;
-import uk.ac.standrews.cs.digitising_scotland.population_model.model.PopulationConverter;
 import uk.ac.standrews.cs.digitising_scotland.util.DBManipulation;
 
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -47,8 +42,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
  * Created by graham on 07/07/2014.
@@ -67,7 +61,7 @@ public class GeneralDBPopulationTest extends GeneralPopulationStructureTests {
 
     // The name string gives informative labels in the JUnit output.
     @Parameterized.Parameters(name = "{0}")
-    public static Collection<Object[]> generateData() throws IOException, InconsistentWeightException, NegativeDeviationException, NegativeWeightException, ParseException {
+    public static Collection<Object[]> generateData() throws Exception {
 
         // Use each of the compact population test cases to create a database test population.
         return getDBTestCases(CompactPopulationTestCases.getTestPopulations());
@@ -125,6 +119,43 @@ public class GeneralDBPopulationTest extends GeneralPopulationStructureTests {
 
         assertSamePeopleIds(population.getPeople(), original_population.getPeople());
         assertSamePartnershipIds(population.getPartnerships(), original_population.getPartnerships());
+        assertSamePartners(population, original_population);
+        assertSameChildren(population, original_population);
+    }
+
+    private void assertSamePartners(IPopulation population, IPopulation original_population) {
+
+        for (IPartnership partnership1 : population.getPartnerships()) {
+
+            IPartnership partnership2 = original_population.findPartnership(partnership1.getId());
+            assertTrue(partnership1.getPartner1Id() == partnership2.getPartner1Id() || partnership1.getPartner1Id() == partnership2.getPartner2Id());
+            assertTrue(partnership1.getPartner2Id() == partnership2.getPartner2Id() || partnership1.getPartner2Id() == partnership2.getPartner1Id());
+        }
+    }
+
+    private void assertSameChildren(IPopulation population, IPopulation original_population) {
+
+        for (IPartnership partnership1 : population.getPartnerships()) {
+
+            IPartnership partnership2 = original_population.findPartnership(partnership1.getId());
+
+            assertEqualSets(partnership1.getChildIds(), partnership2.getChildIds());
+        }
+    }
+
+    private void assertEqualSets(List<Integer> set1, List<Integer> set2) {
+
+        if (set1 == null) {
+            assertNull(set2);
+
+        } else {
+            assertNotNull(set2);
+            assertEquals(set1.size(), set2.size());
+
+            for (int i : set1) {
+                assertTrue(set2.contains(i));
+            }
+        }
     }
 
     private void assertSamePeopleIds(Iterable<IPerson> people1, Iterable<IPerson> people2) {

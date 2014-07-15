@@ -119,11 +119,12 @@ public class DBPopulationAdapter implements IPopulation {
                     if (!hasNext()) throw new NoSuchElementException();
 
                     try {
-                        final IPerson result = new DBPerson(person_result_set);
+                        final IPerson result = new DBPerson(connection, person_result_set);
                         person_result_set.next();
                         return result;
 
                     } catch (final SQLException e) {
+                        e.printStackTrace();
                         throw new RuntimeException("Error creating person: " + e.getMessage());
                     }
                 }
