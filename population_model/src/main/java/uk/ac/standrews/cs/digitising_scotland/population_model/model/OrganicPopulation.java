@@ -25,6 +25,7 @@ import uk.ac.standrews.cs.digitising_scotland.population_model.util.RandomFactor
 import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 import java.util.Date;
@@ -73,6 +74,9 @@ public class OrganicPopulation implements IPopulation {
 
     private List<OrganicPerson> people = new ArrayList<OrganicPerson>();
     private List<OrganicPartnership> partnerships = new ArrayList<OrganicPartnership>();
+    
+    private LinkedList<OrganicPerson> maleParnershipQueue = new LinkedList<OrganicPerson>();
+    private LinkedList<OrganicPerson> femaleParnershipQueue = new LinkedList<OrganicPerson>();
 
     public void makeSeed(int size) {
 

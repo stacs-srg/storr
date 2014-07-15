@@ -73,6 +73,12 @@ public class OrganicPerson implements IPerson {
     public OrganicTimeline getTimeline() {
         return timeline;
     }
+    
+//    public OrganicEvent getCurrentEvent() {
+//		timeline = getTimeline();
+//		
+//    	return null;	
+//    }
 
     /**
      * INTERFACE METHODS

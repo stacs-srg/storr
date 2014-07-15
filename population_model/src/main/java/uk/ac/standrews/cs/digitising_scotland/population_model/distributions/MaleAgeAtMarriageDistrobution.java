@@ -59,23 +59,24 @@ public class MaleAgeAtMarriageDistrobution implements Distribution<Integer> {
      */
 
 	private static final int MAXIMUM_AGE_IN_YEARS = 100;
-    private static final int[] AGE_DISTRIBUTION_WEIGHTS = new int[]{0,0,0,20,107,49,18,10,7,5,4,4,4,3,3,3,1,1,0};
+	private static final int[] AGE_DISTRIBUTION_WEIGHTS = new int[] { 0, 0, 0, 20, 107, 49, 18, 10, 7, 5, 4, 4, 4, 3, 3, 3, 1, 1, 0 };
 
-    private final WeightedIntegerDistribution distribution;
+	private final WeightedIntegerDistribution distribution;
 
-    /**
-     * Creates an age at marriage distribution
-     * @param random the random number generator to be used
-     */
-    public MaleAgeAtMarriageDistrobution(final Random random) {
-    	try {
-            distribution = new WeightedIntegerDistribution(0, (int) (MAXIMUM_AGE_IN_YEARS * CompactPopulation.DAYS_PER_YEAR) - 1, AGE_DISTRIBUTION_WEIGHTS, random);
-        }
-        catch (final NegativeWeightException e) {
-            throw new RuntimeException("negative weight exception: " + e.getMessage());
-        }
+	/**
+	 * Creates an age at marriage distribution
+	 * 
+	 * @param random
+	 *            the random number generator to be used
+	 */
+	public MaleAgeAtMarriageDistrobution(final Random random) {
+		try {
+			distribution = new WeightedIntegerDistribution(0, (int) (MAXIMUM_AGE_IN_YEARS * CompactPopulation.DAYS_PER_YEAR) - 1, AGE_DISTRIBUTION_WEIGHTS, random);
+		} catch (final NegativeWeightException e) {
+			throw new RuntimeException("negative weight exception: " + e.getMessage());
+		}
 	}
-    
+
 	@Override
 	public Integer getSample() {
 		return distribution.getSample();

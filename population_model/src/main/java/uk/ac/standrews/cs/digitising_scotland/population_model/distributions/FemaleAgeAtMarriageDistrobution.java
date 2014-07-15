@@ -59,7 +59,7 @@ public class FemaleAgeAtMarriageDistrobution implements Distribution<Integer> {
 	 */
 
 	private static final int MAXIMUM_AGE_IN_YEARS = 100;
-	private static final int[] AGE_DISTRIBUTION_WEIGHTS = new int[]{0,0,0,66,101,29,12,7,5,5,4,3,2,2,1,1,0,0,0};
+	private static final int[] AGE_DISTRIBUTION_WEIGHTS = new int[] { 0, 0, 0, 66, 101, 29, 12, 7, 5, 5, 4, 3, 2, 2, 1, 1, 0, 0, 0 };
 
 	private final WeightedIntegerDistribution distribution;
 
