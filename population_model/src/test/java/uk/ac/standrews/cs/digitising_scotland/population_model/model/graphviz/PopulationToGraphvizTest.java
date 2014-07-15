@@ -14,15 +14,14 @@
  * You should have received a copy of the GNU General Public License along with population_model. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-package uk.ac.standrews.cs.digitising_scotland.population_model.transform;
+package uk.ac.standrews.cs.digitising_scotland.population_model.model.graphviz;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.InconsistentWeightException;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPopulation;
-import uk.ac.standrews.cs.digitising_scotland.population_model.model.graphviz.PopulationToGraphviz;
+import uk.ac.standrews.cs.digitising_scotland.population_model.transform.AbstractExporterTest;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -45,11 +44,10 @@ public class PopulationToGraphvizTest extends AbstractExporterTest {
     }
 
     @Test
-    @Ignore
     public void test() throws IOException, InconsistentWeightException {
 
-        final Path actual_output = Paths.get(TEST_DIRECTORY_PATH_STRING, file_name_root + ACTUAL_SUFFIX);
-        final Path intended_output = Paths.get(TEST_DIRECTORY_PATH_STRING, file_name_root + INTENDED_SUFFIX);
+        final Path actual_output = Paths.get(TEST_DIRECTORY_PATH_STRING, "graphviz", file_name_root + ACTUAL_SUFFIX);
+        final Path intended_output = Paths.get(TEST_DIRECTORY_PATH_STRING, "graphviz", file_name_root + INTENDED_SUFFIX);
 
         final PopulationToGraphviz exporter = new PopulationToGraphviz(population, actual_output.toString());
         exporter.export();

@@ -37,7 +37,7 @@ public class GEDCOMValidityTest {
 
         IPopulation population = new CompactPopulationAdapter(new CompactPopulation(1000));
 
-        final String path = Paths.get(AbstractExporterTest.TEST_DIRECTORY_PATH_STRING, "test.ged").toString();
+        final String path = Paths.get(AbstractExporterTest.TEST_DIRECTORY_PATH_STRING, "gedcom", "_test.ged").toString();
 
         final PopulationToGEDCOM exporter = new PopulationToGEDCOM(population, path);
         exporter.export();

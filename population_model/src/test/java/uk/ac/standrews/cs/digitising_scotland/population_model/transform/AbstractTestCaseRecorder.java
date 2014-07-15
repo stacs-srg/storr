@@ -41,7 +41,9 @@ public abstract class AbstractTestCaseRecorder {
 
             IDFactory.resetId();
 
-            final String path_string = Paths.get(AbstractExporterTest.TEST_DIRECTORY_PATH_STRING, AbstractExporterTest.TEST_CASE_FILE_NAME_ROOTS[i] + getIntendedOutputFileSuffix()).toString();
+            final String path_string = Paths.get(
+                    AbstractExporterTest.TEST_DIRECTORY_PATH_STRING,
+                    getDirectoryName(),AbstractExporterTest.TEST_CASE_FILE_NAME_ROOTS[i] + getIntendedOutputFileSuffix()).toString();
 
             final CompactPopulation population = new CompactPopulation(AbstractExporterTest.TEST_CASE_POPULATION_SIZES[i]);
             final IPopulation population_interface = new CompactPopulationAdapter(population);
@@ -52,6 +54,7 @@ public abstract class AbstractTestCaseRecorder {
     }
 
     protected abstract String getIntendedOutputFileSuffix();
+    protected abstract String getDirectoryName();
 
     protected abstract PopulationToFile getExporter(IPopulation population, String path_string) throws IOException, InconsistentWeightException;
 }

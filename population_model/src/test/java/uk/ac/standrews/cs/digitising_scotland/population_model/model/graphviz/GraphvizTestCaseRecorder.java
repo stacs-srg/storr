@@ -14,14 +14,14 @@
  * You should have received a copy of the GNU General Public License along with population_model. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-package uk.ac.standrews.cs.digitising_scotland.population_model.transform;
+package uk.ac.standrews.cs.digitising_scotland.population_model.model.graphviz;
 
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.InconsistentWeightException;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.NegativeDeviationException;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.NegativeWeightException;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPopulation;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.PopulationToFile;
-import uk.ac.standrews.cs.digitising_scotland.population_model.model.graphviz.PopulationToGraphviz;
+import uk.ac.standrews.cs.digitising_scotland.population_model.transform.AbstractTestCaseRecorder;
 
 import java.io.IOException;
 
@@ -48,5 +48,10 @@ public class GraphvizTestCaseRecorder extends AbstractTestCaseRecorder {
     protected String getIntendedOutputFileSuffix() {
 
         return PopulationToGraphvizTest.INTENDED_SUFFIX;
+    }
+
+    @Override
+    protected String getDirectoryName() {
+        return "graphviz";
     }
 }

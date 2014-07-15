@@ -50,4 +50,9 @@ public class GEDCOMTestCaseRecorder extends AbstractTestCaseRecorder {
 
         return PopulationToGEDCOMTest.INTENDED_SUFFIX;
     }
+
+    @Override
+    protected String getDirectoryName() {
+        return "gedcom";
+    }
 }

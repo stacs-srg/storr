@@ -16,13 +16,11 @@
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.model.gedcom;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.InconsistentWeightException;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPopulation;
-import uk.ac.standrews.cs.digitising_scotland.population_model.model.gedcom.PopulationToGEDCOM;
 import uk.ac.standrews.cs.digitising_scotland.population_model.transform.AbstractExporterTest;
 
 import java.io.IOException;
@@ -46,11 +44,10 @@ public class PopulationToGEDCOMTest extends AbstractExporterTest {
     }
 
     @Test
-    @Ignore
     public void test() throws IOException, InconsistentWeightException {
 
-        final Path actual_output = Paths.get(TEST_DIRECTORY_PATH_STRING, file_name_root + ACTUAL_SUFFIX);
-        final Path intended_output = Paths.get(TEST_DIRECTORY_PATH_STRING, file_name_root + INTENDED_SUFFIX);
+        final Path actual_output = Paths.get(TEST_DIRECTORY_PATH_STRING, "gedcom", file_name_root + ACTUAL_SUFFIX);
+        final Path intended_output = Paths.get(TEST_DIRECTORY_PATH_STRING, "gedcom", file_name_root + INTENDED_SUFFIX);
 
         final PopulationToGEDCOM exporter = new PopulationToGEDCOM(population, actual_output.toString());
         exporter.export();
