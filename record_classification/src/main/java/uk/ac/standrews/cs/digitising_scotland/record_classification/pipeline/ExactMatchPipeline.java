@@ -3,6 +3,9 @@ package uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline;
 import java.io.IOException;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.lookup.ExactMatchClassifier;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeTriple;
@@ -14,6 +17,8 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
  * Provides convenience methods for classifying records and buckets.
  */
 public class ExactMatchPipeline {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ExactMatchPipeline.class);
 
     /** The exact match classifier. */
     private ExactMatchClassifier classifier;
@@ -41,13 +46,19 @@ public class ExactMatchPipeline {
     public Bucket classify(final Bucket bucket) throws IOException {
 
         Bucket classified = new Bucket();
+        int count = 0;
+        int match = 0;
         for (Record record : bucket) {
+            count++;
+            LOGGER.info("Exact Matching record " + count + " of " + bucket.size());
             final Set<CodeTriple> result = classify(record);
             if (result != null) {
+                match++;
                 record.addAllCodeTriples(result);
                 classified.addRecordToBucket(record);
             }
         }
+        LOGGER.info("Total exact matched = " + match + "/" + bucket.size());
         return classified;
     }
 

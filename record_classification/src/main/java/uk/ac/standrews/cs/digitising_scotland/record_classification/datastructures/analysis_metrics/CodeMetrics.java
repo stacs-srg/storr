@@ -540,11 +540,15 @@ public class CodeMetrics {
 
     /**
      * Prints the micro stats, in this case, micro precision and micro recall.
+     *
+     * @return the micro stats as a string
      */
-    public void printMicroStats() {
+    public String getMicroStatsAsString() {
 
-        System.out.println("micro precision: " + getMicroPrecision());
-        System.out.println("micro recall: " + getMicroRecall());
+        StringBuilder sb = new StringBuilder();
+        sb.append("micro precision: " + getMicroPrecision() + "\n");
+        sb.append("micro recall: " + getMicroRecall() + "\n");
+        return sb.toString();
     }
 
 }

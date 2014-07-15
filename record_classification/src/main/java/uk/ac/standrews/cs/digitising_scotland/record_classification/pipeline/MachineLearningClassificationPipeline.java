@@ -8,6 +8,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.AbstractClassifier;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.lookup.NGramSubstrings;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Pair;
@@ -30,6 +33,8 @@ import com.google.common.collect.Multiset;
  * 
  */
 public class MachineLearningClassificationPipeline {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(MachineLearningClassificationPipeline.class);
 
     /** The Constant WORDLIMIT. */
     private static final int WORDLIMIT = 1;
@@ -67,9 +72,14 @@ public class MachineLearningClassificationPipeline {
      */
     public Bucket classify(final Bucket bucket) throws IOException {
 
+        int count = 0;
         Bucket classified = new Bucket();
 
         for (Record record : bucket) {
+
+            LOGGER.info("Classifying record " + count + " of " + bucket.size());
+            count++;
+
             Set<CodeTriple> result = recordCache.get(record.getCleanedDescription());
             if (result == null) {
                 result = classify(record);

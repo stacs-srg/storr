@@ -5,6 +5,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeTriple;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
@@ -19,6 +22,8 @@ import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
  * @author jkc25
  */
 public class ListAccuracyMetrics {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ListAccuracyMetrics.class);
 
     /**
      * The total aggregated records.
@@ -190,18 +195,18 @@ public class ListAccuracyMetrics {
      */
     public void prettyPrint() {
 
-        System.out.println("Total records in bucket: " + recordsInBucket);
-        System.out.println("Average confidence: " + averageConfidence);
-        System.out.println("Total number of classifications: " + (numConfidenceNotOne + numConfidenceOfOne));
-        System.out.println("Number of classifications with confidence of 1: " + numConfidenceOfOne);
-        System.out.println("Number of classifications with confidence < 1: " + numConfidenceNotOne);
-        System.out.println("Proportion of gold standard codes predicted: " + propGoldPredicted);
-        System.out.println("Proportion of incorrect gold standard codes predicted: " + propWronglyPredicted);
-        System.out.println("Number unclassified: " + unclassified);
-        System.out.println("Number coded by exact match: " + codedExactMatch);
-        System.out.println("Singly classified: " + singleClassification);
-        System.out.println("Doubly classified: " + twoClassifications);
-        System.out.println("Multiply classified: " + moreThanTwoClassifications);
+        LOGGER.info("Total records in bucket: " + recordsInBucket);
+        LOGGER.info("Average confidence: " + averageConfidence);
+        LOGGER.info("Total number of classifications: " + (numConfidenceNotOne + numConfidenceOfOne));
+        LOGGER.info("Number of classifications with confidence of 1: " + numConfidenceOfOne);
+        LOGGER.info("Number of classifications with confidence < 1: " + numConfidenceNotOne);
+        LOGGER.info("Proportion of gold standard codes predicted: " + propGoldPredicted);
+        LOGGER.info("Proportion of incorrect gold standard codes predicted: " + propWronglyPredicted);
+        LOGGER.info("Number unclassified: " + unclassified);
+        LOGGER.info("Number coded by exact match: " + codedExactMatch);
+        LOGGER.info("Singly classified: " + singleClassification);
+        LOGGER.info("Doubly classified: " + twoClassifications);
+        LOGGER.info("Multiply classified: " + moreThanTwoClassifications);
         printMatrix("Over/Under Prediction Matrix", overUnderPredictionMatrix);
     }
 
@@ -221,7 +226,7 @@ public class ListAccuracyMetrics {
         sb.append(message).append("\n");
         sb.append("   ");
         sb.append("\n").append(getMatrixAsString(matrix, "\t", true));
-        System.out.println(sb.toString());
+        LOGGER.info(sb.toString());
         return sb.toString();
     }
 

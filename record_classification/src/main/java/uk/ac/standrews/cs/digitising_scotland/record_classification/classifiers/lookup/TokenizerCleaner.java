@@ -9,6 +9,8 @@ import org.apache.lucene.analysis.standard.StandardTokenizer;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.analysis.util.CharArraySet;
 import org.apache.lucene.util.Version;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 
@@ -18,6 +20,8 @@ import org.apache.lucene.util.Version;
  * 
  */
 public final class TokenizerCleaner {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(TokenizerCleaner.class);
 
     private TokenizerCleaner() {
 
@@ -38,8 +42,9 @@ public final class TokenizerCleaner {
             concatenatedTokens = tokeniseAndConcatenateTokens(description);
         }
         catch (IOException e) {
-            System.out.println("Error: Unable to clean description.");
-            e.printStackTrace();
+            LOGGER.error("Error: Unable to clean description.", e);
+            //            System.out.println();
+            //            e.printStackTrace();
         }
         return concatenatedTokens;
     }

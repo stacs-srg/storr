@@ -32,7 +32,7 @@ import com.google.common.collect.Multiset;
 public class DataCleaning {
 
     /** The Constant TOKENLIMIT. */
-    private static final int TOKENLIMIT = 2;
+    private static final int TOKENLIMIT = 1;
 
     /** The Constant SIMILARITY. */
     private static final double SIMILARITY = 0.75;
@@ -113,7 +113,7 @@ public class DataCleaning {
         return bestMatch;
     }
 
-    private void printDebugInfo(final String token, String bestMatch) {
+    private void printDebugInfo(final String token, final String bestMatch) {
 
         if (!token.equals(bestMatch)) {
             System.out.println(token + "\t corrected to \t" + bestMatch);

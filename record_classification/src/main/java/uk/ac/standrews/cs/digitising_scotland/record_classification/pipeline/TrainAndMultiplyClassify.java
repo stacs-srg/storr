@@ -8,6 +8,9 @@ import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.AbstractClassifier;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.OLR.OLRClassifier;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.lookup.ExactMatchClassifier;
@@ -61,6 +64,8 @@ import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearnin
  */
 public final class TrainAndMultiplyClassify {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(TrainAndMultiplyClassify.class);
+
     private static final double TRAINING_PCT = 0.8;
 
     private static VectorFactory vectorFactory;
@@ -91,7 +96,7 @@ public final class TrainAndMultiplyClassify {
         File training = new File(args[0]);
         // File prediction = new File(args[1]);
 
-        System.out.println("********** Generating Training Bucket **********");
+        LOGGER.info("********** Generating Training Bucket **********");
         Bucket allRecords = createBucketOfRecords(training);
 
         generateActualCodeMappings(allRecords);
@@ -115,28 +120,28 @@ public final class TrainAndMultiplyClassify {
         Bucket machineLearned = machineLearningClassifier.classify(notExactMatched);
         Bucket allClassified = BucketUtils.getUnion(machineLearned, exactMatched);
 
-        System.out.println("********** Classifying Bucket **********");
+        LOGGER.info("********** Classifying Bucket **********");
 
         writeRecords(allClassified);
 
-        System.out.println("********** **********");
+        LOGGER.info("********** **********");
 
-        System.out.println("All Records");
+        LOGGER.info("All Records");
         generateAndPrintStats(allClassified);
 
-        System.out.println("\nUnique Records");
+        LOGGER.info("\nUnique Records");
         final Bucket uniqueRecordsOnly = BucketFilter.uniqueRecordsOnly(allClassified);
         generateAndPrintStats(uniqueRecordsOnly);
 
-        System.out.println("Codes that were null and weren't adter chopping: " + CodeFactory.getInstance().getCodeMapNullCounter());
+        LOGGER.info("Codes that were null and weren't adter chopping: " + CodeFactory.getInstance().getCodeMapNullCounter());
     }
 
     private static void printStatusUpdate() {
 
-        System.out.println("********** Training Classifier **********");
-        System.out.println("Training with a dictionary size of: " + MachineLearningConfiguration.getDefaultProperties().getProperty("numFeatures"));
-        System.out.println("Training with this number of output classes: " + MachineLearningConfiguration.getDefaultProperties().getProperty("numCategories"));
-        System.out.println("Codes that were null and weren't adter chopping: " + CodeFactory.getInstance().getCodeMapNullCounter());
+        LOGGER.info("********** Training Classifier **********");
+        LOGGER.info("Training with a dictionary size of: " + MachineLearningConfiguration.getDefaultProperties().getProperty("numFeatures"));
+        LOGGER.info("Training with this number of output classes: " + MachineLearningConfiguration.getDefaultProperties().getProperty("numCategories"));
+        LOGGER.info("Codes that were null and weren't adter chopping: " + CodeFactory.getInstance().getCodeMapNullCounter());
     }
 
     private static void generateActualCodeMappings(final Bucket bucket) {
@@ -183,8 +188,8 @@ public final class TrainAndMultiplyClassify {
 
         AbstractConfusionMatrix invertedConfusionMatrix = new InvertedSoftConfusionMatrix(bucket);
         double totalCorrectlyPredicted = invertedConfusionMatrix.getTotalCorrectlyPredicted();
-        System.out.println("Number of predictions too specific: " + totalCorrectlyPredicted);
-        System.out.println("Proportion of predictions too specific: " + totalCorrectlyPredicted / invertedConfusionMatrix.getTotalPredicted());
+        LOGGER.info("Number of predictions too specific: " + totalCorrectlyPredicted);
+        LOGGER.info("Proportion of predictions too specific: " + totalCorrectlyPredicted / invertedConfusionMatrix.getTotalPredicted());
 
         runRscript("src/R/CodeStatsPlotter.R", strictCodeStatsPath, reportspath, strictCodePath);
         runRscript("src/R/CodeStatsPlotter.R", softCodeStatsPath, reportspath, softCodePath);
@@ -195,9 +200,9 @@ public final class TrainAndMultiplyClassify {
     private static String printCodeMetrics(final Bucket bucket, final ListAccuracyMetrics accuracyMetrics, final String strictCodeStatsPath, final String codeStatsPath) {
 
         CodeMetrics codeMetrics = new CodeMetrics(new StrictConfusionMatrix(bucket));
-        codeMetrics.printMicroStats();
+        LOGGER.info(codeMetrics.getMicroStatsAsString());
         codeMetrics.writeStats(strictCodeStatsPath);
-        System.out.println(strictCodeStatsPath + ": " + codeMetrics.getTotalCorrectlyPredicted());
+        LOGGER.info(strictCodeStatsPath + ": " + codeMetrics.getTotalCorrectlyPredicted());
         accuracyMetrics.generateMarkDownSummary(experimentalFolderName, codeStatsPath);
         return strictCodeStatsPath;
     }
@@ -210,7 +215,7 @@ public final class TrainAndMultiplyClassify {
 
         String imageOutputPath = reportsPath + imageName + ".png";
         String command = "Rscript " + pathToRScript + " " + dataPath + " " + imageOutputPath;
-        System.out.println(Utils.executeCommand(command));
+        LOGGER.info(Utils.executeCommand(command));
     }
 
     private static boolean isRinstalled() {
@@ -218,7 +223,7 @@ public final class TrainAndMultiplyClassify {
         final String pathToScript = Utils.class.getResource("/scripts/checkScript.sh").getFile();
         String checkSystemForR = "sh " + pathToScript + " RScript";
         final String executeCommand = Utils.executeCommand(checkSystemForR);
-        System.out.println(executeCommand);
+        LOGGER.info(executeCommand);
 
         if (executeCommand.equals("RScript required but it's not installed.  Aborting.\n")) {
             System.err.println("Stats not generated. R or RScript is not installed.");
