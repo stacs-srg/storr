@@ -1,6 +1,5 @@
 package uk.ac.standrews.cs.digitising_scotland.tools;
 
-// TODO: Auto-generated Javadoc
 /**
  * Simple Timer class that is can be used for timing method execution times, amongst other things.
  */
@@ -21,7 +20,7 @@ public class Timer {
     }
 
     /**
-     * Stops the time.
+     * Stops the timer.
      */
     public void stop() {
 

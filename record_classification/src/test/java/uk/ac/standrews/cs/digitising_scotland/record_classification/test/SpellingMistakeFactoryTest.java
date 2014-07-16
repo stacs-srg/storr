@@ -22,7 +22,7 @@ public class SpellingMistakeFactoryTest {
 
         SpellingMistakeFactory spf = new SpellingMistakeFactory();
         for (int i = 0; i < 10; i++) {
-            assertTrue(!spf.addMistake("spelling mistakes are easy to make").equalsIgnoreCase("spelling mistakes are easy to make"));
+            assertTrue(!spf.addMistakeSwap("spelling mistakes are easy to make").equalsIgnoreCase("spelling mistakes are easy to make"));
         }
     }
 
@@ -33,7 +33,7 @@ public class SpellingMistakeFactoryTest {
     public void testTwoLetter() {
 
         SpellingMistakeFactory spf = new SpellingMistakeFactory();
-        assertTrue(spf.addMistake("to").equalsIgnoreCase("ot"));
+        assertTrue(spf.addMistakeSwap("to").equalsIgnoreCase("ot"));
     }
 
     /**

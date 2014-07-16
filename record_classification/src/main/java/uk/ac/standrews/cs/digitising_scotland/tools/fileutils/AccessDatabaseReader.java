@@ -7,11 +7,21 @@ import java.util.Set;
 import com.healthmarketscience.jackcess.Database;
 import com.healthmarketscience.jackcess.Table;
 
+/**
+ * The Class AccessDatabaseReader can be used to read an access database file (*.mdb) and dump it to csv.
+ */
 public class AccessDatabaseReader {
 
-    Database db;
+    /** The db. */
+    private Database db;
 
-    public AccessDatabaseReader(String databaseLocation) throws IOException {
+    /**
+     * Instantiates a new access database reader.
+     *
+     * @param databaseLocation the database location
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
+    public AccessDatabaseReader(final String databaseLocation) throws IOException {
 
         File dbFile = new File(databaseLocation);
         db = Database.create(dbFile);
@@ -24,7 +34,13 @@ public class AccessDatabaseReader {
         System.out.println(db.toString());
     }
 
-    public static void main(String[] args) throws IOException {
+    /**
+     * The main method.
+     *
+     * @param args the arguments
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
+    public static void main(final String[] args) throws IOException {
 
         AccessDatabaseReader reader = new AccessDatabaseReader("db.mdb");
     }

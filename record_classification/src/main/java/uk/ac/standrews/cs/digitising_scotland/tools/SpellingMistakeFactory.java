@@ -15,7 +15,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
-// TODO: Auto-generated Javadoc
 /**
  * Adds a spelling mistake to a string by swapping the two 'middle' characters in a randomly string.
  * 
@@ -23,7 +22,6 @@ import java.util.Scanner;
  */
 public class SpellingMistakeFactory {
 
-    /** The Constant ASCIIOFFSET. */
     static final int ASCIIOFFSET = 97;
 
     /**
@@ -33,7 +31,7 @@ public class SpellingMistakeFactory {
      *            input string to add mistake to.
      * @return input string with random spelling mistake introduced.
      */
-    public String addMistake(final String input) {
+    public String addMistakeSwap(final String input) {
 
         int a, b = 0;
         String[] inputSplit = input.split("\\s");
@@ -175,7 +173,7 @@ public class SpellingMistakeFactory {
                     String content = line.split("\t")[1];
                     int decisionInt = (int) Math.rint(Math.random() * 100);
                     if (decisionInt < spellingMistakePct) {
-                        String newContent = spf.addMistake(content);
+                        String newContent = spf.addMistakeSwap(content);
                         output += feature + "\t" + newContent + "\t" + (docID + i) + "\n";
                         System.out.println(changed++);
                     }

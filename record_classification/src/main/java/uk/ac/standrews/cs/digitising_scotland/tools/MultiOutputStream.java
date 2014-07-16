@@ -3,7 +3,6 @@ package uk.ac.standrews.cs.digitising_scotland.tools;
 import java.io.IOException;
 import java.io.OutputStream;
 
-// TODO: Auto-generated Javadoc
 /**
  * Supports multiple output streams.
  * Used to redirect stdout and stderr to files.

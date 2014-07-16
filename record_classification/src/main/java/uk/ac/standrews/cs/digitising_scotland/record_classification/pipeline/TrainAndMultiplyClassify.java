@@ -110,6 +110,7 @@ public final class TrainAndMultiplyClassify {
 
         AbstractClassifier classifier = trainOLRClassifier(trainingBucket, vectorFactory);
 
+        LOGGER.info("********** Creating Lookup Tables **********");
         ExactMatchClassifier exactMatchClassifier = trainExactMatchClassifier();
 
         ExactMatchPipeline exactMatchPipeline = new ExactMatchPipeline(exactMatchClassifier);
@@ -290,7 +291,7 @@ public final class TrainAndMultiplyClassify {
     private static AbstractClassifier trainOLRClassifier(final Bucket bucket, final VectorFactory vectorFactory) throws Exception {
 
         AbstractClassifier olrClassifier = new OLRClassifier(vectorFactory);
-        ((OLRClassifier) olrClassifier).setModelPath(experimentalFolderName + "/Models/olrModel");
+        OLRClassifier.setModelPath(experimentalFolderName + "/Models/olrModel");
         olrClassifier.train(bucket);
         return olrClassifier;
     }

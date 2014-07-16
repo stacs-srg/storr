@@ -9,7 +9,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
  * @author jkc25
  *
  */
-public class BucketUtils {
+public final class BucketUtils {
 
     private BucketUtils() {
 
