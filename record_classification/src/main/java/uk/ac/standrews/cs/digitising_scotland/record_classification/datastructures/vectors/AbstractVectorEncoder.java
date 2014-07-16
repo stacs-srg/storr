@@ -1,6 +1,5 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.vectors;
 
-
 import org.apache.mahout.math.Vector;
 
 /**
@@ -8,6 +7,7 @@ import org.apache.mahout.math.Vector;
  * Created by fraserdunlop on 28/04/2014 at 10:01.
  */
 public abstract class AbstractVectorEncoder {
+
     /**
      * Should take a (String) token and encode it into a vector.
      * @param token the token to encode.
@@ -19,4 +19,5 @@ public abstract class AbstractVectorEncoder {
      * allows resetting of the internal dictionary for testing purposes
      */
     protected abstract void reset();
+
 }

@@ -228,7 +228,7 @@ public class DataCleaning {
         correctTokensInFile(file, correctedFile);
     }
 
-    private static void correctTokensInFile(File file, File correctedFile) throws IOException {
+    private static void correctTokensInFile(final File file, final File correctedFile) throws IOException {
 
         BufferedReader br = new BufferedReader(new FileReader(file));
         BufferedWriter bw = new BufferedWriter(new FileWriter(correctedFile));
@@ -242,7 +242,7 @@ public class DataCleaning {
         bw.close();
     }
 
-    private static String correctLine(String line) {
+    private static String correctLine(final String line) {
 
         String[] commaSplits = line.split(Utils.getCSVComma());
         StringBuilder sb = new StringBuilder();
@@ -254,14 +254,16 @@ public class DataCleaning {
         return correctedLine.subSequence(0, correctedLine.length() - 1).toString();
     }
 
-    private static String tokenizeAndCleanString(String str) {
+    private static String tokenizeAndCleanString(final String str) {
 
         StringBuilder sb = new StringBuilder();
         for (String token : new TokenSet(str)) {
             String correctedToken = correctionMap.get(token);
             if (correctedToken != null) {
                 sb.append(correctedToken).append(" ");
-                if (!correctedToken.equals(token)) System.out.println("Original token: " + token + " Corrected token: " + correctedToken);
+                if (!correctedToken.equals(token)) {
+                    System.out.println("Original token: " + token + " Corrected token: " + correctedToken);
+                }
             }
             else {
                 sb.append(token).append(" ");

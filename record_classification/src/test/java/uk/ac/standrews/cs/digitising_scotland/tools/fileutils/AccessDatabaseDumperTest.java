@@ -19,8 +19,8 @@ import com.healthmarketscience.jackcess.TableBuilder;
 public class AccessDatabaseDumperTest {
 
     private Database db;
-    private String databaseName = "testdb";
-    private String tableName = "testDB";
+    private String databaseName = "testDatabase";
+    private String tableName = "testTable";
     private String databaseLocation = "target/" + databaseName + ".mdb";
 
     @Before
@@ -30,9 +30,9 @@ public class AccessDatabaseDumperTest {
 
         Table table = new TableBuilder(tableName).addColumn(new ColumnBuilder("ID", DataType.INT)).addColumn(new ColumnBuilder("Foo", DataType.TEXT)).addColumn(new ColumnBuilder("Bar", DataType.TEXT)).toTable(db);
 
-        table.addRow(new Integer(0), "foo", "bar");
-        table.addRow(new Integer(1), "foo1", "bar1");
-        table.addRow(new Integer(2), "foo2", "bar2");
+        table.addRow(Integer.valueOf(0), "foo", "bar");
+        table.addRow(Integer.valueOf(1), "foo1", "bar1");
+        table.addRow(Integer.valueOf(2), "foo2", "bar2");
     }
 
     @Test
@@ -43,7 +43,7 @@ public class AccessDatabaseDumperTest {
 
         AccessDatabaseDumper dumper = new AccessDatabaseDumper(databaseLocation);
         dumper.writeTablesToFile("target/");
-        File actualTsv = new File("target/" + databaseName + "/" + databaseName + ".tsv");
+        File actualTsv = new File("target/" + databaseName + "/" + tableName + ".tsv");
         File expectedTsv = new File("src/test/resources/databaseDumperExpected.tsv");
         BufferedReader br = new BufferedReader(new FileReader(expectedTsv));
         String line;
