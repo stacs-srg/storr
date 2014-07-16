@@ -58,6 +58,12 @@ public class OrganicPerson implements IPerson {
         this.sex = sex;
     }
 
+    public OrganicPerson(Date date1, Date date2, char sex) {
+        dateOfBirth = date1;
+        dateOfDeath = date2;
+        this.sex = sex;
+    }
+
     public OrganicPerson(char sex) {
         this.sex = sex;
     }
