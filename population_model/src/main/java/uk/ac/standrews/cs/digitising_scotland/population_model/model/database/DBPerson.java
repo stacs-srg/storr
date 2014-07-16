@@ -42,7 +42,6 @@ public class DBPerson extends AbstractPerson {
                     PopulationProperties.getDatabaseName(),
                     PopulationProperties.PERSON_TABLE_NAME,
                     PopulationProperties.PERSON_FIELD_ID);
-            get_person_statement = connection.prepareStatement(person_query);
 
             String parents_query = String.format(
                     "SELECT %1$s FROM %2$s.%3$s WHERE %4$s = ?",
@@ -51,6 +50,7 @@ public class DBPerson extends AbstractPerson {
                     PopulationProperties.PARTNERSHIP_CHILD_TABLE_NAME,
                     PopulationProperties.PARTNERSHIP_FIELD_PERSON_ID);
 
+            get_person_statement = connection.prepareStatement(person_query);
             get_parents_statement = connection.prepareStatement(parents_query);
         }
 

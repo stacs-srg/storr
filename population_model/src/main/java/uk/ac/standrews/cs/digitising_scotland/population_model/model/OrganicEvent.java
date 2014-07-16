@@ -18,8 +18,29 @@ package uk.ac.standrews.cs.digitising_scotland.population_model.model;
 
 /**
  * Created by victor on 08/07/14.
+ * @author Tom Dalton (tsd4@st-andrews.ac.uk)
  */
 public class OrganicEvent {
 
-    // TODO move Organic classes to organic package
+    private EventType eventType;
+    
+    /**
+     * Initialises an OrganicEvent given the eventType which is an Enum of possible events
+     * 
+     * @param eventType Specifies the event type
+     */
+    public OrganicEvent(EventType eventType) {
+    	this.eventType = eventType;
+    }
+    
+    
+    /**
+     * Returns the event type
+     * 
+     * @return The event type
+     */
+    public EventType getEventType() {
+    	return eventType;
+    }
+    
 }

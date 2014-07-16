@@ -26,10 +26,15 @@ import java.io.IOException;
 import java.util.Properties;
 
 import org.apache.mahout.classifier.sgd.L1;
-import org.apache.mahout.math.*;
+import org.apache.mahout.math.DenseMatrix;
+import org.apache.mahout.math.DenseVector;
+import org.apache.mahout.math.MatrixWritable;
+import org.apache.mahout.math.NamedVector;
+import org.apache.mahout.math.Vector;
 import org.apache.mahout.math.Vector.Element;
-
+import org.apache.mahout.math.VectorWritable;
 import org.apache.mahout.math.function.Functions;
+
 import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearningConfiguration;
 
 /**
@@ -58,10 +63,12 @@ public class OLR {
     private int step;
 
     public int getStep() {
+
         return step;
     }
 
     public Vector classifyFull(Vector instance) {
+
         Vector r = new DenseVector(numCategories);
         r.viewPart(1, numCategories - 1).assign(classify(instance));
         r.setQuick(0, 1.0 - r.zSum());
@@ -73,17 +80,19 @@ public class OLR {
         Vector p = classify(instance);
         if (actual > 0) {
             return Math.max(-100.0, Math.log(p.get(actual - 1)));
-        } else {
+        }
+        else {
             return Math.max(-100.0, Math.log1p(-p.zSum()));
         }
     }
 
-
     public int getNumCategories() {
+
         return numCategories;
     }
 
     private class Gradient {
+
         public final Vector apply(NamedVector instance) {
 
             int actual = Integer.parseInt(instance.getName());
@@ -133,6 +142,7 @@ public class OLR {
     }
 
     private void nextStep() {
+
         step++;
     }
 
@@ -172,7 +182,6 @@ public class OLR {
 
     private void regularize(final int category, final int feature) {
 
-
         double lastUpdated = updateSteps.get(feature);
         double missingUpdates = getStep() - lastUpdated;
         if (missingUpdates > 0) {
@@ -191,7 +200,8 @@ public class OLR {
 
         if (weArePerTermAnnealing) {
             return perTermLearningRate(feature);
-        } else {
+        }
+        else {
             return currentLearningRate();
         }
     }
@@ -209,13 +219,15 @@ public class OLR {
     }
 
     public Vector link(Vector v) {
+
         double max = v.maxValue();
         if (max >= 40) {
             // if max > 40, we subtract the large offset first
             // the size of the max means that 1+sum(exp(v)) = sum(exp(v)) to within round-off
             v.assign(Functions.minus(max)).assign(Functions.EXP);
             return v.divide(v.norm(1));
-        } else {
+        }
+        else {
             v.assign(Functions.EXP);
             return v.divide(1 + v.norm(1));
         }

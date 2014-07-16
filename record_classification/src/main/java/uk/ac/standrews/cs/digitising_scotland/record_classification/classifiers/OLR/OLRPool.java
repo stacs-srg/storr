@@ -16,6 +16,8 @@ import org.apache.mahout.math.NamedVector;
 import org.apache.mahout.math.Vector;
 import org.apache.mahout.math.function.DoubleDoubleFunction;
 import org.apache.mahout.math.function.Functions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.Lists;
 
@@ -27,6 +29,7 @@ import com.google.common.collect.Lists;
  */
 public class OLRPool implements Runnable {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(OLRPool.class);
     private final boolean modelTrainable;
     private List<OLRShuffled> models = Lists.newArrayList();
     private Properties properties;
@@ -67,7 +70,10 @@ public class OLRPool implements Runnable {
 
     public void getSurvivors() {
 
+        LOGGER.info("Getting survivors...");
+        LOGGER.info("Calling testAndPackageModels");
         ArrayList<ModelDoublePair> modelPairs = testAndPackageModels();
+        LOGGER.info("Calling getSurvivors");
         survivors = getSurvivors(modelPairs);
     }
 
@@ -167,7 +173,7 @@ public class OLRPool implements Runnable {
 
         ArrayList<OLRShuffled> survivors = new ArrayList<OLRShuffled>();
         Collections.sort(modelPairs);
-        for (int i = (modelPairs.size() - 1); i >= (modelPairs.size() - numSurvivors); i--) {
+        for (int i = (modelPairs.size() - 1); i >= modelPairs.size() - numSurvivors; i--) {
             survivors.add(modelPairs.get(i).getModel());
         }
         return survivors;

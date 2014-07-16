@@ -57,7 +57,8 @@ public abstract class AbstractClassifier {
      * 
      * @param record
      *            Record to classify
-     * @return record record with a new {@link ClassificationSet}
+     * @return record record with a new set of classifications
+     * 
      * @throws IOException
      *             An exception will be thrown for any number of reasons,
      *             including using invalid training data, codes or malformed

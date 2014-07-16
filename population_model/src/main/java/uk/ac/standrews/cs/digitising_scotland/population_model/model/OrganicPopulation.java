@@ -18,6 +18,8 @@ package uk.ac.standrews.cs.digitising_scotland.population_model.model;
 
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.AgeAtDeathDistribution;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.Distribution;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.FemaleAgeAtMarriageDistribution;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.MaleAgeAtMarriageDistribution;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.UniformDistribution;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.UniformSexDistribution;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.in_memory.CompactPopulation;
@@ -25,13 +27,15 @@ import uk.ac.standrews.cs.digitising_scotland.population_model.util.RandomFactor
 import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
-import java.util.Date;
 
 /**
  * Created by victor on 11/06/14.
+ * @author Tom Dalton (tsd4@st-andrews.ac.uk)
  */
 public class OrganicPopulation implements IPopulation {
 
@@ -70,6 +74,8 @@ public class OrganicPopulation implements IPopulation {
     private Distribution<Integer> seed_age_distribution = new UniformDistribution(0, 70, random);
     private Distribution<Boolean> sex_distribution = new UniformSexDistribution(random);
     private Distribution<Integer> age_at_death_distribution = new AgeAtDeathDistribution(random);
+    private Distribution<Integer> maleAgeAtMarriageDistrobution = new MaleAgeAtMarriageDistribution(random);
+    private Distribution<Integer> femaleAgeAtMarriageDistrobution = new FemaleAgeAtMarriageDistribution(random);
 
 
     private List<OrganicPerson> people = new ArrayList<OrganicPerson>();
@@ -77,25 +83,18 @@ public class OrganicPopulation implements IPopulation {
     
     private LinkedList<OrganicPerson> maleParnershipQueue = new LinkedList<OrganicPerson>();
     private LinkedList<OrganicPerson> femaleParnershipQueue = new LinkedList<OrganicPerson>();
+    
+    private LinkedList<Integer> maleInitialPartnershipOrderer = new LinkedList<Integer>();
+    private LinkedList<Integer> femaleInitialPartnershipOrderer = new LinkedList<Integer>();
 
     public void makeSeed(int size) {
 
         for (int i = 0; i < size; i++) {
 
-            Date currentDateOfBirth;
-            int age = seed_age_distribution.getSample();
-            int auxiliary = (int) ((age - 1) * (DAYS_PER_YEAR)) + RandomFactory.getRandomInt(1, (int) DAYS_PER_YEAR);
-            auxiliary = DateManipulation.dateToDays(START_YEAR, 1, 1) - auxiliary;
-
-            currentDateOfBirth = DateManipulation.daysToDate(auxiliary);
-            auxiliary = age_at_death_distribution.getSample();
-            Date currentDateOfDeath;
-
-
             if (sex_distribution.getSample())
-                people.add(new OrganicPerson(currentDateOfBirth, 'M'));
+                people.add(new OrganicPerson('M'));
             else
-                people.add(new OrganicPerson(currentDateOfBirth, 'F'));
+                people.add(new OrganicPerson('F'));
         }
     }
 
@@ -104,14 +103,96 @@ public class OrganicPopulation implements IPopulation {
     }
 
     public void generate_timelines() {
+
+        UniformDistribution days_of_year_distribution = new UniformDistribution(1, (int) DAYS_PER_YEAR, random);
+
         for (int i = 0; i < people.size(); i++) {
             if (people.get(i).getTimeline() == null) {
+
                 OrganicPerson currentPerson = people.get(i);
                 OrganicTimeline currentTimeline;
-                currentTimeline = new OrganicTimeline(currentPerson.getBirthDate(), age_at_death_distribution.getSample());
-                currentPerson.setTimeline(currentTimeline);
+
+                //Math for dates of birth and death
+                Date currentDateOfBirth;
+                int age = seed_age_distribution.getSample();
+                int auxiliary = (int) ((age - 1) * (DAYS_PER_YEAR)) + days_of_year_distribution.getSample();
+                auxiliary = DateManipulation.dateToDays(START_YEAR, 1, 1) - auxiliary;
+
+                currentDateOfBirth = DateManipulation.daysToDate(auxiliary);
+
+                Distribution<Integer> seed_death_distribution = new UniformDistribution(age, 100, random);
+                auxiliary = DateManipulation.dateToDays(START_YEAR,1,1) + (seed_death_distribution.getSample() - age)*(int)DAYS_PER_YEAR;
+                Date currentDateOfDeath = DateManipulation.daysToDate(auxiliary);
+
+
+                currentTimeline = new OrganicTimeline(currentDateOfBirth, currentDateOfDeath);
+                
+                // Add ELIGIBLE_TO_MARRY event
+                int date;
+                if(currentPerson.getSex() == 'M') {
+                	// time in days to birth from 1/1/1600 + marriage age in days
+                	date = DateManipulation.dateToDays(currentTimeline.getStartDate()) + maleAgeAtMarriageDistrobution.getSample();
+                	currentTimeline.addEvent(date , new OrganicEvent(EventType.ELIGIBLE_TO_MARRY));
+                } else {
+                	// time in days to birth from 1/1/1600 + marriage age in days
+                	date = DateManipulation.dateToDays(currentTimeline.getStartDate()) + maleAgeAtMarriageDistrobution.getSample();
+                	currentTimeline.addEvent(date, new OrganicEvent(EventType.ELIGIBLE_TO_MARRY));
+                }
+                
+                // If marriage date is before simulation start date then add to respective partnership queue
+                //  Must be added to the partnership queue in the order that would be expected if simulation had occurred naturally.
+                if(date <= DateManipulation.dateToDays(START_YEAR, 0, 0)) {
+                	if(currentPerson.getSex() == 'M') {
+                		Iterator iter = maleInitialPartnershipOrderer.iterator();
+                		int count = 0;
+                		while (iter.hasNext()) {
+							if(date < (Integer)iter.next()) {
+								maleInitialPartnershipOrderer.add(count, date);
+								maleParnershipQueue.add(count, currentPerson);
+								break;
+							}
+							count++;
+						}
+                	} else if(currentPerson.getSex() == 'F') {
+                		Iterator iter = femaleInitialPartnershipOrderer.iterator();
+                		int count = 0;
+                		while (iter.hasNext()) {
+							if(date < (Integer)iter.next()) {
+								femaleInitialPartnershipOrderer.add(count, date);
+								femaleParnershipQueue.add(count, currentPerson);
+								break;
+							}
+							count++;
+						}
+                	} 
+                }
+                maleInitialPartnershipOrderer.clear();
+                femaleInitialPartnershipOrderer.clear();
+                
+                currentPerson.setTimeline(currentTimeline);               
             }
         }
+        marryUpPeople();
+    }
+    
+    public void marryUpPeople() {
+    	Iterator iter = maleParnershipQueue.iterator();
+    	while (iter.hasNext()) {
+			if(!femaleParnershipQueue.isEmpty()) {
+				marry((OrganicPerson)iter.next(),femaleParnershipQueue.getFirst());
+				// remove people from queues
+				
+			}
+			
+		}
+    }
+    
+    public void marry(OrganicPerson husband, OrganicPerson wife) {
+    	// Create partnership
+    	// Add both parties
+    	// Create timeline
+    	// Place events on timeline - births and divorces
+    	//     	
     }
 
     public void mainIteration() {
@@ -174,7 +255,12 @@ public class OrganicPopulation implements IPopulation {
         op.makeSeed();
         op.generate_timelines();
         for (int i = 0; i < op.getNumberOfPeople(); i++) {
-            System.out.println(op.people.get(i).getDeathDate());
+        	System.out.println();
+            System.out.println("BORN: " + op.people.get(i).getBirthDate());
+            System.out.println("DIED: " + op.people.get(i).getDeathDate());
+            int x = (DateManipulation.dateToDays(op.people.get(i).getDeathDate()) - DateManipulation.dateToDays(op.people.get(i).getBirthDate()))/365;
+            System.out.println("ALIVE FOR: " + x);
+            System.out.println();
         }
     }
 }

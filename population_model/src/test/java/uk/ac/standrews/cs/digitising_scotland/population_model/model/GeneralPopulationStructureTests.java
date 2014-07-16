@@ -16,10 +16,8 @@
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.model;
 
-import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.junit.runners.MethodSorters;
 import org.junit.runners.Parameterized;
 import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
 
@@ -39,7 +37,6 @@ import static org.junit.Assert.*;
  * @author Graham Kirby (graham.kirby@st-andrews.ac.uk)
  */
 @RunWith(Parameterized.class)
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public abstract class GeneralPopulationStructureTests {
 
     protected IPopulation population;
@@ -160,6 +157,15 @@ public abstract class GeneralPopulationStructureTests {
     }
 
     @Test
+    public void sexesConsistent() {
+
+        for (IPartnership partnership : population.getPartnerships()) {
+
+            assertSexesConsistent(partnership);
+        }
+    }
+
+    @Test
     public void surnamesInheritedOnMaleLine() throws Exception {
 
         for (IPerson person : population.getPeople()) {
@@ -183,15 +189,6 @@ public abstract class GeneralPopulationStructureTests {
         for (IPartnership partnership : population.getPartnerships()) {
 
             assertParentNotPartnerOfChild(partnership);
-        }
-    }
-
-    @Test
-    public void noSameSexPartnerships() throws Exception {
-
-        for (IPartnership partnership : population.getPartnerships()) {
-
-            assertPartnersDifferentSex(partnership);
         }
     }
 
@@ -229,11 +226,8 @@ public abstract class GeneralPopulationStructureTests {
 
     private void assertParentsHaveSensibleAgesAtBirth(IPartnership partnership) throws Exception {
 
-        IPerson partner1 = population.findPerson(partnership.getPartner1Id());
-        IPerson partner2 = population.findPerson(partnership.getPartner2Id());
-
-        IPerson father = partner1.getSex() == IPerson.MALE ? partner1 : partner2;
-        IPerson mother = partner1.getSex() == IPerson.FEMALE ? partner1 : partner2;
+        IPerson mother = population.findPerson(partnership.getFemalePartnerId());
+        IPerson father = population.findPerson(partnership.getMalePartnerId());
 
         for (final int child_id : partnership.getChildIds()) {
 
@@ -249,18 +243,10 @@ public abstract class GeneralPopulationStructureTests {
 
             for (final int child_id : child_ids) {
 
-                assertFalse(child_id == partnership.getPartner1Id());
-                assertFalse(child_id == partnership.getPartner2Id());
+                assertFalse(child_id == partnership.getFemalePartnerId());
+                assertFalse(child_id == partnership.getMalePartnerId());
             }
         }
-    }
-
-    private void assertPartnersDifferentSex(IPartnership partnership) throws Exception {
-
-        IPerson partner1 = population.findPerson(partnership.getPartner1Id());
-        IPerson partner2 = population.findPerson(partnership.getPartner2Id());
-
-        assertFalse(partner1.getSex() == partner2.getSex());
     }
 
     private void assertNoneOfChildrenAreSiblingPartners(IPerson person) throws Exception {
@@ -279,6 +265,12 @@ public abstract class GeneralPopulationStructureTests {
                 }
             }
         }
+    }
+
+    private void assertSexesConsistent(IPartnership partnership) {
+
+        assertEquals(population.findPerson(partnership.getFemalePartnerId()).getSex(), IPerson.FEMALE);
+        assertEquals(population.findPerson(partnership.getMalePartnerId()).getSex(), IPerson.MALE);
     }
 
     private void assertNotPartnerOfAny(final int person_id, final Set<Integer> people_ids) throws Exception {
@@ -387,8 +379,8 @@ public abstract class GeneralPopulationStructureTests {
 
         if (consistent_across_iterations) {
 
-            assertEquals(partnership.getPartner1Id(), retrieved_person.getPartner1Id());
-            assertEquals(partnership.getPartner2Id(), retrieved_person.getPartner2Id());
+            assertEquals(partnership.getFemalePartnerId(), retrieved_person.getFemalePartnerId());
+            assertEquals(partnership.getMalePartnerId(), retrieved_person.getMalePartnerId());
             assertEquals(partnership.getMarriageDate(), retrieved_person.getMarriageDate());
             assertChildrenEqual(partnership.getChildIds(), retrieved_person.getChildIds());
         }

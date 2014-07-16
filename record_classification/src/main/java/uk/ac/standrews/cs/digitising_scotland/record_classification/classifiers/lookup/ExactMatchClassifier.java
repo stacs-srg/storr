@@ -20,7 +20,6 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeTriple;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
-import cc.mallet.classify.Classification;
 
 /**
  * Uses a lookup table to return matches as classifications.
@@ -111,7 +110,7 @@ public class ExactMatchClassifier extends AbstractClassifier {
     }
 
     /**
-     * Adds each {@link Classification} in the records {@link ClassificationSet} to the lookupTable.
+     * Adds each gold standard {@link CodeTriple} in the records to the lookupTable.
      * @param record to add
      */
     private void addRecordToLookupTable(final Record record) {

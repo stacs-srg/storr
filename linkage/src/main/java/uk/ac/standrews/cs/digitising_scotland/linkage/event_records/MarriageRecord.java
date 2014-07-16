@@ -118,11 +118,8 @@ public class MarriageRecord extends Record {
 
         setUid(String.valueOf(partnership.getId()));
 
-        IPerson partner1 = population.findPerson(partnership.getPartner1Id());
-        IPerson partner2 = population.findPerson(partnership.getPartner2Id());
-
-        IPerson groom = partner1.getSex() == IPerson.MALE ? partner1 : partner2;
-        IPerson bride = partner1.getSex() == IPerson.FEMALE ? partner1 : partner2;
+        IPerson bride = population.findPerson(partnership.getFemalePartnerId());
+        IPerson groom = population.findPerson(partnership.getMalePartnerId());
 
         setGroomForename(groom.getFirstName());
         setGroomSurname(groom.getSurname());
@@ -135,11 +132,8 @@ public class MarriageRecord extends Record {
 
             IPartnership groom_parents_partnership = population.findPartnership(groom_parents_partnership_id);
 
-            IPerson groom_parents_partner1 = population.findPerson(groom_parents_partnership.getPartner1Id());
-            IPerson groom_parents_partner2 = population.findPerson(groom_parents_partnership.getPartner2Id());
-
-            IPerson groom_father = groom_parents_partner1.getSex() == IPerson.MALE ? groom_parents_partner1 : groom_parents_partner2;
-            IPerson groom_mother = groom_parents_partner1.getSex() == IPerson.FEMALE ? groom_parents_partner1 : groom_parents_partner2;
+            IPerson groom_mother = population.findPerson(groom_parents_partnership.getFemalePartnerId());
+            IPerson groom_father = population.findPerson(groom_parents_partnership.getMalePartnerId());
 
             setGroomFathersForename(groom_father.getFirstName());
             setGroomFathersSurname(getRecordedParentsSurname(groom_father.getSurname(), groom.getSurname()));
@@ -151,16 +145,13 @@ public class MarriageRecord extends Record {
         final int bride_parents_partnership_id = bride.getParentsPartnership();
         if (bride_parents_partnership_id != -1) {
 
-            IPartnership bride_parents_partnership = population.findPartnership(groom_parents_partnership_id);
+            IPartnership bride_parents_partnership = population.findPartnership(bride_parents_partnership_id);
 
-            IPerson bride_parents_partner1 = population.findPerson(bride_parents_partnership.getPartner1Id());
-            IPerson bride_parents_partner2 = population.findPerson(bride_parents_partnership.getPartner2Id());
-
-            IPerson bride_father = bride_parents_partner1.getSex() == IPerson.MALE ? bride_parents_partner1 : bride_parents_partner2;
-            IPerson bride_mother = bride_parents_partner1.getSex() == IPerson.FEMALE ? bride_parents_partner1 : bride_parents_partner2;
+            IPerson bride_mother = population.findPerson(bride_parents_partnership.getFemalePartnerId());
+            IPerson bride_father = population.findPerson(bride_parents_partnership.getMalePartnerId());
 
             setBrideFathersForename(bride_father.getFirstName());
-            setBrideFathersSurname(getRecordedParentsSurname(bride_father.getSurname(), groom.getSurname()));
+            setBrideFathersSurname(getRecordedParentsSurname(bride_father.getSurname(), bride.getSurname()));
 
             setBrideMothersForename(bride_mother.getFirstName());
             setBrideMothersMaidenSurname(getMaidenSurname(population, bride_mother));

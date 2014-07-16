@@ -17,32 +17,28 @@
 package uk.ac.standrews.cs.digitising_scotland.population_model.model.gedcom;
 
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.InconsistentWeightException;
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.NegativeDeviationException;
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.NegativeWeightException;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPopulation;
-import uk.ac.standrews.cs.digitising_scotland.population_model.model.PopulationToFile;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPopulationWriter;
 import uk.ac.standrews.cs.digitising_scotland.population_model.transform.AbstractTestCaseRecorder;
 
 import java.io.IOException;
 
 /**
  * Generates test cases for GEDCOM export.
- * 
+ *
  * @author Graham Kirby (graham.kirby@st-andrews.ac.uk)
  */
 public class GEDCOMTestCaseRecorder extends AbstractTestCaseRecorder {
 
-    public static void main(final String[] args) throws IOException, InconsistentWeightException, NegativeDeviationException, NegativeWeightException {
+    public static void main(final String[] args) throws Exception {
 
-        final GEDCOMTestCaseRecorder recorder = new GEDCOMTestCaseRecorder();
-
-        recorder.recordTestCase();
+        new GEDCOMTestCaseRecorder().recordTestCase();
     }
 
     @Override
-    protected PopulationToFile getExporter(final IPopulation population, final String path_string) throws IOException, InconsistentWeightException {
+    protected IPopulationWriter getPopulationWriter(final String path_string, final IPopulation population) throws IOException, InconsistentWeightException {
 
-        return new PopulationToGEDCOM(population, path_string);
+        return new PopulationToGEDCOM(path_string);
     }
 
     @Override

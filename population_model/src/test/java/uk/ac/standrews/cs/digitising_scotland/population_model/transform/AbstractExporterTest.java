@@ -16,7 +16,7 @@
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.transform;
 
-import org.junit.runners.Parameterized.Parameters;
+import org.junit.runners.Parameterized;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IDFactory;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPopulation;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.in_memory.CompactPopulation;
@@ -53,13 +53,13 @@ public abstract class AbstractExporterTest {
         }
     }
 
-    public AbstractExporterTest(final IPopulation population, final String file_name_root) {
+    public AbstractExporterTest(final IPopulation population, final String file_name_root) throws Exception {
 
         this.population = population;
         this.file_name_root = file_name_root;
     }
 
-    @Parameters
+    @Parameterized.Parameters(name = "{0}")
     public static Collection<Object[]> generateConfigurations() throws Exception {
 
         final Object[][] configurations = new Object[TEST_CASE_POPULATION_SIZES.length][];
@@ -72,7 +72,10 @@ public abstract class AbstractExporterTest {
     private static Object[] makeTestConfiguration(final int population_size, final String file_name_root) throws Exception {
 
         IDFactory.resetId();
-        return new Object[]{new CompactPopulationAdapter(new CompactPopulation(population_size)), file_name_root};
+        IPopulation population = new CompactPopulationAdapter(new CompactPopulation(population_size));
+        population.setDescription(String.valueOf(population_size));
+
+        return new Object[]{population, file_name_root};
     }
 
     private static String makeFileNameRoot(final int population_size) {

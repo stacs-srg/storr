@@ -17,8 +17,11 @@
 package uk.ac.standrews.cs.digitising_scotland.population_model.tools;
 
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPopulation;
-import uk.ac.standrews.cs.digitising_scotland.population_model.model.PopulationToFile;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPopulationWriter;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.PopulationConverter;
 import uk.ac.standrews.cs.nds.util.CommandLineArgs;
+
+import java.io.IOException;
 
 /**
  * Manual test of Graphviz export.
@@ -32,7 +35,7 @@ public abstract class AbstractPopulationToFile {
 
     public abstract IPopulation getPopulation(String[] args) throws Exception;
 
-    public abstract PopulationToFile getExporter(IPopulation population, String path_string);
+    public abstract IPopulationWriter getPopulationWriter(String path_string, IPopulation population) throws IOException;
 
     protected void export(String[] args) throws Exception {
 
@@ -41,7 +44,14 @@ public abstract class AbstractPopulationToFile {
         if (path_string != null) {
 
             System.out.println("exporting...");
-            getExporter(getPopulation(args), path_string).export();
+
+            IPopulation population = getPopulation(args);
+            IPopulationWriter exporter = getPopulationWriter(path_string, population);
+
+            try (PopulationConverter converter = new PopulationConverter(population, exporter)) {
+                converter.convert();
+            }
+
             System.out.println("done");
 
         } else {

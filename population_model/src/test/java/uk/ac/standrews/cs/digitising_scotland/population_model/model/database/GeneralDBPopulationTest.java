@@ -128,8 +128,8 @@ public class GeneralDBPopulationTest extends GeneralPopulationStructureTests {
         for (IPartnership partnership1 : population.getPartnerships()) {
 
             IPartnership partnership2 = original_population.findPartnership(partnership1.getId());
-            assertTrue(partnership1.getPartner1Id() == partnership2.getPartner1Id() || partnership1.getPartner1Id() == partnership2.getPartner2Id());
-            assertTrue(partnership1.getPartner2Id() == partnership2.getPartner2Id() || partnership1.getPartner2Id() == partnership2.getPartner1Id());
+            assertTrue(partnership1.getMalePartnerId() == partnership2.getMalePartnerId());
+            assertTrue(partnership1.getFemalePartnerId() == partnership2.getFemalePartnerId());
         }
     }
 

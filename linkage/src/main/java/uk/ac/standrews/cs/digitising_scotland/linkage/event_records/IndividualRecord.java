@@ -28,24 +28,16 @@ public abstract class IndividualRecord extends Record {
     protected void setParentAttributes(IPerson person, IPopulation population, IPartnership parents_partnership) {
 
         // Attributes associated with individual's parents.
-        for (final int parent_id : parents_partnership.getPartnerIds()) {
+        IPerson mother = population.findPerson(parents_partnership.getFemalePartnerId());
+        IPerson father = population.findPerson(parents_partnership.getMalePartnerId());
 
-            IPerson parent = population.findPerson(parent_id);
+        setMothersForename(mother.getFirstName());
+        setMothersSurname(getRecordedParentsSurname(mother.getSurname(), person.getSurname()));
+        setMothersMaidenSurname(getMaidenSurname(population, mother));
 
-            if (parent.getSex() == IPerson.MALE) {
-
-                setFathersForename(parent.getFirstName());
-                setFathersSurname(getRecordedParentsSurname(parent.getSurname(), person.getSurname()));
-                setFathersOccupation(parent.getOccupation());
-
-            } else {
-
-                setMothersForename(parent.getFirstName());
-                setMothersSurname(getRecordedParentsSurname(parent.getSurname(), person.getSurname()));
-
-                setMothersMaidenSurname(getMaidenSurname(population, parent));
-            }
-        }
+        setFathersForename(father.getFirstName());
+        setFathersSurname(getRecordedParentsSurname(father.getSurname(), person.getSurname()));
+        setFathersOccupation(father.getOccupation());
     }
 
     public String getSurname() {

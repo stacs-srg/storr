@@ -102,7 +102,7 @@ public class SpecificPopulationStructureTest {
         int partnershipA_id = partnershipA_ids.get(0);
         IPartnership partnershipA = population.findPartnership(partnershipA_id);
 
-        assertPartnerIds(partnershipA.getPartner1Id(), partnershipA.getPartner2Id(), CompactPopulationTestCases.fatherA_id, CompactPopulationTestCases.motherA_id);
+        assertPartnerIds(partnershipA.getMalePartnerId(), partnershipA.getFemalePartnerId(), CompactPopulationTestCases.fatherA_id, CompactPopulationTestCases.motherA_id);
 
         // Check that the family has the expected two children.
         List<Integer> child_ids_partnershipA = partnershipA.getChildIds();
@@ -126,7 +126,7 @@ public class SpecificPopulationStructureTest {
         int partnershipB_id = partnershipB_ids.get(0);
         IPartnership partnershipB = population.findPartnership(partnershipB_id);
 
-        assertPartnerIds(partnershipB.getPartner1Id(), partnershipB.getPartner2Id(), CompactPopulationTestCases.fatherB_id, CompactPopulationTestCases.motherB_id);
+        assertPartnerIds(partnershipB.getMalePartnerId(), partnershipB.getFemalePartnerId(), CompactPopulationTestCases.fatherB_id, CompactPopulationTestCases.motherB_id);
 
         // Check that the family has the expected two children.
         List<Integer> child_ids_partnershipB = partnershipB.getChildIds();
@@ -143,6 +143,6 @@ public class SpecificPopulationStructureTest {
 
     private void assertPartnerIds(int partner1Id, int partner2Id, int father_id, int mother_id) {
 
-        assertTrue(partner1Id == father_id && partner2Id == mother_id || partner1Id == mother_id && partner2Id == father_id);
+        assertTrue(partner1Id == father_id && partner2Id == mother_id);
     }
 }

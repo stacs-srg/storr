@@ -18,7 +18,6 @@ package uk.ac.standrews.cs.digitising_scotland.population_model.model.gedcom;
 
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPartnership;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPerson;
-import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPopulation;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.PopulationToFile;
 import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
 
@@ -37,8 +36,6 @@ import java.util.List;
  */
 public class PopulationToGEDCOM extends PopulationToFile {
 
-    // TODO implement IPopulationWriter
-
     private static final String CHAR_SET = "ASCII";
     private static final String GEDCOM_FORM = "LINEAGE-LINKED";
     private static final String GEDCOM_VERSION = "5.5.1";
@@ -48,13 +45,12 @@ public class PopulationToGEDCOM extends PopulationToFile {
     /**
      * Initialises the exporter. This includes potentially expensive scanning of the population graph.
      *
-     * @param population  the population
      * @param path_string the path for the output file
      * @throws IOException if the file does not exist and cannot be created
      */
-    public PopulationToGEDCOM(final IPopulation population, final String path_string) {
+    public PopulationToGEDCOM(final String path_string) throws IOException {
 
-        super(population, path_string);
+        super(path_string);
     }
 
     @Override
@@ -70,7 +66,7 @@ public class PopulationToGEDCOM extends PopulationToFile {
     }
 
     @Override
-    protected void outputIndividual(final PrintWriter writer, final IPerson person) {
+    public void recordPerson(IPerson person) {
 
         writer.println("0 @" + individualLabel(person.getId()) + "@ INDI");
         writer.println("1 NAME " + person.getFirstName() + " /" + person.getSurname() + "/");
@@ -99,32 +95,26 @@ public class PopulationToGEDCOM extends PopulationToFile {
     }
 
     @Override
-    protected void outputFamilies(final PrintWriter writer) {
+    public void recordPartnership(IPartnership partnership) {
 
-        for (IPartnership partnership : population.getPartnerships()) {
+        final int partnership_id = partnership.getId();
 
-            final int partnership_id = partnership.getId();
+        writer.println("0 @" + familyLabel(partnership_id) + "@ FAM");
+        if (partnership.getMarriageDate() != null) {
+            writer.println("1 MARR");
+            writer.println("2 DATE " + DateManipulation.formatDate(partnership.getMarriageDate()));
+        }
 
-            writer.println("0 @" + familyLabel(partnership_id) + "@ FAM");
-            if (partnership.getMarriageDate() != null) {
-                writer.println("1 MARR");
-                writer.println("2 DATE " + DateManipulation.formatDate(partnership.getMarriageDate()));
-            }
+        int father_id = partnership.getMalePartnerId();
+        int mother_id = partnership.getFemalePartnerId();
 
-            IPerson partner1 = population.findPerson(partnership.getPartner1Id());
-            IPerson partner2 = population.findPerson(partnership.getPartner2Id());
+        writer.println("1 HUSB @" + individualLabel(father_id) + "@");
+        writer.println("1 WIFE @" + individualLabel(mother_id) + "@");
 
-            IPerson father = partner1.getSex() == IPerson.MALE ? partner1 : partner2;
-            IPerson mother = partner1.getSex() == IPerson.FEMALE ? partner1 : partner2;
-
-            writer.println("1 HUSB @" + individualLabel(father.getId()) + "@");
-            writer.println("1 WIFE @" + individualLabel(mother.getId()) + "@");
-
-            List<Integer> child_ids = partnership.getChildIds();
-            if (child_ids != null) {
-                for (final int child_id : child_ids) {
-                    writer.println("1 CHIL @" + individualLabel(child_id) + "@");
-                }
+        List<Integer> child_ids = partnership.getChildIds();
+        if (child_ids != null) {
+            for (final int child_id : child_ids) {
+                writer.println("1 CHIL @" + individualLabel(child_id) + "@");
             }
         }
     }

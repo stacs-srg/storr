@@ -14,7 +14,6 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeTriple;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
-import cc.mallet.classify.Classification;
 
 /**
  * Uses a lookup table to return matches as classifications.
@@ -83,7 +82,7 @@ public class LookupTableClassifier extends AbstractClassifier implements Seriali
     }
 
     /**
-     * Adds each {@link Classification} in the records {@link ClassificationSet} to the lookupTable.
+     * Adds each {@link TokenSet} in the records {@link CodeTriple} to the lookupTable.
      * @param record to add
      */
     protected void addRecordToLookupTable(final Record record) {
@@ -94,7 +93,7 @@ public class LookupTableClassifier extends AbstractClassifier implements Seriali
     }
 
     /**
-     * Classifies and {@link NGramSubstrings} object and return a {@link ClassificationSet}.
+     * Classifies and {@link NGramSubstrings} object and return a set of {@link CodeTriple}.
      *
      * @param grams the grams
      * @param record the record that the grams came from

@@ -112,6 +112,7 @@ public final class TrainAndMultiplyClassify {
 
         AbstractClassifier classifier = trainOLRClassifier(trainingBucket, vectorFactory);
 
+        LOGGER.info("********** Creating Lookup Tables **********");
         ExactMatchClassifier exactMatchClassifier = trainExactMatchClassifier();
 
         // Bucket predicitionBucket = createPredictionBucket(prediction);
@@ -142,7 +143,6 @@ public final class TrainAndMultiplyClassify {
         generateAndPrintStats(uniqueRecordsOnly);
 
         System.out.println("Codes that were null and weren't adter chopping: " + CodeFactory.getInstance().getCodeMapNullCounter());
-
 
         t.stop();
         System.out.println("Elapsed Time: " + t.elapsedTime());
@@ -303,7 +303,7 @@ public final class TrainAndMultiplyClassify {
     private static AbstractClassifier trainOLRClassifier(final Bucket bucket, final VectorFactory vectorFactory) throws Exception {
 
         AbstractClassifier olrClassifier = new OLRClassifier(vectorFactory);
-        ((OLRClassifier) olrClassifier).setModelPath(experimentalFolderName + "/Models/olrModel");
+        OLRClassifier.setModelPath(experimentalFolderName + "/Models/olrModel");
         olrClassifier.train(bucket);
         return olrClassifier;
     }
@@ -330,9 +330,8 @@ public final class TrainAndMultiplyClassify {
         BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(inputFile), "UTF8"));
         String line = br.readLine();
         br.close();
-        if (line != null) {
-            if (line.split(Utils.getCSVComma()).length == 38) { return true; }
-        }
+        final int lineLength = line.split(Utils.getCSVComma()).length;
+        if (line != null && lineLength == 38) { return true; }
         return false;
     }
 
@@ -343,10 +342,8 @@ public final class TrainAndMultiplyClassify {
         int highestFolderCount = 0;
         File base = new File(baseFolder);
 
-        if (!base.exists()) {
-            if (!base.mkdirs()) {
-                System.err.println("Could not create all folders in path " + base + ".\n" + base.getAbsolutePath() + " may already exsists");
-            }
+        if (!base.exists() && !base.mkdirs()) {
+            System.err.println("Could not create all folders in path " + base + ".\n" + base.getAbsolutePath() + " may already exsists");
         }
 
         File[] allFiles = base.listFiles();
