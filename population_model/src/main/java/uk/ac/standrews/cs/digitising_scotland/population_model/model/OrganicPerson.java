@@ -50,9 +50,9 @@ public class OrganicPerson implements IPerson {
         this.sex = sex;
     }
 
-    public OrganicPerson(int age, char sex) {
+    public OrganicPerson(int id, char sex) {
         this.sex = sex;
-        age_in_days = age;
+        this.id = id;
     }
 
     public void setTimeline(OrganicTimeline t) {

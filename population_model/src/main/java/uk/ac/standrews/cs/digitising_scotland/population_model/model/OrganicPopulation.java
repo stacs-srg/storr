@@ -92,9 +92,9 @@ public class OrganicPopulation implements IPopulation {
         for (int i = 0; i < size; i++) {
 
             if (sex_distribution.getSample())
-                people.add(new OrganicPerson('M'));
+                people.add(IDFactory.getNextID(), new OrganicPerson('M'));
             else
-                people.add(new OrganicPerson('F'));
+                people.add(IDFactory.getNextID(), new OrganicPerson('F'));
         }
     }
 
