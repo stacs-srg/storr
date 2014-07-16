@@ -26,15 +26,10 @@ import java.io.IOException;
 import java.util.Properties;
 
 import org.apache.mahout.classifier.sgd.L1;
-import org.apache.mahout.math.DenseMatrix;
-import org.apache.mahout.math.DenseVector;
-import org.apache.mahout.math.MatrixWritable;
-import org.apache.mahout.math.NamedVector;
-import org.apache.mahout.math.Vector;
+import org.apache.mahout.math.*;
 import org.apache.mahout.math.Vector.Element;
-import org.apache.mahout.math.VectorWritable;
-import org.apache.mahout.math.function.Functions;
 
+import org.apache.mahout.math.function.Functions;
 import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearningConfiguration;
 
 /**
@@ -43,13 +38,15 @@ import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearnin
  */
 public class OLR {
 
-    private L1 prior;
     private Gradient gradient = new Gradient();
     protected org.apache.mahout.math.Matrix beta;
 
     private Properties properties;
+
     //set in properties
+    //TODO OLR parameters object?
     private double mu0;
+    private L1 prior;
     private double decayFactor;
     private double perTermAnnealingRate;
     private boolean weArePerTermAnnealing;
@@ -61,37 +58,33 @@ public class OLR {
     private int step;
 
     public int getStep() {
-
         return step;
     }
 
-    public Vector classifyFull(final Vector instance) {
-
+    public Vector classifyFull(Vector instance) {
         Vector r = new DenseVector(numCategories);
         r.viewPart(1, numCategories - 1).assign(classify(instance));
         r.setQuick(0, 1.0 - r.zSum());
         return r;
     }
 
-    public double logLikelihood(final int actual, final Vector instance) {
+    public double logLikelihood(int actual, Vector instance) {
 
         Vector p = classify(instance);
         if (actual > 0) {
             return Math.max(-100.0, Math.log(p.get(actual - 1)));
-        }
-        else {
+        } else {
             return Math.max(-100.0, Math.log1p(-p.zSum()));
         }
     }
 
-    public int getNumCategories() {
 
+    public int getNumCategories() {
         return numCategories;
     }
 
     private class Gradient {
-
-        public final Vector apply(final NamedVector instance) {
+        public final Vector apply(NamedVector instance) {
 
             int actual = Integer.parseInt(instance.getName());
             // what does the current model say?
@@ -140,7 +133,6 @@ public class OLR {
     }
 
     private void nextStep() {
-
         step++;
     }
 
@@ -168,7 +160,8 @@ public class OLR {
         if (weAreRegularizing) {
             regularize(category, feature);
         }
-        updateCoefficient(category, feature, featureElement, gradientBase);
+        if (gradientBase > 0.000001 || gradientBase < -0.000001) //FIXME test whether this increases training efficiency or can be removed - frjd2
+            updateCoefficient(category, feature, featureElement, gradientBase);
     }
 
     private void updateCoefficient(final int category, final int feature, final Vector.Element featureElement, final double gradientBase) {
@@ -178,6 +171,7 @@ public class OLR {
     }
 
     private void regularize(final int category, final int feature) {
+
 
         double lastUpdated = updateSteps.get(feature);
         double missingUpdates = getStep() - lastUpdated;
@@ -197,8 +191,7 @@ public class OLR {
 
         if (weArePerTermAnnealing) {
             return perTermLearningRate(feature);
-        }
-        else {
+        } else {
             return currentLearningRate();
         }
     }
@@ -215,16 +208,14 @@ public class OLR {
         return link(classifyNoLink(instance));
     }
 
-    public Vector link(final Vector v) {
-
+    public Vector link(Vector v) {
         double max = v.maxValue();
         if (max >= 40) {
             // if max > 40, we subtract the large offset first
             // the size of the max means that 1+sum(exp(v)) = sum(exp(v)) to within round-off
             v.assign(Functions.minus(max)).assign(Functions.EXP);
             return v.divide(v.norm(1));
-        }
-        else {
+        } else {
             v.assign(Functions.EXP);
             return v.divide(1 + v.norm(1));
         }

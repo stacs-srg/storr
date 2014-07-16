@@ -28,7 +28,8 @@ import java.nio.file.Paths;
 import static org.junit.Assert.assertEquals;
 
 /**
- * Created by graham on 15/07/2014.
+ * Tests for GEDCOM validity using the gedcom4j parser.
+ * See also online validator: http://ged-inline.elasticbeanstalk.com/validate
  */
 public class GEDCOMValidityTest {
 

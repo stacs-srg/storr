@@ -30,6 +30,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.vectors.VectorFactory;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.exceptions.InputFormatException;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.writers.DataClerkingWriter;
+import uk.ac.standrews.cs.digitising_scotland.tools.Timer;
 import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
 import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearningConfiguration;
 
@@ -90,7 +91,8 @@ public final class TrainAndMultiplyClassify {
     public static void main(final String[] args) throws Exception {
 
         // TODO split this up!
-
+        Timer t = new Timer();
+        t.start();
         setupExperimentalFolders("Experiments");
 
         File training = new File(args[0]);
@@ -113,6 +115,8 @@ public final class TrainAndMultiplyClassify {
         LOGGER.info("********** Creating Lookup Tables **********");
         ExactMatchClassifier exactMatchClassifier = trainExactMatchClassifier();
 
+        // Bucket predicitionBucket = createPredictionBucket(prediction);
+
         ExactMatchPipeline exactMatchPipeline = new ExactMatchPipeline(exactMatchClassifier);
         MachineLearningClassificationPipeline machineLearningClassifier = new MachineLearningClassificationPipeline(classifier, trainingBucket);
 
@@ -122,6 +126,10 @@ public final class TrainAndMultiplyClassify {
         Bucket allClassified = BucketUtils.getUnion(machineLearned, exactMatched);
 
         LOGGER.info("********** Classifying Bucket **********");
+
+        System.out.println("********** Classifying Bucket **********");
+
+        //  Bucket classifiedBucket = bucketClassifier.classify(predictionBucket);
 
         writeRecords(allClassified);
 
@@ -134,6 +142,11 @@ public final class TrainAndMultiplyClassify {
         final Bucket uniqueRecordsOnly = BucketFilter.uniqueRecordsOnly(allClassified);
         generateAndPrintStats(uniqueRecordsOnly);
 
+        System.out.println("Codes that were null and weren't adter chopping: " + CodeFactory.getInstance().getCodeMapNullCounter());
+
+
+        t.stop();
+        System.out.println("Elapsed Time: " + t.elapsedTime());
         LOGGER.info("Codes that were null and weren't adter chopping: " + CodeFactory.getInstance().getCodeMapNullCounter());
     }
 
