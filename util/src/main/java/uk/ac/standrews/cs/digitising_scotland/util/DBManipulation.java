@@ -82,11 +82,11 @@ public class DBManipulation {
     }
 
     @SuppressFBWarnings(value = "RCN_REDUNDANT_NULLCHECK_OF_NULL_VALUE", justification = "spurious warning")
-    public static int countRows(Connection connection, String database_name, String table_name) throws SQLException {
+    public static int countRows(final Connection connection, final String database_name, final String table_name) throws SQLException {
 
-        try (Statement statement = connection.createStatement()) {
+        try (final Statement statement = connection.createStatement()) {
 
-            ResultSet size_result = statement.executeQuery(SELECT_ALL_SYNTAX + database_name + "." + table_name);
+            final ResultSet size_result = statement.executeQuery(SELECT_ALL_SYNTAX + database_name + "." + table_name);
 
             if (!size_result.first()) {
                 throw new SQLException("No rows returned in count");
@@ -96,33 +96,33 @@ public class DBManipulation {
     }
 
     @SuppressFBWarnings(value = "SQL_NONCONSTANT_STRING_PASSED_TO_EXECUTE", justification = "spurious warning")
-    public static boolean databaseExists(Connection connection, String database_name) throws SQLException {
+    public static boolean databaseExists(final Connection connection, final String database_name) throws SQLException {
 
-        try (Statement statement = connection.createStatement()) {
+        try (final Statement statement = connection.createStatement()) {
 
-            ResultSet check_result = statement.executeQuery(SELECT_SCHEMA_SYNTAX + database_name + "'");
+            final ResultSet check_result = statement.executeQuery(SELECT_SCHEMA_SYNTAX + database_name + "'");
 
             return check_result.first() && check_result.getString(1).equals(database_name);
         }
     }
 
     @SuppressFBWarnings(value = {"RCN_REDUNDANT_NULLCHECK_OF_NULL_VALUE", "SQL_NONCONSTANT_STRING_PASSED_TO_EXECUTE"}, justification = "spurious warnings")
-    public static boolean tableExists(Connection connection, String database_name, String table_name) throws SQLException {
+    public static boolean tableExists(final Connection connection, final String database_name, final String table_name) throws SQLException {
 
-        try (Statement statement = connection.createStatement()) {
+        try (final Statement statement = connection.createStatement()) {
 
-            ResultSet check_result = statement.executeQuery(SELECT_TABLE_SYNTAX1 + database_name + SELECT_TABLE_SYNTAX2 + table_name + "'");
+            final ResultSet check_result = statement.executeQuery(SELECT_TABLE_SYNTAX1 + database_name + SELECT_TABLE_SYNTAX2 + table_name + "'");
 
             return check_result.first() && check_result.getString(1).equalsIgnoreCase(table_name);
         }
     }
 
-    public static void createDatabaseIfDoesNotExist(Connection connection, String database_name) throws SQLException {
+    public static void createDatabaseIfDoesNotExist(final Connection connection, final String database_name) throws SQLException {
 
         executeStatement(connection, CREATE_DB_SYNTAX + database_name);
     }
 
-    public static void dropDatabase(Connection connection, String database_name) throws SQLException {
+    public static void dropDatabase(final Connection connection, final String database_name) throws SQLException {
 
         executeStatement(connection, DROP_DB_SYNTAX + database_name);
     }
