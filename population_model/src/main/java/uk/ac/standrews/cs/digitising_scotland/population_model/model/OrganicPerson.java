@@ -32,36 +32,18 @@ public class OrganicPerson implements IPerson {
     private String lastName;
     private char sex;
     private int age_in_days;
-    private Date dateOfBirth;
-    private Date dateOfDeath;
     private List<Integer> partnerships;
 
     //    private int daysToLive = DateManipulation.dateToDays(dateOfDeath) -  DateManipulation.dateToDays(dateOfBirth);
     private OrganicTimeline timeline = null;
 
     public int getDayOfLife(Date date) {
-        int day = DateManipulation.dateToDays(date) - DateManipulation.dateToDays(dateOfBirth);
-        ;
+        int day = DateManipulation.dateToDays(date) - DateManipulation.dateToDays(getBirthDate());
         return day;
     }
 
     public OrganicPerson() {
         setTimeline(null);
-    }
-
-    public OrganicPerson(Date date) {
-        dateOfBirth = date;
-    }
-
-    public OrganicPerson(Date date, char sex) {
-        dateOfBirth = date;
-        this.sex = sex;
-    }
-
-    public OrganicPerson(Date date1, Date date2, char sex) {
-        dateOfBirth = date1;
-        dateOfDeath = date2;
-        this.sex = sex;
     }
 
     public OrganicPerson(char sex) {
@@ -113,12 +95,12 @@ public class OrganicPerson implements IPerson {
 
     @Override
     public Date getBirthDate() {
-        return dateOfBirth;
+        return this.getTimeline().getStartDate();
     }
 
     @Override
     public Date getDeathDate() {
-        return dateOfDeath;
+        return this.getTimeline().getEndDate();
     }
 
     @Override

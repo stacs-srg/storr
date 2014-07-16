@@ -91,21 +91,10 @@ public class OrganicPopulation implements IPopulation {
 
         for (int i = 0; i < size; i++) {
 
-            Date currentDateOfBirth;
-            int age = seed_age_distribution.getSample();
-            int auxiliary = (int) ((age - 1) * (DAYS_PER_YEAR)) + RandomFactory.getRandomInt(1, (int) DAYS_PER_YEAR);
-            auxiliary = DateManipulation.dateToDays(START_YEAR, 1, 1) - auxiliary;
-
-            currentDateOfBirth = DateManipulation.daysToDate(auxiliary);
-
-            Distribution<Integer> seed_death_distribution = new UniformDistribution(age, 100, random);
-            auxiliary = DateManipulation.dateToDays(START_YEAR,1,1) + (seed_death_distribution.getSample() - age)*(int)DAYS_PER_YEAR;
-            Date currentDateOfDeath = DateManipulation.daysToDate(auxiliary);
-
             if (sex_distribution.getSample())
-                people.add(new OrganicPerson(currentDateOfBirth,currentDateOfDeath, 'M'));
+                people.add(new OrganicPerson('M'));
             else
-                people.add(new OrganicPerson(currentDateOfBirth,currentDateOfDeath, 'F'));
+                people.add(new OrganicPerson('F'));
         }
     }
 
@@ -116,9 +105,24 @@ public class OrganicPopulation implements IPopulation {
     public void generate_timelines() {
         for (int i = 0; i < people.size(); i++) {
             if (people.get(i).getTimeline() == null) {
+
                 OrganicPerson currentPerson = people.get(i);
                 OrganicTimeline currentTimeline;
-                currentTimeline = new OrganicTimeline(currentPerson.getBirthDate(), age_at_death_distribution.getSample());
+
+                //Math for dates of birth and death
+                Date currentDateOfBirth;
+                int age = seed_age_distribution.getSample();
+                int auxiliary = (int) ((age - 1) * (DAYS_PER_YEAR)) + RandomFactory.getRandomInt(1, (int) DAYS_PER_YEAR);
+                auxiliary = DateManipulation.dateToDays(START_YEAR, 1, 1) - auxiliary;
+
+                currentDateOfBirth = DateManipulation.daysToDate(auxiliary);
+
+                Distribution<Integer> seed_death_distribution = new UniformDistribution(age, 100, random);
+                auxiliary = DateManipulation.dateToDays(START_YEAR,1,1) + (seed_death_distribution.getSample() - age)*(int)DAYS_PER_YEAR;
+                Date currentDateOfDeath = DateManipulation.daysToDate(auxiliary);
+
+
+                currentTimeline = new OrganicTimeline(currentDateOfBirth, currentDateOfDeath);
                 
                 // Add ELIGIBLE_TO_MARRY event
                 int date;
