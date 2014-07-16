@@ -19,11 +19,11 @@ package uk.ac.standrews.cs.digitising_scotland.population_model.model.gedcom;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.InconsistentWeightException;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPopulation;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPopulationWriter;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.PopulationConverter;
 import uk.ac.standrews.cs.digitising_scotland.population_model.transform.AbstractExporterTest;
 
-import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -38,19 +38,23 @@ public class PopulationToGEDCOMTest extends AbstractExporterTest {
     protected static final String INTENDED_SUFFIX = "_intended.ged";
     private static final String ACTUAL_SUFFIX = "_test.ged";
 
-    public PopulationToGEDCOMTest(final IPopulation population, final String file_name) {
+    public PopulationToGEDCOMTest(final IPopulation population, final String file_name) throws Exception {
 
         super(population, file_name);
     }
 
     @Test
-    public void test() throws IOException, InconsistentWeightException {
+    public void test() throws Exception {
 
         final Path actual_output = Paths.get(TEST_DIRECTORY_PATH_STRING, "gedcom", file_name_root + ACTUAL_SUFFIX);
         final Path intended_output = Paths.get(TEST_DIRECTORY_PATH_STRING, "gedcom", file_name_root + INTENDED_SUFFIX);
 
-        final PopulationToGEDCOM exporter = new PopulationToGEDCOM(population, actual_output.toString());
-        exporter.export();
+        final IPopulationWriter population_writer = new PopulationToGEDCOM(actual_output.toString());
+
+        try (PopulationConverter converter = new PopulationConverter(population, population_writer)) {
+            converter.convert();
+        }
+
         assertThatFilesHaveSameContent(actual_output, intended_output);
     }
 }

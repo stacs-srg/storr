@@ -33,16 +33,16 @@ public interface IPartnership extends Comparable<IPartnership> {
     int getId();
 
     /**
-     * Gets the identifier of the first person in the partnership.
-     * @return the identifier of the first person
+     * Gets the identifier of the female in the partnership.
+     * @return the identifier of the female
      */
-    int getPartner1Id();
+    int getFemalePartnerId();
 
     /**
-     * Gets the identifier of the second person in the partnership.
-     * @return the identifier of the second person
+     * Gets the identifier of the male in the partnership.
+     * @return the identifier of the male
      */
-    int getPartner2Id();
+    int getMalePartnerId();
 
     /**
      * Gets the identifier of the partner of the person with the given identifier, or -1 if neither member

@@ -19,6 +19,8 @@ package uk.ac.standrews.cs.digitising_scotland.population_model.model.gedcom;
 import org.gedcom4j.parser.GedcomParser;
 import org.junit.Test;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPopulation;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPopulationWriter;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.PopulationConverter;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.in_memory.CompactPopulation;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.in_memory.CompactPopulationAdapter;
 import uk.ac.standrews.cs.digitising_scotland.population_model.transform.AbstractExporterTest;
@@ -36,12 +38,14 @@ public class GEDCOMValidityTest {
     @Test
     public void gedcomIsValid() throws Exception {
 
-        IPopulation population = new CompactPopulationAdapter(new CompactPopulation(1000));
-
         final String path = Paths.get(AbstractExporterTest.TEST_DIRECTORY_PATH_STRING, "gedcom", "_test.ged").toString();
 
-        final PopulationToGEDCOM exporter = new PopulationToGEDCOM(population, path);
-        exporter.export();
+        final IPopulation population = new CompactPopulationAdapter(new CompactPopulation(1000));
+        final IPopulationWriter population_writer = new PopulationToGEDCOM(path);
+
+        try (PopulationConverter converter = new PopulationConverter(population, population_writer)) {
+            converter.convert();
+        }
 
         final GedcomParser parser = new GedcomParser();
         parser.load(path);

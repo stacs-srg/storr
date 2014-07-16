@@ -25,9 +25,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Collection;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
@@ -38,27 +36,29 @@ import java.util.List;
  */
 public class PopulationToGraphviz extends PopulationToFile {
 
-    // TODO implement IPopulationWriter
+    private static final String INDIVIDUAL_NODE_COLOUR = "blue";
+    private static final String PARTNERSHIP_NODE_COLOUR = "red";
+    private static final String PARTNERSHIP_ARC_COLOUR = "red";
 
     private static final String ARC = " -> ";
-    private static final String INDIVIDUAL_NODE_ATTRIBUTES = " [shape=box style=solid color=blue]";
-    private static final String FAMILY_ARC_ATTRIBUTES = " [color=red arrowhead=none]";
+    private static final String INDIVIDUAL_NODE_ATTRIBUTES = " [shape=box style=solid color=" + INDIVIDUAL_NODE_COLOUR + "]";
+    private static final String FAMILY_ARC_ATTRIBUTES = " [color=" + PARTNERSHIP_ARC_COLOUR + " arrowhead=none]";
 
     private final DateFormat formatter;
-    private Collection<Integer> processed_partnerships;
+    private final IPopulation population;
 
     /**
      * Initialises the exporter. This includes potentially expensive scanning of the population graph.
      *
-     * @param population  the population
      * @param path_string the path for the output file
      * @throws IOException if the file does not exist and cannot be created
      */
-    public PopulationToGraphviz(final IPopulation population, final String path_string) {
+    public PopulationToGraphviz(final String path_string, final IPopulation population) throws IOException {
 
-        super(population, path_string);
+        super(path_string);
+        this.population = population;
+
         formatter = new SimpleDateFormat("dd/MM/yyyy");
-        processed_partnerships = new HashSet<>();
     }
 
     @Override
@@ -69,26 +69,74 @@ public class PopulationToGraphviz extends PopulationToFile {
     }
 
     @Override
-    protected void outputIndividual(final PrintWriter writer, IPerson person) {
+    public void recordPerson(IPerson person) {
 
         writer.println(individualLabel(person.getId()) + getIndividualNodeAttributes(person));
-
-        List<Integer> partnership_ids = person.getPartnerships();
-        if (partnership_ids != null) {
-            for (final int partnership_id : partnership_ids) {
-
-                if (!processed_partnerships.contains(partnership_id)) {
-
-                    outputPartnership(writer, population.findPartnership(partnership_id));
-                    processed_partnerships.add(partnership_id);
-                }
-            }
-        }
-
-        setRankIfOrphan(writer, person);
+        setRankIfOrphan(person);
     }
 
-    private void setRankIfOrphan(PrintWriter writer, IPerson person) {
+    @Override
+    public void recordPartnership(IPartnership partnership) {
+
+        outputCouple(partnership);
+        outputChildren(partnership);
+    }
+
+    @Override
+    protected void outputTrailer(final PrintWriter writer) {
+
+        writer.println("}");
+    }
+
+    private void outputCouple(final IPartnership partnership) {
+
+        final int partnership_id = partnership.getId();
+        final int female_partner_id = partnership.getFemalePartnerId();
+        final int male_partner_id = partnership.getMalePartnerId();
+
+        writer.println(individualLabel(female_partner_id) + ARC + familyLabel(partnership_id) + FAMILY_ARC_ATTRIBUTES);
+        writer.println(familyLabel(partnership_id) + ARC + individualLabel(male_partner_id) + FAMILY_ARC_ATTRIBUTES);
+        writer.println(familyLabel(partnership_id) + getFamilyNodeAttributes(partnership));
+
+        writer.println("{ rank = same; " + individualLabel(female_partner_id) + " " + individualLabel(male_partner_id) + " " + familyLabel(partnership_id) + "; }");
+    }
+
+    private void outputChildren(final IPartnership partnership) {
+
+        List<Integer> child_ids = partnership.getChildIds();
+        if (child_ids != null) {
+
+            final int partnership_id = partnership.getId();
+
+            for (final int child_id : child_ids) {
+                writer.println(familyLabel(partnership_id) + ARC + individualLabel(child_id));
+            }
+        }
+    }
+
+    private String getIndividualNodeAttributes(final IPerson person) {
+
+        final Date date_of_death = person.getDeathDate();
+
+        StringBuilder builder = new StringBuilder();
+
+        builder.append(" [label=\"b: ");
+        builder.append(formatter.format(person.getBirthDate()));
+        if (date_of_death != null) {
+            builder.append("\\nd: ");
+            builder.append(formatter.format(date_of_death));
+        }
+        builder.append("\"]");
+
+        return builder.toString();
+    }
+
+    private String getFamilyNodeAttributes(final IPartnership partnership) {
+
+        return " [shape=box color=" + PARTNERSHIP_NODE_COLOUR + " label=\"m: " + formatter.format(partnership.getMarriageDate()) + "\"]";
+    }
+
+    private void setRankIfOrphan(IPerson person) {
 
         if (!personHasParents(person)) {
             final int id_of_next_person_with_parents = findIdOfClosestPersonWithParents(person);
@@ -130,70 +178,5 @@ public class PopulationToGraphviz extends PopulationToFile {
             }
         }
         return false;
-    }
-
-    @Override
-    protected void outputFamilies(final PrintWriter writer) {
-
-    }
-
-    @Override
-    protected void outputTrailer(final PrintWriter writer) {
-
-        writer.println("}");
-    }
-
-    private String getIndividualNodeAttributes(final IPerson person) {
-
-        final Date date_of_death = person.getDeathDate();
-
-        StringBuilder builder = new StringBuilder();
-
-        builder.append(" [label=\"b: ");
-        builder.append(formatter.format(person.getBirthDate()));
-        if (date_of_death != null) {
-            builder.append("\\nd: ");
-            builder.append(formatter.format(date_of_death));
-        }
-        builder.append("\"]");
-
-        return builder.toString();
-    }
-
-    private String getFamilyNodeAttributes(final IPartnership partnership) {
-
-        return " [shape=box color=red label=\"m: " + formatter.format(partnership.getMarriageDate()) + "\"]";
-    }
-
-    private void outputPartnership(final PrintWriter writer, final IPartnership partnership) {
-
-        outputCouple(writer, partnership);
-        outputChildren(writer, partnership);
-    }
-
-    private void outputCouple(final PrintWriter writer, final IPartnership partnership) {
-
-        final int partnership_id = partnership.getId();
-        final int partner1_id = partnership.getPartner1Id();
-        final int partner2_id = partnership.getPartner2Id();
-
-        writer.println(individualLabel(partner1_id) + ARC + familyLabel(partnership_id) + FAMILY_ARC_ATTRIBUTES);
-        writer.println(familyLabel(partnership_id) + ARC + individualLabel(partner2_id) + FAMILY_ARC_ATTRIBUTES);
-        writer.println(familyLabel(partnership_id) + getFamilyNodeAttributes(partnership));
-
-        writer.println("{ rank = same; " + individualLabel(partner1_id) + " " + individualLabel(partner2_id) + " " + familyLabel(partnership_id) + "; }");
-    }
-
-    private void outputChildren(final PrintWriter writer, final IPartnership partnership) {
-
-        List<Integer> child_ids = partnership.getChildIds();
-        if (child_ids != null) {
-
-            final int partnership_id = partnership.getId();
-
-            for (final int child_id : child_ids) {
-                writer.println(familyLabel(partnership_id) + ARC + individualLabel(child_id));
-            }
-        }
     }
 }

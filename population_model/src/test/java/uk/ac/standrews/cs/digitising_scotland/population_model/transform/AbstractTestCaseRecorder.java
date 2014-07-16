@@ -17,25 +17,24 @@
 package uk.ac.standrews.cs.digitising_scotland.population_model.transform;
 
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.InconsistentWeightException;
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.NegativeDeviationException;
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.NegativeWeightException;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IDFactory;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPopulation;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPopulationWriter;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.PopulationConverter;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.in_memory.CompactPopulation;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.in_memory.CompactPopulationAdapter;
-import uk.ac.standrews.cs.digitising_scotland.population_model.model.PopulationToFile;
 
 import java.io.IOException;
 import java.nio.file.Paths;
 
 /**
  * Tests of Graphviz export.
- * 
+ *
  * @author Graham Kirby (graham.kirby@st-andrews.ac.uk)
  */
 public abstract class AbstractTestCaseRecorder {
 
-    protected void recordTestCase() throws IOException, InconsistentWeightException, NegativeDeviationException, NegativeWeightException {
+    protected void recordTestCase() throws Exception {
 
         for (int i = 0; i < AbstractExporterTest.TEST_CASE_POPULATION_SIZES.length; i++) {
 
@@ -43,18 +42,21 @@ public abstract class AbstractTestCaseRecorder {
 
             final String path_string = Paths.get(
                     AbstractExporterTest.TEST_DIRECTORY_PATH_STRING,
-                    getDirectoryName(),AbstractExporterTest.TEST_CASE_FILE_NAME_ROOTS[i] + getIntendedOutputFileSuffix()).toString();
+                    getDirectoryName(), AbstractExporterTest.TEST_CASE_FILE_NAME_ROOTS[i] + getIntendedOutputFileSuffix()).toString();
 
             final CompactPopulation population = new CompactPopulation(AbstractExporterTest.TEST_CASE_POPULATION_SIZES[i]);
-            final IPopulation population_interface = new CompactPopulationAdapter(population);
+            final IPopulation abstract_population = new CompactPopulationAdapter(population);
+            final IPopulationWriter population_writer = getPopulationWriter(path_string, abstract_population);
 
-            final PopulationToFile exporter = getExporter(population_interface, path_string);
-            exporter.export();
+            try (PopulationConverter converter = new PopulationConverter(abstract_population, population_writer)) {
+                converter.convert();
+            }
         }
     }
 
     protected abstract String getIntendedOutputFileSuffix();
+
     protected abstract String getDirectoryName();
 
-    protected abstract PopulationToFile getExporter(IPopulation population, String path_string) throws IOException, InconsistentWeightException;
+    protected abstract IPopulationWriter getPopulationWriter(String path_string, IPopulation population) throws IOException, InconsistentWeightException;
 }

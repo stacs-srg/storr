@@ -16,22 +16,17 @@
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.model;
 
-import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPartnership;
-import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPerson;
-import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPopulation;
-import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPopulationWriter;
 import uk.ac.standrews.cs.digitising_scotland.util.ProgressIndicator;
 
 /**
  * Created by graham on 11/06/2014.
  */
-public class PopulationConverter {
+public class PopulationConverter implements AutoCloseable {
 
     private final IPopulation population;
     private final IPopulationWriter writer;
 
     private final ProgressIndicator progress_indicator;
-
 
     public PopulationConverter(final IPopulation population, final IPopulationWriter writer, final ProgressIndicator progress_indicator) throws Exception {
 
@@ -40,6 +35,13 @@ public class PopulationConverter {
         this.progress_indicator = progress_indicator;
 
         initialiseProgressIndicator();
+
+        // Copy the set of people before outputting them, to avoid problems with overlapping iterations of the population.
+
+//        Collection<IPerson> people = new HashSet<>();
+//        for (IPerson p : population.getPeople()) {
+//            people.add(p);
+//        }
     }
 
     public PopulationConverter(final IPopulation population, final IPopulationWriter writer) throws Exception {
@@ -60,6 +62,12 @@ public class PopulationConverter {
             writer.recordPartnership(partnership);
             progressStep();
         }
+    }
+
+    @Override
+    public void close() throws Exception {
+
+        writer.close();
     }
 
     private void initialiseProgressIndicator() throws Exception {

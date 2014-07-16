@@ -23,6 +23,8 @@ import uk.ac.standrews.cs.digitising_scotland.population_model.model.in_memory.C
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.in_memory.CompactPopulationAdapter;
 import uk.ac.standrews.cs.nds.util.CommandLineArgs;
 
+import java.io.IOException;
+
 /**
  * Manual test of Graphviz export.
  *
@@ -37,14 +39,13 @@ public class GenerateCompactPopulationInGraphvizFile extends AbstractPopulationT
     public IPopulation getPopulation(final String[] args) throws Exception {
 
         final int population_size = CommandLineArgs.extractIntFromCommandLineArgs(args, SIZE_FLAG, DEFAULT_SIZE);
-
         return new CompactPopulationAdapter(new CompactPopulation(population_size));
     }
 
     @Override
-    public PopulationToFile getExporter(IPopulation population, String path_string) {
+    public PopulationToFile getPopulationWriter(String path_string, IPopulation population) throws IOException {
 
-        return new PopulationToGraphviz(population, path_string);
+        return new PopulationToGraphviz(path_string, population);
     }
 
     public static void main(final String[] args) throws Exception {

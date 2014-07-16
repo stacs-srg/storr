@@ -84,16 +84,10 @@ public abstract class Record {
         if (parents_partnership_id != -1) {
 
             IPartnership parents_partnership = population.findPartnership(parents_partnership_id);
-            IPerson parent1 = population.findPerson(parents_partnership.getPartner1Id());
-            if (parent1.getSex() == IPerson.MALE) {
-                return parent1.getSurname();
+            IPerson father = population.findPerson(parents_partnership.getMalePartnerId());
+            return father.getSurname();
 
-            } else {
-                IPerson parent2 = population.findPerson(parents_partnership.getPartner2Id());
-                return parent2.getSurname();
-            }
-        }
-        else return null;
+        } else return null;
     }
 
     protected String getRecordedParentsSurname(final String parents_surname, final String childs_surname) {

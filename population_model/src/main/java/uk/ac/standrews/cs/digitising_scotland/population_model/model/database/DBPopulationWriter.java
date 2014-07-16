@@ -17,7 +17,6 @@
 package uk.ac.standrews.cs.digitising_scotland.population_model.model.database;
 
 import uk.ac.standrews.cs.digitising_scotland.population_model.config.PopulationProperties;
-import uk.ac.standrews.cs.digitising_scotland.population_model.model.database.DBConnector;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPartnership;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPerson;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPopulationWriter;
@@ -90,8 +89,8 @@ public class DBPopulationWriter implements IPopulationWriter {
         Date marriage_date = DateManipulation.dateToSQLDate(partnership.getMarriageDate());
 
         recordPartnership(partnership_id, marriage_date);
-        recordPartnerWithinPartnership(partnership_id, partnership.getPartner1Id());
-        recordPartnerWithinPartnership(partnership_id, partnership.getPartner2Id());
+        recordPartnerWithinPartnership(partnership_id, partnership.getFemalePartnerId());
+        recordPartnerWithinPartnership(partnership_id, partnership.getMalePartnerId());
 
         for (final Integer child_id : partnership.getChildIds()) {
             recordChildWithinPartnership(partnership_id, child_id);

@@ -26,6 +26,8 @@ package uk.ac.standrews.cs.digitising_scotland.population_model.model.gedcom;
  */
 public class GEDCOMToDBWriter {
 
+    // TODO use code here to write IPopulation interface over a GEDCOM file.
+
 //    private final Connection connection;
 //    private final GedcomParser parser;
 //    private final PersonFactory person_factory;
