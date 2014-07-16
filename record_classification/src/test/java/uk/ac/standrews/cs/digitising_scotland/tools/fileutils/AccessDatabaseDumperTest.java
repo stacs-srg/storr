@@ -18,9 +18,9 @@ import com.healthmarketscience.jackcess.TableBuilder;
 
 public class AccessDatabaseDumperTest {
 
-    Database db;
-    String databaseName = "testdb";
-    String tableName = "testDB";
+    private Database db;
+    private String databaseName = "testdb";
+    private String tableName = "testDB";
     private String databaseLocation = "target/" + databaseName + ".mdb";
 
     @Before
@@ -47,10 +47,11 @@ public class AccessDatabaseDumperTest {
         File expectedTsv = new File("src/test/resources/databaseDumperExpected.tsv");
         BufferedReader br = new BufferedReader(new FileReader(expectedTsv));
         String line;
-
         while ((line = br.readLine()) != null) {
             expectedLines.add(line);
         }
+        br.close();
+
         br = new BufferedReader(new FileReader(actualTsv));
         while ((line = br.readLine()) != null) {
             expectedLines.add(line);
@@ -61,6 +62,8 @@ public class AccessDatabaseDumperTest {
             Assert.assertEquals(expectedLines.get(count), actual);
             count++;
         }
+
+        br.close();
 
     }
 }
