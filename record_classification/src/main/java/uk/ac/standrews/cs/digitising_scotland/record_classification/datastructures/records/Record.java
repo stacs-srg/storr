@@ -82,8 +82,8 @@ public class Record {
     }
 
     /**
-     * Returns the gold standard {@link ClassificationSet} for this Record.
-     * If no gold standard set exists then an empty {@link ClassificationSet} will be returned.
+     * Returns the gold standard set of {@link CodeTriple} for this Record.
+     * If no gold standard set exists then an empty {@link CodeTriple} will be returned.
      *
      * @return the gold standard classification set
      */
