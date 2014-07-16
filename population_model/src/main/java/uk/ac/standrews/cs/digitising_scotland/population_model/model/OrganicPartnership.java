@@ -16,8 +16,50 @@
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.model;
 
+import java.util.Date;
+import java.util.List;
+
 /**
  * Created by victor on 08/07/14.
  */
-public class OrganicPartnership {
+public class OrganicPartnership implements IPartnership{
+    @Override
+    public int getId() {
+        return 0;
+    }
+
+    @Override
+    public int getFemalePartnerId() {
+        return 0;
+    }
+
+    @Override
+    public int getMalePartnerId() {
+        return 0;
+    }
+
+    @Override
+    public int getPartnerOf(int id) {
+        return 0;
+    }
+
+    @Override
+    public Date getMarriageDate() {
+        return null;
+    }
+
+    @Override
+    public List<Integer> getChildIds() {
+        return null;
+    }
+
+    @Override
+    public List<Integer> getPartnerIds() {
+        return null;
+    }
+
+    @Override
+    public int compareTo(IPartnership iPartnership) {
+        return 0;
+    }
 }

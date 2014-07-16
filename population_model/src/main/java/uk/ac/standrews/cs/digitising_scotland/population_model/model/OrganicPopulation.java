@@ -264,11 +264,29 @@ public class OrganicPopulation implements IPopulation {
 
     @Override
     public IPerson findPerson(int id) {
+        int index, binaryStep;
+        for(binaryStep = 1 ; binaryStep<people.size() ; binaryStep <<= 1);
+        for(index = 0 ; binaryStep != 0 ; binaryStep >>=1) {
+            if (index + binaryStep < people.size() && people.get(index + binaryStep).getId() <= id) {
+                index += binaryStep;
+            }
+        }
+        if(people.get(index).getId() == id) { return people.get(index); }
+
         return null;
     }
 
     @Override
     public IPartnership findPartnership(int id){
+        int index, binaryStep;
+        for(binaryStep = 1 ; binaryStep<partnerships.size() ; binaryStep <<= 1);
+        for(index = 0 ; binaryStep != 0 ; binaryStep >>=1) {
+            if (index + binaryStep < partnerships.size() && partnerships.get(index + binaryStep).getId() <= id) {
+                index += binaryStep;
+            }
+        }
+        if(partnerships.get(index).getId() == id) { return partnerships.get(index); }
+
         return null;
     }
 
