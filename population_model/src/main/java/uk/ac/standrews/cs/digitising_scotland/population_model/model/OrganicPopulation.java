@@ -26,18 +26,15 @@ import uk.ac.standrews.cs.digitising_scotland.population_model.model.in_memory.C
 import uk.ac.standrews.cs.digitising_scotland.population_model.util.RandomFactory;
 import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 /**
  * Created by victor on 11/06/14.
  * @author Tom Dalton (tsd4@st-andrews.ac.uk)
  */
 public class OrganicPopulation implements IPopulation {
+
+    String description;
 
     /**
      * Seed parameters.
@@ -209,24 +206,89 @@ public class OrganicPopulation implements IPopulation {
 
     @Override
     public Iterable<IPerson> getPeople() {
-        return null;
+        return new Iterable<IPerson>() {
+            @Override
+            public Iterator<IPerson> iterator() {
+
+                final Iterator iterator = people.iterator();
+
+                return new Iterator<IPerson>(){
+
+                    @Override
+                    public boolean hasNext() {
+                        return iterator.hasNext();
+                    }
+
+                    @Override
+                    public IPerson next() {
+                        return (IPerson)iterator.next();
+                    }
+
+                    @Override
+                    public void remove() {
+                        iterator.remove();
+                    }
+                };
+            };
+        };
     }
 
     @Override
     public Iterable<IPartnership> getPartnerships() {
-        return null;
+        return new Iterable<IPartnership>() {
+            @Override
+            public Iterator<IPartnership> iterator() {
+
+                final Iterator iterator = partnerships.iterator();
+
+                return new Iterator<IPartnership>(){
+
+                    @Override
+                    public boolean hasNext() {
+                        return iterator.hasNext();
+                    }
+
+                    @Override
+                    public IPartnership next() {
+                        return (IPartnership)iterator.next();
+                    }
+
+                    @Override
+                    public void remove() {
+                        iterator.remove();
+                    }
+                };
+            };
+        };
     }
 
     @Override
     public IPerson findPerson(int id) {
+        int index, binaryStep;
+        for(binaryStep = 1 ; binaryStep<people.size() ; binaryStep <<= 1);
+        for(index = 0 ; binaryStep != 0 ; binaryStep >>=1) {
+            if (index + binaryStep < people.size() && people.get(index + binaryStep).getId() <= id) {
+                index += binaryStep;
+            }
+        }
+        if(people.get(index).getId() == id) { return people.get(index); }
+
         return null;
     }
 
     @Override
-    public IPartnership findPartnership(int id) {
+    public IPartnership findPartnership(int id){
+        int index, binaryStep;
+        for(binaryStep = 1 ; binaryStep<partnerships.size() ; binaryStep <<= 1);
+        for(index = 0 ; binaryStep != 0 ; binaryStep >>=1) {
+            if (index + binaryStep < partnerships.size() && partnerships.get(index + binaryStep).getId() <= id) {
+                index += binaryStep;
+            }
+        }
+        if(partnerships.get(index).getId() == id) { return partnerships.get(index); }
+
         return null;
     }
-    
 
     @Override
     public int getNumberOfPeople() {
@@ -235,12 +297,12 @@ public class OrganicPopulation implements IPopulation {
 
     @Override
     public int getNumberOfPartnerships() {
-        return 0;
+        return partnerships.size();
     }
 
     @Override
     public void setDescription(String description) {
-
+        this.description = description;
     }
 
     @Override
