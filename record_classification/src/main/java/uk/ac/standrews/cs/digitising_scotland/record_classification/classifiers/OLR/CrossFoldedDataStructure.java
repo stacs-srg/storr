@@ -27,7 +27,7 @@ public abstract class CrossFoldedDataStructure {
 
         for (int i = 0; i < folds; i++) {
             for (int j = 0; j < size; j++) {
-                if ((j > splitPoints[i] && j <= splitPoints[i + 1])) {
+                if (j > splitPoints[i] && j <= splitPoints[i + 1]) {
                     crossFoldedData[i][1].add(trainingVectorList.get(j));
                 }
                 else {

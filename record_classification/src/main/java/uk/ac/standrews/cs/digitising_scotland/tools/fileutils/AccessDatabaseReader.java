@@ -25,13 +25,21 @@ public class AccessDatabaseReader {
 
         File dbFile = new File(databaseLocation);
         db = Database.create(dbFile);
-        Set<String> tablesNames = db.getTableNames();
-        for (String string : tablesNames) {
-            Table table = db.getTable(string);
-            System.out.println("tabel: " + table.display());
-        }
 
         System.out.println(db.toString());
+    }
+
+    public String getTablesNames() throws IOException {
+
+        StringBuilder sb = new StringBuilder();
+        Set<String> tablesNames = db.getTableNames();
+        sb.append("Number of tables: " + tablesNames.size());
+        for (String string : tablesNames) {
+            Table table = db.getTable(string);
+            sb.append("tabel: " + table.display());
+        }
+
+        return sb.toString();
     }
 
     /**
@@ -43,5 +51,6 @@ public class AccessDatabaseReader {
     public static void main(final String[] args) throws IOException {
 
         AccessDatabaseReader reader = new AccessDatabaseReader("db.mdb");
+        System.out.println(reader.getTablesNames());
     }
 }

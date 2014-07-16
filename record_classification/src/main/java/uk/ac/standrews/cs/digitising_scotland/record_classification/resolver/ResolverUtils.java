@@ -49,7 +49,7 @@ public final class ResolverUtils {
 
             public int compare(final Map.Entry<K, V> o1, final Map.Entry<K, V> o2) {
 
-                return (o2.getValue()).compareTo(o1.getValue());
+                return o2.getValue().compareTo(o1.getValue());
             }
         });
 

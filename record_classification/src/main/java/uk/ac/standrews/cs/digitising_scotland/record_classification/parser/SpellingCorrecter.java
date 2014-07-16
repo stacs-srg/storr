@@ -111,7 +111,7 @@ class SpellingCorrecter {
 
         if (args.length > 0) {
             for (int i = 0; i < args.length; i++) {
-                System.out.println((new SpellingCorrecter("dictSmall.txt")).correct(args[i]));
+                System.out.println(new SpellingCorrecter("dictSmall.txt").correct(args[i]));
             }
         }
 
