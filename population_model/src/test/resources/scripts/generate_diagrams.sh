@@ -19,6 +19,7 @@
 mkdir -p population_model/target/diagrams
 for i in population_model/src/test/resources/graphviz/*test.dot
 do
+    echo PDF file: $i.pdf
     dot -Tpdf $i > $i.pdf
-    mv $i.pdf population_model/target/diagrams
+    cp $i.pdf population_model/target/diagrams
 done

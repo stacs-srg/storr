@@ -288,8 +288,6 @@ public class CompactPopulation {
      */
     private void createPeople() {
 
-        int id = IDFactory.getNextID();
-
         for (int i = 0; i < people.length; i++) {
             people[i] = new CompactPerson(date_of_birth_distribution.getSample(), sex_distribution.getSample());
             progressStep();
@@ -298,8 +296,9 @@ public class CompactPopulation {
         sortPeopleByAge();
 
         // Set the person ids in order so binary split can be used to locate ids.
-        for (int i = 0; i < people.length; i++) {
-            people[i].id = id++;
+        int id = IDFactory.getNextID();
+        for (CompactPerson person : people) {
+            person.id = id++;
         }
     }
 
