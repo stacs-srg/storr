@@ -534,7 +534,7 @@ public class CompactPopulation {
         final CompactPerson person = people[partner_index];
         final CompactPerson candidate_partner = people[candidate_partner_index];
 
-        boolean oppositeSex = CompactPerson.oppositeSex(person, candidate_partner);
+        boolean oppositeSex = oppositeSex(person, candidate_partner);
         boolean ageDifferenceIsReasonable = PopulationLogic.partnerAgeDifferenceIsReasonable(person.birth_date, candidate_partner.birth_date);
         boolean notPreviouslyPartners = notPreviouslyPartners(person, partner_index, candidate_partner);
         boolean notTooManyPartnerships = notTooManyPartnerships(candidate_partner);
@@ -545,6 +545,18 @@ public class CompactPopulation {
                 notPreviouslyPartners &&
                 notTooManyPartnerships &&
                 notTooRecentPartnership;
+    }
+
+    /**
+     * Tests whether the given people are of opposite sex.
+     *
+     * @param person1 the first person
+     * @param person2 the second person
+     * @return true if the people are of opposite sex
+     */
+    private boolean oppositeSex(final CompactPerson person1, final CompactPerson person2) {
+
+        return person1.isMale() != person2.isMale();
     }
 
     private boolean notPreviouslyPartners(final CompactPerson person, final int index, final CompactPerson candidate_partner) {

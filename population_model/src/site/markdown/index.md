@@ -1,9 +1,8 @@
+# Module *population_model*
+
 This module provides a simple population model, configurable with parameters such as longevity distribution, childbirth patterns etc.
 
-* main classes: [CompactPopulation](https://builds.cs.st-andrews.ac.uk/job/digitising_scotland/javadoc/uk/ac/standrews/cs/digitising_scotland/population_model/model/CompactPopulation.html),
-        [GeneratePopulation](https://builds.cs.st-andrews.ac.uk/job/digitising_scotland/javadoc/uk/ac/standrews/cs/digitising_scotland/population_model/tools/GeneratePopulation.html)
-* bash scripts: [init\_db.sh](http://quicksilver.hg.cs.st-andrews.ac.uk/digitising_scotland/file/tip/population_model/src/main/resources/scripts/init_db.sh),
-        [generate\_population.sh](http://quicksilver.hg.cs.st-andrews.ac.uk/digitising_scotland/file/tip/population_model/src/main/resources/scripts/generate_population.sh)
+
 
 ## Documentation
 
@@ -12,6 +11,8 @@ The API documentation is here:
 <div class="source">
     <pre><a href="https://builds.cs.st-andrews.ac.uk/job/digitising_scotland/javadoc/index.html?uk/ac/standrews/cs/digitising_scotland/population_model/package-summary.html">https://builds.cs.st-andrews.ac.uk/job/digitising_scotland/javadoc/</a></pre>
 </div>
+
+Various operations can be invoked via [command-line scripts](scripts.html).
 
 ## Download
 

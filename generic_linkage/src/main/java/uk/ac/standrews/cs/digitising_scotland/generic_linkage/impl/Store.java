@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IBucket;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXP;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IRepository;
@@ -11,7 +12,6 @@ import uk.ac.standrews.cs.nds.util.ErrorHandling;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
@@ -34,10 +34,10 @@ public class Store implements IStore {
     private final File id_file;
     private final IStoreIndex store_index;
 
-    public static IStore instance;
-
+    private static IStore instance;
     private int id = 1;
 
+    @SuppressFBWarnings(value = "ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD", justification = "intended behaviour")
     public Store(String store_path) throws StoreException, IOException {
         this.store_path = store_path;
         this.repo_path = store_path + File.separator + REPO_DIR_NAME;
@@ -56,7 +56,8 @@ public class Store implements IStore {
         instance = this;
     }
 
-    public static IStore getInstance() {
+    public synchronized static IStore getInstance() {
+
         if (instance == null) {
             ErrorHandling.hardError("No Store specified");
             return null;
@@ -123,8 +124,10 @@ public class Store implements IStore {
 
     private void initId() throws IOException {
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(id_file))) {
+        try (BufferedReader reader = Files.newBufferedReader(Paths.get(id_file.getAbsolutePath()), FileManipulation.FILE_CHARSET)) {
+
             String line = reader.readLine();
+            if (line == null) throw new IOException("Couldn't read ID from file");
             id = Integer.parseInt(line);
         }
     }
@@ -179,7 +182,7 @@ public class Store implements IStore {
         }
     }
 
-    private class RepoIterator implements Iterator<IRepository> {
+    private static class RepoIterator implements Iterator<IRepository> {
 
         private final Iterator<File> file_iterator;
         private final IStore store;
@@ -214,5 +217,4 @@ public class Store implements IStore {
             throw new UnsupportedOperationException("remove called on stream - unsupported");
         }
     }
-
 }
