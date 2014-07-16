@@ -285,7 +285,7 @@ public class AnalysisTools {
             tpTotal += classificationMap.get(mapSet[i]).getTP();
             fpTotal += classificationMap.get(mapSet[i]).getFP();
         }
-        return (tpTotal / (tpTotal + fpTotal));
+        return tpTotal / (tpTotal + fpTotal);
     }
 
     /**
@@ -302,7 +302,7 @@ public class AnalysisTools {
             tpTotal += classificationMap.get(mapSet[i]).getTP();
             fnTotal += classificationMap.get(mapSet[i]).getFN();
         }
-        return (tpTotal / (tpTotal + fnTotal));
+        return tpTotal / (tpTotal + fnTotal);
     }
 
     /**

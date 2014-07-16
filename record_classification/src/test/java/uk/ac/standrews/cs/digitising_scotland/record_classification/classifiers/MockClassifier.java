@@ -46,7 +46,7 @@ public class MockClassifier extends AbstractClassifier {
     @Override
     public Pair<Code, Double> classify(final TokenSet tokenSet) throws IOException {
 
-        if ((tokenSet.size() % 2) == 0) {
+        if (tokenSet.size() % 2 == 0) {
             Pair<Code, Double> testvalue;
             testvalue = new Pair<>(CodeFactory.getInstance().getCode(0), 0.8);
             return testvalue;

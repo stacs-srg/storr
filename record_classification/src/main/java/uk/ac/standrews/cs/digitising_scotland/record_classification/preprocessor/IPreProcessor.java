@@ -5,7 +5,7 @@ package uk.ac.standrews.cs.digitising_scotland.record_classification.preprocesso
  * @author jkc25
  *
  */
-public interface iPreProcessor {
+public interface IPreProcessor {
 
     /**
      * Process the specified file.

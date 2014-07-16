@@ -1,7 +1,18 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.preprocessor;
 
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import uk.ac.shef.wit.simmetrics.similaritymetrics.AbstractStringMetric;
 import uk.ac.shef.wit.simmetrics.similaritymetrics.Levenshtein;
@@ -61,6 +72,7 @@ public class DataCleaning {
     }
 
     private static void buildCorrectionMap(final Bucket bucket) {
+
         correctionMap = new HashMap<>();
         for (Record record : bucket) {
             addToCorrectionMap(correctionMap, record);
@@ -74,6 +86,7 @@ public class DataCleaning {
      * @param record        the record to clean
      */
     private static void addToCorrectionMap(final Map<String, String> correctionMap, final Record record) {
+
         Set<CodeTriple> set = record.getGoldStandardClassificationSet();
         for (CodeTriple codeTriple : set) {
             TokenSet ts = codeTriple.getTokenSet();
@@ -87,6 +100,7 @@ public class DataCleaning {
      * @param tokenSet the tokenSet to clean.
      */
     private static void addToCorrectionMap(final Map<String, String> correctionMap, final TokenSet tokenSet) {
+
         for (String token : tokenSet) {
             if (wordMultiset.count(token) < TOKENLIMIT) {
                 String correctedToken = correct(token);
@@ -153,7 +167,8 @@ public class DataCleaning {
         String bestMatch;
         if (!possibleMatches.isEmpty()) {
             bestMatch = possibleMatches.get(possibleMatches.size() - 1).getLeft();
-        } else {
+        }
+        else {
             bestMatch = token;
         }
         return bestMatch;
@@ -198,12 +213,14 @@ public class DataCleaning {
     }
 
     public static void main(final String[] args) throws IOException, InputFormatException {
+
         File originalFile = new File(args[0]);
         File fileToWriteTo = new File(args[1]);
         runOnFile(originalFile, fileToWriteTo);
     }
 
     public static void runOnFile(final File file, final File correctedFile) throws IOException, InputFormatException {
+
         List<Record> records = FormatConverter.convert(file);
         Bucket bucket = new Bucket(records);
         buildTokenOccurrenceMap(bucket);
@@ -212,8 +229,9 @@ public class DataCleaning {
     }
 
     private static void correctTokensInFile(File file, File correctedFile) throws IOException {
+
         BufferedReader br = new BufferedReader(new FileReader(file));
-        BufferedWriter bw = new BufferedWriter((new FileWriter(correctedFile)));
+        BufferedWriter bw = new BufferedWriter(new FileWriter(correctedFile));
         String line;
         while ((line = br.readLine()) != null) {
             String correctedLine = correctLine(line);
@@ -225,6 +243,7 @@ public class DataCleaning {
     }
 
     private static String correctLine(String line) {
+
         String[] commaSplits = line.split(Utils.getCSVComma());
         StringBuilder sb = new StringBuilder();
         for (String str : commaSplits) {
@@ -236,14 +255,15 @@ public class DataCleaning {
     }
 
     private static String tokenizeAndCleanString(String str) {
+
         StringBuilder sb = new StringBuilder();
         for (String token : new TokenSet(str)) {
             String correctedToken = correctionMap.get(token);
             if (correctedToken != null) {
                 sb.append(correctedToken).append(" ");
-                if (!correctedToken.equals(token))
-                    System.out.println("Original token: " + token + " Corrected token: " + correctedToken);
-            } else {
+                if (!correctedToken.equals(token)) System.out.println("Original token: " + token + " Corrected token: " + correctedToken);
+            }
+            else {
                 sb.append(token).append(" ");
             }
         }

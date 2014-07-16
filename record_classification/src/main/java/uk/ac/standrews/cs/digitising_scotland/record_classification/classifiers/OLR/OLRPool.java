@@ -192,13 +192,13 @@ public class OLRPool implements Runnable {
         }
     }
 
-    protected void readFields(final DataInputStream in) throws IOException {
+    protected void readFields(final DataInputStream inputStream) throws IOException {
 
         survivors = new ArrayList<OLRShuffled>();
-        int numModels = in.readInt();
+        int numModels = inputStream.readInt();
         for (int i = 0; i < numModels; i++) {
             OLRShuffled olrShuffled = new OLRShuffled();
-            olrShuffled.readFields(in);
+            olrShuffled.readFields(inputStream);
             survivors.add(olrShuffled);
 
         }

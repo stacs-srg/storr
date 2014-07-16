@@ -33,17 +33,17 @@ public final class StatsHelper {
     /**
      * Calculates term frequency.
      * 
-     * @param in
+     * @param inputFIle
      *            FIle to read.
      * @return true if successful.
      * @throws FileNotFoundException
      *             if file is not found.
      */
-    public static boolean numberCrunch(final File in) throws FileNotFoundException {
+    public static boolean numberCrunch(final File inputFIle) throws FileNotFoundException {
 
-        Scanner s = new Scanner(in, "UTF-8");
+        Scanner s = new Scanner(inputFIle, "UTF-8");
 
-        int maxRange = getMaxRange(in) + 1;
+        int maxRange = getMaxRange(inputFIle) + 1;
         int[][] data = new int[maxRange][2];
 
         while (s.hasNextLine()) {
