@@ -65,7 +65,8 @@ public class AccessDatabaseDumper {
     public void writeTablesToFile() throws IOException {
 
         final String name = database.getFile().getName();
-        File databaseFolder = new File(name.substring(0, name.length() - 4));
+        final int fileExtensionLength = 4;
+        File databaseFolder = new File(name.substring(0, name.length() - fileExtensionLength));
         if (!databaseFolder.mkdirs()) {
             LOGGER.error("Could not create database storage folder");
         }

@@ -67,7 +67,7 @@ public class OLR {
         return step;
     }
 
-    public Vector classifyFull(Vector instance) {
+    public Vector classifyFull(final Vector instance) {
 
         Vector r = new DenseVector(numCategories);
         r.viewPart(1, numCategories - 1).assign(classify(instance));
@@ -75,7 +75,7 @@ public class OLR {
         return r;
     }
 
-    public double logLikelihood(int actual, Vector instance) {
+    public double logLikelihood(final int actual, final Vector instance) {
 
         Vector p = classify(instance);
         if (actual > 0) {
@@ -93,7 +93,7 @@ public class OLR {
 
     private class Gradient {
 
-        public final Vector apply(NamedVector instance) {
+        public final Vector apply(final NamedVector instance) {
 
             int actual = Integer.parseInt(instance.getName());
             // what does the current model say?
@@ -170,8 +170,9 @@ public class OLR {
         if (weAreRegularizing) {
             regularize(category, feature);
         }
-        if (gradientBase > 0.000001 || gradientBase < -0.000001) //FIXME test whether this increases training efficiency or can be removed - frjd2
+        if (gradientBase > 0.000001 || gradientBase < -0.000001) {
             updateCoefficient(category, feature, featureElement, gradientBase);
+        }
     }
 
     private void updateCoefficient(final int category, final int feature, final Vector.Element featureElement, final double gradientBase) {
@@ -218,7 +219,7 @@ public class OLR {
         return link(classifyNoLink(instance));
     }
 
-    public Vector link(Vector v) {
+    public Vector link(final Vector v) {
 
         double max = v.maxValue();
         if (max >= 40) {
