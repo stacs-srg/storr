@@ -85,7 +85,7 @@ public class NGramClassifier extends AbstractClassifier implements Serializable 
      * 
      * @param record
      *            - The Description of the record to be classified.
-     * @return {@link ClassificationSet} of the {@link NGramSubstrings} of the
+     * @return Set of {@link CodeTriple} of the {@link NGramSubstrings} of the
      *         Description.
      * @throws IOException
      *             if a failure occurs while reading tokens from the
