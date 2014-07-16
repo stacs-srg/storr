@@ -27,6 +27,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.exceptions.InputFormatException;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.CodeTriple;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.writers.DataClerkingWriter;
+import uk.ac.standrews.cs.digitising_scotland.tools.Timer;
 import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
 import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearningConfiguration;
 
@@ -85,7 +86,8 @@ public final class TrainAndMultiplyClassify {
     public static void main(final String[] args) throws Exception {
 
         // TODO split this up!
-
+        Timer t = new Timer();
+        t.start();
         setupExperimentalFolders("Experiments");
 
         File training = new File(args[0]);
@@ -137,6 +139,10 @@ public final class TrainAndMultiplyClassify {
         generateAndPrintStats(BucketFilter.uniqueRecordsOnly(allClassified));
 
         System.out.println("Codes that were null and weren't adter chopping: " + CodeFactory.getInstance().codeMapNullCounter);
+
+
+        t.stop();
+        System.out.println("Elapsed Time: " + t.elapsedTime());
     }
 
     private static void generateActualCodeMappings(final Bucket bucket) {
