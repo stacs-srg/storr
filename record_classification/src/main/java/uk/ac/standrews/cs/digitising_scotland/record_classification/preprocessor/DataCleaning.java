@@ -1,13 +1,7 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.preprocessor;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import java.io.*;
+import java.util.*;
 
 import uk.ac.shef.wit.simmetrics.similaritymetrics.AbstractStringMetric;
 import uk.ac.shef.wit.simmetrics.similaritymetrics.Levenshtein;
@@ -18,6 +12,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.exceptions.InputFormatException;
+import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
 import uk.ac.standrews.cs.digitising_scotland.tools.analysis.UniqueWordCounter;
 
 import com.google.common.collect.HashMultiset;
@@ -26,23 +21,31 @@ import com.google.common.collect.Multiset;
 /**
  * Reads a {@link Bucket} and performs data cleaning such as spelling correction and feature selection on the descriptions in each {@link Record}.
  * OriginalData.description is not changed, instead the cleanedDescripion field is populated.
- * @author jkc25, frjd2
  *
+ * @author jkc25, frjd2
  */
 public class DataCleaning {
 
-    /** The Constant TOKENLIMIT. */
-    private static final int TOKENLIMIT = 1;
+    /**
+     * The Constant TOKENLIMIT.
+     */
+    private static final int TOKENLIMIT = 4;
 
-    /** The Constant SIMILARITY. */
-    private static final double SIMILARITY = 0.75;
+    /**
+     * The Constant SIMILARITY.
+     */
+    private static final double SIMILARITY = 0.85;
 
-    /** The word multiset. */
-    private Multiset<String> wordMultiset;
+    /**
+     * The word multiset.
+     */
+    private static Multiset<String> wordMultiset;
+    private static Map<String, String> correctionMap;
 
     /**
      * Currently a dummy method.
      * Copies original string to cleaned string.
+     *
      * @param bucketToClean bucket to perform cleaning on.
      * @return the bucket with cleaned records attached.
      */
@@ -57,44 +60,39 @@ public class DataCleaning {
         return cleanedBucket;
     }
 
+    private static void buildCorrectionMap(final Bucket bucket) {
+        correctionMap = new HashMap<>();
+        for (Record record : bucket) {
+            addToCorrectionMap(correctionMap, record);
+        }
+    }
+
     /**
      * Performs cleaning on the goldstandard tokensets of a record.
      *
-     * @param record the record to clean
-     * @return the record after cleaning
+     * @param correctionMap the correction map of tokens to corrected tokens.
+     * @param record        the record to clean
      */
-    private Record cleanRecord(final Record record) {
-
+    private static void addToCorrectionMap(final Map<String, String> correctionMap, final Record record) {
         Set<CodeTriple> set = record.getGoldStandardClassificationSet();
         for (CodeTriple codeTriple : set) {
             TokenSet ts = codeTriple.getTokenSet();
-            TokenSet cleaned = clean(ts);
+            addToCorrectionMap(correctionMap, ts);
         }
-
-        return record;
     }
 
     /**
      * Performs cleaning on a {@link TokenSet}.
      *
      * @param tokenSet the tokenSet to clean.
-     * @return the token set after cleaning
      */
-    private TokenSet clean(final TokenSet tokenSet) {
-
-        TokenSet cleaned = new TokenSet();
-        Iterator<String> it = tokenSet.iterator();
-        while (it.hasNext()) {
-            String token = it.next();
+    private static void addToCorrectionMap(final Map<String, String> correctionMap, final TokenSet tokenSet) {
+        for (String token : tokenSet) {
             if (wordMultiset.count(token) < TOKENLIMIT) {
-                token = correct(token);
-                cleaned.add(token);
-            }
-            else {
-                cleaned.add(token);
+                String correctedToken = correct(token);
+                correctionMap.put(token, correctedToken);
             }
         }
-        return cleaned;
     }
 
     /**
@@ -103,7 +101,7 @@ public class DataCleaning {
      * @param token the token to correct
      * @return the highest similarity match
      */
-    private String correct(final String token) {
+    private static String correct(final String token) {
 
         AbstractStringMetric metric = new Levenshtein();
         List<Pair<String, Float>> possibleMatches = getPossibleMatches(token, metric);
@@ -113,7 +111,7 @@ public class DataCleaning {
         return bestMatch;
     }
 
-    private void printDebugInfo(final String token, final String bestMatch) {
+    private static void printDebugInfo(final String token, final String bestMatch) {
 
         if (!token.equals(bestMatch)) {
             System.out.println(token + "\t corrected to \t" + bestMatch);
@@ -123,20 +121,20 @@ public class DataCleaning {
     /**
      * Gets the possible matches.
      *
-     * @param token the token
+     * @param token  the token
      * @param metric the metric
      * @return the possible matches
      */
-    private List<Pair<String, Float>> getPossibleMatches(final String token, final AbstractStringMetric metric) {
+    private static List<Pair<String, Float>> getPossibleMatches(final String token, final AbstractStringMetric metric) {
 
         List<Pair<String, Float>> possibleMatches = new ArrayList<>();
         Set<String> allWords = wordMultiset.elementSet();
 
         for (String string : allWords) {
-            if (wordMultiset.count(string) > 3) {
+            if (wordMultiset.count(string) > wordMultiset.count(token)) {
                 float result = metric.getSimilarity(string, token);
                 if (result > SIMILARITY) {
-                    possibleMatches.add(new Pair<String, Float>(string, result));
+                    possibleMatches.add(new Pair<>(string, result));
                 }
             }
         }
@@ -146,17 +144,16 @@ public class DataCleaning {
     /**
      * Gets the best match.
      *
-     * @param token the token
+     * @param token           the token
      * @param possibleMatches the possible matches
      * @return the best match
      */
-    private String getBestMatch(final String token, final List<Pair<String, Float>> possibleMatches) {
+    private static String getBestMatch(final String token, final List<Pair<String, Float>> possibleMatches) {
 
         String bestMatch;
         if (!possibleMatches.isEmpty()) {
             bestMatch = possibleMatches.get(possibleMatches.size() - 1).getLeft();
-        }
-        else {
+        } else {
             bestMatch = token;
         }
         return bestMatch;
@@ -167,7 +164,7 @@ public class DataCleaning {
      *
      * @param possibleMatches the possible matches
      */
-    private void sortPossibleMatches(final List<Pair<String, Float>> possibleMatches) {
+    private static void sortPossibleMatches(final List<Pair<String, Float>> possibleMatches) {
 
         Comparator<Pair<String, Float>> c = new Comparator<Pair<String, Float>>() {
 
@@ -184,49 +181,73 @@ public class DataCleaning {
     /**
      * Builds a {@link HashMultiset} of tokens to occurrences from all the words that appear in the gold standard
      * tokenSets.
+     *
      * @param bucket to create word count map from
      */
-    protected void buildTokenOccurenceMap(final Bucket bucket) {
+    protected static void buildTokenOccurrenceMap(final Bucket bucket) {
 
         wordMultiset = HashMultiset.create();
-        String line;
 
         for (Record r : bucket) {
             Set<CodeTriple> set = r.getGoldStandardClassificationSet();
             for (CodeTriple codeTriple : set) {
-                line = codeTriple.getTokenSet().toString();
-                UniqueWordCounter.countWordsInLine(wordMultiset, line);
+                UniqueWordCounter.countWordsInLine(wordMultiset, codeTriple.getTokenSet());
             }
         }
 
     }
 
-    /**
-     * The main method.
-     *
-     * @param args the arguments
-     * @throws IOException Signals that an I/O exception has occurred.
-     * @throws InputFormatException the input format exception
-     */
     public static void main(final String[] args) throws IOException, InputFormatException {
-
-        File training = new File(args[0]);
-
-        Iterable<Record> records;
-        records = FormatConverter.convert(training);
-        Bucket bucket = new Bucket();
-        bucket.addCollectionOfRecords(records);
-        DataCleaning cleaner = new DataCleaning();
-        cleaner.buildTokenOccurenceMap(bucket);
-
-        for (Record record : bucket) {
-            Set<CodeTriple> ct = record.getGoldStandardClassificationSet();
-            for (CodeTriple codeTriple : ct) {
-                TokenSet tokens = new TokenSet(codeTriple.getTokenSet());
-                tokens = cleaner.clean(tokens);
-            }
-
-        }
-
+        File originalFile = new File(args[0]);
+        File fileToWriteTo = new File(args[1]);
+        runOnFile(originalFile, fileToWriteTo);
     }
+
+    public static void runOnFile(final File file, final File correctedFile) throws IOException, InputFormatException {
+        List<Record> records = FormatConverter.convert(file);
+        Bucket bucket = new Bucket(records);
+        buildTokenOccurrenceMap(bucket);
+        buildCorrectionMap(bucket);
+        correctTokensInFile(file, correctedFile);
+    }
+
+    private static void correctTokensInFile(File file, File correctedFile) throws IOException {
+        BufferedReader br = new BufferedReader(new FileReader(file));
+        BufferedWriter bw = new BufferedWriter((new FileWriter(correctedFile)));
+        String line;
+        while ((line = br.readLine()) != null) {
+            String correctedLine = correctLine(line);
+            bw.write(correctedLine);
+            bw.write("\n");
+        }
+        br.close();
+        bw.close();
+    }
+
+    private static String correctLine(String line) {
+        String[] commaSplits = line.split(Utils.getCSVComma());
+        StringBuilder sb = new StringBuilder();
+        for (String str : commaSplits) {
+            String cleanedString = tokenizeAndCleanString(str);
+            sb.append(cleanedString).append(",");
+        }
+        String correctedLine = sb.toString();
+        return correctedLine.subSequence(0, correctedLine.length() - 1).toString();
+    }
+
+    private static String tokenizeAndCleanString(String str) {
+        StringBuilder sb = new StringBuilder();
+        for (String token : new TokenSet(str)) {
+            String correctedToken = correctionMap.get(token);
+            if (correctedToken != null) {
+                sb.append(correctedToken).append(" ");
+                if (!correctedToken.equals(token))
+                    System.out.println("Original token: " + token + " Corrected token: " + correctedToken);
+            } else {
+                sb.append(token).append(" ");
+            }
+        }
+        return sb.toString().trim();
+    }
+
 }
