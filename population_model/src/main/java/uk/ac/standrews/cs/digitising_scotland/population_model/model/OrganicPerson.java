@@ -23,6 +23,7 @@ import java.util.List;
 
 /**
  * Created by victor on 08/07/14.
+ * @author Tom Dalton (tsd4@st-andrews.ac.uk)
  */
 public class OrganicPerson implements IPerson {
 
