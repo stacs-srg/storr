@@ -16,12 +16,14 @@
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.transform;
 
-import uk.ac.standrews.cs.digitising_scotland.population_model.generation.distributions.InconsistentWeightException;
-import uk.ac.standrews.cs.digitising_scotland.population_model.generation.distributions.NegativeDeviationException;
-import uk.ac.standrews.cs.digitising_scotland.population_model.generation.distributions.NegativeWeightException;
-import uk.ac.standrews.cs.digitising_scotland.population_model.model.CompactPopulation;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.InconsistentWeightException;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.NegativeDeviationException;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.NegativeWeightException;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IDFactory;
-import uk.ac.standrews.cs.digitising_scotland.population_model.transform.old.PopulationToFile;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPopulation;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.in_memory.CompactPopulation;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.in_memory.CompactPopulationAdapter;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.PopulationToFile;
 
 import java.io.IOException;
 import java.nio.file.Paths;
@@ -39,17 +41,20 @@ public abstract class AbstractTestCaseRecorder {
 
             IDFactory.resetId();
 
-            final String path_string = Paths.get(AbstractExporterTest.TEST_DIRECTORY_PATH_STRING, AbstractExporterTest.TEST_CASE_FILE_NAME_ROOTS[i] + getIntendedOutputFileSuffix()).toString();
+            final String path_string = Paths.get(
+                    AbstractExporterTest.TEST_DIRECTORY_PATH_STRING,
+                    getDirectoryName(),AbstractExporterTest.TEST_CASE_FILE_NAME_ROOTS[i] + getIntendedOutputFileSuffix()).toString();
 
             final CompactPopulation population = new CompactPopulation(AbstractExporterTest.TEST_CASE_POPULATION_SIZES[i]);
+            final IPopulation population_interface = new CompactPopulationAdapter(population);
 
-            final PopulationToFile exporter = getExporter(population, path_string);
-
+            final PopulationToFile exporter = getExporter(population_interface, path_string);
             exporter.export();
         }
     }
 
     protected abstract String getIntendedOutputFileSuffix();
+    protected abstract String getDirectoryName();
 
-    protected abstract PopulationToFile getExporter(CompactPopulation population, String path_string) throws IOException, InconsistentWeightException;
+    protected abstract PopulationToFile getExporter(IPopulation population, String path_string) throws IOException, InconsistentWeightException;
 }

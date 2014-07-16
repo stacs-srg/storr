@@ -27,6 +27,7 @@ public interface IPopulation {
     /**
      * Allows iteration over the people in the population.
      * The order is determined by the underlying population implementation.
+     * The unique identifiers of people are allocated in temporal order.
      *
      * @return an iterable sequence of people
      */
@@ -44,6 +45,7 @@ public interface IPopulation {
      * Retrieves a person by id.
      * @param id the id
      * @return the corresponding person
+     * @throws Exception if there is an error retrieving the person
      */
     IPerson findPerson(int id);
 
@@ -51,20 +53,23 @@ public interface IPopulation {
      * Retrieves a partnership by id.
      * @param id the id
      * @return the corresponding partnership
+     * @throws Exception if there is an error retrieving the partnership
      */
     IPartnership findPartnership(int id);
 
     /**
      * Returns the number of people in the population.
      * @return the number of people in the population
+     * @throws Exception if there is an error determining the number of people
      */
-    int getNumberOfPeople();
+    int getNumberOfPeople() throws Exception;
 
     /**
      * Returns the number of partnerships in the population.
      * @return the number of partnerships in the population
+     * @throws Exception if there is an error determining the number of partnerships
      */
-    int getNumberOfPartnerships();
+    int getNumberOfPartnerships() throws Exception;
 
     /**
      * Sets a description for the population, which may be useful for testing and debugging.

@@ -9,9 +9,11 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.TokenSet;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Pair;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeFactory;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeTriple;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -31,7 +33,7 @@ public class ResolverMatrixTest {
     @Before
     public void setup() {
 
-        CodeFactory.getInstance().loadDictionary(new File("record_classification/src/test/resources/CodeFactoryTestFile.txt"));
+        CodeFactory.getInstance().loadDictionary(new File("target/test-classes/CodeFactoryTestFile.txt"));
         matrix = new ResolverMatrix();
 
     }

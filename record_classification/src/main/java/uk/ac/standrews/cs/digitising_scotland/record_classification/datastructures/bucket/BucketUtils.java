@@ -2,13 +2,18 @@ package uk.ac.standrews.cs.digitising_scotland.record_classification.datastructu
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 
-// TODO: Auto-generated Javadoc
 /**
- * Methods to perform manipulation of Buckets.
+ * This class contains methods that perform manipulation of {@link Bucket}s. Standard manipulations are
+ * calculating the union or intersection of two buckets. Each method will read a number of buckets and
+ * return a new bucket containing the result of the calculation.
  * @author jkc25
  *
  */
 public class BucketUtils {
+
+    private BucketUtils() {
+
+    }
 
     /**
      * Calculates the union of two buckets.
@@ -64,7 +69,7 @@ public class BucketUtils {
     }
 
     /**
-     * Checks if is disjoint.
+     * Checks if buckets A and B are disjoint.
      *
      * @param bucketA the bucket a
      * @param bucketB the bucket b
@@ -76,7 +81,7 @@ public class BucketUtils {
     }
 
     /**
-     * Checks if is subset.
+     * Checks if bucket A is a subset of bucket B.
      *
      * @param bucketA the bucket a
      * @param bucketB the bucket b

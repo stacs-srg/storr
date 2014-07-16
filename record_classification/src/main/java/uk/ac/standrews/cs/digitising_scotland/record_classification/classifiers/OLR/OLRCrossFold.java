@@ -15,7 +15,6 @@ import org.apache.mahout.math.Vector;
 import org.apache.mahout.math.function.DoubleDoubleFunction;
 import org.apache.mahout.math.function.Functions;
 
-// TODO: Auto-generated Javadoc
 /**
  * Distributes training vectors across {@link OLRPool}s in a cross fold manner. Allows concurrent training
  * of the {@link OLRPool}s and provides a classify method that averages the classifications given by each pool.
@@ -102,8 +101,7 @@ public class OLRCrossFold {
      */
     private void checkTrainable() {
 
-        if (!modelTrainable) { throw new UnsupportedOperationException("This model has no files to train "
-                + "on and may only be used for classification."); }
+        if (!modelTrainable) { throw new UnsupportedOperationException("This model has no files to train " + "on and may only be used for classification."); }
     }
 
     /**

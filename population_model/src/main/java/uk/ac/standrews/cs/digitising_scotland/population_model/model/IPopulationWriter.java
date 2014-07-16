@@ -20,7 +20,7 @@ package uk.ac.standrews.cs.digitising_scotland.population_model.model;
  * Interface to be implemented by classes that process information from a population.
  *
  * @author Graham Kirby (graham.kirby@st-andrews.ac.uk)
- * @see uk.ac.standrews.cs.digitising_scotland.population_model.transform.PopulationConverter
+ * @see PopulationConverter
  */
 public interface IPopulationWriter extends AutoCloseable {
 

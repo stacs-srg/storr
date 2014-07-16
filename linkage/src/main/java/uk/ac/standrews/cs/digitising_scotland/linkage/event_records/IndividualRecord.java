@@ -1,5 +1,9 @@
 package uk.ac.standrews.cs.digitising_scotland.linkage.event_records;
 
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPartnership;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPerson;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPopulation;
+
 /**
  * Created by graham on 13/05/2014.
  */
@@ -20,6 +24,29 @@ public abstract class IndividualRecord extends Record {
     protected String fathers_forename;
     protected String fathers_surname;
     protected String fathers_occupation;
+
+    protected void setParentAttributes(IPerson person, IPopulation population, IPartnership parents_partnership) {
+
+        // Attributes associated with individual's parents.
+        for (final int parent_id : parents_partnership.getPartnerIds()) {
+
+            IPerson parent = population.findPerson(parent_id);
+
+            if (parent.getSex() == IPerson.MALE) {
+
+                setFathersForename(parent.getFirstName());
+                setFathersSurname(getRecordedParentsSurname(parent.getSurname(), person.getSurname()));
+                setFathersOccupation(parent.getOccupation());
+
+            } else {
+
+                setMothersForename(parent.getFirstName());
+                setMothersSurname(getRecordedParentsSurname(parent.getSurname(), person.getSurname()));
+
+                setMothersMaidenSurname(getMaidenSurname(population, parent));
+            }
+        }
+    }
 
     public String getSurname() {
         return surname;

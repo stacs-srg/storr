@@ -10,13 +10,29 @@ import org.junit.Test;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.RecordFactory;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.exceptions.InputFormatException;
 
+/**
+ * The Class BucketUtilsTest.
+ */
 public class BucketUtilsTest {
 
+    /** The bucket a. */
     Bucket bucketA;
+
+    /** The bucket b. */
     Bucket bucketB;
+
+    /** The bucket c. */
     Bucket bucketC;
+
+    /** The empty bucket. */
     Bucket emptyBucket;
 
+    /**
+     * Sets the up.
+     *
+     * @throws IOException Signals that an I/O exception has occurred.
+     * @throws InputFormatException the input format exception
+     */
     @Before
     public void setUp() throws IOException, InputFormatException {
 
@@ -33,6 +49,9 @@ public class BucketUtilsTest {
         bucketC.remove(bucketA.iterator().next());
     }
 
+    /**
+     * Test compliment.
+     */
     @Test
     public void testCompliment() {
 
@@ -41,6 +60,9 @@ public class BucketUtilsTest {
         Assert.assertEquals(expectedSize, compliment.size());
     }
 
+    /**
+     * Test intersection.
+     */
     @Test
     public void testIntersection() {
 
@@ -49,6 +71,9 @@ public class BucketUtilsTest {
         Assert.assertEquals(expectedSize, intersection.size());
     }
 
+    /**
+     * Test union.
+     */
     @Test
     public void testUnion() {
 

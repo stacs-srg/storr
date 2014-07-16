@@ -4,8 +4,8 @@ import java.util.Collection;
 import java.util.Set;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.OriginalData;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeTriple;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.CodeTriple;
 
 /**
  * Dummy record - fields set null and stubs with no implementation for all methods.
@@ -16,7 +16,7 @@ public class DummyRecord extends Record {
 
     public DummyRecord() {
 
-        super(null);
+        super((int) Math.rint(Math.random() * 1000), null);
     }
 
     @Override

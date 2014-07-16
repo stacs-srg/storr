@@ -8,24 +8,27 @@ import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.AbstractClassifier;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.OLR.OLRClassifier;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.lookup.ExactMatchClassifier;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.FormatConverter;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.AnalysisMetrics.AbstractConfusionMatrix;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.AnalysisMetrics.CodeMetrics;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.AnalysisMetrics.InvertedSoftConfusionMatrix;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.AnalysisMetrics.ListAccuracyMetrics;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.AnalysisMetrics.StrictConfusionMatrix;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.analysis_metrics.AbstractConfusionMatrix;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.analysis_metrics.CodeMetrics;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.analysis_metrics.InvertedSoftConfusionMatrix;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.analysis_metrics.ListAccuracyMetrics;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.analysis_metrics.StrictConfusionMatrix;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.BucketFilter;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.BucketUtils;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeFactory;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeTriple;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.RecordFactory;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.vectors.VectorFactory;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.exceptions.InputFormatException;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.CodeTriple;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.writers.DataClerkingWriter;
 import uk.ac.standrews.cs.digitising_scotland.tools.Timer;
 import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
@@ -62,6 +65,8 @@ import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearnin
  */
 public final class TrainAndMultiplyClassify {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(TrainAndMultiplyClassify.class);
+
     private static final double TRAINING_PCT = 0.8;
 
     private static VectorFactory vectorFactory;
@@ -93,7 +98,7 @@ public final class TrainAndMultiplyClassify {
         File training = new File(args[0]);
         // File prediction = new File(args[1]);
 
-        System.out.println("********** Generating Training Bucket **********");
+        LOGGER.info("********** Generating Training Bucket **********");
         Bucket allRecords = createBucketOfRecords(training);
 
         generateActualCodeMappings(allRecords);
@@ -103,10 +108,7 @@ public final class TrainAndMultiplyClassify {
 
         vectorFactory = new VectorFactory(trainingBucket);
 
-        System.out.println("********** Training Classifier **********");
-        System.out.println("Training with a dictionary size of: " + MachineLearningConfiguration.getDefaultProperties().getProperty("numFeatures"));
-        System.out.println("Training with this number of output classes: " + MachineLearningConfiguration.getDefaultProperties().getProperty("numCategories"));
-        System.out.println("Codes that were null and weren't adter chopping: " + CodeFactory.getInstance().codeMapNullCounter);
+        printStatusUpdate();
 
         AbstractClassifier classifier = trainOLRClassifier(trainingBucket, vectorFactory);
 
@@ -115,14 +117,14 @@ public final class TrainAndMultiplyClassify {
         // Bucket predicitionBucket = createPredictionBucket(prediction);
 
         ExactMatchPipeline exactMatchPipeline = new ExactMatchPipeline(exactMatchClassifier);
-        MachineLearningClassificationPipeline machineLearningClassifier = new MachineLearningClassificationPipeline(classifier);
+        MachineLearningClassificationPipeline machineLearningClassifier = new MachineLearningClassificationPipeline(classifier, trainingBucket);
 
         Bucket exactMatched = exactMatchPipeline.classify(predictionBucket);
         Bucket notExactMatched = BucketUtils.getComplement(predictionBucket, exactMatched);
         Bucket machineLearned = machineLearningClassifier.classify(notExactMatched);
         Bucket allClassified = BucketUtils.getUnion(machineLearned, exactMatched);
 
-        //  BucketClassifier bucketClassifier = new BucketClassifier(recordClassifier);
+        LOGGER.info("********** Classifying Bucket **********");
 
         System.out.println("********** Classifying Bucket **********");
 
@@ -130,19 +132,29 @@ public final class TrainAndMultiplyClassify {
 
         writeRecords(allClassified);
 
-        System.out.println("********** **********");
+        LOGGER.info("********** **********");
 
-        System.out.println("All Records");
+        LOGGER.info("All Records");
         generateAndPrintStats(allClassified);
 
-        System.out.println("\nUnique Records");
-        generateAndPrintStats(BucketFilter.uniqueRecordsOnly(allClassified));
+        LOGGER.info("\nUnique Records");
+        final Bucket uniqueRecordsOnly = BucketFilter.uniqueRecordsOnly(allClassified);
+        generateAndPrintStats(uniqueRecordsOnly);
 
-        System.out.println("Codes that were null and weren't adter chopping: " + CodeFactory.getInstance().codeMapNullCounter);
+        System.out.println("Codes that were null and weren't adter chopping: " + CodeFactory.getInstance().getCodeMapNullCounter());
 
 
         t.stop();
         System.out.println("Elapsed Time: " + t.elapsedTime());
+        LOGGER.info("Codes that were null and weren't adter chopping: " + CodeFactory.getInstance().getCodeMapNullCounter());
+    }
+
+    private static void printStatusUpdate() {
+
+        LOGGER.info("********** Training Classifier **********");
+        LOGGER.info("Training with a dictionary size of: " + MachineLearningConfiguration.getDefaultProperties().getProperty("numFeatures"));
+        LOGGER.info("Training with this number of output classes: " + MachineLearningConfiguration.getDefaultProperties().getProperty("numCategories"));
+        LOGGER.info("Codes that were null and weren't adter chopping: " + CodeFactory.getInstance().getCodeMapNullCounter());
     }
 
     private static void generateActualCodeMappings(final Bucket bucket) {
@@ -189,8 +201,8 @@ public final class TrainAndMultiplyClassify {
 
         AbstractConfusionMatrix invertedConfusionMatrix = new InvertedSoftConfusionMatrix(bucket);
         double totalCorrectlyPredicted = invertedConfusionMatrix.getTotalCorrectlyPredicted();
-        System.out.println("Number of predictions too specific: " + totalCorrectlyPredicted);
-        System.out.println("Proportion of predictions too specific: " + totalCorrectlyPredicted / invertedConfusionMatrix.getTotalPredicted());
+        LOGGER.info("Number of predictions too specific: " + totalCorrectlyPredicted);
+        LOGGER.info("Proportion of predictions too specific: " + totalCorrectlyPredicted / invertedConfusionMatrix.getTotalPredicted());
 
         runRscript("src/R/CodeStatsPlotter.R", strictCodeStatsPath, reportspath, strictCodePath);
         runRscript("src/R/CodeStatsPlotter.R", softCodeStatsPath, reportspath, softCodePath);
@@ -201,9 +213,9 @@ public final class TrainAndMultiplyClassify {
     private static String printCodeMetrics(final Bucket bucket, final ListAccuracyMetrics accuracyMetrics, final String strictCodeStatsPath, final String codeStatsPath) {
 
         CodeMetrics codeMetrics = new CodeMetrics(new StrictConfusionMatrix(bucket));
-        codeMetrics.printMicroStats();
+        LOGGER.info(codeMetrics.getMicroStatsAsString());
         codeMetrics.writeStats(strictCodeStatsPath);
-        System.out.println(strictCodeStatsPath + ": " + codeMetrics.getTotalCorrectlyPredicted());
+        LOGGER.info(strictCodeStatsPath + ": " + codeMetrics.getTotalCorrectlyPredicted());
         accuracyMetrics.generateMarkDownSummary(experimentalFolderName, codeStatsPath);
         return strictCodeStatsPath;
     }
@@ -216,7 +228,7 @@ public final class TrainAndMultiplyClassify {
 
         String imageOutputPath = reportsPath + imageName + ".png";
         String command = "Rscript " + pathToRScript + " " + dataPath + " " + imageOutputPath;
-        System.out.println(Utils.executeCommand(command));
+        LOGGER.info(Utils.executeCommand(command));
     }
 
     private static boolean isRinstalled() {
@@ -224,7 +236,7 @@ public final class TrainAndMultiplyClassify {
         final String pathToScript = Utils.class.getResource("/scripts/checkScript.sh").getFile();
         String checkSystemForR = "sh " + pathToScript + " RScript";
         final String executeCommand = Utils.executeCommand(checkSystemForR);
-        System.out.println(executeCommand);
+        LOGGER.info(executeCommand);
 
         if (executeCommand.equals("RScript required but it's not installed.  Aborting.\n")) {
             System.err.println("Stats not generated. R or RScript is not installed.");

@@ -16,6 +16,9 @@ import java.util.Locale;
 import java.util.TreeSet;
 import java.util.regex.Pattern;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import uk.ac.standrews.cs.digitising_scotland.tools.Timer;
 import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
 import uk.ac.standrews.cs.digitising_scotland.tools.analysis.MemoryMonitor;
@@ -43,6 +46,8 @@ import cc.mallet.types.LabelSequence;
  * Please remember that LDA is a generative model and as such is not guaranteed to give the same allocation of words/topics each time it is run.
  */
 public class TopicModel {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(TopicModel.class);
 
     /** The results matrix - for debug/information only. Will show summary of how many topics were assigned/should of been assigned to each record */
     private static int[][] resultsMatrix = new int[4][10];
@@ -215,7 +220,7 @@ public class TopicModel {
 
         TopicInferencer inferencer = model.getInferencer();
         double[] testProbabilities = inferencer.getSampledDistribution(testing.get(0), 10, 1, 5);
-        System.out.println("0\t" + testProbabilities[0]);
+        LOGGER.info("0\t" + testProbabilities[0]);
         model.write(new File("target/ldaModel.model"));
     }
 
@@ -239,7 +244,7 @@ public class TopicModel {
                 out.format("%s (%.0f) ", dataAlphabet.lookupObject(idCountPair.getID()), idCountPair.getWeight());
                 rank++;
             }
-            System.out.println(out);
+            LOGGER.info(out.toString());
         }
         out.close();
     }

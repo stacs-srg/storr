@@ -19,15 +19,33 @@ import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearnin
  */
 public final class CodeFactory {
 
+    /** The Constant INSTANCE. */
     private static final CodeFactory INSTANCE = new CodeFactory();
-    private HashMap<String, Code> codeMap = new HashMap<String, Code>();
-    private HashMap<Integer, Code> idToCodeMap = new HashMap<Integer, Code>();
-    private boolean doOnce = true;
-    private File inputFile;
-    private int currentMaxID;
-    private static final String ENCODING = "UTF-8";
-    public int codeMapNullCounter = 0;
 
+    /** The code map. */
+    private HashMap<String, Code> codeMap = new HashMap<String, Code>();
+
+    /** The id to code map. */
+    private HashMap<Integer, Code> idToCodeMap = new HashMap<Integer, Code>();
+
+    /** The do once. */
+    private boolean doOnce = true;
+
+    /** The input file. */
+    private File inputFile;
+
+    /** The current max id. */
+    private int currentMaxID;
+
+    /** The Constant ENCODING. */
+    private static final String ENCODING = "UTF-8";
+
+    /** The code map null counter. */
+    private int codeMapNullCounter = 0;
+
+    /**
+     * Instantiates a new code factory.
+     */
     private CodeFactory() {
 
         Properties properties = MachineLearningConfiguration.getDefaultProperties();
@@ -79,6 +97,9 @@ public final class CodeFactory {
         return idToCodeMap.get(id);
     }
 
+    /**
+     * Try init code map.
+     */
     private void tryInitCodeMap() {
 
         try {
@@ -92,6 +113,12 @@ public final class CodeFactory {
         }
     }
 
+    /**
+     * Try get code from map.
+     *
+     * @param code the code
+     * @return the code
+     */
     private Code tryGetCodeFromMap(final String code) {
 
         Code codeFromMap = null;
@@ -104,6 +131,13 @@ public final class CodeFactory {
         return codeFromMap;
     }
 
+    /**
+     * Gets the code from map.
+     *
+     * @param code the code
+     * @return the code from map
+     * @throws CodeNotValidException the code not valid exception
+     */
     protected Code getCodeFromMap(final String code) throws CodeNotValidException {
 
         //FIXME Remember, we've hacked this to perform scale testing. Need to check with Lee about 0's on end of codes.
@@ -111,7 +145,7 @@ public final class CodeFactory {
         if (codeFromMap == null) {
             codeFromMap = codeMap.get(code.substring(0, code.length() - 1));
             if (codeFromMap != null) {
-                codeMapNullCounter++;
+                setCodeMapNullCounter(getCodeMapNullCounter() + 1);
             }
         }
         if (codeFromMap == null) { throw new CodeNotValidException(code + " is not a valid code, or is not in the code dictionary(" + inputFile.getAbsolutePath() + ")"); }
@@ -119,6 +153,12 @@ public final class CodeFactory {
         return codeFromMap;
     }
 
+    /**
+     * Inits the code map.
+     *
+     * @throws IOException Signals that an I/O exception has occurred.
+     * @throws CodeNotValidException the code not valid exception
+     */
     private void initCodeMap() throws IOException, CodeNotValidException {
 
         doOnce = false;
@@ -164,6 +204,12 @@ public final class CodeFactory {
         return codeMap.size();
     }
 
+    /**
+     * Checks if is cause of death.
+     *
+     * @return true, if is cause of death
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
     private boolean isCauseOfDeath() throws IOException {
 
         BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(inputFile), ENCODING));
@@ -211,9 +257,9 @@ public final class CodeFactory {
     /**
      * Puts a cause of death code in the map.
      *
-     * @param codeFromFile
-     * @param descriptionFromFile
-     * @throws CodeNotValidException
+     * @param codeFromFile the code from file
+     * @param descriptionFromFile the description from file
+     * @throws CodeNotValidException the code not valid exception
      */
     private void putCoDCodeInMap(final String codeFromFile, final String descriptionFromFile) throws CodeNotValidException {
 
@@ -227,9 +273,9 @@ public final class CodeFactory {
     /**
      * Puts an occupation code in the map.
      *
-     * @param codeFromFile
-     * @param descriptionFromFile
-     * @throws CodeNotValidException
+     * @param codeFromFile the code from file
+     * @param descriptionFromFile the description from file
+     * @throws CodeNotValidException the code not valid exception
      */
     private void putOccCodeInMap(final String codeFromFile, final String descriptionFromFile) throws CodeNotValidException {
 
@@ -239,6 +285,26 @@ public final class CodeFactory {
             idToCodeMap.put(currentMaxID++, code);
 
         }
+    }
+
+    /**
+     * Gets the code map null counter.
+     *
+     * @return the code map null counter
+     */
+    public int getCodeMapNullCounter() {
+
+        return codeMapNullCounter;
+    }
+
+    /**
+     * Sets the code map null counter.
+     *
+     * @param codeMapNullCounter the new code map null counter
+     */
+    public void setCodeMapNullCounter(int codeMapNullCounter) {
+
+        this.codeMapNullCounter = codeMapNullCounter;
     }
 
 }

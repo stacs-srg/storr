@@ -17,10 +17,10 @@
 package uk.ac.standrews.cs.digitising_scotland.population_model.transform;
 
 import org.junit.runners.Parameterized.Parameters;
-import uk.ac.standrews.cs.digitising_scotland.population_model.generation.distributions.NegativeDeviationException;
-import uk.ac.standrews.cs.digitising_scotland.population_model.generation.distributions.NegativeWeightException;
-import uk.ac.standrews.cs.digitising_scotland.population_model.model.CompactPopulation;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IDFactory;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPopulation;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.in_memory.CompactPopulation;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.in_memory.CompactPopulationAdapter;
 import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
 
 import java.io.BufferedReader;
@@ -38,9 +38,9 @@ import static org.junit.Assert.assertNull;
  */
 public abstract class AbstractExporterTest {
 
-    protected static final String TEST_DIRECTORY_PATH_STRING = "src/test/resources/";
+    public static final String TEST_DIRECTORY_PATH_STRING = "src/test/resources/";
 
-    protected final CompactPopulation population;
+    protected final IPopulation population;
     protected final String file_name_root;
 
     protected static final int[] TEST_CASE_POPULATION_SIZES = new int[]{10, 30, 50, 200};
@@ -53,14 +53,14 @@ public abstract class AbstractExporterTest {
         }
     }
 
-    public AbstractExporterTest(final CompactPopulation population, final String file_name_root) {
+    public AbstractExporterTest(final IPopulation population, final String file_name_root) {
 
         this.population = population;
         this.file_name_root = file_name_root;
     }
 
     @Parameters
-    public static Collection<Object[]> generateConfigurations() throws NegativeDeviationException, NegativeWeightException {
+    public static Collection<Object[]> generateConfigurations() throws Exception {
 
         final Object[][] configurations = new Object[TEST_CASE_POPULATION_SIZES.length][];
         for (int i = 0; i < configurations.length; i++) {
@@ -69,10 +69,10 @@ public abstract class AbstractExporterTest {
         return Arrays.asList(configurations);
     }
 
-    private static Object[] makeTestConfiguration(final int population_size, final String file_name_root) throws NegativeDeviationException, NegativeWeightException {
+    private static Object[] makeTestConfiguration(final int population_size, final String file_name_root) throws Exception {
 
         IDFactory.resetId();
-        return new Object[]{new CompactPopulation(population_size), file_name_root};
+        return new Object[]{new CompactPopulationAdapter(new CompactPopulation(population_size)), file_name_root};
     }
 
     private static String makeFileNameRoot(final int population_size) {

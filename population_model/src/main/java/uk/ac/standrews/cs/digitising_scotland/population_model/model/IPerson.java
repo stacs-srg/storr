@@ -37,7 +37,8 @@ public interface IPerson {
     char MALE = 'M';
 
     /**
-     * Gets the person's unique identifier.
+     * Gets the person's unique identifier. It can be assumed that identifiers are allocated in temporal
+     * order, so an older person's identifier is always less than that of a younger person.
      * @return the person's unique identifier
      */
     int getId();
@@ -95,4 +96,10 @@ public interface IPerson {
      * @return the identifiers of the person's partnerships
      */
     List<Integer> getPartnerships();
+
+    /**
+     * Gets the identifier of the person's parents' partnership, or -1 if none are recorded.
+     * @return the identifier of the person's parents' partnership
+     */
+    int getParentsPartnership();
 }

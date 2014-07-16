@@ -15,9 +15,9 @@ import org.apache.mahout.math.RandomAccessSparseVector;
 import org.apache.mahout.math.Vector;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeTriple;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.machinelearning.tokenizing.StandardTokenizerIterable;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.CodeTriple;
 import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearningConfiguration;
 
 /**

@@ -16,14 +16,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.AbstractClassifier;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.TokenSet;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Pair;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeFactory;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeTriple;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.vectors.VectorFactory;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.CodeTriple;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.Pair;
 import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearningConfiguration;
 
 /**
@@ -34,16 +34,13 @@ import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearnin
  */
 public class OLRClassifier extends AbstractClassifier {
 
-    /** The model. */
-    private OLRCrossFold model = null;
+    private static final Logger LOGGER = LoggerFactory.getLogger(OLRClassifier.class);
 
-    /** The properties. */
+    private OLRCrossFold model = null;
     private final Properties properties;
 
     /** The Constant MODELPATH. Default is target/olrModelPath, but can be overwritten. */
     private static String modelPath = "target/olrModelPath";
-
-    private final Logger logger = LoggerFactory.getLogger(OLRClassifier.class);
 
     /**
      * Overrides the default path and sets to the path provided.
@@ -122,7 +119,7 @@ public class OLRClassifier extends AbstractClassifier {
     public Record classify(final Record record) {
 
         if (model == null) {
-            logger.error("Model has not been trained.");
+            LOGGER.error("Model has not been trained.");
             return record;
         }
 
@@ -150,7 +147,7 @@ public class OLRClassifier extends AbstractClassifier {
     public Bucket classify(final Bucket bucket) throws IOException {
 
         if (model == null) {
-            logger.error("Model has not been trained.");
+            LOGGER.error("Model has not been trained.");
             return bucket;
         }
         return super.classify(bucket);

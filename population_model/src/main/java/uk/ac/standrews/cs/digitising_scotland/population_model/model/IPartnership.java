@@ -61,5 +61,7 @@ public interface IPartnership extends Comparable<IPartnership> {
      * Gets the identifiers of the partnership's children, or null if none are recorded.
      * @return the identifiers of the partnership's children
      */
-    List<Integer> getChildren();
+    List<Integer> getChildIds();
+
+    List<Integer> getPartnerIds();
 }

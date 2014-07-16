@@ -44,7 +44,7 @@ public class DateManipulation {
     private static final Map<String, Integer> CALENDAR_MONTHS;
 
     public static final int START_YEAR = 1600;
-    public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd MMM yyyy");
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd MMM yyyy");
 
     static {
 
@@ -133,7 +133,7 @@ public class DateManipulation {
      */
     public static synchronized String daysToString(final int days) {
 
-        return formatDate(daysToDate(days), DATE_FORMAT);
+        return formatDate(daysToDate(days));
     }
 
     public static synchronized String formatDate(final Date date, SimpleDateFormat formatter) {

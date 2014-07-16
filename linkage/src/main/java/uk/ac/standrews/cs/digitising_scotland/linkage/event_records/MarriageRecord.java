@@ -1,10 +1,11 @@
 package uk.ac.standrews.cs.digitising_scotland.linkage.event_records;
 
-import uk.ac.standrews.cs.digitising_scotland.population_model.model.DBBackedPartnership;
-import uk.ac.standrews.cs.digitising_scotland.population_model.model.Person;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPartnership;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPerson;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPopulation;
 import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
 
-import java.sql.Date;
+import java.util.Date;
 
 /**
  * A representation of a Marriage Record in the form used by the Digitising Scotland Project.
@@ -111,57 +112,61 @@ public class MarriageRecord extends Record {
     private String bride_mother_deceased;
     private String bride_father_occupation;
 
-    public MarriageRecord(final DBBackedPartnership partnership) {
+    public MarriageRecord(final IPartnership partnership, final IPopulation population) {
 
         marriage_date = new DateRecord();
 
         setUid(String.valueOf(partnership.getId()));
 
-        // Process the Groom
+        IPerson partner1 = population.findPerson(partnership.getPartner1Id());
+        IPerson partner2 = population.findPerson(partnership.getPartner2Id());
 
-        final Person groom = partnership.getGroom();
+        IPerson groom = partner1.getSex() == IPerson.MALE ? partner1 : partner2;
+        IPerson bride = partner1.getSex() == IPerson.FEMALE ? partner1 : partner2;
 
         setGroomForename(groom.getFirstName());
         setGroomSurname(groom.getSurname());
 
-        // Process the Bride
-
-        final Person bride = partnership.getBride();
-
         setBrideForename(bride.getFirstName());
-        setBrideSurname(bride.getMaidenName());
+        setBrideSurname(bride.getSurname());
 
-        // Process the Groom's family
+        final int groom_parents_partnership_id = groom.getParentsPartnership();
+        if (groom_parents_partnership_id != -1) {
 
-        final DBBackedPartnership grooms_family = groom.getParentsFamily();
-        if (grooms_family != null) {
+            IPartnership groom_parents_partnership = population.findPartnership(groom_parents_partnership_id);
 
-            final Person grooms_father = grooms_family.getGroom();
-            final Person grooms_mother = grooms_family.getBride();
+            IPerson groom_parents_partner1 = population.findPerson(groom_parents_partnership.getPartner1Id());
+            IPerson groom_parents_partner2 = population.findPerson(groom_parents_partnership.getPartner2Id());
 
-            setGroomFathersForename(grooms_father.getFirstName());
-            setGroomFathersSurname(getRecordedParentsSurname(grooms_father.getSurname(), groom.getSurname()));
+            IPerson groom_father = groom_parents_partner1.getSex() == IPerson.MALE ? groom_parents_partner1 : groom_parents_partner2;
+            IPerson groom_mother = groom_parents_partner1.getSex() == IPerson.FEMALE ? groom_parents_partner1 : groom_parents_partner2;
 
-            setGroomMothersForename(grooms_mother.getFirstName());
-            setGroomMothersMaidenSurname(grooms_mother.getMaidenName());
+            setGroomFathersForename(groom_father.getFirstName());
+            setGroomFathersSurname(getRecordedParentsSurname(groom_father.getSurname(), groom.getSurname()));
+
+            setGroomMothersForename(groom_mother.getFirstName());
+            setGroomMothersMaidenSurname(getMaidenSurname(population, groom_mother));
         }
 
-        // Process the Bride's family
+        final int bride_parents_partnership_id = bride.getParentsPartnership();
+        if (bride_parents_partnership_id != -1) {
 
-        final DBBackedPartnership brides_family = bride.getParentsFamily();
-        if (brides_family != null) {
+            IPartnership bride_parents_partnership = population.findPartnership(groom_parents_partnership_id);
 
-            final Person brides_father = brides_family.getGroom();
-            final Person brides_mother = brides_family.getBride();
+            IPerson bride_parents_partner1 = population.findPerson(bride_parents_partnership.getPartner1Id());
+            IPerson bride_parents_partner2 = population.findPerson(bride_parents_partnership.getPartner2Id());
 
-            setBrideFathersForename(brides_father.getFirstName());
-            setBrideFathersSurname(getRecordedParentsSurname(brides_father.getSurname(), bride.getSurname()));
+            IPerson bride_father = bride_parents_partner1.getSex() == IPerson.MALE ? bride_parents_partner1 : bride_parents_partner2;
+            IPerson bride_mother = bride_parents_partner1.getSex() == IPerson.FEMALE ? bride_parents_partner1 : bride_parents_partner2;
 
-            setBrideMothersForename(brides_mother.getFirstName());
-            setBrideMothersMaidenSurname(brides_mother.getMaidenName());
+            setBrideFathersForename(bride_father.getFirstName());
+            setBrideFathersSurname(getRecordedParentsSurname(bride_father.getSurname(), groom.getSurname()));
+
+            setBrideMothersForename(bride_mother.getFirstName());
+            setBrideMothersMaidenSurname(getMaidenSurname(population, bride_mother));
         }
 
-        final Date start_date = partnership.getStartDate();
+        final Date start_date = partnership.getMarriageDate();
 
         setMarriageDay(String.valueOf(DateManipulation.dateToDay(start_date)));
         setMarriageMonth(String.valueOf(DateManipulation.dateToMonth(start_date)));

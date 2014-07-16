@@ -9,21 +9,22 @@ import java.util.Map;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 
 /**
- * Contains a set of records and metrics associated with that bucket.
+ * A Bucket is an iterable collection of {@link Record} objects. Buckets can be manipulated using the {@link BucketUtils}
+ * and {@link BucketFilter} classes. Methods for checking if a bucket contains a given record, checking it's size etc are provided.
  * @author jkc25, frjd2
  *
  */
 public class Bucket implements Iterable<Record> {
 
     /** The records. */
-    private Map<String, Record> records;
+    private Map<Integer, Record> records;
 
     /**
      * Instantiates a new empty bucket.
      */
     public Bucket() {
 
-        records = new LinkedHashMap<String, Record>();
+        records = new LinkedHashMap<Integer, Record>();
     }
 
     /**
@@ -45,9 +46,7 @@ public class Bucket implements Iterable<Record> {
      */
     public void addRecordToBucket(final Record recordToInsert) {
 
-        //TODO if bucket contains similar record consolidate records?
-        //TODO if doing this return to using hashmaps as record ID in vectors?
-        records.put(recordToInsert.getUid(), recordToInsert);
+        records.put(recordToInsert.getid(), recordToInsert);
     }
 
     /**
@@ -57,7 +56,6 @@ public class Bucket implements Iterable<Record> {
      */
     public void addCollectionOfRecords(final Iterable<Record> records) {
 
-        //TODO do we want this to be a merge type operation?
         for (Record record : records) {
             addRecordToBucket(record);
         }
@@ -84,7 +82,7 @@ public class Bucket implements Iterable<Record> {
      */
     public Record remove(final Record record) {
 
-        return records.remove(record.getUid());
+        return records.remove(record.getid());
     }
 
     /**
@@ -111,12 +109,12 @@ public class Bucket implements Iterable<Record> {
 
     /**
      * Returns a single record that matches the String UID supplied.
-     * @param uID hashCode of the vector we are looking for
+     * @param uid hashCode of the vector we are looking for
      * @return Record with matching hashCode
      */
-    public Record getRecord(final String uID) {
+    public Record getRecord(final int uid) {
 
-        return records.get(uID);
+        return records.get(uid);
     }
 
     /* (non-Javadoc)

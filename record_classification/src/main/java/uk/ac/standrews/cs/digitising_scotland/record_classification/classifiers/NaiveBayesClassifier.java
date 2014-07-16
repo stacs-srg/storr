@@ -26,15 +26,15 @@ import org.apache.mahout.math.Vector;
 import org.apache.mahout.math.VectorWritable;
 import org.apache.mahout.vectorizer.encoders.Dictionary;
 
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.TokenSet;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Pair;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeFactory;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeTriple;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.vectors.CustomVectorWriter;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.vectors.VectorFactory;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.CodeTriple;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.Pair;
 import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
 import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearningConfiguration;
 

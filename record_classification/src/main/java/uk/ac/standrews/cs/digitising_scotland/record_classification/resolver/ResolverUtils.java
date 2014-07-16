@@ -11,8 +11,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.TokenSet;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeTriple;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
 
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multiset;

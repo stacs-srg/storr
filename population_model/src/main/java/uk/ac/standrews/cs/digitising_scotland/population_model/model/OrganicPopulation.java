@@ -16,19 +16,30 @@
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.model;
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import uk.ac.standrews.cs.digitising_scotland.util.ProgressIndicator;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.AgeAtDeathDistribution;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.Distribution;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.UniformDistribution;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.UniformSexDistribution;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.in_memory.CompactPopulation;
+import uk.ac.standrews.cs.digitising_scotland.population_model.util.RandomFactory;
+import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
+
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Random;
+import java.util.Date;
 
 /**
  * Created by victor on 11/06/14.
  */
-public class OrganicPopulation {
+public class OrganicPopulation implements IPopulation {
 
     /**
      * Seed parameters.
      */
     CompactPopulation seedPopulation;
-    public static final int SEED_SIZE = 1000;
+    public static final int DEFAULT_SEED_SIZE = 1000;
 
     /**
      * The approximate average number of days per year.
@@ -39,45 +50,131 @@ public class OrganicPopulation {
      * The start year of the simulation.
      */
     public static final int START_YEAR = 1780;
+    private int currentDay = 0;
 
     /**
      * The end year of the simulation.
      */
     public static final int END_YEAR = 2013;
-    public static final int NUMBER_OF_STAGES_IN_POPULATION_GENERATION = 5;
+    public int totalNumberOfDays = DateManipulation.dateToDays(END_YEAR, 1, 1) - DateManipulation.dateToDays(START_YEAR, 1, 1);
 
+    /**
+     * Additional parameters
+     */
     private static final int DAYS_IN_DECEMBER = 31;
     private static final int DECEMBER_INDEX = 11;
 
-    private static final int AGE_AT_FIRST_MARRIAGE_STD_DEV = 3;
-    private static final int AGE_AT_FIRST_MARRIAGE_MEAN = 18;
-    private static final int MARRIAGE_SEPARATION_MEAN = 7;
-    private static final int MARRIAGE_SEPARATION_STD_DEV = 2;
-    private static final int INTER_CHILD_INTERVAL = 3;
-    private static final int TIME_BEFORE_FIRST_CHILD = 1;
-    private static final int MINIMUM_PERIOD_BETWEEN_PARTNERSHIPS = 7;
-    private static final int PARTNERSHIP_AGE_DIFFERENCE_LIMIT = 5;
-    private static final int MAX_CHILDREN = 6;
-    private static final int MAX_MARRIAGES = 3;
+    private static int DEFAULT_STEP_SIZE = 1;
 
-    private static final int MINIMUM_MOTHER_AGE_AT_CHILDBIRTH = 12;
-    private static final int MAXIMUM_MOTHER_AGE_AT_CHILDBIRTH = 50;
-    private static final int MAX_GESTATION_IN_DAYS = 300;
-    private static final int MINIMUM_FATHER_AGE_AT_CHILDBIRTH = 12;
-    private static final int MAXIMUM_FATHER_AGE_AT_CHILDBIRTH = 70;
-
-    private static final int[] NUMBER_OF_CHILDREN_DISTRIBUTION = new int[]{2, 3, 2, 1, 1, 1, 1};
-    private static final int[] NUMBER_OF_MARRIAGES_DISTRIBUTION = new int[]{4, 20, 2, 1};
-
-    private static final double PROBABILITY_OF_BEING_INCOMER = 0.125;
-    private ProgressIndicator progress_indicator;
-
-    @SuppressFBWarnings(value = "URF_UNREAD_FIELD")
-    private CompactPerson[] people;
-    @SuppressFBWarnings(value = "UUF_UNUSED_FIELD")
-    private CompactPerson[] peopleToBeMarriedToday;
-    @SuppressFBWarnings(value = "UUF_UNUSED_FIELD")
-    private CompactPartnership[] partnershipsToHaveOffspringToday;
+    Random random = RandomFactory.getRandom();
+    private Distribution<Integer> seed_age_distribution = new UniformDistribution(0, 70, random);
+    private Distribution<Boolean> sex_distribution = new UniformSexDistribution(random);
+    private Distribution<Integer> age_at_death_distribution = new AgeAtDeathDistribution(random);
 
 
+    private List<OrganicPerson> people = new ArrayList<OrganicPerson>();
+    private List<OrganicPartnership> partnerships = new ArrayList<OrganicPartnership>();
+    
+    private LinkedList<OrganicPerson> maleParnershipQueue = new LinkedList<OrganicPerson>();
+    private LinkedList<OrganicPerson> femaleParnershipQueue = new LinkedList<OrganicPerson>();
+
+    public void makeSeed(int size) {
+
+        for (int i = 0; i < size; i++) {
+
+            Date currentDateOfBirth;
+            int age = seed_age_distribution.getSample();
+            int auxiliary = (int) ((age - 1) * (DAYS_PER_YEAR)) + RandomFactory.getRandomInt(1, (int) DAYS_PER_YEAR);
+            auxiliary = DateManipulation.dateToDays(START_YEAR, 1, 1) - auxiliary;
+
+            currentDateOfBirth = DateManipulation.daysToDate(auxiliary);
+            auxiliary = age_at_death_distribution.getSample();
+            Date currentDateOfDeath;
+
+
+            if (sex_distribution.getSample())
+                people.add(new OrganicPerson(currentDateOfBirth, 'M'));
+            else
+                people.add(new OrganicPerson(currentDateOfBirth, 'F'));
+        }
+    }
+
+    public void makeSeed() {
+        makeSeed(DEFAULT_SEED_SIZE);
+    }
+
+    public void generate_timelines() {
+        for (int i = 0; i < people.size(); i++) {
+            if (people.get(i).getTimeline() == null) {
+                OrganicPerson currentPerson = people.get(i);
+                OrganicTimeline currentTimeline;
+                currentTimeline = new OrganicTimeline(currentPerson.getBirthDate(), age_at_death_distribution.getSample());
+                currentPerson.setTimeline(currentTimeline);
+            }
+        }
+    }
+
+    public void mainIteration() {
+        mainIteration(DEFAULT_STEP_SIZE);
+    }
+
+    public void mainIteration(int timeStepSizeInDays) {
+
+    }
+
+    /**
+     * Methods from interface.
+     */
+
+    @Override
+    public Iterable<IPerson> getPeople() {
+        return null;
+    }
+
+    @Override
+    public Iterable<IPartnership> getPartnerships() {
+        return null;
+    }
+
+    @Override
+    public IPerson findPerson(int id) {
+        return null;
+    }
+
+    @Override
+    public IPartnership findPartnership(int id) {
+        return null;
+    }
+    
+
+    @Override
+    public int getNumberOfPeople() {
+        return people.size();
+    }
+
+    @Override
+    public int getNumberOfPartnerships() {
+        return 0;
+    }
+
+    @Override
+    public void setDescription(String description) {
+
+    }
+
+    @Override
+    public void setConsistentAcrossIterations(boolean consistent_across_iterations) {
+
+    }
+
+    //Testing purposes
+    public static void main(String[] args) {
+        System.out.println("--------MAIN HERE---------");
+        OrganicPopulation op = new OrganicPopulation();
+        op.makeSeed();
+        op.generate_timelines();
+        for (int i = 0; i < op.getNumberOfPeople(); i++) {
+            System.out.println(op.people.get(i).getDeathDate());
+        }
+    }
 }

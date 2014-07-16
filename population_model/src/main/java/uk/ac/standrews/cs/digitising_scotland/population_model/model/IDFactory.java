@@ -31,7 +31,7 @@ public class IDFactory {
 
     static {
         try {
-            loadPersistentId();
+            resetId();
         }
         catch (final Throwable e) {
             ErrorHandling.exceptionError(e, "Cannot recover persistent id");
@@ -48,8 +48,8 @@ public class IDFactory {
         id = 0;
     }
 
-    private static void loadPersistentId() {
+    public static void setId(int id) {
 
-        // TODO get id from database
+        IDFactory.id = id;
     }
 }

@@ -1,5 +1,9 @@
 package uk.ac.standrews.cs.digitising_scotland.linkage.event_records;
 
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPartnership;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPerson;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPopulation;
+
 /**
  * Created by graham on 13/05/2014.
  */
@@ -71,6 +75,25 @@ public abstract class Record {
 
     public void setImageQuality(final String image_quality) {
         this.image_quality = image_quality;
+    }
+
+    protected String getMaidenSurname(IPopulation population, IPerson person) {
+
+        int parents_partnership_id = person.getParentsPartnership();
+
+        if (parents_partnership_id != -1) {
+
+            IPartnership parents_partnership = population.findPartnership(parents_partnership_id);
+            IPerson parent1 = population.findPerson(parents_partnership.getPartner1Id());
+            if (parent1.getSex() == IPerson.MALE) {
+                return parent1.getSurname();
+
+            } else {
+                IPerson parent2 = population.findPerson(parents_partnership.getPartner2Id());
+                return parent2.getSurname();
+            }
+        }
+        else return null;
     }
 
     protected String getRecordedParentsSurname(final String parents_surname, final String childs_surname) {

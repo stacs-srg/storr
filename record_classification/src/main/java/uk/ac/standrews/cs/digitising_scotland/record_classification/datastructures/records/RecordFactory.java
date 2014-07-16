@@ -10,11 +10,11 @@ import java.util.List;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.CODOrignalData;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.OriginalData;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.TokenSet;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeFactory;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeTriple;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.exceptions.InputFormatException;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.CodeTriple;
 
 /**
  * Creates {@link Record} objects populated with data from file.
@@ -25,6 +25,7 @@ public abstract class RecordFactory {
 
     /** The Constant ENCODING. */
     private static final String ENCODING = "UTF-8";
+    private static int highestId = 0;
 
     /**
      * Creates a list of {@link Record} objects from a file where the records need to be coded.
@@ -68,7 +69,8 @@ public abstract class RecordFactory {
         int year = Integer.parseInt(lineSplit[1]);
         int imageQuality = Integer.parseInt(lineSplit[2]);
         OriginalData originalData = new OriginalData(description, year, imageQuality, inputFile.getPath());
-        Record newRecord = new Record(originalData);
+        int id = highestId++;
+        Record newRecord = new Record(id, originalData);
         // newRecord.addClassificationSet(getClassificationSet(line));
 
         return newRecord;
@@ -85,13 +87,15 @@ public abstract class RecordFactory {
 
         String[] lineSplit = line.split("\\|");
         String description = lineSplit[5];
+        int id = Integer.parseInt(lineSplit[0]);
         int year = Integer.parseInt(lineSplit[1]);
         int ageGroup = Integer.parseInt(lineSplit[4]);
         int sex = Integer.parseInt(lineSplit[3]);
         int imageQuality = Integer.parseInt(lineSplit[2]);
 
         OriginalData originalData = new CODOrignalData(description, year, ageGroup, sex, imageQuality, inputFile.getPath());
-        Record newRecord = new Record(originalData);
+
+        Record newRecord = new Record(id, originalData);
         //   newRecord.addClassificationSet(getClassificationSet(line));
 
         return newRecord;
@@ -140,7 +144,8 @@ public abstract class RecordFactory {
      */
     private static Record createRecord(final Code thisCode, final OriginalData originalData) {
 
-        Record record = new Record(originalData);
+        int id = (int) Math.rint(Math.random() * 1000);
+        Record record = new Record(id, originalData);
         CodeTriple goldStandardClassification = new CodeTriple(thisCode, new TokenSet(originalData.getDescription()), 1.0);
         record.getOriginalData().getGoldStandardCodeTriples().add(goldStandardClassification);
         return record;

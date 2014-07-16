@@ -8,8 +8,10 @@ import java.util.Map;
 import java.util.Set;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.AbstractClassifier;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.TokenSet;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Pair;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeTriple;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
 
 /**
  * ResolverMatrix stores mappings between {@link Code}s and the list of {@link Pair}<TokenSet, Double> objects

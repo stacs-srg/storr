@@ -1,8 +1,7 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.exceptions;
 
-// TODO: Auto-generated Javadoc
 /**
- * InputFormatException is called in the instance of an input being mal-formed or of the wrong type.
+ * InputFormatException is called in the instance of an input being malformed or of the wrong type.
  */
 public class InputFormatException extends Exception {
 

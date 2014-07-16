@@ -28,7 +28,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
  */
 public class TrainAndClassify {
 
-    private final static Logger logger = LoggerFactory.getLogger(TrainAndClassify.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(TrainAndClassify.class);
 
     /**
      * The training file.
@@ -194,7 +194,7 @@ public class TrainAndClassify {
             System.err.println("Usage: TrainClassifiers [-properties customProperties] trainingFile unclassifiedFile");
         }
         else {
-            logger.info("Training Classifiers...");
+            LOGGER.info("Training Classifiers...");
             String trainingFile = args[args.length - 2];
             String unclassifiedFile = args[args.length - 1];
 
