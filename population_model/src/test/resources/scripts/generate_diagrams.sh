@@ -16,10 +16,12 @@
 # <http://www.gnu.org/licenses/>.
 #
 
-mkdir -p population_model/target/diagrams
-for i in population_model/src/test/resources/graphviz/*test.dot
+export SOURCE_DIR="population_model/src/test/resources/graphviz"
+export OUTPUT_DIR="population_model/target/diagrams/graphviz"
+
+mkdir -p $OUTPUT_DIR
+for i in $SOURCE_DIR/*test.dot
 do
-    echo PDF file: $i.pdf
     dot -Tpdf $i > $i.pdf
-    cp $i.pdf population_model/target/diagrams
+    cp $i.pdf $OUTPUT_DIR
 done
