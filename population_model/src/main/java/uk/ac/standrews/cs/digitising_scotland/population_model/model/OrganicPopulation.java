@@ -97,13 +97,15 @@ public class OrganicPopulation implements IPopulation {
             auxiliary = DateManipulation.dateToDays(START_YEAR, 1, 1) - auxiliary;
 
             currentDateOfBirth = DateManipulation.daysToDate(auxiliary);
-            auxiliary = age_at_death_distribution.getSample();
-            Date currentDateOfDeath;
+
+            Distribution<Integer> seed_death_distribution = new UniformDistribution(age, 100, random);
+            auxiliary = DateManipulation.dateToDays(START_YEAR,1,1) + (seed_death_distribution.getSample() - age)*(int)DAYS_PER_YEAR;
+            Date currentDateOfDeath = DateManipulation.daysToDate(auxiliary);
 
             if (sex_distribution.getSample())
-                people.add(new OrganicPerson(currentDateOfBirth, 'M'));
+                people.add(new OrganicPerson(currentDateOfBirth,currentDateOfDeath, 'M'));
             else
-                people.add(new OrganicPerson(currentDateOfBirth, 'F'));
+                people.add(new OrganicPerson(currentDateOfBirth,currentDateOfDeath, 'F'));
         }
     }
 
@@ -163,10 +165,27 @@ public class OrganicPopulation implements IPopulation {
                 currentPerson.setTimeline(currentTimeline);               
             }
         }
+        marryUpPeople();
     }
     
     public void marryUpPeople() {
-    	
+    	Iterator iter = maleParnershipQueue.iterator();
+    	while (iter.hasNext()) {
+			if(!femaleParnershipQueue.isEmpty()) {
+				marry((OrganicPerson)iter.next(),femaleParnershipQueue.getFirst());
+				// remove people from queues
+				
+			}
+			
+		}
+    }
+    
+    public void marry(OrganicPerson husband, OrganicPerson wife) {
+    	// Create partnership
+    	// Add both parties
+    	// Create timeline
+    	// Place events on timeline - births and divorces
+    	//     	
     }
 
     public void mainIteration() {
@@ -229,7 +248,12 @@ public class OrganicPopulation implements IPopulation {
         op.makeSeed();
         op.generate_timelines();
         for (int i = 0; i < op.getNumberOfPeople(); i++) {
-            System.out.println(op.people.get(i).getDeathDate());
+        	System.out.println();
+            System.out.println("BORN: " + op.people.get(i).getBirthDate());
+            System.out.println("DIED: " + op.people.get(i).getDeathDate());
+            int x = (DateManipulation.dateToDays(op.people.get(i).getDeathDate()) - DateManipulation.dateToDays(op.people.get(i).getBirthDate()))/365;
+            System.out.println("ALIVE FOR: " + x);
+            System.out.println();
         }
     }
 }

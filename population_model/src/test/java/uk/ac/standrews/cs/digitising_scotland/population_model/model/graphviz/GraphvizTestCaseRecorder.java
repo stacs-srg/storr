@@ -17,31 +17,28 @@
 package uk.ac.standrews.cs.digitising_scotland.population_model.model.graphviz;
 
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.InconsistentWeightException;
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.NegativeDeviationException;
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.NegativeWeightException;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPopulation;
-import uk.ac.standrews.cs.digitising_scotland.population_model.model.PopulationToFile;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPopulationWriter;
 import uk.ac.standrews.cs.digitising_scotland.population_model.transform.AbstractTestCaseRecorder;
 
 import java.io.IOException;
 
 /**
  * Generates test cases for Graphviz export.
- * 
+ *
  * @author Graham Kirby (graham.kirby@st-andrews.ac.uk)
  */
 public class GraphvizTestCaseRecorder extends AbstractTestCaseRecorder {
 
-    public static void main(final String[] args) throws IOException, InconsistentWeightException, NegativeDeviationException, NegativeWeightException {
+    public static void main(final String[] args) throws Exception {
 
-        final GraphvizTestCaseRecorder recorder = new GraphvizTestCaseRecorder();
-        recorder.recordTestCase();
+        new GraphvizTestCaseRecorder().recordTestCase();
     }
 
     @Override
-    protected PopulationToFile getExporter(final IPopulation population, final String path_string) throws IOException, InconsistentWeightException {
+    protected IPopulationWriter getPopulationWriter(final String path_string, final IPopulation population) throws IOException, InconsistentWeightException {
 
-        return new PopulationToGraphviz(population, path_string);
+        return new PopulationToGraphviz(path_string, population);
     }
 
     @Override

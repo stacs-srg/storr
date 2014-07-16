@@ -26,8 +26,8 @@ import java.util.List;
 public abstract class AbstractPartnership implements IPartnership {
 
     protected int id;
-    protected int partner1_id;
-    protected int partner2_id;
+    protected int male_partner_id;
+    protected int female_partner_id;
     protected Date marriage_date;
     protected List<Integer> children;
     protected List<Integer> partner_ids;
@@ -38,18 +38,18 @@ public abstract class AbstractPartnership implements IPartnership {
     }
 
     @Override
-    public int getPartner1Id() {
-        return partner1_id;
+    public int getMalePartnerId() {
+        return male_partner_id;
     }
 
     @Override
-    public int getPartner2Id() {
-        return partner2_id;
+    public int getFemalePartnerId() {
+        return female_partner_id;
     }
 
     @Override
     public int getPartnerOf(int id) {
-        return id == partner1_id ? partner2_id : id == partner2_id ? partner1_id : -1;
+        return id == male_partner_id ? female_partner_id : id == female_partner_id ? male_partner_id : -1;
     }
 
     @Override
@@ -67,8 +67,8 @@ public abstract class AbstractPartnership implements IPartnership {
 
         if (partner_ids == null) {
             partner_ids = new ArrayList<>();
-            partner_ids.add(partner1_id);
-            partner_ids.add(partner2_id);
+            partner_ids.add(male_partner_id);
+            partner_ids.add(female_partner_id);
         }
         return partner_ids;
     }

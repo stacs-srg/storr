@@ -17,11 +17,13 @@
 package uk.ac.standrews.cs.digitising_scotland.population_model.tools;
 
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPopulation;
-import uk.ac.standrews.cs.digitising_scotland.population_model.model.PopulationToFile;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPopulationWriter;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.gedcom.PopulationToGEDCOM;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.in_memory.CompactPopulation;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.in_memory.CompactPopulationAdapter;
 import uk.ac.standrews.cs.nds.util.CommandLineArgs;
+
+import java.io.IOException;
 
 /**
  * Manual test of Graphviz export.
@@ -30,21 +32,19 @@ import uk.ac.standrews.cs.nds.util.CommandLineArgs;
  */
 public class GenerateCompactPopulationInGEDCOMFile extends AbstractPopulationToFile {
 
-    private static final String SIZE_FLAG = "-s";
     private static final int DEFAULT_SIZE = 100;
 
     @Override
     public IPopulation getPopulation(final String[] args) throws Exception {
 
         final int population_size = CommandLineArgs.extractIntFromCommandLineArgs(args, SIZE_FLAG, DEFAULT_SIZE);
-
         return new CompactPopulationAdapter(new CompactPopulation(population_size));
     }
 
     @Override
-    public PopulationToFile getExporter(IPopulation population, String path_string) {
+    public IPopulationWriter getPopulationWriter(String path_string, IPopulation population) throws IOException {
 
-        return new PopulationToGEDCOM(population, path_string);
+        return new PopulationToGEDCOM(path_string);
     }
 
     public static void main(final String[] args) throws Exception {

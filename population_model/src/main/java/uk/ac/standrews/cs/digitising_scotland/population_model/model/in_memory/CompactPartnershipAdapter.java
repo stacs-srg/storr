@@ -42,8 +42,15 @@ public class CompactPartnershipAdapter {
             this.population = population;
 
             id = compact_partnership.getId();
-            partner1_id = populationIndexToId(compact_partnership.getPartner1());
-            partner2_id = populationIndexToId(compact_partnership.getPartner2());
+
+            CompactPerson partner1 = population.getPerson(compact_partnership.getPartner1());
+            CompactPerson partner2 = population.getPerson(compact_partnership.getPartner2());
+
+            boolean partner1_is_male = partner1.isMale();
+
+            male_partner_id = partner1_is_male ? partner1.getId() : partner2.getId();
+            female_partner_id = partner1_is_male ? partner2.getId() : partner1.getId();
+
             marriage_date = DateManipulation.daysToDate(compact_partnership.getMarriageDate());
 
             children = copyChildren(compact_partnership.getChildren());
