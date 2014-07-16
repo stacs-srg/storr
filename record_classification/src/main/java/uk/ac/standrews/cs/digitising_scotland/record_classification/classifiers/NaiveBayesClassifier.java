@@ -59,6 +59,8 @@ public class NaiveBayesClassifier extends AbstractClassifier {
     /** The model. */
     private NaiveBayesModel model = null;
 
+    private final double staticConfidence = 0.1;
+
     /**
      * Create Naive Bayes classifier with default properties.
      * 
@@ -308,7 +310,7 @@ public class NaiveBayesClassifier extends AbstractClassifier {
         // double confidence = Math.pow(logLikelihood, 2);
         // confidence = Math.sqrt(confidence);
 
-        return 0.5;
+        return staticConfidence;
     }
 
     /**
@@ -373,8 +375,8 @@ public class NaiveBayesClassifier extends AbstractClassifier {
         Code code = CodeFactory.getInstance().getCode(classificationID);
         // double confidence =
         // Math.exp(getClassifier().logLikelihood(classificationID, vector));
-        // THIS WONT WORK - Need to fudge it
-        double confidence = 0.1;
+        // TODO THIS WONT WORK - Baysian classifier don't give real confidence measures - Need to fudge it
+        double confidence = staticConfidence;
 
         pair = new Pair<>(code, confidence);
         return pair;

@@ -35,22 +35,22 @@ public final class FormatConverter {
     static final int CODLINELENGTH = 38;
 
     /** The Constant idPosition. */
-    private static int idPosition = 0;
+    private static final int ID_POSITION = 0;
 
     /** The Constant agePosition. */
-    private static int agePosition = 34;
+    private static final int AGE_POSITION = 34;
 
     /** The Constant sexPosition. */
-    private static int sexPosition = 35;
+    private static final int SEX_POSITION = 35;
 
     /** The Constant descriptionStart. */
-    private static int descriptionStart = 1;
+    private static final int DESC_START = 1;
 
     /** The Constant descriptionEnd. */
-    private static int descriptionEnd = 4;
+    private static final int DESC_END = 4;
 
     /** The Constant yearPosition. */
-    private static int yearPosition = 37;
+    private static final int YEAR_POSITION = 37;
 
     /**
      * Instantiates a new format converter.
@@ -79,12 +79,12 @@ public final class FormatConverter {
 
             checkLineLength(lineSplit);
 
-            int id = Integer.parseInt(lineSplit[idPosition]);
+            int id = Integer.parseInt(lineSplit[ID_POSITION]);
             int imageQuality = 1;
-            int ageGroup = convertAgeGroup(removeQuotes(lineSplit[agePosition]));
-            int sex = convertSex(removeQuotes(lineSplit[sexPosition]));
-            String description = formDescription(lineSplit, descriptionStart, descriptionEnd);
-            int year = Integer.parseInt(removeQuotes(lineSplit[yearPosition]));
+            int ageGroup = convertAgeGroup(removeQuotes(lineSplit[AGE_POSITION]));
+            int sex = convertSex(removeQuotes(lineSplit[SEX_POSITION]));
+            String description = formDescription(lineSplit, DESC_START, DESC_END);
+            int year = Integer.parseInt(removeQuotes(lineSplit[YEAR_POSITION]));
 
             CODOrignalData originalData = new CODOrignalData(description, year, ageGroup, sex, imageQuality, inputFile.getName());
             HashSet<CodeTriple> goldStandard = new HashSet<>();
