@@ -39,19 +39,6 @@ public class UtilsTest {
         File testNumberOfLines = new File("testNumberOfLines.txt");
         Utils.writeToFile("line1 \n" + "line2 \n" + "line3 +\n", "testNumberOfLines.txt");
         assertEquals(3, Utils.getNumberOfLines(testNumberOfLines));
-    }
-
-    /**
-     * Test write and number of lines append.
-     */
-    @Test
-    public void testWriteAndNumberOfLinesAppend() throws IOException {
-
-        // TODO this test is broken because it makes assumptions about other tests having run previously.
-        // JUnit tests need to be independent.
-
-        //  String filePath = getClass().getResource("testNumberOfLines.txt").getFile();
-        File testNumberOfLines = new File("testNumberOfLines.txt");
         Utils.writeToFile(("line1 \n" + "line2 \n" + "line3 \n"), "testNumberOfLines.txt", true);
 
         assertEquals(6, Utils.getNumberOfLines(testNumberOfLines));
