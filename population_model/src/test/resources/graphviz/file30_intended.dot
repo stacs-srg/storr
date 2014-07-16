@@ -1,0 +1,79 @@
+digraph familyTree {
+node [shape=box style=solid color=blue]
+p00000001 [label="b: 15/03/1780\nd: 02/10/1863"]
+{ rank = same; p00000001 p00000010; }
+p00000002 [label="b: 14/01/1788\nd: 30/01/1871"]
+{ rank = same; p00000002 p00000010; }
+p00000003 [label="b: 29/09/1793\nd: 13/06/1862"]
+{ rank = same; p00000003 p00000010; }
+p00000004 [label="b: 12/10/1805\nd: 10/07/1860"]
+{ rank = same; p00000004 p00000010; }
+p00000005 [label="b: 03/02/1820\nd: 23/11/1890"]
+p00000005 -> m00000002 [color=red arrowhead=none]
+m00000002 -> p00000007 [color=red arrowhead=none]
+m00000002 [shape=box color=red label="m: 21/06/1839"]
+{ rank = same; p00000005 p00000007 m00000002; }
+m00000002 -> p00000010
+{ rank = same; p00000005 p00000010; }
+p00000006 [label="b: 16/01/1821\nd: 10/01/1890"]
+p00000006 -> m00000003 [color=red arrowhead=none]
+m00000003 -> p00000008 [color=red arrowhead=none]
+m00000003 [shape=box color=red label="m: 22/06/1840"]
+{ rank = same; p00000006 p00000008 m00000003; }
+{ rank = same; p00000006 p00000022; }
+p00000007 [label="b: 23/03/1829\nd: 13/12/1914"]
+{ rank = same; p00000007 p00000022; }
+p00000008 [label="b: 13/06/1830\nd: 24/09/1892"]
+{ rank = same; p00000008 p00000022; }
+p00000009 [label="b: 07/08/1838\nd: 23/12/1913"]
+{ rank = same; p00000009 p00000022; }
+p00000010 [label="b: 26/11/1849\nd: 25/02/1930"]
+p00000011 [label="b: 17/11/1861\nd: 11/07/1935"]
+{ rank = same; p00000011 p00000022; }
+p00000012 [label="b: 17/12/1863\nd: 29/12/1913"]
+{ rank = same; p00000012 p00000022; }
+p00000013 [label="b: 18/06/1869\nd: 18/01/1936"]
+{ rank = same; p00000013 p00000022; }
+p00000014 [label="b: 22/10/1895\nd: 19/05/1974"]
+{ rank = same; p00000014 p00000022; }
+p00000015 [label="b: 10/07/1908\nd: 13/11/1954"]
+{ rank = same; p00000015 p00000022; }
+p00000017 [label="b: 26/05/1916\nd: 18/04/1983"]
+{ rank = same; p00000017 p00000022; }
+p00000016 [label="b: 12/02/1913\nd: 23/02/1980"]
+{ rank = same; p00000016 p00000022; }
+p00000019 [label="b: 13/04/1930\nd: 25/08/1952"]
+{ rank = same; p00000019 p00000022; }
+p00000018 [label="b: 09/07/1924\nd: 09/01/1969"]
+p00000018 -> m00000004 [color=red arrowhead=none]
+m00000004 -> p00000020 [color=red arrowhead=none]
+m00000004 [shape=box color=red label="m: 15/12/1938"]
+{ rank = same; p00000018 p00000020 m00000004; }
+m00000004 -> p00000022
+{ rank = same; p00000018 p00000022; }
+p00000021 [label="b: 27/12/1937\nd: 05/06/2003"]
+{ rank = same; p00000021 p00000022; }
+p00000020 [label="b: 08/05/1933\nd: 30/05/2011"]
+{ rank = same; p00000020 p00000022; }
+p00000023 [label="b: 06/08/1955"]
+{ rank = same; p00000023 p00000022; }
+p00000022 [label="b: 26/11/1952"]
+p00000025 [label="b: 06/02/1978"]
+{ rank = same; p00000025 p00000022; }
+p00000024 [label="b: 03/12/1964"]
+{ rank = same; p00000024 p00000022; }
+p00000027 [label="b: 10/07/1979"]
+{ rank = same; p00000027 p00000022; }
+p00000026 [label="b: 17/08/1978"]
+p00000026 -> m00000005 [color=red arrowhead=none]
+m00000005 -> p00000028 [color=red arrowhead=none]
+m00000005 [shape=box color=red label="m: 04/06/1992"]
+{ rank = same; p00000026 p00000028 m00000005; }
+{ rank = same; p00000026 p00000022; }
+p00000029 [label="b: 02/07/1995"]
+{ rank = same; p00000029 p00000022; }
+p00000028 [label="b: 13/11/1989"]
+{ rank = same; p00000028 p00000022; }
+p00000030 [label="b: 08/05/2009"]
+{ rank = same; p00000030 p00000022; }
+}

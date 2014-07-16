@@ -177,6 +177,8 @@ public class CompactPerson {
 
         builder.append(getClass().getSimpleName());
         builder.append("{");
+        builder.append(getSex());
+        builder.append("-");
         builder.append(getBirthDate());
         builder.append("-");
         if (getDeathDate() != -1) {

@@ -334,7 +334,7 @@ public class CompactPopulationAdapter implements IPopulation {
 
         if (!consistent_across_iterations) {
 
-            return compact_person_adapter.convertToFullPerson(person);
+            return compact_person_adapter.convertToFullPerson(person, getParentsPartnershipId(person));
 
         } else {
 
@@ -345,11 +345,33 @@ public class CompactPopulationAdapter implements IPopulation {
             }
             else {
 
-                IPerson full_person = compact_person_adapter.convertToFullPerson(person);
+                IPerson full_person = compact_person_adapter.convertToFullPerson(person, getParentsPartnershipId(person));
                 person_cache.put(id, full_person);
                 return full_person;
             }
         }
+    }
+
+    private int getParentsPartnershipId(final CompactPerson person) {
+
+        final int person_id = person.getId();
+
+        for (CompactPerson parent_candidate : people) {
+            List<CompactPartnership> partnerships = parent_candidate.getPartnerships();
+            if (partnerships != null) {
+                for (CompactPartnership partnership : partnerships) {
+                    List<Integer> children = partnership.getChildren();
+                    if (children != null) {
+                        for (int child_index : children) {
+                            if (people[child_index].getId() == person_id) {
+                                return partnership.getId();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return -1;
     }
 
     private IPartnership getFullPartnership(final CompactPartnership partnership) {

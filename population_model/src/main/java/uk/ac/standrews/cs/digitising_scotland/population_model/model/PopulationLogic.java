@@ -50,7 +50,7 @@ public class PopulationLogic {
         return parentsHaveSensibleAgesAtChildBirth(father_birth_date, father_death_date, mother_birth_date, mother_death_date, child_birth_date);
     }
 
-    public static boolean parentsHaveSensibleAgesAtChildBirth(int father_birth_date, int father_death_date, int mother_birth_date, int mother_death_date, int child_birth_date) {
+    public static boolean parentsHaveSensibleAgesAtChildBirth(final int father_birth_date, final int father_death_date, final int mother_birth_date, final int mother_death_date, final int child_birth_date) {
 
         return parentsHaveSensibleAgesAtChildBirth(
                 DateManipulation.daysToDate(father_birth_date),
@@ -60,7 +60,7 @@ public class PopulationLogic {
                 DateManipulation.daysToDate(child_birth_date));
     }
 
-    public static boolean parentsHaveSensibleAgesAtChildBirth(Date father_birth_date, Date father_death_date, Date mother_birth_date, Date mother_death_date, Date child_birth_date) {
+    public static boolean parentsHaveSensibleAgesAtChildBirth(final Date father_birth_date, final Date father_death_date, final Date mother_birth_date, final Date mother_death_date, final Date child_birth_date) {
 
         return motherAliveAtBirth(mother_death_date, child_birth_date) &&
                 motherNotTooYoungAtBirth(mother_birth_date, child_birth_date) &&
@@ -80,7 +80,8 @@ public class PopulationLogic {
         return Math.abs(DateManipulation.differenceInYears(person_birth_date, candidate_birth_date)) <= MAXIMUM_AGE_DIFFERENCE_IN_PARTNERSHIP;
     }
 
-    public static boolean longEnoughBetweenMarriages(int candidate_marriage_date, int previous_marriage_date) {
+    public static boolean longEnoughBetweenMarriages(final int candidate_marriage_date, final int previous_marriage_date) {
+
         return DateManipulation.differenceInYears(previous_marriage_date, candidate_marriage_date) > MINIMUM_PERIOD_BETWEEN_PARTNERSHIPS;
     }
 

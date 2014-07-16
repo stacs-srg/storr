@@ -28,6 +28,7 @@ import java.sql.SQLException;
 public class DBPerson extends AbstractPerson {
 
     private static PreparedStatement get_person_statement = null;
+    private static PreparedStatement get_parents_statement = null;
 
     private static Connection connection;
 
@@ -36,8 +37,21 @@ public class DBPerson extends AbstractPerson {
         // Delay initialisation of prepared statement until the first call, after the database properties have been set.
         if (connection != DBPerson.connection || get_person_statement == null) {
 
-            String person_query = "SELECT * FROM " + PopulationProperties.getDatabaseName() + "." + PopulationProperties.PERSON_TABLE_NAME + " WHERE id = ?";
+            String person_query = String.format(
+                    "SELECT * FROM %1$s.%2$s WHERE %3$s = ?",
+                    PopulationProperties.getDatabaseName(),
+                    PopulationProperties.PERSON_TABLE_NAME,
+                    PopulationProperties.PERSON_FIELD_ID);
             get_person_statement = connection.prepareStatement(person_query);
+
+            String parents_query = String.format(
+                    "SELECT %1$s FROM %2$s.%3$s WHERE %4$s = ?",
+                    PopulationProperties.PARTNERSHIP_FIELD_PARTNERSHIP_ID,
+                    PopulationProperties.getDatabaseName(),
+                    PopulationProperties.PARTNERSHIP_CHILD_TABLE_NAME,
+                    PopulationProperties.PARTNERSHIP_FIELD_PERSON_ID);
+
+            get_parents_statement = connection.prepareStatement(parents_query);
         }
 
         DBPerson.connection = connection;
@@ -45,34 +59,49 @@ public class DBPerson extends AbstractPerson {
 
     public static void closeCachedConnection() throws SQLException {
 
-        if (get_person_statement != null){
-        get_person_statement.close();}
+        if (get_person_statement != null) {
+            get_person_statement.close();
+        }
+
+        if (get_parents_statement != null) {
+            get_parents_statement.close();
+        }
     }
 
-    public DBPerson(final ResultSet result_set) throws SQLException {
+    private DBPerson(final Connection connection) throws SQLException {
 
+        // The connection will be reused for others.
+        initStatementIfNecessary(connection);
+    }
+
+    public DBPerson(final Connection connection, final ResultSet result_set) throws SQLException {
+
+        this(connection);
         init(result_set);
     }
 
     public DBPerson(final Connection connection, final int person_id) throws SQLException {
 
-        // The connection passed for the first partnership will be reused for others.
-        initStatementIfNecessary(connection);
+        this(connection);
 
         get_person_statement.setInt(1, person_id);
-        final ResultSet result_set = get_person_statement.executeQuery();
+        final ResultSet person_result_set = get_person_statement.executeQuery();
 
-        if (!result_set.first()) {
+        if (!person_result_set.first()) {
             throw new SQLException("can't find person id: " + person_id);
         }
 
-        init(result_set);
+        init(person_result_set);
     }
 
     private void init(ResultSet result_set) throws SQLException {
 
+        int person_id = result_set.getInt(PopulationProperties.PERSON_FIELD_ID);
+
+        int parents_partnership_id = getParentsPartnershipId(person_id);
+
         init(
-                result_set.getInt(PopulationProperties.PERSON_FIELD_ID),
+                person_id,
                 result_set.getString(PopulationProperties.PERSON_FIELD_NAME),
                 result_set.getString(PopulationProperties.PERSON_FIELD_SURNAME),
                 result_set.getString(PopulationProperties.PERSON_FIELD_GENDER).charAt(0),
@@ -80,10 +109,23 @@ public class DBPerson extends AbstractPerson {
                 result_set.getDate(PopulationProperties.PERSON_FIELD_DEATH_DATE),
                 result_set.getString(PopulationProperties.PERSON_FIELD_OCCUPATION),
                 result_set.getString(PopulationProperties.PERSON_FIELD_CAUSE_OF_DEATH),
-                result_set.getString(PopulationProperties.PERSON_FIELD_ADDRESS));
+                result_set.getString(PopulationProperties.PERSON_FIELD_ADDRESS),
+                parents_partnership_id);
     }
 
-    private void init(final int id, final String first_name, final String surname, final char sex, final Date date_of_birth, final Date date_of_death, final String occupation, final String cause_of_death, final String address) {
+    private int getParentsPartnershipId(int person_id) throws SQLException {
+
+        get_parents_statement.setInt(1, person_id);
+        final ResultSet parents_result_set = get_parents_statement.executeQuery();
+
+        if (!parents_result_set.first()) {
+            return -1;
+        }
+
+        return parents_result_set.getInt(PopulationProperties.PARTNERSHIP_FIELD_PARTNERSHIP_ID);
+    }
+
+    private void init(final int id, final String first_name, final String surname, final char sex, final Date date_of_birth, final Date date_of_death, final String occupation, final String cause_of_death, final String address, int parents_partnership_id) {
 
         this.id = id;
         this.first_name = first_name;
@@ -94,34 +136,8 @@ public class DBPerson extends AbstractPerson {
         this.occupation = occupation;
         this.cause_of_death = cause_of_death;
         this.address = address;
+        this.parents_partnership_id = parents_partnership_id;
 
         string_rep = "DB Person: " + id;
     }
-
-//    /**
-//     * @return the family to which this person belongs
-//     * i.e. the partnership of which this Person is a child.
-//     */
-//    public DBBackedPartnership getParentsFamily() {
-//
-//        try {
-//            return DBBackedPartnershipFactory.createDBBackedPartnershipForChild(connection, getId());
-//        } catch (final SQLException e) {
-//            ErrorHandling.error("Cannot get parents' family");
-//            return null;
-//        }
-//    }
-
-    /**
-     * @return the person's immediate family - i.e. the family of which this person is a husband or wife
-     */
-//    public DBBackedPartnership getFamily() {
-//
-//        try {
-//            return DBBackedPartnershipFactory.createDBBackedPartnershipFromSpouse(connection, getId());
-//        } catch (final SQLException e) {
-//            ErrorHandling.error("Cannot get family");
-//            return null;
-//        }
-//    }
 }

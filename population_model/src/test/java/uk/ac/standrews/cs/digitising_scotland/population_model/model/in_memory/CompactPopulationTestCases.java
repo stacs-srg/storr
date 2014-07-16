@@ -17,8 +17,6 @@
 package uk.ac.standrews.cs.digitising_scotland.population_model.model.in_memory;
 
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.InconsistentWeightException;
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.NegativeDeviationException;
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.NegativeWeightException;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPopulation;
 import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
 
@@ -42,7 +40,7 @@ public class CompactPopulationTestCases {
     protected static int child2A_id = 7;
     protected static int child2B_id = 8;
 
-    public static IPopulation[] getTestPopulations() throws IOException, InconsistentWeightException, ParseException, NegativeDeviationException, NegativeWeightException {
+    public static IPopulation[] getTestPopulations() throws Exception {
 
         return new IPopulation[]{
                 unconnectedPopulation(0),
@@ -57,8 +55,8 @@ public class CompactPopulationTestCases {
                 fullPopulation(3),
                 fullPopulation(10),
                 fullPopulation(100),
-                fullPopulation(1000),
-                fullPopulation(10000)};
+                fullPopulation(1000)
+        };
     }
 
     protected static IPopulation makePopulation(int population_size) throws IOException, InconsistentWeightException {
@@ -76,20 +74,30 @@ public class CompactPopulationTestCases {
         return result;
     }
 
+    protected static IPopulation fullPopulation(int size) throws Exception {
+
+        CompactPopulation compact_population = new CompactPopulation(size);
+        IPopulation population = new CompactPopulationAdapter(compact_population);
+        population.setDescription("full-population-" + size);
+
+        return population;
+    }
+
+    protected static IPopulation populationWithTwoFamilies() throws IOException, InconsistentWeightException, ParseException {
+
+        CompactPerson[] people = makePeopleInTwoFamilies();
+
+        IPopulation population = new CompactPopulationAdapter(new CompactPopulation(people, 0, 0));
+        population.setDescription("population-2-families");
+
+        return population;
+    }
+
     private static IPopulation unconnectedPopulation(int size) throws IOException, InconsistentWeightException {
 
         CompactPerson[] people = makePeople(size);
         IPopulation population = new CompactPopulationAdapter(new CompactPopulation(people, 0, 0));
         population.setDescription("unconnected-population-" + size);
-
-        return population;
-    }
-
-    private static IPopulation fullPopulation(int size) throws IOException, InconsistentWeightException, NegativeDeviationException, NegativeWeightException {
-
-        CompactPopulation compact_population = new CompactPopulation(size);
-        IPopulation population = new CompactPopulationAdapter(compact_population);
-        population.setDescription("full-population-" + size);
 
         return population;
     }
@@ -115,16 +123,6 @@ public class CompactPopulationTestCases {
 
         IPopulation population = new CompactPopulationAdapter(new CompactPopulation(people, 0, 0));
         population.setDescription("population-3-partnerships");
-
-        return population;
-    }
-
-    protected static IPopulation populationWithTwoFamilies() throws IOException, InconsistentWeightException, ParseException {
-
-        CompactPerson[] people = makePeopleInTwoFamilies();
-
-        IPopulation population = new CompactPopulationAdapter(new CompactPopulation(people, 0, 0));
-        population.setDescription("population-2-families");
 
         return population;
     }

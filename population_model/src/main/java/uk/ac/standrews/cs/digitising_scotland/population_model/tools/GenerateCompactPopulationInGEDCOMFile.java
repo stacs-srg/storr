@@ -14,40 +14,41 @@
  * You should have received a copy of the GNU General Public License along with population_model. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-package uk.ac.standrews.cs.digitising_scotland.population_model.transform;
+package uk.ac.standrews.cs.digitising_scotland.population_model.tools;
 
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.InconsistentWeightException;
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.NegativeDeviationException;
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.NegativeWeightException;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPopulation;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.PopulationToFile;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.gedcom.PopulationToGEDCOM;
-
-import java.io.IOException;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.in_memory.CompactPopulation;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.in_memory.CompactPopulationAdapter;
+import uk.ac.standrews.cs.nds.util.CommandLineArgs;
 
 /**
- * Generates test cases for GEDCOM export.
- * 
+ * Manual test of Graphviz export.
+ *
  * @author Graham Kirby (graham.kirby@st-andrews.ac.uk)
  */
-public class GEDCOMTestCaseRecorder extends AbstractTestCaseRecorder {
+public class GenerateCompactPopulationInGEDCOMFile extends AbstractPopulationToFile {
 
-    public static void main(final String[] args) throws IOException, InconsistentWeightException, NegativeDeviationException, NegativeWeightException {
+    private static final String SIZE_FLAG = "-s";
+    private static final int DEFAULT_SIZE = 100;
 
-        final GEDCOMTestCaseRecorder recorder = new GEDCOMTestCaseRecorder();
+    @Override
+    public IPopulation getPopulation(final String[] args) throws Exception {
 
-        recorder.recordTestCase();
+        final int population_size = CommandLineArgs.extractIntFromCommandLineArgs(args, SIZE_FLAG, DEFAULT_SIZE);
+
+        return new CompactPopulationAdapter(new CompactPopulation(population_size));
     }
 
     @Override
-    protected PopulationToFile getExporter(final IPopulation population, final String path_string) throws IOException, InconsistentWeightException {
+    public PopulationToFile getExporter(IPopulation population, String path_string) {
 
         return new PopulationToGEDCOM(population, path_string);
     }
 
-    @Override
-    protected String getIntendedOutputFileSuffix() {
+    public static void main(final String[] args) throws Exception {
 
-        return PopulationToGEDCOMTest.INTENDED_SUFFIX;
+        new GenerateCompactPopulationInGEDCOMFile().export(args);
     }
 }

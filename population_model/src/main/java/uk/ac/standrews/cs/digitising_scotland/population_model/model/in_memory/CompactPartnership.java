@@ -34,11 +34,11 @@ public class CompactPartnership implements Comparable<CompactPartnership> {
 
     private int id;
 
-    protected int partner1_index;
-    protected int partner2_index;
-    protected int marriage_date;
-    protected List<Integer> children;
-    private boolean marked;  // TODO remove eventually
+    private int partner1_index;
+    private int partner2_index;
+    private int marriage_date;
+    private List<Integer> children;
+    private boolean marked;
 
     /**
      * Creates a partnership with a given marriage date.

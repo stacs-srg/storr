@@ -59,12 +59,12 @@ public abstract class AbstractPerson implements IPerson {
 
     @Override
     public Date getBirthDate() {
-        return date_of_birth;
+        return (Date) date_of_birth.clone();
     }
 
     @Override
     public Date getDeathDate() {
-        return date_of_death;
+        return date_of_death == null ? null : (Date) date_of_death.clone();
     }
 
     @Override

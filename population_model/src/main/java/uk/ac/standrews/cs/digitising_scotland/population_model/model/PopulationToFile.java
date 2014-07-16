@@ -16,8 +16,6 @@
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.model;
 
-import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPerson;
-import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPopulation;
 import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
 
 import java.io.IOException;
@@ -26,6 +24,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.NumberFormat;
+import java.util.Collection;
+import java.util.HashSet;
 
 /**
  * Writes a representation of the population to file in some external format - specialised by subclasses.
@@ -86,13 +86,28 @@ public abstract class PopulationToFile {
 
     protected void outputIndividuals(final PrintWriter writer) {
 
+        // Copy the set of people before outputting them, to avoid problems with overlapping iterations of the population.
+
+        Collection<IPerson> people = new HashSet<>();
         for (IPerson p : population.getPeople()) {
+            people.add(p);
+        }
+
+        for (IPerson p : people) {
 
             outputIndividual(writer, p);
         }
     }
 
-    protected String padId(final int index) {
+    protected String individualLabel(int person_id) {
+        return "p" + padId(person_id);
+    }
+
+    protected String familyLabel(int partnership_id) {
+        return "m" + padId(partnership_id);
+    }
+
+    private String padId(final int index) {
 
         return formatter.format(index);
     }

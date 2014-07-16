@@ -65,6 +65,30 @@ public class SpecificPopulationStructureTest {
     }
 
     @Test
+    public void somePartnershipsAndChildrenAreCreated() throws Exception {
+
+        checkSomePartnershipsAndChildrenAreCreated(100);
+        checkSomePartnershipsAndChildrenAreCreated(1000);
+    }
+
+    private void checkSomePartnershipsAndChildrenAreCreated(int population_size) throws Exception {
+
+        IPopulation population = CompactPopulationTestCases.fullPopulation(population_size);
+        assertTrue(population.getNumberOfPartnerships() > 0);
+        assertTrue(numberOfChildrenIn(population) > 0);
+    }
+
+    private int numberOfChildrenIn(IPopulation population) {
+
+        int count = 0;
+        for (IPartnership partnership : population.getPartnerships()) {
+            List<Integer> child_ids = partnership.getChildIds();
+            if (child_ids != null) count += child_ids.size();
+        }
+        return count;
+    }
+
+    @Test
     public void familyStructureIsAsExpected() throws Exception {
 
         IPopulation population = CompactPopulationTestCases.populationWithTwoFamilies();

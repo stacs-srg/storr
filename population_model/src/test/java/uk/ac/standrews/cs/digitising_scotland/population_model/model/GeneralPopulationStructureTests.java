@@ -216,6 +216,7 @@ public abstract class GeneralPopulationStructureTests {
     private void assertParentsAndChildrenConsistent(IPartnership partnership) {
 
         List<Integer> child_ids = partnership.getChildIds();
+
         if (child_ids != null) {
 
             for (int child_id : child_ids) {

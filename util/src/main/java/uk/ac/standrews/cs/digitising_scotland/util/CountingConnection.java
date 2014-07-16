@@ -16,6 +16,8 @@
  */
 package uk.ac.standrews.cs.digitising_scotland.util;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 import java.sql.Array;
 import java.sql.Blob;
 import java.sql.CallableStatement;
@@ -39,6 +41,7 @@ import java.util.concurrent.Executor;
 /**
  * Created by graham on 09/07/2014.
  */
+@SuppressFBWarnings(value = "ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD", justification = "intended behaviour")
 public class CountingConnection implements Connection {
 
     private static int number_of_connections = 0;
