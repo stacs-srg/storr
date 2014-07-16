@@ -10,6 +10,7 @@ import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.util.Version;
 
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.machinelearning.tokenizing.TokenStreamIterator;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.machinelearning.tokenizing.TokenStreamIteratorFactory;
 import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
@@ -62,12 +63,12 @@ public final class UniqueWordCounter {
 
         String line = "";
         while ((line = br.readLine()) != null) {
-            wordMultiset = countWordsInLine(wordMultiset, line);
+            wordMultiset = countWordsInLine(wordMultiset, new TokenSet(line));
         }
 
         StringBuilder sb = new StringBuilder();
         for (String string : wordMultiset.elementSet()) {
-            sb.append(string + "\t" + wordMultiset.count(string) + "\n");
+            sb.append(string).append("\t").append(wordMultiset.count(string)).append("\n");
         }
         Utils.writeToFile(sb.toString(), "target/wordCounts.txt");
         br.close();
@@ -79,14 +80,12 @@ public final class UniqueWordCounter {
      * Counts the number of words in a string.
      *
      * @param wordMultiset the word multiset to add words to. This keeps track of how many time each word appears.
-     * @param line the line to count. Line is split into tokens and these are added to the multiset.
      * @return the multiset with new words added
      */
-    public static Multiset<String> countWordsInLine(final Multiset<String> wordMultiset, final String line) {
+    public static Multiset<String> countWordsInLine(final Multiset<String> wordMultiset, final TokenSet tokenSet) {
 
-        TokenStreamIterator<CharTermAttribute> ts = TokenStreamIteratorFactory.newTokenStreamIterator(line);
-        while (ts.hasNext()) {
-            wordMultiset.add(ts.next().toString().trim().toLowerCase());
+        for (String token : tokenSet) {
+            wordMultiset.add(token.trim().toLowerCase());
         }
         return wordMultiset;
     }

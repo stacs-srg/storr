@@ -249,8 +249,6 @@ public class CompactPopulation {
                     continue;
                 case NEGATIVE_STOP:
                     return -1;
-                default:
-                    throw new RuntimeException("unexpected condition");
             }
         }
         return -1;

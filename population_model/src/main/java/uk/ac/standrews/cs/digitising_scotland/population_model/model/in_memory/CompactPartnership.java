@@ -83,16 +83,6 @@ public class CompactPartnership implements Comparable<CompactPartnership> {
     }
 
     /**
-     * Setter for Id.
-     *
-     * @param id the id to be set
-     */
-    public void setId(final int id) {
-
-        this.id = id;
-    }
-
-    /**
      * Gets the partner of the given person.
      *
      * @param p the index of one person in this partnership
@@ -121,62 +111,6 @@ public class CompactPartnership implements Comparable<CompactPartnership> {
     public int getPartner2() {
 
         return partner2_index;
-    }
-
-    /**
-     * Setter for partner.
-     *
-     * @param partner1 partner to set
-     */
-    public void setPartner1(final int partner1) {
-
-        this.partner1_index = partner1;
-    }
-
-    /**
-     * Setter for partner.
-     *
-     * @param partner2 partner to set
-     */
-    public void setPartner2(final int partner2) {
-
-        this.partner2_index = partner2;
-    }
-
-    /**
-     * Tests whether a given person is a child of this partnership.
-     * Uses binary search. Replace with sequential search if order preservation is lost.
-     *
-     * @param p the person
-     * @return true if the person is a child of this partnership
-     */
-    public boolean includesChild(final int p) {
-
-        if (children != null) {
-
-            int number_of_children = children.size();
-            if (number_of_children == 0) {
-                return false;
-            }
-
-            int binary_step = 1;
-            while (binary_step < number_of_children) {
-                binary_step <<= 1;
-            }
-
-            int index;
-            for (index = 0; binary_step != 0; binary_step >>= 1) {
-                if (index + binary_step < number_of_children && children.get(index + binary_step) <= p) {
-                    index += binary_step;
-                }
-            }
-
-            if (children.get(index) == p) {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     public int compareTo(final CompactPartnership other) {
@@ -222,16 +156,6 @@ public class CompactPartnership implements Comparable<CompactPartnership> {
     }
 
     /**
-     * Sets the marriage date of this partnership.
-     *
-     * @param marriage_date the date of marriage to set
-     */
-    public void setMarriageDate(final int marriage_date) {
-
-        this.marriage_date = marriage_date;
-    }
-
-    /**
      * Gets the children associated with this partnership.
      *
      * @return the children.
@@ -257,29 +181,5 @@ public class CompactPartnership implements Comparable<CompactPartnership> {
 
     public void setMarked(boolean marked) {
         this.marked = marked;
-    }
-
-    @Override
-    public String toString() {
-
-        StringBuilder builder = new StringBuilder();
-
-        builder.append(getClass().getSimpleName());
-        builder.append("{");
-        builder.append(getMarriageDate());
-
-        int pcount = 0;
-        if (getPartner1() != -1) {
-            pcount++;
-        }
-        if (getPartner2() != -1) {
-            pcount++;
-        }
-        builder.append(", p:" + pcount);
-        builder.append(", c:");
-        builder.append(children == null ? 0 : children.size());
-        builder.append("}");
-
-        return builder.toString();
     }
 }
