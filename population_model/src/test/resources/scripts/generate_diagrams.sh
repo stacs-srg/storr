@@ -16,9 +16,9 @@
 # <http://www.gnu.org/licenses/>.
 #
 
-for i in src/test/resources/*test.dot
+mkdir -p population_model/target/diagrams
+for i in population_model/src/test/resources/graphviz/*test.dot
 do
-dot -Tpdf $i > $i.pdf
-mkdir -p target/diagrams
-cp $i.pdf target/diagrams
+    dot -Tpdf $i > $i.pdf
+    mv $i.pdf population_model/target/diagrams
 done
