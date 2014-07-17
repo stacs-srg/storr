@@ -36,7 +36,7 @@ public abstract class AbstractDataCleaner {
     /**
      * The Constant TOKENLIMIT.
      */
-    private static int TOKENLIMIT = 4;
+    private static int tokenLimit = 4;
 
     /**
      * The word multiset.
@@ -45,14 +45,20 @@ public abstract class AbstractDataCleaner {
 
     private static Map<String, String> correctionMap;
 
+    /**
+     * Should perform a correction if applicable to the given token.
+     * Exact behaviour is implemented by extending classes.
+     * @param token String to clean
+     * @return String corrected token
+     */
     public abstract String correct(final String token);
 
     /**
-     *
+     * Perform the data cleaning step on the file supplied in the arguments.
      * @param args 1 is the input file path, 2 is the output file path, 3 (optional) sets TOKENLIMIT which
      *             states the frequency of occurrence below which we start correcting tokens.
-     * @throws IOException
-     * @throws InputFormatException
+     * @throws IOException Indicates an IO Error
+     * @throws InputFormatException Indicates an error with the input file format
      */
     public void runOnFile(final String... args) throws IOException, InputFormatException {
 
@@ -83,7 +89,7 @@ public abstract class AbstractDataCleaner {
     private void addToCorrectionMap(final TokenSet tokenSet) {
 
         for (String token : tokenSet) {
-            if (wordMultiset.count(token) < TOKENLIMIT) {
+            if (wordMultiset.count(token) < tokenLimit) {
                 String correctedToken = correct(token);
                 correctionMap.put(token, correctedToken);
             }
@@ -152,11 +158,11 @@ public abstract class AbstractDataCleaner {
     private void setTokenLimit(final String... args) {
 
         try {
-            TOKENLIMIT = Integer.parseInt(args[2]);
-            System.out.println("TOKENLIMIT set to " + TOKENLIMIT);
+            tokenLimit = Integer.parseInt(args[2]);
+            System.out.println("TOKENLIMIT set to " + tokenLimit);
         }
         catch (ArrayIndexOutOfBoundsException e) {
-            System.out.println("No TOKENLIMIT argument. Default is " + TOKENLIMIT);
+            System.out.println("No TOKENLIMIT argument. Default is " + tokenLimit);
         }
     }
 
