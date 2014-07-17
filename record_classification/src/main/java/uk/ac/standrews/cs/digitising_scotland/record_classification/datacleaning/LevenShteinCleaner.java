@@ -14,6 +14,8 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.exceptions.InputFormatException;
 
+import com.google.common.collect.Multiset;
+
 /**
  * Reads a {@link Bucket} and performs data cleaning such as spelling correction and feature selection on the descriptions in each {@link Record}.
  * OriginalData.description is not changed, instead the cleanedDescripion field is populated.
@@ -26,6 +28,7 @@ public class LevenShteinCleaner extends AbstractDataCleaner {
      * The Constant SIMILARITY.
      */
     private static double similarity = 0.85;
+    private static final AbstractStringMetric metric = new Levenshtein();
 
     public static void main(final String... args) throws IOException, InputFormatException {
 
@@ -53,7 +56,8 @@ public class LevenShteinCleaner extends AbstractDataCleaner {
      */
     @Override
     public String correct(final String token) {
-        List<Pair<String, Float>> possibleMatches = getPossibleMatches(token, wordMultiset);
+
+        List<Pair<String, Float>> possibleMatches = getPossibleMatches(token, getWordMultiset());
         sortPossibleMatches(possibleMatches);
         String bestMatch = getBestMatch(token, possibleMatches);
         printDebugInfo(token, bestMatch);
@@ -75,13 +79,12 @@ public class LevenShteinCleaner extends AbstractDataCleaner {
      * @return the possible matches
      */
     //TODO test
-    private static List<Pair<String, Float>> getPossibleMatches(final String token, final AbstractStringMetric metric) {
+    private static List<Pair<String, Float>> getPossibleMatches(final String token, final Multiset<String> wordMultiset) {
 
         List<Pair<String, Float>> possibleMatches = new ArrayList<>();
-        Set<String> allWords = getWordMultiset().elementSet();
-
+        Set<String> allWords = wordMultiset.elementSet();
         for (String string : allWords) {
-            if (getWordMultiset().count(string) > getWordMultiset().count(token)) {
+            if (wordMultiset.count(string) > wordMultiset.count(token)) {
                 float result = metric.getSimilarity(string, token);
                 if (result > similarity) {
                     possibleMatches.add(new Pair<>(string, result));
