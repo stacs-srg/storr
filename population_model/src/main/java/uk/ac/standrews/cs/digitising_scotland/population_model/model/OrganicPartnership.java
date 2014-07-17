@@ -19,12 +19,25 @@ package uk.ac.standrews.cs.digitising_scotland.population_model.model;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
+
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.DivorceAgeForFemaleDistribution;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.DivorceAgeForMaleDistribution;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.DivorceInstigatedByGenderDistribution;
+import uk.ac.standrews.cs.digitising_scotland.population_model.util.RandomFactory;
+import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
 
 /**
  * Created by victor on 08/07/14.
+ * @author Tom Dalton (tsd4@st-andrews.ac.uk)
  */
 public class OrganicPartnership implements IPartnership {
 
+	private static Random random = RandomFactory.getRandom();
+	private static DivorceInstigatedByGenderDistribution divorceInstigatedByGenderDistribution = new DivorceInstigatedByGenderDistribution(random);
+	private static DivorceAgeForMaleDistribution divorceAgeForMaleDistribution = new DivorceAgeForMaleDistribution(random);
+	private static DivorceAgeForFemaleDistribution divorceAgeForFemaleDistribution = new DivorceAgeForFemaleDistribution(random);
+	
     private Integer id;
     private Integer husband;
     private Integer wife;
@@ -32,23 +45,67 @@ public class OrganicPartnership implements IPartnership {
     private Date marriageDate;
     private List<Integer> childrenIds = null;
 
-    public OrganicPartnership(final int id, final int husbandId, final int wifeId, Date marriageDate) {
+    public OrganicPartnership(final int id, final OrganicPerson husband, final OrganicPerson wife, Date marriageDate) {
 
         this.id = id;
-        this.husband = husbandId;
-        this.wife = wifeId;
+        this.husband = husband.getId();
+        this.wife = wife.getId();
         this.marriageDate = marriageDate;
-        timeline = createPartnershipTimeline();
+        timeline = createPartnershipTimeline(husband, wife);
     }
 
-    public OrganicTimeline createPartnershipTimeline() {
+    public OrganicTimeline createPartnershipTimeline(OrganicPerson husband, OrganicPerson wife) {
 
-        OrganicTimeline timeline = new OrganicTimeline();
-        // This needs a distribution creating
+    	// TODO Correctly populate timeline
+        OrganicTimeline timeline = new OrganicTimeline(marriageDate);        
+        
+        // Decide if/when relationship terminates
+        switch (divorceInstigatedByGenderDistribution.getDefinedSample()) { 
+		case MALE:
+			// get male age at divorce
+			int maleDivorceAgeInDays;
+			do {
+				maleDivorceAgeInDays = divorceAgeForMaleDistribution.getSample();
+			} while(!PopulationLogic.divorceNotBeforeMarriage(DateManipulation.dateToDays(marriageDate), maleDivorceAgeInDays));
+			timeline.addEvent(maleDivorceAgeInDays, new OrganicEvent(EventType.DIVORCE));
+			timeline.setEndDate(DateManipulation.daysToDate(maleDivorceAgeInDays));
+			break;
+		case FEMALE:
+			// get female age at divorce
+			int femaleDivorceAgeInDays;
+			do {
+				femaleDivorceAgeInDays = divorceAgeForFemaleDistribution.getSample();
+			} while(!PopulationLogic.divorceNotBeforeMarriage(DateManipulation.dateToDays(marriageDate), femaleDivorceAgeInDays));
+			timeline.addEvent(femaleDivorceAgeInDays, new OrganicEvent(EventType.DIVORCE));
+			timeline.setEndDate(DateManipulation.daysToDate(femaleDivorceAgeInDays));
+			break;
+		case NO_DIVORCE:
+			// If not then added earliest death date
+			Date firstPartnersDeathDate = dateOfFirstPartnersDeath(husband.getDeathDate(), wife.getDeathDate());
+			timeline.addEvent(DateManipulation.dateToDays(firstPartnersDeathDate), new OrganicEvent(EventType.PARTNERSHIP_ENDED_BY_DEATH));
+			timeline.setEndDate(firstPartnersDeathDate);
+			break;
+		} 
+        
+        // Decide on a number of children for relationship
+        
+        
+        // Generate birth dates
+        // Check they are permissible - not after death, breakup, too close together
+        
+        // Add births to timeline
+                
+        
         timeline.addEvent(400, new OrganicEvent(EventType.BIRTH));
-        // Need a divorce event as well
 
         return timeline;
+    }
+    
+    private Date dateOfFirstPartnersDeath(Date husbandDeath, Date wifeDeath) {
+    	if(husbandDeath.before(wifeDeath))
+    		return husbandDeath;
+    	else
+    		return wifeDeath;
     }
 
     public OrganicTimeline getTimeline() {

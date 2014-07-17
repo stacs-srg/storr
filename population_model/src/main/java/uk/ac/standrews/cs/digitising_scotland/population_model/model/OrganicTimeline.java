@@ -48,9 +48,6 @@ public class OrganicTimeline {
         //endDate = DateManipulation.daysToDate(DateManipulation.dateToDays(startDate) + days);
     }
 
-    public OrganicTimeline() {
-    }
-
     public void addEvent(final int day, final OrganicEvent event) {
         events.put(day, event);
     }

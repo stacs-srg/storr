@@ -55,11 +55,12 @@ public class MaleAgeAtMarriageDistribution implements Distribution<Integer> {
      * 75-79   3
      * 80-84   1
      * 85-89   1
-     * 90+     0
+     * 90-95   0
+     * 95-100  0
      */
 
 	private static final int MAXIMUM_AGE_IN_YEARS = 100;
-	private static final int[] AGE_DISTRIBUTION_WEIGHTS = new int[] { 0, 0, 0, 20, 107, 49, 18, 10, 7, 5, 4, 4, 4, 3, 3, 3, 1, 1, 0 };
+	private static final int[] AGE_DISTRIBUTION_WEIGHTS = new int[] { 0, 0, 0, 20, 107, 49, 18, 10, 7, 5, 4, 4, 4, 3, 3, 3, 1, 1, 0, 0 };
 
 	private final WeightedIntegerDistribution distribution;
 
