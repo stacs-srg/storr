@@ -10,6 +10,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.regex.Pattern;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
 import cc.mallet.fst.HMM;
 import cc.mallet.fst.HMMTrainerByLikelihood;
@@ -31,6 +34,8 @@ import cc.mallet.types.Sequence;
  * The Class HiddenMarkovModel uses Mallet functionality to build a Hidden Markov Model from labeled training data.
  */
 public class HiddenMarkovModel {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(HiddenMarkovModel.class);
 
     /** The training filename. */
     private String trainingFilename;
@@ -59,7 +64,7 @@ public class HiddenMarkovModel {
 
         ArrayList<Pipe> pipes = new ArrayList<Pipe>();
         SimpleTaggerSentence2TokenSequence tagger = new SimpleTaggerSentence2TokenSequence();
-        System.out.println("new SimpleTaggerSentence2TokenSequence target processing?:" + tagger.isTargetProcessing());
+        LOGGER.info("new SimpleTaggerSentence2TokenSequence target processing?:" + tagger.isTargetProcessing());
 
         Alphabet alphabet = generateAlphabet(testingFilename);
         tagger.setDataAlphabet(alphabet);
@@ -72,16 +77,16 @@ public class HiddenMarkovModel {
         Pipe pipe = new SerialPipes(pipes);
 
         InstanceList trainingInstances = new InstanceList(pipe);
-        System.out.println("alphabet matches: " + Alphabet.alphabetsMatch(pipe, trainingInstances));
+        LOGGER.info("alphabet matches: " + Alphabet.alphabetsMatch(pipe, trainingInstances));
         trainingInstances.addThruPipe(new LineGroupIterator(new BufferedReader(new InputStreamReader(new FileInputStream(trainingFilename), "UTF-8")), Pattern.compile("^\\s*$"), true));
 
         tagger.setTargetProcessing(false);
         pipe.setTargetProcessing(false);
-        System.out.println("new SimpleTaggerSentence2TokenSequence target processing?:" + pipe.isTargetProcessing());
+        LOGGER.info("new SimpleTaggerSentence2TokenSequence target processing?:" + pipe.isTargetProcessing());
 
         //  InstanceList testingInstances = new InstanceList(pipe.getDataAlphabet(), pipe.getTargetAlphabet());
 
-        System.out.println("alphabet " + trainingInstances.get(0).getAlphabet());
+        LOGGER.info("alphabet " + trainingInstances.get(0).getAlphabet());
 
         HMM hmm = new HMM(pipe, null);
         hmm.addStatesForLabelsConnectedAsIn(trainingInstances);
@@ -95,17 +100,17 @@ public class HiddenMarkovModel {
         trainingEvaluator.evaluate(trainer);
         //    testingEvaluator.evaluate(trainer);
 
-        System.out.println("new SimpleTaggerSentence2TokenSequence target processing?:" + tagger.isTargetProcessing());
+        LOGGER.info("new SimpleTaggerSentence2TokenSequence target processing?:" + tagger.isTargetProcessing());
 
         Transducer transducer = trainer.getTransducer();
-        System.out.println("transducer.isGenerative(): " + transducer.isGenerative());
+        LOGGER.info("transducer.isGenerative(): " + transducer.isGenerative());
 
         Pipe pip = transducer.getInputPipe();
         InstanceList i = new InstanceList(pip);
         pip.setTargetProcessing(false);
 
-        System.out.println("num of states: " + hmm.numStates());
-        System.out.println("states are: ");
+        LOGGER.info("num of states: " + hmm.numStates());
+        LOGGER.info("states are: ");
         for (int j = 0; j < hmm.numStates(); j++) {
             System.out.println(hmm.getState(j).getName());
         }
@@ -113,14 +118,14 @@ public class HiddenMarkovModel {
         //   i.addThruPipe(new LineGroupIterator(new BufferedReader(new InputStreamReader(new FileInputStream(testingFilename))), Pattern.compile("^\\s*$"), true));
         for (Instance instance : i) {
             Instance out = transducer.label(instance);
-            System.out.println(instance.getData() + ": \t " + out.getTarget());
+            LOGGER.info(instance.getData() + ": \t " + out.getTarget());
 
         }
 
         Sequence<Integer> newSequence = new FeatureSequence(transducer.getInputPipe().getAlphabet(), new int[]{1, 9, 10});
 
-        System.out.println(newSequence.toString());
-        System.out.println(transducer.transduce(newSequence));
+        LOGGER.info(newSequence.toString());
+        LOGGER.info(transducer.transduce(newSequence).toString());
 
         alphabet = dumpAlphabet(transducer);
 
@@ -153,7 +158,7 @@ public class HiddenMarkovModel {
             }
             sb.append("\n");
 
-            System.out.println(sequence.toString() + "\n" + hmmSequence);
+            LOGGER.info(sequence.toString() + "\n" + hmmSequence);
         }
         return sb;
     }

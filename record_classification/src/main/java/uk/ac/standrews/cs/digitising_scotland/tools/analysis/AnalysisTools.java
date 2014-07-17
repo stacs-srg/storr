@@ -245,7 +245,7 @@ public class AnalysisTools {
      * Returns the True Negative of the sample set.
      *
      */
-    public void calculateTN() {
+    public final void calculateTN() {
 
         Set<String> ks = classificationMap.keySet();
         Object[] ksa = ks.toArray();
@@ -367,7 +367,7 @@ public class AnalysisTools {
      * 
      * @return total number of classes.
      */
-    public int totalNumberOfClasses() {
+    public final int totalNumberOfClasses() {
 
         HashMap<String, Integer> words = new HashMap<String, Integer>();
         for (int i = 0; i < stringInput.length; i++) {

@@ -28,6 +28,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.RecordFactory;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.vectors.VectorFactory;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.exceptions.FolderCreationException;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.exceptions.InputFormatException;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.writers.DataClerkingWriter;
 import uk.ac.standrews.cs.digitising_scotland.tools.Timer;
@@ -91,8 +92,8 @@ public final class TrainAndMultiplyClassify {
     public static void main(final String[] args) throws Exception {
 
         // TODO split this up!
-        Timer t = new Timer();
-        t.start();
+        Timer timer = new Timer();
+        timer.start();
         setupExperimentalFolders("Experiments");
 
         File training = new File(args[0]);
@@ -127,7 +128,7 @@ public final class TrainAndMultiplyClassify {
 
         LOGGER.info("********** Classifying Bucket **********");
 
-        System.out.println("********** Classifying Bucket **********");
+        LOGGER.info("********** Classifying Bucket **********");
 
         //  Bucket classifiedBucket = bucketClassifier.classify(predictionBucket);
 
@@ -142,10 +143,10 @@ public final class TrainAndMultiplyClassify {
         final Bucket uniqueRecordsOnly = BucketFilter.uniqueRecordsOnly(allClassified);
         generateAndPrintStats(uniqueRecordsOnly);
 
-        System.out.println("Codes that were null and weren't adter chopping: " + CodeFactory.getInstance().getCodeMapNullCounter());
+        LOGGER.info("Codes that were null and weren't adter chopping: " + CodeFactory.getInstance().getCodeMapNullCounter());
 
-        t.stop();
-        System.out.println("Elapsed Time: " + t.elapsedTime());
+        timer.stop();
+        LOGGER.info("Elapsed Time: " + timer.elapsedTime());
         LOGGER.info("Codes that were null and weren't adter chopping: " + CodeFactory.getInstance().getCodeMapNullCounter());
     }
 
@@ -239,7 +240,7 @@ public final class TrainAndMultiplyClassify {
         LOGGER.info(executeCommand);
 
         if (executeCommand.equals("RScript required but it's not installed.  Aborting.\n")) {
-            System.err.println("Stats not generated. R or RScript is not installed.");
+            LOGGER.error("Stats not generated. R or RScript is not installed.");
             System.exit(2);
             return false;
         }
@@ -258,13 +259,14 @@ public final class TrainAndMultiplyClassify {
 
         experimentalFolderName = getExperimentalFolderName(baseFolder);
 
-        if (!(new File(experimentalFolderName).mkdirs() && new File(experimentalFolderName + "/Reports").mkdirs() && new File(experimentalFolderName + "/Data").mkdirs() && new File(experimentalFolderName + "/Models").mkdirs())) { throw new RuntimeException("couldn't create experimental folder"); }
+        if (!(new File(experimentalFolderName).mkdirs() && new File(experimentalFolderName + "/Reports").mkdirs() && new File(experimentalFolderName + "/Data").mkdirs() && new File(experimentalFolderName + "/Models").mkdirs())) { throw new FolderCreationException(
+                        "couldn't create experimental folder"); }
     }
 
     private static void writeRecords(final Bucket classifiedBucket) throws IOException {
 
-        DataClerkingWriter writer = new DataClerkingWriter(new File(experimentalFolderName + "/Data/NRSData.txt"));
-        for (Record record : classifiedBucket) {
+        final DataClerkingWriter writer = new DataClerkingWriter(new File(experimentalFolderName + "/Data/NRSData.txt"));
+        for (final Record record : classifiedBucket) {
             writer.write(record);
         }
         writer.close();
@@ -343,7 +345,7 @@ public final class TrainAndMultiplyClassify {
         File base = new File(baseFolder);
 
         if (!base.exists() && !base.mkdirs()) {
-            System.err.println("Could not create all folders in path " + base + ".\n" + base.getAbsolutePath() + " may already exsists");
+            LOGGER.error("Could not create all folders in path " + base + ".\n" + base.getAbsolutePath() + " may already exsists");
         }
 
         File[] allFiles = base.listFiles();

@@ -278,6 +278,50 @@ public class OrganicPopulation implements IPopulation {
 
     public void mainIteration(final int timeStepSizeInDays) {
 
+        while(currentDay<totalNumberOfDays){
+
+            int previousDate = currentDay;
+            currentDay+=timeStepSizeInDays;
+
+            //Checking all time-lines for new events
+
+            //People
+            for(int i = 0 ; i < people.size() ; i++) {
+                if(people.get(i).getTimeline() != null){
+
+                    //Check all dates between the previous and current date after taking the time step
+                    for(int j = previousDate ; j <= currentDay ; j++) {
+                        Date date;
+                        OrganicEvent event;
+                        date = DateManipulation.daysToDate(DateManipulation.dateToDays(START_YEAR,1,1) + j);
+                        if(people.get(i).getTimeline().isDateAvailable(date))
+                            event = people.get(i).getTimeline().getEvent(date);
+
+                        //deal with event
+                    }
+
+                }
+            }
+
+            //Partnerships
+            for(int i = 0 ; i < partnerships.size() ; i++) {
+                if(partnerships.get(i).getTimeline() != null){
+
+                    //Check all dates between the previous and current date after taking the time step
+                    for(int j = previousDate ; j <= currentDay ; j++) {
+                        Date date;
+                        OrganicEvent event;
+                        date = DateManipulation.daysToDate(DateManipulation.dateToDays(START_YEAR,1,1) + j);
+                        if(partnerships.get(i).getTimeline().isDateAvailable(date))
+                            event = partnerships.get(i).getTimeline().getEvent(date);
+
+                        //deal with event
+                    }
+
+                }
+            }
+
+        }
     }
 
     /**

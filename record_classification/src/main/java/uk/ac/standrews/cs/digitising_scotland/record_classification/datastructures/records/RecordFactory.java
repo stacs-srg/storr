@@ -86,12 +86,19 @@ public abstract class RecordFactory {
     public static Record createCoDRecord(final File inputFile, final String line) throws InputFormatException {
 
         String[] lineSplit = line.split("\\|");
-        String description = lineSplit[5];
-        int id = Integer.parseInt(lineSplit[0]);
-        int year = Integer.parseInt(lineSplit[1]);
-        int ageGroup = Integer.parseInt(lineSplit[4]);
-        int sex = Integer.parseInt(lineSplit[3]);
-        int imageQuality = Integer.parseInt(lineSplit[2]);
+        final int descriptionPos = 5;
+        final int idPos = 0;
+        final int yearPos = 1;
+        final int ageGroupPos = 4;
+        final int sexPos = 3;
+        final int imageQualityPos = 2;
+
+        String description = lineSplit[descriptionPos];
+        int id = Integer.parseInt(lineSplit[idPos]);
+        int year = Integer.parseInt(lineSplit[yearPos]);
+        int ageGroup = Integer.parseInt(lineSplit[ageGroupPos]);
+        int sex = Integer.parseInt(lineSplit[sexPos]);
+        int imageQuality = Integer.parseInt(lineSplit[imageQualityPos]);
 
         OriginalData originalData = new CODOrignalData(description, year, ageGroup, sex, imageQuality, inputFile.getPath());
 
@@ -111,17 +118,23 @@ public abstract class RecordFactory {
      */
     public static List<Record> makeCodedRecordsFromFile(final File inputFile) throws IOException, InputFormatException {
 
+        final int yearPos = 1;
+        final int imageQualityPos = 2;
+        final int ageGroupPos = 3;
+        final int sexPos = 4;
+        final int descriptionPos = 5;
+
         List<Record> recordList = new ArrayList<Record>();
         BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(inputFile), ENCODING));
         String line;
 
         while ((line = br.readLine()) != null) {
             String[] lineSplit = line.split("\\|");
-            int year = Integer.parseInt(lineSplit[1]);
-            int imageQuality = Integer.parseInt(lineSplit[2]);
-            int ageGroup = Integer.parseInt(lineSplit[3]);
-            int sex = Integer.parseInt(lineSplit[4]);
-            String description = lineSplit[5];
+            int year = Integer.parseInt(lineSplit[yearPos]);
+            int imageQuality = Integer.parseInt(lineSplit[imageQualityPos]);
+            int ageGroup = Integer.parseInt(lineSplit[ageGroupPos]);
+            int sex = Integer.parseInt(lineSplit[sexPos]);
+            String description = lineSplit[descriptionPos];
             OriginalData originalData = new CODOrignalData(description, year, ageGroup, sex, imageQuality, inputFile.getPath());
 
             for (int i = 6; i < lineSplit.length; i++) {
@@ -144,7 +157,8 @@ public abstract class RecordFactory {
      */
     private static Record createRecord(final Code thisCode, final OriginalData originalData) {
 
-        int id = (int) Math.rint(Math.random() * 1000);
+        final int scaleFactor = 1000;
+        int id = (int) Math.rint(Math.random() * scaleFactor);
         Record record = new Record(id, originalData);
         CodeTriple goldStandardClassification = new CodeTriple(thisCode, new TokenSet(originalData.getDescription()), 1.0);
         record.getOriginalData().getGoldStandardCodeTriples().add(goldStandardClassification);

@@ -11,7 +11,6 @@ import java.util.Set;
 import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
 import uk.ac.standrews.cs.digitising_scotland.tools.analysis.HumanCodingAnalyser;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class HiscoDataFormatter.
  */
@@ -167,10 +166,7 @@ public class HiscoDataFormatter {
             }
 
             while (innerIterator.hasNext()) {
-                System.out.println(count);
-
                 count++;
-
                 Entry<String, Integer> current = innerIterator.next();
                 int number = current.getValue();
                 totalThisClass += number;
@@ -179,12 +175,8 @@ public class HiscoDataFormatter {
                     innerStringBuilder.append(codings.getKey() + "\t" + current.getKey() + "\n");
                 }
             }
-            if (variance < 0.9 && numberOfPopularClass > 25) {
-                //do nothing
-            }
-            else {
+            if (variance > 0.9 && numberOfPopularClass < 25) {
                 sb.append(innerStringBuilder.toString());
-
             }
 
         }

@@ -11,10 +11,27 @@ import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.TrainAndMultiplyClassify;
 import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
 
+/**
+ * The Class HMMPreparser prepares a data file for use by the {@link HiddenMarkovModel} builder.
+ */
 public class HMMPreparser {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(TrainAndMultiplyClassify.class);
+
+    /**
+     * Prepare file.
+     *
+     * @param input the input
+     * @param output the output
+     * @return the file
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
     public File prepareFile(final File input, final File output) throws IOException {
 
         BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(input), "UTF8"));
@@ -30,6 +47,12 @@ public class HMMPreparser {
 
     }
 
+    /**
+     * Split into multipule lines.
+     *
+     * @param preparedLine the prepared line
+     * @return the string
+     */
     protected String splitIntoMultipuleLines(final ArrayList<String> preparedLine) {
 
         StringBuilder sb = new StringBuilder();
@@ -41,11 +64,17 @@ public class HMMPreparser {
         return sb.toString();
     }
 
+    /**
+     * Tokenise.
+     *
+     * @param preparedLine the prepared line
+     * @return the string
+     */
     protected String tokenise(final String preparedLine) {
 
         StringTokenizer st = new StringTokenizer(preparedLine);
         ArrayList<String> tokenisedLine = new ArrayList<String>();
-        System.out.println("---- Split by space ------");
+        LOGGER.info("---- Split by space ------");
         while (st.hasMoreElements()) {
             tokenisedLine.add(st.nextElement().toString());
         }
@@ -53,9 +82,15 @@ public class HMMPreparser {
         return splitIntoMultipuleLines(tokenisedLine);
     }
 
+    /**
+     * Seperate puncutation.
+     *
+     * @param line the line
+     * @return the string
+     */
     protected String seperatePuncutation(final String line) {
 
-        System.out.println(line);
+        LOGGER.info(line);
         String newLine = removeQuotes(line);
         List<String> allMatches = new ArrayList<String>();
         Matcher m = Pattern.compile("[;,&12/]").matcher(newLine);
@@ -68,11 +103,17 @@ public class HMMPreparser {
             newLine = newLine.replaceAll(allMatches.get(i), " " + allMatches.get(i));
         }
 
-        System.out.println(newLine);
+        LOGGER.info(newLine);
 
         return newLine.trim();
     }
 
+    /**
+     * Removes the quotes.
+     *
+     * @param line the line
+     * @return the string
+     */
     protected String removeQuotes(final String line) {
 
         return line.replaceAll("\"", "");
