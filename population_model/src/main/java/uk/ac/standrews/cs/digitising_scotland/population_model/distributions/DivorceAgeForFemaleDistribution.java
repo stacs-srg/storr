@@ -20,39 +20,38 @@ import java.util.Random;
 
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.in_memory.CompactPopulation;
 
+
 /**
- * Distribution modelling ages of females at marriage, represented in days.
+ * Distribution modelling ages of females at divorce, represented in days.
  * 
  * @author Tom Dalton (tsd4@st-andrews.ac.uk)
  */
-public class FemaleAgeAtMarriageDistribution implements Distribution<Integer> {
+public class DivorceAgeForFemaleDistribution implements Distribution<Integer> {
 
 	/*
-	 * from ageatmarriageandpreviousmaritalstatus_tcm77-366510.xls
-	 * from http://www.ons.gov.uk/ons/rel/vsob1/marriages-in-england-and-wales--provisional-/2012/rtd-age-at-marriage-and-previous-marital-status.xls
-	 * Age of husband and previous marital status, 1846–2011
+	 * from numberofdivorcesageatdivorceandmaritalstatusbeforemarriage_tcm77-351699
+     * from http://www.ons.gov.uk/ons/rel/vsob1/divorces-in-england-and-wales/2012/rtd-divorces---number-of-divorces-age-at-divorce-and-marital-status-before-marriage.xls
+     * Number of divorces, age at divorce and marital status before marriage
+     * 
+     * Data for the year 1975
 	 * 
-	 * from MYE6TS3C_mid-1971-mid-2012-unformatted-ctry_quin_sex-data-file
-	 * from http://www.ons.gov.uk/ons/rel/vsob1/cancer-statistics-registrations--england--series-mb1-/no--43--2012/rft-mid-1971-to-mid-2012-population-estimates.xls
-	 * Mid-1971 to Mid-2012 Population Estimates: Quinary age groups for Constituent Countries in the United Kingdom
-	 * 
-	 * Age     Marriages per 1000
+	 * Age     per 1000 Divorces
 	 * 0-4     0
 	 * 5-9     0
 	 * 10-14   0
-	 * 15-19   66
-	 * 20-24   101
-	 * 25-29   29
-	 * 30-34   12
-	 * 35-39   7
-	 * 40-44   5
-	 * 45-49   5
-	 * 50-54   4
-	 * 55-59   3
-	 * 60-64   2
-	 * 65-69   2
-	 * 70-74   1
-	 * 75-79   1
+	 * 15-19   6
+	 * 20-24   166
+	 * 25-29   222
+	 * 30-34   190
+	 * 35-39   150
+	 * 40-44   114
+	 * 45-49   82
+	 * 50-54   24
+	 * 55-59   24
+	 * 60-64   15 // By interpolation
+	 * 65-69   7 // By interpolation
+	 * 70-74   0
+	 * 75-79   0
 	 * 80-84   0
 	 * 85-89   0
 	 * 90-95   0
@@ -60,15 +59,15 @@ public class FemaleAgeAtMarriageDistribution implements Distribution<Integer> {
 	 */
 
 	private static final int MAXIMUM_AGE_IN_YEARS = 100;
-	private static final int[] AGE_DISTRIBUTION_WEIGHTS = new int[] { 0, 0, 0, 66, 101, 29, 12, 7, 5, 5, 4, 3, 2, 2, 1, 1, 0, 0, 0, 0 };
+	private static final int[] AGE_DISTRIBUTION_WEIGHTS = new int[] { 0, 0, 0, 6, 166, 222, 190, 150, 114, 82, 24, 24, 15, 7, 0, 0, 0, 0, 0, 0};
 
 	private final WeightedIntegerDistribution distribution;
 
 	/**
 	 * Creates an age at marriage distribution
-	 * @param random the random number gernerator to be used
+	 * @param random the random number generator to be used
 	 */
-	public FemaleAgeAtMarriageDistribution(final Random random) {
+	public DivorceAgeForFemaleDistribution(final Random random) {
 		try {
 			distribution = new WeightedIntegerDistribution(0, (int) (MAXIMUM_AGE_IN_YEARS * CompactPopulation.DAYS_PER_YEAR) - 1, AGE_DISTRIBUTION_WEIGHTS, random);
 		}

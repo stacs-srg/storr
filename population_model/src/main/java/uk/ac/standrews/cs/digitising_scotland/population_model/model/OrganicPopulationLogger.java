@@ -21,6 +21,7 @@ import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.Mal
 public class OrganicPopulationLogger {
 
 	private static int population = 0;
+	private static int marriages = 0;
 	private static int[] maleAgeAtMarriage = new int[100];
 	private static int[] femaleAgeAtMarriage = new int[100];
 	private static int[] ageDifferenceAtMarriage = new int[25];
@@ -31,7 +32,15 @@ public class OrganicPopulationLogger {
 	
 	public static void decPopulation() {
 		population--;
-	}	
+	}
+	
+	public static void incMarriages() {
+		marriages++;
+	}
+	
+	public static void decMarriages() {
+		marriages--;
+	}
 	
 	public static void addMaleAgeAtMarriage(int days) {
 		int years = (int)((float)days / OrganicPopulation.DAYS_PER_YEAR);
@@ -50,6 +59,7 @@ public class OrganicPopulationLogger {
 	}
 	
 	public static void logMarriage(int maleDays, int femaleDays) {
+		incMarriages();
 		addMaleAgeAtMarriage(maleDays);
 		addFemaleAgeAtMarriage(femaleDays);
 		addAgeDifferenceAtMarriage(maleDays, femaleDays);
@@ -57,6 +67,7 @@ public class OrganicPopulationLogger {
 	
 	public static void printLogData() {
 		System.out.println("Population: " + population);
+		System.out.println("Marriages: " + marriages);
 		System.out.println();
 		System.out.println("Male Age At Marriage Distrobution");
 		System.out.println();

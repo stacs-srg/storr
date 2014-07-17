@@ -22,6 +22,7 @@ import java.util.Date;
 
 /**
  * Created by graham on 03/07/2014.
+ * @author Tom Dalton (tsd4@st-andrews.ac.uk)
  */
 public class PopulationLogic {
 
@@ -83,6 +84,11 @@ public class PopulationLogic {
     public static boolean longEnoughBetweenMarriages(final int candidate_marriage_date, final int previous_marriage_date) {
 
         return DateManipulation.differenceInYears(previous_marriage_date, candidate_marriage_date) > MINIMUM_PERIOD_BETWEEN_PARTNERSHIPS;
+    }
+    
+    public static boolean divorceNotBeforeMarriage(final int marriage_date, final int divorce_date) {
+    	
+    	return DateManipulation.differenceInDays(marriage_date, divorce_date) > 0;
     }
 
     private static boolean motherAliveAtBirth(final Date mother_death_date, final Date child_birth_date) {

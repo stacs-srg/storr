@@ -18,6 +18,7 @@ package uk.ac.standrews.cs.digitising_scotland.population_model.model;
 
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.AgeAtDeathDistribution;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.Distribution;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.DivorceInstigatedByGenderDistribution;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.FemaleAgeAtMarriageDistribution;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.MaleAgeAtMarriageDistribution;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.UniformDistribution;
@@ -79,9 +80,8 @@ public class OrganicPopulation implements IPopulation {
     private Distribution<Integer> seed_age_distribution = new UniformDistribution(0, 70, random);
     private Distribution<Boolean> sex_distribution = new UniformSexDistribution(random);
     private Distribution<Integer> age_at_death_distribution = new AgeAtDeathDistribution(random);
-    private Distribution<Integer> maleAgeAtMarriageDistrobution = new MaleAgeAtMarriageDistribution(random);
-    private Distribution<Integer> femaleAgeAtMarriageDistrobution = new FemaleAgeAtMarriageDistribution(random);
-    
+    private Distribution<Integer> maleAgeAtMarriageDistribution = new MaleAgeAtMarriageDistribution(random);
+    private Distribution<Integer> femaleAgeAtMarriageDistribution = new FemaleAgeAtMarriageDistribution(random);
 
     private List<OrganicPerson> people = new ArrayList<OrganicPerson>();
     private List<OrganicPartnership> partnerships = new ArrayList<OrganicPartnership>();
@@ -130,16 +130,17 @@ public class OrganicPopulation implements IPopulation {
 
 
                 currentTimeline = new OrganicTimeline(currentDateOfBirth, currentDateOfDeath);
+                currentPerson.setTimeline(currentTimeline);
                 
                 // Add ELIGIBLE_TO_MARRY event
                 int date;
                 if(currentPerson.getSex() == 'M') {
                 	// time in days to birth from 1/1/1600 + marriage age in days
-                	date = DateManipulation.dateToDays(currentTimeline.getStartDate()) + maleAgeAtMarriageDistrobution.getSample();
+                	date = DateManipulation.dateToDays(currentTimeline.getStartDate()) + maleAgeAtMarriageDistribution.getSample();
                 	currentTimeline.addEvent(date , new OrganicEvent(EventType.ELIGIBLE_TO_MARRY));
                 } else {
                 	// time in days to birth from 1/1/1600 + marriage age in days
-                	date = DateManipulation.dateToDays(currentTimeline.getStartDate()) + maleAgeAtMarriageDistrobution.getSample();
+                	date = DateManipulation.dateToDays(currentTimeline.getStartDate()) + femaleAgeAtMarriageDistribution.getSample();
                 	currentTimeline.addEvent(date, new OrganicEvent(EventType.ELIGIBLE_TO_MARRY));
                 }
                 // If marriage date is before simulation start date then add to respective partnership queue
@@ -179,14 +180,15 @@ public class OrganicPopulation implements IPopulation {
 								count++;
 	                		}
                 		}
-                	} 
+                	}
                 }
-                currentPerson.setTimeline(currentTimeline);               
+                               
             }
         }
         marryUpSeedPeople();
         maleInitialPartnershipOrderer.clear();
         femaleInitialPartnershipOrderer.clear();
+        
     }
     
     public void marryUpSeedPeople() {
@@ -265,7 +267,7 @@ public class OrganicPopulation implements IPopulation {
     
     public void marry(final OrganicPerson husband, final OrganicPerson wife, Date date) {
     	// Create partnership
-    	OrganicPartnership newPartnership = new OrganicPartnership(IDFactory.getNextID(), husband.getId(), wife.getId(), date);
+    	OrganicPartnership newPartnership = new OrganicPartnership(IDFactory.getNextID(), husband, wife, date);
     	partnerships.add(newPartnership);
     	OrganicPopulationLogger.logMarriage(DateManipulation.differenceInDays(husband.getBirthDate(), date), DateManipulation.differenceInDays(wife.getBirthDate(), date));
     	husband.addPartnership(newPartnership.getId());
@@ -445,25 +447,27 @@ public class OrganicPopulation implements IPopulation {
         op.makeSeed();
         op.generate_timelines();
         
-        System.out.println("--------PEOPLE--------");
-        for (int i = 0; i < op.getNumberOfPeople(); i++) {
-        	System.out.println();
-            System.out.println("BORN: " + op.people.get(i).getBirthDate());
-            System.out.println("DIED: " + op.people.get(i).getDeathDate());
-            int x = (DateManipulation.dateToDays(op.people.get(i).getDeathDate()) - DateManipulation.dateToDays(op.people.get(i).getBirthDate()))/365;
-            System.out.println("ALIVE FOR: " + x);
-            System.out.println();
-        }
-        
-        System.out.println("--------PARTNERSHIPS--------");
-        for(int i = 0; i < op.getNumberOfPartnerships(); i++) {
-        	System.out.println();
-        	System.out.println("Husband: " + op.partnerships.get(i).getMalePartnerId());
-        	System.out.println("Wife: " + op.partnerships.get(i).getFemalePartnerId());
-        	System.out.println("Date: " + op.partnerships.get(i).getMarriageDate());
-        }
+//        System.out.println("--------PEOPLE--------");
+//        for (int i = 0; i < op.getNumberOfPeople(); i++) {
+//        	System.out.println();
+//            System.out.println("BORN: " + op.people.get(i).getBirthDate());
+//            System.out.println("DIED: " + op.people.get(i).getDeathDate());
+//            int x = (DateManipulation.dateToDays(op.people.get(i).getDeathDate()) - DateManipulation.dateToDays(op.people.get(i).getBirthDate()))/365;
+//            System.out.println("ALIVE FOR: " + x);
+//            System.out.println();
+//        }
+//        
+//        System.out.println("--------PARTNERSHIPS--------");
+//        for(int i = 0; i < op.getNumberOfPartnerships(); i++) {
+//        	System.out.println();
+//        	System.out.println("Husband: " + op.partnerships.get(i).getMalePartnerId());
+//        	System.out.println("Wife: " + op.partnerships.get(i).getFemalePartnerId());
+//        	System.out.println("Date: " + op.partnerships.get(i).getMarriageDate());
+//        }
         
         OrganicPopulationLogger.printLogData();
+        System.out.println("Female Marriage Queue Size: " + op.femalePartnershipQueue.size());
+        System.out.println("Male Marriage Queue Size: " + op.malePartnershipQueue.size());
         
     }
 }
