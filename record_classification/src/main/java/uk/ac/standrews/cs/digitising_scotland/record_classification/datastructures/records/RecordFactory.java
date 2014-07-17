@@ -130,7 +130,6 @@ public abstract class RecordFactory {
 
         while ((line = br.readLine()) != null) {
             String[] lineSplit = line.split("\\|");
-
             int year = Integer.parseInt(lineSplit[yearPos]);
             int imageQuality = Integer.parseInt(lineSplit[imageQualityPos]);
             int ageGroup = Integer.parseInt(lineSplit[ageGroupPos]);
