@@ -128,7 +128,7 @@ public final class TrainAndMultiplyClassify {
 
         LOGGER.info("********** Classifying Bucket **********");
 
-        System.out.println("********** Classifying Bucket **********");
+        LOGGER.info("********** Classifying Bucket **********");
 
         //  Bucket classifiedBucket = bucketClassifier.classify(predictionBucket);
 
@@ -240,7 +240,7 @@ public final class TrainAndMultiplyClassify {
         LOGGER.info(executeCommand);
 
         if (executeCommand.equals("RScript required but it's not installed.  Aborting.\n")) {
-            System.err.println("Stats not generated. R or RScript is not installed.");
+            LOGGER.error("Stats not generated. R or RScript is not installed.");
             System.exit(2);
             return false;
         }
@@ -345,7 +345,7 @@ public final class TrainAndMultiplyClassify {
         File base = new File(baseFolder);
 
         if (!base.exists() && !base.mkdirs()) {
-            System.err.println("Could not create all folders in path " + base + ".\n" + base.getAbsolutePath() + " may already exsists");
+            LOGGER.error("Could not create all folders in path " + base + ".\n" + base.getAbsolutePath() + " may already exsists");
         }
 
         File[] allFiles = base.listFiles();

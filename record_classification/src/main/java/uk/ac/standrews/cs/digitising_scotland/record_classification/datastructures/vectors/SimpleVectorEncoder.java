@@ -65,7 +65,7 @@ public class SimpleVectorEncoder extends AbstractVectorEncoder {
         }
     }
 
-    protected void initialize() {
+    protected final void initialize() {
 
         dictionary = new LinkedHashMap<>();
         currentMaxTokenIndexValue = 0;
@@ -79,32 +79,32 @@ public class SimpleVectorEncoder extends AbstractVectorEncoder {
     /**
      * Write.
      *
-     * @param out the out
+     * @param outputStream the out
      * @throws java.io.IOException Signals that an I/O exception has occurred.
      */
-    protected void write(final DataOutputStream out) throws IOException {
+    protected void write(final DataOutputStream outputStream) throws IOException {
 
-        out.writeInt(currentMaxTokenIndexValue);
+        outputStream.writeInt(currentMaxTokenIndexValue);
         for (String string : dictionary.keySet()) {
-            out.writeInt(dictionary.get(string));
-            out.writeUTF(string);
+            outputStream.writeInt(dictionary.get(string));
+            outputStream.writeUTF(string);
         }
     }
 
     /**
      * Read fields.
      *
-     * @param in the in
+     * @param inputStream the in
      * @throws IOException Signals that an I/O exception has occurred.
      */
-    protected void readFields(final DataInputStream in) throws IOException {
+    protected void readFields(final DataInputStream inputStream) throws IOException {
 
         reset();
-        int currentMaxTokenIndexValue = in.readInt();
+        int currentMaxTokenIndexValue = inputStream.readInt();
         for (int i = 0; i < currentMaxTokenIndexValue; i++) {
-            int readint = in.readInt();
+            int readint = inputStream.readInt();
             if (i != readint) { throw new RuntimeException("error reading SimpleVectorEncoder dictionary"); }
-            updateDictionary(in.readUTF());
+            updateDictionary(inputStream.readUTF());
         }
 
     }
