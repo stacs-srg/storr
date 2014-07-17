@@ -101,7 +101,7 @@ public class TrainAndClassify {
         ClassificationPipeline pipeLine = new ClassificationPipeline(classifiers);
 
         Bucket toClassify = new Bucket(RecordFactory.makeUnCodedRecordsFromFile(new File(inputFile)));
-        LevenShteinCleaner.cleanData(toClassify);
+//        LevenShteinCleaner.cleanData(toClassify);
         //        toClassify.generateVectors(toClassify);
 
         pipeLine.classifyBucket(toClassify);

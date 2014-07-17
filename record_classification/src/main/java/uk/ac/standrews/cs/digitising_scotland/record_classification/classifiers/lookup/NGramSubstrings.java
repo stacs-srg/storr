@@ -72,7 +72,7 @@ public class NGramSubstrings implements Iterable<TokenSet> {
      */
     public NGramSubstrings(final Record record) throws IOException {
 
-        String string = record.getCleanedDescription();
+        String string = record.getDescription();
         this.grams = splitIntoNGrams(string);
     }
 

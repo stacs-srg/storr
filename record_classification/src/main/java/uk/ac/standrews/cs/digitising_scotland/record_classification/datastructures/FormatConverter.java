@@ -94,7 +94,7 @@ public final class FormatConverter {
             r.getOriginalData().setGoldStandardClassification(goldStandard);
 
             if (goldStandard.size() == 0) {
-                LOGGER.info("Gold Standard Set Empty: " + r.getCleanedDescription());
+                LOGGER.info("Gold Standard Set Empty: " + r.getDescription());
             }
             else {
                 recordList.add(r);

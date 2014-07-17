@@ -59,7 +59,7 @@ public class LookupTableClassifier extends AbstractClassifier implements Seriali
     @Override
     public Record classify(final Record record) throws IOException {
 
-        NGramSubstrings nGrams = new NGramSubstrings(record.getCleanedDescription());
+        NGramSubstrings nGrams = new NGramSubstrings(record.getDescription());
         Set<CodeTriple> classifiedGramsSet = classify(nGrams, record);
         record.addAllCodeTriples(classifiedGramsSet);
         return record;

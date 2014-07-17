@@ -10,7 +10,6 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.exceptions.InputFormatException;
 import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
 import uk.ac.standrews.cs.digitising_scotland.tools.analysis.UniqueWordCounter;
-
 import java.io.*;
 import java.util.HashMap;
 import java.util.List;
@@ -35,24 +34,6 @@ public abstract class AbstractDataCleaner {
     private static Map<String, String> correctionMap;
 
     public abstract String correct(final String token);
-
-    /**
-     * Currently a dummy method.
-     * Copies original string to cleaned string.
-     *
-     * @param bucketToClean bucket to perform cleaning on.
-     * @return the bucket with cleaned records attached.
-     */
-    public static Bucket cleanData(final Bucket bucketToClean) {
-
-        Bucket cleanedBucket = bucketToClean;
-        //TODO dummy method, copies original data to cleaned data.
-        for (Record record : cleanedBucket) {
-            record.setCleanedDescription(record.getOriginalData().getDescription());
-        }
-
-        return cleanedBucket;
-    }
 
     /**
      *

@@ -48,7 +48,7 @@ public class Classifier {
     public Bucket classifyBucket() throws IOException, InputFormatException {
 
         Bucket toClassify = new Bucket(RecordFactory.makeUnCodedRecordsFromFile(fileToClassify));
-        LevenShteinCleaner.cleanData(toClassify);
+//        LevenShteinCleaner.cleanData(toClassify);
 
         ClassificationPipeline pipeLine = new ClassificationPipeline();
         AbstractClassifier exactMatch = new ExactMatchClassifier();

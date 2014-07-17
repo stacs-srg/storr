@@ -48,7 +48,7 @@ public class NGramClassifierTest {
     @Test
     public void testClassify() throws Exception {
 
-        LevenShteinCleaner.cleanData(testingBucket);
+//        LevenShteinCleaner.cleanData(testingBucket);
         NGramClassifier nGramClassifer = train();
         for (Record record : testingBucket) {
             Record classifiedRecord = nGramClassifer.classify(record);

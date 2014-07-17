@@ -93,7 +93,7 @@ public class NGramClassifier extends AbstractClassifier implements Serializable 
      */
     private Set<CodeTriple> classifyGrams(final Record record) throws IOException {
 
-        NGramSubstrings grams = new NGramSubstrings(record.getCleanedDescription());
+        NGramSubstrings grams = new NGramSubstrings(record.getDescription());
         return lookupTableClassifier.classify(grams, record);
     }
 

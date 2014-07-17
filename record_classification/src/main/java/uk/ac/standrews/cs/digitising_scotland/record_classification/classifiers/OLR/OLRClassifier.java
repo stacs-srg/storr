@@ -132,7 +132,7 @@ public class OLRClassifier extends AbstractClassifier {
 
             code = CodeFactory.getInstance().getCode(classificationID);
             double confidence = Math.exp(model.logLikelihood(classificationID, vector)); //TODO test
-            codeTripleSet.add(new CodeTriple(code, new TokenSet(record.getCleanedDescription()), confidence));
+            codeTripleSet.add(new CodeTriple(code, new TokenSet(record.getDescription()), confidence));
         }
 
         record.addAllCodeTriples(codeTripleSet);

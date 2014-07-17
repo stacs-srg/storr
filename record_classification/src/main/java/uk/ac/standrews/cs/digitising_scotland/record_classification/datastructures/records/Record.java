@@ -19,9 +19,6 @@ public class Record {
     /** The original data. */
     private OriginalData originalData;
 
-    /** The cleaned description. */
-    private String cleanedDescription;
-
     /** The code triples. */
     private Set<CodeTriple> codeTriples;
 
@@ -52,23 +49,13 @@ public class Record {
      *
      * @return the cleaned description
      */
-    public String getCleanedDescription() {
+    public String getDescription() {
+//
+//        if (cleanedDescription == null) {
+//            cleanedDescription = TokenizerCleaner.clean(originalData.getDescription()).intern();
+//        }
 
-        if (cleanedDescription == null) {
-            cleanedDescription = TokenizerCleaner.clean(originalData.getDescription()).intern();
-        }
-
-        return cleanedDescription;
-    }
-
-    /**
-     * Sets the cleaned description.
-     *
-     * @param cleanedDescription the new cleaned description
-     */
-    public void setCleanedDescription(final String cleanedDescription) {
-
-        this.cleanedDescription = cleanedDescription;
+        return originalData.getDescription();
     }
 
     /**
@@ -112,7 +99,7 @@ public class Record {
     @Override
     public String toString() {
 
-        return "Record [cleanedDescription=" + cleanedDescription + "\t codeTriples=" + codeTriples + "]\n";
+        return "Record [description=" + getDescription() + "\t codeTriples=" + codeTriples + "]\n";
     }
 
     /* (non-Javadoc)
@@ -123,7 +110,6 @@ public class Record {
 
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((cleanedDescription == null) ? 0 : cleanedDescription.hashCode());
         result = prime * result + ((codeTriples == null) ? 0 : codeTriples.hashCode());
         result = prime * result + ((originalData == null) ? 0 : originalData.hashCode());
         return result;
@@ -139,10 +125,6 @@ public class Record {
         if (obj == null) { return false; }
         if (getClass() != obj.getClass()) { return false; }
         Record other = (Record) obj;
-        if (cleanedDescription == null) {
-            if (other.cleanedDescription != null) { return false; }
-        }
-        else if (!cleanedDescription.equals(other.cleanedDescription)) { return false; }
         if (codeTriples == null) {
             if (other.codeTriples != null) { return false; }
         }
