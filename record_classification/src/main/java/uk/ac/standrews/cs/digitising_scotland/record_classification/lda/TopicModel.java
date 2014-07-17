@@ -48,9 +48,11 @@ import cc.mallet.types.LabelSequence;
 public class TopicModel {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TopicModel.class);
+    static final int ROWS = 4;
+    static final int COLS = 10;
 
     /** The results matrix - for debug/information only. Will show summary of how many topics were assigned/should of been assigned to each record */
-    private static int[][] resultsMatrix = new int[4][10];
+    private static int[][] resultsMatrix = new int[ROWS][COLS];
 
     /**
      * Processes the input file and returns an output file.
@@ -78,9 +80,7 @@ public class TopicModel {
 
         initResultsMatrix();
 
-        File outputFile = null;
-
-        outputFile = modelTopics(input, output, outputFile);
+        File outputFile = modelTopics(input, output);
 
         dumpResultsMatrix();
 
@@ -106,8 +106,9 @@ public class TopicModel {
         }
     }
 
-    private File modelTopics(final File input, final File output, File outputFile) {
+    private File modelTopics(final File input, final File output) {
 
+        File outputFile = null;
         try {
             outputFile = modelTopics(input.getAbsolutePath(), output.getAbsolutePath());
         }
@@ -164,7 +165,9 @@ public class TopicModel {
 
         int numTopics = Integer.parseInt(MachineLearningConfiguration.getDefaultProperties().getProperty("lda.numTopics"));
 
-        ParallelTopicModel model = new ParallelTopicModel(numTopics, 1.0, 0.01);
+        final double beta = 0.01;
+        final double alphaSum = 1.0;
+        ParallelTopicModel model = new ParallelTopicModel(numTopics, alphaSum, beta);
 
         model.addInstances(instances);
 
@@ -196,7 +199,8 @@ public class TopicModel {
         Iterator<IDSorter> iterator = topicSortedWords.get(0).iterator();
 
         int rank = 0;
-        while (iterator.hasNext() && rank < 5) {
+        final int rankLimit = 5;
+        while (iterator.hasNext() && rank < rankLimit) {
             IDSorter idCountPair = iterator.next();
             topicZeroText.append(dataAlphabet.lookupObject(idCountPair.getID()) + " ");
             rank++;
@@ -219,14 +223,18 @@ public class TopicModel {
     private void writeModel(final ParallelTopicModel model, final InstanceList testing) {
 
         TopicInferencer inferencer = model.getInferencer();
-        double[] testProbabilities = inferencer.getSampledDistribution(testing.get(0), 10, 1, 5);
+        final int numIterations = 10;
+        final int thinning = 1;
+        final int burnIn = 5;
+        double[] testProbabilities = inferencer.getSampledDistribution(testing.get(0), numIterations, thinning, burnIn);
         LOGGER.info("0\t" + testProbabilities[0]);
         model.write(new File("target/ldaModel.model"));
     }
 
     private void writeExecutionData(final Timer timer, final int numberOfLines) {
 
-        String data = numberOfLines + " \t" + timer.elapsedTime() + "\t" + (timer.elapsedTime() / 1000000000) + "\n";
+        final int convertingFactor = 1000000000;
+        String data = numberOfLines + " \t" + timer.elapsedTime() + "\t" + (timer.elapsedTime() / convertingFactor) + "\n";
         Utils.writeToFile(data, "target/LDAExecutionTimes.txt", true);
     }
 
@@ -239,7 +247,8 @@ public class TopicModel {
             out = new Formatter(new StringBuilder(), Locale.US);
             out.format("%d\t%.3f\t", topic, topicDistribution[topic]);
             int rank = 0;
-            while (iterator.hasNext() && rank < 5) {
+            final int rankLimit = 5;
+            while (iterator.hasNext() && rank < rankLimit) {
                 IDSorter idCountPair = iterator.next();
                 out.format("%s (%.0f) ", dataAlphabet.lookupObject(idCountPair.getID()), idCountPair.getWeight());
                 rank++;
@@ -253,7 +262,8 @@ public class TopicModel {
 
         FeatureSequence tokens = (FeatureSequence) model.getData().get(0).instance.getData();
         LabelSequence topics = model.getData().get(0).topicSequence;
-        for (int i = 0; i < 10; i++) {
+        final int topicsToPrint = 10;
+        for (int i = 0; i < topicsToPrint; i++) {
             Formatter out = new Formatter(new StringBuilder(), Locale.US);
             for (int position = 0; position < tokens.getLength(); position++) {
                 out.format("%s-%d ", dataAlphabet.lookupObject(tokens.getIndexAtPosition(position)), topics.getIndexAtPosition(position));
