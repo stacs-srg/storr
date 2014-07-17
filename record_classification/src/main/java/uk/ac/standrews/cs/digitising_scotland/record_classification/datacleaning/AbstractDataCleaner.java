@@ -18,6 +18,8 @@ import java.util.Map;
 import java.util.Set;
 
 /**
+ * Base class for all data cleaners. Subclasses must implement a correct method which maps incorrect
+ * spellings to correct spellings.
  * Created by fraserdunlop on 16/07/2014 at 15:21.
  */
 public abstract class AbstractDataCleaner {
@@ -52,6 +54,13 @@ public abstract class AbstractDataCleaner {
         return cleanedBucket;
     }
 
+    /**
+     *
+     * @param args 1 is the input file path, 2 is the output file path, 3 (optional) sets TOKENLIMIT which
+     *             states the frequency of occurrence below which we start correcting tokens.
+     * @throws IOException
+     * @throws InputFormatException
+     */
     public void runOnFile(final String... args) throws IOException, InputFormatException {
         File file = new File(args[0]);
         File correctedFile = new File(args[1]);
