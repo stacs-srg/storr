@@ -74,7 +74,7 @@ public class ExactMatchPipeline {
      */
     public Set<CodeTriple> classify(final Record record) throws IOException {
 
-        TokenSet cleanedTokenSet = new TokenSet(record.getCleanedDescription());
+        TokenSet cleanedTokenSet = new TokenSet(record.getDescription());
 
         return classifier.classifyTokenSetToCodeTripleSet(cleanedTokenSet);
 

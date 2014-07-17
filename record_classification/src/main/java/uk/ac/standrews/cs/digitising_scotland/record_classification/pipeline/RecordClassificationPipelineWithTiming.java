@@ -48,9 +48,9 @@ public class RecordClassificationPipelineWithTiming {
      */
     public Set<CodeTriple> classify(final Record record) throws IOException {
 
-        if (new TokenSet(record.getCleanedDescription()).size() < WORDLIMIT) {
+        if (new TokenSet(record.getDescription()).size() < WORDLIMIT) {
 
-            TokenSet cleanedTokenSet = new TokenSet(record.getCleanedDescription());
+            TokenSet cleanedTokenSet = new TokenSet(record.getDescription());
             return classifyTokenSet(cleanedTokenSet);
         }
         else {

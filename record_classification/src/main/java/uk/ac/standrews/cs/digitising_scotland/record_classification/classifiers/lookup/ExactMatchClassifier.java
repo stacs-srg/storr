@@ -80,7 +80,7 @@ public class ExactMatchClassifier extends AbstractClassifier {
     @Override
     public Record classify(final Record record) throws IOException {
 
-        Set<CodeTriple> result = lookupTable.get(record.getCleanedDescription());
+        Set<CodeTriple> result = lookupTable.get(record.getDescription());
         if (result == null) {
             return record;
         }
@@ -115,7 +115,7 @@ public class ExactMatchClassifier extends AbstractClassifier {
      */
     private void addRecordToLookupTable(final Record record) {
 
-        lookupTable.put(record.getCleanedDescription(), record.getOriginalData().getGoldStandardCodeTriples());
+        lookupTable.put(record.getDescription(), record.getOriginalData().getGoldStandardCodeTriples());
 
     }
 

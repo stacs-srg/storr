@@ -182,7 +182,7 @@ public class CombinedNaiveBayesolrTest {
         listOfRecords = RecordFactory.makeUnCodedRecordsFromFile(inputFile);
         bucketA.addCollectionOfRecords(listOfRecords);
 
-        LevenShteinCleaner.cleanData(bucketA);
+//        LevenShteinCleaner.cleanData(bucketA);
 
         System.out.println(bucketA.toString());
 

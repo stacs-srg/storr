@@ -48,24 +48,6 @@ public abstract class AbstractDataCleaner {
     public abstract String correct(final String token);
 
     /**
-     * Currently a dummy method.
-     * Copies original string to cleaned string.
-     *
-     * @param bucketToClean bucket to perform cleaning on.
-     * @return the bucket with cleaned records attached.
-     */
-    public static Bucket cleanData(final Bucket bucketToClean) {
-
-        Bucket cleanedBucket = bucketToClean;
-        //TODO dummy method, copies original data to cleaned data.
-        for (Record record : cleanedBucket) {
-            record.setCleanedDescription(record.getOriginalData().getDescription());
-        }
-
-        return cleanedBucket;
-    }
-
-    /**
      *
      * @param args 1 is the input file path, 2 is the output file path, 3 (optional) sets TOKENLIMIT which
      *             states the frequency of occurrence below which we start correcting tokens.

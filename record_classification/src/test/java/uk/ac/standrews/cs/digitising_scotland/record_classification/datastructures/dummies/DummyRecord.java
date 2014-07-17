@@ -26,15 +26,11 @@ public class DummyRecord extends Record {
     }
 
     @Override
-    public String getCleanedDescription() {
+    public String getDescription() {
 
         return null;
     }
 
-    @Override
-    public void setCleanedDescription(final String cleanedDescription) {
-
-    }
 
     @Override
     public Set<CodeTriple> getGoldStandardClassificationSet() {

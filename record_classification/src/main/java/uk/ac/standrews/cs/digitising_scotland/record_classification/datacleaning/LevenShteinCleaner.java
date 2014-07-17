@@ -53,9 +53,7 @@ public class LevenShteinCleaner extends AbstractDataCleaner {
      */
     @Override
     public String correct(final String token) {
-
-        AbstractStringMetric metric = new Levenshtein();
-        List<Pair<String, Float>> possibleMatches = getPossibleMatches(token, metric);
+        List<Pair<String, Float>> possibleMatches = getPossibleMatches(token, wordMultiset);
         sortPossibleMatches(possibleMatches);
         String bestMatch = getBestMatch(token, possibleMatches);
         printDebugInfo(token, bestMatch);
@@ -76,6 +74,7 @@ public class LevenShteinCleaner extends AbstractDataCleaner {
      * @param metric the metric
      * @return the possible matches
      */
+    //TODO test
     private static List<Pair<String, Float>> getPossibleMatches(final String token, final AbstractStringMetric metric) {
 
         List<Pair<String, Float>> possibleMatches = new ArrayList<>();
@@ -99,6 +98,7 @@ public class LevenShteinCleaner extends AbstractDataCleaner {
      * @param possibleMatches the possible matches
      * @return the best match
      */
+    //TODO test
     private static String getBestMatch(final String token, final List<Pair<String, Float>> possibleMatches) {
 
         String bestMatch;
@@ -116,6 +116,7 @@ public class LevenShteinCleaner extends AbstractDataCleaner {
      *
      * @param possibleMatches the possible matches
      */
+    //TODO test
     private static void sortPossibleMatches(final List<Pair<String, Float>> possibleMatches) {
 
         Comparator<Pair<String, Float>> c = new Comparator<Pair<String, Float>>() {

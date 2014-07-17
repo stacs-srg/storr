@@ -219,7 +219,7 @@ public class NaiveBayesClassifier extends AbstractClassifier {
 
         double confidence = getConfidence(cr.getLogLikelihood());
 
-        return new CodeTriple(code, new TokenSet(record.getCleanedDescription()), confidence);
+        return new CodeTriple(code, new TokenSet(record.getDescription()), confidence);
     }
 
     /**

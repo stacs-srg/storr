@@ -136,28 +136,6 @@ public class RecordTest {
 
         Record x = new Record(id, originalData);
         Record y = new Record(id, originalData);
-        x.setCleanedDescription("dis");
-        y.setCleanedDescription("dis");
-        assertTheSame(x, y);
-    }
-
-    /**
-     * Test equals symmetric3.
-     */
-    @Test
-    public void testEqualsSymmetric3() {
-
-        int id = (int) Math.rint(Math.random() * 1000);
-
-        Record x = new Record(id, originalData);
-        Record y = new Record(id, originalData);
-
-        assertTheSame(x, y);
-        //make them different
-        x.setCleanedDescription("different");
-        assertDifferent(x, y);
-        //make the same again
-        y.setCleanedDescription("different");
         assertTheSame(x, y);
     }
 

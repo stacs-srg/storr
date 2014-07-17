@@ -12,7 +12,6 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeTriple;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.RecordFactory;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datacleaning.LevenShteinCleaner;
 
 /**
  * Test class to test {@link LookupTableClassifier}.
@@ -157,9 +156,9 @@ public class LookupTableClassifierTest {
      */
     public void addVectorsToBucket(final Bucket bucket) throws Exception {
 
-        LevenShteinCleaner.cleanData(bucket);
+//        LevenShteinCleaner.cleanData(bucket);
         for (Record record : bucket) {
-            record.getCleanedDescription();
+            record.getDescription();
         }
 
         System.out.println(bucket.toString());

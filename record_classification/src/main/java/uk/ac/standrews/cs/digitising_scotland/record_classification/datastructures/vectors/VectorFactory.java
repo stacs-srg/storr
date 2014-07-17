@@ -47,7 +47,7 @@ public class VectorFactory {
 
         vectorEncoder = new SimpleVectorEncoder();
         for (Record record : bucket) {
-            updateDictionary(record.getCleanedDescription());
+            updateDictionary(record.getDescription());
         }
         setNumFeatures();
     }
@@ -75,7 +75,7 @@ public class VectorFactory {
             vectors.addAll(createNamedVectorsWithGoldStandardCodes(record));
         }
         else {
-            vectors.add(createNamedVectorFromString(record.getCleanedDescription(), "noGoldStandard"));
+            vectors.add(createNamedVectorFromString(record.getDescription(), "noGoldStandard"));
         }
         return vectors;
     }

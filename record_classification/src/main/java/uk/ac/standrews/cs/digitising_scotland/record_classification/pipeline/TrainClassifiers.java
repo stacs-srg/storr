@@ -62,7 +62,7 @@ public class TrainClassifiers {
     private Bucket createCleanedBucket(final List<Record> listOfRecords) {
 
         Bucket trainingBucket = new Bucket(listOfRecords);
-        LevenShteinCleaner.cleanData(trainingBucket);
+//        LevenShteinCleaner.cleanData(trainingBucket);
         return trainingBucket;
     }
 

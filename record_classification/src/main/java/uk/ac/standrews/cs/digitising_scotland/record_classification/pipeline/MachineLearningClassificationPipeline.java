@@ -80,14 +80,14 @@ public class MachineLearningClassificationPipeline {
             LOGGER.info("Classifying record " + count + " of " + bucket.size());
             count++;
 
-            Set<CodeTriple> result = recordCache.get(record.getCleanedDescription());
+            Set<CodeTriple> result = recordCache.get(record.getDescription());
             if (result == null) {
                 result = classify(record);
                 if (result != null) {
                     record.addAllCodeTriples(result);
                     classified.addRecordToBucket(record);
                 }
-                recordCache.put(record.getCleanedDescription(), record.getCodeTriples());
+                recordCache.put(record.getDescription(), record.getCodeTriples());
             }
         }
 
@@ -106,7 +106,7 @@ public class MachineLearningClassificationPipeline {
      */
     public Set<CodeTriple> classify(final Record record) throws IOException {
 
-        TokenSet cleanedTokenSet = new TokenSet(record.getCleanedDescription());
+        TokenSet cleanedTokenSet = new TokenSet(record.getDescription());
 
         return classifyTokenSet(cleanedTokenSet);
 
