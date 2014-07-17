@@ -67,7 +67,6 @@ public class CompactPopulation {
      * The end year of the simulation.
      */
     public static final int END_YEAR = 2013;
-//    public static final int END_YEAR = 1830;
 
     private static final int DAYS_IN_DECEMBER = 31;
     private static final int DECEMBER_INDEX = 11;
@@ -80,6 +79,7 @@ public class CompactPopulation {
     private static final int MAX_MARRIAGES = 3;
 
     private static final int[] NUMBER_OF_CHILDREN_DISTRIBUTION = new int[]{2, 3, 2, 1, 1, 1, 1};
+    @SuppressWarnings("MagicNumber")
     private static final int[] NUMBER_OF_MARRIAGES_DISTRIBUTION = new int[]{4, 20, 2, 1};
 
     private static final double PROBABILITY_OF_BEING_INCOMER = 0.125;
@@ -99,7 +99,7 @@ public class CompactPopulation {
     private NormalDistribution marriage_separation_distribution;
     private ProgressIndicator progress_indicator;
 
-    private CompactPerson[] people;
+    private final CompactPerson[] people;
     private int number_of_partnerships = 0;
 
     /**
@@ -116,7 +116,7 @@ public class CompactPopulation {
         this.latest_date = latest_date;
         this.progress_indicator = progress_indicator;
 
-        Random random = RandomFactory.getRandom();
+        final Random random = RandomFactory.getRandom();
 
         date_of_birth_distribution = new UniformDistribution(this.earliest_date, this.latest_date, random);
         sex_distribution = new UniformSexDistribution(random);
@@ -204,9 +204,8 @@ public class CompactPopulation {
 
         while (low <= high) {
 
-            int mid = low + (high - low) / 2;
-
-            CompactPerson mid_person = people[mid];
+            final int mid = low + (high - low) / 2;
+            final CompactPerson mid_person = people[mid];
 
             if (id < mid_person.id) {
                 high = mid - 1;
@@ -223,10 +222,10 @@ public class CompactPopulation {
 
     public CompactPartnership findPartnership(final int id) {
 
-        for (CompactPerson person : people) {
-            List<CompactPartnership> partnerships = person.getPartnerships();
+        for (final CompactPerson person : people) {
+            final List<CompactPartnership> partnerships = person.getPartnerships();
             if (partnerships != null) {
-                for (CompactPartnership partnership : partnerships) {
+                for (final CompactPartnership partnership : partnerships) {
                     if (partnership.getId() == id) {
                         return partnership;
                     }
@@ -238,7 +237,7 @@ public class CompactPopulation {
 
     public int findPerson(final int start_index, final SearchCondition condition) {
 
-        int population_size = people.length;
+        final int population_size = people.length;
         for (int i = start_index + 1; i < population_size; i++) {
 
             switch (condition.check(i)) {
@@ -295,7 +294,7 @@ public class CompactPopulation {
 
         // Set the person ids in order so binary split can be used to locate ids.
         int id = IDFactory.getNextID();
-        for (CompactPerson person : people) {
+        for (final CompactPerson person : people) {
             person.id = id++;
         }
     }
@@ -408,6 +407,7 @@ public class CompactPopulation {
         }
     }
 
+    @SuppressWarnings("FeatureEnvy")
     private void linkChildren(final CompactPartnership partnership, final int number_of_children, final int latest_acceptable_birth_date) {
 
         final List<Integer> children = new ArrayList<>(number_of_children);
@@ -451,6 +451,7 @@ public class CompactPopulation {
         }
     }
 
+    @SuppressWarnings("FeatureEnvy")
     private int findSuitableChild(final CompactPartnership partnership, final int start_search_index, final int earliest_birth_date, final int latest_birth_date) {
 
         final int husband_index = getHusbandIndex(partnership);
@@ -470,44 +471,44 @@ public class CompactPopulation {
                 final CompactPerson father = people[husband_index];
                 final CompactPerson mother = people[wife_index];
 
-                boolean not_incomer = !child.isIncomer();
-                boolean not_born_too_early = child.birth_date > earliest_birth_date;
-                boolean not_born_too_late = child.birth_date < latest_birth_date;
-                boolean doesnt_have_parents = !child.hasParents();
-                boolean parents_have_sensible_ages = PopulationLogic.parentsHaveSensibleAgesAtChildBirth(father.birth_date, father.death_date, mother.birth_date, mother.death_date, child.birth_date);
-                boolean child_not_married_to_existing_child = !marriedToAnyChildrenOf(child_index, partnership);
+                final boolean not_incomer = !child.isIncomer();
+                final boolean not_born_too_early = child.birth_date > earliest_birth_date;
+                final boolean not_born_too_late = child.birth_date < latest_birth_date;
+                final boolean does_not_have_parents = !child.hasParents();
+                final boolean parents_have_sensible_ages = PopulationLogic.parentsHaveSensibleAgesAtChildBirth(father.birth_date, father.death_date, mother.birth_date, mother.death_date, child.birth_date);
+                final boolean child_not_married_to_existing_child = !marriedToAnyChildrenOf(child_index, partnership);
 
                 return not_incomer &&
                         not_born_too_early &&
                         not_born_too_late &&
-                        doesnt_have_parents &&
+                        does_not_have_parents &&
                         parents_have_sensible_ages &&
                         child_not_married_to_existing_child ?
 
                         ConditionResult.POSITIVE : ConditionResult.NEGATIVE_CONTINUE;
             }
-        };
 
-        return findPerson(start_search_index, conditions);
-    }
+            private boolean marriedToAnyChildrenOf(final int person_index, final CompactPartnership partnership) {
 
-    private boolean marriedToAnyChildrenOf(final int person_index, final CompactPartnership partnership) {
+                // Iterate over all partnerships of the people in the given partnership.
+                for (final int partner : new Integer[]{partnership.getPartner1(), partnership.getPartner2()}) {
+                    for (final CompactPartnership partnership2 : people[partner].getPartnerships()) {
 
-        // Iterate over all partnerships of the people in the given partnership.
-        for (final int partner : new Integer[]{partnership.getPartner1(), partnership.getPartner2()}) {
-            for (final CompactPartnership partnership2 : people[partner].getPartnerships()) {
-
-                final List<Integer> children = partnership2.getChildren();
-                if (children != null) {
-                    for (final int child : children) {
-                        if (married(child, person_index)) {
-                            return true;
+                        final List<Integer> children = partnership2.getChildren();
+                        if (children != null) {
+                            for (final int child : children) {
+                                if (married(child, person_index)) {
+                                    return true;
+                                }
+                            }
                         }
                     }
                 }
+                return false;
             }
-        }
-        return false;
+        };
+
+        return findPerson(start_search_index, conditions);
     }
 
     /**
@@ -515,6 +516,7 @@ public class CompactPopulation {
      *
      * @return the index if a person is found and -1 otherwise.
      */
+    @SuppressWarnings("FeatureEnvy")
     private int findPartner(final int first_partner_index, final int start_index, final int marriage_date) {
 
         final SearchCondition partner_compatible = new SearchCondition() {
@@ -522,73 +524,57 @@ public class CompactPopulation {
             @Override
             public ConditionResult check(final int person_index) {
 
-                return partnersAreCompatible(first_partner_index, person_index, marriage_date) ? ConditionResult.POSITIVE : ConditionResult.NEGATIVE_CONTINUE;
+                final CompactPerson person = people[first_partner_index];
+                final CompactPerson candidate_partner = people[person_index];
+
+                final boolean opposite_sex = person.getSex() != candidate_partner.getSex();
+                final boolean age_difference_is_reasonable = PopulationLogic.partnerAgeDifferenceIsReasonable(person.birth_date, candidate_partner.birth_date);
+                final boolean not_previously_partners = notPreviouslyPartners(person, first_partner_index, candidate_partner);
+                final boolean not_too_many_partnerships = notTooManyPartnerships(candidate_partner);
+                final boolean not_too_recent_partnership = notTooRecentPartnership(candidate_partner, marriage_date);
+
+                return opposite_sex &&
+                        age_difference_is_reasonable &&
+                        not_previously_partners &&
+                        not_too_many_partnerships &&
+                        not_too_recent_partnership ? ConditionResult.POSITIVE : ConditionResult.NEGATIVE_CONTINUE;
+            }
+
+            private boolean notPreviouslyPartners(final CompactPerson person, final int index, final CompactPerson candidate_partner) {
+
+                if (person.getPartnerships() == null || candidate_partner.getPartnerships() == null) {
+                    return true;
+                }
+
+                for (final CompactPartnership partnership : person.getPartnerships()) {
+                    if (people[partnership.getPartner(index)] == candidate_partner) {
+                        return false;
+                    }
+                }
+
+                return true;
+            }
+
+            private boolean notTooManyPartnerships(final CompactPerson candidate_partner) {
+
+                return candidate_partner.getPartnerships() == null || candidate_partner.getPartnerships().size() < MAX_MARRIAGES;
+            }
+
+            private boolean notTooRecentPartnership(final CompactPerson candidate_partner, final int marriage_date) {
+
+                final CompactPartnership recent_partnership = candidate_partner.mostRecentPartnership();
+                if (recent_partnership == null) {
+                    return true;
+                }
+
+                final int most_recent_marriage_date = recent_partnership.getMarriageDate();
+                return PopulationLogic.longEnoughBetweenMarriages(marriage_date, most_recent_marriage_date);
             }
         };
 
         return findPerson(start_index, partner_compatible);
     }
 
-    private boolean partnersAreCompatible(final int partner_index, final int candidate_partner_index, final int marriage_date) {
-
-        final CompactPerson person = people[partner_index];
-        final CompactPerson candidate_partner = people[candidate_partner_index];
-
-        boolean oppositeSex = oppositeSex(person, candidate_partner);
-        boolean ageDifferenceIsReasonable = PopulationLogic.partnerAgeDifferenceIsReasonable(person.birth_date, candidate_partner.birth_date);
-        boolean notPreviouslyPartners = notPreviouslyPartners(person, partner_index, candidate_partner);
-        boolean notTooManyPartnerships = notTooManyPartnerships(candidate_partner);
-        boolean notTooRecentPartnership = notTooRecentPartnership(candidate_partner, marriage_date);
-
-        return oppositeSex &&
-                ageDifferenceIsReasonable &&
-                notPreviouslyPartners &&
-                notTooManyPartnerships &&
-                notTooRecentPartnership;
-    }
-
-    /**
-     * Tests whether the given people are of opposite sex.
-     *
-     * @param person1 the first person
-     * @param person2 the second person
-     * @return true if the people are of opposite sex
-     */
-    private boolean oppositeSex(final CompactPerson person1, final CompactPerson person2) {
-
-        return person1.isMale() != person2.isMale();
-    }
-
-    private boolean notPreviouslyPartners(final CompactPerson person, final int index, final CompactPerson candidate_partner) {
-
-        if (person.getPartnerships() == null || candidate_partner.getPartnerships() == null) {
-            return true;
-        }
-
-        for (final CompactPartnership partnership : person.getPartnerships()) {
-            if (people[partnership.getPartner(index)] == candidate_partner) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    private boolean notTooManyPartnerships(final CompactPerson candidate_partner) {
-
-        return candidate_partner.getPartnerships() == null || candidate_partner.getPartnerships().size() < MAX_MARRIAGES;
-    }
-
-    private boolean notTooRecentPartnership(final CompactPerson candidate_partner, final int marriage_date) {
-
-        CompactPartnership recent_partnership = candidate_partner.mostRecentPartnership();
-        if (recent_partnership == null) {
-            return true;
-        }
-
-        int most_recent_marriage_date = recent_partnership.getMarriageDate();
-        return PopulationLogic.longEnoughBetweenMarriages(marriage_date, most_recent_marriage_date);
-    }
 
     private void sortPeopleByAge() {
 
@@ -598,7 +584,13 @@ public class CompactPopulation {
             @Override
             public int compare(final CompactPerson p1, final CompactPerson p2) {
 
-                return p1.birth_date - p2.birth_date;
+                if (p1.birth_date < p2.birth_date) {
+                    return -1;
+                }
+                if (p1.birth_date > p2.birth_date) {
+                    return 1;
+                }
+                return 0;
             }
         });
         sorter.sort();
@@ -606,16 +598,16 @@ public class CompactPopulation {
 
     private void setNumberOfPartnerships() {
 
-        Set<CompactPartnership> partnerships = new HashSet<>();
-        for (CompactPerson person : people) {
-            List<CompactPartnership> partnerships1 = person.getPartnerships();
-            if (partnerships1 != null) {
-                for (CompactPartnership partnership : partnerships1) {
-                    partnerships.add(partnership);
+        final Set<CompactPartnership> partnership_set = new HashSet<>();
+        for (final CompactPerson person : people) {
+            final List<CompactPartnership> partnerships = person.getPartnerships();
+            if (partnerships != null) {
+                for (final CompactPartnership partnership : partnerships) {
+                    partnership_set.add(partnership);
                 }
             }
         }
-        number_of_partnerships = partnerships.size();
+        number_of_partnerships = partnership_set.size();
     }
 
     /**
@@ -626,7 +618,7 @@ public class CompactPopulation {
      */
     private int getHusbandIndex(final CompactPartnership partnership) {
 
-        int partner1_index = partnership.getPartner1();
+        final int partner1_index = partnership.getPartner1();
         return people[partner1_index].isMale() ? partner1_index : partnership.getPartner2();
     }
 
@@ -638,7 +630,7 @@ public class CompactPopulation {
      */
     private int getWifeIndex(final CompactPartnership partnership) {
 
-        int partner1_index = partnership.getPartner1();
+        final int partner1_index = partnership.getPartner1();
         return !people[partner1_index].isMale() ? partner1_index : partnership.getPartner2();
     }
 }

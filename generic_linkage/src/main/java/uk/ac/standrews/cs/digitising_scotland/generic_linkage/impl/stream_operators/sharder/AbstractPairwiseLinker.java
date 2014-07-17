@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.stream_operations.sharder;
+package uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.stream_operators.sharder;
 
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.*;
 import uk.ac.standrews.cs.nds.util.ErrorHandling;

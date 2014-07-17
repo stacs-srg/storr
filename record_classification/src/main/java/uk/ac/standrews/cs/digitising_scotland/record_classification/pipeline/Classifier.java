@@ -13,7 +13,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.RecordFactory;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.vectors.VectorFactory;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.exceptions.InputFormatException;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.preprocessor.DataCleaning;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.preprocessor.LevenShteinCleaner;
 
 /**
  * The Class Classifier is a legacy class that will classify an uncoded batch of records stored in a file, 1 record per line.
@@ -48,7 +48,7 @@ public class Classifier {
     public Bucket classifyBucket() throws IOException, InputFormatException {
 
         Bucket toClassify = new Bucket(RecordFactory.makeUnCodedRecordsFromFile(fileToClassify));
-        DataCleaning.cleanData(toClassify);
+        LevenShteinCleaner.cleanData(toClassify);
 
         ClassificationPipeline pipeLine = new ClassificationPipeline();
         AbstractClassifier exactMatch = new ExactMatchClassifier();

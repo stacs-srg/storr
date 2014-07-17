@@ -18,8 +18,7 @@ package uk.ac.standrews.cs.digitising_scotland.population_model.model.in_memory;
 
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IDFactory;
 
-import java.util.ArrayList;
-import java.util.Collections;
+import javax.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -32,11 +31,11 @@ import java.util.List;
  */
 public class CompactPartnership implements Comparable<CompactPartnership> {
 
-    private int id;
+    private final int id;
 
-    private int partner1_index;
-    private int partner2_index;
-    private int marriage_date;
+    private final int partner1_index;
+    private final int partner2_index;
+    private final int marriage_date;
     private List<Integer> children;
     private boolean marked;
 
@@ -68,8 +67,8 @@ public class CompactPartnership implements Comparable<CompactPartnership> {
 
         this(partner1_index, partner2_index, marriage_date);
 
-        addPartnershipToPartner(partner1);
-        addPartnershipToPartner(partner2);
+        partner1.addPartnership(this);
+        partner2.addPartnership(this);
     }
 
     /**
@@ -113,36 +112,34 @@ public class CompactPartnership implements Comparable<CompactPartnership> {
         return partner2_index;
     }
 
-    public int compareTo(final CompactPartnership other) {
+    public int compareTo(final @Nonnull CompactPartnership other) {
 
-        // No need to override hashCode() since this does conform to the assumption that (p1.compareTo(p2) == 0) == (p1.equals(p2)) i.e. it only returns zero for equal objects.
+         final int this_date = getMarriageDate();
+        final int other_date = other.getMarriageDate();
 
-        final int date_difference = getMarriageDate() - other.getMarriageDate();
-        return date_difference != 0 ? date_difference : hashCode() - other.hashCode();
+        if (this_date < other_date) {
+            return -1;
+        }
+        if (this_date > other_date) {
+            return 1;
+        }
+        if (this == other) {
+            return 0;
+        }
+
+        return hashCode() < other.hashCode() ? -1 : 1;
     }
 
     @Override
     public boolean equals(final Object o) {
 
-        return this == o || !(o == null || !(o instanceof CompactPartnership)) && compareTo((CompactPartnership) o) == 0;
+        return this == o || o instanceof CompactPartnership && compareTo((CompactPartnership) o) == 0;
     }
 
     @Override
     public int hashCode() {
 
         return id;
-    }
-
-    private void addPartnershipToPartner(final CompactPerson person) {
-
-        synchronized (person) {
-            if (person.getPartnerships() == null) {
-                person.setPartnerships(new ArrayList<CompactPartnership>());
-            }
-            List<CompactPartnership> partnerships = person.getPartnerships();
-            partnerships.add(this);
-            Collections.sort(partnerships);
-        }
     }
 
     /**

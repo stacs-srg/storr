@@ -16,9 +16,9 @@
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.model.gedcom;
 
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.AbstractFilePopulationWriter;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPartnership;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPerson;
-import uk.ac.standrews.cs.digitising_scotland.population_model.model.PopulationToFile;
 import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
 
 import java.io.IOException;
@@ -34,7 +34,7 @@ import java.util.List;
  * @author Graham Kirby (graham.kirby@st-andrews.ac.uk)
  * @author Alan Dearle (alan.dearle@st-andrews.ac.uk)
  */
-public class PopulationToGEDCOM extends PopulationToFile {
+public class PopulationToGEDCOM extends AbstractFilePopulationWriter {
 
     private static final String CHAR_SET = "ASCII";
     private static final String GEDCOM_FORM = "LINEAGE-LINKED";
