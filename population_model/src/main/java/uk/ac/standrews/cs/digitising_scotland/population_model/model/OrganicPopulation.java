@@ -260,11 +260,11 @@ public class OrganicPopulation implements IPopulation {
 		}
     }
     
-    public boolean eligableToMarry(OrganicPerson male, OrganicPerson female) {
+    public boolean eligableToMarry(final OrganicPerson male, final OrganicPerson female) {
     	return PopulationLogic.partnerAgeDifferenceIsReasonable(DateManipulation.dateToDays(male.getBirthDate()), DateManipulation.dateToDays(female.getBirthDate()));
     }
     
-    public void marry(OrganicPerson husband, OrganicPerson wife, Date date) {
+    public void marry(final OrganicPerson husband, final OrganicPerson wife, Date date) {
     	// Create partnership
     	OrganicPartnership newPartnership = new OrganicPartnership(IDFactory.getNextID(), husband.getId(), wife.getId(), date);
     	partnerships.add(newPartnership);
