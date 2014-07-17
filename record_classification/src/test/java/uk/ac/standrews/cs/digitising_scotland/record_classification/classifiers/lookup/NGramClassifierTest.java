@@ -12,7 +12,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeTriple;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.RecordFactory;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.preprocessor.LevenShteinCleaner;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datacleaning.LevenShteinCleaner;
 
 /**
  * Test class to test {@link NGramClassifier}.

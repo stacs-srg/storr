@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.digitising_scotland.record_classification.preprocessor;
+package uk.ac.standrews.cs.digitising_scotland.record_classification.datacleaning;
 
 import java.io.IOException;
 import java.util.*;
@@ -15,7 +15,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.exceptions.I
  *
  * @author jkc25, frjd2
  */
-public class LevenShteinCleaner extends AbstractDataCleaning {
+public class LevenShteinCleaner extends AbstractDataCleaner {
 
     /**
      * The Constant SIMILARITY.
