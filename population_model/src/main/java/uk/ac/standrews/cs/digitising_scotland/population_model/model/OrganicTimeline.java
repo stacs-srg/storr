@@ -18,8 +18,8 @@ package uk.ac.standrews.cs.digitising_scotland.population_model.model;
 
 import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
 
-import java.util.HashMap;
 import java.util.Date;
+import java.util.HashMap;
 
 /**
  * Created by victor on 08/07/14.
@@ -33,16 +33,16 @@ public class OrganicTimeline {
 
     private HashMap<Integer, OrganicEvent> events = new HashMap<Integer, OrganicEvent>();
 
-    public OrganicTimeline(Date date) {
+    public OrganicTimeline(final Date date) {
         startDate = date;
     }
 
-    public OrganicTimeline(Date date1, Date date2) {
+    public OrganicTimeline(final Date date1, final Date date2) {
         startDate = date1;
         endDate = date2;
     }
 
-    public OrganicTimeline(Date date, int days) {
+    public OrganicTimeline(final Date date, final int days) {
         startDate = date;
         duration = days;
         //endDate = DateManipulation.daysToDate(DateManipulation.dateToDays(startDate) + days);
@@ -51,15 +51,15 @@ public class OrganicTimeline {
     public OrganicTimeline() {
     }
 
-    public void addEvent(int day, OrganicEvent event) {
+    public void addEvent(final int day, final OrganicEvent event) {
         events.put(day, event);
     }
 
-    public void removeEvent(int day) {
+    public void removeEvent(final int day) {
         events.remove(day);
     }
 
-    public void removeEvent(OrganicEvent event) {
+    public void removeEvent(final OrganicEvent event) {
         int removalKey = -1;
         for (int key : events.keySet()) {
             if (events.get(key).equals(event)) {
@@ -72,7 +72,7 @@ public class OrganicTimeline {
             events.remove(removalKey);
     }
 
-    public boolean isDateAvailable(Date date) {
+    public boolean isDateAvailable(final Date date) {
         int day = DateManipulation.dateToDays(date) - DateManipulation.dateToDays(startDate);
         return events.containsKey(day);
     }
@@ -81,7 +81,7 @@ public class OrganicTimeline {
         return startDate;
     }
 
-    public void setStartDate(Date startDate) {
+    public void setStartDate(final Date startDate) {
         this.startDate = startDate;
     }
 
@@ -89,7 +89,7 @@ public class OrganicTimeline {
         return endDate;
     }
 
-    public void setEndDate(Date endDate) {
+    public void setEndDate(final Date endDate) {
         this.endDate = endDate;
     }
 
@@ -97,7 +97,7 @@ public class OrganicTimeline {
         return duration;
     }
 
-    public void setDuration(int duration) {
+    public void setDuration(final int duration) {
         this.duration = duration;
     }
 
@@ -105,7 +105,7 @@ public class OrganicTimeline {
         return currentDay;
     }
 
-    public void setCurrentDay(int currentDay) {
+    public void setCurrentDay(final int currentDay) {
         this.currentDay = currentDay;
     }
 }

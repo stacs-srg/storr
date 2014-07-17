@@ -64,7 +64,7 @@ public class CompactPopulationAdapter implements IPopulation {
     }
 
     @Override
-    public void setDescription(String description) {
+    public void setDescription(final String description) {
         this.description = description;
     }
 
@@ -72,11 +72,11 @@ public class CompactPopulationAdapter implements IPopulation {
         return description;
     }
 
-    public static void setDefaultConsistentAcrossIterations(boolean default_consistent_across_iterations) {
+    public static void setDefaultConsistentAcrossIterations(final boolean default_consistent_across_iterations) {
         CompactPopulationAdapter.default_consistent_across_iterations = default_consistent_across_iterations;
     }
 
-    public void setConsistentAcrossIterations(boolean consistent_across_iterations) {
+    public void setConsistentAcrossIterations(final boolean consistent_across_iterations) {
         this.consistent_across_iterations = consistent_across_iterations;
     }
 
@@ -176,7 +176,7 @@ public class CompactPopulationAdapter implements IPopulation {
                     next_person = null;
                 }
 
-                private void recordChildrenWithSameSurnameIfMale(CompactPerson person) {
+                private void recordChildrenWithSameSurnameIfMale(final CompactPerson person) {
 
                     if (person.isMale()) {
 
@@ -200,7 +200,7 @@ public class CompactPopulationAdapter implements IPopulation {
                     }
                 }
 
-                private void markPerson(CompactPerson person) {
+                private void markPerson(final CompactPerson person) {
 
                     if (person != null) {
                         person.setMarked(true);

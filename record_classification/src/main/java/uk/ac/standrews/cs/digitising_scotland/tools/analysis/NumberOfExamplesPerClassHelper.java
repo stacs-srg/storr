@@ -190,13 +190,13 @@ public class NumberOfExamplesPerClassHelper {
      *
      * @param analyzer the analyzer
      * @param words the words
-     * @param in the in
+     * @param reader the in
      * @return words Collection<String> of all the words in the token strea that have not been removed by the analyzer
      * @throws IOException Signals that an I/O exception has occurred.
      */
-    public static Collection<String> getWords(final Analyzer analyzer, final Collection<String> words, final Reader in) throws IOException {
+    public static Collection<String> getWords(final Analyzer analyzer, final Collection<String> words, final Reader reader) throws IOException {
 
-        TokenStream ts = analyzer.reusableTokenStream("text", in);
+        TokenStream ts = analyzer.reusableTokenStream("text", reader);
         ts.addAttribute(CharTermAttribute.class);
         ts.reset();
         while (ts.incrementToken()) {

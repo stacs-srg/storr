@@ -186,7 +186,7 @@ public class AccuracyMetrics {
         if (precision < 0) {
             precision = tP / (tP + fP);
         }
-        if ((tP + fP) == 0) {
+        if (tP + fP == 0) {
             precision = 0;
         }
         return precision;

@@ -27,7 +27,7 @@ public class PopulationProperties {
     public static final String DEFAULT_DB_USERNAME = "ds_user";
     public static final String DEFAULT_DB_PASSWORD = "";
 
-    private static final String DEFAULT_DATABASE_NAME = "population";
+    public static final String DEFAULT_DATABASE_NAME = "population";
 
     public static final String PERSON_TABLE_NAME = "Person";
     public static final String PARTNERSHIP_TABLE_NAME = "Partnership";

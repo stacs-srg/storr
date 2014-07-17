@@ -16,7 +16,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
  */
 public class BucketClassifier {
 
-    private final Logger logger = LoggerFactory.getLogger(BucketClassifier.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(BucketClassifier.class);
 
     /** The record classifier. */
     private MachineLearningClassificationPipeline recordClassifier;
@@ -43,7 +43,7 @@ public class BucketClassifier {
         int count = 0;
         int total = bucket.size();
         for (Record record : bucket) {
-            logger.info("classifying record " + count + " of " + total);
+            LOGGER.info("classifying record " + count + " of " + total);
             Set<CodeTriple> result = recordClassifier.classify(record);
             record.addAllCodeTriples(result);
             count++;

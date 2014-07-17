@@ -21,12 +21,14 @@ package uk.ac.standrews.cs.digitising_scotland.util;
  */
 public class PercentageProgressIndicator extends ProgressIndicator {
 
+    private static final int HUNDRED_PERCENT = 100;
+
     public PercentageProgressIndicator(final int number_of_progress_updates) {
         super(number_of_progress_updates);
     }
 
     public void indicateProgress(final double proportion_complete) {
 
-        Diagnostic.traceNoSource(Math.round(proportion_complete * 100) + "%");
+        Diagnostic.traceNoSource(Math.round(proportion_complete * HUNDRED_PERCENT) + "%");
     }
 }

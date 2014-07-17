@@ -418,7 +418,7 @@ public final class Utils {
             return startPosition;
         }
         else {
-            return startPosition - (startPosition % (100 - percentTestFiles));
+            return startPosition - startPosition % (100 - percentTestFiles);
         }
 
     }

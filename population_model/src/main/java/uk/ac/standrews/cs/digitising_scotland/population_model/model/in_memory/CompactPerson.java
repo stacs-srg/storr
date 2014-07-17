@@ -83,18 +83,6 @@ public class CompactPerson {
     }
 
     /**
-     * Tests whether the given people are of opposite sex.
-     *
-     * @param person1 the first person
-     * @param person2 the second person
-     * @return true if the people are of opposite sex
-     */
-    public static boolean oppositeSex(final CompactPerson person1, final CompactPerson person2) {
-
-        return person1.isMale() != person2.isMale();
-    }
-
-    /**
      * Tests whether this person is male.
      *
      * @return true if this person is male

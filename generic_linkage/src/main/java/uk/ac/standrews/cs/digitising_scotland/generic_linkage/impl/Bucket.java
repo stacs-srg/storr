@@ -104,9 +104,8 @@ public class Bucket implements IBucket {
 
     @Override
     public boolean contains(int id) {
-        Path p = Paths.get(filePath(id));
-        File f = p.toFile();
-        return f.exists();
+
+        return Paths.get(filePath(id)).toFile().exists();
     }
 
     private Iterator<File> getFileIterator() {
@@ -135,9 +134,7 @@ public class Bucket implements IBucket {
             public ILXP next() {
 
                 try {
-                    int id = Integer.valueOf(file_iterator.next().getName());
-
-                    return get(id);
+                    return get(Integer.parseInt(file_iterator.next().getName()));
 
                 } catch (PersistentObjectException | IOException e) {
                     ErrorHandling.exceptionError(e, "Exception in iterator");
@@ -152,6 +149,4 @@ public class Bucket implements IBucket {
             }
         }
     }
-
-
 }

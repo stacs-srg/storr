@@ -5,18 +5,19 @@ import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.LXP;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.Repository;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.RepositoryException;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.stream_operations.sharder.AbstractPairwiseLinker;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.*;
+import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IBucket;
+import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXP;
+import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXPInputStream;
+import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXPOutputStream;
+import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IPair;
+import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IRepository;
 import uk.ac.standrews.cs.digitising_scotland.linkage.EventImporter;
 import uk.ac.standrews.cs.digitising_scotland.linkage.RecordFormatException;
 import uk.ac.standrews.cs.digitising_scotland.linkage.blocking.BlockingBFF_BFL_MPF_MPL;
-import uk.ac.standrews.cs.digitising_scotland.linkage.event_records.DeathRecord;
 import uk.ac.standrews.cs.digitising_scotland.linkage.labels.BirthLabels;
 import uk.ac.standrews.cs.nds.util.ErrorHandling;
 
 import java.io.IOException;
-import java.text.ParseException;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.Iterator;
 
 /**
@@ -139,73 +140,6 @@ public class BabyFatherResolver {
 
             return potential_father.get(BirthLabels.SURNAME).equals(fathers_surname) &&
                     potential_father.get(BirthLabels.FORENAME).equals(potential_child.get(BirthLabels.FATHERS_FORENAME));
-        }
-
-        private Date getdob(final ILXP record) throws RecordFormatException {
-
-            //TODO consider this -
-//        Object o = record.instatiateJavaInstance();
-//        if( o instanceof Birth )
-//
-//        VitalRecord rec = RecordFactory.createRecord(record);
-
-            if (record.get("TYPE").equals("birth")) {
-
-                String year_string = record.get("birth_year");
-                String month_string = record.get("birth_month");
-                String day_string = record.get("birth_day");
-
-                return fieldsToDate(year_string, month_string, day_string);
-            }
-
-            if (record.get("TYPE").equals("death")) {
-
-                String dob_string = record.get("date_of_birth");
-                if (dob_string != null) {
-                    try {
-                        return DeathRecord.parseDate(dob_string);
-                    } catch (ParseException e) {
-                        throw new RecordFormatException("error in birth date: " + dob_string);
-                    }
-
-                } else {
-
-                    // we don't have a dob - need to approximate
-
-                    String year_string = record.get("death_year");
-                    String month_string = record.get("death_month");
-                    String day_string = record.get("death_day");
-
-                    Date death_date = fieldsToDate(year_string, month_string, day_string);
-
-                    int age_in_years = Integer.parseInt(record.get("age_at_death"));
-
-                    Calendar cal = Calendar.getInstance();
-                    cal.setTime(death_date);
-                    cal.add(Calendar.YEAR, -age_in_years);
-                    return cal.getTime();
-                }
-            } else {
-                ErrorHandling.error("Found unexpected record type");
-                throw new RecordFormatException("error in date");
-            }
-        }
-
-        private Date fieldsToDate(final String year_string, final String month_string, final String day_string) throws RecordFormatException {
-
-            Calendar cal = Calendar.getInstance();
-            cal.clear();
-            try {
-                int year = Integer.parseInt(year_string);
-                int month = Integer.parseInt(month_string);
-                int day = Integer.parseInt(day_string);
-                cal.set(year, month, day);
-                return cal.getTime();
-
-            } catch (NumberFormatException e) {
-                ErrorHandling.error("Error parsing date (d/m/y) : " + day_string + "/" + month_string + "/" + year_string);
-                throw new RecordFormatException("error in date");
-            }
         }
 
         /**

@@ -40,9 +40,7 @@ public class BucketBackedInputStream implements ILXPInputStream {
         public ILXP next() {
 
             try {
-                int id = Integer.valueOf(file_iterator.next().getName());
-
-                return bucket.get(id);
+                return bucket.get(Integer.parseInt(file_iterator.next().getName()));
 
             } catch (PersistentObjectException | IOException e) {
                 ErrorHandling.exceptionError(e, "Exception in iterator");

@@ -179,7 +179,7 @@ public class HiscoDataFormatter {
                     innerStringBuilder.append(codings.getKey() + "\t" + current.getKey() + "\n");
                 }
             }
-            if ((variance < 0.9) && numberOfPopularClass > 25) {
+            if (variance < 0.9 && numberOfPopularClass > 25) {
                 //do nothing
             }
             else {

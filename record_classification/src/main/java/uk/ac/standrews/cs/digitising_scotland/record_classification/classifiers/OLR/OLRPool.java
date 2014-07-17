@@ -173,7 +173,7 @@ public class OLRPool implements Runnable {
 
         ArrayList<OLRShuffled> survivors = new ArrayList<OLRShuffled>();
         Collections.sort(modelPairs);
-        for (int i = (modelPairs.size() - 1); i >= modelPairs.size() - numSurvivors; i--) {
+        for (int i = modelPairs.size() - 1; i >= modelPairs.size() - numSurvivors; i--) {
             survivors.add(modelPairs.get(i).getModel());
         }
         return survivors;
@@ -184,21 +184,21 @@ public class OLRPool implements Runnable {
         modelTrainable = false;
     }
 
-    protected void write(final DataOutputStream out) throws IOException {
+    protected void write(final DataOutputStream outputStream) throws IOException {
 
-        out.writeInt(survivors.size());
+        outputStream.writeInt(survivors.size());
         for (OLRShuffled survivor : survivors) {
-            survivor.write(out);
+            survivor.write(outputStream);
         }
     }
 
-    protected void readFields(final DataInputStream in) throws IOException {
+    protected void readFields(final DataInputStream inputStream) throws IOException {
 
         survivors = new ArrayList<OLRShuffled>();
-        int numModels = in.readInt();
+        int numModels = inputStream.readInt();
         for (int i = 0; i < numModels; i++) {
             OLRShuffled olrShuffled = new OLRShuffled();
-            olrShuffled.readFields(in);
+            olrShuffled.readFields(inputStream);
             survivors.add(olrShuffled);
 
         }

@@ -29,7 +29,7 @@ public class OrganicEvent {
      * 
      * @param eventType Specifies the event type
      */
-    public OrganicEvent(EventType eventType) {
+    public OrganicEvent(final EventType eventType) {
     	this.eventType = eventType;
     }
     

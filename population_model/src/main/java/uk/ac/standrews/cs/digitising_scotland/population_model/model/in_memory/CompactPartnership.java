@@ -179,7 +179,7 @@ public class CompactPartnership implements Comparable<CompactPartnership> {
         return marked;
     }
 
-    public void setMarked(boolean marked) {
+    public void setMarked(final boolean marked) {
         this.marked = marked;
     }
 }

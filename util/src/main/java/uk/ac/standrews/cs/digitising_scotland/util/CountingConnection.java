@@ -52,7 +52,7 @@ public class CountingConnection implements Connection {
 
     private boolean debug = false;
 
-    public CountingConnection(String connection_string, String username, String password) throws SQLException {
+    public CountingConnection(final String connection_string, final String username, final String password) throws SQLException {
 
         connection = DriverManager.getConnection(connection_string, username, password);
 
@@ -64,7 +64,7 @@ public class CountingConnection implements Connection {
         }
     }
 
-    public void setDebug(boolean debug) {
+    public void setDebug(final boolean debug) {
         this.debug = debug;
     }
 
@@ -74,22 +74,22 @@ public class CountingConnection implements Connection {
     }
 
     @Override
-    public PreparedStatement prepareStatement(String sql) throws SQLException {
+    public PreparedStatement prepareStatement(final String sql) throws SQLException {
         return connection.prepareStatement(sql);
     }
 
     @Override
-    public CallableStatement prepareCall(String sql) throws SQLException {
+    public CallableStatement prepareCall(final String sql) throws SQLException {
         return connection.prepareCall(sql);
     }
 
     @Override
-    public String nativeSQL(String sql) throws SQLException {
+    public String nativeSQL(final String sql) throws SQLException {
         return connection.nativeSQL(sql);
     }
 
     @Override
-    public void setAutoCommit(boolean autoCommit) throws SQLException {
+    public void setAutoCommit(final boolean autoCommit) throws SQLException {
         connection.setAutoCommit(autoCommit);
     }
 
@@ -131,7 +131,7 @@ public class CountingConnection implements Connection {
     }
 
     @Override
-    public void setReadOnly(boolean readOnly) throws SQLException {
+    public void setReadOnly(final boolean readOnly) throws SQLException {
         connection.setReadOnly(readOnly);
     }
 
@@ -141,7 +141,7 @@ public class CountingConnection implements Connection {
     }
 
     @Override
-    public void setCatalog(String catalog) throws SQLException {
+    public void setCatalog(final String catalog) throws SQLException {
         connection.setCatalog(catalog);
     }
 
@@ -151,7 +151,7 @@ public class CountingConnection implements Connection {
     }
 
     @Override
-    public void setTransactionIsolation(int level) throws SQLException {
+    public void setTransactionIsolation(final int level) throws SQLException {
         connection.setTransactionIsolation(level);
     }
 
@@ -172,17 +172,17 @@ public class CountingConnection implements Connection {
     }
 
     @Override
-    public Statement createStatement(int resultSetType, int resultSetConcurrency) throws SQLException {
+    public Statement createStatement(final int resultSetType, final int resultSetConcurrency) throws SQLException {
         return connection.createStatement(resultSetType, resultSetConcurrency);
     }
 
     @Override
-    public PreparedStatement prepareStatement(String sql, int resultSetType, int resultSetConcurrency) throws SQLException {
+    public PreparedStatement prepareStatement(final String sql, final int resultSetType, final int resultSetConcurrency) throws SQLException {
         return connection.prepareStatement(sql, resultSetType, resultSetConcurrency);
     }
 
     @Override
-    public CallableStatement prepareCall(String sql, int resultSetType, int resultSetConcurrency) throws SQLException {
+    public CallableStatement prepareCall(final String sql, final int resultSetType, final int resultSetConcurrency) throws SQLException {
         return connection.prepareCall(sql, resultSetType, resultSetConcurrency);
     }
 
@@ -197,7 +197,7 @@ public class CountingConnection implements Connection {
     }
 
     @Override
-    public void setHoldability(int holdability) throws SQLException {
+    public void setHoldability(final int holdability) throws SQLException {
         connection.setHoldability(holdability);
     }
 
@@ -212,47 +212,47 @@ public class CountingConnection implements Connection {
     }
 
     @Override
-    public Savepoint setSavepoint(String name) throws SQLException {
+    public Savepoint setSavepoint(final String name) throws SQLException {
         return connection.setSavepoint(name);
     }
 
     @Override
-    public void rollback(Savepoint savepoint) throws SQLException {
+    public void rollback(final Savepoint savepoint) throws SQLException {
         connection.rollback(savepoint);
     }
 
     @Override
-    public void releaseSavepoint(Savepoint savepoint) throws SQLException {
+    public void releaseSavepoint(final Savepoint savepoint) throws SQLException {
         connection.releaseSavepoint(savepoint);
     }
 
     @Override
-    public Statement createStatement(int resultSetType, int resultSetConcurrency, int resultSetHoldability) throws SQLException {
+    public Statement createStatement(final int resultSetType, final int resultSetConcurrency, final int resultSetHoldability) throws SQLException {
         return connection.createStatement(resultSetType, resultSetConcurrency, resultSetHoldability);
     }
 
     @Override
-    public PreparedStatement prepareStatement(String sql, int resultSetType, int resultSetConcurrency, int resultSetHoldability) throws SQLException {
+    public PreparedStatement prepareStatement(final String sql, final int resultSetType, final int resultSetConcurrency, final int resultSetHoldability) throws SQLException {
         return connection.prepareStatement(sql, resultSetType, resultSetConcurrency, resultSetHoldability);
     }
 
     @Override
-    public CallableStatement prepareCall(String sql, int resultSetType, int resultSetConcurrency, int resultSetHoldability) throws SQLException {
+    public CallableStatement prepareCall(final String sql, final int resultSetType, final int resultSetConcurrency, final int resultSetHoldability) throws SQLException {
         return connection.prepareCall(sql, resultSetType, resultSetConcurrency, resultSetHoldability);
     }
 
     @Override
-    public PreparedStatement prepareStatement(String sql, int autoGeneratedKeys) throws SQLException {
+    public PreparedStatement prepareStatement(final String sql, final int autoGeneratedKeys) throws SQLException {
         return connection.prepareStatement(sql, autoGeneratedKeys);
     }
 
     @Override
-    public PreparedStatement prepareStatement(String sql, int[] columnIndexes) throws SQLException {
+    public PreparedStatement prepareStatement(final String sql, final int[] columnIndexes) throws SQLException {
         return connection.prepareStatement(sql, columnIndexes);
     }
 
     @Override
-    public PreparedStatement prepareStatement(String sql, String[] columnNames) throws SQLException {
+    public PreparedStatement prepareStatement(final String sql, final String[] columnNames) throws SQLException {
         return connection.prepareStatement(sql, columnNames);
     }
 
@@ -277,22 +277,22 @@ public class CountingConnection implements Connection {
     }
 
     @Override
-    public boolean isValid(int timeout) throws SQLException {
+    public boolean isValid(final int timeout) throws SQLException {
         return connection.isValid(timeout);
     }
 
     @Override
-    public void setClientInfo(String name, String value) throws SQLClientInfoException {
+    public void setClientInfo(final String name, final String value) throws SQLClientInfoException {
         connection.setClientInfo(name, value);
     }
 
     @Override
-    public void setClientInfo(Properties properties) throws SQLClientInfoException {
+    public void setClientInfo(final Properties properties) throws SQLClientInfoException {
         connection.setClientInfo(properties);
     }
 
     @Override
-    public String getClientInfo(String name) throws SQLException {
+    public String getClientInfo(final String name) throws SQLException {
         return connection.getClientInfo(name);
     }
 
@@ -302,17 +302,17 @@ public class CountingConnection implements Connection {
     }
 
     @Override
-    public Array createArrayOf(String typeName, Object[] elements) throws SQLException {
+    public Array createArrayOf(final String typeName, final Object[] elements) throws SQLException {
         return connection.createArrayOf(typeName, elements);
     }
 
     @Override
-    public Struct createStruct(String typeName, Object[] attributes) throws SQLException {
+    public Struct createStruct(final String typeName, final Object[] attributes) throws SQLException {
         return connection.createStruct(typeName, attributes);
     }
 
     @Override
-    public void setSchema(String schema) throws SQLException {
+    public void setSchema(final String schema) throws SQLException {
         connection.setSchema(schema);
     }
 
@@ -322,12 +322,12 @@ public class CountingConnection implements Connection {
     }
 
     @Override
-    public void abort(Executor executor) throws SQLException {
+    public void abort(final Executor executor) throws SQLException {
         connection.abort(executor);
     }
 
     @Override
-    public void setNetworkTimeout(Executor executor, int milliseconds) throws SQLException {
+    public void setNetworkTimeout(final Executor executor, final int milliseconds) throws SQLException {
         connection.setNetworkTimeout(executor, milliseconds);
     }
 
@@ -337,12 +337,12 @@ public class CountingConnection implements Connection {
     }
 
     @Override
-    public <T> T unwrap(Class<T> iface) throws SQLException {
+    public <T> T unwrap(final Class<T> iface) throws SQLException {
         return connection.unwrap(iface);
     }
 
     @Override
-    public boolean isWrapperFor(Class<?> iface) throws SQLException {
+    public boolean isWrapperFor(final Class<?> iface) throws SQLException {
         return connection.isWrapperFor(iface);
     }
 }

@@ -59,13 +59,15 @@ public class AccessDatabaseDumper {
     /**
      * Writes each table in the database to file. Each table has its own file with the table name in
      * a folder with the same name as the parent database.
+     * @param baseDirectory Base directory in which to create database folder
      *
      * @throws IOException Signals that an I/O exception has occurred.
      */
-    public void writeTablesToFile() throws IOException {
+    public void writeTablesToFile(String baseDirectory) throws IOException {
 
         final String name = database.getFile().getName();
-        File databaseFolder = new File(name.substring(0, name.length() - 4));
+        final int fileExtensionLength = 4;
+        File databaseFolder = new File(baseDirectory + name.substring(0, name.length() - fileExtensionLength));
         if (!databaseFolder.mkdirs()) {
             LOGGER.error("Could not create database storage folder");
         }
@@ -89,6 +91,6 @@ public class AccessDatabaseDumper {
     public static void main(final String[] args) throws IOException {
 
         AccessDatabaseDumper reader = new AccessDatabaseDumper(args[0]);
-        reader.writeTablesToFile();
+        reader.writeTablesToFile("target/");
     }
 }

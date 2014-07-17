@@ -189,8 +189,7 @@ public class DictionaryStatHelper {
      */
     public int getUniqueWordsOriginal() {
 
-        int uniqueWords = 0;
-        uniqueWords = originalMap.size();
+        int uniqueWords = originalMap.size();
         return uniqueWords;
     }
 
@@ -201,8 +200,7 @@ public class DictionaryStatHelper {
      */
     public int getUniqueWordsCorrected() {
 
-        int uniqueWords = 0;
-        uniqueWords = correctedMap.size();
+        int uniqueWords = correctedMap.size();
         return uniqueWords;
     }
 

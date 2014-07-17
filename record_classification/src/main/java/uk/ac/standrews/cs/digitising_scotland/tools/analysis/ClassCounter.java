@@ -55,7 +55,7 @@ public class ClassCounter {
      */
     public ClassCounter(final File input, final int classColumn) {
 
-        this.input = (input);
+        this.input = input;
         this.classColumn = classColumn;
     }
 

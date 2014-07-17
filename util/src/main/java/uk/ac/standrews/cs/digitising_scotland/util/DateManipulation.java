@@ -136,7 +136,7 @@ public class DateManipulation {
         return formatDate(daysToDate(days));
     }
 
-    public static synchronized String formatDate(final Date date, SimpleDateFormat formatter) {
+    public static synchronized String formatDate(final Date date, final SimpleDateFormat formatter) {
 
         return formatter.format(date);
     }
@@ -146,7 +146,7 @@ public class DateManipulation {
         return formatDate(date, DATE_FORMAT);
     }
 
-    public static synchronized Date parseDate(final String date_string, SimpleDateFormat formatter) throws ParseException {
+    public static synchronized Date parseDate(final String date_string, final SimpleDateFormat formatter) throws ParseException {
 
         return formatter.parse(date_string);
     }

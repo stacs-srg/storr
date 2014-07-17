@@ -68,7 +68,7 @@ public class CompactPersonAdapter {
         generateNextSurname();
     }
 
-    public IPerson convertToFullPerson(final CompactPerson person, int parents_partnership_id) {
+    public IPerson convertToFullPerson(final CompactPerson person, final int parents_partnership_id) {
 
         return person != null ? new FullPerson(person, current_surname, parents_partnership_id) : null;
     }
@@ -80,7 +80,7 @@ public class CompactPersonAdapter {
 
     private class FullPerson extends AbstractPerson {
 
-        public FullPerson(CompactPerson person, String surname, int parents_partnership_id) {
+        public FullPerson(final CompactPerson person, final String surname, final int parents_partnership_id) {
 
             id = person.getId();
             sex = person.getSex();

@@ -7,12 +7,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.util.Version;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.machinelearning.tokenizing.TokenStreamIterator;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.machinelearning.tokenizing.TokenStreamIteratorFactory;
 import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
 
 import com.google.common.collect.HashMultiset;

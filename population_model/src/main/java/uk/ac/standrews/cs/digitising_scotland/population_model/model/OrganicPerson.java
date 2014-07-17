@@ -18,6 +18,7 @@ package uk.ac.standrews.cs.digitising_scotland.population_model.model;
 
 import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -32,12 +33,12 @@ public class OrganicPerson implements IPerson {
     private String lastName;
     private char sex;
     private int age_in_days;
-    private List<Integer> partnerships;
+    private ArrayList<Integer> partnerships = new ArrayList<Integer>();
 
     //    private int daysToLive = DateManipulation.dateToDays(dateOfDeath) -  DateManipulation.dateToDays(dateOfBirth);
     private OrganicTimeline timeline = null;
 
-    public int getDayOfLife(Date date) {
+    public int getDayOfLife(final Date date) {
         int day = DateManipulation.dateToDays(date) - DateManipulation.dateToDays(getBirthDate());
         return day;
     }
@@ -46,16 +47,16 @@ public class OrganicPerson implements IPerson {
         setTimeline(null);
     }
 
-    public OrganicPerson(char sex) {
+    public OrganicPerson(final char sex) {
         this.sex = sex;
     }
 
-    public OrganicPerson(int age, char sex) {
+    public OrganicPerson(final int id, final char sex) {
         this.sex = sex;
-        age_in_days = age;
+        this.id = id;
     }
 
-    public void setTimeline(OrganicTimeline t) {
+    public void setTimeline(final OrganicTimeline t) {
         this.timeline = t;
     }
 
@@ -68,6 +69,10 @@ public class OrganicPerson implements IPerson {
 //		
 //    	return null;	
 //    }
+    
+    public void addPartnership(final int id) {
+    	partnerships.add(id);
+    }
 
     /**
      * INTERFACE METHODS

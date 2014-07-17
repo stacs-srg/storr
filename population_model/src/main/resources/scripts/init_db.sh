@@ -1,5 +1,5 @@
 #!/bin/sh
-#
+
 # Copyright 2014 Digitising Scotland project:
 # <http://digitisingscotland.cs.st-andrews.ac.uk/>
 #
@@ -14,7 +14,7 @@
 #
 # You should have received a copy of the GNU General Public License along with population_model. If not, see
 # <http://www.gnu.org/licenses/>.
-#
+
 # TODO add scripts to print number of people in db
 
 if [ -n "$1" ];

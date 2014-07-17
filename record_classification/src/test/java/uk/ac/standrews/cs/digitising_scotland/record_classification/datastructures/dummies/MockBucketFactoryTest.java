@@ -22,7 +22,7 @@ public class MockBucketFactoryTest {
     }
 
     @Test
-    public void dummyBucket_HasCorrectSizeTest() {
+    public void dummyBucketHasCorrectSizeTest() {
 
         Bucket dummyBucket = mockBucketFactory.generateBucketWithDummyRecords(10);
         assertEquals(10, dummyBucket.size());
