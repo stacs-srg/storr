@@ -27,14 +27,15 @@ import uk.ac.standrews.cs.digitising_scotland.population_model.util.RandomFactor
 import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
-import java.util.Date;
 
 /**
  * Created by victor on 11/06/14.
+ *
  * @author Tom Dalton (tsd4@st-andrews.ac.uk)
  */
 public class OrganicPopulation implements IPopulation {
@@ -71,7 +72,7 @@ public class OrganicPopulation implements IPopulation {
     private static final int DECEMBER_INDEX = 11;
 
     private static int DEFAULT_STEP_SIZE = 1;
-    
+
     boolean firstMale = true;
     boolean firstFemale = true;
 
@@ -81,18 +82,17 @@ public class OrganicPopulation implements IPopulation {
     private Distribution<Integer> age_at_death_distribution = new AgeAtDeathDistribution(random);
     private Distribution<Integer> maleAgeAtMarriageDistrobution = new MaleAgeAtMarriageDistribution(random);
     private Distribution<Integer> femaleAgeAtMarriageDistrobution = new FemaleAgeAtMarriageDistribution(random);
-    
 
     private List<OrganicPerson> people = new ArrayList<OrganicPerson>();
     private List<OrganicPartnership> partnerships = new ArrayList<OrganicPartnership>();
-    
-    private LinkedList<OrganicPerson> maleParnershipQueue = new LinkedList<OrganicPerson>();
-    private LinkedList<OrganicPerson> femaleParnershipQueue = new LinkedList<OrganicPerson>();
-    
+
+    private LinkedList<OrganicPerson> malePartnershipQueue = new LinkedList<OrganicPerson>();
+    private LinkedList<OrganicPerson> femalePartnershipQueue = new LinkedList<OrganicPerson>();
+
     private LinkedList<Integer> maleInitialPartnershipOrderer = new LinkedList<Integer>();
     private LinkedList<Integer> femaleInitialPartnershipOrderer = new LinkedList<Integer>();
 
-    public void makeSeed(int size) {
+    public void makeSeed(final int size) {
 
         for (int i = 0; i < size; i++) {
 
@@ -109,13 +109,13 @@ public class OrganicPopulation implements IPopulation {
 
     public void generate_timelines() {
 
-        UniformDistribution days_of_year_distribution = new UniformDistribution(1, (int) DAYS_PER_YEAR, random);
+        final UniformDistribution days_of_year_distribution = new UniformDistribution(1, (int) DAYS_PER_YEAR, random);
 
         for (int i = 0; i < people.size(); i++) {
             if (people.get(i).getTimeline() == null) {
                 OrganicPerson currentPerson = people.get(i);
                 OrganicTimeline currentTimeline;
-                
+
                 //Math for dates of birth and death
                 Date currentDateOfBirth;
                 int age = seed_age_distribution.getSample();
@@ -125,108 +125,108 @@ public class OrganicPopulation implements IPopulation {
                 currentDateOfBirth = DateManipulation.daysToDate(auxiliary);
 
                 Distribution<Integer> seed_death_distribution = new UniformDistribution(age, 100, random);
-                auxiliary = DateManipulation.dateToDays(START_YEAR,1,1) + (seed_death_distribution.getSample() - age)*(int)DAYS_PER_YEAR;
+                auxiliary = DateManipulation.dateToDays(START_YEAR, 1, 1) + (seed_death_distribution.getSample() - age) * (int) DAYS_PER_YEAR;
                 Date currentDateOfDeath = DateManipulation.daysToDate(auxiliary);
 
 
                 currentTimeline = new OrganicTimeline(currentDateOfBirth, currentDateOfDeath);
-                
+
                 // Add ELIGIBLE_TO_MARRY event
                 int date;
-                if(currentPerson.getSex() == 'M') {
-                	// time in days to birth from 1/1/1600 + marriage age in days
-                	date = DateManipulation.dateToDays(currentTimeline.getStartDate()) + maleAgeAtMarriageDistrobution.getSample();
-                	currentTimeline.addEvent(date , new OrganicEvent(EventType.ELIGIBLE_TO_MARRY));
+                if (currentPerson.getSex() == 'M') {
+                    // time in days to birth from 1/1/1600 + marriage age in days
+                    date = DateManipulation.dateToDays(currentTimeline.getStartDate()) + maleAgeAtMarriageDistrobution.getSample();
+                    currentTimeline.addEvent(date, new OrganicEvent(EventType.ELIGIBLE_TO_MARRY));
                 } else {
-                	// time in days to birth from 1/1/1600 + marriage age in days
-                	date = DateManipulation.dateToDays(currentTimeline.getStartDate()) + maleAgeAtMarriageDistrobution.getSample();
-                	currentTimeline.addEvent(date, new OrganicEvent(EventType.ELIGIBLE_TO_MARRY));
+                    // time in days to birth from 1/1/1600 + marriage age in days
+                    date = DateManipulation.dateToDays(currentTimeline.getStartDate()) + maleAgeAtMarriageDistrobution.getSample();
+                    currentTimeline.addEvent(date, new OrganicEvent(EventType.ELIGIBLE_TO_MARRY));
                 }
                 // If marriage date is before simulation start date then add to respective partnership queue
                 //  Must be added to the partnership queue in the order that would be expected if simulation had occurred naturally.
-                if(date <= DateManipulation.dateToDays(START_YEAR, 0, 0)) {
-                	if(currentPerson.getSex() == 'M') {
-                		if(firstMale) {
-                			maleInitialPartnershipOrderer.add(date);
-                			maleParnershipQueue.add(currentPerson);
-                			firstMale = false;
-                		} else {
-	                		Iterator iter = maleInitialPartnershipOrderer.iterator();
-	                		int count = 0;
-	                		while (iter.hasNext()) {
-								if(date < (Integer)iter.next()) {
-									maleInitialPartnershipOrderer.add(count, date);
-									maleParnershipQueue.add(count, currentPerson);
-									break;
-								}
-								count++;
-							}
-                		}
-                	} else if(currentPerson.getSex() == 'F') {
-                		if(firstFemale) {
-                			femaleInitialPartnershipOrderer.add(date);
-                			femaleParnershipQueue.add(currentPerson);
-                			firstFemale = false;
-                		} else {
-                			Iterator iter = femaleInitialPartnershipOrderer.iterator();
-	                		int count = 0;
-	                		while (iter.hasNext()) {
-								if(date < (Integer)iter.next()) {
-									femaleInitialPartnershipOrderer.add(count, date);
-									femaleParnershipQueue.add(count, currentPerson);
-									break;
-								}
-								count++;
-	                		}
-                		}
-                	} 
+                if (date <= DateManipulation.dateToDays(START_YEAR, 0, 0)) {
+                    if (currentPerson.getSex() == 'M') {
+                        if (firstMale) {
+                            maleInitialPartnershipOrderer.add(date);
+                            malePartnershipQueue.add(currentPerson);
+                            firstMale = false;
+                        } else {
+                            Iterator iter = maleInitialPartnershipOrderer.iterator();
+                            int count = 0;
+                            while (iter.hasNext()) {
+                                if (date < (Integer) iter.next()) {
+                                    maleInitialPartnershipOrderer.add(count, date);
+                                    malePartnershipQueue.add(count, currentPerson);
+                                    break;
+                                }
+                                count++;
+                            }
+                        }
+                    } else if (currentPerson.getSex() == 'F') {
+                        if (firstFemale) {
+                            femaleInitialPartnershipOrderer.add(date);
+                            femalePartnershipQueue.add(currentPerson);
+                            firstFemale = false;
+                        } else {
+                            Iterator iter = femaleInitialPartnershipOrderer.iterator();
+                            int count = 0;
+                            while (iter.hasNext()) {
+                                if (date < (Integer) iter.next()) {
+                                    femaleInitialPartnershipOrderer.add(count, date);
+                                    femalePartnershipQueue.add(count, currentPerson);
+                                    break;
+                                }
+                                count++;
+                            }
+                        }
+                    }
                 }
-                currentPerson.setTimeline(currentTimeline);               
+                currentPerson.setTimeline(currentTimeline);
             }
         }
         marryUpSeedPeople();
         maleInitialPartnershipOrderer.clear();
         femaleInitialPartnershipOrderer.clear();
     }
-    
+
     public void marryUpSeedPeople() {
-    	int count = 0;
-    	while (!maleParnershipQueue.isEmpty()) {
-			if(!femaleParnershipQueue.isEmpty()) {
-				// Calculate marriage date
-				// Finds first day both were eligible to marry
-				int firstDay = maleInitialPartnershipOrderer.getFirst();
-				if(femaleInitialPartnershipOrderer.getFirst() > firstDay)
-					firstDay = femaleInitialPartnershipOrderer.getFirst();
-				
-				Date date = DateManipulation.daysToDate(firstDay);
-				marry(maleParnershipQueue.getFirst(),femaleParnershipQueue.getFirst(),date);
-				
-				// remove people from queues
-				maleParnershipQueue.removeFirst();
-				maleInitialPartnershipOrderer.removeFirst();
-				femaleParnershipQueue.removeFirst();
-				femaleInitialPartnershipOrderer.removeFirst();
-			} else
-				break;
-			count++;
-			
-		}
+        int count = 0;
+        while (!malePartnershipQueue.isEmpty()) {
+            if (!femalePartnershipQueue.isEmpty()) {
+                // Calculate marriage date
+                // Finds first day both were eligible to marry
+                int firstDay = maleInitialPartnershipOrderer.getFirst();
+                if (femaleInitialPartnershipOrderer.getFirst() > firstDay)
+                    firstDay = femaleInitialPartnershipOrderer.getFirst();
+
+                Date date = DateManipulation.daysToDate(firstDay);
+                marry(malePartnershipQueue.getFirst(), femalePartnershipQueue.getFirst(), date);
+
+                // remove people from queues
+                malePartnershipQueue.removeFirst();
+                maleInitialPartnershipOrderer.removeFirst();
+                femalePartnershipQueue.removeFirst();
+                femaleInitialPartnershipOrderer.removeFirst();
+            } else
+                break;
+            count++;
+
+        }
     }
-    
-    public void marry(OrganicPerson husband, OrganicPerson wife, Date date) {
-    	// Create partnership
-    	OrganicPartnership newPartnership = new OrganicPartnership(IDFactory.getNextID(), husband.getId(), wife.getId(), date);
-    	partnerships.add(newPartnership);
-    	husband.addPartnership(newPartnership.getId());
-    	wife.addPartnership(newPartnership.getId());
+
+    public void marry(final OrganicPerson husband, final OrganicPerson wife, final Date date) {
+        // Create partnership
+        OrganicPartnership newPartnership = new OrganicPartnership(IDFactory.getNextID(), husband.getId(), wife.getId(), date);
+        partnerships.add(newPartnership);
+        husband.addPartnership(newPartnership.getId());
+        wife.addPartnership(newPartnership.getId());
     }
 
     public void mainIteration() {
         mainIteration(DEFAULT_STEP_SIZE);
     }
 
-    public void mainIteration(int timeStepSizeInDays) {
+    public void mainIteration(final int timeStepSizeInDays) {
 
     }
 
@@ -242,7 +242,7 @@ public class OrganicPopulation implements IPopulation {
 
                 final Iterator iterator = people.iterator();
 
-                return new Iterator<IPerson>(){
+                return new Iterator<IPerson>() {
 
                     @Override
                     public boolean hasNext() {
@@ -251,7 +251,7 @@ public class OrganicPopulation implements IPopulation {
 
                     @Override
                     public IPerson next() {
-                        return (IPerson)iterator.next();
+                        return (IPerson) iterator.next();
                     }
 
                     @Override
@@ -259,7 +259,9 @@ public class OrganicPopulation implements IPopulation {
                         iterator.remove();
                     }
                 };
-            };
+            }
+
+            ;
         };
     }
 
@@ -271,7 +273,7 @@ public class OrganicPopulation implements IPopulation {
 
                 final Iterator iterator = partnerships.iterator();
 
-                return new Iterator<IPartnership>(){
+                return new Iterator<IPartnership>() {
 
                     @Override
                     public boolean hasNext() {
@@ -280,43 +282,49 @@ public class OrganicPopulation implements IPopulation {
 
                     @Override
                     public IPartnership next() {
-                        return (IPartnership)iterator.next();
-    }
+                        return (IPartnership) iterator.next();
+                    }
 
-    @Override
+                    @Override
                     public void remove() {
                         iterator.remove();
                     }
                 };
-            };
+            }
+
+            ;
         };
     }
 
     @Override
-    public IPerson findPerson(int id) {
+    public IPerson findPerson(final int id) {
         int index, binaryStep;
-        for(binaryStep = 1 ; binaryStep<people.size() ; binaryStep <<= 1);
-        for(index = 0 ; binaryStep != 0 ; binaryStep >>=1) {
+        for (binaryStep = 1; binaryStep < people.size(); binaryStep <<= 1) ;
+        for (index = 0; binaryStep != 0; binaryStep >>= 1) {
             if (index + binaryStep < people.size() && people.get(index + binaryStep).getId() <= id) {
                 index += binaryStep;
             }
         }
-        if(people.get(index).getId() == id) { return people.get(index); }
+        if (people.get(index).getId() == id) {
+            return people.get(index);
+        }
 
         return null;
     }
 
     @Override
-    public IPartnership findPartnership(int id) {
+    public IPartnership findPartnership(final int id) {
         int index, binaryStep;
-        for(binaryStep = 1 ; binaryStep<partnerships.size() ; binaryStep <<= 1);
-        for(index = 0 ; binaryStep != 0 ; binaryStep >>=1) {
+        for (binaryStep = 1; binaryStep < partnerships.size(); binaryStep <<= 1) ;
+        for (index = 0; binaryStep != 0; binaryStep >>= 1) {
             if (index + binaryStep < partnerships.size() && partnerships.get(index + binaryStep).getId() <= id) {
                 index += binaryStep;
-    }
+            }
         }
-        if(partnerships.get(index).getId() == id) { return partnerships.get(index); }
-    
+        if (partnerships.get(index).getId() == id) {
+            return partnerships.get(index);
+        }
+
         return null;
     }
 
@@ -331,39 +339,39 @@ public class OrganicPopulation implements IPopulation {
     }
 
     @Override
-    public void setDescription(String description) {
+    public void setDescription(final String description) {
         this.description = description;
     }
 
     @Override
-    public void setConsistentAcrossIterations(boolean consistent_across_iterations) {
+    public void setConsistentAcrossIterations(final boolean consistent_across_iterations) {
 
     }
 
     //Testing purposes
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         System.out.println("--------MAIN HERE---------");
         OrganicPopulation op = new OrganicPopulation();
         op.makeSeed();
         op.generate_timelines();
-        
+
         System.out.println("--------PEOPLE--------");
         for (int i = 0; i < op.getNumberOfPeople(); i++) {
-        	System.out.println();
+            System.out.println();
             System.out.println("BORN: " + op.people.get(i).getBirthDate());
             System.out.println("DIED: " + op.people.get(i).getDeathDate());
-            int x = (DateManipulation.dateToDays(op.people.get(i).getDeathDate()) - DateManipulation.dateToDays(op.people.get(i).getBirthDate()))/365;
+            int x = (DateManipulation.dateToDays(op.people.get(i).getDeathDate()) - DateManipulation.dateToDays(op.people.get(i).getBirthDate())) / 365;
             System.out.println("ALIVE FOR: " + x);
             System.out.println();
         }
-        
+
         System.out.println("--------PARTNERSHIPS--------");
-        for(int i = 0; i < op.getNumberOfPartnerships(); i++) {
-        	System.out.println();
-        	System.out.println("Husband: " + op.partnerships.get(i).getMalePartnerId());
-        	System.out.println("Wife: " + op.partnerships.get(i).getFemalePartnerId());
-        	System.out.println("Date: " + op.partnerships.get(i).getMarriageDate());
+        for (int i = 0; i < op.getNumberOfPartnerships(); i++) {
+            System.out.println();
+            System.out.println("Husband: " + op.partnerships.get(i).getMalePartnerId());
+            System.out.println("Wife: " + op.partnerships.get(i).getFemalePartnerId());
+            System.out.println("Date: " + op.partnerships.get(i).getMarriageDate());
         }
-        
+
     }
 }

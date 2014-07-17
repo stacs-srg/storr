@@ -38,7 +38,7 @@ public class OrganicPerson implements IPerson {
     //    private int daysToLive = DateManipulation.dateToDays(dateOfDeath) -  DateManipulation.dateToDays(dateOfBirth);
     private OrganicTimeline timeline = null;
 
-    public int getDayOfLife(Date date) {
+    public int getDayOfLife(final Date date) {
         int day = DateManipulation.dateToDays(date) - DateManipulation.dateToDays(getBirthDate());
         return day;
     }
@@ -47,16 +47,16 @@ public class OrganicPerson implements IPerson {
         setTimeline(null);
     }
 
-    public OrganicPerson(char sex) {
+    public OrganicPerson(final char sex) {
         this.sex = sex;
     }
 
-    public OrganicPerson(int id, char sex) {
+    public OrganicPerson(final int id, final char sex) {
         this.sex = sex;
         this.id = id;
     }
 
-    public void setTimeline(OrganicTimeline t) {
+    public void setTimeline(final OrganicTimeline t) {
         this.timeline = t;
     }
 
@@ -70,7 +70,7 @@ public class OrganicPerson implements IPerson {
 //    	return null;	
 //    }
     
-    public void addPartnership(Integer id) {
+    public void addPartnership(final int id) {
     	partnerships.add(id);
     }
 

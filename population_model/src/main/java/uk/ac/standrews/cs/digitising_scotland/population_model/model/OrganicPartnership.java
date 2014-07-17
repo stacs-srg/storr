@@ -24,82 +24,81 @@ import java.util.List;
  * Created by victor on 08/07/14.
  */
 public class OrganicPartnership implements IPartnership {
-	
-	private Integer id;
-	private Integer husband;
-	private Integer wife;
-	private OrganicTimeline timeline;
-	private Date marriageDate;
-	private List<Integer> childrenIds = null;
-	
-	public OrganicPartnership(Integer id, Integer husbandId, Integer wifeId, Date marriageDate) {
-		this.id = id;
-		this.husband = husbandId;
-		this.wife = wifeId;
-		this.marriageDate = marriageDate;
-		timeline = createPartnershipTimeline();
-	}
-	
-	public OrganicTimeline createPartnershipTimeline() {
-		OrganicTimeline timeline = new OrganicTimeline();
-		// This needs a distribution creating
-		timeline.addEvent(400, new OrganicEvent(EventType.BIRTH));
-		// Need a divorce event as well
-		
-		return timeline;
-	}
-	
-	public OrganicTimeline getTimeline() {
-		return timeline;
-	}
 
-	@Override
-	public int compareTo(IPartnership arg0) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+    private Integer id;
+    private Integer husband;
+    private Integer wife;
+    private OrganicTimeline timeline;
+    private Date marriageDate;
+    private List<Integer> childrenIds = null;
 
-	@Override
-	public int getId() {
-		return id;
-	}
+    public OrganicPartnership(final int id, final int husbandId, final int wifeId, Date marriageDate) {
 
-	@Override
-	public int getFemalePartnerId() {
-		return wife;
-	}
+        this.id = id;
+        this.husband = husbandId;
+        this.wife = wifeId;
+        this.marriageDate = marriageDate;
+        timeline = createPartnershipTimeline();
+    }
 
-	@Override
-	public int getMalePartnerId() {
-		return husband;
-	}
+    public OrganicTimeline createPartnershipTimeline() {
 
-	@Override
-	public int getPartnerOf(int id) {
-		if(id == husband)
-			return wife;
-		else if(id == wife)
-			return husband;
-		else
-			return -1;
-	}
+        OrganicTimeline timeline = new OrganicTimeline();
+        // This needs a distribution creating
+        timeline.addEvent(400, new OrganicEvent(EventType.BIRTH));
+        // Need a divorce event as well
 
-	@Override
-	public Date getMarriageDate() {
-		return marriageDate;
-	}
+        return timeline;
+    }
 
-	@Override
-	public List<Integer> getChildIds() {
-		return childrenIds;
-	}
+    public OrganicTimeline getTimeline() {
+        return timeline;
+    }
 
-	@Override
-	public List<Integer> getPartnerIds() {
-		List<Integer> partnerIds = Arrays.asList(husband,wife);
-		return partnerIds;
-	}
-	
-	
-	
+    @Override
+    public int compareTo(final IPartnership arg0) {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    @Override
+    public int getId() {
+        return id;
+    }
+
+    @Override
+    public int getFemalePartnerId() {
+        return wife;
+    }
+
+    @Override
+    public int getMalePartnerId() {
+        return husband;
+    }
+
+    @Override
+    public int getPartnerOf(final int id) {
+
+        if (id == husband)
+            return wife;
+        else if (id == wife)
+            return husband;
+        else
+            return -1;
+    }
+
+    @Override
+    public Date getMarriageDate() {
+        return marriageDate;
+    }
+
+    @Override
+    public List<Integer> getChildIds() {
+        return childrenIds;
+    }
+
+    @Override
+    public List<Integer> getPartnerIds() {
+        return Arrays.asList(husband, wife);
+    }
 }

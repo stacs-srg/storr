@@ -38,7 +38,7 @@ public class EventImporter {
      * @throws RecordFormatException
      * @throws JSONException
      */
-    public int importBirths(IBucket b, String filename) throws IOException, RecordFormatException, JSONException {
+    public int importBirths(final IBucket b, final String filename) throws IOException, RecordFormatException, JSONException {
 
         int counter = 0;
         try (final BufferedReader reader = Files.newBufferedReader(Paths.get(filename), FileManipulation.FILE_CHARSET)) {
@@ -62,7 +62,7 @@ public class EventImporter {
      * @throws RecordFormatException
      * @throws JSONException
      */
-    public int importDeaths(IBucket b, String filename) throws IOException, RecordFormatException, JSONException {
+    public int importDeaths(final IBucket b, final String filename) throws IOException, RecordFormatException, JSONException {
 
         int counter = 0;
         try (final BufferedReader reader = Files.newBufferedReader(Paths.get(filename), FileManipulation.FILE_CHARSET)) {
@@ -86,7 +86,7 @@ public class EventImporter {
      * @throws RecordFormatException
      * @throws JSONException
      */
-    public int importMarriages(IBucket b, String filename) throws IOException, RecordFormatException, JSONException {
+    public int importMarriages(final IBucket b, final String filename) throws IOException, RecordFormatException, JSONException {
 
         int counter = 0;
         try (final BufferedReader reader = Files.newBufferedReader(Paths.get(filename), FileManipulation.FILE_CHARSET)) {
@@ -105,7 +105,7 @@ public class EventImporter {
     /**
      * Creates a LXP birth record from a file.
      */
-    private ILXP importBirthRecord(BufferedReader reader) throws IOException, RecordFormatException {
+    private ILXP importBirthRecord(final BufferedReader reader) throws IOException, RecordFormatException {
 
         return importRecord(reader, BirthLabels.TYPE, BirthLabels.BIRTH_FIELD_NAMES);
     }
@@ -113,7 +113,7 @@ public class EventImporter {
     /**
      * Creates a LXP death record from a file of death records.
      */
-    private ILXP importDeathRecord(BufferedReader reader) throws IOException, RecordFormatException {
+    private ILXP importDeathRecord(final BufferedReader reader) throws IOException, RecordFormatException {
 
         return importRecord(reader, DeathLabels.TYPE, DeathLabels.DEATH_FIELD_NAMES);
     }
@@ -121,7 +121,7 @@ public class EventImporter {
     /**
      * Creates a LXP marriage record from a file of marriage records.
      */
-    private ILXP importMarriageRecord(BufferedReader reader) throws IOException, RecordFormatException {
+    private ILXP importMarriageRecord(final BufferedReader reader) throws IOException, RecordFormatException {
 
         return importRecord(reader, MarriageLabels.TYPE, MarriageLabels.MARRIAGE_FIELD_NAMES);
     }
@@ -129,7 +129,7 @@ public class EventImporter {
     /**
      * Creates a LXP marriage record from a file of marriage records.
      */
-    private ILXP importRecord(BufferedReader reader, String record_type, Iterable<String> field_names) throws IOException, RecordFormatException {
+    private ILXP importRecord(final BufferedReader reader, final String record_type, final Iterable<String> field_names) throws IOException, RecordFormatException {
 
         String line = reader.readLine();
         if (line == null) {
@@ -152,7 +152,7 @@ public class EventImporter {
         }
     }
 
-    private void addFields(Iterable<String> field_names, Iterable<String> field_values, LXP record) {
+    private void addFields(final Iterable<String> field_names, final Iterable<String> field_values, final LXP record) {
 
         Iterator<String> value_iterator = field_values.iterator();
         for (String field_name : field_names) {
@@ -160,7 +160,7 @@ public class EventImporter {
         }
     }
 
-    private void addField(String field_value, String field_name, LXP record) {
+    private void addField(final String field_value, final String field_name, final LXP record) {
 
         record.put(field_name, field_value);
     }

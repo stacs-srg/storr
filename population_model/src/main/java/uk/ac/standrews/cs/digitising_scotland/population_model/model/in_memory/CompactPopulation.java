@@ -196,7 +196,7 @@ public class CompactPopulation {
      * @param id the identifier
      * @return the person with that identifier, or null if none is found
      */
-    public CompactPerson findPerson(int id) {
+    public CompactPerson findPerson(final int id) {
 
         // Use binary split since the array is sorted by id order.
         int low = 0;

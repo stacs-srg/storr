@@ -28,7 +28,7 @@ import java.util.List;
  */
 public class CompactPartnershipAdapter {
 
-    public IPartnership convertToFullPartnership(CompactPartnership partnership, CompactPopulation population) {
+    public IPartnership convertToFullPartnership(final CompactPartnership partnership, final CompactPopulation population) {
 
         return partnership != null ? new FullPartnership(partnership, population) : null;
     }
