@@ -280,7 +280,7 @@ public class TopicModel {
             if (line != null && !line.equals("")) {
                 tokens = (FeatureSequence) model.getData().get(i).instance.getData();
                 topics = model.getData().get(i).topicSequence;
-                modelString(inputFile, outputFile, line, model, dataAlphabet, tokens, topics);
+                modelString(outputFile, line, dataAlphabet, tokens, topics);
             }
         }
         closeReader(br);
@@ -303,16 +303,14 @@ public class TopicModel {
     /**
      * Model string.
      *
-     * @param inputFile the input file
      * @param outputFile the output file
      * @param line the line
-     * @param model the model
      * @param dataAlphabet the data alphabet
      * @param tokens the tokens
      * @param topics the topics
      * @return the file
      */
-    private static File modelString(final File inputFile, final File outputFile, final String line, final ParallelTopicModel model, final Alphabet dataAlphabet, final FeatureSequence tokens, final LabelSequence topics) {
+    private static File modelString(final File outputFile, final String line, final Alphabet dataAlphabet, final FeatureSequence tokens, final LabelSequence topics) {
 
         int numberOfTopics = 0;
         HashMap<Integer, Integer> topicNumbers = new HashMap<Integer, Integer>();
@@ -327,10 +325,6 @@ public class TopicModel {
         System.out.println(out);
         String contents = lineSplit[0] + "\t" + lineSplit[1] + "\t" + lineSplit[2] + "\t" + out.toString() + "\t" + numberOfTopics + "\n";
         Utils.writeToFile(contents, outputFile.getAbsolutePath(), true);
-        //        System.out.println(Integer.parseInt(lineSplit[0]) + "\t" + numberOfTopics);
-        //        if (numberOfTopics > 0) {
-        //            resultsMatrix[Integer.parseInt(lineSplit[0]) - 1][numberOfTopics - 1] = resultsMatrix[Integer.parseInt(lineSplit[0]) - 1][numberOfTopics - 1] + 1;
-        //        }
 
         return outputFile;
     }

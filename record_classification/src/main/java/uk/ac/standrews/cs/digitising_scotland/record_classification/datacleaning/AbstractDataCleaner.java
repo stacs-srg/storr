@@ -1,7 +1,16 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.datacleaning;
 
-import com.google.common.collect.HashMultiset;
-import com.google.common.collect.Multiset;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.FormatConverter;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeTriple;
@@ -11,16 +20,14 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.exceptions.I
 import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
 import uk.ac.standrews.cs.digitising_scotland.tools.analysis.UniqueWordCounter;
 
-import java.io.*;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import com.google.common.collect.HashMultiset;
+import com.google.common.collect.Multiset;
 
 /**
  * Created by fraserdunlop on 16/07/2014 at 15:21.
  */
 public abstract class AbstractDataCleaner {
+
     /**
      * The Constant TOKENLIMIT.
      */
@@ -53,6 +60,7 @@ public abstract class AbstractDataCleaner {
     }
 
     public void runOnFile(final String... args) throws IOException, InputFormatException {
+
         File file = new File(args[0]);
         File correctedFile = new File(args[1]);
         setTokenLimit(args);
@@ -64,6 +72,7 @@ public abstract class AbstractDataCleaner {
     }
 
     private void buildCorrectionMap(final Bucket bucket) {
+
         correctionMap = new HashMap<>();
         for (Record record : bucket) {
             TokenSet tokenSet = new TokenSet(record.getOriginalData().getDescription());
@@ -77,6 +86,7 @@ public abstract class AbstractDataCleaner {
      * @param tokenSet the tokenSet to clean.
      */
     private void addToCorrectionMap(final TokenSet tokenSet) {
+
         for (String token : tokenSet) {
             if (wordMultiset.count(token) < TOKENLIMIT) {
                 String correctedToken = correct(token);
@@ -103,7 +113,8 @@ public abstract class AbstractDataCleaner {
         }
     }
 
-    private void correctTokensInFile(File file, File correctedFile) throws IOException {
+    private void correctTokensInFile(final File file, final File correctedFile) throws IOException {
+
         BufferedReader br = new BufferedReader(new FileReader(file));
         BufferedWriter bw = new BufferedWriter((new FileWriter(correctedFile)));
         String line;
@@ -116,7 +127,8 @@ public abstract class AbstractDataCleaner {
         bw.close();
     }
 
-    private String correctLine(String line) {
+    private String correctLine(final String line) {
+
         String[] commaSplits = line.split(Utils.getCSVComma());
         StringBuilder sb = new StringBuilder();
         for (String str : commaSplits) {
@@ -127,24 +139,28 @@ public abstract class AbstractDataCleaner {
         return correctedLine.subSequence(0, correctedLine.length() - 1).toString();
     }
 
-    private String tokenizeAndCleanString(String str) {
+    private String tokenizeAndCleanString(final String str) {
+
         StringBuilder sb = new StringBuilder();
         for (String token : new TokenSet(str)) {
             String correctedToken = correctionMap.get(token);
             if (correctedToken != null) {
                 sb.append(correctedToken).append(" ");
-            } else {
+            }
+            else {
                 sb.append(token).append(" ");
             }
         }
         return sb.toString().trim();
     }
 
-    private void setTokenLimit(String... args) {
-        try{
+    private void setTokenLimit(final String... args) {
+
+        try {
             TOKENLIMIT = Integer.parseInt(args[2]);
             System.out.println("TOKENLIMIT set to " + TOKENLIMIT);
-        } catch (ArrayIndexOutOfBoundsException e) {
+        }
+        catch (ArrayIndexOutOfBoundsException e) {
             System.out.println("No TOKENLIMIT argument. Default is " + TOKENLIMIT);
         }
     }

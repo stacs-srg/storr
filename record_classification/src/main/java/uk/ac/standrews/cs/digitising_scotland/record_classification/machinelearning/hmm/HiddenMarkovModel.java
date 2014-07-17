@@ -158,7 +158,7 @@ public class HiddenMarkovModel {
             }
             sb.append("\n");
 
-            System.out.println(sequence.toString() + "\n" + hmmSequence);
+            LOGGER.info(sequence.toString() + "\n" + hmmSequence);
         }
         return sb;
     }
