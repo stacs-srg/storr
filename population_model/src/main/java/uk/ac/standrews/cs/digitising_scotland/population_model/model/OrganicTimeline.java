@@ -81,6 +81,11 @@ public class OrganicTimeline {
         return startDate;
     }
 
+    public OrganicEvent getEvent(Date date) {
+        int day = DateManipulation.dateToDays(date) - DateManipulation.dateToDays(startDate);
+        return events.get(day);
+    }
+
     public void setStartDate(final Date startDate) {
         this.startDate = startDate;
     }
