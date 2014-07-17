@@ -10,8 +10,15 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.exceptions.InputFormatException;
 import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
 import uk.ac.standrews.cs.digitising_scotland.tools.analysis.UniqueWordCounter;
+import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -76,10 +83,9 @@ public abstract class AbstractDataCleaning {
      * @param record the record to clean
      */
     private void addToCorrectionMap(final Record record) {
-        Set<CodeTriple> set = record.getGoldStandardClassificationSet();
-        for (CodeTriple codeTriple : set) {
-            TokenSet ts = codeTriple.getTokenSet();
-            addToCorrectionMap(ts);
+        final Set<CodeTriple> set = record.getGoldStandardClassificationSet();
+        for (final CodeTriple codeTriple : set) {
+            addToCorrectionMap(codeTriple.getTokenSet());
         }
     }
 
@@ -89,10 +95,9 @@ public abstract class AbstractDataCleaning {
      * @param tokenSet the tokenSet to clean.
      */
     private void addToCorrectionMap(final TokenSet tokenSet) {
-        for (String token : tokenSet) {
+        for (final String token : tokenSet) {
             if (wordMultiset.count(token) < TOKENLIMIT) {
-                String correctedToken = correct(token);
-                correctionMap.put(token, correctedToken);
+                correctionMap.put(token, correct(token));
             }
         }
     }
@@ -103,60 +108,65 @@ public abstract class AbstractDataCleaning {
      *
      * @param bucket to create word count map from
      */
-    private void buildTokenOccurrenceMap(final Bucket bucket) {
+    private static void buildTokenOccurrenceMap(final Bucket bucket) {
 
         wordMultiset = HashMultiset.create();
 
-        for (Record r : bucket) {
-            Set<CodeTriple> set = r.getGoldStandardClassificationSet();
-            for (CodeTriple codeTriple : set) {
+        for (final Record r : bucket) {
+            final Set<CodeTriple> set = r.getGoldStandardClassificationSet();
+            for (final CodeTriple codeTriple : set) {
                 UniqueWordCounter.countWordsInLine(wordMultiset, codeTriple.getTokenSet());
             }
         }
     }
 
-    private void correctTokensInFile(File file, File correctedFile) throws IOException {
-        BufferedReader br = new BufferedReader(new FileReader(file));
-        BufferedWriter bw = new BufferedWriter((new FileWriter(correctedFile)));
-        String line;
-        while ((line = br.readLine()) != null) {
-            String correctedLine = correctLine(line);
-            bw.write(correctedLine);
-            bw.write("\n");
+    private static void correctTokensInFile(final File file, final File correctedFile) throws IOException {
+
+        try (BufferedReader reader = Files.newBufferedReader(fileToPath(file), FileManipulation.FILE_CHARSET)) {
+            try (final BufferedWriter writer = Files.newBufferedWriter(fileToPath(correctedFile), FileManipulation.FILE_CHARSET)) {
+
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    writer.write(correctLine(line));
+                    writer.write("\n");
+                }
+            }
         }
-        br.close();
-        bw.close();
     }
 
-    private String correctLine(String line) {
-        String[] commaSplits = line.split(Utils.getCSVComma());
-        StringBuilder sb = new StringBuilder();
-        for (String str : commaSplits) {
-            String cleanedString = tokenizeAndCleanString(str);
-            sb.append(cleanedString).append(",");
+    private static Path fileToPath(final File file) {
+
+        return Paths.get(file.getAbsolutePath());
+    }
+
+    private static String correctLine(final String line) {
+        final String[] commaSplits = line.split(Utils.getCSVComma());
+        final StringBuilder sb = new StringBuilder();
+        for (final String str : commaSplits) {
+            sb.append(tokenizeAndCleanString(str)).append(',');
         }
-        String correctedLine = sb.toString();
+        final String correctedLine = sb.toString();
         return correctedLine.subSequence(0, correctedLine.length() - 1).toString();
     }
 
-    private String tokenizeAndCleanString(String str) {
-        StringBuilder sb = new StringBuilder();
-        for (String token : new TokenSet(str)) {
-            String correctedToken = correctionMap.get(token);
+    private static String tokenizeAndCleanString(final String str) {
+        final StringBuilder sb = new StringBuilder();
+        for (final String token : new TokenSet(str)) {
+            final String correctedToken = correctionMap.get(token);
             if (correctedToken != null) {
-                sb.append(correctedToken).append(" ");
+                sb.append(correctedToken).append(' ');
             } else {
-                sb.append(token).append(" ");
+                sb.append(token).append(' ');
             }
         }
         return sb.toString().trim();
     }
 
-    private void setTokenLimit(String... args) {
+    private static void setTokenLimit(final String... args) {
         try{
             TOKENLIMIT = Integer.parseInt(args[2]);
             System.out.println("TOKENLIMIT set to " + TOKENLIMIT);
-        } catch (ArrayIndexOutOfBoundsException e) {
+        } catch (final ArrayIndexOutOfBoundsException e) {
             System.out.println("No TOKENLIMIT argument. Default is " + TOKENLIMIT);
         }
     }
