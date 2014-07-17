@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.digitising_scotland.record_classification.preprocessor;
+package uk.ac.standrews.cs.digitising_scotland.record_classification.datacleaning;
 
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multiset;
@@ -20,7 +20,7 @@ import java.util.Set;
 /**
  * Created by fraserdunlop on 16/07/2014 at 15:21.
  */
-public abstract class AbstractDataCleaning {
+public abstract class AbstractDataCleaner {
     /**
      * The Constant TOKENLIMIT.
      */
@@ -66,20 +66,8 @@ public abstract class AbstractDataCleaning {
     private void buildCorrectionMap(final Bucket bucket) {
         correctionMap = new HashMap<>();
         for (Record record : bucket) {
-            addToCorrectionMap(record);
-        }
-    }
-
-    /**
-     * Performs cleaning on the goldstandard tokensets of a record.
-     *
-     * @param record the record to clean
-     */
-    private void addToCorrectionMap(final Record record) {
-        Set<CodeTriple> set = record.getGoldStandardClassificationSet();
-        for (CodeTriple codeTriple : set) {
-            TokenSet ts = codeTriple.getTokenSet();
-            addToCorrectionMap(ts);
+            TokenSet tokenSet = new TokenSet(record.getOriginalData().getDescription());
+            addToCorrectionMap(tokenSet);
         }
     }
 

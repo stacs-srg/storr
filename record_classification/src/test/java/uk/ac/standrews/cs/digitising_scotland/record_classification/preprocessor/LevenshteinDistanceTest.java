@@ -2,6 +2,7 @@ package uk.ac.standrews.cs.digitising_scotland.record_classification.preprocesso
 
 import org.junit.Assert;
 import org.junit.Test;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datacleaning.LevenshteinDistance;
 
 /**
  * The Class LevenshteinDistanceTest tests the calculation of Levenshtein distances with various strings.
