@@ -37,7 +37,7 @@ abstract class AbstractPopulationToFile {
 
     public abstract IPopulationWriter getPopulationWriter(String path_string, IPopulation population) throws IOException;
 
-    protected void export(String[] args) throws Exception {
+    protected void export(final String[] args) throws Exception {
 
         final String path_string = CommandLineArgs.getArg(args, FILE_FLAG);
 
@@ -45,8 +45,8 @@ abstract class AbstractPopulationToFile {
 
             System.out.println("exporting...");
 
-            IPopulation population = getPopulation(args);
-            IPopulationWriter exporter = getPopulationWriter(path_string, population);
+            final IPopulation population = getPopulation(args);
+            final IPopulationWriter exporter = getPopulationWriter(path_string, population);
 
             try (PopulationConverter converter = new PopulationConverter(population, exporter)) {
                 converter.convert();
@@ -61,7 +61,7 @@ abstract class AbstractPopulationToFile {
 
     private void usage() {
 
-        System.out.println("Usage: java " + getClass().getSimpleName() + " " +
+        System.out.println("Usage: java " + getClass().getSimpleName() + ' ' +
                 FILE_FLAG + "<file path> " +
                 SIZE_FLAG + "<population size> ");
     }

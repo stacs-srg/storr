@@ -50,13 +50,14 @@ public class CompactPersonAdapter {
 
     private String current_surname;
 
+    @SuppressWarnings("FeatureEnvy")
     public CompactPersonAdapter() throws IOException, InconsistentWeightException {
 
         final String occupation_distribution_file_name = PopulationProperties.getProperties().getProperty(OCCUPATION_DISTRIBUTION_KEY);
         final String cause_of_death_distribution_file_name = PopulationProperties.getProperties().getProperty(CAUSE_OF_DEATH_DISTRIBUTION_KEY);
         final String address_distribution_file_name = PopulationProperties.getProperties().getProperty(ADDRESS_DISTRIBUTION_KEY);
 
-        Random random = RandomFactory.getRandom();
+        final Random random = RandomFactory.getRandom();
 
         male_first_name_distribution = new MaleFirstNameDistribution(random);
         female_first_name_distribution = new FemaleFirstNameDistribution(random);
@@ -80,6 +81,7 @@ public class CompactPersonAdapter {
 
     private class FullPerson extends AbstractPerson {
 
+        @SuppressWarnings("FeatureEnvy")
         public FullPerson(final CompactPerson person, final String surname, final int parents_partnership_id) {
 
             id = person.getId();
@@ -103,10 +105,10 @@ public class CompactPersonAdapter {
 
         private List<Integer> getPartnershipIds(final CompactPerson person) {
 
-            List<CompactPartnership> original_partnerships = person.getPartnerships();
+            final List<CompactPartnership> original_partnerships = person.getPartnerships();
             if (original_partnerships != null) {
-                List<Integer> result = new ArrayList<>();
-                for (CompactPartnership partnership : original_partnerships) {
+                final List<Integer> result = new ArrayList<>();
+                for (final CompactPartnership partnership : original_partnerships) {
                     result.add(partnership.getId());
                 }
                 return result;

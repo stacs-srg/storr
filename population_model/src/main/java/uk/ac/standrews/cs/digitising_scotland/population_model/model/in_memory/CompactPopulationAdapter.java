@@ -41,7 +41,7 @@ public class CompactPopulationAdapter implements IPopulation {
     private final CompactPartnershipAdapter compact_partnership_adapter;
 
     private boolean consistent_across_iterations;
-    private static boolean default_consistent_across_iterations = false;
+    private static final boolean DEFAULT_CONSISTENT_ACROSS_ITERATIONS = false;
 
     private final Map<Integer, IPerson> person_cache;
     private final Map<Integer, IPartnership> partnership_cache;
@@ -59,7 +59,7 @@ public class CompactPopulationAdapter implements IPopulation {
         person_cache = new HashMap<>();
         partnership_cache = new HashMap<>();
 
-        consistent_across_iterations = default_consistent_across_iterations;
+        consistent_across_iterations = DEFAULT_CONSISTENT_ACROSS_ITERATIONS;
         description = super.toString();
     }
 
@@ -72,14 +72,11 @@ public class CompactPopulationAdapter implements IPopulation {
         return description;
     }
 
-    public static void setDefaultConsistentAcrossIterations(final boolean default_consistent_across_iterations) {
-        CompactPopulationAdapter.default_consistent_across_iterations = default_consistent_across_iterations;
-    }
-
     public void setConsistentAcrossIterations(final boolean consistent_across_iterations) {
         this.consistent_across_iterations = consistent_across_iterations;
     }
 
+    @SuppressWarnings("FeatureEnvy")
     @Override
     public Iterable<IPerson> getPeople() {
 
@@ -88,7 +85,10 @@ public class CompactPopulationAdapter implements IPopulation {
             @Override
             public Iterator<IPerson> iterator() {
 
-                unmarkAllPeople();
+                for (final CompactPerson person : people) {
+                    person.setMarked(false);
+                }
+
                 return new PersonIterator();
             }
 
@@ -96,7 +96,7 @@ public class CompactPopulationAdapter implements IPopulation {
 
                 private int person_index = 0;
                 private CompactPerson next_person = null;
-                private List<CompactPerson> descendants = new ArrayList<>();
+                private final List<CompactPerson> descendants = new ArrayList<>();
 
                 PersonIterator() {
                     advanceToNext();
@@ -111,8 +111,11 @@ public class CompactPopulationAdapter implements IPopulation {
                 @Override
                 public IPerson next() {
 
-                    if (!hasNext()) throw new NoSuchElementException();
-                    IPerson result = getFullPerson(next_person);
+                    if (!hasNext()) {
+                        throw new NoSuchElementException();
+                    }
+
+                    final IPerson result = getFullPerson(next_person);
                     advanceToNext();
                     return result;
                 }
@@ -180,17 +183,17 @@ public class CompactPopulationAdapter implements IPopulation {
 
                     if (person.isMale()) {
 
-                        List<CompactPartnership> partnerships = person.getPartnerships();
+                        final List<CompactPartnership> partnerships = person.getPartnerships();
                         if (partnerships != null) {
 
                             for (final CompactPartnership partnership : partnerships) {
 
-                                List<Integer> children = partnership.getChildren();
+                                final List<Integer> children = partnership.getChildren();
                                 if (children != null) {
 
                                     for (final int child_index : children) {
 
-                                        CompactPerson child = population.getPerson(child_index);
+                                        final CompactPerson child = population.getPerson(child_index);
                                         descendants.add(child);
                                         recordChildrenWithSameSurnameIfMale(child);
                                     }
@@ -210,6 +213,7 @@ public class CompactPopulationAdapter implements IPopulation {
         };
     }
 
+    @SuppressWarnings("FeatureEnvy")
     @Override
     public Iterable<IPartnership> getPartnerships() {
 
@@ -218,7 +222,15 @@ public class CompactPopulationAdapter implements IPopulation {
             @Override
             public Iterator<IPartnership> iterator() {
 
-                unmarkAllPartnerships();
+                for (final CompactPerson person : people) {
+                    final List<CompactPartnership> partnerships = person.getPartnerships();
+                    if (partnerships != null) {
+                        for (final CompactPartnership partnership : partnerships) {
+                            partnership.setMarked(false);
+                        }
+                    }
+                }
+
                 return new PartnershipIterator();
             }
 
@@ -241,8 +253,11 @@ public class CompactPopulationAdapter implements IPopulation {
                 @Override
                 public IPartnership next() {
 
-                    if (!hasNext()) throw new NoSuchElementException();
-                    IPartnership result = getFullPartnership(next_partnership);
+                    if (!hasNext()) {
+                        throw new NoSuchElementException();
+                    }
+
+                    final IPartnership result = getFullPartnership(next_partnership);
                     advanceToNext();
                     return result;
                 }
@@ -306,8 +321,7 @@ public class CompactPopulationAdapter implements IPopulation {
     @Override
     public IPerson findPerson(final int id) {
 
-        CompactPerson person = population.findPerson(id);
-        return getFullPerson(person);
+        return getFullPerson(population.findPerson(id));
     }
 
     @Override
@@ -330,7 +344,9 @@ public class CompactPopulationAdapter implements IPopulation {
 
     private IPerson getFullPerson(final CompactPerson person) {
 
-        if (person == null) return null;
+        if (person == null) {
+            return null;
+        }
 
         if (!consistent_across_iterations) {
 
@@ -338,31 +354,32 @@ public class CompactPopulationAdapter implements IPopulation {
 
         } else {
 
-            int id = person.getId();
+            final int id = person.getId();
 
             if (person_cache.containsKey(id)) {
                 return person_cache.get(id);
             }
             else {
 
-                IPerson full_person = compact_person_adapter.convertToFullPerson(person, getParentsPartnershipId(person));
+                final IPerson full_person = compact_person_adapter.convertToFullPerson(person, getParentsPartnershipId(person));
                 person_cache.put(id, full_person);
                 return full_person;
             }
         }
     }
 
+    @SuppressWarnings("FeatureEnvy")
     private int getParentsPartnershipId(final CompactPerson person) {
 
         final int person_id = person.getId();
 
-        for (CompactPerson parent_candidate : people) {
-            List<CompactPartnership> partnerships = parent_candidate.getPartnerships();
+        for (final CompactPerson parent_candidate : people) {
+            final List<CompactPartnership> partnerships = parent_candidate.getPartnerships();
             if (partnerships != null) {
-                for (CompactPartnership partnership : partnerships) {
-                    List<Integer> children = partnership.getChildren();
+                for (final CompactPartnership partnership : partnerships) {
+                    final List<Integer> children = partnership.getChildren();
                     if (children != null) {
-                        for (int child_index : children) {
+                        for (final int child_index : children) {
                             if (people[child_index].getId() == person_id) {
                                 return partnership.getId();
                             }
@@ -376,7 +393,9 @@ public class CompactPopulationAdapter implements IPopulation {
 
     private IPartnership getFullPartnership(final CompactPartnership partnership) {
 
-        if (partnership == null) return null;
+        if (partnership == null) {
+            return null;
+        }
 
         if (!consistent_across_iterations) {
 
@@ -384,14 +403,14 @@ public class CompactPopulationAdapter implements IPopulation {
 
         } else {
 
-            int id = partnership.getId();
+            final int id = partnership.getId();
 
             if (partnership_cache.containsKey(id)) {
                 return partnership_cache.get(id);
             }
             else {
 
-                IPartnership full_partnership = compact_partnership_adapter.convertToFullPartnership(partnership, population);
+                final IPartnership full_partnership = compact_partnership_adapter.convertToFullPartnership(partnership, population);
                 partnership_cache.put(id, full_partnership);
                 return full_partnership;
             }
@@ -400,26 +419,7 @@ public class CompactPopulationAdapter implements IPopulation {
 
     private Iterator<CompactPartnership> getPartnerships(final int person_index) {
 
-        List<CompactPartnership> partnerships = person_index < people.length ? people[person_index].getPartnerships() : null;
+        final List<CompactPartnership> partnerships = person_index < people.length ? people[person_index].getPartnerships() : null;
         return (partnerships == null ? new ArrayList<CompactPartnership>() : partnerships).iterator();
-    }
-
-    private void unmarkAllPeople() {
-
-        for (CompactPerson person : people) {
-            person.setMarked(false);
-        }
-    }
-
-    private void unmarkAllPartnerships() {
-
-        for (CompactPerson person : people) {
-            List<CompactPartnership> partnerships = person.getPartnerships();
-            if (partnerships != null) {
-                for (CompactPartnership partnership : partnerships) {
-                    partnership.setMarked(false);
-                }
-            }
-        }
     }
 }

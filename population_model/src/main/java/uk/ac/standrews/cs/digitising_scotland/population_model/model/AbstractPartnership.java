@@ -16,6 +16,7 @@
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.model;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -48,7 +49,7 @@ public abstract class AbstractPartnership implements IPartnership {
     }
 
     @Override
-    public int getPartnerOf(int id) {
+    public int getPartnerOf(final int id) {
         return id == male_partner_id ? female_partner_id : id == female_partner_id ? male_partner_id : -1;
     }
 
@@ -74,8 +75,16 @@ public abstract class AbstractPartnership implements IPartnership {
     }
 
     @Override
-    public int compareTo(final IPartnership other) {
-        return id - other.getId();
+    @SuppressWarnings("CompareToUsesNonFinalVariable")
+    public int compareTo(final @Nonnull IPartnership other) {
+
+        if (id < other.getId()) {
+            return -1;
+        }
+        if (id > other.getId()) {
+            return 1;
+        }
+        return 0;
     }
 
     @Override
@@ -84,6 +93,7 @@ public abstract class AbstractPartnership implements IPartnership {
     }
 
     @Override
+    @SuppressWarnings("NonFinalFieldReferencedInHashCode")
     public int hashCode() {
         return id;
     }

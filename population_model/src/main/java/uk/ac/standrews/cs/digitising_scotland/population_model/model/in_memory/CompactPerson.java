@@ -33,7 +33,6 @@ import java.util.List;
  */
 public class CompactPerson {
 
-
     private static final int POSITION_OF_MALE_BIT = 0;
     private static final int POSITION_OF_PARENTS_BIT = 1;
     private static final int POSITION_OF_INCOMERS_BIT = 2;
@@ -163,14 +162,14 @@ public class CompactPerson {
     @Override
     public String toString() {
 
-        StringBuilder builder = new StringBuilder();
+        final StringBuilder builder = new StringBuilder();
 
         builder.append(getClass().getSimpleName());
-        builder.append("{");
+        builder.append('{');
         builder.append(getSex());
-        builder.append("-");
+        builder.append('-');
         builder.append(getBirthDate());
-        builder.append("-");
+        builder.append('-');
         if (getDeathDate() != -1) {
             builder.append(getDeathDate());
         }
@@ -178,7 +177,7 @@ public class CompactPerson {
             builder.append(", p:");
             builder.append(getPartnerships().size());
         }
-        builder.append("}");
+        builder.append('}');
 
         return builder.toString();
     }

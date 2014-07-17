@@ -55,9 +55,9 @@ public class GeneralDBPopulationTest extends GeneralPopulationStructureTests {
 
     private String database_name;
     private Connection connection;
-    private IPopulation original_population;
     private DBPopulationWriter population_writer;
     private DBPopulationAdapter population_typed_as_db;
+    private final IPopulation original_population;
 
     // The name string gives informative labels in the JUnit output.
     @Parameterized.Parameters(name = "{0}")
@@ -67,7 +67,7 @@ public class GeneralDBPopulationTest extends GeneralPopulationStructureTests {
         return getDBTestCases(CompactPopulationTestCases.getTestPopulations());
     }
 
-    public GeneralDBPopulationTest(IPopulation population) throws Exception {
+    public GeneralDBPopulationTest(final IPopulation population) throws Exception {
 
         super();
         original_population = population;
@@ -96,7 +96,10 @@ public class GeneralDBPopulationTest extends GeneralPopulationStructureTests {
     private void writeCompactPopulationToDatabase() throws Exception {
 
         population_writer = new DBPopulationWriter();
-        new PopulationConverter(original_population, population_writer).convert();
+
+        try (PopulationConverter converter = new PopulationConverter(original_population, population_writer)) {
+            converter.convert();
+        }
     }
 
     @After
@@ -123,27 +126,26 @@ public class GeneralDBPopulationTest extends GeneralPopulationStructureTests {
         assertSameChildren(population, original_population);
     }
 
-    private void assertSamePartners(IPopulation population, IPopulation original_population) {
+    private static void assertSamePartners(final IPopulation population, final IPopulation original_population) {
 
-        for (IPartnership partnership1 : population.getPartnerships()) {
+        for (final IPartnership partnership1 : population.getPartnerships()) {
 
-            IPartnership partnership2 = original_population.findPartnership(partnership1.getId());
-            assertTrue(partnership1.getMalePartnerId() == partnership2.getMalePartnerId());
-            assertTrue(partnership1.getFemalePartnerId() == partnership2.getFemalePartnerId());
+            final IPartnership partnership2 = original_population.findPartnership(partnership1.getId());
+            assertEquals(partnership1.getMalePartnerId(), partnership2.getMalePartnerId());
+            assertEquals(partnership1.getFemalePartnerId(), partnership2.getFemalePartnerId());
         }
     }
 
-    private void assertSameChildren(IPopulation population, IPopulation original_population) {
+    private static void assertSameChildren(final IPopulation population, final IPopulation original_population) {
 
-        for (IPartnership partnership1 : population.getPartnerships()) {
+        for (final IPartnership partnership1 : population.getPartnerships()) {
 
-            IPartnership partnership2 = original_population.findPartnership(partnership1.getId());
-
+            final IPartnership partnership2 = original_population.findPartnership(partnership1.getId());
             assertEqualSets(partnership1.getChildIds(), partnership2.getChildIds());
         }
     }
 
-    private void assertEqualSets(List<Integer> set1, List<Integer> set2) {
+    private static void assertEqualSets(final List<Integer> set1, final List<Integer> set2) {
 
         if (set1 == null) {
             assertNull(set2);
@@ -152,42 +154,41 @@ public class GeneralDBPopulationTest extends GeneralPopulationStructureTests {
             assertNotNull(set2);
             assertEquals(set1.size(), set2.size());
 
-            for (int i : set1) {
+            for (final int i : set1) {
                 assertTrue(set2.contains(i));
             }
         }
     }
 
-    private void assertSamePeopleIds(Iterable<IPerson> people1, Iterable<IPerson> people2) {
+    private static void assertSamePeopleIds(final Iterable<IPerson> people1, final Iterable<IPerson> people2) {
 
-        Set<Integer> ids = new HashSet<>();
-        for (IPerson person : people1) {
+        final Set<Integer> ids = new HashSet<>();
+        for (final IPerson person : people1) {
             ids.add(person.getId());
         }
 
-        for (IPerson person : people2) {
+        for (final IPerson person : people2) {
             assertTrue(ids.contains(person.getId()));
         }
     }
 
-    private void assertSamePartnershipIds(Iterable<IPartnership> partnerships1, Iterable<IPartnership> partnerships2) {
+    private static void assertSamePartnershipIds(final Iterable<IPartnership> partnerships1, final Iterable<IPartnership> partnerships2) {
 
-        Set<Integer> ids = new HashSet<>();
-        for (IPartnership partnership : partnerships1) {
+        final Set<Integer> ids = new HashSet<>();
+        for (final IPartnership partnership : partnerships1) {
             ids.add(partnership.getId());
         }
 
-        for (IPartnership partnership : partnerships2) {
+        for (final IPartnership partnership : partnerships2) {
             assertTrue(ids.contains(partnership.getId()));
         }
     }
 
-    private static List<Object[]> getDBTestCases(IPopulation... populations) {
+    private static List<Object[]> getDBTestCases(final IPopulation... populations) {
 
-        List<Object[]> result = new ArrayList<>();
+        final List<Object[]> result = new ArrayList<>();
 
-        for (IPopulation population : populations) {
-
+        for (final IPopulation population : populations) {
             result.add(new Object[]{population});
         }
         return result;

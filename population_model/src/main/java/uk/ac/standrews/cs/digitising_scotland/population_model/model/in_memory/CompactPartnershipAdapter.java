@@ -28,25 +28,26 @@ import java.util.List;
  */
 public class CompactPartnershipAdapter {
 
-    public IPartnership convertToFullPartnership(final CompactPartnership partnership, final CompactPopulation population) {
+    public static IPartnership convertToFullPartnership(final CompactPartnership partnership, final CompactPopulation population) {
 
         return partnership != null ? new FullPartnership(partnership, population) : null;
     }
 
     private static class FullPartnership extends AbstractPartnership {
 
-        private CompactPopulation population;
+        final private CompactPopulation population;
 
+        @SuppressWarnings("FeatureEnvy")
         FullPartnership(final CompactPartnership compact_partnership, final CompactPopulation population) {
 
             this.population = population;
 
             id = compact_partnership.getId();
 
-            CompactPerson partner1 = population.getPerson(compact_partnership.getPartner1());
-            CompactPerson partner2 = population.getPerson(compact_partnership.getPartner2());
+            final CompactPerson partner1 = population.getPerson(compact_partnership.getPartner1());
+            final CompactPerson partner2 = population.getPerson(compact_partnership.getPartner2());
 
-            boolean partner1_is_male = partner1.isMale();
+            final boolean partner1_is_male = partner1.isMale();
 
             male_partner_id = partner1_is_male ? partner1.getId() : partner2.getId();
             female_partner_id = partner1_is_male ? partner2.getId() : partner1.getId();
@@ -62,9 +63,9 @@ public class CompactPartnershipAdapter {
 
         private List<Integer> copyChildren(final List<Integer> original_children) {
 
-            List<Integer> children = new ArrayList<>();
+            final List<Integer> children = new ArrayList<>();
             if (original_children != null) {
-                for (Integer child_index : original_children) {
+                for (final Integer child_index : original_children) {
                     children.add(populationIndexToId(child_index));
                 }
             }

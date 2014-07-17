@@ -42,9 +42,9 @@ public class CompactPartnership implements Comparable<CompactPartnership> {
     /**
      * Creates a partnership with a given marriage date.
      *
-     * @param partner1_index      the first partner's index in the People array
-     * @param partner2_index      the second partner's index in the People array
-     * @param marriage_date the marriage date
+     * @param partner1_index the first partner's index in the People array
+     * @param partner2_index the second partner's index in the People array
+     * @param marriage_date  the marriage date
      */
     public CompactPartnership(final int partner1_index, final int partner2_index, final int marriage_date) {
 
@@ -114,7 +114,7 @@ public class CompactPartnership implements Comparable<CompactPartnership> {
 
     public int compareTo(final @Nonnull CompactPartnership other) {
 
-         final int this_date = getMarriageDate();
+        final int this_date = getMarriageDate();
         final int other_date = other.getMarriageDate();
 
         if (this_date < other_date) {
