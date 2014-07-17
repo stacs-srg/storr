@@ -22,7 +22,7 @@ import com.google.common.collect.Multiset;
  *
  * @author jkc25, frjd2
  */
-public class LevenShteinCleaner extends AbstractDataCleaner {
+public class LevenshteinCleaner extends AbstractDataCleaner {
 
     /**
      * The Constant SIMILARITY.
@@ -32,7 +32,7 @@ public class LevenShteinCleaner extends AbstractDataCleaner {
 
     public static void main(final String... args) throws IOException, InputFormatException {
 
-        LevenShteinCleaner cleaner = new LevenShteinCleaner();
+        LevenshteinCleaner cleaner = new LevenshteinCleaner();
         setSimilarity(args);
         cleaner.runOnFile(args);
     }
