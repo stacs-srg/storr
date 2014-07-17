@@ -22,7 +22,7 @@ import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
  * Testing the superclass that does all of the grunt work of file handling etc in the data cleaning steps.
  * Created by fraserdunlop on 17/07/2014 at 10:55.
  */
-public class AbstractDataCleaningTest {
+public class AbstractDataCleanerTest {
 
     private final String incorrectFilePath = this.getClass().getResource("/AbstractDataCleaningTestIncorrectFile.txt").getPath();
     private final String correctFilePath = this.getClass().getResource("/AbstractDataCleaningCorrectFile.txt").getPath();
