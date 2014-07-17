@@ -19,6 +19,8 @@ package uk.ac.standrews.cs.digitising_scotland.population_model.model.in_memory;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPerson;
 import uk.ac.standrews.cs.digitising_scotland.util.BitManipulation;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -199,5 +201,14 @@ public class CompactPerson {
     public void setPartnerships(final List<CompactPartnership> partnership_list) {
 
         this.partnership_list = partnership_list;
+    }
+
+    protected synchronized void addPartnership(final CompactPartnership partnership) {
+
+        if (partnership_list == null) {
+            partnership_list = new ArrayList<>();
+        }
+        partnership_list.add(partnership);
+        Collections.sort(partnership_list);
     }
 }

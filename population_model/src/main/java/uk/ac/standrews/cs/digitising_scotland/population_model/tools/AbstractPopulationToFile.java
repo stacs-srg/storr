@@ -28,7 +28,7 @@ import java.io.IOException;
  *
  * @author Graham Kirby (graham.kirby@st-andrews.ac.uk)
  */
-public abstract class AbstractPopulationToFile {
+abstract class AbstractPopulationToFile {
 
     protected static final String FILE_FLAG = "-f";
     protected static final String SIZE_FLAG = "-s";

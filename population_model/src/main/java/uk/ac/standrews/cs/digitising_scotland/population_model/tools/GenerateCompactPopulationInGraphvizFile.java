@@ -16,8 +16,8 @@
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.tools;
 
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.AbstractFilePopulationWriter;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPopulation;
-import uk.ac.standrews.cs.digitising_scotland.population_model.model.PopulationToFile;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.graphviz.PopulationToGraphviz;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.in_memory.CompactPopulation;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.in_memory.CompactPopulationAdapter;
@@ -43,7 +43,7 @@ public class GenerateCompactPopulationInGraphvizFile extends AbstractPopulationT
     }
 
     @Override
-    public PopulationToFile getPopulationWriter(String path_string, IPopulation population) throws IOException {
+    public AbstractFilePopulationWriter getPopulationWriter(String path_string, IPopulation population) throws IOException {
 
         return new PopulationToGraphviz(path_string, population);
     }

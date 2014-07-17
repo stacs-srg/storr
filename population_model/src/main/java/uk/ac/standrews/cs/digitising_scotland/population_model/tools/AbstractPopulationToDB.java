@@ -30,7 +30,7 @@ import uk.ac.standrews.cs.nds.util.Diagnostic;
  *
  * @author Graham Kirby (graham.kirby@st-andrews.ac.uk)
  */
-public abstract class AbstractPopulationToDB {
+abstract class AbstractPopulationToDB {
 
     private static final String BATCH_SIZE_FLAG = "-b";
     private static final String NUMBER_OF_BATCHES_FLAG = "-n";
