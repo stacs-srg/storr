@@ -31,7 +31,7 @@ import java.text.NumberFormat;
  * @author Graham Kirby (graham.kirby@st-andrews.ac.uk)
  * @author Alan Dearle (alan.dearle@st-andrews.ac.uk)
  */
-public abstract class PopulationToFile implements IPopulationWriter {
+public abstract class AbstractFilePopulationWriter implements IPopulationWriter {
 
     private static final int NUMBER_OF_DIGITS_IN_ID = 8;
 
@@ -49,7 +49,7 @@ public abstract class PopulationToFile implements IPopulationWriter {
      * @param path_string the path for the output file
      * @throws IOException if the file does not exist and cannot be created
      */
-    public PopulationToFile(final String path_string) throws IOException {
+    public AbstractFilePopulationWriter(final String path_string) throws IOException {
 
         formatter = NumberFormat.getInstance();
         formatter.setMinimumIntegerDigits(NUMBER_OF_DIGITS_IN_ID);
@@ -70,7 +70,7 @@ public abstract class PopulationToFile implements IPopulationWriter {
         writer.close();
     }
 
-    protected String individualLabel(int person_id) {
+    protected String individualLabel(final int person_id) {
         return "p" + padId(person_id);
     }
 

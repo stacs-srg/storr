@@ -25,7 +25,7 @@ import uk.ac.standrews.cs.digitising_scotland.util.ProgressIndicator;
  * Generates a population in a series of independent batches, and exports to the database.
  *
  * @author Graham Kirby (graham.kirby@st-andrews.ac.uk)
- * @see {http://digitisingscotland.cs.st-andrews.ac.uk/population_model/scripts/generate_population.html}
+ * @see <a href="http://digitisingscotland.cs.st-andrews.ac.uk/population_model/scripts/generate_population.html">Launch script documentation</a>}
  */
 public class GenerateCompactPopulationInDB extends AbstractPopulationToDB {
 
