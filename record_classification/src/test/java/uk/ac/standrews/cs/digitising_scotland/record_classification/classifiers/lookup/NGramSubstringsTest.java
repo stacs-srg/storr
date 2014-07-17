@@ -10,7 +10,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.preprocessor.DataCleaning;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.preprocessor.LevenShteinCleaner;
 
 /**
  * Tests the NGramSubstring class that grams are being produced correctly.
@@ -43,7 +43,7 @@ public class NGramSubstringsTest {
         Record record = new Record(id, originalData);
         Bucket bucketToClean = new Bucket();
         bucketToClean.addRecordToBucket(record);
-        DataCleaning.cleanData(bucketToClean);
+        LevenShteinCleaner.cleanData(bucketToClean);
         nGramSubstringsRecord = new NGramSubstrings(record);
     }
 

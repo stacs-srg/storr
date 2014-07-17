@@ -12,7 +12,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeTriple;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.RecordFactory;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.preprocessor.DataCleaning;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.preprocessor.LevenShteinCleaner;
 
 /**
  * Test class to test {@link NGramClassifier}.
@@ -48,7 +48,7 @@ public class NGramClassifierTest {
     @Test
     public void testClassify() throws Exception {
 
-        DataCleaning.cleanData(testingBucket);
+        LevenShteinCleaner.cleanData(testingBucket);
         NGramClassifier nGramClassifer = train();
         for (Record record : testingBucket) {
             Record classifiedRecord = nGramClassifer.classify(record);

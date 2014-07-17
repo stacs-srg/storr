@@ -15,7 +15,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.RecordFactory;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.vectors.VectorFactory;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.exceptions.InputFormatException;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.preprocessor.DataCleaning;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.preprocessor.LevenShteinCleaner;
 
 /**
  * The Class TrainClassifiers trains a set of classifiers.
@@ -62,7 +62,7 @@ public class TrainClassifiers {
     private Bucket createCleanedBucket(final List<Record> listOfRecords) {
 
         Bucket trainingBucket = new Bucket(listOfRecords);
-        DataCleaning.cleanData(trainingBucket);
+        LevenShteinCleaner.cleanData(trainingBucket);
         return trainingBucket;
     }
 

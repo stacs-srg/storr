@@ -15,7 +15,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.RecordFactory;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.preprocessor.DataCleaning;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.preprocessor.LevenShteinCleaner;
 
 /**
  * The Class ClassifierTestingHelper.
@@ -44,7 +44,7 @@ public class ClassifierTestingHelper {
      */
     public Bucket giveBucketTestingOccCodes(final Bucket bucket) throws IOException, CodeNotValidException, URISyntaxException {
 
-        DataCleaning.cleanData(bucket);
+        LevenShteinCleaner.cleanData(bucket);
 
         for (Record record : bucket) {
             loadDictionary("/CodeFactoryTestFile.txt");

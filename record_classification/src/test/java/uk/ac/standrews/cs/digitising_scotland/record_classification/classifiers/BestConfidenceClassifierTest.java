@@ -17,7 +17,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.RecordFactory;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.vectors.VectorFactory;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.preprocessor.DataCleaning;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.preprocessor.LevenShteinCleaner;
 
 /**
  * The Class BestConfidenceClassifierTest.
@@ -115,7 +115,7 @@ public class BestConfidenceClassifierTest {
      */
     public void addVectorsToBucket(final Bucket bucket) throws Exception {
 
-        DataCleaning.cleanData(bucket);
+        LevenShteinCleaner.cleanData(bucket);
 
         System.out.println(bucket.toString());
 
@@ -137,7 +137,7 @@ public class BestConfidenceClassifierTest {
         listOfRecords = RecordFactory.makeUnCodedRecordsFromFile(inputFile);
         bucketA.addCollectionOfRecords(listOfRecords);
 
-        DataCleaning.cleanData(bucketA);
+        LevenShteinCleaner.cleanData(bucketA);
 
         System.out.println(bucketA.toString());
         bestConfClassifier.classify(bucketA);
@@ -160,7 +160,7 @@ public class BestConfidenceClassifierTest {
         listOfRecords = RecordFactory.makeUnCodedRecordsFromFile(inputFile);
         bucketA.addCollectionOfRecords(listOfRecords);
 
-        DataCleaning.cleanData(bucketA);
+        LevenShteinCleaner.cleanData(bucketA);
 
         System.out.println(bucketA.toString());
         for (Record r : bucketA) {
