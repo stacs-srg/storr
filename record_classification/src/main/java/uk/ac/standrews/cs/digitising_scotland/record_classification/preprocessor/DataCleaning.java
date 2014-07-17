@@ -1,19 +1,7 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.preprocessor;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
+import com.google.common.collect.HashMultiset;
+import com.google.common.collect.Multiset;
 import uk.ac.shef.wit.simmetrics.similaritymetrics.AbstractStringMetric;
 import uk.ac.shef.wit.simmetrics.similaritymetrics.Levenshtein;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.FormatConverter;
@@ -25,9 +13,22 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.exceptions.InputFormatException;
 import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
 import uk.ac.standrews.cs.digitising_scotland.tools.analysis.UniqueWordCounter;
+import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
 
-import com.google.common.collect.HashMultiset;
-import com.google.common.collect.Multiset;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Reads a {@link Bucket} and performs data cleaning such as spelling correction and feature selection on the descriptions in each {@link Record}.
@@ -167,8 +168,7 @@ public class DataCleaning {
         String bestMatch;
         if (!possibleMatches.isEmpty()) {
             bestMatch = possibleMatches.get(possibleMatches.size() - 1).getLeft();
-        }
-        else {
+        } else {
             bestMatch = token;
         }
         return bestMatch;
@@ -209,7 +209,6 @@ public class DataCleaning {
                 UniqueWordCounter.countWordsInLine(wordMultiset, codeTriple.getTokenSet());
             }
         }
-
     }
 
     public static void main(final String[] args) throws IOException, InputFormatException {
@@ -230,16 +229,22 @@ public class DataCleaning {
 
     private static void correctTokensInFile(final File file, final File correctedFile) throws IOException {
 
-        BufferedReader br = new BufferedReader(new FileReader(file));
-        BufferedWriter bw = new BufferedWriter(new FileWriter(correctedFile));
-        String line;
-        while ((line = br.readLine()) != null) {
-            String correctedLine = correctLine(line);
-            bw.write(correctedLine);
-            bw.write("\n");
+        try (BufferedReader reader = Files.newBufferedReader(fileToPath(file), FileManipulation.FILE_CHARSET)) {
+            try (final BufferedWriter writer = Files.newBufferedWriter(fileToPath(correctedFile), FileManipulation.FILE_CHARSET)) {
+
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    String correctedLine = correctLine(line);
+                    writer.write(correctedLine);
+                    writer.write("\n");
+                }
+            }
         }
-        br.close();
-        bw.close();
+    }
+
+    private static Path fileToPath(File file) {
+
+        return Paths.get(file.getAbsolutePath());
     }
 
     private static String correctLine(final String line) {
@@ -264,12 +269,10 @@ public class DataCleaning {
                 if (!correctedToken.equals(token)) {
                     System.out.println("Original token: " + token + " Corrected token: " + correctedToken);
                 }
-            }
-            else {
+            } else {
                 sb.append(token).append(" ");
             }
         }
         return sb.toString().trim();
     }
-
 }
