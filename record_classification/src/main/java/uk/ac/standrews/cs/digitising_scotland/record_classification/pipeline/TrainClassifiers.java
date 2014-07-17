@@ -15,7 +15,6 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.RecordFactory;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.vectors.VectorFactory;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.exceptions.InputFormatException;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datacleaning.LevenShteinCleaner;
 
 /**
  * The Class TrainClassifiers trains a set of classifiers.
@@ -62,7 +61,6 @@ public class TrainClassifiers {
     private Bucket createCleanedBucket(final List<Record> listOfRecords) {
 
         Bucket trainingBucket = new Bucket(listOfRecords);
-//        LevenShteinCleaner.cleanData(trainingBucket);
         return trainingBucket;
     }
 
@@ -77,7 +75,6 @@ public class TrainClassifiers {
     public Bucket createCleanedBucketFromFile(final String trainingFile) throws IOException, InputFormatException {
 
         List<Record> listOfRecords = RecordFactory.makeCodedRecordsFromFile(new File(trainingFile));
-
         Bucket trainingBucket = createCleanedBucket(listOfRecords);
         return trainingBucket;
     }
