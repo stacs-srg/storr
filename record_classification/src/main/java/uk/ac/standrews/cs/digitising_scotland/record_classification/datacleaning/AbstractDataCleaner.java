@@ -3,9 +3,12 @@ package uk.ac.standrews.cs.digitising_scotland.record_classification.datacleanin
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,7 +41,8 @@ public abstract class AbstractDataCleaner {
     /**
      * The word multiset.
      */
-    protected static Multiset<String> wordMultiset;
+    private static Multiset<String> wordMultiset;
+
     private static Map<String, String> correctionMap;
 
     public abstract String correct(final String token);
@@ -124,8 +128,8 @@ public abstract class AbstractDataCleaner {
 
     private void correctTokensInFile(final File file, final File correctedFile) throws IOException {
 
-        BufferedReader br = new BufferedReader(new FileReader(file));
-        BufferedWriter bw = new BufferedWriter((new FileWriter(correctedFile)));
+        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"));
+        Writer bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(correctedFile.getAbsoluteFile()), "UTF-8"));
         String line;
         while ((line = br.readLine()) != null) {
             String correctedLine = correctLine(line);
@@ -172,5 +176,14 @@ public abstract class AbstractDataCleaner {
         catch (ArrayIndexOutOfBoundsException e) {
             System.out.println("No TOKENLIMIT argument. Default is " + TOKENLIMIT);
         }
+    }
+
+    /**
+     * Gets the word Multiset contains the word counts.
+     * @return  Multiset<String> word multiset
+     */
+    public static Multiset<String> getWordMultiset() {
+
+        return wordMultiset;
     }
 }

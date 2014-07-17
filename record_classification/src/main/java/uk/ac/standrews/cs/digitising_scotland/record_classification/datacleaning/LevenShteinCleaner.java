@@ -1,7 +1,12 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.datacleaning;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Set;
+
 import uk.ac.shef.wit.simmetrics.similaritymetrics.AbstractStringMetric;
 import uk.ac.shef.wit.simmetrics.similaritymetrics.Levenshtein;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Pair;
@@ -20,24 +25,25 @@ public class LevenShteinCleaner extends AbstractDataCleaner {
     /**
      * The Constant SIMILARITY.
      */
-    private static double SIMILARITY = 0.85;
-
+    private static double similarity = 0.85;
 
     public static void main(final String... args) throws IOException, InputFormatException {
+
         LevenShteinCleaner cleaner = new LevenShteinCleaner();
         setSimilarity(args);
         cleaner.runOnFile(args);
     }
 
-    private static void setSimilarity(String... args) {
-        try{
-            SIMILARITY = Double.parseDouble(args[3]);
-            System.out.println("SIMILARITY set to " + SIMILARITY);
-        } catch (ArrayIndexOutOfBoundsException e) {
-            System.out.println("No SIMILARITY argument. Default is " + SIMILARITY);
+    private static void setSimilarity(final String... args) {
+
+        try {
+            similarity = Double.parseDouble(args[3]);
+            System.out.println("SIMILARITY set to " + similarity);
+        }
+        catch (ArrayIndexOutOfBoundsException e) {
+            System.out.println("No SIMILARITY argument. Default is " + similarity);
         }
     }
-
 
     /**
      * Corrects a token to the most similar higher occurrence term.
@@ -47,6 +53,7 @@ public class LevenShteinCleaner extends AbstractDataCleaner {
      */
     @Override
     public String correct(final String token) {
+
         AbstractStringMetric metric = new Levenshtein();
         List<Pair<String, Float>> possibleMatches = getPossibleMatches(token, metric);
         sortPossibleMatches(possibleMatches);
@@ -55,14 +62,12 @@ public class LevenShteinCleaner extends AbstractDataCleaner {
         return bestMatch;
     }
 
-
     private void printDebugInfo(final String token, final String bestMatch) {
 
         if (!token.equals(bestMatch)) {
             System.out.println("Original token: " + token + " Corrected token: " + bestMatch);
         }
     }
-
 
     /**
      * Gets the possible matches.
@@ -74,12 +79,12 @@ public class LevenShteinCleaner extends AbstractDataCleaner {
     private static List<Pair<String, Float>> getPossibleMatches(final String token, final AbstractStringMetric metric) {
 
         List<Pair<String, Float>> possibleMatches = new ArrayList<>();
-        Set<String> allWords = wordMultiset.elementSet();
+        Set<String> allWords = getWordMultiset().elementSet();
 
         for (String string : allWords) {
-            if (wordMultiset.count(string) > wordMultiset.count(token)) {
+            if (getWordMultiset().count(string) > getWordMultiset().count(token)) {
                 float result = metric.getSimilarity(string, token);
-                if (result > SIMILARITY) {
+                if (result > similarity) {
                     possibleMatches.add(new Pair<>(string, result));
                 }
             }
@@ -99,7 +104,8 @@ public class LevenShteinCleaner extends AbstractDataCleaner {
         String bestMatch;
         if (!possibleMatches.isEmpty()) {
             bestMatch = possibleMatches.get(possibleMatches.size() - 1).getLeft();
-        } else {
+        }
+        else {
             bestMatch = token;
         }
         return bestMatch;
