@@ -95,7 +95,7 @@ public class OrganicPopulation implements IPopulation {
     public void makeSeed(final int size) {
 
         for (int i = 0; i < size; i++) {
-
+        	OrganicPopulationLogger.incPopulation();
             if (sex_distribution.getSample())
                 people.add(new OrganicPerson(IDFactory.getNextID(), 'M'));
             else
@@ -227,7 +227,6 @@ public class OrganicPopulation implements IPopulation {
 					
 					int maleId = malePartnershipQueue.getFirst().getId();
 					int femaleId = femalePartnershipQueue.getFirst().getId();
-					System.out.println(maleId + " & " + femaleId);
 					
 					// remove people from queues
 					malePartnershipQueue.removeFirst();
@@ -235,7 +234,7 @@ public class OrganicPopulation implements IPopulation {
 					femalePartnershipQueue.removeFirst();
 					femaleInitialPartnershipOrderer.removeFirst();
 					
-					// need to reset queues
+					// Resets queues
 					if(maleId != firstMaleId)
 						while(malePartnershipQueue.getFirst().getId() != firstMaleId) {
 		    				malePartnershipQueue.add(malePartnershipQueue.removeFirst());
@@ -268,6 +267,7 @@ public class OrganicPopulation implements IPopulation {
     	// Create partnership
     	OrganicPartnership newPartnership = new OrganicPartnership(IDFactory.getNextID(), husband.getId(), wife.getId(), date);
     	partnerships.add(newPartnership);
+    	OrganicPopulationLogger.logMarriage(DateManipulation.differenceInDays(husband.getBirthDate(), date), DateManipulation.differenceInDays(wife.getBirthDate(), date));
     	husband.addPartnership(newPartnership.getId());
     	wife.addPartnership(newPartnership.getId());
     }
@@ -418,6 +418,8 @@ public class OrganicPopulation implements IPopulation {
         	System.out.println("Wife: " + op.partnerships.get(i).getFemalePartnerId());
         	System.out.println("Date: " + op.partnerships.get(i).getMarriageDate());
         }
+        
+        OrganicPopulationLogger.printLogData();
         
     }
 }
