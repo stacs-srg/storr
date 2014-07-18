@@ -24,6 +24,7 @@ import java.util.List;
 
 /**
  * An analytic class to analyse the distribution of marriages.
+ *
  * @author Alan Dearle (alan.dearle@st-andrews.ac.uk)
  */
 public class MarriageAnalytics {
@@ -36,7 +37,8 @@ public class MarriageAnalytics {
 
     /**
      * Creates an analytic instance to analyse marriages in a population.
-     * @param population - the population to analyse.
+     *
+     * @param population the population to analyse
      */
     public MarriageAnalytics(final IPopulation population) {
 
@@ -44,6 +46,9 @@ public class MarriageAnalytics {
         analyseMarriages();
     }
 
+    /**
+     * Prints out all analyses.
+     */
     public void printAllAnalytics() {
 
         final int sum = ArrayManipulation.sum(count_marriages);
@@ -53,7 +58,7 @@ public class MarriageAnalytics {
 
         for (int i = 1; i < count_marriages.length; i++) {
             if (count_marriages[i] != 0) {
-                System.out.println("\t Married " + i + " times: " + count_marriages[i] + " = " + String.format("%.1f", count_marriages[i] / (double) sum * ONE_HUNDRED) + "%");
+                System.out.println("\t Married " + i + " times: " + count_marriages[i] + " = " + String.format("%.1f", count_marriages[i] / (double) sum * ONE_HUNDRED) + '%');
             }
         }
     }
@@ -63,11 +68,11 @@ public class MarriageAnalytics {
      */
     public void analyseMarriages() {
 
-        for (IPerson p : population.getPeople()) {
+        for (final IPerson person : population.getPeople()) {
 
-            if (p.getSex() == IPerson.MALE) { // only look at Males to avoid counting marriages twice.
+            if (person.getSex() == IPerson.MALE) { // only look at Males to avoid counting marriages twice.
 
-                final List<Integer> partnership_ids = p.getPartnerships();
+                final List<Integer> partnership_ids = person.getPartnerships();
                 if (partnership_ids == null) {
                     count_marriages[0]++;
                 } else {

@@ -25,8 +25,8 @@ import java.util.List;
 
 /**
  * An analytic class to analyse the distribution of children.
- * @author Alan Dearle (alan.dearle@st-andrews.ac.uk)
  *
+ * @author Alan Dearle (alan.dearle@st-andrews.ac.uk)
  */
 public class ChildrenAnalytics {
 
@@ -38,7 +38,9 @@ public class ChildrenAnalytics {
 
     /**
      * Creates an analytic instance to analyse children in a population.
-     * @param population - the population to analyse.
+     *
+     * @param population the population to analyse
+     * @throws Exception if the analysis cannot be completed
      */
     public ChildrenAnalytics(final IPopulation population) throws Exception {
 
@@ -46,6 +48,9 @@ public class ChildrenAnalytics {
         analyseChildren();
     }
 
+    /**
+     * Prints out all analyses.
+     */
     public void printAllAnalytics() {
 
         final int sum = ArrayManipulation.sum(children_per_marriage);
@@ -60,6 +65,8 @@ public class ChildrenAnalytics {
 
     /**
      * Analyses children of marriages for the population.
+     *
+     * @throws Exception if the analysis cannot be completed
      */
     public void analyseChildren() throws Exception {
 

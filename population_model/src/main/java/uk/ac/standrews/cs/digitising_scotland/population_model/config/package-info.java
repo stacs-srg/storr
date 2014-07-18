@@ -14,10 +14,9 @@
  * You should have received a copy of the GNU General Public License along with population_model. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-package uk.ac.standrews.cs.digitising_scotland.population_model.model;
 
 /**
- * Created by victor on 18/07/14.
+ * Configuration classes.
  */
-public class GeneralOrganicPopulationTest extends GeneralPopulationStructureTests{
-}
+package uk.ac.standrews.cs.digitising_scotland.population_model.config;
+
