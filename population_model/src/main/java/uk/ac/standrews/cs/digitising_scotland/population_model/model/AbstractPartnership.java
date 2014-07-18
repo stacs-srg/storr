@@ -76,7 +76,7 @@ public abstract class AbstractPartnership implements IPartnership {
 
     @Override
     @SuppressWarnings("CompareToUsesNonFinalVariable")
-    public int compareTo(final @Nonnull IPartnership other) {
+    public int compareTo(@Nonnull final IPartnership other) {
 
         if (id < other.getId()) {
             return -1;

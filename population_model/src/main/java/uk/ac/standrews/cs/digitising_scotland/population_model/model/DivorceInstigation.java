@@ -17,7 +17,7 @@
 package uk.ac.standrews.cs.digitising_scotland.population_model.model;
 
 public enum DivorceInstigation {
-	MALE,
-	FEMALE,
-	NO_DIVORCE
+    MALE,
+    FEMALE,
+    NO_DIVORCE
 }

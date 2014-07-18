@@ -83,8 +83,8 @@ public class DBPopulationAdapter implements IPopulation {
 
             class PersonIterator implements Iterator<IPerson> {
 
-                final ResultSet person_result_set;
-                final boolean person_table_empty;
+                private final ResultSet person_result_set;
+                private final boolean person_table_empty;
 
                 PersonIterator() {
 

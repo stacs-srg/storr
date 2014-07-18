@@ -35,7 +35,7 @@ public class CompactPartnershipAdapter {
 
     private static class FullPartnership extends AbstractPartnership {
 
-        final private CompactPopulation population;
+        private final CompactPopulation population;
 
         @SuppressWarnings("FeatureEnvy")
         FullPartnership(final CompactPartnership compact_partnership, final CompactPopulation population) {

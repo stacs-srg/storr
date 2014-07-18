@@ -19,14 +19,14 @@ package uk.ac.standrews.cs.digitising_scotland.population_model.model;
 
 /**
  * Specifies the possible types of events that can occur in an OrganicTimeline
- * 
+ *
  * @author Tom Dalton (tsd4@st-andrews.ac.uk)
  */
 public enum EventType {
-	ELIGIBLE_TO_MARRY,
-	MOVE_LOCATION,
-	DIVORCE,
-	EMIGRATE,
-	BIRTH,
-	PARTNERSHIP_ENDED_BY_DEATH
+    ELIGIBLE_TO_MARRY,
+    MOVE_LOCATION,
+    DIVORCE,
+    EMIGRATE,
+    BIRTH,
+    PARTNERSHIP_ENDED_BY_DEATH
 }

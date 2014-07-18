@@ -16,96 +16,94 @@
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.model;
 
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.MaleAgeAtMarriageDistribution;
-
 public class OrganicPopulationLogger {
 
-	private static int population = 0;
-	private static int marriages = 0;
-	private static int[] maleAgeAtMarriage = new int[100];
-	private static int[] femaleAgeAtMarriage = new int[100];
-	private static int[] ageDifferenceAtMarriage = new int[25];
-	
-	public static void incPopulation() {
-		population++;
-	}
-	
-	public static void decPopulation() {
-		population--;
-	}
-	
-	public static void incMarriages() {
-		marriages++;
-	}
-	
-	public static void decMarriages() {
-		marriages--;
-	}
-	
-	public static void addMaleAgeAtMarriage(int days) {
-		int years = (int)((float)days / OrganicPopulation.DAYS_PER_YEAR);
-		maleAgeAtMarriage[years] ++;
-	}
-	
-	public static void addFemaleAgeAtMarriage(int days) {
-		int years = (int)((float)days / OrganicPopulation.DAYS_PER_YEAR);
-		femaleAgeAtMarriage[years] ++;
-	}
-	
-	public static void addAgeDifferenceAtMarriage(int maleDays, int femaleDays) {
-		int difference = Math.abs(maleDays - femaleDays);
-		int years = (int)((float)difference / OrganicPopulation.DAYS_PER_YEAR);
-		ageDifferenceAtMarriage[years] ++;
-	}
-	
-	public static void logMarriage(int maleDays, int femaleDays) {
-		incMarriages();
-		addMaleAgeAtMarriage(maleDays);
-		addFemaleAgeAtMarriage(femaleDays);
-		addAgeDifferenceAtMarriage(maleDays, femaleDays);
-	}
-	
-	public static void printLogData() {
-		System.out.println("Population: " + population);
-		System.out.println("Marriages: " + marriages);
-		System.out.println();
-		System.out.println("Male Age At Marriage Distrobution");
-		System.out.println();
-		System.out.println("| Age | Number |");
-		for(int i = 0; i < maleAgeAtMarriage.length; i++) {
-			System.out.print("| ");
-			System.out.format("%3d", i);
-			System.out.print(" | ");
-			System.out.format("%6d", maleAgeAtMarriage[i]);
-			System.out.println(" |");
-		}
-		System.out.println();
-		
-		System.out.println();
-		System.out.println("Female Age At Marriage Distrobution");
-		System.out.println();
-		System.out.println("| Age | Number |");
-		for(int i = 0; i < maleAgeAtMarriage.length; i++) {
-			System.out.print("| ");
-			System.out.format("%3d", i);
-			System.out.print(" | ");
-			System.out.format("%6d", femaleAgeAtMarriage[i]);
-			System.out.println(" |");
-		}
-		System.out.println();
-		
-		System.out.println();
-		System.out.println("Age Difference At Marriage Distrobution");
-		System.out.println();
-		System.out.println("| Diff | Number |");
-		for(int i = 0; i < ageDifferenceAtMarriage.length; i++) {
-			System.out.print("|  ");
-			System.out.format("%2d", i);
-			System.out.print("  | ");
-			System.out.format("%6d", ageDifferenceAtMarriage[i]);
-			System.out.println(" |");
-		}
-		System.out.println();
-	}
+    private static int population = 0;
+    private static int marriages = 0;
+    private static int[] maleAgeAtMarriage = new int[100];
+    private static int[] femaleAgeAtMarriage = new int[100];
+    private static int[] ageDifferenceAtMarriage = new int[25];
+
+    public static void incPopulation() {
+        population++;
+    }
+
+    public static void decPopulation() {
+        population--;
+    }
+
+    public static void incMarriages() {
+        marriages++;
+    }
+
+    public static void decMarriages() {
+        marriages--;
+    }
+
+    public static void addMaleAgeAtMarriage(int days) {
+        int years = (int) ((float) days / OrganicPopulation.DAYS_PER_YEAR);
+        maleAgeAtMarriage[years]++;
+    }
+
+    public static void addFemaleAgeAtMarriage(int days) {
+        int years = (int) ((float) days / OrganicPopulation.DAYS_PER_YEAR);
+        femaleAgeAtMarriage[years]++;
+    }
+
+    public static void addAgeDifferenceAtMarriage(int maleDays, int femaleDays) {
+        int difference = Math.abs(maleDays - femaleDays);
+        int years = (int) ((float) difference / OrganicPopulation.DAYS_PER_YEAR);
+        ageDifferenceAtMarriage[years]++;
+    }
+
+    public static void logMarriage(int maleDays, int femaleDays) {
+        incMarriages();
+        addMaleAgeAtMarriage(maleDays);
+        addFemaleAgeAtMarriage(femaleDays);
+        addAgeDifferenceAtMarriage(maleDays, femaleDays);
+    }
+
+    public static void printLogData() {
+        System.out.println("Population: " + population);
+        System.out.println("Marriages: " + marriages);
+        System.out.println();
+        System.out.println("Male Age At Marriage Distrobution");
+        System.out.println();
+        System.out.println("| Age | Number |");
+        for (int i = 0; i < maleAgeAtMarriage.length; i++) {
+            System.out.print("| ");
+            System.out.format("%3d", i);
+            System.out.print(" | ");
+            System.out.format("%6d", maleAgeAtMarriage[i]);
+            System.out.println(" |");
+        }
+        System.out.println();
+
+        System.out.println();
+        System.out.println("Female Age At Marriage Distrobution");
+        System.out.println();
+        System.out.println("| Age | Number |");
+        for (int i = 0; i < maleAgeAtMarriage.length; i++) {
+            System.out.print("| ");
+            System.out.format("%3d", i);
+            System.out.print(" | ");
+            System.out.format("%6d", femaleAgeAtMarriage[i]);
+            System.out.println(" |");
+        }
+        System.out.println();
+
+        System.out.println();
+        System.out.println("Age Difference At Marriage Distrobution");
+        System.out.println();
+        System.out.println("| Diff | Number |");
+        for (int i = 0; i < ageDifferenceAtMarriage.length; i++) {
+            System.out.print("|  ");
+            System.out.format("%2d", i);
+            System.out.print("  | ");
+            System.out.format("%6d", ageDifferenceAtMarriage[i]);
+            System.out.println(" |");
+        }
+        System.out.println();
+    }
 
 }
