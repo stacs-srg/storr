@@ -20,7 +20,6 @@ import uk.ac.standrews.cs.digitising_scotland.population_model.model.in_memory.C
 
 import java.util.Random;
 
-
 /**
  * Distribution modelling ages of females at divorce, represented in days.
  *
@@ -28,35 +27,35 @@ import java.util.Random;
  */
 public class DivorceAgeForFemaleDistribution implements Distribution<Integer> {
 
-	/*
+    /*
      * from numberofdivorcesageatdivorceandmaritalstatusbeforemarriage_tcm77-351699
      * from http://www.ons.gov.uk/ons/rel/vsob1/divorces-in-england-and-wales/2012/rtd-divorces---number-of-divorces-age-at-divorce-and-marital-status-before-marriage.xls
      * Number of divorces, age at divorce and marital status before marriage
      * 
      * Data for the year 1975
-	 * 
-	 * Age     per 1000 Divorces
-	 * 0-4     0
-	 * 5-9     0
-	 * 10-14   0
-	 * 15-19   6
-	 * 20-24   166
-	 * 25-29   222
-	 * 30-34   190
-	 * 35-39   150
-	 * 40-44   114
-	 * 45-49   82
-	 * 50-54   24
-	 * 55-59   24
-	 * 60-64   15 // By interpolation
-	 * 65-69   7 // By interpolation
-	 * 70-74   0
-	 * 75-79   0
-	 * 80-84   0
-	 * 85-89   0
-	 * 90-95   0
-	 * 95-100  0
-	 */
+     * 
+     * Age     per 1000 Divorces
+     * 0-4     0
+     * 5-9     0
+     * 10-14   0
+     * 15-19   6
+     * 20-24   166
+     * 25-29   222
+     * 30-34   190
+     * 35-39   150
+     * 40-44   114
+     * 45-49   82
+     * 50-54   24
+     * 55-59   24
+     * 60-64   15 // By interpolation
+     * 65-69   7 // By interpolation
+     * 70-74   0
+     * 75-79   0
+     * 80-84   0
+     * 85-89   0
+     * 90-95   0
+     * 95-100  0
+     */
 
     private static final int MAXIMUM_AGE_IN_YEARS = 100;
     private static final int[] AGE_DISTRIBUTION_WEIGHTS = new int[]{0, 0, 0, 6, 166, 222, 190, 150, 114, 82, 24, 24, 15, 7, 0, 0, 0, 0, 0, 0};
