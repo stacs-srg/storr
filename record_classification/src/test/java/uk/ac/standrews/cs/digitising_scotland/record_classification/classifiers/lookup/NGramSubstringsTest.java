@@ -43,7 +43,6 @@ public class NGramSubstringsTest {
         Record record = new Record(id, originalData);
         Bucket bucketToClean = new Bucket();
         bucketToClean.addRecordToBucket(record);
-//        LevenShteinCleaner.cleanData(bucketToClean);
         nGramSubstringsRecord = new NGramSubstrings(record);
     }
 

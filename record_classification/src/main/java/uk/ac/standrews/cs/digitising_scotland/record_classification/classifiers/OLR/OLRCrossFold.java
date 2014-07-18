@@ -1,8 +1,6 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.OLR;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Properties;
 import java.util.concurrent.ExecutorService;
@@ -53,6 +51,37 @@ public class OLRCrossFold {
         modelTrainable = true;
     }
 
+    public void stop(){
+        for(OLRPool model : models){
+            model.stop();
+        }
+    }
+
+    public class StopListener implements Runnable{
+        public void commandLineStopListener() throws IOException {
+            BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+            String line = "";
+
+            while (!line.equalsIgnoreCase("stop")) {
+                line = in.readLine();
+            }
+
+            stop();
+
+            in.close();
+        }
+
+        @Override
+        public void run() {
+            try {
+                commandLineStopListener();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+
     /**
      * trains models.
      */
@@ -69,7 +98,10 @@ public class OLRCrossFold {
      */
     private void trainAllModels() throws InterruptedException {
 
+        StopListener stopListener = new StopListener();
+
         ExecutorService executorService = Executors.newFixedThreadPool(folds);
+        executorService.submit(stopListener);
         for (OLRPool model : models) {
             executorService.submit(model);
         }

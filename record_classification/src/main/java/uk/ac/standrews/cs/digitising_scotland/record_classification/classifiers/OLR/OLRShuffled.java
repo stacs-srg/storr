@@ -46,6 +46,7 @@ public class OLRShuffled implements Runnable {
     private int reps; //set in config
     private final Logger logger = LoggerFactory.getLogger(OLRShuffled.class);
     private ArrayList<NamedVector> trainingVectorList = new ArrayList<NamedVector>();
+    private boolean stopped = false;
 
     //----constructors---
 
@@ -91,7 +92,7 @@ public class OLRShuffled implements Runnable {
     private void train() {
 
         for (int rep = 0; rep < reps; rep++) {
-            logger.info("Performing rep " + rep);
+          //  logger.info("Performing rep " + rep);
             shuffleAndTrainOnAllVectors();
         }
     }
@@ -140,8 +141,17 @@ public class OLRShuffled implements Runnable {
 
         Collections.shuffle(trainingVectorList);
         for (NamedVector vector : trainingVectorList) {
+            if(!stopped())
             this.model.train(vector);
         }
+    }
+
+    public void stop(){
+        stopped = true;
+    }
+
+    private boolean stopped() {
+        return stopped;
     }
 
     private int getID(final NamedVector vector) {
