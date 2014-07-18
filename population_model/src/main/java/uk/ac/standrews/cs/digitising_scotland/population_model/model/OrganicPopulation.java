@@ -90,7 +90,8 @@ public class OrganicPopulation implements IPopulation {
     private LinkedList<OrganicPerson> femalePartnershipQueue = new LinkedList<OrganicPerson>();
 
     private LinkedList<Integer> maleInitialPartnershipOrderer = new LinkedList<Integer>();
-    private LinkedList<Integer> femaleInitialPartnershipOrderer = new LinkedList<Integer>();
+    private
+    LinkedList<Integer> femaleInitialPartnershipOrderer = new LinkedList<Integer>();
 
     public void makeSeed(final int size) {
 
