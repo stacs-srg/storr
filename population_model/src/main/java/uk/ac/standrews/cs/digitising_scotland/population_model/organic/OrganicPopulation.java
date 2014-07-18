@@ -132,9 +132,10 @@ public class OrganicPopulation implements IPopulation {
 		int currentDayOfBirth = DateManipulation.dateToDays(START_YEAR, 1, 1) - auxiliary;
 
 		// Set birth date
+
 		if(currentDayOfBirth < earliestDate)
             earliestDate = currentDayOfBirth;
-        
+
 
 		// Calculate and set death date
         // TODO allow death before start age
