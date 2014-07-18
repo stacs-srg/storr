@@ -50,10 +50,10 @@ public class ChildrenAnalytics {
 
         final int sum = ArrayManipulation.sum(children_per_marriage);
 
-        System.out.println("Chilren per marriage sizes:");
+        System.out.println("Children per marriage sizes:");
         for (int i = 0; i < children_per_marriage.length; i++) {
             if (children_per_marriage[i] != 0) {
-                System.out.println("\t" + children_per_marriage[i] + " Marriages with " + i + " children" + " = " + String.format("%.1f", children_per_marriage[i] / (double) sum * ONE_HUNDRED) + "%");
+                System.out.println("\t" + children_per_marriage[i] + " Marriages with " + i + " children" + " = " + String.format("%.1f", children_per_marriage[i] / (double) sum * ONE_HUNDRED) + '%');
             }
         }
     }
@@ -63,15 +63,15 @@ public class ChildrenAnalytics {
      */
     public void analyseChildren() throws Exception {
 
-        for (IPerson person : population.getPeople()) {
+        for (final IPerson person : population.getPeople()) {
 
             final List<Integer> partnership_ids = person.getPartnerships();
             if (partnership_ids != null) {
 
                 for (final int partnership_id : partnership_ids) {
 
-                    IPartnership partnership = population.findPartnership(partnership_id);
-                    List<Integer> child_ids = partnership.getChildIds();
+                    final IPartnership partnership = population.findPartnership(partnership_id);
+                    final List<Integer> child_ids = partnership.getChildIds();
 
                     if (child_ids != null) {
                         children_per_marriage[child_ids.size()]++;

@@ -39,8 +39,8 @@ public class DBPopulationAdapter implements IPopulation {
 
     public DBPopulationAdapter() throws SQLException {
 
-        String get_people_query = getAllQuery(PopulationProperties.PERSON_TABLE_NAME);
-        String get_partnerships_query = getAllQuery(PopulationProperties.PARTNERSHIP_TABLE_NAME);
+        final String get_people_query = getAllQuery(PopulationProperties.PERSON_TABLE_NAME);
+        final String get_partnerships_query = getAllQuery(PopulationProperties.PARTNERSHIP_TABLE_NAME);
 
         connection = new DBConnector(PopulationProperties.getDatabaseName()).createConnection();
 
@@ -55,13 +55,8 @@ public class DBPopulationAdapter implements IPopulation {
         connection.close();
     }
 
-    private String getAllQuery(String table_name) {
-
-        return "SELECT * FROM " + PopulationProperties.getDatabaseName() + "." + table_name;
-    }
-
     @Override
-    public void setDescription(String description) {
+    public void setDescription(final String description) {
         this.description = description;
     }
 
@@ -70,7 +65,7 @@ public class DBPopulationAdapter implements IPopulation {
     }
 
     @Override
-    public void setConsistentAcrossIterations(boolean consistent_across_iterations) {
+    public void setConsistentAcrossIterations(final boolean consistent_across_iterations) {
 
         // Ignored, since this implementation does not perform cacheing.
     }
@@ -88,8 +83,8 @@ public class DBPopulationAdapter implements IPopulation {
 
             class PersonIterator implements Iterator<IPerson> {
 
-                ResultSet person_result_set;
-                boolean person_table_empty;
+                private final ResultSet person_result_set;
+                private final boolean person_table_empty;
 
                 PersonIterator() {
 
@@ -97,7 +92,7 @@ public class DBPopulationAdapter implements IPopulation {
                         person_result_set = person_select_statement.executeQuery();
                         person_table_empty = !person_result_set.first();
 
-                    } catch (SQLException e) {
+                    } catch (final SQLException e) {
                         throw new RuntimeException("Error retrieving people from database: " + e.getMessage());
                     }
                 }
@@ -116,7 +111,9 @@ public class DBPopulationAdapter implements IPopulation {
                 @Override
                 public IPerson next() {
 
-                    if (!hasNext()) throw new NoSuchElementException();
+                    if (!hasNext()) {
+                        throw new NoSuchElementException();
+                    }
 
                     try {
                         final IPerson result = new DBPerson(connection, person_result_set);
@@ -124,7 +121,6 @@ public class DBPopulationAdapter implements IPopulation {
                         return result;
 
                     } catch (final SQLException e) {
-                        e.printStackTrace();
                         throw new RuntimeException("Error creating person: " + e.getMessage());
                     }
                 }
@@ -160,7 +156,7 @@ public class DBPopulationAdapter implements IPopulation {
                         partnership_result_set = partnership_select_statement.executeQuery();
                         partnership_table_empty = !partnership_result_set.first();
 
-                    } catch (SQLException e) {
+                    } catch (final SQLException e) {
                         throw new RuntimeException("Error retrieving partnerships from database: " + e.getMessage());
                     }
                 }
@@ -179,7 +175,9 @@ public class DBPopulationAdapter implements IPopulation {
                 @Override
                 public IPartnership next() {
 
-                    if (!hasNext()) throw new NoSuchElementException();
+                    if (!hasNext()) {
+                        throw new NoSuchElementException();
+                    }
 
                     try {
                         final IPartnership result = new DBPartnership(connection, partnership_result_set);
@@ -206,7 +204,7 @@ public class DBPopulationAdapter implements IPopulation {
         try {
             return new DBPerson(connection, id);
 
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
             return null;
         }
     }
@@ -217,7 +215,7 @@ public class DBPopulationAdapter implements IPopulation {
         try {
             return new DBPartnership(connection, id);
 
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
             return null;
         }
     }
@@ -232,5 +230,10 @@ public class DBPopulationAdapter implements IPopulation {
     public int getNumberOfPartnerships() throws SQLException {
 
         return DBManipulation.countRows(connection, PopulationProperties.getDatabaseName(), PopulationProperties.PARTNERSHIP_TABLE_NAME);
+    }
+
+    private static String getAllQuery(final String table_name) {
+
+        return "SELECT * FROM " + PopulationProperties.getDatabaseName() + '.' + table_name;
     }
 }

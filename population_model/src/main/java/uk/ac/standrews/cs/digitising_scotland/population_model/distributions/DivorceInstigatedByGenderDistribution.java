@@ -16,14 +16,13 @@
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.distributions;
 
-import java.util.Random;
+import uk.ac.standrews.cs.digitising_scotland.population_model.organic.DivorceInstigation;
 
-import uk.ac.standrews.cs.digitising_scotland.population_model.model.DivorceInstigation;
-import uk.ac.standrews.cs.digitising_scotland.population_model.model.in_memory.CompactPopulation;
+import java.util.Random;
 
 /**
  * Distribution modelling instigation of divorce by gender.
- * 
+ *
  * @author Tom Dalton (tsd4@st-andrews.ac.uk)
  */
 public class DivorceInstigatedByGenderDistribution implements Distribution<Integer> {
@@ -41,41 +40,40 @@ public class DivorceInstigatedByGenderDistribution implements Distribution<Integ
      * No divorce   9808
      */
 
-	private static final int MAXIMUM_AGE_IN_YEARS = 100;
-	private static final int[] AGE_DISTRIBUTION_WEIGHTS = new int[] {96, 96, 9808};
+    private static final int MAXIMUM_AGE_IN_YEARS = 100;
+    private static final int[] AGE_DISTRIBUTION_WEIGHTS = new int[]{96, 96, 9808};
 
-	private final WeightedIntegerDistribution distribution;
+    private final WeightedIntegerDistribution distribution;
 
-	/**
-	 * Creates a divorce instigated by gender distribution
-	 * 
-	 * @param random
-	 *            the random number generator to be used
-	 */
-	public DivorceInstigatedByGenderDistribution(final Random random) {
-		try {
-			distribution = new WeightedIntegerDistribution(0, 2, AGE_DISTRIBUTION_WEIGHTS, random);
-		} catch (final NegativeWeightException e) {
-			throw new RuntimeException("negative weight exception: " + e.getMessage());
-		}
-	}
-	
-	public DivorceInstigation getDefinedSample() {
-		int value = getSample();
-		switch (value) {
-		case 0:
-			return DivorceInstigation.MALE;
-		case 1:
-			return DivorceInstigation.FEMALE;
-		case 2:
-			return DivorceInstigation.NO_DIVORCE;
-		}
-		return null;
-	}
-		
-	@Override
-	public Integer getSample() {
-		return distribution.getSample();
-	}
+    /**
+     * Creates a divorce instigated by gender distribution
+     *
+     * @param random the random number generator to be used
+     */
+    public DivorceInstigatedByGenderDistribution(final Random random) {
+        try {
+            distribution = new WeightedIntegerDistribution(0, 2, AGE_DISTRIBUTION_WEIGHTS, random);
+        } catch (final NegativeWeightException e) {
+            throw new RuntimeException("negative weight exception: " + e.getMessage());
+        }
+    }
+
+    public DivorceInstigation getDefinedSample() {
+        int value = getSample();
+        switch (value) {
+            case 0:
+                return DivorceInstigation.MALE;
+            case 1:
+                return DivorceInstigation.FEMALE;
+            case 2:
+                return DivorceInstigation.NO_DIVORCE;
+        }
+        return null;
+    }
+
+    @Override
+    public Integer getSample() {
+        return distribution.getSample();
+    }
 
 }

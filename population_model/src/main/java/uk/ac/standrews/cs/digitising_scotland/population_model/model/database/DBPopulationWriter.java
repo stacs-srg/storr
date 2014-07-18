@@ -66,6 +66,7 @@ public class DBPopulationWriter implements IPopulationWriter {
         connection.close();
     }
 
+    @SuppressWarnings("FeatureEnvy")
     public void recordPerson(final IPerson person) throws SQLException {
 
         DBManipulation.configurePreparedStatement(
@@ -83,10 +84,11 @@ public class DBPopulationWriter implements IPopulationWriter {
         record_person_statement.executeUpdate();
     }
 
+    @SuppressWarnings("FeatureEnvy")
     public void recordPartnership(final IPartnership partnership) throws SQLException {
 
-        int partnership_id = partnership.getId();
-        Date marriage_date = DateManipulation.dateToSQLDate(partnership.getMarriageDate());
+        final int partnership_id = partnership.getId();
+        final Date marriage_date = DateManipulation.dateToSQLDate(partnership.getMarriageDate());
 
         recordPartnership(partnership_id, marriage_date);
         recordPartnerWithinPartnership(partnership_id, partnership.getFemalePartnerId());
@@ -115,15 +117,17 @@ public class DBPopulationWriter implements IPopulationWriter {
         record_child_within_partnership_statement.executeUpdate();
     }
 
-    private static String makeInsertStatement(String table_name, int number_of_values) {
+    private static String makeInsertStatement(final String table_name, final int number_of_values) {
 
-        StringBuilder builder = new StringBuilder();
+        final StringBuilder builder = new StringBuilder();
         builder.append("INSERT INTO ");
         builder.append(table_name);
         builder.append(" VALUES(");
         for (int i = 0; i < number_of_values; i++) {
-            if (i > 0) builder.append(",");
-            builder.append("?");
+            if (i > 0) {
+                builder.append(',');
+            }
+            builder.append('?');
         }
         builder.append(");");
         return builder.toString();
