@@ -237,8 +237,8 @@ public class OrganicPopulation implements IPopulation {
 					firstFemaleId = femalePartnershipQueue.getFirst().getId();
 				} else if (femalePartnershipQueue.getFirst().getId() == firstFemaleId) {
 					firstFemaleId = (Integer) null;
-					malePartnershipQueue.add(malePartnershipQueue.getFirst());
-					maleInitialPartnershipOrderer.add(maleInitialPartnershipOrderer.getFirst());
+					malePartnershipQueue.add(malePartnershipQueue.removeFirst());
+					maleInitialPartnershipOrderer.add(maleInitialPartnershipOrderer.removeFirst());
 					break;
 				}
 				if (eligableToMarry(malePartnershipQueue.getFirst(), femalePartnershipQueue.getFirst())) {
@@ -248,10 +248,9 @@ public class OrganicPopulation implements IPopulation {
 					if (femaleInitialPartnershipOrderer.getFirst() > firstDay)
 						firstDay = femaleInitialPartnershipOrderer.getFirst();
 
-					Date date = DateManipulation.daysToDate(firstDay);
 					System.out.println("Partnership " + malePartnershipQueue.getFirst().getId() + " & " + femalePartnershipQueue.getFirst().getId());
 					marry(malePartnershipQueue.getFirst(), femalePartnershipQueue.getFirst(), currentDay);
-
+					
 					int maleId = malePartnershipQueue.getFirst().getId();
 					int femaleId = femalePartnershipQueue.getFirst().getId();
 
@@ -323,7 +322,7 @@ public class OrganicPopulation implements IPopulation {
 				if (people.get(i).getTimeline() != null) {
 
 					//Check all dates between the previous and current date after taking the time step
-					for (int j = previousDate; j <= currentDay; j++) {
+					for (int j = previousDate; j < currentDay; j++) {
 						EventType event;
 						if (people.get(i).getTimeline().isDateAvailable(currentDay)) {
 							event = people.get(i).getTimeline().getEvent(currentDay).getEventType();
@@ -357,7 +356,7 @@ public class OrganicPopulation implements IPopulation {
 				if (partnerships.get(i).getTimeline() != null) {
 
 					// Check all dates between the previous and current date after taking the time step
-					for (int j = previousDate; j <= currentDay; j++) {
+					for (int j = previousDate; j < currentDay; j++) {
 						EventType event;
 						if (partnerships.get(i).getTimeline().isDateAvailable(currentDay)) {
 							event = partnerships.get(i).getTimeline().getEvent(currentDay).getEventType();
