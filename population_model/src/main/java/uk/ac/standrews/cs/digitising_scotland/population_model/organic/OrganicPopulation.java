@@ -101,10 +101,16 @@ public class OrganicPopulation implements IPopulation {
 
 		for (int i = 0; i < size; i++) {
 			OrganicPopulationLogger.incPopulation();
-			if (sex_distribution.getSample())
-				people.add(new OrganicPerson(IDFactory.getNextID(), 'M'));
-			else
-				people.add(new OrganicPerson(IDFactory.getNextID(), 'F'));
+			OrganicPerson person;
+			if (sex_distribution.getSample()) {
+				person = new OrganicPerson(IDFactory.getNextID(), 'M');
+				person = setPersonsBirthAndDeathDates(person);
+				people.add(person);
+			} else {
+				person = new OrganicPerson(IDFactory.getNextID(), 'F');
+				person = setPersonsBirthAndDeathDates(person);
+				people.add(person);
+			} 
 		}
 	}
 
@@ -112,8 +118,7 @@ public class OrganicPopulation implements IPopulation {
 		makeSeed(DEFAULT_SEED_SIZE);
 	}
 
-	public void generate_timeline(OrganicPerson currentPerson) {
-
+	private OrganicPerson setPersonsBirthAndDeathDates(OrganicPerson currentPerson) {
 		final UniformDistribution days_of_year_distribution = new UniformDistribution(1, (int) DAYS_PER_YEAR, random);
 
 		// Find an age for person
@@ -128,27 +133,31 @@ public class OrganicPopulation implements IPopulation {
 		Distribution<Integer> seed_death_distribution = new UniformDistribution(age, 100, random);
 		auxiliary = DateManipulation.dateToDays(START_YEAR, 1, 1) + (seed_death_distribution.getSample() - age) * (int) DAYS_PER_YEAR;
 		Date currentDateOfDeath = DateManipulation.daysToDate(auxiliary);
-
+		
 		// Create timeline
 		OrganicTimeline currentTimeline = new OrganicTimeline(currentDateOfBirth, currentDateOfDeath);
 		currentPerson.setTimeline(currentTimeline);
+		return currentPerson;
+	}
+
+	public void populate_timeline(OrganicPerson currentPerson) {
 
 		// Add events to timeline
-		addEligibleToMarryEvent(currentPerson, currentTimeline);
+		addEligibleToMarryEvent(currentPerson);
 
 	}
 
-	private void addEligibleToMarryEvent(OrganicPerson currentPerson, OrganicTimeline currentTimeline) {
+	private void addEligibleToMarryEvent(OrganicPerson currentPerson) {
 		// Add ELIGIBLE_TO_MARRY event
 		int date;
 		if (currentPerson.getSex() == 'M') {
 			// time in days to birth from 1/1/1600 + marriage age in days
-			date = DateManipulation.dateToDays(currentTimeline.getStartDate()) + maleAgeAtMarriageDistribution.getSample();
-			currentTimeline.addEvent(date, new OrganicEvent(EventType.ELIGIBLE_TO_MARRY));
+			date = DateManipulation.dateToDays(currentPerson.getTimeline().getStartDate()) + maleAgeAtMarriageDistribution.getSample();
+			currentPerson.getTimeline().addEvent(date, new OrganicEvent(EventType.ELIGIBLE_TO_MARRY));
 		} else {
 			// time in days to birth from 1/1/1600 + marriage age in days
-			date = DateManipulation.dateToDays(currentTimeline.getStartDate()) + femaleAgeAtMarriageDistribution.getSample();
-			currentTimeline.addEvent(date, new OrganicEvent(EventType.ELIGIBLE_TO_MARRY));
+			date = DateManipulation.dateToDays(currentPerson.getTimeline().getStartDate()) + femaleAgeAtMarriageDistribution.getSample();
+			currentPerson.getTimeline().addEvent(date, new OrganicEvent(EventType.ELIGIBLE_TO_MARRY));
 		}
 		// If marriage date is before simulation start date then add to respective partnership queue
 		//  Must be added to the partnership queue in the order that would be expected if simulation had occurred naturally.
@@ -285,7 +294,7 @@ public class OrganicPopulation implements IPopulation {
 	public void mainIteration(final int timeStepSizeInDays) {
 
 		while (currentDay < totalNumberOfDays) {
-
+			System.out.println(currentDay);
 			int previousDate = currentDay;
 			currentDay += timeStepSizeInDays;
 
@@ -318,7 +327,7 @@ public class OrganicPopulation implements IPopulation {
 					}
 
 				} else if(DateManipulation.differenceInDays(currentDay, DateManipulation.dateToDays(people.get(i).getBirthDate())) >= 0) {
-					generate_timeline(people.get(i));
+					populate_timeline(people.get(i));
 				}
 			}
 
