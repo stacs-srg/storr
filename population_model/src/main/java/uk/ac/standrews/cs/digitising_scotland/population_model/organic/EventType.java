@@ -28,5 +28,6 @@ public enum EventType {
     DIVORCE,
     EMIGRATE,
     BIRTH,
-    PARTNERSHIP_ENDED_BY_DEATH
+    PARTNERSHIP_ENDED_BY_DEATH,
+    DEATH
 }
