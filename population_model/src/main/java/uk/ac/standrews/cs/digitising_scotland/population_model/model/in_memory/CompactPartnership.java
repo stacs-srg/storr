@@ -112,7 +112,7 @@ public class CompactPartnership implements Comparable<CompactPartnership> {
         return partner2_index;
     }
 
-    public int compareTo(final @Nonnull CompactPartnership other) {
+    public int compareTo(@Nonnull final CompactPartnership other) {
 
         final int this_date = getMarriageDate();
         final int other_date = other.getMarriageDate();

@@ -34,6 +34,7 @@ import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
 import uk.ac.standrews.cs.digitising_scotland.util.ProgressIndicator;
 import uk.ac.standrews.cs.nds.util.QuickSort;
 
+import javax.annotation.concurrent.NotThreadSafe;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -45,10 +46,13 @@ import java.util.Set;
 /**
  * Model of synthetic population.
  *
+ * This class is not thread-safe.
+ *
  * @author Alan Dearle (alan.dearle@st-andrews.ac.uk)
  * @author Graham Kirby (graham.kirby@st-andrews.ac.uk)
  * @author Victor Andrei (va9@st-andrews.ac.uk)
  */
+@NotThreadSafe
 public class CompactPopulation {
 
     // TODO provide a way to configure the parameters dynamically

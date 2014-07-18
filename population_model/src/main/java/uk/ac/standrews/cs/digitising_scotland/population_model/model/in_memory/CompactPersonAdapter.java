@@ -27,6 +27,7 @@ import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPerson;
 import uk.ac.standrews.cs.digitising_scotland.population_model.util.RandomFactory;
 import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
 
+import javax.annotation.concurrent.NotThreadSafe;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +36,7 @@ import java.util.Random;
 /**
  * Created by graham on 01/07/2014.
  */
+@NotThreadSafe
 public class CompactPersonAdapter {
 
     public static final String OCCUPATION_DISTRIBUTION_KEY = "occupation_distribution_filename";

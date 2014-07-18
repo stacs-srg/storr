@@ -19,6 +19,7 @@ package uk.ac.standrews.cs.digitising_scotland.population_model.model.in_memory;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPerson;
 import uk.ac.standrews.cs.digitising_scotland.util.BitManipulation;
 
+import javax.annotation.concurrent.NotThreadSafe;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -28,9 +29,12 @@ import java.util.List;
  * Encodes multiple attributes into a field wherever possible.
  * Dates are encoded as integers.
  *
+ * This class is not thread-safe.
+ *
  * @author Alan Dearle (alan.dearle@st-andrews.ac.uk)
  * @author Graham Kirby (graham.kirby@st-andrews.ac.uk)
  */
+@NotThreadSafe
 public class CompactPerson {
 
     private static final int POSITION_OF_MALE_BIT = 0;
@@ -202,7 +206,7 @@ public class CompactPerson {
         this.partnership_list = partnership_list;
     }
 
-    protected synchronized void addPartnership(final CompactPartnership partnership) {
+    protected void addPartnership(final CompactPartnership partnership) {
 
         if (partnership_list == null) {
             partnership_list = new ArrayList<>();

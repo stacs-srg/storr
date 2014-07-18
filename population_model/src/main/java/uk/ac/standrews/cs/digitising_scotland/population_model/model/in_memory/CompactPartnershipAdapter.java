@@ -20,12 +20,14 @@ import uk.ac.standrews.cs.digitising_scotland.population_model.model.AbstractPar
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPartnership;
 import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
 
+import javax.annotation.concurrent.NotThreadSafe;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by graham on 01/07/2014.
  */
+@NotThreadSafe
 public class CompactPartnershipAdapter {
 
     public static IPartnership convertToFullPartnership(final CompactPartnership partnership, final CompactPopulation population) {

@@ -19,11 +19,12 @@ package uk.ac.standrews.cs.digitising_scotland.population_model.model;
 import uk.ac.standrews.cs.nds.util.ErrorHandling;
 
 /**
- * Generates (sequential) persistent unique IDs.
+ * Generates sequential unique IDs. There is no built-in mechanism for persisting the last issued
+ * ID across executions. If this is required, {@link #setId(int)} should be used to set the next
+ * ID retrieved from a file, database etc.
  *
  * @author Alan Dearle (alan.dearle@st-andrews.ac.uk)
  * @author Graham Kirby (graham.kirby@st-andrews.ac.uk)
- *
  */
 public class IDFactory {
 
@@ -38,17 +39,28 @@ public class IDFactory {
         }
     }
 
-    public static int getNextID() {
+    /**
+     * Gets the next ID.
+     * @return the next ID
+     */
+    public static synchronized int getNextID() {
 
-        return ++id;
+        return id++;
     }
 
+    /**
+     * Sets the next ID to one.
+     */
     public static void resetId() {
 
-        id = 0;
+        setId(1);
     }
 
-    public static void setId(int id) {
+    /**
+     * Sets the next ID.
+     * @param id the next ID to be allocated
+     */
+    public static synchronized void setId(final int id) {
 
         IDFactory.id = id;
     }

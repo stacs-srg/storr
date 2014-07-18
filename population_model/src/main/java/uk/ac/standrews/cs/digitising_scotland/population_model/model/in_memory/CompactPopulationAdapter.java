@@ -21,6 +21,7 @@ import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPartnershi
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPerson;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPopulation;
 
+import javax.annotation.concurrent.NotThreadSafe;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,14 +32,14 @@ import java.util.NoSuchElementException;
 
 /**
  * Created by graham on 10/06/2014.
- * Not thread-safe.
+ * This class is not thread-safe.
  */
+@NotThreadSafe
 public class CompactPopulationAdapter implements IPopulation {
 
     private final CompactPopulation population;
     private final CompactPerson[] people;
     private final CompactPersonAdapter compact_person_adapter;
-    private final CompactPartnershipAdapter compact_partnership_adapter;
 
     private boolean consistent_across_iterations;
     private static final boolean DEFAULT_CONSISTENT_ACROSS_ITERATIONS = false;
@@ -54,7 +55,6 @@ public class CompactPopulationAdapter implements IPopulation {
         people = population.getPeopleArray();
 
         compact_person_adapter = new CompactPersonAdapter();
-        compact_partnership_adapter = new CompactPartnershipAdapter();
 
         person_cache = new HashMap<>();
         partnership_cache = new HashMap<>();
@@ -399,7 +399,7 @@ public class CompactPopulationAdapter implements IPopulation {
 
         if (!consistent_across_iterations) {
 
-            return compact_partnership_adapter.convertToFullPartnership(partnership, population);
+            return CompactPartnershipAdapter.convertToFullPartnership(partnership, population);
 
         } else {
 
@@ -410,7 +410,7 @@ public class CompactPopulationAdapter implements IPopulation {
             }
             else {
 
-                final IPartnership full_partnership = compact_partnership_adapter.convertToFullPartnership(partnership, population);
+                final IPartnership full_partnership = CompactPartnershipAdapter.convertToFullPartnership(partnership, population);
                 partnership_cache.put(id, full_partnership);
                 return full_partnership;
             }
