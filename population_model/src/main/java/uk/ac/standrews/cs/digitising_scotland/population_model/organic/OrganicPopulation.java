@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License along with population_model. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-package uk.ac.standrews.cs.digitising_scotland.population_model.model;
+package uk.ac.standrews.cs.digitising_scotland.population_model.organic;
 
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.AgeAtDeathDistribution;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.Distribution;
@@ -22,6 +22,11 @@ import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.Fem
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.MaleAgeAtMarriageDistribution;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.UniformDistribution;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.UniformSexDistribution;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.IDFactory;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPartnership;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPerson;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPopulation;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.PopulationLogic;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.in_memory.CompactPopulation;
 import uk.ac.standrews.cs.digitising_scotland.population_model.util.RandomFactory;
 import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
@@ -90,8 +95,7 @@ public class OrganicPopulation implements IPopulation {
     private LinkedList<OrganicPerson> femalePartnershipQueue = new LinkedList<OrganicPerson>();
 
     private LinkedList<Integer> maleInitialPartnershipOrderer = new LinkedList<Integer>();
-    private
-    LinkedList<Integer> femaleInitialPartnershipOrderer = new LinkedList<Integer>();
+    private LinkedList<Integer> femaleInitialPartnershipOrderer = new LinkedList<Integer>();
 
     public void makeSeed(final int size) {
 

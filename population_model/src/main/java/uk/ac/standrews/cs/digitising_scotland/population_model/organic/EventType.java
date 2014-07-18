@@ -15,7 +15,7 @@
  * <http://www.gnu.org/licenses/>.
  */
 
-package uk.ac.standrews.cs.digitising_scotland.population_model.model;
+package uk.ac.standrews.cs.digitising_scotland.population_model.organic;
 
 /**
  * Specifies the possible types of events that can occur in an OrganicTimeline

@@ -16,7 +16,7 @@
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.distributions;
 
-import uk.ac.standrews.cs.digitising_scotland.population_model.model.DivorceInstigation;
+import uk.ac.standrews.cs.digitising_scotland.population_model.organic.DivorceInstigation;
 
 import java.util.Random;
 
