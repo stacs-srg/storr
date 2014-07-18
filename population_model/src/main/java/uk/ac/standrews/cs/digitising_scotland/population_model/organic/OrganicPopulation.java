@@ -118,6 +118,8 @@ public class OrganicPopulation implements IPopulation {
 		makeSeed(DEFAULT_SEED_SIZE);
 	}
 
+    private Date earliestDate = new Date(START_YEAR,1,1);
+
 	private OrganicPerson setPersonsBirthAndDeathDates(OrganicPerson currentPerson) {
 		final UniformDistribution days_of_year_distribution = new UniformDistribution(1, (int) DAYS_PER_YEAR, random);
 
@@ -128,6 +130,9 @@ public class OrganicPopulation implements IPopulation {
 
 		// Set birth date
 		Date currentDateOfBirth = DateManipulation.daysToDate(auxiliary);
+        if(DateManipulation.dateToDays(currentDateOfBirth) < DateManipulation.dateToDays(earliestDate))
+            earliestDate = currentDateOfBirth;
+        
 
 		// Calculate and set death date
 		Distribution<Integer> seed_death_distribution = new UniformDistribution(age, 100, random);
