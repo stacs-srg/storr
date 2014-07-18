@@ -58,8 +58,8 @@ public class DivorceAgeForMaleDistribution implements Distribution<Integer> {
 	 * 95-100  0
 	 */
 
-    private static final int MAXIMUM_AGE_IN_YEARS = 100;
-    private static final int[] AGE_DISTRIBUTION_WEIGHTS = new int[]{0, 0, 0, 6, 137, 214, 192, 161, 122, 91, 28, 28, 14, 6, 1, 0, 0, 0, 0, 0};
+    private static final int MAXIMUM_AGE_IN_YEARS = 74;
+    private static final int[] AGE_DISTRIBUTION_WEIGHTS = new int[]{6, 137, 214, 192, 161, 122, 91, 28, 28, 14, 6, 1};
 
     private final WeightedIntegerDistribution distribution;
 
@@ -70,7 +70,7 @@ public class DivorceAgeForMaleDistribution implements Distribution<Integer> {
      */
     public DivorceAgeForMaleDistribution(final Random random) {
         try {
-            distribution = new WeightedIntegerDistribution(0, (int) (MAXIMUM_AGE_IN_YEARS * CompactPopulation.DAYS_PER_YEAR) - 1, AGE_DISTRIBUTION_WEIGHTS, random);
+            distribution = new WeightedIntegerDistribution((int)(15 * CompactPopulation.DAYS_PER_YEAR), (int) (MAXIMUM_AGE_IN_YEARS * CompactPopulation.DAYS_PER_YEAR) - 1, AGE_DISTRIBUTION_WEIGHTS, random);
         } catch (final NegativeWeightException e) {
             throw new RuntimeException("negative weight exception: " + e.getMessage());
         }

@@ -70,7 +70,7 @@ public class OrganicPartnership implements IPartnership {
                 do {
                     maleDivorceAgeInDays = divorceAgeForMaleDistribution.getSample();
                 }
-                while (!PopulationLogic.divorceNotBeforeMarriage(DateManipulation.dateToDays(marriageDate), maleDivorceAgeInDays));
+                while (!PopulationLogic.divorceNotBeforeMarriage(DateManipulation.differenceInDays(husband.getBirthDate(), marriageDate), maleDivorceAgeInDays));
                 timeline.addEvent(maleDivorceAgeInDays, new OrganicEvent(EventType.DIVORCE));
                 timeline.setEndDate(DateManipulation.daysToDate(maleDivorceAgeInDays));
                 break;
@@ -80,7 +80,7 @@ public class OrganicPartnership implements IPartnership {
                 do {
                     femaleDivorceAgeInDays = divorceAgeForFemaleDistribution.getSample();
                 }
-                while (!PopulationLogic.divorceNotBeforeMarriage(DateManipulation.dateToDays(marriageDate), femaleDivorceAgeInDays));
+                while (!PopulationLogic.divorceNotBeforeMarriage(DateManipulation.differenceInDays(husband.getBirthDate(), marriageDate), femaleDivorceAgeInDays));
                 timeline.addEvent(femaleDivorceAgeInDays, new OrganicEvent(EventType.DIVORCE));
                 timeline.setEndDate(DateManipulation.daysToDate(femaleDivorceAgeInDays));
                 break;

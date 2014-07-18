@@ -51,7 +51,7 @@ public class OrganicPopulation implements IPopulation {
      * Seed parameters.
      */
     CompactPopulation seedPopulation;
-    public static final int DEFAULT_SEED_SIZE = 1000;
+    public static final int DEFAULT_SEED_SIZE = 10000;
 
     /**
      * The approximate average number of days per year.
