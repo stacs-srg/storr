@@ -41,14 +41,14 @@ public class SpecificPopulationStructureTest {
     @Test(expected = NoSuchElementException.class)
     public void getNextPersonFromEmptyPopulation() throws IOException, InconsistentWeightException {
 
-        IPopulation population = CompactPopulationTestCases.makePopulation(0);
+        final IPopulation population = CompactPopulationTestCases.makePopulation(0);
         population.getPeople().iterator().next();
     }
 
     @Test(expected = NoSuchElementException.class)
     public void getNextPartnershipFromEmptyPopulation() throws IOException, InconsistentWeightException {
 
-        IPopulation population = CompactPopulationTestCases.makePopulation(0);
+        final IPopulation population = CompactPopulationTestCases.makePopulation(0);
         population.getPartnerships().iterator().next();
     }
 
@@ -56,8 +56,8 @@ public class SpecificPopulationStructureTest {
     public void findPerson() {
 
         IDFactory.resetId();
-        CompactPerson[] people = CompactPopulationTestCases.makePeople(10);
-        CompactPopulation population = new CompactPopulation(people, 0, 0);
+        final CompactPerson[] people = CompactPopulationTestCases.makePeople(10);
+        final CompactPopulation population = new CompactPopulation(people, 0, 0);
 
         for (int i = 0; i < people.length; i++) {
             assertEquals(people[i], population.findPerson(i + 1));
@@ -71,78 +71,80 @@ public class SpecificPopulationStructureTest {
         checkSomePartnershipsAndChildrenAreCreated(1000);
     }
 
-    private void checkSomePartnershipsAndChildrenAreCreated(int population_size) throws Exception {
-
-        IPopulation population = CompactPopulationTestCases.fullPopulation(population_size);
-        assertTrue(population.getNumberOfPartnerships() > 0);
-        assertTrue(numberOfChildrenIn(population) > 0);
-    }
-
-    private int numberOfChildrenIn(IPopulation population) {
-
-        int count = 0;
-        for (IPartnership partnership : population.getPartnerships()) {
-            List<Integer> child_ids = partnership.getChildIds();
-            if (child_ids != null) count += child_ids.size();
-        }
-        return count;
-    }
-
     @Test
     public void familyStructureIsAsExpected() throws Exception {
 
-        IPopulation population = CompactPopulationTestCases.populationWithTwoFamilies();
+        final IPopulation population = CompactPopulationTestCases.populationWithTwoFamilies();
 
         // Check that father of family A has one partnership.
-        IPerson fatherA = population.findPerson(CompactPopulationTestCases.fatherA_id);
-        List<Integer> partnershipA_ids = fatherA.getPartnerships();
+        final IPerson fatherA = population.findPerson(CompactPopulationTestCases.fatherA_id);
+        final List<Integer> partnershipA_ids = fatherA.getPartnerships();
         assertEquals(1, partnershipA_ids.size());
 
         // Check that partnership points to father and mother of family A.
-        int partnershipA_id = partnershipA_ids.get(0);
-        IPartnership partnershipA = population.findPartnership(partnershipA_id);
+        final int partnershipA_id = partnershipA_ids.get(0);
+        final IPartnership partnershipA = population.findPartnership(partnershipA_id);
 
         assertPartnerIds(partnershipA.getMalePartnerId(), partnershipA.getFemalePartnerId(), CompactPopulationTestCases.fatherA_id, CompactPopulationTestCases.motherA_id);
 
         // Check that the family has the expected two children.
-        List<Integer> child_ids_partnershipA = partnershipA.getChildIds();
+        final List<Integer> child_ids_partnershipA = partnershipA.getChildIds();
         assertEquals(2, child_ids_partnershipA.size());
         assertEquals(CompactPopulationTestCases.child1A_id, (int) child_ids_partnershipA.get(0));
         assertEquals(CompactPopulationTestCases.child2A_id, (int) child_ids_partnershipA.get(1));
 
         // Check that the children refer to the parents' partnership.
-        IPerson child1A = population.findPerson(CompactPopulationTestCases.child1A_id);
-        IPerson child2A = population.findPerson(CompactPopulationTestCases.child2A_id);
+        final IPerson child1A = population.findPerson(CompactPopulationTestCases.child1A_id);
+        final IPerson child2A = population.findPerson(CompactPopulationTestCases.child2A_id);
         assertEquals(partnershipA_id, child1A.getParentsPartnership());
         assertEquals(partnershipA_id, child2A.getParentsPartnership());
 
         // Check that father of family B has one partnership.
-        IPerson fatherB = population.findPerson(CompactPopulationTestCases.fatherB_id);
-        List<Integer> partnershipB_ids = fatherB.getPartnerships();
+        final IPerson fatherB = population.findPerson(CompactPopulationTestCases.fatherB_id);
+        final List<Integer> partnershipB_ids = fatherB.getPartnerships();
         assertEquals(1, partnershipB_ids.size());
 
         // Check that partnership points to father and mother of family B.
         // The order of the partners within the partnership is as originally created.
-        int partnershipB_id = partnershipB_ids.get(0);
-        IPartnership partnershipB = population.findPartnership(partnershipB_id);
+        final int partnershipB_id = partnershipB_ids.get(0);
+        final IPartnership partnershipB = population.findPartnership(partnershipB_id);
 
         assertPartnerIds(partnershipB.getMalePartnerId(), partnershipB.getFemalePartnerId(), CompactPopulationTestCases.fatherB_id, CompactPopulationTestCases.motherB_id);
 
         // Check that the family has the expected two children.
-        List<Integer> child_ids_partnershipB = partnershipB.getChildIds();
+        final List<Integer> child_ids_partnershipB = partnershipB.getChildIds();
         assertEquals(2, child_ids_partnershipB.size());
         assertEquals(CompactPopulationTestCases.child1B_id, (int) child_ids_partnershipB.get(0));
         assertEquals(CompactPopulationTestCases.child2B_id, (int) child_ids_partnershipB.get(1));
 
         // Check that the children refer to the parents' partnership.
-        IPerson child1B = population.findPerson(CompactPopulationTestCases.child1B_id);
-        IPerson child2B = population.findPerson(CompactPopulationTestCases.child2B_id);
+        final IPerson child1B = population.findPerson(CompactPopulationTestCases.child1B_id);
+        final IPerson child2B = population.findPerson(CompactPopulationTestCases.child2B_id);
         assertEquals(partnershipB_id, child1B.getParentsPartnership());
         assertEquals(partnershipB_id, child2B.getParentsPartnership());
     }
 
-    private void assertPartnerIds(int partner1Id, int partner2Id, int father_id, int mother_id) {
+    private static void assertPartnerIds(final int partner1Id, final int partner2Id, final int father_id, final int mother_id) {
 
         assertTrue(partner1Id == father_id && partner2Id == mother_id);
+    }
+
+    private static void checkSomePartnershipsAndChildrenAreCreated(final int population_size) throws Exception {
+
+        final IPopulation population = CompactPopulationTestCases.fullPopulation(population_size);
+        assertTrue(population.getNumberOfPartnerships() > 0);
+        assertTrue(numberOfChildrenIn(population) > 0);
+    }
+
+    private static int numberOfChildrenIn(final IPopulation population) {
+
+        int count = 0;
+        for (final IPartnership partnership : population.getPartnerships()) {
+            final List<Integer> child_ids = partnership.getChildIds();
+            if (child_ids != null) {
+                count += child_ids.size();
+            }
+        }
+        return count;
     }
 }

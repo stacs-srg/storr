@@ -59,14 +59,14 @@ public class CompactPopulationTestCases {
         };
     }
 
-    protected static IPopulation makePopulation(int population_size) throws IOException, InconsistentWeightException {
+    protected static IPopulation makePopulation(final int population_size) throws IOException, InconsistentWeightException {
 
         return new CompactPopulationAdapter(new CompactPopulation(makePeople(population_size), 0, 0));
     }
 
-    protected static CompactPerson[] makePeople(int n) {
+    protected static CompactPerson[] makePeople(final int n) {
 
-        CompactPerson[] result = new CompactPerson[n];
+        final CompactPerson[] result = new CompactPerson[n];
         for (int i = 0; i < n; i++) {
             result[i] = new CompactPerson(0, true);
             result[i].id = i + 1;
@@ -74,10 +74,10 @@ public class CompactPopulationTestCases {
         return result;
     }
 
-    protected static IPopulation fullPopulation(int size) throws Exception {
+    protected static IPopulation fullPopulation(final int size) throws Exception {
 
-        CompactPopulation compact_population = new CompactPopulation(size);
-        IPopulation population = new CompactPopulationAdapter(compact_population);
+        final CompactPopulation compact_population = new CompactPopulation(size);
+        final IPopulation population = new CompactPopulationAdapter(compact_population);
         population.setDescription("full-population-" + size);
 
         return population;
@@ -85,18 +85,18 @@ public class CompactPopulationTestCases {
 
     protected static IPopulation populationWithTwoFamilies() throws IOException, InconsistentWeightException, ParseException {
 
-        CompactPerson[] people = makePeopleInTwoFamilies();
+        final CompactPerson[] people = makePeopleInTwoFamilies();
 
-        IPopulation population = new CompactPopulationAdapter(new CompactPopulation(people, 0, 0));
+        final IPopulation population = new CompactPopulationAdapter(new CompactPopulation(people, 0, 0));
         population.setDescription("population-2-families");
 
         return population;
     }
 
-    private static IPopulation unconnectedPopulation(int size) throws IOException, InconsistentWeightException {
+    private static IPopulation unconnectedPopulation(final int size) throws IOException, InconsistentWeightException {
 
-        CompactPerson[] people = makePeople(size);
-        IPopulation population = new CompactPopulationAdapter(new CompactPopulation(people, 0, 0));
+        final CompactPerson[] people = makePeople(size);
+        final IPopulation population = new CompactPopulationAdapter(new CompactPopulation(people, 0, 0));
         population.setDescription("unconnected-population-" + size);
 
         return population;
@@ -104,10 +104,10 @@ public class CompactPopulationTestCases {
 
     private static IPopulation populationWithOnePartnership() throws IOException, InconsistentWeightException {
 
-        CompactPerson[] people = makePeople(3);
+        final CompactPerson[] people = makePeople(3);
         createPartnership(people, 0, 1);
 
-        IPopulation population = new CompactPopulationAdapter(new CompactPopulation(people, 0, 0));
+        final IPopulation population = new CompactPopulationAdapter(new CompactPopulation(people, 0, 0));
         population.setDescription("population-1-partnership");
 
         return population;
@@ -115,19 +115,19 @@ public class CompactPopulationTestCases {
 
     private static IPopulation populationWithThreePartnerships() throws IOException, InconsistentWeightException {
 
-        CompactPerson[] people = makePeople(6);
+        final CompactPerson[] people = makePeople(6);
 
         createPartnership(people, 0, 1);
         createPartnership(people, 2, 3);
         createPartnership(people, 4, 5);
 
-        IPopulation population = new CompactPopulationAdapter(new CompactPopulation(people, 0, 0));
+        final IPopulation population = new CompactPopulationAdapter(new CompactPopulation(people, 0, 0));
         population.setDescription("population-3-partnerships");
 
         return population;
     }
 
-    private static CompactPartnership createPartnership(CompactPerson[] people, int partner1_index, int partner2_index) {
+    private static CompactPartnership createPartnership(final CompactPerson[] people,final  int partner1_index, final int partner2_index) {
 
         people[partner1_index].setMale(false);
         people[partner2_index].setMale(true);
@@ -137,36 +137,36 @@ public class CompactPopulationTestCases {
 
     private static CompactPerson[] makePeopleInTwoFamilies() throws IOException, InconsistentWeightException, ParseException {
 
-        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+        final  SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 
-        int fatherA_birth_date = DateManipulation.dateToDays(DateManipulation.parseDate("21/08/1888", formatter));
-        int motherA_birth_date = DateManipulation.dateToDays(DateManipulation.parseDate("01/01/1890", formatter));
-        int child1A_birth_date = DateManipulation.dateToDays(DateManipulation.parseDate("17/11/1910", formatter));
-        int child2A_birth_date = DateManipulation.dateToDays(DateManipulation.parseDate("31/12/1913", formatter));
+        final int fatherA_birth_date = DateManipulation.dateToDays(DateManipulation.parseDate("21/08/1888", formatter));
+        final int motherA_birth_date = DateManipulation.dateToDays(DateManipulation.parseDate("01/01/1890", formatter));
+        final int child1A_birth_date = DateManipulation.dateToDays(DateManipulation.parseDate("17/11/1910", formatter));
+        final int child2A_birth_date = DateManipulation.dateToDays(DateManipulation.parseDate("31/12/1913", formatter));
 
-        int fatherB_birth_date = DateManipulation.dateToDays(DateManipulation.parseDate("21/07/1860", formatter));
-        int motherB_birth_date = DateManipulation.dateToDays(DateManipulation.parseDate("23/02/1891", formatter));
-        int child1B_birth_date = DateManipulation.dateToDays(DateManipulation.parseDate("21/08/1920", formatter));
-        int child2B_birth_date = DateManipulation.dateToDays(DateManipulation.parseDate("21/08/1925", formatter));
+        final int fatherB_birth_date = DateManipulation.dateToDays(DateManipulation.parseDate("21/07/1860", formatter));
+        final int motherB_birth_date = DateManipulation.dateToDays(DateManipulation.parseDate("23/02/1891", formatter));
+        final int child1B_birth_date = DateManipulation.dateToDays(DateManipulation.parseDate("21/08/1920", formatter));
+        final int child2B_birth_date = DateManipulation.dateToDays(DateManipulation.parseDate("21/08/1925", formatter));
 
-        CompactPerson fatherA = new CompactPerson(fatherA_birth_date, true, fatherA_id);
-        CompactPerson motherA = new CompactPerson(motherA_birth_date, false, motherA_id);
-        CompactPerson motherB = new CompactPerson(motherB_birth_date, false, motherB_id);
-        CompactPerson fatherB = new CompactPerson(fatherB_birth_date, true, fatherB_id);
-        CompactPerson child1A = new CompactPerson(child1A_birth_date, false, child1A_id);
-        CompactPerson child1B = new CompactPerson(child1B_birth_date, true, child1B_id);
-        CompactPerson child2A = new CompactPerson(child2A_birth_date, true, child2A_id);
-        CompactPerson child2B = new CompactPerson(child2B_birth_date, false, child2B_id);
+        final CompactPerson fatherA = new CompactPerson(fatherA_birth_date, true, fatherA_id);
+        final CompactPerson motherA = new CompactPerson(motherA_birth_date, false, motherA_id);
+        final CompactPerson motherB = new CompactPerson(motherB_birth_date, false, motherB_id);
+        final CompactPerson fatherB = new CompactPerson(fatherB_birth_date, true, fatherB_id);
+        final CompactPerson child1A = new CompactPerson(child1A_birth_date, false, child1A_id);
+        final CompactPerson child1B = new CompactPerson(child1B_birth_date, true, child1B_id);
+        final CompactPerson child2A = new CompactPerson(child2A_birth_date, true, child2A_id);
+        final CompactPerson child2B = new CompactPerson(child2B_birth_date, false, child2B_id);
 
-        CompactPerson[] population = new CompactPerson[]{fatherA, motherA, motherB, fatherB, child1A, child1B, child2A, child2B};
+        final CompactPerson[] population = new CompactPerson[]{fatherA, motherA, motherB, fatherB, child1A, child1B, child2A, child2B};
 
-        CompactPartnership partnershipA = new CompactPartnership(0, 1, 0);
-        CompactPartnership partnershipB = new CompactPartnership(2, 3, 0);
+        final CompactPartnership partnershipA = new CompactPartnership(0, 1, 0);
+        final CompactPartnership partnershipB = new CompactPartnership(2, 3, 0);
 
-        List<CompactPartnership> partnershipsFatherA = new ArrayList<>();
-        List<CompactPartnership> partnershipsMotherA = new ArrayList<>();
-        List<CompactPartnership> partnershipsFatherB = new ArrayList<>();
-        List<CompactPartnership> partnershipsMotherB = new ArrayList<>();
+        final List<CompactPartnership> partnershipsFatherA = new ArrayList<>();
+        final List<CompactPartnership> partnershipsMotherA = new ArrayList<>();
+        final List<CompactPartnership> partnershipsFatherB = new ArrayList<>();
+        final List<CompactPartnership> partnershipsMotherB = new ArrayList<>();
 
         partnershipsFatherA.add(partnershipA);
         partnershipsMotherA.add(partnershipA);
@@ -178,8 +178,8 @@ public class CompactPopulationTestCases {
         fatherB.setPartnerships(partnershipsFatherB);
         motherB.setPartnerships(partnershipsMotherB);
 
-        List<Integer> childrenA = new ArrayList<>();
-        List<Integer> childrenB = new ArrayList<>();
+        final List<Integer> childrenA = new ArrayList<>();
+        final List<Integer> childrenB = new ArrayList<>();
 
         childrenA.add(4);
         childrenA.add(6);

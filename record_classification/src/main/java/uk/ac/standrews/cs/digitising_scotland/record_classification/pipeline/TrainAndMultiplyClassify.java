@@ -286,21 +286,22 @@ public final class TrainAndMultiplyClassify {
         }
     }
 
-    private static Bucket createPredictionBucket(final File prediction) {
-
-        Bucket toClassify = null;
-        try {
-            toClassify = new Bucket(RecordFactory.makeCodedRecordsFromFile(prediction));
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
-        catch (InputFormatException e) {
-            e.printStackTrace();
-        }
-
-        return toClassify;
-    }
+    //    Commented out while testing - FIXME
+    //    private static Bucket createPredictionBucket(final File prediction) {
+    //
+    //        Bucket toClassify = null;
+    //        try {
+    //            toClassify = new Bucket(RecordFactory.makeCodedRecordsFromFile(prediction));
+    //        }
+    //        catch (IOException e) {
+    //            e.printStackTrace();
+    //        }
+    //        catch (InputFormatException e) {
+    //            e.printStackTrace();
+    //        }
+    //
+    //        return toClassify;
+    //    }
 
     private static AbstractClassifier trainOLRClassifier(final Bucket bucket, final VectorFactory vectorFactory) throws Exception {
 

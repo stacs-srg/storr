@@ -43,11 +43,11 @@ public abstract class AbstractExporterTest {
     protected final IPopulation population;
     protected final String file_name_root;
 
+    @SuppressWarnings("MagicNumber")
     protected static final int[] TEST_CASE_POPULATION_SIZES = new int[]{10, 30, 50, 200};
     protected static final String[] TEST_CASE_FILE_NAME_ROOTS = new String[TEST_CASE_POPULATION_SIZES.length];
 
     static {
-
         for (int i = 0; i < TEST_CASE_FILE_NAME_ROOTS.length; i++) {
             TEST_CASE_FILE_NAME_ROOTS[i] = makeFileNameRoot(TEST_CASE_POPULATION_SIZES[i]);
         }
@@ -72,7 +72,7 @@ public abstract class AbstractExporterTest {
     private static Object[] makeTestConfiguration(final int population_size, final String file_name_root) throws Exception {
 
         IDFactory.resetId();
-        IPopulation population = new CompactPopulationAdapter(new CompactPopulation(population_size));
+        final IPopulation population = new CompactPopulationAdapter(new CompactPopulation(population_size));
         population.setDescription(String.valueOf(population_size));
 
         return new Object[]{population, file_name_root};
@@ -83,16 +83,16 @@ public abstract class AbstractExporterTest {
         return "file" + population_size;
     }
 
-    protected void assertThatFilesHaveSameContent(final Path path1, final Path path2) throws IOException {
+    protected static void assertThatFilesHaveSameContent(final Path path1, final Path path2) throws IOException {
 
         try (
                 BufferedReader reader1 = Files.newBufferedReader(path1, FileManipulation.FILE_CHARSET);
                 BufferedReader reader2 = Files.newBufferedReader(path2, FileManipulation.FILE_CHARSET)) {
 
-            String line1, line2;
+            String line1;
 
             while ((line1 = reader1.readLine()) != null) {
-                line2 = reader2.readLine();
+                final String line2 = reader2.readLine();
                 assertEquals(line1, line2);
             }
             assertNull(reader2.readLine());

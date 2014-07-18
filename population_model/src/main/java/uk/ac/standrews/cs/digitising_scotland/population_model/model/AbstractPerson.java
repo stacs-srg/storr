@@ -92,11 +92,13 @@ public abstract class AbstractPerson implements IPerson {
         return parents_partnership_id;
     }
 
+    @SuppressWarnings("NonFinalFieldReferenceInEquals")
     @Override
     public boolean equals(final Object other) {
         return other instanceof IPerson && ((IPerson) other).getId() == id;
     }
 
+    @SuppressWarnings("NonFinalFieldReferencedInHashCode")
     @Override
     public int hashCode() {
         return id;

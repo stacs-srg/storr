@@ -55,7 +55,7 @@ public abstract class AbstractFilePopulationWriter implements IPopulationWriter 
         formatter.setMinimumIntegerDigits(NUMBER_OF_DIGITS_IN_ID);
         formatter.setGroupingUsed(false);
 
-        Path path = Paths.get(path_string);
+        final Path path = Paths.get(path_string);
         FileManipulation.createParentDirectoryIfDoesNotExist(path);
 
         writer = new PrintWriter(Files.newBufferedWriter(path, FileManipulation.FILE_CHARSET));
@@ -71,11 +71,11 @@ public abstract class AbstractFilePopulationWriter implements IPopulationWriter 
     }
 
     protected String individualLabel(final int person_id) {
-        return "p" + padId(person_id);
+        return 'p' + padId(person_id);
     }
 
-    protected String familyLabel(int partnership_id) {
-        return "m" + padId(partnership_id);
+    protected String familyLabel(final int partnership_id) {
+        return 'm' + padId(partnership_id);
     }
 
     private String padId(final int index) {

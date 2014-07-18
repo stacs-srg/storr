@@ -14,33 +14,34 @@
  * You should have received a copy of the GNU General Public License along with population_model. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-package uk.ac.standrews.cs.digitising_scotland.population_model.model;
+package uk.ac.standrews.cs.digitising_scotland.population_model.organic;
 
 /**
  * Created by victor on 08/07/14.
+ *
  * @author Tom Dalton (tsd4@st-andrews.ac.uk)
  */
 public class OrganicEvent {
 
     private EventType eventType;
-    
+
     /**
      * Initialises an OrganicEvent given the eventType which is an Enum of possible events
-     * 
+     *
      * @param eventType Specifies the event type
      */
     public OrganicEvent(final EventType eventType) {
-    	this.eventType = eventType;
+        this.eventType = eventType;
     }
-    
-    
+
+
     /**
      * Returns the event type
-     * 
+     *
      * @return The event type
      */
     public EventType getEventType() {
-    	return eventType;
+        return eventType;
     }
-    
+
 }

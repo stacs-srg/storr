@@ -14,8 +14,9 @@
  * You should have received a copy of the GNU General Public License along with population_model. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-package uk.ac.standrews.cs.digitising_scotland.population_model.model;
+package uk.ac.standrews.cs.digitising_scotland.population_model.organic;
 
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPerson;
 import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
 
 import java.util.ArrayList;
@@ -24,6 +25,7 @@ import java.util.List;
 
 /**
  * Created by victor on 08/07/14.
+ *
  * @author Tom Dalton (tsd4@st-andrews.ac.uk)
  */
 public class OrganicPerson implements IPerson {
@@ -63,15 +65,15 @@ public class OrganicPerson implements IPerson {
     public OrganicTimeline getTimeline() {
         return timeline;
     }
-    
+
 //    public OrganicEvent getCurrentEvent() {
 //		timeline = getTimeline();
 //		
 //    	return null;	
 //    }
-    
+
     public void addPartnership(final int id) {
-    	partnerships.add(id);
+        partnerships.add(id);
     }
 
     /**

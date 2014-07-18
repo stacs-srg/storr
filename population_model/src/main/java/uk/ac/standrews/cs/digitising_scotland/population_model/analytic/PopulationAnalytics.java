@@ -51,8 +51,8 @@ public class PopulationAnalytics {
         final int number_females = countFemales();
 
         System.out.println("Population size = " + size);
-        System.out.println("Number of males = " + number_males + " = " + String.format("%.1f", number_males / (double) size * ONE_HUNDRED) + "%");
-        System.out.println("Number of males = " + number_females + " = " + String.format("%.1f", number_females / (double) size * ONE_HUNDRED) + "%");
+        System.out.println("Number of males = " + number_males + " = " + String.format("%.1f", number_males / (double) size * ONE_HUNDRED) + '%');
+        System.out.println("Number of females = " + number_females + " = " + String.format("%.1f", number_females / (double) size * ONE_HUNDRED) + '%');
 
         printAllBirthDates();
         printAllDeathDates();
@@ -62,8 +62,10 @@ public class PopulationAnalytics {
     private int countMales() throws Exception {
 
         int count = 0;
-        for (IPerson person : population.getPeople()) {
-            if (person.getSex() == IPerson.MALE) count++;
+        for (final IPerson person : population.getPeople()) {
+            if (person.getSex() == IPerson.MALE) {
+                count++;
+            }
         }
         return count;
     }
@@ -71,26 +73,26 @@ public class PopulationAnalytics {
     private int countFemales() throws Exception {
 
         int count = 0;
-        for (IPerson person : population.getPeople()) {
-            if (person.getSex() == IPerson.FEMALE) count++;
+        for (final IPerson person : population.getPeople()) {
+            if (person.getSex() == IPerson.FEMALE) {
+                count++;
+            }
         }
         return count;
     }
-
-    // -------------------------------------------------------------------------------------------------------
 
     /**
      * Prints the dates of birth of all people.
      */
     public void printAllBirthDates() throws Exception {
 
-        for (IPerson person : population.getPeople()) {
+        for (final IPerson person : population.getPeople()) {
             printBirthDate(person);
             System.out.println();
         }
     }
 
-    private void printBirthDate(IPerson person) {
+    private static void printBirthDate(final IPerson person) {
 
         System.out.print(DateManipulation.formatDate(person.getBirthDate()));
     }
@@ -100,15 +102,15 @@ public class PopulationAnalytics {
      */
     public void printAllDeathDates() throws Exception {
 
-        for (IPerson person : population.getPeople()) {
+        for (final IPerson person : population.getPeople()) {
             printDeathDate(person);
             System.out.println();
         }
     }
 
-    private void printDeathDate(IPerson person) {
+    private static void printDeathDate(final IPerson person) {
 
-        Date death_date = person.getDeathDate();
+        final Date death_date = person.getDeathDate();
         if (death_date != null) {
             System.out.print(DateManipulation.formatDate(death_date));
         }
@@ -133,19 +135,20 @@ public class PopulationAnalytics {
     /**
      * Prints the details of partnerships and children for a given person.
      */
-    public void printPartnerships(IPerson person) throws Exception {
+    @SuppressWarnings("FeatureEnvy")
+    public void printPartnerships(final IPerson person) throws Exception {
 
         final List<Integer> partnership_ids = person.getPartnerships();
         if (partnership_ids != null) {
             for (final int partnership_id : partnership_ids) {
 
-                IPartnership partnership = population.findPartnership(partnership_id);
+                final IPartnership partnership = population.findPartnership(partnership_id);
 
                 final int partner_id = partnership.getPartnerOf(person.getId());
                 final IPerson partner = population.findPerson(partner_id);
                 System.out.println("\tPartner born: " + DateManipulation.formatDate(partner.getBirthDate()));
 
-                Date marriage_date = partnership.getMarriageDate();
+                final Date marriage_date = partnership.getMarriageDate();
                 if (marriage_date != null) {
                     System.out.println("\tMarriage on " + DateManipulation.formatDate(marriage_date));
                 }
@@ -160,7 +163,7 @@ public class PopulationAnalytics {
      */
     public void printAllDates() throws Exception {
 
-        for (IPerson person : population.getPeople()) {
+        for (final IPerson person : population.getPeople()) {
 
             System.out.print(person.getSex() + " Born: ");
             printBirthDate(person);

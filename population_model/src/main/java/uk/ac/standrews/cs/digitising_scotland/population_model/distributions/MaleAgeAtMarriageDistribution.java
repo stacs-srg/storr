@@ -16,13 +16,13 @@
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.distributions;
 
-import java.util.Random;
-
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.in_memory.CompactPopulation;
+
+import java.util.Random;
 
 /**
  * Distribution modelling ages of males at marriage, represented in days.
- * 
+ *
  * @author Tom Dalton (tsd4@st-andrews.ac.uk)
  */
 public class MaleAgeAtMarriageDistribution implements Distribution<Integer> {
@@ -55,31 +55,31 @@ public class MaleAgeAtMarriageDistribution implements Distribution<Integer> {
      * 75-79   3
      * 80-84   1
      * 85-89   1
-     * 90+     0
+     * 90-95   0
+     * 95-100  0
      */
 
-	private static final int MAXIMUM_AGE_IN_YEARS = 100;
-	private static final int[] AGE_DISTRIBUTION_WEIGHTS = new int[] { 0, 0, 0, 20, 107, 49, 18, 10, 7, 5, 4, 4, 4, 3, 3, 3, 1, 1, 0 };
+    private static final int MAXIMUM_AGE_IN_YEARS = 100;
+    private static final int[] AGE_DISTRIBUTION_WEIGHTS = new int[]{0, 0, 0, 20, 107, 49, 18, 10, 7, 5, 4, 4, 4, 3, 3, 3, 1, 1, 0, 0};
 
-	private final WeightedIntegerDistribution distribution;
+    private final WeightedIntegerDistribution distribution;
 
-	/**
-	 * Creates an age at marriage distribution
-	 * 
-	 * @param random
-	 *            the random number generator to be used
-	 */
-	public MaleAgeAtMarriageDistribution(final Random random) {
-		try {
-			distribution = new WeightedIntegerDistribution(0, (int) (MAXIMUM_AGE_IN_YEARS * CompactPopulation.DAYS_PER_YEAR) - 1, AGE_DISTRIBUTION_WEIGHTS, random);
-		} catch (final NegativeWeightException e) {
-			throw new RuntimeException("negative weight exception: " + e.getMessage());
-		}
-	}
+    /**
+     * Creates an age at marriage distribution
+     *
+     * @param random the random number generator to be used
+     */
+    public MaleAgeAtMarriageDistribution(final Random random) {
+        try {
+            distribution = new WeightedIntegerDistribution(0, (int) (MAXIMUM_AGE_IN_YEARS * CompactPopulation.DAYS_PER_YEAR) - 1, AGE_DISTRIBUTION_WEIGHTS, random);
+        } catch (final NegativeWeightException e) {
+            throw new RuntimeException("negative weight exception: " + e.getMessage());
+        }
+    }
 
-	@Override
-	public Integer getSample() {
-		return distribution.getSample();
-	}
+    @Override
+    public Integer getSample() {
+        return distribution.getSample();
+    }
 
 }

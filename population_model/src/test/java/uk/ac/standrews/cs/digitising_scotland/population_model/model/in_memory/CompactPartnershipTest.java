@@ -30,10 +30,10 @@ public class CompactPartnershipTest {
     @Test
     public void getPartner() {
 
-        int partner1_index = 2;
-        int partner2_index = 3;
+        final int partner1_index = 2;
+        final int partner2_index = 3;
 
-        CompactPartnership p = new CompactPartnership(partner1_index, partner2_index, -1);
+        final CompactPartnership p = new CompactPartnership(partner1_index, partner2_index, -1);
 
         assertEquals(partner2_index, p.getPartner(partner1_index));
         assertEquals(partner1_index, p.getPartner(partner2_index));
@@ -43,9 +43,9 @@ public class CompactPartnershipTest {
     @Test
     public void compareTo() {
 
-        CompactPartnership p1 = new CompactPartnership(0, 0, 5);
-        CompactPartnership p2 = new CompactPartnership(0, 0, 7);
-        CompactPartnership p3 = new CompactPartnership(0, 0, 7);
+        final CompactPartnership p1 = new CompactPartnership(0, 0, 5);
+        final CompactPartnership p2 = new CompactPartnership(0, 0, 7);
+        final CompactPartnership p3 = new CompactPartnership(0, 0, 7);
 
         assertTrue(p1.compareTo(p2) < 0);
         assertTrue(p1.compareTo(p3) < 0);
@@ -60,9 +60,9 @@ public class CompactPartnershipTest {
     @Test
     public void equals() {
 
-        CompactPartnership p1 = new CompactPartnership(0, 0, 5);
-        CompactPartnership p2 = new CompactPartnership(0, 0, 7);
-        CompactPartnership p3 = new CompactPartnership(0, 0, 7);
+        final CompactPartnership p1 = new CompactPartnership(0, 0, 5);
+        final CompactPartnership p2 = new CompactPartnership(0, 0, 7);
+        final CompactPartnership p3 = new CompactPartnership(0, 0, 7);
 
         assertFalse(p1.equals(p2));
         assertFalse(p1.equals(p3));

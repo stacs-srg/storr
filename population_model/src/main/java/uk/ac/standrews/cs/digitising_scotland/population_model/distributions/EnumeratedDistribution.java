@@ -34,7 +34,7 @@ public class EnumeratedDistribution implements Distribution<String> {
     private static final double ALLOWABLE_TOTAL_WEIGHT_DISCREPANCY = 0.001;
     private static final Comparator<? super StringWithCumulativeProbability> ITEM_COMPARATOR = new ItemComparator();
 
-    private Random random;
+    private final Random random;
     private StringWithCumulativeProbability[] items = null;
 
     protected EnumeratedDistribution(final Random random) {
@@ -53,7 +53,7 @@ public class EnumeratedDistribution implements Distribution<String> {
         double cumulative_probability = 0.0;
         int i = 0;
 
-        for (Map.Entry<String, Double> entry : item_probabilities.entrySet()) {
+        for (final Map.Entry<String, Double> entry : item_probabilities.entrySet()) {
 
             cumulative_probability += entry.getValue();
             items[i++] = new StringWithCumulativeProbability(entry.getKey(), cumulative_probability);
