@@ -21,6 +21,11 @@ import uk.ac.standrews.cs.digitising_scotland.util.PropertiesManipulation;
 import java.io.IOException;
 import java.util.Properties;
 
+/**
+ * Defines various population properties.
+ *
+ * @author Graham Kirby (graham.kirby@st-andrews.ac.uk)
+ */
 public class PopulationProperties {
 
     /**

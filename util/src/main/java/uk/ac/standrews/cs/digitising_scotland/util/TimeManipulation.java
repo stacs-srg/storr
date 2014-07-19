@@ -16,9 +16,7 @@
  */
 package uk.ac.standrews.cs.digitising_scotland.util;
 
-import static java.util.concurrent.TimeUnit.MILLISECONDS;
-import static java.util.concurrent.TimeUnit.MINUTES;
-import static java.util.concurrent.TimeUnit.HOURS;
+import static java.util.concurrent.TimeUnit.*;
 
 /**
  * Created by graham on 28/05/2014.

@@ -139,6 +139,7 @@ public class PopulationAnalytics {
 
     /**
      * Prints the details of partnerships and children for a given person.
+     * @param person the person
      */
     @SuppressWarnings("FeatureEnvy")
     public void printPartnerships(final IPerson person)  {

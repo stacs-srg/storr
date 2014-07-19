@@ -18,14 +18,15 @@ package uk.ac.standrews.cs.digitising_scotland.util;
 
 /**
  * Utility class implementing reading and writing bits within a byte.
- * 
+ *
  * @author Graham Kirby (graham.kirby@st-andrews.ac.uk)
  */
 public class BitManipulation {
 
     /**
      * Reads a specified bit within a byte.
-     * @param b the byte
+     *
+     * @param b        the byte
      * @param position the bit position, from 0-7
      * @return the bit
      */
@@ -36,8 +37,9 @@ public class BitManipulation {
 
     /**
      * Writes a specified bit within a byte.
-     * @param b the byte
-     * @param bit the bit value to be written
+     *
+     * @param b        the byte
+     * @param bit      the bit value to be written
      * @param position the bit position, from 0-7
      * @return the resulting byte
      */

@@ -37,7 +37,7 @@ public class FilteredIterator<T> implements Iterator<T> {
         loadNext();
     }
 
-    private void loadNext()  {
+    private void loadNext() {
 
         if (iterator.hasNext()) {
             next = iterator.next();
@@ -47,8 +47,7 @@ public class FilteredIterator<T> implements Iterator<T> {
             if (!condition.test(next)) {
                 next = null;
             }
-        }
-        else {
+        } else {
             next = null;
         }
     }
