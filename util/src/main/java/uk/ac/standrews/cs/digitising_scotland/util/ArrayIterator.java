@@ -17,18 +17,19 @@ package uk.ac.standrews.cs.digitising_scotland.util;
  *
  * See LICENSE.txt for details.
  */
+
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
  * Converts an array to an iterator.
- * <p>
+ * <p/>
  * More information about this class is available from <a target="_top" href=
  * "http://ostermiller.org/utils/Iterator_Enumeration.html">ostermiller.org</a>.
  *
- * @author Stephen Ostermiller http://ostermiller.org/contact.pl?regarding=Java+Utilities
  * @param <ElementType> Type of array over which to iterate
+ * @author Stephen Ostermiller http://ostermiller.org/contact.pl?regarding=Java+Utilities
  * @since ostermillerutils 1.03.00
  */
 public class ArrayIterator<ElementType> implements Iterator<ElementType> {
@@ -52,7 +53,6 @@ public class ArrayIterator<ElementType> implements Iterator<ElementType> {
      * Create an Iterator from an Array.
      *
      * @param array of objects on which to enumerate.
-     *
      * @since ostermillerutils 1.03.00
      */
     public ArrayIterator(final ElementType[] array) {
@@ -65,7 +65,6 @@ public class ArrayIterator<ElementType> implements Iterator<ElementType> {
      *
      * @return true if and only if this Iterator object contains at least
      * one more element to provide; false otherwise.
-     *
      * @since ostermillerutils 1.03.00
      */
     @Override
@@ -79,13 +78,14 @@ public class ArrayIterator<ElementType> implements Iterator<ElementType> {
      * object has at least one more element to provide.
      *
      * @return the next element of this Iterator.
-     *
      * @since ostermillerutils 1.03.00
      */
     @Override
     public ElementType next() {
 
-        if (index >= array.length) { throw new NoSuchElementException("Array index: " + index); }
+        if (index >= array.length) {
+            throw new NoSuchElementException("Array index: " + index);
+        }
         final ElementType object = array[index];
         index++;
         lastRemoved = false;
@@ -98,14 +98,17 @@ public class ArrayIterator<ElementType> implements Iterator<ElementType> {
      * This method can be called only once per call to next.
      *
      * @throws IllegalStateException if the next method has not yet been called, or the remove method has already been called after the last call to the next method.
-     *
      * @since ostermillerutils 1.03.00
      */
     @Override
     public void remove() {
 
-        if (index == 0) { throw new IllegalStateException(); }
-        if (lastRemoved) { throw new IllegalStateException(); }
+        if (index == 0) {
+            throw new IllegalStateException();
+        }
+        if (lastRemoved) {
+            throw new IllegalStateException();
+        }
         array[index - 1] = null;
         lastRemoved = true;
     }

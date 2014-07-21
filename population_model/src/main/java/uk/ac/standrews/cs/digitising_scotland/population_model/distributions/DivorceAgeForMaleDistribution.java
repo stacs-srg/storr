@@ -28,36 +28,37 @@ import java.util.Random;
  */
 public class DivorceAgeForMaleDistribution implements Distribution<Integer> {
 
-	/*
+    /*
      * from numberofdivorcesageatdivorceandmaritalstatusbeforemarriage_tcm77-351699
      * from http://www.ons.gov.uk/ons/rel/vsob1/divorces-in-england-and-wales/2012/rtd-divorces---number-of-divorces-age-at-divorce-and-marital-status-before-marriage.xls
      * Number of divorces, age at divorce and marital status before marriage
      * 
      * Data for the year 1975
-	 * 
-	 * Age     per 1000 Divorces
-	 * 0-4     0
-	 * 5-9     0
-	 * 10-14   0
-	 * 15-19   6
-	 * 20-24   137
-	 * 25-29   214
-	 * 30-34   192
-	 * 35-39   161
-	 * 40-44   122
-	 * 45-49   91
-	 * 50-54   28
-	 * 55-59   28
-	 * 60-64   14 // By interpolation
-	 * 65-69   6 // By interpolation
-	 * 70-74   1 // By interpolation
-	 * 75-79   0
-	 * 80-84   0
-	 * 85-89   0
-	 * 90-95   0
-	 * 95-100  0
-	 */
+     * 
+     * Age     per 1000 Divorces
+     * 0-4     0
+     * 5-9     0
+     * 10-14   0
+     * 15-19   6
+     * 20-24   137
+     * 25-29   214
+     * 30-34   192
+     * 35-39   161
+     * 40-44   122
+     * 45-49   91
+     * 50-54   28
+     * 55-59   28
+     * 60-64   14 // By interpolation
+     * 65-69   6 // By interpolation
+     * 70-74   1 // By interpolation
+     * 75-79   0
+     * 80-84   0
+     * 85-89   0
+     * 90-95   0
+     * 95-100  0
+     */
 
+    public static final int MINIMUM_AGE_IN_YEARS = 15;
     private static final int MAXIMUM_AGE_IN_YEARS = 74;
     private static final int[] AGE_DISTRIBUTION_WEIGHTS = new int[]{6, 137, 214, 192, 161, 122, 91, 28, 28, 14, 6, 1};
 
@@ -70,7 +71,8 @@ public class DivorceAgeForMaleDistribution implements Distribution<Integer> {
      */
     public DivorceAgeForMaleDistribution(final Random random) {
         try {
-            distribution = new WeightedIntegerDistribution((int)(15 * CompactPopulation.DAYS_PER_YEAR), (int) (MAXIMUM_AGE_IN_YEARS * CompactPopulation.DAYS_PER_YEAR) - 1, AGE_DISTRIBUTION_WEIGHTS, random);
+            distribution = new WeightedIntegerDistribution((int) (MINIMUM_AGE_IN_YEARS * CompactPopulation.DAYS_PER_YEAR), (int) (MAXIMUM_AGE_IN_YEARS * CompactPopulation.DAYS_PER_YEAR) - 1, AGE_DISTRIBUTION_WEIGHTS, random);
+
         } catch (final NegativeWeightException e) {
             throw new RuntimeException("negative weight exception: " + e.getMessage());
         }
@@ -80,5 +82,4 @@ public class DivorceAgeForMaleDistribution implements Distribution<Integer> {
     public Integer getSample() {
         return distribution.getSample();
     }
-
 }

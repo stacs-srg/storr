@@ -28,7 +28,7 @@ import java.util.List;
 
 /**
  * Writes a representation of the population to file in GEDCOM format.
- * <p/>
+ *
  * GEDCOM specification: http://homepages.rootsweb.ancestry.com/~pmcbride/gedcom/55gctoc.htm
  *
  * @author Graham Kirby (graham.kirby@st-andrews.ac.uk)
@@ -65,16 +65,17 @@ public class PopulationToGEDCOM extends AbstractFilePopulationWriter {
         writer.println("1 CHAR " + CHAR_SET);
     }
 
+    @SuppressWarnings("FeatureEnvy")
     @Override
-    public void recordPerson(IPerson person) {
+    public void recordPerson(final IPerson person) {
 
         writer.println("0 @" + individualLabel(person.getId()) + "@ INDI");
-        writer.println("1 NAME " + person.getFirstName() + " /" + person.getSurname() + "/");
+        writer.println("1 NAME " + person.getFirstName() + " /" + person.getSurname() + '/');
         writer.println("1 SEX " + person.getSex());
         writer.println("1 BIRT");
         writer.println("2 DATE " + DateManipulation.formatDate(person.getBirthDate()));
 
-        Date death_date = person.getDeathDate();
+        final Date death_date = person.getDeathDate();
         if (death_date != null) {
             writer.println("1 DEAT");
             writer.println("2 DATE " + DateManipulation.formatDate(death_date));
@@ -84,18 +85,19 @@ public class PopulationToGEDCOM extends AbstractFilePopulationWriter {
 
         if (partnership_ids != null) {
             for (final int partnership_id : partnership_ids) {
-                writer.println("1 FAMS @" + familyLabel(partnership_id) + "@");
+                writer.println("1 FAMS @" + familyLabel(partnership_id) + '@');
             }
         }
 
         final int parents_partnership_id = person.getParentsPartnership();
         if (parents_partnership_id != -1) {
-            writer.println("1 FAMC @" + familyLabel(parents_partnership_id) + "@");
+            writer.println("1 FAMC @" + familyLabel(parents_partnership_id) + '@');
         }
     }
 
+    @SuppressWarnings("FeatureEnvy")
     @Override
-    public void recordPartnership(IPartnership partnership) {
+    public void recordPartnership(final IPartnership partnership) {
 
         final int partnership_id = partnership.getId();
 
@@ -105,16 +107,16 @@ public class PopulationToGEDCOM extends AbstractFilePopulationWriter {
             writer.println("2 DATE " + DateManipulation.formatDate(partnership.getMarriageDate()));
         }
 
-        int father_id = partnership.getMalePartnerId();
-        int mother_id = partnership.getFemalePartnerId();
+        final int father_id = partnership.getMalePartnerId();
+        final int mother_id = partnership.getFemalePartnerId();
 
-        writer.println("1 HUSB @" + individualLabel(father_id) + "@");
-        writer.println("1 WIFE @" + individualLabel(mother_id) + "@");
+        writer.println("1 HUSB @" + individualLabel(father_id) + '@');
+        writer.println("1 WIFE @" + individualLabel(mother_id) + '@');
 
-        List<Integer> child_ids = partnership.getChildIds();
+        final List<Integer> child_ids = partnership.getChildIds();
         if (child_ids != null) {
             for (final int child_id : child_ids) {
-                writer.println("1 CHIL @" + individualLabel(child_id) + "@");
+                writer.println("1 CHIL @" + individualLabel(child_id) + '@');
             }
         }
     }

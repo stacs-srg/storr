@@ -37,13 +37,18 @@ public class PopulationAnalytics {
     /**
      * Creates an analytic instance to analyse the entire population.
      *
-     * @param population - the population to analyse.
+     * @param population the population to analyse
      */
     public PopulationAnalytics(final IPopulation population) {
 
         this.population = population;
     }
 
+    /**
+     * Prints out all analyses.
+     *
+     * @throws Exception if the population size cannot be accessed
+     */
     public void printAllAnalytics() throws Exception {
 
         final int size = population.getNumberOfPeople();
@@ -59,7 +64,7 @@ public class PopulationAnalytics {
         printAllDates();
     }
 
-    private int countMales() throws Exception {
+    private int countMales()  {
 
         int count = 0;
         for (final IPerson person : population.getPeople()) {
@@ -70,7 +75,7 @@ public class PopulationAnalytics {
         return count;
     }
 
-    private int countFemales() throws Exception {
+    private int countFemales()  {
 
         int count = 0;
         for (final IPerson person : population.getPeople()) {
@@ -84,7 +89,7 @@ public class PopulationAnalytics {
     /**
      * Prints the dates of birth of all people.
      */
-    public void printAllBirthDates() throws Exception {
+    public void printAllBirthDates()  {
 
         for (final IPerson person : population.getPeople()) {
             printBirthDate(person);
@@ -100,7 +105,7 @@ public class PopulationAnalytics {
     /**
      * Prints the dates of death of all people.
      */
-    public void printAllDeathDates() throws Exception {
+    public void printAllDeathDates() {
 
         for (final IPerson person : population.getPeople()) {
             printDeathDate(person);
@@ -121,7 +126,7 @@ public class PopulationAnalytics {
      *
      * @param partnership the partnership
      */
-    public void printChildren(final IPartnership partnership) throws Exception {
+    public void printChildren(final IPartnership partnership) {
 
         if (partnership.getChildIds() != null) {
             for (final int child_index : partnership.getChildIds()) {
@@ -134,9 +139,10 @@ public class PopulationAnalytics {
 
     /**
      * Prints the details of partnerships and children for a given person.
+     * @param person the person
      */
     @SuppressWarnings("FeatureEnvy")
-    public void printPartnerships(final IPerson person) throws Exception {
+    public void printPartnerships(final IPerson person)  {
 
         final List<Integer> partnership_ids = person.getPartnerships();
         if (partnership_ids != null) {
@@ -161,7 +167,7 @@ public class PopulationAnalytics {
     /**
      * Prints all significant dates for the population.
      */
-    public void printAllDates() throws Exception {
+    public void printAllDates()  {
 
         for (final IPerson person : population.getPeople()) {
 

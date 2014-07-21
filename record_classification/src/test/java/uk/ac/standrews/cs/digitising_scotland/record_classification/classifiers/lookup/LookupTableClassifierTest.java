@@ -156,7 +156,6 @@ public class LookupTableClassifierTest {
      */
     public void addVectorsToBucket(final Bucket bucket) throws Exception {
 
-//        LevenShteinCleaner.cleanData(bucket);
         for (Record record : bucket) {
             record.getDescription();
         }

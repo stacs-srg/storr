@@ -115,8 +115,6 @@ public class BestConfidenceClassifierTest {
      */
     public void addVectorsToBucket(final Bucket bucket) throws Exception {
 
-//        LevenShteinCleaner.cleanData(bucket);
-
         System.out.println(bucket.toString());
 
     }
@@ -136,8 +134,6 @@ public class BestConfidenceClassifierTest {
 
         listOfRecords = RecordFactory.makeUnCodedRecordsFromFile(inputFile);
         bucketA.addCollectionOfRecords(listOfRecords);
-
-//        LevenShteinCleaner.cleanData(bucketA);
 
         System.out.println(bucketA.toString());
         bestConfClassifier.classify(bucketA);
@@ -159,9 +155,6 @@ public class BestConfidenceClassifierTest {
 
         listOfRecords = RecordFactory.makeUnCodedRecordsFromFile(inputFile);
         bucketA.addCollectionOfRecords(listOfRecords);
-
-//        LevenShteinCleaner.cleanData(bucketA);
-
         System.out.println(bucketA.toString());
         for (Record r : bucketA) {
             TokenSet tokenSet = new TokenSet(r.getOriginalData().getDescription());

@@ -77,7 +77,6 @@ public class PopulationLogic {
     }
 
     public static boolean partnerAgeDifferenceIsReasonable(final int person_birth_date, final int candidate_birth_date) {
-
         return Math.abs(DateManipulation.differenceInYears(person_birth_date, candidate_birth_date)) <= MAXIMUM_AGE_DIFFERENCE_IN_PARTNERSHIP;
     }
 

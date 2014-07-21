@@ -44,8 +44,6 @@ public class ClassifierTestingHelper {
      */
     public Bucket giveBucketTestingOccCodes(final Bucket bucket) throws IOException, CodeNotValidException, URISyntaxException {
 
-//        LevenShteinCleaner.cleanData(bucket);
-
         for (Record record : bucket) {
             loadDictionary("/CodeFactoryTestFile.txt");
             record = addGoldStandardCodeToRecord(record, "2200");

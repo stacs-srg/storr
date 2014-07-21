@@ -27,7 +27,7 @@ import java.util.Random;
  */
 public class DivorceInstigatedByGenderDistribution implements Distribution<Integer> {
     
-	/*
+    /*
      * from numberofdivorcesageatdivorceandmaritalstatusbeforemarriage_tcm77-351699
      * from http://www.ons.gov.uk/ons/rel/vsob1/divorces-in-england-and-wales/2012/rtd-divorces---number-of-divorces-age-at-divorce-and-marital-status-before-marriage.xls
      * Number of divorces, age at divorce and marital status before marriage

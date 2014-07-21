@@ -68,6 +68,12 @@ public class OLRPool implements Runnable {
         //  getSurvivors();
     }
 
+    public void stop(){
+        for(OLRShuffled model : models){
+            model.stop();
+        }
+    }
+
     public void getSurvivors() {
 
         LOGGER.info("Getting survivors...");
