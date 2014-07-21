@@ -36,17 +36,17 @@ public class OLRCrossFold {
 
 
 
-    public double getRunningLogLikelihood(){
+    public double getAverageRunningLogLikelihood(){
         double ll = 0.;
         for (OLRPool model : models)
-            ll += model.getRunningLogLikelihood();
+            ll += model.getAverageRunningLogLikelihood();
         ll /= models.size();
         return ll;
     }
 
-    public void resetRunningLoglikelihood(){
+    public void resetRunningLogLikelihoods(){
         for(OLRPool model : models)
-            model.resetRunningLoglikelihood();
+            model.resetRunningLogLikelihoods();
     }
 
 
@@ -85,10 +85,10 @@ public class OLRCrossFold {
                     break;
                 }
                 if(line.equalsIgnoreCase("getloglik")){
-                    System.out.println(getRunningLogLikelihood());
+                    System.out.println(getAverageRunningLogLikelihood());
                 }
                 if(line.equalsIgnoreCase("resetloglik")){
-                    resetRunningLoglikelihood();
+                    resetRunningLogLikelihoods();
                     System.out.println("Running log likelihood reset.");
                 }
                 line = in.readLine();

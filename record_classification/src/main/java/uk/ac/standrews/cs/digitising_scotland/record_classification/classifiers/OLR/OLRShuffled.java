@@ -65,8 +65,8 @@ public class OLRShuffled implements Runnable {
        return model.getRunningLogLikelihood();
     }
 
-    public void resetRunningLoglikelihood(){
-        model.resetRunningLoglikelihood();
+    public void resetRunningLogLikelihood(){
+        model.resetRunningLogLikelihood();
     }
 
     /**

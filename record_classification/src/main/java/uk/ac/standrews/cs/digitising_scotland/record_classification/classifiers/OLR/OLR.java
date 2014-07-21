@@ -77,15 +77,11 @@ public class OLR {
         return r;
     }
 
-    public void extendBetaBy(final int classes, final int features) {
-
-    }
-
     public double getRunningLogLikelihood() {
         return runningLogLikelihood / numLogLikelihoodSumUpdates;
     }
 
-    public void resetRunningLoglikelihood() {
+    public void resetRunningLogLikelihood() {
         runningLogLikelihood = 0.;
         numLogLikelihoodSumUpdates = 0;
     }
@@ -151,7 +147,7 @@ public class OLR {
      * @param properties properties
      */
     public OLR(final Properties properties) {
-        resetRunningLoglikelihood();
+        resetRunningLogLikelihood();
         this.properties = properties;
         this.prior = new L1();
         getConfigOptions();
