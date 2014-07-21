@@ -75,6 +75,14 @@ public class OrganicPerson implements IPerson {
     public void addPartnership(final int id) {
         partnerships.add(id);
     }
+    
+    public int getBirthDay() {
+    	return timeline.getStartDate();
+    }
+    
+    public int getDeathDay() {
+    	return timeline.getEndDate();
+    }
 
     /**
      * INTERFACE METHODS
@@ -102,12 +110,12 @@ public class OrganicPerson implements IPerson {
 
     @Override
     public Date getBirthDate() {
-        return this.getTimeline().getStartDate();
+        return DateManipulation.daysToDate(this.getTimeline().getStartDate());
     }
 
     @Override
     public Date getDeathDate() {
-        return this.getTimeline().getEndDate();
+        return DateManipulation.daysToDate(this.getTimeline().getEndDate());
     }
 
     @Override

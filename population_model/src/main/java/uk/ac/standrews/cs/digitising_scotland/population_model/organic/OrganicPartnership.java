@@ -45,22 +45,22 @@ public class OrganicPartnership implements IPartnership {
     private Integer husband;
     private Integer wife;
     private OrganicTimeline timeline;
-    private Date marriageDate;
+    private int marriageDay;
     private List<Integer> childrenIds = null;
 
-    public OrganicPartnership(final int id, final OrganicPerson husband, final OrganicPerson wife, Date marriageDate) {
+    public OrganicPartnership(final int id, final OrganicPerson husband, final OrganicPerson wife, int marriageDay) {
 
         this.id = id;
         this.husband = husband.getId();
         this.wife = wife.getId();
-        this.marriageDate = marriageDate;
+        this.marriageDay = marriageDay;
         timeline = createPartnershipTimeline(husband, wife);
     }
 
     public OrganicTimeline createPartnershipTimeline(OrganicPerson husband, OrganicPerson wife) {
 
         // TODO Correctly populate timeline
-        OrganicTimeline timeline = new OrganicTimeline(marriageDate);
+        OrganicTimeline timeline = new OrganicTimeline(marriageDay);
 
         // Decide if/when relationship terminates
         switch (divorceInstigatedByGenderDistribution.getDefinedSample()) {
@@ -70,9 +70,9 @@ public class OrganicPartnership implements IPartnership {
                 do {
                     maleDivorceAgeInDays = divorceAgeForMaleDistribution.getSample();
                 }
-                while (!PopulationLogic.divorceNotBeforeMarriage(DateManipulation.differenceInDays(husband.getBirthDate(), marriageDate), maleDivorceAgeInDays));
+                while (!PopulationLogic.divorceNotBeforeMarriage(DateManipulation.differenceInDays(husband.getBirthDay(), marriageDay), maleDivorceAgeInDays));
                 timeline.addEvent(maleDivorceAgeInDays, new OrganicEvent(EventType.DIVORCE));
-                timeline.setEndDate(DateManipulation.daysToDate(maleDivorceAgeInDays));
+                timeline.setEndDate(maleDivorceAgeInDays);
                 break;
             case FEMALE:
                 // get female age at divorce
@@ -80,14 +80,14 @@ public class OrganicPartnership implements IPartnership {
                 do {
                     femaleDivorceAgeInDays = divorceAgeForFemaleDistribution.getSample();
                 }
-                while (!PopulationLogic.divorceNotBeforeMarriage(DateManipulation.differenceInDays(husband.getBirthDate(), marriageDate), femaleDivorceAgeInDays));
+                while (!PopulationLogic.divorceNotBeforeMarriage(DateManipulation.differenceInDays(husband.getBirthDay(), marriageDay), femaleDivorceAgeInDays));
                 timeline.addEvent(femaleDivorceAgeInDays, new OrganicEvent(EventType.DIVORCE));
-                timeline.setEndDate(DateManipulation.daysToDate(femaleDivorceAgeInDays));
+                timeline.setEndDate(femaleDivorceAgeInDays);
                 break;
             case NO_DIVORCE:
                 // If not then added earliest death date
-                Date firstPartnersDeathDate = dateOfFirstPartnersDeath(husband.getDeathDate(), wife.getDeathDate());
-                timeline.addEvent(DateManipulation.dateToDays(firstPartnersDeathDate), new OrganicEvent(EventType.PARTNERSHIP_ENDED_BY_DEATH));
+                int firstPartnersDeathDate = dateOfFirstPartnersDeath(husband.getDeathDay(), wife.getDeathDay());
+                timeline.addEvent(firstPartnersDeathDate, new OrganicEvent(EventType.PARTNERSHIP_ENDED_BY_DEATH));
                 timeline.setEndDate(firstPartnersDeathDate);
                 break;
         }
@@ -106,8 +106,8 @@ public class OrganicPartnership implements IPartnership {
         return timeline;
     }
 
-    private Date dateOfFirstPartnersDeath(Date husbandDeath, Date wifeDeath) {
-        if (husbandDeath.before(wifeDeath))
+    private int dateOfFirstPartnersDeath(int husbandDeath, int wifeDeath) {
+        if (husbandDeath < wifeDeath)
             return husbandDeath;
         else
             return wifeDeath;
@@ -151,7 +151,7 @@ public class OrganicPartnership implements IPartnership {
 
     @Override
     public Date getMarriageDate() {
-        return marriageDate;
+        return DateManipulation.daysToDate(marriageDay);
     }
 
     @Override

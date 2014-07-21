@@ -24,7 +24,7 @@ import static uk.ac.standrews.cs.digitising_scotland.util.DateManipulation.START
 
 /**
  * Tests of date conversion.
- *         
+ *
  * @author Graham Kirby (graham.kirby@st-andrews.ac.uk)
  * @author Alan Dearle (alan.dearle@st-andrews.ac.uk)
  */

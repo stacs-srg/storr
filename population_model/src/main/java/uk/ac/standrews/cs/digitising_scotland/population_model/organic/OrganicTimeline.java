@@ -26,26 +26,20 @@ import java.util.HashMap;
  */
 public class OrganicTimeline {
 
-    private Date startDate;
-    private Date endDate;
+    private int startDay;
+    private int endDay;
     private int duration;// = DateManipulation.dateToDays(endDate) - DateManipulation.dateToDays(startDate);
     private int currentDay;
 
     private HashMap<Integer, OrganicEvent> events = new HashMap<Integer, OrganicEvent>();
 
-    public OrganicTimeline(final Date date) {
-        startDate = date;
+    public OrganicTimeline(final int startDay) {
+        this.startDay = startDay;
     }
 
-    public OrganicTimeline(final Date date1, final Date date2) {
-        startDate = date1;
-        endDate = date2;
-    }
-
-    public OrganicTimeline(final Date date, final int days) {
-        startDate = date;
-        duration = days;
-        //endDate = DateManipulation.daysToDate(DateManipulation.dateToDays(startDate) + days);
+    public OrganicTimeline(final int startDay, final int endDay) {
+    	this.startDay = startDay;
+    	this.endDay = endDay;
     }
 
     public void addEvent(final int day, final OrganicEvent event) {
@@ -70,29 +64,37 @@ public class OrganicTimeline {
     }
 
     public boolean isDateAvailable(final Date date) {
-        int day = DateManipulation.dateToDays(date) - DateManipulation.dateToDays(startDate);
+        int day = DateManipulation.dateToDays(date) - startDay;
         return events.containsKey(day);
     }
+    
+    public boolean isDateAvailable(final int days) {
+        return events.containsKey(days);
+    }
 
-    public Date getStartDate() {
-        return startDate;
+    public int getStartDate() {
+        return startDay;
     }
 
     public OrganicEvent getEvent(Date date) {
-        int day = DateManipulation.dateToDays(date) - DateManipulation.dateToDays(startDate);
+        int day = DateManipulation.dateToDays(date) - startDay;
         return events.get(day);
     }
-
-    public void setStartDate(final Date startDate) {
-        this.startDate = startDate;
+    
+    public OrganicEvent getEvent(int days) {
+        return events.get(days);
     }
 
-    public Date getEndDate() {
-        return endDate;
+    public void setStartDay(final int startDay) {
+        this.startDay = startDay;
     }
 
-    public void setEndDate(final Date endDate) {
-        this.endDate = endDate;
+    public int getEndDate() {
+        return endDay;
+    }
+
+    public void setEndDate(final int endDay) {
+        this.endDay = endDay;
     }
 
     public int getDuration() {

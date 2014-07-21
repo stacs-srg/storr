@@ -28,7 +28,7 @@ import static uk.ac.standrews.cs.digitising_scotland.util.ErrorHandling.DEFAULT_
 
 /**
  * <p>Provides support for various diagnostic output.</p>
- *
+ * <p/>
  * <p>A global threshold diagnostic level may be set by the user; the default value
  * is NONE, the highest level. Each call to produce diagnostic output is
  * parameterised by a diagnostic level. The output is only actually generated if
@@ -93,7 +93,9 @@ public final class Diagnostic {
             final StackTraceElement call = trace[i];
             final String calling_class_name = call.getClassName();
 
-            if (!calling_class_name.equals(DIAGNOSTIC_CLASS_NAME) && !calling_class_name.equals(ERROR_CLASS_NAME)) { return calling_class_name + "::" + call.getMethodName(); }
+            if (!calling_class_name.equals(DIAGNOSTIC_CLASS_NAME) && !calling_class_name.equals(ERROR_CLASS_NAME)) {
+                return calling_class_name + "::" + call.getMethodName();
+            }
         }
 
         return "";
@@ -160,7 +162,9 @@ public final class Diagnostic {
 
         for (final String ignore : ignored_packages) {
 
-            if (calling_method_name.startsWith(ignore)) { return true; }
+            if (calling_method_name.startsWith(ignore)) {
+                return true;
+            }
         }
 
         return false;

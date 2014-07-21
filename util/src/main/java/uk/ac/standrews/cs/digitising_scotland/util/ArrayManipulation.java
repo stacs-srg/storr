@@ -17,7 +17,6 @@
 package uk.ac.standrews.cs.digitising_scotland.util;
 
 /**
- * 
  * Simple class for doing array manipulation.
  *
  * @author Alan Dearle (alan.dearle@st-andrews.ac.uk)
@@ -26,8 +25,9 @@ public class ArrayManipulation {
 
     /**
      * Sums an array of ints.
-     * @return the sum of the array supplied as a parameter.
+     *
      * @param array - the array over which to sum.
+     * @return the sum of the array supplied as a parameter.
      */
     public static int sum(final int[] array) {
 

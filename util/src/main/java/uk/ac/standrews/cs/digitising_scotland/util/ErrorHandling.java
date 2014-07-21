@@ -22,7 +22,7 @@ import java.util.Date;
 
 /**
  * Provides support for various error message output.
- *
+ * <p/>
  * Based on code from the com.findnearyou package (C)
  * A. Dearle & R.Connor.
  *
@@ -53,7 +53,8 @@ public final class ErrorHandling {
 
     /**
      * Outputs details of an exception, followed by a stack trace.
-     * @param e the exception
+     *
+     * @param e   the exception
      * @param msg a descriptive message
      */
     public static void exceptionError(final Throwable e, final Object... msg) {
@@ -89,7 +90,8 @@ public final class ErrorHandling {
             }
 
             for (final Object message : messages) {
-                /*if (message!= null)*/sb.append(message);
+                /*if (message!= null)*/
+                sb.append(message);
             }
 
             if (e != null) {

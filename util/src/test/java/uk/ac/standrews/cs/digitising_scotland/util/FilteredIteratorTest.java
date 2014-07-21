@@ -108,7 +108,11 @@ public class FilteredIteratorTest {
     private Iterator<Integer> makeEvensIterator(Integer[] array) {
 
         Iterator<Integer> original = new ArrayIterator<>(array);
-        Condition<Integer> even_filter = new Condition<Integer>(){public boolean test(Integer t) { return t%2 == 0; }};
+        Condition<Integer> even_filter = new Condition<Integer>() {
+            public boolean test(Integer t) {
+                return t % 2 == 0;
+            }
+        };
         return new FilteredIterator<>(original, even_filter);
     }
 }

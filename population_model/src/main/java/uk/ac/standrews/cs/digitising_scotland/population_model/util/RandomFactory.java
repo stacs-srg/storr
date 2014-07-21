@@ -36,7 +36,7 @@ public class RandomFactory {
         if (!configured) {
 
             try {
-                deterministic = PopulationProperties.getDeterministic();
+                deterministic = PopulationProperties.isDeterministic();
             } catch (IOException e) {
                 throw new RuntimeException("Couldn't read determinism flag from properties");
             }

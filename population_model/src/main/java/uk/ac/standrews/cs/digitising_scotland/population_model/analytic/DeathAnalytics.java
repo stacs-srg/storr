@@ -25,6 +25,7 @@ import java.util.Date;
 
 /**
  * An analytic class to analyse the distribution of deaths.
+ *
  * @author Alan Dearle (alan.dearle@st-andrews.ac.uk)
  */
 public class DeathAnalytics {
@@ -37,7 +38,8 @@ public class DeathAnalytics {
 
     /**
      * Creates an analytic instance to analyse deaths in a population.
-     * @param population - the population to analyse.
+     *
+     * @param population the population to analyse
      */
     public DeathAnalytics(final IPopulation population) {
 
@@ -45,13 +47,16 @@ public class DeathAnalytics {
         analyseDeaths();
     }
 
+    /**
+     * Prints out all analyses.
+     */
     public void printAllAnalytics() {
 
         final int sum = ArrayManipulation.sum(age_at_death);
 
         System.out.println("Death distribution:");
         for (int i = 1; i < age_at_death.length; i++) {
-            System.out.println("\tDeaths at age: " + i + " = " + age_at_death[i] + " = " + String.format("%.1f", age_at_death[i] / (double) sum * ONE_HUNDRED) + "%");
+            System.out.println("\tDeaths at age: " + i + " = " + age_at_death[i] + " = " + String.format("%.1f", age_at_death[i] / (double) sum * ONE_HUNDRED) + '%');
         }
     }
 
@@ -60,13 +65,13 @@ public class DeathAnalytics {
      */
     public void analyseDeaths() {
 
-        for (IPerson p : population.getPeople()) {
+        for (final IPerson person : population.getPeople()) {
 
-            Date death_date = p.getDeathDate();
+            final Date death_date = person.getDeathDate();
 
             if (death_date != null) {
 
-                Date birth_date = p.getBirthDate();
+                final Date birth_date = person.getBirthDate();
                 final int age_at_death_in_years = DateManipulation.differenceInYears(birth_date, death_date);
                 if (age_at_death_in_years >= 0 && age_at_death_in_years < age_at_death.length) {
                     age_at_death[age_at_death_in_years]++;

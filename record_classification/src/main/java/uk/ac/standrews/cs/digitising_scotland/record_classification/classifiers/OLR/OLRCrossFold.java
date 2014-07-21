@@ -124,8 +124,7 @@ public class OLRCrossFold {
 
         try {
             this.trainAllModels();
-        }
-        catch (InterruptedException e) {
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
