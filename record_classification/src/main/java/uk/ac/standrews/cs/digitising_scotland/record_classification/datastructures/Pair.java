@@ -9,10 +9,14 @@ package uk.ac.standrews.cs.digitising_scotland.record_classification.datastructu
 public class Pair<L, R> {
 
     /** The left. */
-    private final L left;
+    private L left;
+
+    public void setRight(R right) {
+        this.right = right;
+    }
 
     /** The right. */
-    private final R right;
+    private R right;
 
     /**
      * Instantiates a new pair.
@@ -24,6 +28,10 @@ public class Pair<L, R> {
 
         this.left = left;
         this.right = right;
+    }
+
+    public void setLeft(final L left){
+        this.left = left;
     }
 
     /**

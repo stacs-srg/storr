@@ -33,6 +33,23 @@ public class OLRCrossFold {
     /** The properties. */
     private Properties properties;
 
+
+
+
+    public double getRunningLogLikelihood(){
+        double ll = 0.;
+        for (OLRPool model : models)
+            ll += model.getRunningLogLikelihood();
+        ll /= models.size();
+        return ll;
+    }
+
+    public void resetRunningLoglikelihood(){
+        for(OLRPool model : models)
+            model.resetRunningLoglikelihood();
+    }
+
+
     /**
      * Constructor.
      *
@@ -62,11 +79,20 @@ public class OLRCrossFold {
             BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
             String line = "";
 
-            while (!line.equalsIgnoreCase("stop")) {
+            while (true) {
+                if(line.equalsIgnoreCase("stop")){
+                    stop();
+                    break;
+                }
+                if(line.equalsIgnoreCase("getloglik")){
+                    System.out.println(getRunningLogLikelihood());
+                }
+                if(line.equalsIgnoreCase("resetloglik")){
+                    resetRunningLoglikelihood();
+                    System.out.println("Running log likelihood reset.");
+                }
                 line = in.readLine();
             }
-
-            stop();
 
             in.close();
         }
