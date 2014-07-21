@@ -1,6 +1,8 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.OLR;
 
-import java.io.*;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -177,16 +179,16 @@ public class OLRClassifier extends AbstractClassifier {
         out.close();
     }
 
-    private void write(final DataOutputStream out) throws IOException {
+    private void write(final DataOutputStream outputStream) throws IOException {
 
-        vectorFactory.write(out);
-        model.write(out);
+        vectorFactory.write(outputStream);
+        model.write(outputStream);
     }
 
-    private void readFields(final DataInputStream in) throws IOException {
+    private void readFields(final DataInputStream inputStream) throws IOException {
 
         //  vectorFactory.readFields(in);
-        model.readFields(in);
+        model.readFields(inputStream);
     }
 
     /**

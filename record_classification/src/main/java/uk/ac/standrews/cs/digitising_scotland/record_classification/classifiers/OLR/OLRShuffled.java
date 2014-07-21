@@ -44,7 +44,7 @@ public class OLRShuffled implements Runnable {
     private OLR model;
     private Properties properties = MachineLearningConfiguration.getDefaultProperties();
     private int reps; //set in config
-    private final Logger logger = LoggerFactory.getLogger(OLRShuffled.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(OLRShuffled.class);
     private ArrayList<NamedVector> trainingVectorList = new ArrayList<NamedVector>();
     private boolean stopped = false;
 
@@ -92,8 +92,9 @@ public class OLRShuffled implements Runnable {
     private void train() {
 
         for (int rep = 0; rep < reps; rep++) {
-            if (stopped())
+            if (stopped()) {
                 break;
+            }
             //  logger.info("Performing rep " + rep);
             shuffleAndTrainOnAllVectors();
         }
@@ -136,26 +137,30 @@ public class OLRShuffled implements Runnable {
 
     private void checkTrainable() {
 
-        if (!modelTrainable) {
-            throw new UnsupportedOperationException("This model has no files to train " + "on and may only be used for classification.");
-        }
+        if (!modelTrainable) { throw new UnsupportedOperationException("This model has no files to train " + "on and may only be used for classification."); }
     }
 
     private void shuffleAndTrainOnAllVectors() {
 
         Collections.shuffle(trainingVectorList);
         for (NamedVector vector : trainingVectorList) {
-            if (stopped())
+            if (stopped()) {
                 break;
+            }
             this.model.train(vector);
         }
     }
 
+    /**
+     * Sets the 'stopped' flag to true.
+     */
     public void stop() {
+
         stopped = true;
     }
 
     private boolean stopped() {
+
         return stopped;
     }
 
@@ -191,15 +196,15 @@ public class OLRShuffled implements Runnable {
         return olrShuffled;
     }
 
-    protected void write(final DataOutputStream out) throws IOException {
+    protected void write(final DataOutputStream outputStream) throws IOException {
 
-        model.write(out);
+        model.write(outputStream);
     }
 
-    protected void readFields(final DataInputStream in) throws IOException {
+    protected void readFields(final DataInputStream inputStream) throws IOException {
 
         OLR olr = new OLR();
-        olr.readFields(in);
+        olr.readFields(inputStream);
         model = olr;
     }
 
