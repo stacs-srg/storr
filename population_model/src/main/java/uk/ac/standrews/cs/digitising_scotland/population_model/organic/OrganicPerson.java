@@ -48,18 +48,19 @@ public class OrganicPerson implements IPerson {
     
     private static Random random = RandomFactory.getRandom();
 	private static Distribution<Integer> seed_age_distribution = new UniformDistribution(0, 70, random);
+	private static Distribution<Integer> seed_death_distribution = new UniformDistribution(0, 100, random);
 	private static Distribution<Integer> maleAgeAtMarriageDistribution = new MaleAgeAtMarriageDistribution(random);
 	private static Distribution<Integer> femaleAgeAtMarriageDistribution = new FemaleAgeAtMarriageDistribution(random);
 	private static UniformSexDistribution sex_distribution = new UniformSexDistribution(random);
 
-    public OrganicPerson(final int id) {
+    public OrganicPerson(final int id, final int birthDay) {
     	this.id = id;
     	if (sex_distribution.getSample()) {
     		sex = 'M';
-    		setPersonsBirthAndDeathDates();
+    		setPersonsBirthAndDeathDates(birthDay);
 		} else {
 			sex = 'F';
-			setPersonsBirthAndDeathDates();
+			setPersonsBirthAndDeathDates(birthDay);
 		}
     }
 	
@@ -82,27 +83,28 @@ public class OrganicPerson implements IPerson {
 //    	return null;	
 //    }
     
-	private void setPersonsBirthAndDeathDates() {
+	private void setPersonsBirthAndDeathDates(final int birthDay) {
 		final UniformDistribution days_of_year_distribution = new UniformDistribution(1, (int) OrganicPopulation.DAYS_PER_YEAR, random);
-
 		// Find an age for person
-		int age = seed_age_distribution.getSample();
-		int auxiliary = (int) ((age - 1) * (OrganicPopulation.DAYS_PER_YEAR)) + days_of_year_distribution.getSample();
-		int currentDayOfBirth = DateManipulation.dateToDays(OrganicPopulation.START_YEAR, 1, 1) - auxiliary;
-
-		// Set birth date
-
-		if(currentDayOfBirth < OrganicPopulation.getEarliestDate())
-			OrganicPopulation.setEarliestDate(currentDayOfBirth);
-
-
+		int ageOfDeathInYears = seed_age_distribution.getSample();
+		int ageOfDeathInDays = (int) ((ageOfDeathInYears - 1) * (OrganicPopulation.DAYS_PER_YEAR)) + days_of_year_distribution.getSample();
+		int dayOfBirth = birthDay;
+		
+		
+		if(OrganicPopulation.seedGeneration) {
+			dayOfBirth = DateManipulation.dateToDays(OrganicPopulation.START_YEAR, 0, 0) - ageOfDeathInDays;
+			
+			if(dayOfBirth < OrganicPopulation.getEarliestDate())
+				OrganicPopulation.setEarliestDate(dayOfBirth);
+			
+		} 
+		
 		// Calculate and set death date
-        // TODO allow death before start age
-		Distribution<Integer> seed_death_distribution = new UniformDistribution(age, 100, random);
-		int currentDayOfDeath = DateManipulation.dateToDays(OrganicPopulation.START_YEAR, 1, 1) + (seed_death_distribution.getSample() - age) * (int) OrganicPopulation.DAYS_PER_YEAR;
+		int dayOfDeath = dayOfBirth + ageOfDeathInDays;
+		
 		// Create timeline
-		timeline = new OrganicTimeline(currentDayOfBirth, currentDayOfDeath);
-		timeline.addEvent(currentDayOfDeath, new OrganicEvent(EventType.DEATH));
+		timeline = new OrganicTimeline(dayOfBirth, dayOfDeath);
+		timeline.addEvent(dayOfDeath, new OrganicEvent(EventType.DEATH));
 	}
 
 	public void populate_timeline() {

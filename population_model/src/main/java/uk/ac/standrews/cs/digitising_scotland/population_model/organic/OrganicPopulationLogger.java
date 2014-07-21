@@ -20,6 +20,7 @@ public class OrganicPopulationLogger {
 
     private static int population = 0;
     private static int marriages = 0;
+    private static int births = 0;
     private static int[] maleAgeAtMarriage = new int[100];
     private static int[] femaleAgeAtMarriage = new int[100];
     private static int[] ageDifferenceAtMarriage = new int[25];
@@ -31,6 +32,10 @@ public class OrganicPopulationLogger {
     public static void decPopulation() {
         population--;
     }
+    
+    public static int getPopulation() {
+    	return population;
+    }
 
     public static void incMarriages() {
         marriages++;
@@ -38,6 +43,10 @@ public class OrganicPopulationLogger {
 
     public static void decMarriages() {
         marriages--;
+    }
+    
+    public static void incBirths() {
+        births++;
     }
 
     public static void addMaleAgeAtMarriage(int days) {
@@ -69,6 +78,7 @@ public class OrganicPopulationLogger {
     	System.out.println();
         System.out.println("Population: " + population);
         System.out.println("Marriages: " + marriages);
+        System.out.println("Births: " + births);
         System.out.println();
         System.out.println("Male Age At Marriage Distrobution");
         System.out.println();
