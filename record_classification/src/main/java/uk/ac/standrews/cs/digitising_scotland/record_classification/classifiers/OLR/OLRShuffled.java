@@ -92,7 +92,9 @@ public class OLRShuffled implements Runnable {
     private void train() {
 
         for (int rep = 0; rep < reps; rep++) {
-          //  logger.info("Performing rep " + rep);
+            if (stopped())
+                break;
+            //  logger.info("Performing rep " + rep);
             shuffleAndTrainOnAllVectors();
         }
     }
@@ -134,19 +136,22 @@ public class OLRShuffled implements Runnable {
 
     private void checkTrainable() {
 
-        if (!modelTrainable) { throw new UnsupportedOperationException("This model has no files to train " + "on and may only be used for classification."); }
+        if (!modelTrainable) {
+            throw new UnsupportedOperationException("This model has no files to train " + "on and may only be used for classification.");
+        }
     }
 
     private void shuffleAndTrainOnAllVectors() {
 
         Collections.shuffle(trainingVectorList);
         for (NamedVector vector : trainingVectorList) {
-            if(!stopped())
+            if (stopped())
+                break;
             this.model.train(vector);
         }
     }
 
-    public void stop(){
+    public void stop() {
         stopped = true;
     }
 
@@ -175,8 +180,8 @@ public class OLRShuffled implements Runnable {
      * Allows de-serialization of a model from a file. The de-serialized model is not trainable.
      *
      * @param filename name of file to de-serialize
-     * @throws IOException  Indicates IO error on reading model
      * @return OLRShuffled deserialized model
+     * @throws IOException Indicates IO error on reading model
      */
     public static OLRShuffled deSerializeModel(final String filename) throws IOException {
 

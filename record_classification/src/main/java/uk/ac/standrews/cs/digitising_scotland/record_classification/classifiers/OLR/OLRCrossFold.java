@@ -25,7 +25,7 @@ public class OLRCrossFold {
     private final boolean modelTrainable;
 
     /** The models. */
-    private ArrayList<OLRPool> models = new ArrayList<OLRPool>();
+    private ArrayList<OLRPool> models = new ArrayList<>();
 
     /** The folds. */
     private int folds;
@@ -99,14 +99,16 @@ public class OLRCrossFold {
     private void trainAllModels() throws InterruptedException {
 
         StopListener stopListener = new StopListener();
-
+        ExecutorService stopService = Executors.newFixedThreadPool(1);
         ExecutorService executorService = Executors.newFixedThreadPool(folds);
-        executorService.submit(stopListener);
+        stopService.submit(stopListener);
         for (OLRPool model : models) {
             executorService.submit(model);
         }
         executorService.shutdown();
-        executorService.awaitTermination(1, TimeUnit.DAYS);
+        executorService.awaitTermination(365, TimeUnit.DAYS);
+        stop();
+        stopService.shutdown();
 
         for (OLRPool model : models) {
             model.getSurvivors();
