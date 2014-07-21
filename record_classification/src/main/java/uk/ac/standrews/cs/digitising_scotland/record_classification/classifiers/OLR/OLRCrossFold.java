@@ -12,6 +12,10 @@ import org.apache.mahout.math.NamedVector;
 import org.apache.mahout.math.Vector;
 import org.apache.mahout.math.function.DoubleDoubleFunction;
 import org.apache.mahout.math.function.Functions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
 
 /**
  * Distributes training vectors across {@link OLRPool}s in a cross fold manner. Allows concurrent training
@@ -20,6 +24,8 @@ import org.apache.mahout.math.function.Functions;
  * @author fraserdunlop
  */
 public class OLRCrossFold {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(OLRCrossFold.class);
 
     /** The model trainable. */
     private final boolean modelTrainable;
@@ -68,43 +74,50 @@ public class OLRCrossFold {
         modelTrainable = true;
     }
 
-    public void stop(){
-        for(OLRPool model : models){
+    /**
+     * Stops training on all models in the {@link OLRPool}.
+     */
+    public void stop() {
+
+        for (OLRPool model : models) {
             model.stop();
         }
     }
 
-    public class StopListener implements Runnable{
+    public class StopListener implements Runnable {
         public void commandLineStopListener() throws IOException {
-            BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
-            String line = "";
+            try (BufferedReader in = new BufferedReader(new InputStreamReader(System.in, FileManipulation.FILE_CHARSET))) {
+                String line = "";
 
-            while (true) {
-                if(line.equalsIgnoreCase("stop")){
-                    stop();
-                    break;
+                while (true) {
+                    if (line.equalsIgnoreCase("stop")) {
+                        LOGGER.info("Stop call detected. Stopping training...");
+                        stop();
+                        break;
+                    }
+                    if (line.equalsIgnoreCase("getloglik")) {
+                        LOGGER.info(Double.toString(getAverageRunningLogLikelihood()));
+                    }
+                    if (line.equalsIgnoreCase("resetloglik")) {
+                        resetRunningLogLikelihoods();
+                        LOGGER.info("Running log likelihood reset.");
+                    }
+                    line = in.readLine();
                 }
-                if(line.equalsIgnoreCase("getloglik")){
-                    System.out.println(getAverageRunningLogLikelihood());
-                }
-                if(line.equalsIgnoreCase("resetloglik")){
-                    resetRunningLogLikelihoods();
-                    System.out.println("Running log likelihood reset.");
-                }
-                line = in.readLine();
-            }
 
-            in.close();
-        }
-
-        @Override
-        public void run() {
-            try {
-                commandLineStopListener();
-            } catch (IOException e) {
-                e.printStackTrace();
+                in.close();
             }
         }
+
+            @Override
+            public void run () {
+                try {
+                    commandLineStopListener();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        
     }
 
 

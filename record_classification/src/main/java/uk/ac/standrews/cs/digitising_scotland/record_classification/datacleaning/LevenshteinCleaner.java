@@ -7,6 +7,9 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import uk.ac.shef.wit.simmetrics.similaritymetrics.AbstractStringMetric;
 import uk.ac.shef.wit.simmetrics.similaritymetrics.Levenshtein;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Pair;
@@ -22,17 +25,19 @@ import com.google.common.collect.Multiset;
  *
  * @author jkc25, frjd2
  */
-public class LevenShteinCleaner extends AbstractDataCleaner {
+public class LevenshteinCleaner extends AbstractDataCleaner {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(LevenshteinCleaner.class);
 
     /**
      * The Constant SIMILARITY.
      */
     private static double similarity = 0.85;
-    private static final AbstractStringMetric metric = new Levenshtein();
+    private static final AbstractStringMetric METRIC = new Levenshtein();
 
     public static void main(final String... args) throws IOException, InputFormatException {
 
-        LevenShteinCleaner cleaner = new LevenShteinCleaner();
+        LevenshteinCleaner cleaner = new LevenshteinCleaner();
         setSimilarity(args);
         cleaner.runOnFile(args);
     }
@@ -41,10 +46,10 @@ public class LevenShteinCleaner extends AbstractDataCleaner {
 
         try {
             similarity = Double.parseDouble(args[3]);
-            System.out.println("SIMILARITY set to " + similarity);
+            LOGGER.info("SIMILARITY set to " + similarity);
         }
         catch (ArrayIndexOutOfBoundsException e) {
-            System.out.println("No SIMILARITY argument. Default is " + similarity);
+            LOGGER.info("No SIMILARITY argument. Default is " + similarity);
         }
     }
 
@@ -67,7 +72,7 @@ public class LevenShteinCleaner extends AbstractDataCleaner {
     private void printDebugInfo(final String token, final String bestMatch) {
 
         if (!token.equals(bestMatch)) {
-            System.out.println("Original token: " + token + " Corrected token: " + bestMatch);
+            LOGGER.info("Original token: " + token + " Corrected token: " + bestMatch);
         }
     }
 
@@ -75,7 +80,7 @@ public class LevenShteinCleaner extends AbstractDataCleaner {
      * Gets the possible matches.
      *
      * @param token  the token
-     * @param metric the metric
+     * @param METRIC the metric
      * @return the possible matches
      */
     //TODO test
@@ -85,7 +90,7 @@ public class LevenShteinCleaner extends AbstractDataCleaner {
         Set<String> allWords = wordMultiset.elementSet();
         for (String string : allWords) {
             if (wordMultiset.count(string) > wordMultiset.count(token)) {
-                float result = metric.getSimilarity(string, token);
+                float result = METRIC.getSimilarity(string, token);
                 if (result > similarity) {
                     possibleMatches.add(new Pair<>(string, result));
                 }

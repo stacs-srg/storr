@@ -138,6 +138,7 @@ public class OLR {
      * Constructor with default properties.
      */
     public OLR() {
+
         this(MachineLearningConfiguration.getDefaultProperties());
     }
 

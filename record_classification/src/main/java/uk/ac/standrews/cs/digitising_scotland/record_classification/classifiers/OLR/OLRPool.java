@@ -82,8 +82,12 @@ public class OLRPool implements Runnable {
         //  getSurvivors();
     }
 
-    public void stop(){
-        for(OLRShuffled model : models){
+    /**
+     * Stops the current pool of models from training.
+     */
+    public void stop() {
+
+        for (OLRShuffled model : models) {
             model.stop();
         }
     }

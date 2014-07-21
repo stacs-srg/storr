@@ -17,7 +17,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.RecordFactory;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.vectors.VectorFactory;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datacleaning.LevenShteinCleaner;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datacleaning.LevenshteinCleaner;
 
 /**
  * The Class BestConfidenceClassifierTest.

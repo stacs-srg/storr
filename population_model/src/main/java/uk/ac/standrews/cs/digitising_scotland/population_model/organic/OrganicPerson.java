@@ -16,12 +16,20 @@
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.organic;
 
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.Distribution;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.FemaleAgeAtMarriageDistribution;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.MaleAgeAtMarriageDistribution;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.UniformDistribution;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.UniformSexDistribution;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.IDFactory;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPerson;
+import uk.ac.standrews.cs.digitising_scotland.population_model.util.RandomFactory;
 import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Created by victor on 08/07/14.
@@ -36,26 +44,29 @@ public class OrganicPerson implements IPerson {
     private char sex;
     private int age_in_days;
     private ArrayList<Integer> partnerships = new ArrayList<Integer>();
+	private OrganicTimeline timeline = null;
+    
+    private static Random random = RandomFactory.getRandom();
+	private static Distribution<Integer> seed_age_distribution = new UniformDistribution(0, 70, random);
+	private static Distribution<Integer> seed_death_distribution = new UniformDistribution(0, 100, random);
+	private static Distribution<Integer> maleAgeAtMarriageDistribution = new MaleAgeAtMarriageDistribution(random);
+	private static Distribution<Integer> femaleAgeAtMarriageDistribution = new FemaleAgeAtMarriageDistribution(random);
+	private static UniformSexDistribution sex_distribution = new UniformSexDistribution(random);
 
-    //    private int daysToLive = DateManipulation.dateToDays(dateOfDeath) -  DateManipulation.dateToDays(dateOfBirth);
-    private OrganicTimeline timeline = null;
-
-    public int getDayOfLife(final Date date) {
+    public OrganicPerson(final int id, final int birthDay) {
+    	this.id = id;
+    	if (sex_distribution.getSample()) {
+    		sex = 'M';
+    		setPersonsBirthAndDeathDates(birthDay);
+		} else {
+			sex = 'F';
+			setPersonsBirthAndDeathDates(birthDay);
+		}
+    }
+	
+	public int getDayOfLife(final Date date) {
         int day = DateManipulation.dateToDays(date) - DateManipulation.dateToDays(getBirthDate());
         return day;
-    }
-
-    public OrganicPerson() {
-        setTimeline(null);
-    }
-
-    public OrganicPerson(final char sex) {
-        this.sex = sex;
-    }
-
-    public OrganicPerson(final int id, final char sex) {
-        this.sex = sex;
-        this.id = id;
     }
 
     public void setTimeline(final OrganicTimeline t) {
@@ -71,6 +82,51 @@ public class OrganicPerson implements IPerson {
 //		
 //    	return null;	
 //    }
+    
+	private void setPersonsBirthAndDeathDates(final int birthDay) {
+		final UniformDistribution days_of_year_distribution = new UniformDistribution(1, (int) OrganicPopulation.DAYS_PER_YEAR, random);
+		// Find an age for person
+		int ageOfDeathInYears = seed_age_distribution.getSample();
+		int ageOfDeathInDays = (int) ((ageOfDeathInYears - 1) * (OrganicPopulation.DAYS_PER_YEAR)) + days_of_year_distribution.getSample();
+		int dayOfBirth = birthDay;
+		
+		
+		if(OrganicPopulation.seedGeneration) {
+			dayOfBirth = DateManipulation.dateToDays(OrganicPopulation.START_YEAR, 0, 0) - ageOfDeathInDays;
+			
+			if(dayOfBirth < OrganicPopulation.getEarliestDate())
+				OrganicPopulation.setEarliestDate(dayOfBirth);
+			
+		} 
+		
+		// Calculate and set death date
+		int dayOfDeath = dayOfBirth + ageOfDeathInDays;
+		
+		// Create timeline
+		timeline = new OrganicTimeline(dayOfBirth, dayOfDeath);
+		timeline.addEvent(dayOfDeath, new OrganicEvent(EventType.DEATH));
+	}
+
+	public void populate_timeline() {
+
+		// Add events to timeline
+		addEligibleToMarryEvent();
+
+	}
+
+	private void addEligibleToMarryEvent() {
+		// Add ELIGIBLE_TO_MARRY event
+		int date;
+		if (sex == 'M') {
+			// time in days to birth from 1/1/1600 + marriage age in days
+			date = getBirthDay() + maleAgeAtMarriageDistribution.getSample();
+			timeline.addEvent(date, new OrganicEvent(EventType.ELIGIBLE_TO_MARRY));
+		} else {
+			// time in days to birth from 1/1/1600 + marriage age in days
+			date = getBirthDay() + femaleAgeAtMarriageDistribution.getSample();
+			timeline.addEvent(date, new OrganicEvent(EventType.ELIGIBLE_TO_MARRY));
+		}
+	}
 
     public void addPartnership(final int id) {
         partnerships.add(id);

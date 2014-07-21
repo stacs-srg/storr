@@ -111,6 +111,7 @@ public final class TrainAndMultiplyClassify {
 
         printStatusUpdate();
 
+        LOGGER.info("********** Training OLR Classifiers **********");
         AbstractClassifier classifier = trainOLRClassifier(trainingBucket, vectorFactory);
 
         LOGGER.info("********** Creating Lookup Tables **********");
@@ -118,6 +119,7 @@ public final class TrainAndMultiplyClassify {
 
         // Bucket predicitionBucket = createPredictionBucket(prediction);
 
+        LOGGER.info("********** Classifying Bucket **********");
         ExactMatchPipeline exactMatchPipeline = new ExactMatchPipeline(exactMatchClassifier);
         MachineLearningClassificationPipeline machineLearningClassifier = new MachineLearningClassificationPipeline(classifier, trainingBucket);
 
@@ -125,16 +127,14 @@ public final class TrainAndMultiplyClassify {
         Bucket notExactMatched = BucketUtils.getComplement(predictionBucket, exactMatched);
         Bucket machineLearned = machineLearningClassifier.classify(notExactMatched);
         Bucket allClassified = BucketUtils.getUnion(machineLearned, exactMatched);
-
-        LOGGER.info("********** Classifying Bucket **********");
-
-        LOGGER.info("********** Classifying Bucket **********");
+        LOGGER.info("Exact Matched Bucket Size: " + exactMatched.size());
+        LOGGER.info("Machine Learned Bucket Size: " + machineLearned.size());
 
         //  Bucket classifiedBucket = bucketClassifier.classify(predictionBucket);
 
         writeRecords(allClassified);
 
-        LOGGER.info("********** **********");
+        LOGGER.info("********** Output Stats **********");
 
         LOGGER.info("All Records");
         generateAndPrintStats(allClassified);
@@ -146,13 +146,14 @@ public final class TrainAndMultiplyClassify {
         LOGGER.info("Codes that were null and weren't adter chopping: " + CodeFactory.getInstance().getCodeMapNullCounter());
 
         timer.stop();
+
         LOGGER.info("Elapsed Time: " + timer.elapsedTime());
         LOGGER.info("Codes that were null and weren't adter chopping: " + CodeFactory.getInstance().getCodeMapNullCounter());
     }
 
     private static void printStatusUpdate() {
 
-        LOGGER.info("********** Training Classifier **********");
+        LOGGER.info("********** Training Classifiers **********");
         LOGGER.info("Training with a dictionary size of: " + MachineLearningConfiguration.getDefaultProperties().getProperty("numFeatures"));
         LOGGER.info("Training with this number of output classes: " + MachineLearningConfiguration.getDefaultProperties().getProperty("numCategories"));
         LOGGER.info("Codes that were null and weren't adter chopping: " + CodeFactory.getInstance().getCodeMapNullCounter());
@@ -162,8 +163,8 @@ public final class TrainAndMultiplyClassify {
 
         HashMap<String, Integer> codeMapping = new HashMap<>();
         for (Record record : bucket) {
-            for (CodeTriple ct : record.getGoldStandardClassificationSet()) {
-                codeMapping.put(ct.getCode().getCodeAsString(), 1);
+            for (CodeTriple currentCodeTriple : record.getGoldStandardClassificationSet()) {
+                codeMapping.put(currentCodeTriple.getCode().getCodeAsString(), 1);
             }
         }
 

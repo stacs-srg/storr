@@ -19,11 +19,15 @@ package uk.ac.standrews.cs.digitising_scotland.population_model.organic;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.DivorceAgeForFemaleDistribution;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.DivorceAgeForMaleDistribution;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.DivorceInstigatedByGenderDistribution;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.UniformDistribution;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.UniformSexDistribution;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.IDFactory;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPartnership;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.PopulationLogic;
 import uk.ac.standrews.cs.digitising_scotland.population_model.util.RandomFactory;
 import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -36,131 +40,154 @@ import java.util.Random;
  */
 public class OrganicPartnership implements IPartnership {
 
-    private static Random random = RandomFactory.getRandom();
-    private static DivorceInstigatedByGenderDistribution divorceInstigatedByGenderDistribution = new DivorceInstigatedByGenderDistribution(random);
-    private static DivorceAgeForMaleDistribution divorceAgeForMaleDistribution = new DivorceAgeForMaleDistribution(random);
-    private static DivorceAgeForFemaleDistribution divorceAgeForFemaleDistribution = new DivorceAgeForFemaleDistribution(random);
+	private static Random random = RandomFactory.getRandom();
+	private static DivorceInstigatedByGenderDistribution divorceInstigatedByGenderDistribution = new DivorceInstigatedByGenderDistribution(random);
+	private static DivorceAgeForMaleDistribution divorceAgeForMaleDistribution = new DivorceAgeForMaleDistribution(random);
+	private static DivorceAgeForFemaleDistribution divorceAgeForFemaleDistribution = new DivorceAgeForFemaleDistribution(random);
 
-    private Integer id;
-    private Integer husband;
-    private Integer wife;
-    private OrganicTimeline timeline;
-    private int marriageDay;
-    private List<Integer> childrenIds = null;
+	// TODO Make distributions for these
+	private static UniformDistribution numberOfChildrenDistribution = new UniformDistribution(0, 5, random);
+	private static UniformDistribution daysIntoPartnershipForBirthDistribution = new UniformDistribution(0, (int)(5 * OrganicPopulation.DAYS_PER_YEAR), random);
 
-    public OrganicPartnership(final int id, final OrganicPerson husband, final OrganicPerson wife, int marriageDay) {
+	private Integer id;
+	private Integer husband;
+	private Integer wife;
+	private OrganicTimeline timeline;
+	private int marriageDay;
+	private List<Integer> childrenIds = new ArrayList<Integer>();
+	
+	public static Object[] createOrganicPartnership(final int id, final OrganicPerson husband, final OrganicPerson wife, int marriageDay) {
+		Object[] returns = new Object[2];
+		// Contains OrganicPartnership object
+		OrganicPartnership partnership = new OrganicPartnership(id, husband, wife, marriageDay);
+		// Contains OrganicPerson object aka the child - if no child returns null
+		returns[1] = partnership.createPartnershipTimeline(husband, wife);
+		returns[0] = partnership;
+		return returns;
+	}
 
-        this.id = id;
-        this.husband = husband.getId();
-        this.wife = wife.getId();
-        this.marriageDay = marriageDay;
-        timeline = createPartnershipTimeline(husband, wife);
-    }
+	private OrganicPartnership(final int id, final OrganicPerson husband, final OrganicPerson wife, int marriageDay) {
+		this.id = id;
+		this.husband = husband.getId();
+		this.wife = wife.getId();
+		this.marriageDay = marriageDay;
+	}
 
-    public OrganicTimeline createPartnershipTimeline(OrganicPerson husband, OrganicPerson wife) {
+	private OrganicPerson createPartnershipTimeline(OrganicPerson husband, OrganicPerson wife) {
 
-        // TODO Correctly populate timeline
-        OrganicTimeline timeline = new OrganicTimeline(marriageDay);
+		// TODO Correctly populate timeline
+		OrganicTimeline timeline = new OrganicTimeline(marriageDay);
 
-        // Decide if/when relationship terminates
-        switch (divorceInstigatedByGenderDistribution.getDefinedSample()) {
-            case MALE:
-                // get male age at divorce
-                int maleDivorceAgeInDays;
-                do {
-                    maleDivorceAgeInDays = divorceAgeForMaleDistribution.getSample();
-                }
-                while (!PopulationLogic.divorceNotBeforeMarriage(DateManipulation.differenceInDays(husband.getBirthDay(), marriageDay), maleDivorceAgeInDays));
-                timeline.addEvent(maleDivorceAgeInDays, new OrganicEvent(EventType.DIVORCE));
-                timeline.setEndDate(maleDivorceAgeInDays);
-                break;
-            case FEMALE:
-                // get female age at divorce
-                int femaleDivorceAgeInDays;
-                do {
-                    femaleDivorceAgeInDays = divorceAgeForFemaleDistribution.getSample();
-                }
-                while (!PopulationLogic.divorceNotBeforeMarriage(DateManipulation.differenceInDays(husband.getBirthDay(), marriageDay), femaleDivorceAgeInDays));
-                timeline.addEvent(femaleDivorceAgeInDays, new OrganicEvent(EventType.DIVORCE));
-                timeline.setEndDate(femaleDivorceAgeInDays);
-                break;
-            case NO_DIVORCE:
-                // If not then added earliest death date
-                int firstPartnersDeathDate = dateOfFirstPartnersDeath(husband.getDeathDay(), wife.getDeathDay());
-                timeline.addEvent(firstPartnersDeathDate, new OrganicEvent(EventType.PARTNERSHIP_ENDED_BY_DEATH));
-                timeline.setEndDate(firstPartnersDeathDate);
-                break;
-        }
+		// Decide if/when relationship terminates
+		switch (divorceInstigatedByGenderDistribution.getDefinedSample()) {
+		case MALE:
+			// get male age at divorce
+			int maleDivorceAgeInDays;
+			do {
+				maleDivorceAgeInDays = divorceAgeForMaleDistribution.getSample() + husband.getBirthDay();
+			}
+			while (!PopulationLogic.divorceNotBeforeMarriage(DateManipulation.differenceInDays(husband.getBirthDay(), marriageDay), maleDivorceAgeInDays));
+			timeline.addEvent(maleDivorceAgeInDays, new OrganicEvent(EventType.DIVORCE));
+			timeline.setEndDate(maleDivorceAgeInDays);
+			break;
+		case FEMALE:
+			// get female age at divorce
+			int femaleDivorceAgeInDays;
+			do {
+				femaleDivorceAgeInDays = divorceAgeForFemaleDistribution.getSample() + wife.getBirthDay();
+			}
+			while (!PopulationLogic.divorceNotBeforeMarriage(DateManipulation.differenceInDays(husband.getBirthDay(), marriageDay), femaleDivorceAgeInDays));
+			timeline.addEvent(femaleDivorceAgeInDays, new OrganicEvent(EventType.DIVORCE));
+			timeline.setEndDate(femaleDivorceAgeInDays);
+			break;
+		case NO_DIVORCE:
+			// If not then added earliest death date
+			int firstPartnersDeathDate = dateOfFirstPartnersDeath(husband.getDeathDay(), wife.getDeathDay());
+			timeline.addEvent(firstPartnersDeathDate, new OrganicEvent(EventType.PARTNERSHIP_ENDED_BY_DEATH));
+			timeline.setEndDate(firstPartnersDeathDate);
+			break;
+		}
 
-        // Decide on a number of children for relationship
+		// Decide on a number of children for relationship
+		// Will be from a distribution - just keeping things simple for now
+		int numberOfChildren = 1;
 
+		int dayOfBirth = daysIntoPartnershipForBirthDistribution.getSample();
+		int lastChildDay = 0;
+		OrganicPerson child = null;
+		
+		int count = 0;
+		while(lastChildDay == 0 && count < 100) {
+			if(PopulationLogic.earliestAcceptableBirthDate(marriageDay, 0) < dayOfBirth + marriageDay) {
+				if (PopulationLogic.parentsHaveSensibleAgesAtChildBirth(husband.getBirthDay(), husband.getDeathDay(), wife.getBirthDay(), wife.getDeathDay(), dayOfBirth + marriageDay)) {
+					lastChildDay = dayOfBirth + marriageDay;
+					child = new OrganicPerson(IDFactory.getNextID(), lastChildDay);
+					childrenIds.add(child.getId());
+					timeline.addEvent(lastChildDay, new OrganicEvent(EventType.BIRTH));
+				}
+			}
+			count++;
+		}
+		
 
-        // Generate birth dates
-        // Check they are permissible - not after death, breakup, too close together
+		return child;
+	}
 
-        // Add births to timeline
+	private int dateOfFirstPartnersDeath(int husbandDeath, int wifeDeath) {
+		if (husbandDeath < wifeDeath)
+			return husbandDeath;
+		else
+			return wifeDeath;
+	}
 
+	public OrganicTimeline getTimeline() {
+		return timeline;
+	}
 
-        timeline.addEvent(400, new OrganicEvent(EventType.BIRTH));
+	@Override
+	public int compareTo(final IPartnership arg0) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 
-        return timeline;
-    }
+	@Override
+	public int getId() {
+		return id;
+	}
 
-    private int dateOfFirstPartnersDeath(int husbandDeath, int wifeDeath) {
-        if (husbandDeath < wifeDeath)
-            return husbandDeath;
-        else
-            return wifeDeath;
-    }
+	@Override
+	public int getFemalePartnerId() {
+		return wife;
+	}
 
-    public OrganicTimeline getTimeline() {
-        return timeline;
-    }
+	@Override
+	public int getMalePartnerId() {
+		return husband;
+	}
 
-    @Override
-    public int compareTo(final IPartnership arg0) {
-        // TODO Auto-generated method stub
-        return 0;
-    }
+	@Override
+	public int getPartnerOf(final int id) {
 
-    @Override
-    public int getId() {
-        return id;
-    }
+		if (id == husband)
+			return wife;
+		else if (id == wife)
+			return husband;
+		else
+			return -1;
+	}
 
-    @Override
-    public int getFemalePartnerId() {
-        return wife;
-    }
+	@Override
+	public Date getMarriageDate() {
+		return DateManipulation.daysToDate(marriageDay);
+	}
 
-    @Override
-    public int getMalePartnerId() {
-        return husband;
-    }
+	@Override
+	public List<Integer> getChildIds() {
+		return childrenIds;
+	}
 
-    @Override
-    public int getPartnerOf(final int id) {
-
-        if (id == husband)
-            return wife;
-        else if (id == wife)
-            return husband;
-        else
-            return -1;
-    }
-
-    @Override
-    public Date getMarriageDate() {
-        return DateManipulation.daysToDate(marriageDay);
-    }
-
-    @Override
-    public List<Integer> getChildIds() {
-        return childrenIds;
-    }
-
-    @Override
-    public List<Integer> getPartnerIds() {
-        return Arrays.asList(husband, wife);
-    }
+	@Override
+	public List<Integer> getPartnerIds() {
+		return Arrays.asList(husband, wife);
+	}
 }
