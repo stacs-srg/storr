@@ -9,8 +9,8 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 
 /**
  * The Class OutputDataFormatter formats the fields of a record into a readable format for either manual analysis or
- * data clerking. 
- * Methods should be overridden to give desired behaviour, though the defualts should still be useful.
+ * data clerking.
+ * Methods should be overridden to give desired behaviour, though the default should still be useful.
  * The delimiter can be set by calling the setDelimiter method, otherwise the default of | (pipe) is used.
  * 
  */

@@ -75,7 +75,7 @@ public class OLR {
         return r;
     }
 
-    public void extendBetaBy(final int classes, final int features){
+    public void extendBetaBy(final int classes, final int features) {
 
     }
 

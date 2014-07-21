@@ -63,7 +63,7 @@ public class AccessDatabaseDumper {
      *
      * @throws IOException Signals that an I/O exception has occurred.
      */
-    public void writeTablesToFile(String baseDirectory) throws IOException {
+    public void writeTablesToFile(final String baseDirectory) throws IOException {
 
         final String name = database.getFile().getName();
         final int fileExtensionLength = 4;

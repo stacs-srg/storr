@@ -14,9 +14,8 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class HumanReadableWriter.
+ * The Class HumanReadableWriter formats the fields in a record into a human readable format.
  */
 public class HumanReadableWriter extends OutputDataFormatter {
 

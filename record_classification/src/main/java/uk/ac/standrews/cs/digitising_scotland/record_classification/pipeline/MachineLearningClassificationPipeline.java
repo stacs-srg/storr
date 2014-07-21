@@ -56,7 +56,7 @@ public class MachineLearningClassificationPipeline {
      *            classification.
      * @param trainingBucket the training bucket
      */
-    public MachineLearningClassificationPipeline(final AbstractClassifier classifier, Bucket trainingBucket) {
+    public MachineLearningClassificationPipeline(final AbstractClassifier classifier, final Bucket trainingBucket) {
 
         this.cache = new TokenClassificationCache(classifier);
         recordCache = new HashMap<>();
