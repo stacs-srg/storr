@@ -1,6 +1,10 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.OLR;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Properties;
 import java.util.concurrent.ExecutorService;
@@ -12,6 +16,10 @@ import org.apache.mahout.math.NamedVector;
 import org.apache.mahout.math.Vector;
 import org.apache.mahout.math.function.DoubleDoubleFunction;
 import org.apache.mahout.math.function.Functions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
 
 /**
  * Distributes training vectors across {@link OLRPool}s in a cross fold manner. Allows concurrent training
@@ -20,6 +28,8 @@ import org.apache.mahout.math.function.Functions;
  * @author fraserdunlop
  */
 public class OLRCrossFold {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(OLRCrossFold.class);
 
     /** The model trainable. */
     private final boolean modelTrainable;
@@ -51,36 +61,43 @@ public class OLRCrossFold {
         modelTrainable = true;
     }
 
-    public void stop(){
-        for(OLRPool model : models){
+    /**
+     * Stops training on all models in the {@link OLRPool}.
+     */
+    public void stop() {
+
+        for (OLRPool model : models) {
             model.stop();
         }
     }
 
-    public class StopListener implements Runnable{
-        public void commandLineStopListener() throws IOException {
-            BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
-            String line = "";
+    public class StopListener implements Runnable {
 
-            while (!line.equalsIgnoreCase("stop")) {
-                line = in.readLine();
+        public void commandLineStopListener() throws IOException {
+
+            try (BufferedReader in = new BufferedReader(new InputStreamReader(System.in, FileManipulation.FILE_CHARSET))) {
+                String line = "";
+
+                while (line != null && !line.equalsIgnoreCase("stop")) {
+                    line = in.readLine();
+                }
+                LOGGER.info("Stop call detected. Stopping training...");
+                stop();
             }
 
-            stop();
-
-            in.close();
         }
 
         @Override
         public void run() {
+
             try {
                 commandLineStopListener();
-            } catch (IOException e) {
+            }
+            catch (IOException e) {
                 e.printStackTrace();
             }
         }
     }
-
 
     /**
      * trains models.
@@ -124,7 +141,8 @@ public class OLRCrossFold {
 
         try {
             this.trainAllModels();
-        } catch (InterruptedException e) {
+        }
+        catch (InterruptedException e) {
             e.printStackTrace();
         }
     }

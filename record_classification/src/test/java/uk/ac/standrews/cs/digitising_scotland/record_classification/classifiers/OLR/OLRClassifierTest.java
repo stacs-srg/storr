@@ -1,8 +1,10 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.OLR;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.List;
@@ -18,8 +20,8 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.RecordFactory;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.vectors.VectorFactory;
+import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearningConfiguration;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class OLRClassifierTest.
  */
@@ -110,6 +112,29 @@ public class OLRClassifierTest {
         bucketA = new Bucket(listOfRecordsTraining);
         bucketA = helper.giveBucketTestingOccCodes(bucketA);
         return bucketA;
+    }
+
+    /**
+     * Test stop listener.
+     *
+     * @throws Exception the exception
+     */
+    @Test
+    public void testStop() throws Exception {
+
+        String data = "stop\n";
+        InputStream stdin = System.in;
+        System.setIn(new ByteArrayInputStream(data.getBytes()));
+
+        VectorFactory vectorFactory = new VectorFactory(bucketA);
+        OLRClassifier olrClassifier1 = new OLRClassifier(vectorFactory);
+        MachineLearningConfiguration.getDefaultProperties().setProperty("reps", "10001000");
+
+        olrClassifier1.train(bucketA);
+
+        System.setIn(stdin);
+        Assert.assertTrue(new File("target/olrModelPath").exists());
+
     }
 
 }

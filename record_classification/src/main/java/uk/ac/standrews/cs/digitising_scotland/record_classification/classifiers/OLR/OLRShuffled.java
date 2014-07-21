@@ -26,8 +26,6 @@ import java.util.Properties;
 
 import org.apache.mahout.math.NamedVector;
 import org.apache.mahout.math.Vector;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearningConfiguration;
 
@@ -44,7 +42,6 @@ public class OLRShuffled implements Runnable {
     private OLR model;
     private Properties properties = MachineLearningConfiguration.getDefaultProperties();
     private int reps; //set in config
-    private final static Logger LOGGER = LoggerFactory.getLogger(OLRShuffled.class);
     private ArrayList<NamedVector> trainingVectorList = new ArrayList<NamedVector>();
     private boolean stopped = false;
 
