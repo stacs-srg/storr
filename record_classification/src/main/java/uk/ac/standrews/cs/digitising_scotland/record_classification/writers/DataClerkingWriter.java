@@ -6,23 +6,19 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.util.Set;
 
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.CODOrignalData;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeTriple;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
+import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
 
 /**
  * Contains methods for reading and writing to file {@link Bucket}s and {@link Record}s objects ready for clerking by NRS.
  *
  * @author jkc25, frjd2
  */
-public class DataClerkingWriter implements Closeable, AutoCloseable {
+public class DataClerkingWriter extends OutputDataFormatter implements Closeable, AutoCloseable {
 
     private BufferedWriter writer;
-    private static final String DELIMITER = "|";
 
     /**
      * Instantiates a new data clerking writer.
@@ -33,7 +29,7 @@ public class DataClerkingWriter implements Closeable, AutoCloseable {
     public DataClerkingWriter(final File outputPath) throws IOException {
 
         FileOutputStream fileOutputStream = new FileOutputStream(outputPath);
-        OutputStreamWriter outputStream = new OutputStreamWriter(fileOutputStream, "UTF-8");
+        OutputStreamWriter outputStream = new OutputStreamWriter(fileOutputStream, FileManipulation.FILE_CHARSET);
         writer = new BufferedWriter(outputStream);
     }
 
@@ -77,138 +73,4 @@ public class DataClerkingWriter implements Closeable, AutoCloseable {
         return description + year + imageQuality + sex + ageGroup + codes + "\n";
     }
 
-    /**
-     * Gets the image quality.
-     *
-     * @param record the record
-     * @return the image quality
-     */
-    private String getImageQuality(final Record record) {
-
-        return String.valueOf(record.getOriginalData().getImageQuality()) + DELIMITER;
-    }
-
-    /**
-     * Gets the year.
-     *
-     * @param record the record
-     * @return the year
-     */
-    private String getYear(final Record record) {
-
-        return String.valueOf(record.getOriginalData().getYear()) + DELIMITER;
-    }
-
-    /**
-     * Gets the description.
-     *
-     * @param record the record
-     * @return the description
-     */
-    private String getDescription(final Record record) {
-
-        return record.getOriginalData().getDescription() + DELIMITER;
-    }
-
-    /**
-     * Gets the codes.
-     *
-     * @param record the record
-     * @return the codes
-     */
-    private String getCodes(final Record record) {
-
-        StringBuilder sb = new StringBuilder();
-        Set<CodeTriple> classifications = record.getCodeTriples();
-
-        for (CodeTriple codeTriple : classifications) {
-
-            Code code = codeTriple.getCode();
-            String codeAsString = code.getCodeAsString();
-            String description = getDesciption(record, code);
-            String explanation = getExplanation(codeAsString);
-            sb.append(codeAsString + DELIMITER + description + DELIMITER + explanation + DELIMITER);
-
-        }
-
-        return sb.toString();
-    }
-
-    private String getDesciption(final Record record, final Code code) {
-
-        String description;
-
-        if (record.isCoDRecord()) {
-            description = code.getDescription();
-        }
-        else {
-            description = "Classified into HISCO";
-        }
-        return description;
-    }
-
-    /**
-     * Gets the explanation.
-     *
-     * @param codeAsString the code as string
-     * @return the explanation
-     */
-    private String getExplanation(final String codeAsString) {
-
-        final int expectedLength = 5;
-        if (codeAsString.length() == expectedLength && !String.valueOf(codeAsString.charAt(4)).equals("0")) { return "Coded to the extended historical version (codes ending .01 to .09)"; }
-        return "";
-    }
-
-    /**
-     * Gets the age group.
-     *
-     * @param record the record
-     * @return the age group
-     */
-    private String getAgeGroup(final Record record) {
-
-        if (!record.isCoDRecord()) { return ""; }
-        CODOrignalData originalData = (CODOrignalData) record.getOriginalData();
-        int ageGroup = originalData.getAgeGroup();
-
-        String ageGroupString;
-
-        switch (ageGroup) {
-            case 0:
-                ageGroupString = "(" + 0 + ") 0 - 1";
-                break;
-            case 1:
-                ageGroupString = "(" + 1 + ") 2 - 5";
-                break;
-            case 2:
-                ageGroupString = "(" + 2 + ") 6 - 10";
-                break;
-            case 3:
-                ageGroupString = "(" + 3 + ") 11 - 15";
-                break;
-            case 4:
-                ageGroupString = "(" + 4 + ") 16 - 45";
-                break;
-            default:
-                ageGroupString = "(" + 5 + ") 56+";
-        }
-        return ageGroupString + DELIMITER;
-    }
-
-    /**
-     * Gets the sex.
-     *
-     * @param record the record
-     * @return the sex
-     */
-    private String getSex(final Record record) {
-
-        if (!record.isCoDRecord()) { return ""; }
-        CODOrignalData originalData = (CODOrignalData) record.getOriginalData();
-        int sex = originalData.getSex();
-        if (sex == 0) { return "F" + DELIMITER; }
-        return "M" + DELIMITER;
-
-    }
 }

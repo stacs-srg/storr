@@ -128,7 +128,7 @@ public class OLRClassifierTest {
 
         VectorFactory vectorFactory = new VectorFactory(bucketA);
         OLRClassifier olrClassifier1 = new OLRClassifier(vectorFactory);
-        MachineLearningConfiguration.getDefaultProperties().setProperty("reps", "10001000");
+        MachineLearningConfiguration.getDefaultProperties().setProperty("reps", "1000");
 
         olrClassifier1.train(bucketA);
 
