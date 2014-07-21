@@ -163,8 +163,8 @@ public final class TrainAndMultiplyClassify {
 
         HashMap<String, Integer> codeMapping = new HashMap<>();
         for (Record record : bucket) {
-            for (CodeTriple ct : record.getGoldStandardClassificationSet()) {
-                codeMapping.put(ct.getCode().getCodeAsString(), 1);
+            for (CodeTriple currentCodeTriple : record.getGoldStandardClassificationSet()) {
+                codeMapping.put(currentCodeTriple.getCode().getCodeAsString(), 1);
             }
         }
 
