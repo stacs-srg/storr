@@ -1,22 +1,17 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.OLR;
 
-import org.apache.mahout.math.DenseVector;
-import org.apache.mahout.math.NamedVector;
-import org.apache.mahout.math.Vector;
-import org.apache.mahout.math.function.DoubleDoubleFunction;
-import org.apache.mahout.math.function.Functions;
-import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
-
-import java.io.BufferedReader;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+
+import org.apache.mahout.math.DenseVector;
+import org.apache.mahout.math.NamedVector;
+import org.apache.mahout.math.Vector;
+import org.apache.mahout.math.function.DoubleDoubleFunction;
+import org.apache.mahout.math.function.Functions;
 
 /**
  * Distributes training vectors across {@link OLRPool}s in a cross fold manner. Allows concurrent training
@@ -26,24 +21,16 @@ import java.util.concurrent.TimeUnit;
  */
 public class OLRCrossFold {
 
-    /**
-     * The model trainable.
-     */
+    /** The model trainable. */
     private final boolean modelTrainable;
 
-    /**
-     * The models.
-     */
-    private ArrayList<OLRPool> models = new ArrayList<OLRPool>();
+    /** The models. */
+    private ArrayList<OLRPool> models = new ArrayList<>();
 
-    /**
-     * The folds.
-     */
+    /** The folds. */
     private int folds;
 
-    /**
-     * The properties.
-     */
+    /** The properties. */
     private Properties properties;
 
     /**
@@ -64,24 +51,24 @@ public class OLRCrossFold {
         modelTrainable = true;
     }
 
-    public void stop() {
-        for (OLRPool model : models) {
+    public void stop(){
+        for(OLRPool model : models){
             model.stop();
         }
     }
 
-    public class StopListener implements Runnable {
+    public class StopListener implements Runnable{
         public void commandLineStopListener() throws IOException {
+            BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+            String line = "";
 
-            try (BufferedReader in = new BufferedReader(new InputStreamReader(System.in, FileManipulation.FILE_CHARSET))) {
-                String line = "";
-
-                while (line != null && !line.equalsIgnoreCase("stop")) {
-                    line = in.readLine();
-                }
-
-                stop();
+            while (!line.equalsIgnoreCase("stop")) {
+                line = in.readLine();
             }
+
+            stop();
+
+            in.close();
         }
 
         @Override
@@ -93,6 +80,7 @@ public class OLRCrossFold {
             }
         }
     }
+
 
     /**
      * trains models.
@@ -111,14 +99,16 @@ public class OLRCrossFold {
     private void trainAllModels() throws InterruptedException {
 
         StopListener stopListener = new StopListener();
-
+        ExecutorService stopService = Executors.newFixedThreadPool(1);
         ExecutorService executorService = Executors.newFixedThreadPool(folds);
-        executorService.submit(stopListener);
+        stopService.submit(stopListener);
         for (OLRPool model : models) {
             executorService.submit(model);
         }
         executorService.shutdown();
-        executorService.awaitTermination(1, TimeUnit.DAYS);
+        executorService.awaitTermination(365, TimeUnit.DAYS);
+        stop();
+        stopService.shutdown();
 
         for (OLRPool model : models) {
             model.getSurvivors();
@@ -144,9 +134,7 @@ public class OLRCrossFold {
      */
     private void checkTrainable() {
 
-        if (!modelTrainable) {
-            throw new UnsupportedOperationException("This model has no files to train " + "on and may only be used for classification.");
-        }
+        if (!modelTrainable) { throw new UnsupportedOperationException("This model has no files to train " + "on and may only be used for classification."); }
     }
 
     /**
@@ -167,8 +155,7 @@ public class OLRCrossFold {
 
     /**
      * Gets the log likelihood averaged over the models in the pool.
-     *
-     * @param actual   the actual classification
+     * @param actual the actual classification
      * @param instance the instance vector
      * @return log likelihood
      */

@@ -75,6 +75,10 @@ public class OLR {
         return r;
     }
 
+    public void extendBetaBy(final int classes, final int features){
+
+    }
+
     public double logLikelihood(final int actual, final Vector instance) {
 
         Vector p = classify(instance);
