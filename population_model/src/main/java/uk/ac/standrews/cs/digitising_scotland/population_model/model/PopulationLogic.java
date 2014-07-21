@@ -147,4 +147,12 @@ public class PopulationLogic {
 
         return DateManipulation.differenceInDays(date1, date2) >= 0;
     }
+    
+    public static int getMaximumMotherAgeAtChildBirth() {
+    	return MAXIMUM_MOTHER_AGE_AT_CHILDBIRTH;
+    }
+    
+    public static int getMinimumMotherAgeAtChildBirth() {
+    	return MINIMUM_MOTHER_AGE_AT_CHILDBIRTH;
+    }
 }
