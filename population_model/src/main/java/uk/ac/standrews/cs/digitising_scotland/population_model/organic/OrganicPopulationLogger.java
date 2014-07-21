@@ -64,6 +64,9 @@ public class OrganicPopulationLogger {
     }
 
     public static void printLogData() {
+    	System.out.println();
+    	System.out.println("-------Population Logger-------");
+    	System.out.println();
         System.out.println("Population: " + population);
         System.out.println("Marriages: " + marriages);
         System.out.println();
