@@ -55,7 +55,20 @@ public class OrganicPartnership implements IPartnership {
 	private OrganicTimeline timeline;
 	private int marriageDay;
 	private List<Integer> childrenIds = new ArrayList<Integer>();
-	
+    private boolean on;
+
+    public boolean isOn(){
+        return on;
+    }
+
+    public void turnOn(){
+        on = true;
+    }
+
+    public void turnOff(){
+        on = false;
+    }
+
 	public static Object[] createOrganicPartnership(final int id, final OrganicPerson husband, final OrganicPerson wife, int marriageDay) {
 		Object[] returns = new Object[2];
 		// Contains OrganicPartnership object
@@ -71,6 +84,7 @@ public class OrganicPartnership implements IPartnership {
 		this.husband = husband.getId();
 		this.wife = wife.getId();
 		this.marriageDay = marriageDay;
+        this.turnOn();
 	}
 
 	private OrganicPerson createPartnershipTimeline(OrganicPerson husband, OrganicPerson wife) {

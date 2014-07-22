@@ -21,6 +21,8 @@ public class OrganicPopulationLogger {
     private static int population = 0;
     private static int marriages = 0;
     private static int births = 0;
+    private static int divorces_no_remmariage = 0;
+    private static int divorces;
     private static int[] maleAgeAtMarriage = new int[100];
     private static int[] femaleAgeAtMarriage = new int[100];
     private static int[] ageDifferenceAtMarriage = new int[25];
@@ -43,6 +45,22 @@ public class OrganicPopulationLogger {
 
     public static void decMarriages() {
         marriages--;
+    }
+
+    public static void incDivorces() {
+        divorces++;
+    }
+
+    public static void incDivorcesNoRemmariage() {
+        divorces_no_remmariage++;
+    }
+
+    public static void decDivorcesNoRemmariage() {
+        divorces_no_remmariage++;
+    }
+
+    public static void decDivorces() {
+        divorces--;
     }
     
     public static void incBirths() {

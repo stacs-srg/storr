@@ -45,7 +45,7 @@ public class OrganicPerson implements IPerson {
     private char sex;
     private ArrayList<Integer> partnerships = new ArrayList<Integer>();
 	private OrganicTimeline timeline = null;
-    
+
     private static Random random = RandomFactory.getRandom();
 	private static Distribution<Integer> seed_age_distribution = new UniformDistribution(0, 70, random);
 	private static Distribution<Integer> seed_death_distribution = new UniformDistribution(0, 100, random);
@@ -139,6 +139,7 @@ public class OrganicPerson implements IPerson {
     public int getDeathDay() {
     	return timeline.getEndDate();
     }
+
 
     /**
      * INTERFACE METHODS

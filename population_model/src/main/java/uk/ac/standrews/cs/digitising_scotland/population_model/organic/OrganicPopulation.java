@@ -16,12 +16,7 @@
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.organic;
 
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.AgeAtDeathDistribution;
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.Distribution;
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.FemaleAgeAtMarriageDistribution;
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.MaleAgeAtMarriageDistribution;
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.UniformDistribution;
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.UniformSexDistribution;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.*;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IDFactory;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPartnership;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPerson;
@@ -225,6 +220,7 @@ public class OrganicPopulation implements IPopulation {
 					people.get(i).populate_timeline();
 				}
 				// TODO make more efficient
+                // FIXME potential bug: aren't all of those currentDay's supposed to be actually j's
 				if (people.get(i).getTimeline() != null) {
 
 					//Check all dates between the previous and current date after taking the time step
@@ -273,8 +269,21 @@ public class OrganicPopulation implements IPopulation {
 							case BIRTH:
 
 								break;
-							case DIVORCE:
+							case DIVORCE:{
+                                RemarriageDistribution remmariageDist = new RemarriageDistribution();
+                                OrganicPopulationLogger.incDivorces();
 
+                                partnerships.get(i).turnOff();
+
+                                if(remmariageDist.getSample()){
+                                    // Get right back on the horse.
+
+                                } else {
+
+                                    //Forever alone
+                                    OrganicPopulationLogger.incDivorcesNoRemmariage();
+                                }
+                            }
 								break;
 							case PARTNERSHIP_ENDED_BY_DEATH:
 
