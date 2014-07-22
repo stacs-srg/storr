@@ -12,6 +12,7 @@ public class Pair<L, R> {
     private L left;
 
     public void setRight(R right) {
+
         this.right = right;
     }
 
@@ -30,7 +31,8 @@ public class Pair<L, R> {
         this.right = right;
     }
 
-    public void setLeft(final L left){
+    public void setLeft(final L left) {
+
         this.left = left;
     }
 

@@ -58,17 +58,19 @@ public class OLRPool implements Runnable {
         modelTrainable = true;
     }
 
+    public double getAverageRunningLogLikelihood() {
 
-    public double getAverageRunningLogLikelihood(){
         double ll = 0.;
-        for (OLRShuffled model : models) //TODO do this only for hypothetically surviving models?
+        for (OLRShuffled model : models)
+            //TODO do this only for hypothetically surviving models?
             ll += model.getRunningLogLikelihood();
         ll /= models.size();
         return ll;
     }
 
-    public void resetRunningLogLikelihoods(){
-        for(OLRShuffled model : models)
+    public void resetRunningLogLikelihoods() {
+
+        for (OLRShuffled model : models)
             model.resetRunningLogLikelihood();
     }
 

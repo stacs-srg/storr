@@ -57,12 +57,13 @@ public class OLRShuffled implements Runnable {
         this(MachineLearningConfiguration.getDefaultProperties(), trainingVectorList);
     }
 
+    public double getRunningLogLikelihood() {
 
-    public double getRunningLogLikelihood(){
-       return model.getRunningLogLikelihood();
+        return model.getRunningLogLikelihood();
     }
 
-    public void resetRunningLogLikelihood(){
+    public void resetRunningLogLikelihood() {
+
         model.resetRunningLogLikelihood();
     }
 

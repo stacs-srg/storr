@@ -46,16 +46,18 @@ public class OLRCrossFold {
     public double getAverageRunningLogLikelihood() {
 
         double ll = 0.;
-        for (OLRPool model : models)
+        for (OLRPool model : models) {
             ll += model.getAverageRunningLogLikelihood();
+        }
         ll /= models.size();
         return ll;
     }
 
     public void resetRunningLogLikelihoods() {
 
-        for (OLRPool model : models)
+        for (OLRPool model : models) {
             model.resetRunningLogLikelihoods();
+        }
     }
 
     /**
@@ -152,7 +154,8 @@ public class OLRCrossFold {
             executorService.submit(model);
         }
         executorService.shutdown();
-        executorService.awaitTermination(365, TimeUnit.DAYS);
+        final int timeout = 365;
+        executorService.awaitTermination(timeout, TimeUnit.DAYS);
         stop();
         stopService.shutdown();
 
