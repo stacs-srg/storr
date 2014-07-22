@@ -24,6 +24,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Properties;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.mahout.classifier.sgd.L1;
 import org.apache.mahout.math.DenseMatrix;
@@ -62,7 +63,7 @@ public class OLR {
     private Vector updateCounts;
     private int step;
     private volatile double runningLogLikelihood;
-    private volatile int numLogLikelihoodSumUpdates;
+    private volatile AtomicInteger numLogLikelihoodSumUpdates;
 
     public int getStep() {
 
@@ -78,12 +79,14 @@ public class OLR {
     }
 
     public double getRunningLogLikelihood() {
-        return runningLogLikelihood / numLogLikelihoodSumUpdates;
+
+        return runningLogLikelihood / numLogLikelihoodSumUpdates.get();
     }
 
     public void resetRunningLogLikelihood() {
+
         runningLogLikelihood = 0.;
-        numLogLikelihoodSumUpdates = 0;
+        numLogLikelihoodSumUpdates = new AtomicInteger(0);
     }
 
     public double logLikelihood(final int actual, final Vector instance) {
@@ -91,25 +94,30 @@ public class OLR {
         Vector p = classify(instance);
         if (actual > 0) {
             return Math.max(-100.0, Math.log(p.get(actual - 1)));
-        } else {
+        }
+        else {
             return Math.max(-100.0, Math.log1p(-p.zSum()));
         }
     }
 
     private void updateLogLikelihoodSum(final int actual, final Vector classification) {
+
         double thisloglik;
         if (actual > 0) {
             thisloglik = Math.max(-100.0, Math.log(classification.get(actual - 1)));
-        } else {
+        }
+        else {
             thisloglik = Math.max(-100.0, Math.log1p(-classification.zSum()));
         }
 
-        if (numLogLikelihoodSumUpdates != 0)
-            runningLogLikelihood += (thisloglik - runningLogLikelihood) / numLogLikelihoodSumUpdates;
-        else
+        if (numLogLikelihoodSumUpdates.get() != 0) {
+            runningLogLikelihood += (thisloglik - runningLogLikelihood) / numLogLikelihoodSumUpdates.get();
+        }
+        else {
             runningLogLikelihood = thisloglik;
+        }
 
-        numLogLikelihoodSumUpdates++;
+        numLogLikelihoodSumUpdates.getAndIncrement();
     }
 
     public int getNumCategories() {
@@ -148,6 +156,7 @@ public class OLR {
      * @param properties properties
      */
     public OLR(final Properties properties) {
+
         resetRunningLogLikelihood();
         this.properties = properties;
         this.prior = new L1();
@@ -227,7 +236,8 @@ public class OLR {
 
         if (weArePerTermAnnealing) {
             return perTermLearningRate(feature);
-        } else {
+        }
+        else {
             return currentLearningRate();
         }
     }
@@ -252,7 +262,8 @@ public class OLR {
             // the size of the max means that 1+sum(exp(v)) = sum(exp(v)) to within round-off
             v.assign(Functions.minus(max)).assign(Functions.EXP);
             return v.divide(v.norm(1));
-        } else {
+        }
+        else {
             v.assign(Functions.EXP);
             return v.divide(1 + v.norm(1));
         }
