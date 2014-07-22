@@ -26,13 +26,8 @@ import java.io.IOException;
 import java.util.Properties;
 
 import org.apache.mahout.classifier.sgd.L1;
-import org.apache.mahout.math.DenseMatrix;
-import org.apache.mahout.math.DenseVector;
-import org.apache.mahout.math.MatrixWritable;
-import org.apache.mahout.math.NamedVector;
-import org.apache.mahout.math.Vector;
+import org.apache.mahout.math.*;
 import org.apache.mahout.math.Vector.Element;
-import org.apache.mahout.math.VectorWritable;
 import org.apache.mahout.math.function.Functions;
 
 import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearningConfiguration;
@@ -44,6 +39,15 @@ import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearnin
 public class OLR {
 
     private Gradient gradient = new Gradient();
+
+    public Matrix getBeta() {
+        return beta;
+    }
+
+    public void setBeta(Matrix beta) {
+        this.beta = beta;
+    }
+
     protected org.apache.mahout.math.Matrix beta;
 
     private Properties properties;
@@ -108,7 +112,6 @@ public class OLR {
             runningLogLikelihood += (thisloglik - runningLogLikelihood) / numLogLikelihoodSumUpdates;
         else
             runningLogLikelihood = thisloglik;
-
         numLogLikelihoodSumUpdates++;
     }
 
@@ -153,6 +156,10 @@ public class OLR {
         this.prior = new L1();
         getConfigOptions();
         initialiseModel();
+    }
+
+    public OLR(final Matrix beta){
+        initialiseMode(beta);
     }
 
     /**
@@ -322,6 +329,14 @@ public class OLR {
         updateSteps = new DenseVector(numFeatures);
         updateCounts = new DenseVector(numFeatures);
         beta = new DenseMatrix(numCategories - 1, numFeatures);
+    }
+
+    private void initialiseMode(final Matrix beta){
+        this.beta = beta;
+        numFeatures = beta.numCols();
+        numCategories = beta.numRows()+1;
+        updateSteps = new DenseVector(numFeatures);
+        updateCounts = new DenseVector(numFeatures);
     }
 
     /**
