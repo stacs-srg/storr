@@ -192,7 +192,9 @@ public class ListAccuracyMetrics {
     /**
      * Prints the statistics generated with pretty formatting.
      */
-    public void prettyPrint() {
+    public void prettyPrint(final String header) {
+
+        LOGGER.info(header);
 
         LOGGER.info("Total records in bucket: " + recordsInBucket);
         LOGGER.info("Average confidence: " + averageConfidence);

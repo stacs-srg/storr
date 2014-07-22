@@ -137,11 +137,11 @@ public final class TrainAndMultiplyClassify {
         LOGGER.info("********** Output Stats **********");
 
         LOGGER.info("All Records");
-        generateAndPrintStats(allClassified);
+        generateAndPrintStats(allClassified, "All Records");
 
         LOGGER.info("\nUnique Records");
         final Bucket uniqueRecordsOnly = BucketFilter.uniqueRecordsOnly(allClassified);
-        generateAndPrintStats(uniqueRecordsOnly);
+        generateAndPrintStats(uniqueRecordsOnly, "Unique Only");
 
         LOGGER.info("Codes that were null and weren't adter chopping: " + CodeFactory.getInstance().getCodeMapNullCounter());
 
@@ -180,10 +180,10 @@ public final class TrainAndMultiplyClassify {
         CodeFactory.getInstance().loadDictionary(codeFile);
     }
 
-    private static void generateAndPrintStats(final Bucket classifiedBucket) throws IOException {
+    private static void generateAndPrintStats(final Bucket classifiedBucket, String header) throws IOException {
 
         ListAccuracyMetrics accuracyMetrics = new ListAccuracyMetrics(classifiedBucket);
-        accuracyMetrics.prettyPrint();
+        accuracyMetrics.prettyPrint(header);
         generateStats(classifiedBucket, accuracyMetrics);
     }
 
