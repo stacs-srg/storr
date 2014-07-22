@@ -1,6 +1,7 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.writers;
 
 import java.io.BufferedWriter;
+import java.io.Closeable;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -17,7 +18,7 @@ import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
 /**
  * The Class HumanReadableWriter formats the fields in a record into a human readable format.
  */
-public class HumanReadableWriter extends OutputDataFormatter {
+public class HumanReadableWriter extends OutputDataFormatter implements Closeable {
 
     /** The writer. */
     private BufferedWriter writer;
@@ -91,6 +92,13 @@ public class HumanReadableWriter extends OutputDataFormatter {
         }
 
         return sb.toString();
+    }
+
+    @Override
+    public void close() throws IOException {
+
+        writer.close();
+
     }
 
 }

@@ -14,19 +14,18 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeNotValidException;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 
-/**
- * The Class DataClerkingWriterTest.
- */
-public class DataClerkingWriterTest {
+public class HumanReadableWriterTest {
 
     /** The helper. */
     private ClassifierTestingHelper helper = new ClassifierTestingHelper();
+
+    private String delimiter = "\t";
 
     /** The Constant OCCBUCKET. */
     private static final String OCCBUCKET = "target/OccRecordWriteTest.txt";
 
     /** The Constant CODDATA. */
-    private static final String CODDATA = "/DataClerkingWriterTestCOD.txt";
+    private static final String CODDATA = "/HumanReadableWriterTestCOD.txt";
 
     /** The Constant CODBUCKET. */
     private static final String CODBUCKET = "target/CODRecordWriteTest.txt";
@@ -61,7 +60,7 @@ public class DataClerkingWriterTest {
     @Test
     public void testWriteOcc() throws Exception {
 
-        String occDataFile = "/DataClerkingWriterTestOcc.txt";
+        String occDataFile = "/HumanReadableWriterTestOcc.txt";
         File writeFile = createAndWriteOccBucketWithClassificationTriplesToFile(OCCBUCKET, occDataFile);
         String correctOccBucketFile = "/OccRecordWriteCorrect.txt";
         checkFileAgainstKnownCorrect(correctOccBucketFile, writeFile);
@@ -117,10 +116,10 @@ public class DataClerkingWriterTest {
     private File createAndWriteMultipleCODBucketToFile(final String writeFileName, final String readFileName) throws Exception {
 
         File writeFile = new File(writeFileName);
-        DataClerkingWriter dataClerkingWriter = new DataClerkingWriter(writeFile);
+        HumanReadableWriter humanReadableWriter = new HumanReadableWriter(writeFile, delimiter);
         Bucket bucket = helper.getTrainingBucket(readFileName);
         bucket = addMultipleCODCodes(bucket);
-        writeToFile(dataClerkingWriter, bucket);
+        writeToFile(humanReadableWriter, bucket);
         return writeFile;
     }
 
@@ -135,10 +134,10 @@ public class DataClerkingWriterTest {
     private File createAndWriteHICODBucketToFile(final String writeFileName, final String readFileName) throws Exception {
 
         File writeFile = new File(writeFileName);
-        DataClerkingWriter dataClerkingWriter = new DataClerkingWriter(writeFile);
+        HumanReadableWriter humanReadableWriter = new HumanReadableWriter(writeFile, delimiter);
         Bucket bucket = helper.getTrainingBucket(readFileName);
         bucket = addHICODCodes(bucket);
-        writeToFile(dataClerkingWriter, bucket);
+        writeToFile(humanReadableWriter, bucket);
         return writeFile;
     }
 
@@ -153,10 +152,10 @@ public class DataClerkingWriterTest {
     private File createAndWriteOccBucketToFile(final String writeFileName, final String readFileName) throws Exception {
 
         File writeFile = new File(writeFileName);
-        DataClerkingWriter dataClerkingWriter = new DataClerkingWriter(writeFile);
+        HumanReadableWriter humanReadableWriter = new HumanReadableWriter(writeFile, delimiter);
         Bucket bucket = helper.getTrainingBucket(readFileName);
         bucket = addOccCodes(bucket);
-        writeToFile(dataClerkingWriter, bucket);
+        writeToFile(humanReadableWriter, bucket);
         return writeFile;
     }
 
@@ -171,11 +170,11 @@ public class DataClerkingWriterTest {
     private File createAndWriteOccBucketWithClassificationTriplesToFile(final String writeFileName, final String readFileName) throws Exception {
 
         File writeFile = new File(writeFileName);
-        DataClerkingWriter dataClerkingWriter = new DataClerkingWriter(writeFile);
+        HumanReadableWriter humanReadableWriter = new HumanReadableWriter(writeFile, delimiter);
         Bucket bucket = helper.getTrainingBucket(readFileName);
         bucket = addOccCodes(bucket);
         bucket = addOccClassificationTriples(bucket);
-        writeToFile(dataClerkingWriter, bucket);
+        writeToFile(humanReadableWriter, bucket);
         return writeFile;
     }
 
@@ -190,10 +189,10 @@ public class DataClerkingWriterTest {
     private File createAndWriteCODBucketToFile(final String writeFileName, final String readFileName) throws Exception {
 
         File writeFile = new File(writeFileName);
-        DataClerkingWriter dataClerkingWriter = new DataClerkingWriter(writeFile);
+        HumanReadableWriter humanReadableWriter = new HumanReadableWriter(writeFile, delimiter);
         Bucket bucket = helper.getTrainingBucket(readFileName);
         bucket = addCODCodes(bucket);
-        writeToFile(dataClerkingWriter, bucket);
+        writeToFile(humanReadableWriter, bucket);
         return writeFile;
     }
 
@@ -213,7 +212,6 @@ public class DataClerkingWriterTest {
     }
 
     /**
-     * Adds the cod codes.
      *
      * @param bucket the bucket
      * @return the bucket
@@ -288,15 +286,16 @@ public class DataClerkingWriterTest {
     /**
      * Write to file.
      *
-     * @param dataClerkingWriter the data clerking writer
+     * @param HumanReadableWriter the data clerking writer
      * @param bucket the bucket
      * @throws IOException Signals that an I/O exception has occurred.
      */
-    private void writeToFile(final DataClerkingWriter dataClerkingWriter, final Bucket bucket) throws IOException {
+    private void writeToFile(final HumanReadableWriter HumanReadableWriter, final Bucket bucket) throws IOException {
 
         for (Record record : bucket) {
-            dataClerkingWriter.write(record);
+            HumanReadableWriter.write(record);
         }
-        dataClerkingWriter.close();
+        HumanReadableWriter.close();
     }
+
 }

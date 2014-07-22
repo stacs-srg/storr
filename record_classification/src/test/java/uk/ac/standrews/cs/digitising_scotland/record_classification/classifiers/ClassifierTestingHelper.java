@@ -15,7 +15,6 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.RecordFactory;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datacleaning.LevenshteinCleaner;
 
 /**
  * The Class ClassifierTestingHelper.
@@ -47,6 +46,27 @@ public class ClassifierTestingHelper {
         for (Record record : bucket) {
             loadDictionary("/CodeFactoryTestFile.txt");
             record = addGoldStandardCodeToRecord(record, "2200");
+        }
+
+        return bucket;
+    }
+
+    /**
+     * Populates all records in the bucket with the {@link Code} 2100.
+     * Use for testing only.
+     *
+     * @param bucket Bucket to populate
+     * @return bucket with gold standard codes
+     * @throws IOException Signals that an I/O exception has occurred.
+     * @throws CodeNotValidException the code not valid exception
+     * @throws URISyntaxException the URI syntax exception
+     */
+    public Bucket giveBucketTestingOccClassificationTriples(final Bucket bucket) throws IOException, CodeNotValidException, URISyntaxException {
+
+        for (Record record : bucket) {
+            loadDictionary("/CodeFactoryTestFile.txt");
+            record = addGoldStandardCodeToRecord(record, "2200");
+            addCodeTriplesStandardCodeToRecord(record, "2200");
         }
 
         return bucket;
@@ -169,6 +189,7 @@ public class ClassifierTestingHelper {
     public Bucket getTrainingBucket(final String fileName) throws Exception {
 
         Bucket bucketB;
+        System.out.println(new File(getClass().getResource(fileName).getFile()).exists());
         File inputFileTraining = new File(getClass().getResource(fileName).getFile());
         List<Record> listOfRecordsTraining = RecordFactory.makeUnCodedRecordsFromFile(inputFileTraining);
         bucketB = new Bucket(listOfRecordsTraining);
