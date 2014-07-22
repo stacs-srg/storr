@@ -27,6 +27,7 @@ import uk.ac.standrews.cs.digitising_scotland.population_model.model.PopulationL
 import uk.ac.standrews.cs.digitising_scotland.population_model.util.RandomFactory;
 import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -46,28 +47,36 @@ public class OrganicPartnership implements IPartnership {
 
 	// TODO Make distributions for these
 	private static UniformDistribution numberOfChildrenDistribution = new UniformDistribution(0, 5, random);
-	private static UniformDistribution daysIntoPartnershipForBirthDistribution = new UniformDistribution(0, (int)((PopulationLogic.getMaximumMotherAgeAtChildBirth() - PopulationLogic.getMinimumMotherAgeAtChildBirth()) * OrganicPopulation.DAYS_PER_YEAR), random);
+	private static UniformDistribution daysIntoPartnershipForBirthDistribution = new UniformDistribution(0, (int)(5 * OrganicPopulation.DAYS_PER_YEAR), random);
 
 	private Integer id;
 	private Integer husband;
 	private Integer wife;
 	private OrganicTimeline timeline;
 	private int marriageDay;
-	private List<Integer> childrenIds = null;
+	private List<Integer> childrenIds = new ArrayList<Integer>();
+	
+	public static Object[] createOrganicPartnership(final int id, final OrganicPerson husband, final OrganicPerson wife, int marriageDay) {
+		Object[] returns = new Object[2];
+		// Contains OrganicPartnership object
+		OrganicPartnership partnership = new OrganicPartnership(id, husband, wife, marriageDay);
+		// Contains OrganicPerson object aka the child - if no child returns null
+		returns[1] = partnership.createPartnershipTimeline(husband, wife);
+		returns[0] = partnership;
+		return returns;
+	}
 
-	public OrganicPartnership(final int id, final OrganicPerson husband, final OrganicPerson wife, int marriageDay) {
-
+	private OrganicPartnership(final int id, final OrganicPerson husband, final OrganicPerson wife, int marriageDay) {
 		this.id = id;
 		this.husband = husband.getId();
 		this.wife = wife.getId();
 		this.marriageDay = marriageDay;
-		timeline = createPartnershipTimeline(husband, wife);
 	}
 
-	public OrganicTimeline createPartnershipTimeline(OrganicPerson husband, OrganicPerson wife) {
+	private OrganicPerson createPartnershipTimeline(OrganicPerson husband, OrganicPerson wife) {
 
 		// TODO Correctly populate timeline
-		OrganicTimeline timeline = new OrganicTimeline(marriageDay);
+		timeline = new OrganicTimeline(marriageDay);
 
 		// Decide if/when relationship terminates
 		switch (divorceInstigatedByGenderDistribution.getDefinedSample()) {
@@ -105,26 +114,23 @@ public class OrganicPartnership implements IPartnership {
 
 		int dayOfBirth = daysIntoPartnershipForBirthDistribution.getSample();
 		int lastChildDay = 0;
+		OrganicPerson child = null;
 		
-//		int count = 0;
-//		while(lastChildDay == 0 && count < 100) {
-//			if(PopulationLogic.earliestAcceptableBirthDate(marriageDay, 0) < dayOfBirth + marriageDay) {
-//				if (PopulationLogic.parentsHaveSensibleAgesAtChildBirth(husband.getBirthDay(), husband.getDeathDay(), wife.getBirthDay(), wife.getDeathDay(), dayOfBirth + marriageDay)) {
-//					lastChildDay = dayOfBirth + marriageDay;
-//					OrganicPerson child = new OrganicPerson(IDFactory.getNextID());
-//				}
-//			}
-//			count++;
-//		}
-		// Generate birth dates
-		// Check they are permissible - not after death, breakup, too close together
+		int count = 0;
+		while(lastChildDay == 0 && count < 100) {
+			if(PopulationLogic.earliestAcceptableBirthDate(marriageDay, 0) < dayOfBirth + marriageDay) {
+				if (PopulationLogic.parentsHaveSensibleAgesAtChildBirth(husband.getBirthDay(), husband.getDeathDay(), wife.getBirthDay(), wife.getDeathDay(), dayOfBirth + marriageDay)) {
+					lastChildDay = dayOfBirth + marriageDay;
+					child = new OrganicPerson(IDFactory.getNextID(), lastChildDay, false);
+					childrenIds.add(child.getId());
+					timeline.addEvent(lastChildDay, new OrganicEvent(EventType.BIRTH));
+				}
+			}
+			count++;
+		}
+		
 
-		// Add births to timeline
-
-
-		timeline.addEvent(400, new OrganicEvent(EventType.BIRTH));
-
-		return timeline;
+		return child;
 	}
 
 	private int dateOfFirstPartnersDeath(int husbandDeath, int wifeDeath) {
@@ -138,11 +144,7 @@ public class OrganicPartnership implements IPartnership {
 		return timeline;
 	}
 
-	@Override
-	public int compareTo(final IPartnership arg0) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+
 
 	@Override
 	public int getId() {
@@ -183,5 +185,12 @@ public class OrganicPartnership implements IPartnership {
 	@Override
 	public List<Integer> getPartnerIds() {
 		return Arrays.asList(husband, wife);
+	}
+
+	@Override
+	public int compareTo(IPartnership o) {
+		if(this.equals(o))
+			return 0;
+		return 1;
 	}
 }

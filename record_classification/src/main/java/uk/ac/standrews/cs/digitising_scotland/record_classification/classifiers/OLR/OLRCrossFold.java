@@ -1,10 +1,6 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.OLR;
 
-import java.io.BufferedReader;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Properties;
 import java.util.concurrent.ExecutorService;
@@ -43,6 +39,23 @@ public class OLRCrossFold {
     /** The properties. */
     private Properties properties;
 
+
+
+
+    public double getAverageRunningLogLikelihood(){
+        double ll = 0.;
+        for (OLRPool model : models)
+            ll += model.getAverageRunningLogLikelihood();
+        ll /= models.size();
+        return ll;
+    }
+
+    public void resetRunningLogLikelihoods(){
+        for(OLRPool model : models)
+            model.resetRunningLogLikelihoods();
+    }
+
+
     /**
      * Constructor.
      *
@@ -72,32 +85,41 @@ public class OLRCrossFold {
     }
 
     public class StopListener implements Runnable {
-
         public void commandLineStopListener() throws IOException {
-
             try (BufferedReader in = new BufferedReader(new InputStreamReader(System.in, FileManipulation.FILE_CHARSET))) {
                 String line = "";
 
-                while (line != null && !line.equalsIgnoreCase("stop")) {
+                while (true) {
+                    if (line.equalsIgnoreCase("stop")) {
+                        LOGGER.info("Stop call detected. Stopping training...");
+                        stop();
+                        break;
+                    }
+                    if (line.equalsIgnoreCase("getloglik")) {
+                        LOGGER.info(Double.toString(getAverageRunningLogLikelihood()));
+                    }
+                    if (line.equalsIgnoreCase("resetloglik")) {
+                        resetRunningLogLikelihoods();
+                        LOGGER.info("Running log likelihood reset.");
+                    }
                     line = in.readLine();
                 }
-                LOGGER.info("Stop call detected. Stopping training...");
-                stop();
-            }
 
-        }
-
-        @Override
-        public void run() {
-
-            try {
-                commandLineStopListener();
-            }
-            catch (IOException e) {
-                e.printStackTrace();
+                in.close();
             }
         }
+
+            @Override
+            public void run () {
+                try {
+                    commandLineStopListener();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        
     }
+
 
     /**
      * trains models.
@@ -141,8 +163,7 @@ public class OLRCrossFold {
 
         try {
             this.trainAllModels();
-        }
-        catch (InterruptedException e) {
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
