@@ -1,6 +1,5 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.analysis_metrics;
 
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -439,23 +438,6 @@ public class ListAccuracyMetrics {
         }
 
         return totalConfidence / totalMeasurements;
-    }
-
-    /**
-     * Calculate unique records.
-     * 
-     * @param bucket
-     *            the bucket
-     * @return the int
-     */
-    private int calculateUniqueRecords(final Bucket bucket) {
-
-        HashMap<Record, Integer> tempMap = new HashMap<>();
-        for (Record record : bucket) {
-            tempMap.put(record, 0);
-        }
-
-        return tempMap.size();
     }
 
     /**

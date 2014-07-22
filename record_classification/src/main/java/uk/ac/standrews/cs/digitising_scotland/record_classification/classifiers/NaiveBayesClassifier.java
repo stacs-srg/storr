@@ -309,8 +309,8 @@ public class NaiveBayesClassifier extends AbstractClassifier {
         // TODO FIXME return real confidence... might be hard as this is Bayes
         // double confidence = Math.pow(logLikelihood, 2);
         // confidence = Math.sqrt(confidence);
-
-        return STATIC_CONFIDENCE;
+        //return STATIC_CONFIDENCE;
+        return Math.exp(logLikelihood);
     }
 
     /**
