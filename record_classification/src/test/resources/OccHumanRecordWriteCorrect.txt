@@ -1,0 +1,9 @@
+0	architect	1855	1	2200	Classified into HISCO	
+1	civil engineer	1855	1	2200	Classified into HISCO	
+2	civil engineer	1855	1	2200	Classified into HISCO	
+3	surveyor	1855	1	2200	Classified into HISCO	
+4	surveyor	1855	1	2200	Classified into HISCO	
+5	shipowner	1855	1	2200	Classified into HISCO	
+6	shipowner	1855	1	2200	Classified into HISCO	
+7	shipowner	1855	1	2200	Classified into HISCO	
+8	shipooner	1900	1	2200	Classified into HISCO	

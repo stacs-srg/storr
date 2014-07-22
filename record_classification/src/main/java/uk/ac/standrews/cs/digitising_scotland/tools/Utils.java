@@ -414,11 +414,12 @@ public final class Utils {
      */
     public static int checkStartPosition(final int startPosition, final int percentTestFiles) {
 
-        if (startPosition <= (100 - percentTestFiles)) {
+        final int fullFile = 100;
+        if (startPosition <= (fullFile - percentTestFiles)) {
             return startPosition;
         }
         else {
-            return startPosition - startPosition % (100 - percentTestFiles);
+            return startPosition - startPosition % (fullFile - percentTestFiles);
         }
 
     }

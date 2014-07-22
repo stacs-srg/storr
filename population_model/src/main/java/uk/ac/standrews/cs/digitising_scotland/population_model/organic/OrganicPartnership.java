@@ -76,7 +76,7 @@ public class OrganicPartnership implements IPartnership {
 	private OrganicPerson createPartnershipTimeline(OrganicPerson husband, OrganicPerson wife) {
 
 		// TODO Correctly populate timeline
-		OrganicTimeline timeline = new OrganicTimeline(marriageDay);
+		timeline = new OrganicTimeline(marriageDay);
 
 		// Decide if/when relationship terminates
 		switch (divorceInstigatedByGenderDistribution.getDefinedSample()) {
@@ -121,7 +121,7 @@ public class OrganicPartnership implements IPartnership {
 			if(PopulationLogic.earliestAcceptableBirthDate(marriageDay, 0) < dayOfBirth + marriageDay) {
 				if (PopulationLogic.parentsHaveSensibleAgesAtChildBirth(husband.getBirthDay(), husband.getDeathDay(), wife.getBirthDay(), wife.getDeathDay(), dayOfBirth + marriageDay)) {
 					lastChildDay = dayOfBirth + marriageDay;
-					child = new OrganicPerson(IDFactory.getNextID(), lastChildDay);
+					child = new OrganicPerson(IDFactory.getNextID(), lastChildDay, false);
 					childrenIds.add(child.getId());
 					timeline.addEvent(lastChildDay, new OrganicEvent(EventType.BIRTH));
 				}
@@ -144,11 +144,7 @@ public class OrganicPartnership implements IPartnership {
 		return timeline;
 	}
 
-	@Override
-	public int compareTo(final IPartnership arg0) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+
 
 	@Override
 	public int getId() {
@@ -189,5 +185,12 @@ public class OrganicPartnership implements IPartnership {
 	@Override
 	public List<Integer> getPartnerIds() {
 		return Arrays.asList(husband, wife);
+	}
+
+	@Override
+	public int compareTo(IPartnership o) {
+		if(this.equals(o))
+			return 0;
+		return 1;
 	}
 }

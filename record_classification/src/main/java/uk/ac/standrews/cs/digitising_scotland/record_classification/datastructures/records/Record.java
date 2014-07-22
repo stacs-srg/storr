@@ -4,7 +4,6 @@ import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.lookup.TokenizerCleaner;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.OriginalData;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeTriple;
 
@@ -50,6 +49,7 @@ public class Record {
      * @return the cleaned description
      */
     public String getDescription() {
+
         return originalData.getDescription();
     }
 
@@ -88,13 +88,10 @@ public class Record {
         return false;
     }
 
-    /* (non-Javadoc)
-     * @see java.lang.Object#toString()
-     */
     @Override
     public String toString() {
 
-        return "Record [description=" + getDescription() + "\t codeTriples=" + codeTriples + "]\n";
+        return "Record [id=" + id + ", goldStandardTriples=" + originalData.getGoldStandardCodeTriples() + ", codeTriples=" + codeTriples + "]";
     }
 
     /* (non-Javadoc)
