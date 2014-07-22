@@ -38,7 +38,7 @@ import java.util.Random;
  *
  * @author Tom Dalton (tsd4@st-andrews.ac.uk)
  */
-public class OrganicPartnership implements IPartnership {
+public final class OrganicPartnership implements IPartnership {
 
 	private static Random random = RandomFactory.getRandom();
 	private static DivorceInstigatedByGenderDistribution divorceInstigatedByGenderDistribution = new DivorceInstigatedByGenderDistribution(random);
@@ -46,8 +46,10 @@ public class OrganicPartnership implements IPartnership {
 	private static DivorceAgeForFemaleDistribution divorceAgeForFemaleDistribution = new DivorceAgeForFemaleDistribution(random);
 
 	// TODO Make distributions for these
-	private static UniformDistribution numberOfChildrenDistribution = new UniformDistribution(0, 5, random);
-	private static UniformDistribution daysIntoPartnershipForBirthDistribution = new UniformDistribution(0, (int)(5 * OrganicPopulation.DAYS_PER_YEAR), random);
+	private final static int MAX_NUMBER_CHILDREN = 5;
+	private final static int MAX_TIME_INTO_RELATIONSHIP_UNTIL_FIRST_BIRTH = 5;	
+	private static UniformDistribution numberOfChildrenDistribution = new UniformDistribution(0, MAX_NUMBER_CHILDREN, random);
+	private static UniformDistribution daysIntoPartnershipForBirthDistribution = new UniformDistribution(0, (int)(MAX_TIME_INTO_RELATIONSHIP_UNTIL_FIRST_BIRTH * OrganicPopulation.DAYS_PER_YEAR), random);
 
 	private Integer id;
 	private Integer husband;
@@ -57,19 +59,35 @@ public class OrganicPartnership implements IPartnership {
 	private List<Integer> childrenIds = new ArrayList<Integer>();
     private boolean on;
 
-    public boolean isOn(){
+    private boolean isOn(){
         return on;
     }
 
+    /**
+     * Sets partnership on value to on indicating if the relationship has concluded.
+     */
     public void turnOn(){
         on = true;
     }
 
+    /**
+     * Sets partnership on value to off indicating if the relationship has concluded.
+     */
     public void turnOff(){
         on = false;
     }
 
-	public static Object[] createOrganicPartnership(final int id, final OrganicPerson husband, final OrganicPerson wife, int marriageDay) {
+    /**
+     * Constructs partnership objects and returns both the partnership in the first field of the array and
+     * the partnerships first child in the second
+     * 
+     * @param id
+     * @param husband
+     * @param wife
+     * @param marriageDay
+     * @return
+     */
+	public static Object[] createOrganicPartnership(final int id, final OrganicPerson husband, final OrganicPerson wife, final int marriageDay) {
 		Object[] returns = new Object[2];
 		// Contains OrganicPartnership object
 		OrganicPartnership partnership = new OrganicPartnership(id, husband, wife, marriageDay);
@@ -79,7 +97,7 @@ public class OrganicPartnership implements IPartnership {
 		return returns;
 	}
 
-	private OrganicPartnership(final int id, final OrganicPerson husband, final OrganicPerson wife, int marriageDay) {
+	private OrganicPartnership(final int id, final OrganicPerson husband, final OrganicPerson wife, final int marriageDay) {
 		this.id = id;
 		this.husband = husband.getId();
 		this.wife = wife.getId();
@@ -87,7 +105,7 @@ public class OrganicPartnership implements IPartnership {
         this.turnOn();
 	}
 
-	private OrganicPerson createPartnershipTimeline(OrganicPerson husband, OrganicPerson wife) {
+	private OrganicPerson createPartnershipTimeline(final OrganicPerson husband, final OrganicPerson wife) {
 
 		// TODO Correctly populate timeline
 		timeline = new OrganicTimeline(marriageDay);
@@ -120,6 +138,8 @@ public class OrganicPartnership implements IPartnership {
 			timeline.addEvent(firstPartnersDeathDate, new OrganicEvent(EventType.PARTNERSHIP_ENDED_BY_DEATH));
 			timeline.setEndDate(firstPartnersDeathDate);
 			break;
+		default:
+			break;
 		}
 
 		// Decide on a number of children for relationship
@@ -131,6 +151,7 @@ public class OrganicPartnership implements IPartnership {
 		OrganicPerson child = null;
 		
 		int count = 0;
+		// FIXME Find a solution that dosn't need a magic number
 		while(lastChildDay == 0 && count < 100) {
 			if(PopulationLogic.earliestAcceptableBirthDate(marriageDay, 0) < dayOfBirth + marriageDay) {
 				if (PopulationLogic.parentsHaveSensibleAgesAtChildBirth(husband.getBirthDay(), husband.getDeathDay(), wife.getBirthDay(), wife.getDeathDay(), dayOfBirth + marriageDay)) {
@@ -147,13 +168,19 @@ public class OrganicPartnership implements IPartnership {
 		return child;
 	}
 
-	private int dateOfFirstPartnersDeath(int husbandDeath, int wifeDeath) {
-		if (husbandDeath < wifeDeath)
+	private int dateOfFirstPartnersDeath(final int husbandDeath, final int wifeDeath) {
+		if (husbandDeath < wifeDeath) {
 			return husbandDeath;
-		else
+		} else {
 			return wifeDeath;
+		}
 	}
 
+	/**
+	 * Returns the timeline of the partnership
+	 * 
+	 * @return
+	 */
 	public OrganicTimeline getTimeline() {
 		return timeline;
 	}
@@ -178,12 +205,13 @@ public class OrganicPartnership implements IPartnership {
 	@Override
 	public int getPartnerOf(final int id) {
 
-		if (id == husband)
+		if (id == husband) {
 			return wife;
-		else if (id == wife)
+		} else if (id == wife) {
 			return husband;
-		else
+		} else {
 			return -1;
+		}
 	}
 
 	@Override
@@ -202,9 +230,10 @@ public class OrganicPartnership implements IPartnership {
 	}
 
 	@Override
-	public int compareTo(IPartnership o) {
-		if(this.equals(o))
+	public int compareTo(final IPartnership o) {
+		if(this.equals(o)) {
 			return 0;
+		}
 		return 1;
 	}
 }

@@ -16,21 +16,39 @@
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.distributions;
 
+/**
+ * Provides the functionality of a sting with associated cumulative probability.
+ *
+ */
 public class StringWithCumulativeProbability {
 
     private final String item;
     private final Double cumulative_probability;
 
+    /**
+     * Creates a cumulative probability string.
+     * 
+     * @param item
+     * @param cumulative_probability
+     */
     public StringWithCumulativeProbability(final String item, final double cumulative_probability) {
 
         this.item = item;
         this.cumulative_probability = cumulative_probability;
     }
 
+    /**
+     * Returns item string.
+     * @return
+     */
     public String getItem() {
         return item;
     }
 
+    /**
+     * Returns the cumulative probability petaining to the given item string.
+     * @return
+     */
     public Double getCumulativeProbability() {
         return cumulative_probability;
     }

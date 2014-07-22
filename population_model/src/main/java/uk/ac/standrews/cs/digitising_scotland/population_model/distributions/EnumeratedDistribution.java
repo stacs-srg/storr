@@ -41,6 +41,14 @@ public class EnumeratedDistribution implements Distribution<String> {
         this.random = random;
     }
 
+    /**
+     * Creates an Enumerated distribution.
+     * 
+     * @param item_probabilities
+     * @param random
+     * @throws IOException
+     * @throws InconsistentWeightException
+     */
     public EnumeratedDistribution(final Map<String, Double> item_probabilities, final Random random) throws IOException, InconsistentWeightException {
 
         this(random);

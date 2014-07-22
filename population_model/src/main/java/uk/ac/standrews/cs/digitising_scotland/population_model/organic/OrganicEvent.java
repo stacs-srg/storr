@@ -26,7 +26,7 @@ public class OrganicEvent {
     private EventType eventType;
 
     /**
-     * Initialises an OrganicEvent given the eventType which is an Enum of possible events
+     * Initialises an OrganicEvent given the eventType which is an Enum of possible events.
      *
      * @param eventType Specifies the event type
      */
@@ -36,7 +36,7 @@ public class OrganicEvent {
 
 
     /**
-     * Returns the event type
+     * Returns the event type.
      *
      * @return The event type
      */

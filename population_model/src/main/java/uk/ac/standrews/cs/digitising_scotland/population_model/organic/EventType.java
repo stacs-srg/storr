@@ -18,16 +18,37 @@
 package uk.ac.standrews.cs.digitising_scotland.population_model.organic;
 
 /**
- * Specifies the possible types of events that can occur in an OrganicTimeline
+ * Specifies the possible types of events that can occur in an OrganicTimeline.
  *
  * @author Tom Dalton (tsd4@st-andrews.ac.uk)
  */
 public enum EventType {
+	/**
+	 * Indicates the point in time where an individual should be added to a marriage queue.
+	 */
     ELIGIBLE_TO_MARRY,
+    /**
+     * Indicates the point in time where an individual should move location.
+     */
     MOVE_LOCATION,
+    /**
+     * Indicates the point of divorce on relationship timeline.
+     */
     DIVORCE,
+    /**
+     * Indicates the point in time where an individual will leave the population.
+     */
     EMIGRATE,
+    /**
+     * Indicates the point in time where an individual will be born and also on the relationship timeline where the birth will occur.
+     */
     BIRTH,
+    /**
+     * Indicates where a relationship is ended by death.
+     */
     PARTNERSHIP_ENDED_BY_DEATH,
+    /**
+     * Indicates th epoint in time where an individual dies.
+     */
     DEATH
 }

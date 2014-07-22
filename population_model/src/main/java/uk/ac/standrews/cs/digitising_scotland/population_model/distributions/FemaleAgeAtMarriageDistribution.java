@@ -26,9 +26,8 @@ import java.util.Random;
  * @author Tom Dalton (tsd4@st-andrews.ac.uk)
  */
 public class FemaleAgeAtMarriageDistribution implements Distribution<Integer> {
-
 	/*
-     * from ageatmarriageandpreviousmaritalstatus_tcm77-366510.xls
+	 * from ageatmarriageandpreviousmaritalstatus_tcm77-366510.xls
 	 * from http://www.ons.gov.uk/ons/rel/vsob1/marriages-in-england-and-wales--provisional-/2012/rtd-age-at-marriage-and-previous-marital-status.xls
 	 * Age of husband and previous marital status, 1846–2011
 	 * 
@@ -59,27 +58,27 @@ public class FemaleAgeAtMarriageDistribution implements Distribution<Integer> {
 	 * 95-100  0
 	 */
 
-    private static final int MAXIMUM_AGE_IN_YEARS = 100;
-    private static final int[] AGE_DISTRIBUTION_WEIGHTS = new int[]{0, 0, 0, 66, 101, 29, 12, 7, 5, 5, 4, 3, 2, 2, 1, 1, 0, 0, 0, 0};
+	private static final int MAXIMUM_AGE_IN_YEARS = 100;
+	private static final int[] AGE_DISTRIBUTION_WEIGHTS = new int[]{0, 0, 0, 66, 101, 29, 12, 7, 5, 5, 4, 3, 2, 2, 1, 1, 0, 0, 0, 0};
 
-    private final WeightedIntegerDistribution distribution;
+	private final WeightedIntegerDistribution distribution;
 
-    /**
-     * Creates an age at marriage distribution
-     *
-     * @param random the random number gernerator to be used
-     */
-    public FemaleAgeAtMarriageDistribution(final Random random) {
-        try {
-            distribution = new WeightedIntegerDistribution(0, (int) (MAXIMUM_AGE_IN_YEARS * CompactPopulation.DAYS_PER_YEAR) - 1, AGE_DISTRIBUTION_WEIGHTS, random);
-        } catch (final NegativeWeightException e) {
-            throw new RuntimeException("negative weight exception: " + e.getMessage());
-        }
-    }
+	/**
+	 * Creates an age at marriage distribution.
+	 *
+	 * @param random the random number generator to be used
+	 */
+	public FemaleAgeAtMarriageDistribution(final Random random) {
+		try {
+			distribution = new WeightedIntegerDistribution(0, (int) (MAXIMUM_AGE_IN_YEARS * CompactPopulation.DAYS_PER_YEAR) - 1, AGE_DISTRIBUTION_WEIGHTS, random);
+		} catch (final NegativeWeightException e) {
+			throw new RuntimeException("negative weight exception: " + e.getMessage());
+		}
+	}
 
-    @Override
-    public Integer getSample() {
-        return distribution.getSample();
-    }
+	@Override
+	public Integer getSample() {
+		return distribution.getSample();
+	}
 
 }

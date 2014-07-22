@@ -33,8 +33,10 @@ public class SurnameDistribution extends FileBasedEnumeratedDistribution {
 
     /**
      * Creates a distribution of surnames.
-     *
-     * @param random the random number generator to be used
+     * 
+     * @param random
+     * @throws IOException
+     * @throws InconsistentWeightException
      */
     public SurnameDistribution(final Random random) throws IOException, InconsistentWeightException {
 

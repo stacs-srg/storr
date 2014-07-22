@@ -23,9 +23,6 @@ package uk.ac.standrews.cs.digitising_scotland.population_model.distributions;
  */
 public class NegativeDeviationException extends Exception {
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = -6878666381850895224L;
 
     /**

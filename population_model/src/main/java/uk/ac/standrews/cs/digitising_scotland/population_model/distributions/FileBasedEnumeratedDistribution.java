@@ -37,6 +37,14 @@ public class FileBasedEnumeratedDistribution extends EnumeratedDistribution {
 
     private static final String TAB = "\t";
 
+    /**
+     * Creates a File Based Enumerated distribution.
+     * 
+     * @param path_string
+     * @param random
+     * @throws IOException
+     * @throws InconsistentWeightException
+     */
     public FileBasedEnumeratedDistribution(final String path_string, final Random random) throws IOException, InconsistentWeightException {
 
         super(random);
