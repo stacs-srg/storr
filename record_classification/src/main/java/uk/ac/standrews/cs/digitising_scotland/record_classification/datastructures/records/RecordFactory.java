@@ -184,4 +184,12 @@ public abstract class RecordFactory {
         return false;
     }
 
+    /**
+     * Resets the ID count to 0.
+     */
+    public static void resetIdCount() {
+
+        highestId = 0;
+    }
+
 }

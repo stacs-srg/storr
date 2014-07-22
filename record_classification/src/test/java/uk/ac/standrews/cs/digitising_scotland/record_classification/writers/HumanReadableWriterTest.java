@@ -7,12 +7,14 @@ import java.nio.file.Files;
 
 import org.junit.AfterClass;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.ClassifierTestingHelper;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeNotValidException;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.RecordFactory;
 
 public class HumanReadableWriterTest {
 
@@ -22,10 +24,10 @@ public class HumanReadableWriterTest {
     private String delimiter = "\t";
 
     /** The Constant OCCBUCKET. */
-    private static final String OCCBUCKET = "target/OccRecordWriteTest.txt";
+    private static final String OCCBUCKET = "target/OccRecordHumanWriteTest.txt";
 
     /** The Constant CODDATA. */
-    private static final String CODDATA = "/HumanReadableWriterTestCOD.txt";
+    private static final String CODDATA = "/DataClerkingWriterTestCOD.txt";
 
     /** The Constant CODBUCKET. */
     private static final String CODBUCKET = "target/CODRecordWriteTest.txt";
@@ -36,20 +38,28 @@ public class HumanReadableWriterTest {
     /** The Constant MULTICODBUCKET. */
     private static final String MULTICODBUCKET = "target/MultipleCODRecordWriteTest.txt";
 
+    @Before
+    public void setUp() {
+
+        RecordFactory.resetIdCount();
+
+    }
+
     /**
      * Clean up.
      */
     @AfterClass
     public static void cleanUp() {
 
-        //        File file = new File(OCCBUCKET);
-        //        Assert.assertTrue(file.delete());
-        //        file = new File(CODBUCKET);
-        //        Assert.assertTrue(file.delete());
-        //        file = new File(HICODBUCKET);
-        //        Assert.assertTrue(file.delete());
-        //        file = new File(MULTICODBUCKET);
-        //        Assert.assertTrue(file.delete());
+        File file = new File(OCCBUCKET);
+        Assert.assertTrue(file.delete());
+        file = new File(CODBUCKET);
+        Assert.assertTrue(file.delete());
+        file = new File(HICODBUCKET);
+        Assert.assertTrue(file.delete());
+        file = new File(MULTICODBUCKET);
+        Assert.assertTrue(file.delete());
+        RecordFactory.resetIdCount();
     }
 
     /**
@@ -62,7 +72,7 @@ public class HumanReadableWriterTest {
 
         String occDataFile = "/HumanReadableWriterTestOcc.txt";
         File writeFile = createAndWriteOccBucketWithClassificationTriplesToFile(OCCBUCKET, occDataFile);
-        String correctOccBucketFile = "/OccRecordWriteCorrect.txt";
+        String correctOccBucketFile = "/OccHumanRecordWriteCorrect.txt";
         checkFileAgainstKnownCorrect(correctOccBucketFile, writeFile);
     }
 
@@ -75,7 +85,7 @@ public class HumanReadableWriterTest {
     public void testWriteCOD() throws Exception {
 
         File writeFile = createAndWriteCODBucketToFile(CODBUCKET, CODDATA);
-        String correctCODBucketFile = "/CODRecordWriteCorrect.txt";
+        String correctCODBucketFile = "/CODHumanRecordWriteCorrect.txt";
         checkFileAgainstKnownCorrect(correctCODBucketFile, writeFile);
     }
 
@@ -88,7 +98,7 @@ public class HumanReadableWriterTest {
     public void testWriteHICOD() throws Exception {
 
         File writeFile = createAndWriteHICODBucketToFile(HICODBUCKET, CODDATA);
-        String correctHICODBucketFile = "/HICODRecordWriteCorrect.txt";
+        String correctHICODBucketFile = "/HICODHumanRecordWriteCorrect.txt";
         checkFileAgainstKnownCorrect(correctHICODBucketFile, writeFile);
     }
 
@@ -101,7 +111,7 @@ public class HumanReadableWriterTest {
     public void testWriteMultipleCOD() throws Exception {
 
         File writeFile = createAndWriteMultipleCODBucketToFile(MULTICODBUCKET, CODDATA);
-        String correctMultipleCODBucketFile = "/MultipleCODWriteCorrect.txt";
+        String correctMultipleCODBucketFile = "/MultipleCODHumanWriteCorrect.txt";
         checkFileAgainstKnownCorrect(correctMultipleCODBucketFile, writeFile);
     }
 
@@ -137,24 +147,6 @@ public class HumanReadableWriterTest {
         HumanReadableWriter humanReadableWriter = new HumanReadableWriter(writeFile, delimiter);
         Bucket bucket = helper.getTrainingBucket(readFileName);
         bucket = addHICODCodes(bucket);
-        writeToFile(humanReadableWriter, bucket);
-        return writeFile;
-    }
-
-    /**
-     * Creates the and write occ bucket to file.
-     *
-     * @param writeFileName the write file name
-     * @param readFileName the read file name
-     * @return the file
-     * @throws Exception the exception
-     */
-    private File createAndWriteOccBucketToFile(final String writeFileName, final String readFileName) throws Exception {
-
-        File writeFile = new File(writeFileName);
-        HumanReadableWriter humanReadableWriter = new HumanReadableWriter(writeFile, delimiter);
-        Bucket bucket = helper.getTrainingBucket(readFileName);
-        bucket = addOccCodes(bucket);
         writeToFile(humanReadableWriter, bucket);
         return writeFile;
     }
