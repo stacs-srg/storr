@@ -50,7 +50,6 @@ public class OrganicPopulation implements IPopulation {
 	/**
 	 * Seed parameters.
 	 */
-	CompactPopulation seedPopulation;
 	public static final int DEFAULT_SEED_SIZE = 1000;
 
 	/**
@@ -62,11 +61,10 @@ public class OrganicPopulation implements IPopulation {
 	 * The start year of the simulation.
 	 */
 	public static final int START_YEAR = 1780;
-	public static int seedStartYear;
 	
     private static int earliestDate = DateManipulation.dateToDays(START_YEAR, 0, 0);
     
-	private static int currentDay;
+	private int currentDay;
 
 	/**
 	 * The end year of the simulation.
@@ -76,15 +74,13 @@ public class OrganicPopulation implements IPopulation {
 	/**
 	 * Additional parameters
 	 */
-	private static final int DAYS_IN_DECEMBER = 31;
-	private static final int DECEMBER_INDEX = 11;
 
 	private static int DEFAULT_STEP_SIZE = 1;
 
 	boolean firstMale = true;
 	boolean firstFemale = true;
 	
-	static boolean seedGeneration = true;
+	private boolean seedGeneration = true;
 
 	Random random = RandomFactory.getRandom();
 	private Distribution<Integer> age_at_death_distribution = new AgeAtDeathDistribution(random);
@@ -101,7 +97,7 @@ public class OrganicPopulation implements IPopulation {
 	public void makeSeed(final int size) {
 
 		for (int i = 0; i < size; i++) {
-			OrganicPerson person = new OrganicPerson(IDFactory.getNextID(), 0);
+			OrganicPerson person = new OrganicPerson(IDFactory.getNextID(), 0, seedGeneration);
 			people.add(person);
 		}
 		seedGeneration = false;
@@ -482,7 +478,4 @@ public class OrganicPopulation implements IPopulation {
 		earliestDate = earlyDate;
 	}
 	
-	public static int getCurrentDay() {
-		return currentDay;
-	}
 }

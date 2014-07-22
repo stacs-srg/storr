@@ -19,6 +19,7 @@ package uk.ac.standrews.cs.digitising_scotland.population_model.organic;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.Distribution;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.FemaleAgeAtMarriageDistribution;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.MaleAgeAtMarriageDistribution;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.MaleFirstNameDistribution;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.UniformDistribution;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.UniformSexDistribution;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IDFactory;
@@ -42,7 +43,6 @@ public class OrganicPerson implements IPerson {
     private String firstName;
     private String lastName;
     private char sex;
-    private int age_in_days;
     private ArrayList<Integer> partnerships = new ArrayList<Integer>();
 	private OrganicTimeline timeline = null;
     
@@ -52,15 +52,15 @@ public class OrganicPerson implements IPerson {
 	private static Distribution<Integer> maleAgeAtMarriageDistribution = new MaleAgeAtMarriageDistribution(random);
 	private static Distribution<Integer> femaleAgeAtMarriageDistribution = new FemaleAgeAtMarriageDistribution(random);
 	private static UniformSexDistribution sex_distribution = new UniformSexDistribution(random);
-
-    public OrganicPerson(final int id, final int birthDay) {
+	
+    public OrganicPerson(final int id, final int birthDay, boolean seedGeneration) {
     	this.id = id;
     	if (sex_distribution.getSample()) {
     		sex = 'M';
-    		setPersonsBirthAndDeathDates(birthDay);
+    		setPersonsBirthAndDeathDates(birthDay, seedGeneration);
 		} else {
 			sex = 'F';
-			setPersonsBirthAndDeathDates(birthDay);
+			setPersonsBirthAndDeathDates(birthDay, seedGeneration);
 		}
     }
 	
@@ -83,7 +83,7 @@ public class OrganicPerson implements IPerson {
 //    	return null;	
 //    }
     
-	private void setPersonsBirthAndDeathDates(final int birthDay) {
+	private void setPersonsBirthAndDeathDates(final int birthDay, final boolean seedGeneration) {
 		final UniformDistribution days_of_year_distribution = new UniformDistribution(1, (int) OrganicPopulation.DAYS_PER_YEAR, random);
 		// Find an age for person
 		int ageOfDeathInYears = seed_age_distribution.getSample();
@@ -91,7 +91,7 @@ public class OrganicPerson implements IPerson {
 		int dayOfBirth = birthDay;
 		
 		
-		if(OrganicPopulation.seedGeneration) {
+		if(seedGeneration) {
 			dayOfBirth = DateManipulation.dateToDays(OrganicPopulation.START_YEAR, 0, 0) - ageOfDeathInDays;
 			
 			if(dayOfBirth < OrganicPopulation.getEarliestDate())
