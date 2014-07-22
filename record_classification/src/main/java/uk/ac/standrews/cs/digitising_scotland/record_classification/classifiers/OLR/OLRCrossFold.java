@@ -1,17 +1,16 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.OLR;
 
-import java.io.BufferedReader;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
+import java.util.Stack;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.mahout.math.DenseVector;
+import org.apache.mahout.math.Matrix;
 import org.apache.mahout.math.NamedVector;
 import org.apache.mahout.math.Vector;
 import org.apache.mahout.math.function.DoubleDoubleFunction;
@@ -42,11 +41,12 @@ public class OLRCrossFold {
 
     /** The properties. */
     private Properties properties;
+    private OLR classifier;
 
-    public double getAverageRunningLogLikelihood() {
 
+    public double getAverageRunningLogLikelihood(){
         double ll = 0.;
-        for (OLRPool model : models) {
+        for (OLRPool model : models){
             ll += model.getAverageRunningLogLikelihood();
         }
         ll /= models.size();
@@ -59,6 +59,7 @@ public class OLRCrossFold {
             model.resetRunningLogLikelihoods();
         }
     }
+
 
     /**
      * Constructor.
@@ -89,9 +90,7 @@ public class OLRCrossFold {
     }
 
     public class StopListener implements Runnable {
-
         public void commandLineStopListener() throws IOException {
-
             try (BufferedReader in = new BufferedReader(new InputStreamReader(System.in, FileManipulation.FILE_CHARSET))) {
                 String line = "";
 
@@ -159,9 +158,37 @@ public class OLRCrossFold {
         stop();
         stopService.shutdown();
 
+        prepareClassifier();
+
+    }
+
+    private void prepareClassifier() {
+        List<OLRShuffled> survivors = getSurvivors();
+        Matrix classifierMatrix = getClassifierMatrix(survivors);
+        classifier = new OLR(classifierMatrix);
+    }
+
+    private List<OLRShuffled> getSurvivors() {
+        List<OLRShuffled> survivors = new ArrayList<>();
+
         for (OLRPool model : models) {
-            model.getSurvivors();
+            survivors.addAll(model.getSurvivors());
         }
+        return survivors;
+    }
+
+    private Matrix getClassifierMatrix(List<OLRShuffled> survivors) {
+        Stack<Matrix> matrices = new Stack<>();
+        for (OLRShuffled model : survivors){
+            matrices.add(model.getBeta());
+        }
+
+        Matrix classifierMatrix = matrices.pop();
+        while (!matrices.empty()){
+            classifierMatrix.plus(matrices.pop());
+        }
+        classifierMatrix.divide(survivors.size());
+        return classifierMatrix;
     }
 
     /**
@@ -173,8 +200,7 @@ public class OLRCrossFold {
 
         try {
             this.trainAllModels();
-        }
-        catch (InterruptedException e) {
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
@@ -195,12 +221,13 @@ public class OLRCrossFold {
      */
     public Vector classifyFull(final Vector instance) {
 
-        Vector r = new DenseVector(numCategories());
-        DoubleDoubleFunction scale = Functions.plusMult(1.0 / (models.size()));
-        for (OLRPool model : models) {
-            r.assign(model.classifyFull(instance), scale);
-        }
-        return r;
+//        Vector r = new DenseVector(numCategories());
+//        DoubleDoubleFunction scale = Functions.plusMult(1.0 / (models.size()));
+//        for (OLRPool model : models) {
+//            r.assign(model.classifyFull(instance), scale);
+//        }
+//        return r;
+        return classifier.classifyFull(instance);
     }
 
     /**
@@ -211,11 +238,12 @@ public class OLRCrossFold {
      */
     public double logLikelihood(final int actual, final Vector instance) {
 
-        double logLikelihood = 0;
-        for (OLRPool model : models) {
-            logLikelihood += model.logLikelihood(actual, instance) / models.size();
-        }
-        return logLikelihood;
+//        double logLikelihood = 0;
+//        for (OLRPool model : models) {
+//            logLikelihood += model.logLikelihood(actual, instance) / models.size();
+//        }
+//        return logLikelihood;
+        return classifier.logLikelihood(actual,instance);
     }
 
     /**
@@ -287,6 +315,7 @@ public class OLRCrossFold {
         for (OLRPool model : models) {
             model.write(out);
         }
+        classifier.write(out);
     }
 
     /**
@@ -303,5 +332,8 @@ public class OLRCrossFold {
             olrPool.readFields(in);
             models.add(olrPool);
         }
+        OLR olr = new OLR();
+        olr.readFields(in);
+        classifier = olr;
     }
 }

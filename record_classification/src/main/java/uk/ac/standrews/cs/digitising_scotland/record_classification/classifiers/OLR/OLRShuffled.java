@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Properties;
 
+import org.apache.mahout.math.Matrix;
 import org.apache.mahout.math.NamedVector;
 import org.apache.mahout.math.Vector;
 
@@ -44,6 +45,16 @@ public class OLRShuffled implements Runnable {
     private int reps; //set in config
     private ArrayList<NamedVector> trainingVectorList = new ArrayList<NamedVector>();
     private boolean stopped = false;
+
+
+
+    public Matrix getBeta() {
+        return model.getBeta();
+    }
+
+    public void setBeta(Matrix beta) {
+        model.setBeta(beta);
+    }
 
     //----constructors---
 

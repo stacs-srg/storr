@@ -77,7 +77,7 @@ public class MachineLearningClassificationPipeline {
 
         for (Record record : bucket) {
 
-            LOGGER.info("Classifying record " + count + " of " + bucket.size());
+            LOGGER.info("Classifying record " + count + " of " + bucket.size() + " Description: " + record.getDescription());
             count++;
 
             Set<CodeTriple> result = recordCache.get(record.getDescription());
@@ -135,6 +135,7 @@ public class MachineLearningClassificationPipeline {
         }
 
         resolverMatrix.chopBelowConfidence(CONFIDENCE_CHOP_LEVEL);
+        System.out.println("Resolver matrix complexity: " + resolverMatrix.complexity());
         List<Set<CodeTriple>> triples = resolverMatrix.getValidCodeTriples(cleanedTokenSet);
 
         Set<CodeTriple> best;
