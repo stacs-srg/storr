@@ -101,7 +101,7 @@ public final class Utils {
      *
      * @param toMove List of files to move
      * @param toHere where we want the files moved to.
-     * @throws IOException 
+     * @throws IOException Indicates and IO exception has occured
      */
     public static void moveFiles(final File[] toMove, final File toHere) throws IOException {
 
@@ -155,7 +155,7 @@ public final class Utils {
      *
      * @param listOfFilesToMove String array of file names to move
      * @param storage           Folder to store files in.
-     * @throws IOException 
+     * @throws IOException IOException
      */
     public static void moveFilesTo(final String[] listOfFilesToMove, final File storage) throws IOException {
 

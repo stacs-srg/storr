@@ -278,13 +278,13 @@ public class OLRCrossFold {
     public class StopListener implements Runnable {
 
         private boolean processTerminated;
-        private final String stopCommand = "stop";
-        private final String getLogLikCommand = "getloglik";
-        private final String resetLogLikCommand = "resetloglik";
-        private final String logLikelihoodMessage = "\nLog likelihood is: ";
-        private final String stopMessage = "\nStop call detected. Stopping training...";
-        private final String resetMessage = "\nResetting log likelihood.";
-        private final String instructionMessage = "\n#######################--OLRCrossFold Commands--#################################" + "\n# \"" + stopCommand + "\" will halt the training process and skip straight to classification.\t#" + "\n# \"" + getLogLikCommand
+        private static final String stopCommand = "stop";
+        private static final String getLogLikCommand = "getloglik";
+        private static final String resetLogLikCommand = "resetloglik";
+        private static final String logLikelihoodMessage = "\nLog likelihood is: ";
+        private static final String stopMessage = "\nStop call detected. Stopping training...";
+        private static final String resetMessage = "\nResetting log likelihood.";
+        private static final String instructionMessage = "\n#######################--OLRCrossFold Commands--#################################" + "\n# \"" + stopCommand + "\" will halt the training process and skip straight to classification.\t#" + "\n# \"" + getLogLikCommand
                         + "\" will return the current running average log likelihood estimate.\t#" + "\n# \"" + resetLogLikCommand + "\" will reset the running average log likelihood statistic.\t\t#" + "\n#################################################################################";
 
         public void terminateProcess() {
@@ -301,7 +301,9 @@ public class OLRCrossFold {
                 String line;
                 while (true) {
                     line = in.readLine();
-                    if (processInput(line)) break;
+                    if (line != null && processInput(line)) {
+                        break;
+                    }
                 }
                 in.close();
             }
@@ -310,7 +312,7 @@ public class OLRCrossFold {
             }
         }
 
-        private boolean processInput(String line) throws InterruptedException {
+        private boolean processInput(final String line) throws InterruptedException {
 
             switch (line.toLowerCase()) {
                 case stopCommand:

@@ -11,7 +11,7 @@ public class Pair<L, R> {
     /** The left. */
     private L left;
 
-    public void setRight(R right) {
+    public void setRight(final R right) {
 
         this.right = right;
     }

@@ -72,7 +72,7 @@ public class OLR {
         return beta;
     }
 
-    public void setBeta(Matrix beta) {
+    public void setBeta(final Matrix beta) {
 
         this.beta = beta;
     }
