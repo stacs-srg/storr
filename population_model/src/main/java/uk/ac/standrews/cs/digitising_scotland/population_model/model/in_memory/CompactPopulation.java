@@ -132,21 +132,6 @@ public class CompactPopulation {
         linkChildren();
     }
 
-    private void initialiseDistributions() throws NegativeWeightException, NegativeDeviationException {
-
-        final Random random = RandomFactory.getRandom();
-
-        date_of_birth_distribution = new UniformDistribution(earliest_date, latest_date, random);
-        sex_distribution = new UniformSexDistribution(random);
-        age_at_death_distribution = new AgeAtDeathDistribution(random);
-        incomers_distribution = new IncomersDistribution(PROBABILITY_OF_BEING_INCOMER, random);
-
-        number_of_children_distribution = new WeightedIntegerDistribution(0, MAX_CHILDREN, NUMBER_OF_CHILDREN_DISTRIBUTION, random);
-        number_of_marriages_distribution = new WeightedIntegerDistribution(0, MAX_MARRIAGES, NUMBER_OF_MARRIAGES_DISTRIBUTION, random);
-        age_at_first_marriage_distribution = new NormalDistribution(AGE_AT_FIRST_MARRIAGE_MEAN * DAYS_PER_YEAR, AGE_AT_FIRST_MARRIAGE_STD_DEV * DAYS_PER_YEAR, random);
-        marriage_separation_distribution = new NormalDistribution(MARRIAGE_SEPARATION_MEAN * DAYS_PER_YEAR, MARRIAGE_SEPARATION_STD_DEV * DAYS_PER_YEAR, random);
-    }
-
     /**
      * Creates a synthetic population with default start and end dates.
      *
@@ -274,6 +259,21 @@ public class CompactPopulation {
     public CompactPerson[] getPeopleArray() {
 
         return people;
+    }
+
+    private void initialiseDistributions() throws NegativeWeightException, NegativeDeviationException {
+
+        final Random random = RandomFactory.getRandom();
+
+        date_of_birth_distribution = new UniformDistribution(earliest_date, latest_date, random);
+        sex_distribution = new UniformSexDistribution(random);
+        age_at_death_distribution = new AgeAtDeathDistribution(random);
+        incomers_distribution = new IncomersDistribution(PROBABILITY_OF_BEING_INCOMER, random);
+
+        number_of_children_distribution = new WeightedIntegerDistribution(0, MAX_CHILDREN, NUMBER_OF_CHILDREN_DISTRIBUTION, random);
+        number_of_marriages_distribution = new WeightedIntegerDistribution(0, MAX_MARRIAGES, NUMBER_OF_MARRIAGES_DISTRIBUTION, random);
+        age_at_first_marriage_distribution = new NormalDistribution(AGE_AT_FIRST_MARRIAGE_MEAN * DAYS_PER_YEAR, AGE_AT_FIRST_MARRIAGE_STD_DEV * DAYS_PER_YEAR, random);
+        marriage_separation_distribution = new NormalDistribution(MARRIAGE_SEPARATION_MEAN * DAYS_PER_YEAR, MARRIAGE_SEPARATION_STD_DEV * DAYS_PER_YEAR, random);
     }
 
     /**
@@ -619,24 +619,12 @@ public class CompactPopulation {
         number_of_partnerships = partnership_set.size();
     }
 
-    /**
-     * Gets the index of the male member of this partnership.
-     *
-     * @return the male member of this partnership.
-     * * Assumes that the two partners are of different sexes.
-     */
     private int getHusbandIndex(final CompactPartnership partnership) {
 
         final int partner1_index = partnership.getPartner1();
         return people[partner1_index].isMale() ? partner1_index : partnership.getPartner2();
     }
 
-    /**
-     * Gets the index of female member of this partnership.
-     *
-     * @return the female member of this partnership.
-     * Assumes that the two partners are of different sexes.
-     */
     private int getWifeIndex(final CompactPartnership partnership) {
 
         final int partner1_index = partnership.getPartner1();

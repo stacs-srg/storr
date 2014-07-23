@@ -16,8 +16,6 @@
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.distributions;
 
-import uk.ac.standrews.cs.digitising_scotland.population_model.organic.DivorceInstigation;
-
 import java.util.Random;
 
 /**
@@ -25,7 +23,7 @@ import java.util.Random;
  *
  * @author Tom Dalton (tsd4@st-andrews.ac.uk)
  */
-public class DivorceInstigatedByGenderDistribution implements Distribution<Integer> {
+public class DivorceInstigatedByGenderDistribution implements Distribution<DivorceInstigation> {
     /*
      * from numberofdivorcesageatdivorceandmaritalstatusbeforemarriage_tcm77-351699
      * from http://www.ons.gov.uk/ons/rel/vsob1/divorces-in-england-and-wales/2012/rtd-divorces---number-of-divorces-age-at-divorce-and-marital-status-before-marriage.xls
@@ -58,27 +56,21 @@ public class DivorceInstigatedByGenderDistribution implements Distribution<Integ
 
     /**
      * Returns either a gender or no divorce for which party in the marriage will instigate the divorce.
-     * 
+     *
      * @return Indicates the gender of the instigator or no divorce
      */
-    public DivorceInstigation getDefinedSample() {
-        int value = getSample();
-        switch (value) {
-        case 0:
-            return DivorceInstigation.MALE;
-        case 1:
-            return DivorceInstigation.FEMALE;
-        case 2:
-            return DivorceInstigation.NO_DIVORCE;
-        default:
-            break;
-        }
-        return null;
-    }
-
     @Override
-    public Integer getSample() {
-        return distribution.getSample();
-    }
+    public DivorceInstigation getSample() {
 
+        switch ((int) distribution.getSample()) {
+            case 0:
+                return DivorceInstigation.MALE;
+            case 1:
+                return DivorceInstigation.FEMALE;
+            case 2:
+                return DivorceInstigation.NO_DIVORCE;
+            default:
+                throw new RuntimeException("unexpected sample value");
+        }
+    }
 }

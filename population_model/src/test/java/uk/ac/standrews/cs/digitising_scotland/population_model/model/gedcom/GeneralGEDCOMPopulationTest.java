@@ -18,19 +18,32 @@ package uk.ac.standrews.cs.digitising_scotland.population_model.model.gedcom;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.PopulationComparisonTest;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPopulation;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.PopulationConverter;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.in_memory.CompactPopulationTestCases;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Collection;
 
 /**
  * Created by graham on 07/07/2014.
  */
+@RunWith(Parameterized.class)
 public class GeneralGEDCOMPopulationTest extends PopulationComparisonTest {
 
     private Path path;
+
+    // The name string gives informative labels in the JUnit output.
+    @Parameterized.Parameters(name = "{0}")
+    public static Collection<Object[]> generateData() throws Exception {
+
+        // Use each of the compact population test cases to create a database test population.
+        return getTestCases(CompactPopulationTestCases.getTestPopulations());
+    }
 
     public GeneralGEDCOMPopulationTest(final IPopulation population) throws Exception {
 

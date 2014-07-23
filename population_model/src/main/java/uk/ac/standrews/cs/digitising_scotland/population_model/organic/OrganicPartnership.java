@@ -108,7 +108,7 @@ public final class OrganicPartnership implements IPartnership {
         timeline = new OrganicTimeline(marriageDay);
 
         // Decide if/when relationship terminates
-        switch (divorceInstigatedByGenderDistribution.getDefinedSample()) {
+        switch (divorceInstigatedByGenderDistribution.getSample()) {
             case MALE:
                 // get male age at divorce
                 int maleDivorceAgeInDays;

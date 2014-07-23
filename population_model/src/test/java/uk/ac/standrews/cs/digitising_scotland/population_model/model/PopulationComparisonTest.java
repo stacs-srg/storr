@@ -17,13 +17,9 @@
 package uk.ac.standrews.cs.digitising_scotland.population_model.model;
 
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import uk.ac.standrews.cs.digitising_scotland.population_model.model.in_memory.CompactPopulationTestCases;
 import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -35,21 +31,12 @@ import static org.junit.Assert.*;
 /**
  * Created by graham on 21/07/2014.
  */
-@RunWith(Parameterized.class)
 public abstract class PopulationComparisonTest extends GeneralPopulationStructureTests {
 
     protected static final Random RANDOM = RandomFactory.getRandom();
 
     protected IPopulation original_population;
     protected IPopulationWriter population_writer;
-
-    // The name string gives informative labels in the JUnit output.
-    @Parameterized.Parameters(name = "{0}")
-    public static Collection<Object[]> generateData() throws Exception {
-
-        // Use each of the compact population test cases to create a database test population.
-        return getTestCases(CompactPopulationTestCases.getTestPopulations());
-    }
 
     public PopulationComparisonTest(final IPopulation population) throws Exception {
 

@@ -18,22 +18,35 @@ package uk.ac.standrews.cs.digitising_scotland.population_model.model.database;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
 import uk.ac.standrews.cs.digitising_scotland.population_model.config.PopulationProperties;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.PopulationComparisonTest;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPopulation;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.PopulationConverter;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.in_memory.CompactPopulationTestCases;
 import uk.ac.standrews.cs.digitising_scotland.util.DBManipulation;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Collection;
 
 /**
  * Created by graham on 07/07/2014.
  */
+@RunWith(Parameterized.class)
 public class GeneralDBPopulationTest extends PopulationComparisonTest {
 
     private String database_name;
     private Connection connection;
+
+    // The name string gives informative labels in the JUnit output.
+    @Parameterized.Parameters(name = "{0}")
+    public static Collection<Object[]> generateData() throws Exception {
+
+        // Use each of the compact population test cases to create a database test population.
+        return getTestCases(CompactPopulationTestCases.getTestPopulations());
+    }
 
     public GeneralDBPopulationTest(final IPopulation population) throws Exception {
 
