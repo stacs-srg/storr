@@ -106,10 +106,11 @@ public class DBPerson extends AbstractPerson {
                 result_set.getString(PopulationProperties.PERSON_FIELD_SURNAME),
                 result_set.getString(PopulationProperties.PERSON_FIELD_GENDER).charAt(0),
                 result_set.getDate(PopulationProperties.PERSON_FIELD_BIRTH_DATE),
+                result_set.getString(PopulationProperties.PERSON_FIELD_BIRTH_PLACE),
                 result_set.getDate(PopulationProperties.PERSON_FIELD_DEATH_DATE),
+                result_set.getString(PopulationProperties.PERSON_FIELD_DEATH_PLACE),
+                result_set.getString(PopulationProperties.PERSON_FIELD_DEATH_CAUSE),
                 result_set.getString(PopulationProperties.PERSON_FIELD_OCCUPATION),
-                result_set.getString(PopulationProperties.PERSON_FIELD_CAUSE_OF_DEATH),
-                result_set.getString(PopulationProperties.PERSON_FIELD_ADDRESS),
                 parents_partnership_id);
     }
 
@@ -125,17 +126,18 @@ public class DBPerson extends AbstractPerson {
         return parents_result_set.getInt(PopulationProperties.PARTNERSHIP_FIELD_PARTNERSHIP_ID);
     }
 
-    private void init(final int id, final String first_name, final String surname, final char sex, final Date date_of_birth, final Date date_of_death, final String occupation, final String cause_of_death, final String address, int parents_partnership_id) {
+    private void init(final int id, final String first_name, final String surname, final char sex, final Date birth_date, final String birth_place, final Date death_date, final String death_place, final String death_cause, final String occupation, int parents_partnership_id) {
 
         this.id = id;
         this.first_name = first_name;
         this.surname = surname;
         this.sex = sex;
-        this.date_of_birth = date_of_birth;
-        this.date_of_death = date_of_death;
+        this.birth_date = birth_date;
+        this.birth_place = birth_place;
+        this.death_date = death_date;
+        this.death_place = death_place;
+        this.death_cause = death_cause;
         this.occupation = occupation;
-        this.cause_of_death = cause_of_death;
-        this.address = address;
         this.parents_partnership_id = parents_partnership_id;
 
         string_rep = "DB Person: " + id;

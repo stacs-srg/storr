@@ -14,28 +14,25 @@
  * You should have received a copy of the GNU General Public License along with population_model. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-package uk.ac.standrews.cs.digitising_scotland.population_model.model.database;
+package uk.ac.standrews.cs.digitising_scotland.population_model.model.gedcom;
 
 import org.junit.After;
 import org.junit.Before;
-import uk.ac.standrews.cs.digitising_scotland.population_model.config.PopulationProperties;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.PopulationComparisonTest;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPopulation;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.PopulationConverter;
-import uk.ac.standrews.cs.digitising_scotland.util.DBManipulation;
 
-import java.sql.Connection;
-import java.sql.SQLException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 /**
  * Created by graham on 07/07/2014.
  */
-public class GeneralDBPopulationTest extends PopulationComparisonTest {
+public class GeneralGEDCOMPopulationTest extends PopulationComparisonTest {
 
-    private String database_name;
-    private Connection connection;
+    private Path path;
 
-    public GeneralDBPopulationTest(final IPopulation population) throws Exception {
+    public GeneralGEDCOMPopulationTest(final IPopulation population) throws Exception {
 
         super(population);
     }
@@ -43,25 +40,14 @@ public class GeneralDBPopulationTest extends PopulationComparisonTest {
     @Before
     public void setUp() throws Exception {
 
-        initialiseDatabase();
-        writeCompactPopulationToDatabase();
-
-        population = new DBPopulationAdapter();
+        path = Files.createTempFile(null, ".ged");
+        writeCompactPopulationToGEDCOMFile();
+        population = new GEDCOMPopulationAdapter(path);
     }
 
-    private void initialiseDatabase() throws SQLException {
+    private void writeCompactPopulationToGEDCOMFile() throws Exception {
 
-        database_name = "population" + Math.abs(RANDOM.nextInt());
-        PopulationProperties.setDatabaseName(database_name);
-
-        connection = new DBConnector().createConnection();
-        DBManipulation.dropDatabase(connection, database_name);
-        new DBInitialiser().setupDB();
-    }
-
-    private void writeCompactPopulationToDatabase() throws Exception {
-
-        population_writer = new DBPopulationWriter();
+        population_writer = new GEDCOMPopulationWriter(path);
 
         try (PopulationConverter converter = new PopulationConverter(original_population, population_writer)) {
             converter.convert();
@@ -71,13 +57,7 @@ public class GeneralDBPopulationTest extends PopulationComparisonTest {
     @After
     public void tearDown() throws Exception {
 
-        DBPerson.closeCachedConnection();
-        DBPartnership.closeCachedConnection();
-        DBManipulation.dropDatabase(connection, database_name);
-
-        connection.close();
-
-        ((DBPopulationAdapter)population).close();
+        Files.delete(path);
         population_writer.close();
     }
 }

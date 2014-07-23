@@ -151,6 +151,11 @@ public class DateManipulation {
         return formatter.parse(date_string);
     }
 
+    public static synchronized Date parseDate(final String date_string) throws ParseException {
+
+        return parseDate(date_string, DATE_FORMAT);
+    }
+
     /**
      * Returns a {@link Date} representation of the date represented by the given number of days from 1st January of the {@link #START_YEAR}.
      *

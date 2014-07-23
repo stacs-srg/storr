@@ -13,14 +13,14 @@ public class DeathLabels extends CommonLabels {
     public static final String DEATH_YEAR = "death_year";
     public static final String AGE_AT_DEATH = "age_at_death";
     public static final String CHANGED_DEATH_AGE = "changed_death_age";
-    public static final String DATE_OF_BIRTH = "date_of_birth";
+    public static final String DATE_OF_BIRTH = "birth_date";
     public static final String OCCUPATION = "occupation";
     public static final String MARITAL_STATUS = "marital_status";
     public static final String SPOUSES_NAMES = "spouses_names";
     public static final String SPOUSES_OCCUPATIONS = "spouses_occupations";
     public static final String DEATH_MONTH = "death_month";
     public static final String DEATH_DAY = "death_day";
-    public static final String PLACE_OF_DEATH = "place_of_death";
+    public static final String PLACE_OF_DEATH = "death_place";
     public static final String FATHER_DECEASED = "father_deceased";
     public static final String MOTHER_DECEASED = "mother_deceased";
     public static final String COD_A = "cod_a";

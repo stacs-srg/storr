@@ -153,9 +153,9 @@ public class CompactPartnership implements Comparable<CompactPartnership> {
     }
 
     /**
-     * Gets the children associated with this partnership.
+     * Gets the child_ids associated with this partnership.
      *
-     * @return the children.
+     * @return the child_ids.
      */
     public List<Integer> getChildren() {
 
@@ -163,7 +163,7 @@ public class CompactPartnership implements Comparable<CompactPartnership> {
     }
 
     /**
-     * Set the children to be the children of this partnership.
+     * Set the child_ids to be the child_ids of this partnership.
      *
      * @param children to associate with the partnership.
      */

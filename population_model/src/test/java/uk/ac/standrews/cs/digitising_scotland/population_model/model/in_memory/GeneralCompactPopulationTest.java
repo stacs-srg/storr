@@ -16,6 +16,7 @@
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.model.in_memory;
 
+import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.GeneralPopulationStructureTests;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPopulation;
@@ -27,6 +28,7 @@ import java.util.List;
 /**
  * Created by graham on 07/07/2014.
  */
+@RunWith(Parameterized.class)
 public class GeneralCompactPopulationTest extends GeneralPopulationStructureTests {
 
     // The name string gives informative labels in the JUnit output.

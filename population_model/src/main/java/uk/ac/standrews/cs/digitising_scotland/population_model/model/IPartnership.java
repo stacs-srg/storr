@@ -58,10 +58,14 @@ public interface IPartnership extends Comparable<IPartnership> {
     Date getMarriageDate();
 
     /**
-     * Gets the identifiers of the partnership's children, or null if none are recorded.
-     * @return the identifiers of the partnership's children
+     * Gets the place of marriage, or null if not recorded.
+     * @return the place of marriage
+     */
+    String getMarriagePlace();
+
+    /**
+     * Gets the identifiers of the partnership's child_ids, or null if none are recorded.
+     * @return the identifiers of the partnership's child_ids
      */
     List<Integer> getChildIds();
-
-    List<Integer> getPartnerIds();
 }

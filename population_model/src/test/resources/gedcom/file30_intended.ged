@@ -10,225 +10,322 @@
 1 SEX M
 1 BIRT
 2 DATE 15 Mar 1780
+2 PLAC 1 Main St, St Andrews
 1 DEAT
 2 DATE 02 Oct 1863
+2 PLAC 1 Main St, St Andrews
+2 CAUS specified causes
+1 OCCU labourer
 0 @p00000002@ INDI
-1 NAME Charles /HARRISON/
+1 NAME Alexr /BUCKNALL/
 1 SEX M
 1 BIRT
 2 DATE 14 Jan 1788
+2 PLAC 1 Main St, St Andrews
 1 DEAT
 2 DATE 30 Jan 1871
+2 PLAC 1 Main St, St Andrews
+2 CAUS diarrhoea and enteritis (over 2 years)
+1 OCCU power loom cotton weaver
 0 @p00000003@ INDI
-1 NAME William /PONTON/
+1 NAME George /GRIFFITHS/
 1 SEX M
 1 BIRT
 2 DATE 29 Sep 1793
+2 PLAC 1 Main St, St Andrews
 1 DEAT
 2 DATE 13 Jun 1862
+2 PLAC 1 Main St, St Andrews
+2 CAUS other diseases of organs of locomotion
+1 OCCU papermaker
 0 @p00000004@ INDI
-1 NAME Alexander /TEANS/
+1 NAME Henry /BURWOOD/
 1 SEX M
 1 BIRT
 2 DATE 12 Oct 1805
+2 PLAC 1 Main St, St Andrews
 1 DEAT
 2 DATE 10 Jul 1860
+2 PLAC 1 Main St, St Andrews
+2 CAUS not specified
+1 OCCU ag lab
 0 @p00000005@ INDI
-1 NAME Robert /WHITEHEAD/
+1 NAME Joseph /ALLAN/
 1 SEX M
 1 BIRT
 2 DATE 03 Feb 1820
+2 PLAC 1 Main St, St Andrews
 1 DEAT
 2 DATE 23 Nov 1890
+2 PLAC 1 Main St, St Andrews
+2 CAUS pneumonia broncho
+1 OCCU engine winder (colliery)
 1 FAMS @m00000002@
-0 @p00000010@ INDI
-1 NAME Mary /WHITEHEAD/
-1 SEX F
-1 BIRT
-2 DATE 26 Nov 1849
-1 DEAT
-2 DATE 25 Feb 1930
-1 FAMC @m00000002@
 0 @p00000006@ INDI
-1 NAME Euphemia /SMITH/
+1 NAME Elizabeth /JONES/
 1 SEX F
 1 BIRT
 2 DATE 16 Jan 1821
+2 PLAC 1 Main St, St Andrews
 1 DEAT
 2 DATE 10 Jan 1890
+2 PLAC 1 Main St, St Andrews
+2 CAUS specified causes
+1 OCCU blacksmith
 1 FAMS @m00000003@
 0 @p00000007@ INDI
-1 NAME Janet /WAINWRIGHT/
+1 NAME Jane /BUTCHER/
 1 SEX F
 1 BIRT
 2 DATE 23 Mar 1829
+2 PLAC 1 Main St, St Andrews
 1 DEAT
 2 DATE 13 Dec 1914
+2 PLAC 1 Main St, St Andrews
+2 CAUS specified causes
+1 OCCU gardener
 1 FAMS @m00000002@
 0 @p00000008@ INDI
-1 NAME Charles /MCCRIRRICK/
+1 NAME Wm /MAYHEW/
 1 SEX M
 1 BIRT
 2 DATE 13 Jun 1830
+2 PLAC 1 Main St, St Andrews
 1 DEAT
 2 DATE 24 Sep 1892
+2 PLAC 1 Main St, St Andrews
+2 CAUS enteric fever
+1 OCCU dock lab
 1 FAMS @m00000003@
+0 @p00000010@ INDI
+1 NAME Agnes /MAYHEW/
+1 SEX F
+1 BIRT
+2 DATE 26 Nov 1849
+2 PLAC 1 Main St, St Andrews
+1 DEAT
+2 DATE 25 Feb 1930
+2 PLAC 1 Main St, St Andrews
+2 CAUS "acute nephritis, uraemia"
+1 OCCU bootmaker
+1 FAMC @m00000003@
 0 @p00000009@ INDI
-1 NAME Isabella /HAWKINS/
+1 NAME Jean /HARTLEY/
 1 SEX F
 1 BIRT
 2 DATE 07 Aug 1838
+2 PLAC 1 Main St, St Andrews
 1 DEAT
 2 DATE 23 Dec 1913
+2 PLAC 1 Main St, St Andrews
+2 CAUS other disease of heart
+1 OCCU spinner
 0 @p00000011@ INDI
-1 NAME Elizabeth /GOSMENTY/
-1 SEX F
-1 BIRT
-2 DATE 17 Nov 1861
-1 DEAT
-2 DATE 11 Jul 1935
-0 @p00000012@ INDI
-1 NAME Maggie /MATTHEWS/
-1 SEX F
-1 BIRT
-2 DATE 17 Dec 1863
-1 DEAT
-2 DATE 29 Dec 1913
-0 @p00000013@ INDI
 1 NAME Margaret /ROOK/
 1 SEX F
 1 BIRT
+2 DATE 17 Nov 1861
+2 PLAC 1 Main St, St Andrews
+1 DEAT
+2 DATE 11 Jul 1935
+2 PLAC 1 Main St, St Andrews
+2 CAUS valvular disease
+1 OCCU lab
+0 @p00000012@ INDI
+1 NAME Jane /ROVAND/
+1 SEX F
+1 BIRT
+2 DATE 17 Dec 1863
+2 PLAC 1 Main St, St Andrews
+1 DEAT
+2 DATE 29 Dec 1913
+2 PLAC 1 Main St, St Andrews
+2 CAUS inflammation of brain or its membranes
+1 OCCU sailor
+0 @p00000013@ INDI
+1 NAME Hannah /PHILLIPS/
+1 SEX F
+1 BIRT
 2 DATE 18 Jun 1869
+2 PLAC 1 Main St, St Andrews
 1 DEAT
 2 DATE 18 Jan 1936
+2 PLAC 1 Main St, St Andrews
+2 CAUS diabetes mellitus
+1 OCCU head master
 0 @p00000014@ INDI
-1 NAME Agnes /CUNGFLEET/
+1 NAME May /OLIVER/
 1 SEX F
 1 BIRT
 2 DATE 22 Oct 1895
+2 PLAC 1 Main St, St Andrews
 1 DEAT
 2 DATE 19 May 1974
+2 PLAC 1 Main St, St Andrews
+2 CAUS burns and scalds
+1 OCCU labourer
 0 @p00000015@ INDI
-1 NAME James /DUTTON/
+1 NAME James /TATE/
 1 SEX M
 1 BIRT
 2 DATE 10 Jul 1908
+2 PLAC 1 Main St, St Andrews
 1 DEAT
 2 DATE 13 Nov 1954
+2 PLAC 1 Main St, St Andrews
+2 CAUS uraemia
+1 OCCU overlooker
 0 @p00000016@ INDI
-1 NAME Margaret /BURTON/
+1 NAME Elizabeth /HALL/
 1 SEX F
 1 BIRT
 2 DATE 12 Feb 1913
+2 PLAC 1 Main St, St Andrews
 1 DEAT
 2 DATE 23 Feb 1980
+2 PLAC 1 Main St, St Andrews
+2 CAUS specified causes
+1 OCCU masseuse
 0 @p00000017@ INDI
-1 NAME Hugh /RAE/
+1 NAME Michael /PARKER/
 1 SEX M
 1 BIRT
 2 DATE 26 May 1916
+2 PLAC 1 Main St, St Andrews
 1 DEAT
 2 DATE 18 Apr 1983
+2 PLAC 1 Main St, St Andrews
+2 CAUS carcinoma
+1 OCCU railwayman
 0 @p00000018@ INDI
-1 NAME Martha /SHELLEY/
+1 NAME Betsy /SCOTT/
 1 SEX F
 1 BIRT
 2 DATE 09 Jul 1924
+2 PLAC 1 Main St, St Andrews
 1 DEAT
 2 DATE 09 Jan 1969
+2 PLAC 1 Main St, St Andrews
+2 CAUS cancer
+1 OCCU farmer
 1 FAMS @m00000004@
 0 @p00000019@ INDI
-1 NAME William /HALL/
+1 NAME William /GRETTON/
 1 SEX M
 1 BIRT
 2 DATE 13 Apr 1930
+2 PLAC 1 Main St, St Andrews
 1 DEAT
 2 DATE 25 Aug 1952
+2 PLAC 1 Main St, St Andrews
+2 CAUS "cancer, malignant disease (not otherwise defined)"
+1 OCCU servant
 0 @p00000020@ INDI
-1 NAME Jas /DAVIES/
+1 NAME Duncan /BROWN/
 1 SEX M
 1 BIRT
 2 DATE 08 May 1933
+2 PLAC 1 Main St, St Andrews
 1 DEAT
 2 DATE 30 May 2011
+2 PLAC 1 Main St, St Andrews
+2 CAUS specified causes
+1 OCCU flax farmer
 1 FAMS @m00000004@
 0 @p00000022@ INDI
-1 NAME Robina /DAVIES/
+1 NAME Ann /BROWN/
 1 SEX F
 1 BIRT
 2 DATE 26 Nov 1952
+2 PLAC 1 Main St, St Andrews
+1 OCCU mariner
 1 FAMC @m00000004@
-0 @p00000021@ INDI
-1 NAME George /BOYD/
-1 SEX M
-1 BIRT
-2 DATE 27 Dec 1937
-1 DEAT
-2 DATE 05 Jun 2003
-0 @p00000023@ INDI
-1 NAME Elizabeth /GRETTON/
-1 SEX F
-1 BIRT
-2 DATE 06 Aug 1955
 0 @p00000024@ INDI
-1 NAME Jessie /CLIFF/
+1 NAME Elizabeth /BROWN/
 1 SEX F
 1 BIRT
 2 DATE 03 Dec 1964
-0 @p00000025@ INDI
-1 NAME Margaret /DYSON/
-1 SEX F
-1 BIRT
-2 DATE 06 Feb 1978
-0 @p00000026@ INDI
-1 NAME Margaret /GASTON/
-1 SEX F
-1 BIRT
-2 DATE 17 Aug 1978
-1 FAMS @m00000005@
-0 @p00000027@ INDI
-1 NAME Eliza /DENNIS/
-1 SEX F
-1 BIRT
-2 DATE 10 Jul 1979
-0 @p00000028@ INDI
-1 NAME Robert /NEWRON/
+2 PLAC 1 Main St, St Andrews
+1 OCCU jeweller and pawnbroker
+1 FAMC @m00000004@
+0 @p00000021@ INDI
+1 NAME William /COLGATE/
 1 SEX M
 1 BIRT
-2 DATE 13 Nov 1989
-1 FAMS @m00000005@
-0 @p00000029@ INDI
+2 DATE 27 Dec 1937
+2 PLAC 1 Main St, St Andrews
+1 DEAT
+2 DATE 05 Jun 2003
+2 PLAC 1 Main St, St Andrews
+2 CAUS specified causes
+1 OCCU miner
+0 @p00000023@ INDI
 1 NAME Grace /MURRAY/
 1 SEX F
 1 BIRT
-2 DATE 02 Jul 1995
-0 @p00000030@ INDI
+2 DATE 06 Aug 1955
+2 PLAC 1 Main St, St Andrews
+1 OCCU ag lab
+0 @p00000025@ INDI
 1 NAME Jessie /BAMFORTH/
 1 SEX F
 1 BIRT
+2 DATE 06 Feb 1978
+2 PLAC 1 Main St, St Andrews
+1 OCCU power cotton weaver
+0 @p00000026@ INDI
+1 NAME Mary /DREWEREY/
+1 SEX F
+1 BIRT
+2 DATE 17 Aug 1978
+2 PLAC 1 Main St, St Andrews
+1 OCCU shipwright
+0 @p00000027@ INDI
+1 NAME Mary /STEWART/
+1 SEX F
+1 BIRT
+2 DATE 10 Jul 1979
+2 PLAC 1 Main St, St Andrews
+1 OCCU shoemaker
+0 @p00000028@ INDI
+1 NAME John /MILNER/
+1 SEX M
+1 BIRT
+2 DATE 13 Nov 1989
+2 PLAC 1 Main St, St Andrews
+1 OCCU servant
+0 @p00000029@ INDI
+1 NAME Margaret /STEEDMAN/
+1 SEX F
+1 BIRT
+2 DATE 02 Jul 1995
+2 PLAC 1 Main St, St Andrews
+1 OCCU stonemason
+0 @p00000030@ INDI
+1 NAME Catherine /WATSON/
+1 SEX F
+1 BIRT
 2 DATE 08 May 2009
+2 PLAC 1 Main St, St Andrews
+1 OCCU fisherman
 0 @m00000002@ FAM
 1 MARR
 2 DATE 21 Jun 1839
-1 HUSB @p00000005@
 1 WIFE @p00000007@
-1 CHIL @p00000010@
+1 HUSB @p00000005@
 0 @m00000003@ FAM
 1 MARR
 2 DATE 22 Jun 1840
-1 HUSB @p00000008@
 1 WIFE @p00000006@
+1 HUSB @p00000008@
+1 CHIL @p00000010@
 0 @m00000004@ FAM
 1 MARR
 2 DATE 15 Dec 1938
-1 HUSB @p00000020@
 1 WIFE @p00000018@
+1 HUSB @p00000020@
 1 CHIL @p00000022@
-0 @m00000005@ FAM
-1 MARR
-2 DATE 04 Jun 1992
-1 HUSB @p00000028@
-1 WIFE @p00000026@
+1 CHIL @p00000024@
 0 @S1@ SUBM
 1 NAME Digitising Scotland Project
 0 TRLR

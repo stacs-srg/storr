@@ -19,7 +19,6 @@ package uk.ac.standrews.cs.digitising_scotland.population_model.model.database;
 import uk.ac.standrews.cs.digitising_scotland.population_model.config.PopulationProperties;
 import uk.ac.standrews.cs.digitising_scotland.util.DBManipulation;
 
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 
@@ -41,26 +40,27 @@ public class DBInitialiser {
     private static final String SQL_TYPE_STRING_100 = "varchar(100)";
 
     private static final String ACCESS_DENIED_PREFIX = "Access denied";
+    private static final String INNODB_ENGINE = "InnoDB";
+    private static final String UTF8 = "utf8";
 
     /**
      * Sets up a database ready to contain population data. A new database is created
      * if it does not already exist. Any existing population tables are dropped, and new empty tables are created.
      *
-     * @throws IOException
+     * @throws SQLException if the database initialisation fails
      */
-    public void setupDB() throws SQLException {
+    public static void setupDB() throws SQLException {
 
         try {
             createDB();
             dropExistingTables();
             createTables();
-        }
-        catch (SQLException e) {
+        } catch (final SQLException e) {
             throw addExceptionExplanation(e);
         }
     }
 
-    private SQLException addExceptionExplanation(SQLException e) {
+    private static SQLException addExceptionExplanation(final SQLException e) {
 
         if (e.getMessage().startsWith(ACCESS_DENIED_PREFIX)) {
             return new SQLException(getAccessDeniedHint());
@@ -68,12 +68,12 @@ public class DBInitialiser {
         return e;
     }
 
-    private String getAccessDeniedHint() {
+    private static String getAccessDeniedHint() {
 
         return "Database access denied: make sure that local database user '" + PopulationProperties.DEFAULT_DB_USERNAME + "' exists, and has full access privileges from 'localhost'.";
     }
 
-    private void createDB() throws SQLException {
+    private static void createDB() throws SQLException {
 
         try (Connection connection = new DBConnector().createConnection()) {
 
@@ -81,7 +81,7 @@ public class DBInitialiser {
         }
     }
 
-    private void dropExistingTables() throws SQLException {
+    private static void dropExistingTables() throws SQLException {
 
         try (Connection connection = new DBConnector(PopulationProperties.getDatabaseName()).createConnection()) {
 
@@ -92,12 +92,13 @@ public class DBInitialiser {
         }
     }
 
-    private void dropTable(final Connection connection, final String table_name) throws SQLException {
+    private static void dropTable(final Connection connection, final String table_name) throws SQLException {
 
-        DBManipulation.executeStatement(connection, DROP_TABLE_SYNTAX + " " + table_name);
+        DBManipulation.executeStatement(connection, DROP_TABLE_SYNTAX + ' ' + table_name);
     }
 
-    private void createTables() throws SQLException {
+    @SuppressWarnings("FeatureEnvy")
+    private static void createTables() throws SQLException {
 
         try (Connection connection = new DBConnector(PopulationProperties.getDatabaseName()).createConnection()) {
 
@@ -108,49 +109,67 @@ public class DBInitialiser {
         }
     }
 
-    private String createPeopleTableQuery() throws SQLException {
+    private static String createPeopleTableQuery() throws SQLException {
 
-        String[] attribute_names = new String[]{
+        final String[] attribute_names = new String[]{
 
-                PopulationProperties.PERSON_FIELD_ID, PopulationProperties.PERSON_FIELD_GENDER, PopulationProperties.PERSON_FIELD_NAME,
-                PopulationProperties.PERSON_FIELD_SURNAME, PopulationProperties.PERSON_FIELD_BIRTH_DATE,
-                PopulationProperties.PERSON_FIELD_DEATH_DATE, PopulationProperties.PERSON_FIELD_OCCUPATION,
-                PopulationProperties.PERSON_FIELD_CAUSE_OF_DEATH, PopulationProperties.PERSON_FIELD_ADDRESS
+                PopulationProperties.PERSON_FIELD_ID,
+                PopulationProperties.PERSON_FIELD_GENDER,
+                PopulationProperties.PERSON_FIELD_NAME,
+                PopulationProperties.PERSON_FIELD_SURNAME,
+                PopulationProperties.PERSON_FIELD_BIRTH_DATE,
+                PopulationProperties.PERSON_FIELD_BIRTH_PLACE,
+                PopulationProperties.PERSON_FIELD_DEATH_DATE,
+                PopulationProperties.PERSON_FIELD_DEATH_PLACE,
+                PopulationProperties.PERSON_FIELD_DEATH_CAUSE,
+                PopulationProperties.PERSON_FIELD_OCCUPATION,
         };
 
-        String[] attribute_types = new String[]{
+        final String[] attribute_types = new String[]{
 
-                SQL_TYPE_INTEGER, SQL_TYPE_STRING_1, SQL_TYPE_STRING_50, SQL_TYPE_STRING_50, SQL_TYPE_DATE,
-                SQL_TYPE_DATE, SQL_TYPE_STRING_100, SQL_TYPE_STRING_100, SQL_TYPE_STRING_50};
+                SQL_TYPE_INTEGER,
+                SQL_TYPE_STRING_1,
+                SQL_TYPE_STRING_50,
+                SQL_TYPE_STRING_50,
+                SQL_TYPE_DATE,
+                SQL_TYPE_STRING_100,
+                SQL_TYPE_DATE,
+                SQL_TYPE_STRING_100,
+                SQL_TYPE_STRING_100,
+                SQL_TYPE_STRING_50};
 
-        boolean[] nulls_allowed = new boolean[]{false, true, true, true, true, true, true, true, true};
+        final boolean[] nulls_allowed = new boolean[]{false, true, true, true, true, true, true, true, true, true};
 
         return createTableQuery(PopulationProperties.PERSON_TABLE_NAME, attribute_names, attribute_types, nulls_allowed, PopulationProperties.PERSON_FIELD_ID);
     }
 
-    private String createPartnershipTableQuery() throws SQLException {
+    private static String createPartnershipTableQuery() throws SQLException {
 
-        String[] attribute_names = new String[]{PopulationProperties.PARTNERSHIP_FIELD_ID, PopulationProperties.PARTNERSHIP_FIELD_DATE};
-        String[] attribute_types = new String[]{SQL_TYPE_INTEGER, SQL_TYPE_DATE};
-        boolean[] nulls_allowed = new boolean[]{false, false};
+        final String[] attribute_names = new String[]{
+                PopulationProperties.PARTNERSHIP_FIELD_ID,
+                PopulationProperties.PARTNERSHIP_FIELD_DATE,
+                PopulationProperties.PARTNERSHIP_FIELD_PLACE};
+
+        final String[] attribute_types = new String[]{SQL_TYPE_INTEGER, SQL_TYPE_DATE, SQL_TYPE_STRING_100};
+        final boolean[] nulls_allowed = new boolean[]{false, true, true};
 
         return createTableQuery(PopulationProperties.PARTNERSHIP_TABLE_NAME, attribute_names, attribute_types, nulls_allowed, PopulationProperties.PARTNERSHIP_FIELD_ID);
     }
 
-    private String createPartnershipPartnerTableQuery() throws SQLException {
+    private static String createPartnershipPartnerTableQuery() throws SQLException {
 
-        String[] attribute_names = new String[]{PopulationProperties.PARTNERSHIP_FIELD_PERSON_ID, PopulationProperties.PARTNERSHIP_FIELD_PARTNERSHIP_ID};
-        String[] attribute_types = new String[]{SQL_TYPE_INTEGER, SQL_TYPE_INTEGER};
-        boolean[] nulls_allowed = new boolean[]{false, false};
+        final String[] attribute_names = new String[]{PopulationProperties.PARTNERSHIP_FIELD_PERSON_ID, PopulationProperties.PARTNERSHIP_FIELD_PARTNERSHIP_ID};
+        final String[] attribute_types = new String[]{SQL_TYPE_INTEGER, SQL_TYPE_INTEGER};
+        final boolean[] nulls_allowed = new boolean[]{false, false};
 
         return createTableQuery(PopulationProperties.PARTNERSHIP_PARTNER_TABLE_NAME, attribute_names, attribute_types, nulls_allowed, null);
     }
 
-    private String createPartnershipChildrenTableQuery() throws SQLException {
+    private static String createPartnershipChildrenTableQuery() throws SQLException {
 
-        String[] attribute_names = new String[]{PopulationProperties.PARTNERSHIP_FIELD_PERSON_ID, PopulationProperties.PARTNERSHIP_FIELD_PARTNERSHIP_ID};
-        String[] attribute_types = new String[]{SQL_TYPE_INTEGER, SQL_TYPE_INTEGER};
-        boolean[] nulls_allowed = new boolean[]{false, false};
+        final String[] attribute_names = new String[]{PopulationProperties.PARTNERSHIP_FIELD_PERSON_ID, PopulationProperties.PARTNERSHIP_FIELD_PARTNERSHIP_ID};
+        final String[] attribute_types = new String[]{SQL_TYPE_INTEGER, SQL_TYPE_INTEGER};
+        final boolean[] nulls_allowed = new boolean[]{false, false};
 
         return createTableQuery(PopulationProperties.PARTNERSHIP_CHILD_TABLE_NAME, attribute_names, attribute_types, nulls_allowed, null);
     }
@@ -165,24 +184,24 @@ public class DBInitialiser {
 
         builder.append(CREATE_TABLE_SYNTAX);
         builder.append(table_name);
-        builder.append("(");
+        builder.append('(');
 
         for (int i = 0; i < attribute_names.length; i++) {
-            builder.append("`");
+            builder.append('`');
             builder.append(attribute_names[i]);
             builder.append("` ");
             builder.append(attribute_types[i]);
             builder.append(nulls_allowed[i] ? " DEFAULT NULL" : " NOT NULL");
             if (i < attribute_names.length - 1) {
-                builder.append(",");
+                builder.append(',');
             }
         }
 
         if (primary_key != null) {
-            builder.append(", PRIMARY KEY  (`" + primary_key + "`)");
+            builder.append(", PRIMARY KEY  (`").append(primary_key).append("`)");
         }
 
-        builder.append(") ENGINE=InnoDB DEFAULT CHARSET=utf8;");
+        builder.append(") ENGINE=" + INNODB_ENGINE + " DEFAULT CHARSET=" + UTF8 + ';');
         return builder.toString();
     }
 }

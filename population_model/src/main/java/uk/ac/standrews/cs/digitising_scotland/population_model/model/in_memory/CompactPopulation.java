@@ -45,7 +45,7 @@ import java.util.Set;
 
 /**
  * Model of synthetic population.
- *
+ * <p/>
  * This class is not thread-safe.
  *
  * @author Alan Dearle (alan.dearle@st-andrews.ac.uk)
@@ -120,9 +120,23 @@ public class CompactPopulation {
         this.latest_date = latest_date;
         this.progress_indicator = progress_indicator;
 
+        people = new CompactPerson[population_size];
+
+        initialiseDistributions();
+        initialiseProgressIndicator();
+
+        createPeople();
+        createDeaths();
+        createMarriages();
+        createIncomers();
+        linkChildren();
+    }
+
+    private void initialiseDistributions() throws NegativeWeightException, NegativeDeviationException {
+
         final Random random = RandomFactory.getRandom();
 
-        date_of_birth_distribution = new UniformDistribution(this.earliest_date, this.latest_date, random);
+        date_of_birth_distribution = new UniformDistribution(earliest_date, latest_date, random);
         sex_distribution = new UniformSexDistribution(random);
         age_at_death_distribution = new AgeAtDeathDistribution(random);
         incomers_distribution = new IncomersDistribution(PROBABILITY_OF_BEING_INCOMER, random);
@@ -131,15 +145,6 @@ public class CompactPopulation {
         number_of_marriages_distribution = new WeightedIntegerDistribution(0, MAX_MARRIAGES, NUMBER_OF_MARRIAGES_DISTRIBUTION, random);
         age_at_first_marriage_distribution = new NormalDistribution(AGE_AT_FIRST_MARRIAGE_MEAN * DAYS_PER_YEAR, AGE_AT_FIRST_MARRIAGE_STD_DEV * DAYS_PER_YEAR, random);
         marriage_separation_distribution = new NormalDistribution(MARRIAGE_SEPARATION_MEAN * DAYS_PER_YEAR, MARRIAGE_SEPARATION_STD_DEV * DAYS_PER_YEAR, random);
-
-        people = new CompactPerson[population_size];
-        initialiseProgressIndicator();
-
-        createPeople();
-        createDeaths();
-        createMarriages();
-        createIncomers();
-        linkChildren();
     }
 
     /**
@@ -257,19 +262,6 @@ public class CompactPopulation {
         return -1;
     }
 
-    public boolean married(final int p1_index, final int p2_index) {
-
-        final List<CompactPartnership> partnerships = people[p1_index].getPartnerships();
-        if (partnerships != null) {
-            for (final CompactPartnership partnership : partnerships) {
-                if (partnership.getPartner(p1_index) == p2_index) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
     public int getNumberOfPeople() {
         return people.length;
     }
@@ -345,27 +337,25 @@ public class CompactPopulation {
     private void createMarriages(final int index, final int number_of_marriages) {
 
         final CompactPerson person = getPeopleArray()[index];
-        int marriage_date = (int) (person.birth_date + age_at_first_marriage_distribution.getSample());
+
+        final int death_date = person.getDeathDate();
+        int marriage_date = person.birth_date + (int) (double) age_at_first_marriage_distribution.getSample();
 
         int start_index = index + 1;
 
         for (int i = 0; i < number_of_marriages; i++) {
 
-            final int spouse_index = createMarriage(index, start_index, marriage_date);
-            if (spouse_index == -1) { // can't find a spouse
-                break;
+            if (marriage_date < death_date) {
+                final int spouse_index = createMarriage(index, start_index, marriage_date);
+                if (spouse_index == -1) { // can't find a spouse
+                    break;
+                }
+                start_index = spouse_index + 1;
+                marriage_date += marriage_separation_distribution.getSample();
             }
-            start_index = spouse_index + 1;
-            marriage_date += marriage_separation_distribution.getSample();
         }
     }
 
-    /**
-     * @param first_partner_index the index of the first partner in the partnership
-     * @param start_index         the index from which to search for a spouse
-     * @param marriage_date       the encoded date of the marriage
-     * @return the index of the spouse.
-     */
     private int createMarriage(final int first_partner_index, final int start_index, final int marriage_date) {
 
         if (DateManipulation.daysToYear(marriage_date) <= END_YEAR) {
@@ -404,7 +394,7 @@ public class CompactPopulation {
 
     private void linkChildren(final CompactPartnership partnership, final int start_of_next_partnership) {
 
-        // Ignore if children have already been linked for this partnership.
+        // Ignore if child_ids have already been linked for this partnership.
         if (partnership.getChildren() == null) {
             final int number_of_children = number_of_children_distribution.getSample();
             linkChildren(partnership, number_of_children, start_of_next_partnership);
@@ -419,7 +409,7 @@ public class CompactPopulation {
 
         int previous_child_birth_date = 0;
 
-        int start_index = Math.max(partnership.getPartner1(), partnership.getPartner2()) + 1; // the index at which we start to search for possible children.
+        int start_index = Math.max(partnership.getPartner1(), partnership.getPartner2()) + 1; // the index at which we start to search for possible child_ids.
 
         for (int i = 0; i < number_of_children; i++) {
 
@@ -510,6 +500,19 @@ public class CompactPopulation {
                 }
                 return false;
             }
+
+            private boolean married(final int p1_index, final int p2_index) {
+
+                final List<CompactPartnership> partnerships = people[p1_index].getPartnerships();
+                if (partnerships != null) {
+                    for (final CompactPartnership partnership : partnerships) {
+                        if (partnership.getPartner(p1_index) == p2_index) {
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            }
         };
 
         return findPerson(start_search_index, conditions);
@@ -536,12 +539,14 @@ public class CompactPopulation {
                 final boolean not_previously_partners = notPreviouslyPartners(person, first_partner_index, candidate_partner);
                 final boolean not_too_many_partnerships = notTooManyPartnerships(candidate_partner);
                 final boolean not_too_recent_partnership = notTooRecentPartnership(candidate_partner, marriage_date);
+                final boolean still_alive = marriage_date < candidate_partner.getDeathDate();
 
                 return opposite_sex &&
                         age_difference_is_reasonable &&
                         not_previously_partners &&
                         not_too_many_partnerships &&
-                        not_too_recent_partnership ? ConditionResult.POSITIVE : ConditionResult.NEGATIVE_CONTINUE;
+                        not_too_recent_partnership &&
+                        still_alive ? ConditionResult.POSITIVE : ConditionResult.NEGATIVE_CONTINUE;
             }
 
             private boolean notPreviouslyPartners(final CompactPerson person, final int index, final CompactPerson candidate_partner) {

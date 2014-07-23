@@ -27,7 +27,6 @@ import uk.ac.standrews.cs.digitising_scotland.population_model.util.RandomFactor
 import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
@@ -218,13 +217,13 @@ public final class OrganicPartnership implements IPartnership {
     }
 
     @Override
-    public List<Integer> getChildIds() {
-        return childrenIds;
+    public String getMarriagePlace() {
+        throw new RuntimeException("not implemented");
     }
 
     @Override
-    public List<Integer> getPartnerIds() {
-        return Arrays.asList(husband, wife);
+    public List<Integer> getChildIds() {
+        return childrenIds;
     }
 
     @Override

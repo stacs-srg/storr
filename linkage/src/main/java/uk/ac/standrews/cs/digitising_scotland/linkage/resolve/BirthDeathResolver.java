@@ -175,7 +175,7 @@ public class BirthDeathResolver {
 
             if (record.get("TYPE").equals("death")) {
 
-                String dob_string = record.get("date_of_birth");
+                String dob_string = record.get("birth_date");
                 if (dob_string != null) {
                     try {
                         return DeathRecord.parseDate(dob_string);

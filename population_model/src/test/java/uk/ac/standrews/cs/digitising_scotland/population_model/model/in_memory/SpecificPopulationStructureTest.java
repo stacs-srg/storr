@@ -87,13 +87,13 @@ public class SpecificPopulationStructureTest {
 
         assertPartnerIds(partnershipA.getMalePartnerId(), partnershipA.getFemalePartnerId(), CompactPopulationTestCases.fatherA_id, CompactPopulationTestCases.motherA_id);
 
-        // Check that the family has the expected two children.
+        // Check that the family has the expected two child_ids.
         final List<Integer> child_ids_partnershipA = partnershipA.getChildIds();
         assertEquals(2, child_ids_partnershipA.size());
         assertEquals(CompactPopulationTestCases.child1A_id, (int) child_ids_partnershipA.get(0));
         assertEquals(CompactPopulationTestCases.child2A_id, (int) child_ids_partnershipA.get(1));
 
-        // Check that the children refer to the parents' partnership.
+        // Check that the child_ids refer to the parents' partnership.
         final IPerson child1A = population.findPerson(CompactPopulationTestCases.child1A_id);
         final IPerson child2A = population.findPerson(CompactPopulationTestCases.child2A_id);
         assertEquals(partnershipA_id, child1A.getParentsPartnership());
@@ -111,13 +111,13 @@ public class SpecificPopulationStructureTest {
 
         assertPartnerIds(partnershipB.getMalePartnerId(), partnershipB.getFemalePartnerId(), CompactPopulationTestCases.fatherB_id, CompactPopulationTestCases.motherB_id);
 
-        // Check that the family has the expected two children.
+        // Check that the family has the expected two child_ids.
         final List<Integer> child_ids_partnershipB = partnershipB.getChildIds();
         assertEquals(2, child_ids_partnershipB.size());
         assertEquals(CompactPopulationTestCases.child1B_id, (int) child_ids_partnershipB.get(0));
         assertEquals(CompactPopulationTestCases.child2B_id, (int) child_ids_partnershipB.get(1));
 
-        // Check that the children refer to the parents' partnership.
+        // Check that the child_ids refer to the parents' partnership.
         final IPerson child1B = population.findPerson(CompactPopulationTestCases.child1B_id);
         final IPerson child2B = population.findPerson(CompactPopulationTestCases.child2B_id);
         assertEquals(partnershipB_id, child1B.getParentsPartnership());

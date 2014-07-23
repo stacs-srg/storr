@@ -122,7 +122,7 @@ public class PopulationAnalytics {
     }
 
     /**
-     * Prints the dates of birth of children in a partnership.
+     * Prints the dates of birth of child_ids in a partnership.
      *
      * @param partnership the partnership
      */
@@ -138,7 +138,7 @@ public class PopulationAnalytics {
     }
 
     /**
-     * Prints the details of partnerships and children for a given person.
+     * Prints the details of partnerships and child_ids for a given person.
      * @param person the person
      */
     @SuppressWarnings("FeatureEnvy")

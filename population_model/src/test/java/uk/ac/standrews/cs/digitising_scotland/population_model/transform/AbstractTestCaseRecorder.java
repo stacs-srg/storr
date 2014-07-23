@@ -25,6 +25,7 @@ import uk.ac.standrews.cs.digitising_scotland.population_model.model.in_memory.C
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.in_memory.CompactPopulationAdapter;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
 /**
@@ -40,13 +41,13 @@ public abstract class AbstractTestCaseRecorder {
 
             IDFactory.resetId();
 
-            final String path_string = Paths.get(
+            final Path path = Paths.get(
                     AbstractExporterTest.TEST_DIRECTORY_PATH_STRING,
-                    getDirectoryName(), AbstractExporterTest.TEST_CASE_FILE_NAME_ROOTS[i] + getIntendedOutputFileSuffix()).toString();
+                    getDirectoryName(), AbstractExporterTest.TEST_CASE_FILE_NAME_ROOTS[i] + getIntendedOutputFileSuffix());
 
             final CompactPopulation population = new CompactPopulation(AbstractExporterTest.TEST_CASE_POPULATION_SIZES[i]);
             final IPopulation abstract_population = new CompactPopulationAdapter(population);
-            final IPopulationWriter population_writer = getPopulationWriter(path_string, abstract_population);
+            final IPopulationWriter population_writer = getPopulationWriter(path, abstract_population);
 
             try (PopulationConverter converter = new PopulationConverter(abstract_population, population_writer)) {
                 converter.convert();
@@ -58,5 +59,5 @@ public abstract class AbstractTestCaseRecorder {
 
     protected abstract String getDirectoryName();
 
-    protected abstract IPopulationWriter getPopulationWriter(String path_string, IPopulation population) throws IOException, InconsistentWeightException;
+    protected abstract IPopulationWriter getPopulationWriter(Path path, IPopulation population) throws IOException, InconsistentWeightException;
 }

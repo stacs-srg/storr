@@ -98,7 +98,7 @@ public class DeathRecord extends IndividualRecord {
         setForename(person.getFirstName());
         setSurname(person.getSurname());
         setOccupation(person.getOccupation());
-        setDeathCauseA(person.getCauseOfDeath());
+        setDeathCauseA(person.getDeathCause());
 
         Date birth_date = person.getBirthDate();
         Date death_date = person.getDeathDate();

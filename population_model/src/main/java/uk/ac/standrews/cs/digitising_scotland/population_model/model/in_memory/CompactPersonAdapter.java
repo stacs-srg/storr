@@ -71,14 +71,14 @@ public class CompactPersonAdapter {
         generateNextSurname();
     }
 
-    public IPerson convertToFullPerson(final CompactPerson person, final int parents_partnership_id) {
-
-        return person != null ? new FullPerson(person, current_surname, parents_partnership_id) : null;
-    }
-
     public void generateNextSurname() {
 
         current_surname = surname_distribution.getSample();
+    }
+
+    protected IPerson convertToFullPerson(final CompactPerson person, final int parents_partnership_id) {
+
+        return person != null ? new FullPerson(person, current_surname, parents_partnership_id) : null;
     }
 
     private class FullPerson extends AbstractPerson {
@@ -92,12 +92,16 @@ public class CompactPersonAdapter {
             first_name = person.isMale() ? male_first_name_distribution.getSample() : female_first_name_distribution.getSample();
             this.surname = surname;
 
-            date_of_birth = DateManipulation.daysToDate(person.getBirthDate());
-            date_of_death = person.getDeathDate() != -1 ? DateManipulation.daysToDate(person.getDeathDate()) : null;
+            birth_date = DateManipulation.daysToDate(person.getBirthDate());
+            birth_place = address_distribution.getSample();
+
+            if (person.getDeathDate() != -1) {
+                death_date = DateManipulation.daysToDate(person.getDeathDate());
+                death_place = address_distribution.getSample();
+                death_cause = cause_of_death_distribution.getSample();
+            }
 
             occupation = occupation_distribution.getSample();
-            cause_of_death = person.getDeathDate() != -1 ? cause_of_death_distribution.getSample() : null;
-            address = address_distribution.getSample();
             partnerships = getPartnershipIds(person);
 
             this.parents_partnership_id = parents_partnership_id;

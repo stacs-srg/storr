@@ -18,12 +18,13 @@ package uk.ac.standrews.cs.digitising_scotland.population_model.tools;
 
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPopulation;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPopulationWriter;
-import uk.ac.standrews.cs.digitising_scotland.population_model.model.gedcom.PopulationToGEDCOM;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.gedcom.GEDCOMPopulationWriter;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.in_memory.CompactPopulation;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.in_memory.CompactPopulationAdapter;
 import uk.ac.standrews.cs.nds.util.CommandLineArgs;
 
 import java.io.IOException;
+import java.nio.file.Path;
 
 /**
  * Manual test of Graphviz export.
@@ -42,9 +43,9 @@ public class GenerateCompactPopulationInGEDCOMFile extends AbstractPopulationToF
     }
 
     @Override
-    public IPopulationWriter getPopulationWriter(String path_string, IPopulation population) throws IOException {
+    public IPopulationWriter getPopulationWriter(final Path path, final IPopulation population) throws IOException {
 
-        return new PopulationToGEDCOM(path_string);
+        return new GEDCOMPopulationWriter(path);
     }
 
     public static void main(final String[] args) throws Exception {

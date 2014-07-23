@@ -54,9 +54,10 @@ public class CompactPartnershipAdapter {
             male_partner_id = partner1_is_male ? partner1.getId() : partner2.getId();
             female_partner_id = partner1_is_male ? partner2.getId() : partner1.getId();
 
-            marriage_date = DateManipulation.daysToDate(compact_partnership.getMarriageDate());
+            int marriage_date_in_days = compact_partnership.getMarriageDate();
+            marriage_date = marriage_date_in_days > 0 ? DateManipulation.daysToDate(marriage_date_in_days) : null;
 
-            children = copyChildren(compact_partnership.getChildren());
+            child_ids = copyChildren(compact_partnership.getChildren());
         }
 
         private int populationIndexToId(final int index) {

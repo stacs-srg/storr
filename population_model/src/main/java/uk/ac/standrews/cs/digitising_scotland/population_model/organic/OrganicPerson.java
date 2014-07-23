@@ -248,22 +248,27 @@ public class OrganicPerson implements IPerson {
     }
 
     @Override
+    public String getBirthPlace() {
+        return null;
+    }
+
+    @Override
     public Date getDeathDate() {
         return DateManipulation.daysToDate(this.getTimeline().getEndDate());
     }
 
     @Override
+    public String getDeathPlace() {
+        return null;
+    }
+
+    @Override
+    public String getDeathCause() {
+        return null;
+    }
+
+    @Override
     public String getOccupation() {
-        return null;
-    }
-
-    @Override
-    public String getCauseOfDeath() {
-        return null;
-    }
-
-    @Override
-    public String getAddress() {
         return null;
     }
 

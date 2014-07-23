@@ -22,6 +22,8 @@ import uk.ac.standrews.cs.digitising_scotland.population_model.model.PopulationC
 import uk.ac.standrews.cs.nds.util.CommandLineArgs;
 
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
  * Manual test of Graphviz export.
@@ -35,7 +37,7 @@ abstract class AbstractPopulationToFile {
 
     public abstract IPopulation getPopulation(String[] args) throws Exception;
 
-    public abstract IPopulationWriter getPopulationWriter(String path_string, IPopulation population) throws IOException;
+    public abstract IPopulationWriter getPopulationWriter(Path path, IPopulation population) throws IOException;
 
     protected void export(final String[] args) throws Exception {
 
@@ -46,7 +48,7 @@ abstract class AbstractPopulationToFile {
             System.out.println("exporting...");
 
             final IPopulation population = getPopulation(args);
-            final IPopulationWriter exporter = getPopulationWriter(path_string, population);
+            final IPopulationWriter exporter = getPopulationWriter(Paths.get(path_string), population);
 
             try (PopulationConverter converter = new PopulationConverter(population, exporter)) {
                 converter.convert();
