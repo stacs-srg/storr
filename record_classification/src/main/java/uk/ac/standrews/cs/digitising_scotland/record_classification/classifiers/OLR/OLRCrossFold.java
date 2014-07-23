@@ -18,7 +18,6 @@ import org.apache.mahout.math.NamedVector;
 import org.apache.mahout.math.Vector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
 
 /**
@@ -45,7 +44,6 @@ public class OLRCrossFold {
     private OLR classifier;
 
     public double getAverageRunningLogLikelihood() {
-
         double ll = 0.;
         for (OLRPool model : models) {
             ll += model.getAverageRunningLogLikelihood();
@@ -68,7 +66,6 @@ public class OLRCrossFold {
      * @param properties         properties
      */
     public OLRCrossFold(final ArrayList<NamedVector> trainingVectorList, final Properties properties) {
-
         this.properties = properties;
         getConfigOptions();
         ArrayList<NamedVector>[][] trainingVectors = CrossFoldedDataStructure.make(trainingVectorList, folds);
@@ -89,62 +86,10 @@ public class OLRCrossFold {
         }
     }
 
-    public class StopListener implements Runnable {
-
-        private boolean processTerminated;
-
-        public void terminateProcess() {
-
-            stop();
-            processTerminated = true;
-        }
-
-        public void commandLineStopListener() throws IOException {
-
-            processTerminated = false;
-            try (BufferedReader in = new BufferedReader(new InputStreamReader(System.in, FileManipulation.FILE_CHARSET))) {
-                String line = "";
-                while (true) {
-                    if (line != null) {
-                        if (line.equalsIgnoreCase("stop")) {
-                            LOGGER.info("Stop call detected. Stopping training...");
-                            stop();
-                            break;
-                        }
-                        if (line.equalsIgnoreCase("getloglik")) {
-                            LOGGER.info(Double.toString(getAverageRunningLogLikelihood()));
-                        }
-                        if (line.equalsIgnoreCase("resetloglik")) {
-                            resetRunningLogLikelihoods();
-                            LOGGER.info("Running log likelihood reset.");
-                        }
-                    }
-                    line = in.readLine();
-                    if (processTerminated) {
-                        break;
-                    }
-                }
-                in.close();
-            }
-        }
-
-        @Override
-        public void run() {
-
-            try {
-                commandLineStopListener();
-            }
-            catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
     /**
      * trains models.
      */
     public void train() {
-
         checkTrainable();
         trainIfPossible();
     }
@@ -241,7 +186,6 @@ public class OLRCrossFold {
      * @return log likelihood
      */
     public double logLikelihood(final int actual, final Vector instance) {
-
         return classifier.logLikelihood(actual, instance);
     }
 
@@ -251,7 +195,6 @@ public class OLRCrossFold {
      * @return the config options
      */
     private void getConfigOptions() {
-
         folds = Integer.parseInt(properties.getProperty("OLRFolds"));
     }
 
@@ -262,7 +205,6 @@ public class OLRCrossFold {
      * @throws IOException Signals that an I/O exception has occurred.
      */
     public void serializeModel(final String filename) throws IOException {
-
         DataOutputStream out = OLR.getDataOutputStream(filename);
         write(out);
         out.close();
@@ -276,7 +218,6 @@ public class OLRCrossFold {
      * @throws IOException Signals that an I/O exception has occurred.
      */
     public static OLRCrossFold deSerializeModel(final String filename) throws IOException {
-
         DataInputStream in = OLR.getDataInputStream(filename);
         OLRCrossFold olrCrossFold = new OLRCrossFold();
         olrCrossFold.readFields(in);
@@ -288,7 +229,6 @@ public class OLRCrossFold {
      * Instantiates a new OLR cross fold.
      */
     protected OLRCrossFold() {
-
         modelTrainable = false;
     }
 
@@ -299,7 +239,6 @@ public class OLRCrossFold {
      * @throws IOException Signals that an I/O exception has occurred.
      */
     protected void write(final DataOutputStream out) throws IOException {
-
         out.writeInt(models.size());
         for (OLRPool model : models) {
             model.write(out);

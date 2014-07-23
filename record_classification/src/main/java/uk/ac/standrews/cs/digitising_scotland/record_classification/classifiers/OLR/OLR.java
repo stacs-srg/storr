@@ -93,7 +93,7 @@ public class OLR {
     public void resetRunningLogLikelihood() {
 
         runningLogLikelihood = 0.;
-        numLogLikelihoodSumUpdates = new AtomicInteger(0);
+        numLogLikelihoodSumUpdates = new AtomicInteger(1);
     }
 
     public double logLikelihood(final int actual, final Vector instance) {
