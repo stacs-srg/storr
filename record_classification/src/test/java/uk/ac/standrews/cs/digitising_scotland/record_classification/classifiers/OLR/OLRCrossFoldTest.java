@@ -18,7 +18,6 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.vectors.VectorFactory;
 import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearningConfiguration;
 
-// TODO: Auto-generated Javadoc
 /**
  *
  * Created by fraserdunlop on 06/05/2014 at 11:37.
