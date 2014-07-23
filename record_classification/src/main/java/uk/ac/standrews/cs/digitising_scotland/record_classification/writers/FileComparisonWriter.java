@@ -16,7 +16,11 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
 import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
 
-public class TestFileComparisonWriter extends OutputDataFormatter implements Closeable {
+/**
+ * The Class FileComparisonWriter is used to write a human readable copy of a record to a file using a chosen delimiter.
+ * This class is designed to compare the gold standard codes to classification codes.
+ */
+public class FileComparisonWriter extends OutputDataFormatter implements Closeable {
 
     /** The writer. */
     private BufferedWriter writer;
@@ -29,7 +33,7 @@ public class TestFileComparisonWriter extends OutputDataFormatter implements Clo
      * @throws FileNotFoundException the file not found exception
      * @throws UnsupportedEncodingException the unsupported encoding exception
      */
-    public TestFileComparisonWriter(final File outputPath, final String delimiter) throws FileNotFoundException, UnsupportedEncodingException {
+    public FileComparisonWriter(final File outputPath, final String delimiter) throws FileNotFoundException, UnsupportedEncodingException {
 
         FileOutputStream fileOutputStream = new FileOutputStream(outputPath);
         OutputStreamWriter outputStream = new OutputStreamWriter(fileOutputStream, FileManipulation.FILE_CHARSET);
@@ -101,6 +105,9 @@ public class TestFileComparisonWriter extends OutputDataFormatter implements Clo
         return sb.toString();
     }
 
+    /* (non-Javadoc)
+     * @see java.io.Closeable#close()
+     */
     @Override
     public void close() throws IOException {
 

@@ -31,7 +31,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.exceptions.FolderCreationException;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.exceptions.InputFormatException;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.writers.DataClerkingWriter;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.writers.TestFileComparisonWriter;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.writers.FileComparisonWriter;
 import uk.ac.standrews.cs.digitising_scotland.tools.Timer;
 import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
 import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearningConfiguration;
@@ -275,13 +275,15 @@ public final class TrainAndMultiplyClassify {
 
     private static void writeRecords(final Bucket classifiedBucket) throws IOException {
 
-        final DataClerkingWriter writer = new DataClerkingWriter(new File(experimentalFolderName + "/Data/NRSData.txt"));
+        final String nrsReportPath = "/Data/NRSData.txt";
+        final DataClerkingWriter writer = new DataClerkingWriter(new File(experimentalFolderName + nrsReportPath));
         for (final Record record : classifiedBucket) {
             writer.write(record);
         }
         writer.close();
 
-        final TestFileComparisonWriter comparisonWriter = new TestFileComparisonWriter(new File(experimentalFolderName + "/Data/comaprison.txt"), "\t");
+        final String comparisonReportPath = "/Data/comaprison.txt";
+        final FileComparisonWriter comparisonWriter = new FileComparisonWriter(new File(experimentalFolderName + comparisonReportPath), "\t");
         for (final Record record : classifiedBucket) {
             comparisonWriter.write(record);
         }
@@ -293,7 +295,7 @@ public final class TrainAndMultiplyClassify {
         trainingBucket = new Bucket();
         predictionBucket = new Bucket();
         for (Record record : bucket) {
-            if (Math.random() < TRAINING_PCT) { // TODO Magic number
+            if (Math.random() < TRAINING_PCT) {
                 trainingBucket.addRecordToBucket(record);
             }
             else {
