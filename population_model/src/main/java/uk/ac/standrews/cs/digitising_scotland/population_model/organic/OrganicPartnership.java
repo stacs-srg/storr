@@ -23,7 +23,7 @@ import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.Uni
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IDFactory;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPartnership;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.PopulationLogic;
-import uk.ac.standrews.cs.digitising_scotland.population_model.util.RandomFactory;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.RandomFactory;
 import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
 
 import java.util.ArrayList;

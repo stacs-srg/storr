@@ -16,7 +16,7 @@
  */
 
 /**
- * Interfaces and abstract classes for population simulation.
+ * Population export to and import from relational database.
  */
-package uk.ac.standrews.cs.digitising_scotland.population_model.model;
+package uk.ac.standrews.cs.digitising_scotland.population_model.model.database;
 

@@ -20,7 +20,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import uk.ac.standrews.cs.digitising_scotland.population_model.config.PopulationProperties;
-import uk.ac.standrews.cs.digitising_scotland.population_model.util.RandomFactory;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.RandomFactory;
 import uk.ac.standrews.cs.digitising_scotland.util.DBManipulation;
 
 import java.io.IOException;

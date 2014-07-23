@@ -18,7 +18,7 @@ package uk.ac.standrews.cs.digitising_scotland.population_model.organic;
 
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.*;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPerson;
-import uk.ac.standrews.cs.digitising_scotland.population_model.util.RandomFactory;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.RandomFactory;
 import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
 
 import java.util.ArrayList;

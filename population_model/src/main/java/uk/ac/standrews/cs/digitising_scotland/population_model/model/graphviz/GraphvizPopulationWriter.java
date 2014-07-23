@@ -35,7 +35,7 @@ import java.util.List;
  *
  * @author Graham Kirby (graham.kirby@st-andrews.ac.uk)
  */
-public class PopulationToGraphviz extends AbstractFilePopulationWriter {
+public class GraphvizPopulationWriter extends AbstractFilePopulationWriter {
 
     private static final String INDIVIDUAL_NODE_COLOUR = "blue";
     private static final String PARTNERSHIP_NODE_COLOUR = "red";
@@ -54,7 +54,7 @@ public class PopulationToGraphviz extends AbstractFilePopulationWriter {
      * @param path the path for the output file
      * @throws IOException if the file does not exist and cannot be created
      */
-    public PopulationToGraphviz(final Path path, final IPopulation population) throws IOException {
+    public GraphvizPopulationWriter(final Path path, final IPopulation population) throws IOException {
 
         super(path);
         this.population = population;

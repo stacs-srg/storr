@@ -19,7 +19,7 @@ package uk.ac.standrews.cs.digitising_scotland.population_model.organic;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.AgeAtDeathDistribution;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.Distribution;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.*;
-import uk.ac.standrews.cs.digitising_scotland.population_model.util.RandomFactory;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.RandomFactory;
 import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
 
 import java.util.*;

@@ -20,7 +20,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.in_memory.CompactPopulationTestCases;
-import uk.ac.standrews.cs.digitising_scotland.population_model.util.RandomFactory;
 import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
 
 import java.util.ArrayList;

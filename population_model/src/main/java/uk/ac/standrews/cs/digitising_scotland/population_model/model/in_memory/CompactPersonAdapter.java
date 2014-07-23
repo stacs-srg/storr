@@ -24,7 +24,7 @@ import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.Mal
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.SurnameDistribution;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.AbstractPerson;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPerson;
-import uk.ac.standrews.cs.digitising_scotland.population_model.util.RandomFactory;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.RandomFactory;
 import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
 
 import javax.annotation.concurrent.NotThreadSafe;
