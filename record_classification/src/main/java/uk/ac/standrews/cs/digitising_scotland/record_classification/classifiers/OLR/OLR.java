@@ -27,8 +27,14 @@ import java.util.Properties;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.mahout.classifier.sgd.L1;
-import org.apache.mahout.math.*;
+import org.apache.mahout.math.DenseMatrix;
+import org.apache.mahout.math.DenseVector;
+import org.apache.mahout.math.Matrix;
+import org.apache.mahout.math.MatrixWritable;
+import org.apache.mahout.math.NamedVector;
+import org.apache.mahout.math.Vector;
 import org.apache.mahout.math.Vector.Element;
+import org.apache.mahout.math.VectorWritable;
 import org.apache.mahout.math.function.Functions;
 
 import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearningConfiguration;
@@ -62,9 +68,12 @@ public class OLR {
     }
 
     public Matrix getBeta() {
+
         return beta;
     }
+
     public void setBeta(Matrix beta) {
+
         this.beta = beta;
     }
 
@@ -82,6 +91,7 @@ public class OLR {
     }
 
     public void resetRunningLogLikelihood() {
+
         runningLogLikelihood = 0.;
         numLogLikelihoodSumUpdates = new AtomicInteger(0);
     }
@@ -153,6 +163,7 @@ public class OLR {
      * @param properties properties
      */
     public OLR(final Properties properties) {
+
         resetRunningLogLikelihood();
         this.properties = properties;
         this.prior = new L1();
@@ -160,7 +171,8 @@ public class OLR {
         initialiseModel();
     }
 
-    public OLR(final Matrix beta){
+    public OLR(final Matrix beta) {
+
         initialiseMode(beta);
     }
 
@@ -201,11 +213,13 @@ public class OLR {
 
     private void updateCategoryAtNonZeroFeature(final int category, final double gradientBase, final Vector.Element featureElement) {
 
+        final double aSmallNumber = 0.000001;
         int feature = featureElement.index();
+
         if (weAreRegularizing) {
             regularize(category, feature);
         }
-        if (gradientBase > 0.000001 || gradientBase < -0.000001) {
+        if (gradientBase > aSmallNumber || gradientBase < -aSmallNumber) {
             updateCoefficient(category, feature, featureElement, gradientBase);
         }
     }
@@ -236,7 +250,8 @@ public class OLR {
 
         if (weArePerTermAnnealing) {
             return perTermLearningRate(feature);
-        } else {
+        }
+        else {
             return currentLearningRate();
         }
     }
@@ -261,7 +276,8 @@ public class OLR {
             // the size of the max means that 1+sum(exp(v)) = sum(exp(v)) to within round-off
             v.assign(Functions.minus(max)).assign(Functions.EXP);
             return v.divide(v.norm(1));
-        } else {
+        }
+        else {
             v.assign(Functions.EXP);
             return v.divide(1 + v.norm(1));
         }
@@ -333,10 +349,11 @@ public class OLR {
         beta = new DenseMatrix(numCategories - 1, numFeatures);
     }
 
-    private void initialiseMode(final Matrix beta){
+    private void initialiseMode(final Matrix beta) {
+
         this.beta = beta;
         numFeatures = beta.numCols();
-        numCategories = beta.numRows()+1;
+        numCategories = beta.numRows() + 1;
         updateSteps = new DenseVector(numFeatures);
         updateCounts = new DenseVector(numFeatures);
     }
