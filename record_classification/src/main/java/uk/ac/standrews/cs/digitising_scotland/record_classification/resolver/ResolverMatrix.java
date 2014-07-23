@@ -40,7 +40,6 @@ public class ResolverMatrix {
      * Instantiates a new empty resolver matrix.
      */
     public ResolverMatrix() {
-
         matrix = new HashMap<>();
     }
 
@@ -54,7 +53,6 @@ public class ResolverMatrix {
      * @param codeDoublePair the Pair<Code, Double> to add
      */
     public void add(final TokenSet tokenSet, final Pair<Code, Double> codeDoublePair) {
-
         Code code = codeDoublePair.getLeft();
         Double confidence = codeDoublePair.getRight();
         if (matrix.get(code) == null) {
@@ -73,7 +71,6 @@ public class ResolverMatrix {
      * @return List<Set<CodeTriple>> the List of Sets of valid {@link CodeTriple}s
      */
     public List<Set<CodeTriple>> getValidCodeTriples(final TokenSet originalSet) {
-
         chopUntilComplexityWithinBound(10000);
         resolveHierarchies();
         List<Set<CodeTriple>> merged = new ArrayList<>();
@@ -94,7 +91,6 @@ public class ResolverMatrix {
      * @return the int numerical representation of the complexity of the matrix.
      */
     public int complexity() {
-
         int complexity = 1;
         for (Code code : matrix.keySet()) {
             if (matrix.get(code).size() > 0) {
@@ -112,15 +108,13 @@ public class ResolverMatrix {
      * This utilises the ResolverUtils.removeAncestors() method to achieve this.
      */
     protected void resolveHierarchies() {
-
         Set<Code> keySet = new HashSet<>();
         keySet.addAll(matrix.keySet());
-
         for (Code code : keySet) {
-            Code anscestor = ResolverUtils.whichCodeIsAncestorOfCodeInSet(code, keySet);
-            if (anscestor != null) {
-                matrix.get(code).addAll(matrix.get(anscestor));
-                matrix.remove(anscestor);
+            Code ancestor = ResolverUtils.whichCodeIsAncestorOfCodeInSet(code, keySet);
+            if (ancestor != null) {
+                matrix.get(code).addAll(matrix.get(ancestor));
+                matrix.remove(ancestor);
             }
         }
     }
@@ -132,8 +126,8 @@ public class ResolverMatrix {
      * @param codeTriples the pairs
      * @param code        the code
      */
-    private void merge(final List<Set<CodeTriple>> merged, final List<CodeTriple> codeTriples, final Code code, final TokenSet originalSet) {
-
+    private void merge(final List<Set<CodeTriple>> merged, final List<CodeTriple> codeTriples,
+                       final Code code, final TokenSet originalSet) {
         List<Set<CodeTriple>> temporaryMerge = new ArrayList<>();
         for (Set<CodeTriple> tripleSet : merged) {
             for (CodeTriple triple : codeTriples) {
@@ -157,7 +151,6 @@ public class ResolverMatrix {
      * @param bound the bound
      */
     public void chopUntilComplexityWithinBound(final int bound) {
-
         int maxNoOfEachCode = (int) Math.pow(bound, (1. / (double) matrix.keySet().size()));
         maxNoOfEachCode = Math.max(6, maxNoOfEachCode);
         for (Code code : matrix.keySet()) {
@@ -167,10 +160,8 @@ public class ResolverMatrix {
     }
 
     private class CodeTripleComparator implements Comparator<CodeTriple> {
-
         @Override
         public int compare(final CodeTriple o1, final CodeTriple o2) {
-
             double measure1 = o1.getTokenSet().size() * o1.getConfidence();
             double measure2 = o2.getTokenSet().size() * o2.getConfidence();
             if (measure1 < measure2) {
@@ -191,7 +182,6 @@ public class ResolverMatrix {
      * @param confidence the confidence threshold
      */
     public void chopBelowConfidence(final Double confidence) {
-
         for (Code code : matrix.keySet()) {
             List<CodeTriple> oldList = matrix.get(code);
             List<CodeTriple> newList = new ArrayList<>();
@@ -215,7 +205,6 @@ public class ResolverMatrix {
 
     @Override
     public boolean equals(final Object obj) {
-
         if (this == obj) { return true; }
         if (obj == null) { return false; }
         if (getClass() != obj.getClass()) { return false; }
@@ -229,8 +218,6 @@ public class ResolverMatrix {
 
     @Override
     public String toString() {
-
         return "ResolverMatrix [matrix=" + matrix + "]";
     }
-
 }
