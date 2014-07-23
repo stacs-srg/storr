@@ -31,6 +31,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.exceptions.FolderCreationException;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.exceptions.InputFormatException;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.writers.DataClerkingWriter;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.writers.TestFileComparisonWriter;
 import uk.ac.standrews.cs.digitising_scotland.tools.Timer;
 import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
 import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearningConfiguration;
@@ -93,6 +94,7 @@ public final class TrainAndMultiplyClassify {
 
         // TODO split this up!
         Timer timer = initAndStartTimer();
+
         setupExperimentalFolders("Experiments");
 
         File training = new File(args[0]);
@@ -126,6 +128,7 @@ public final class TrainAndMultiplyClassify {
         Bucket notExactMatched = BucketUtils.getComplement(predictionBucket, exactMatched);
         Bucket machineLearned = machineLearningClassifier.classify(notExactMatched);
         Bucket allClassified = BucketUtils.getUnion(machineLearned, exactMatched);
+
         LOGGER.info("Exact Matched Bucket Size: " + exactMatched.size());
         LOGGER.info("Machine Learned Bucket Size: " + machineLearned.size());
 
@@ -277,6 +280,12 @@ public final class TrainAndMultiplyClassify {
             writer.write(record);
         }
         writer.close();
+
+        final TestFileComparisonWriter comparisonWriter = new TestFileComparisonWriter(new File(experimentalFolderName + "/Data/comaprison.txt"), "\t");
+        for (final Record record : classifiedBucket) {
+            comparisonWriter.write(record);
+        }
+        comparisonWriter.close();
     }
 
     private static void randomlyAssignToTrainingAndPrediction(final Bucket bucket) {

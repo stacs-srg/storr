@@ -14,11 +14,14 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.output.FileWriterWithEncoding;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeTriple;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.writers.DataClerkingWriter;
 import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
@@ -451,6 +454,12 @@ public final class Utils {
         System.out.println(bucketToWrite);
     }
 
+    /**
+     * Executes the specified string command in a separate process using exec().
+     * The output from the command execution is grabbed by a reader and returned after execution.
+     * @param command command to execute
+     * @return output from command execution
+     */
     public static String executeCommand(final String command) {
 
         StringBuffer output = new StringBuffer();
@@ -477,5 +486,33 @@ public final class Utils {
         }
 
         return output.toString();
+    }
+
+    /**
+     * Checks if a given code is a member of a set of CodeTriples.
+     * @param code to check for
+     * @param setCodeTriples to check in
+     * @return true if code is a member of the set
+     */
+    public static boolean contains(final Code code, final Set<CodeTriple> setCodeTriples) {
+
+        for (CodeTriple codeTriple : setCodeTriples) {
+            if (codeTriple.getCode() == code) { return true; }
+        }
+        return false;
+    }
+
+    /**
+     * Returns the codeTriples from the set where the codeTriple has the given code.
+     * @param code to check for
+     * @param setCodeTriples to check in
+     * @return true if code is a member of the set
+     */
+    public static CodeTriple getCodeTripleWithCode(final Code code, final Set<CodeTriple> setCodeTriples) {
+
+        for (CodeTriple codeTriple : setCodeTriples) {
+            if (codeTriple.getCode() == code) { return codeTriple; }
+        }
+        return null;
     }
 }
