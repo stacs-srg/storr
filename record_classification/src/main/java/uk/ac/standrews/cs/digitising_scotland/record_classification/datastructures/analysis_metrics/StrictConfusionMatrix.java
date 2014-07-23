@@ -5,6 +5,7 @@ import java.util.Set;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeTriple;
+import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
 
 /**
  * This is the 'classic' true confusion matrix. Predictions are only correct if they
@@ -68,10 +69,7 @@ public class StrictConfusionMatrix extends AbstractConfusionMatrix {
      */
     public boolean contains(final Code code, final Set<CodeTriple> setCodeTriples) {
 
-        for (CodeTriple codeTriple : setCodeTriples) {
-            if (codeTriple.getCode() == code) { return true; }
-        }
-        return false;
+        return Utils.contains(code, setCodeTriples);
     }
 
 }

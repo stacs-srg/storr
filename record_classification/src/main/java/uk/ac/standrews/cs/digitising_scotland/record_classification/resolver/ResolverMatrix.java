@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.resolver;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -166,7 +167,9 @@ public class ResolverMatrix {
         }
     }
 
-    private static class CodeTripleComparator implements Comparator<CodeTriple> {
+    private static class CodeTripleComparator implements Comparator<CodeTriple>, Serializable {
+
+        private static final long serialVersionUID = -2746182512036694544L;
 
         @Override
         public int compare(final CodeTriple o1, final CodeTriple o2) {
