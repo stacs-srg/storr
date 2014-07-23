@@ -71,7 +71,7 @@ public class OrganicPopulation implements IPopulation {
 
     /**
      * Creates a seed population of the specified size.
-     * 
+     *
      * @param size The number of individuals to be created in the seed population.
      */
     public void makeSeed(final int size) {
@@ -106,8 +106,7 @@ public class OrganicPopulation implements IPopulation {
             if (firstMaleId == (Integer) null) {
                 firstMaleId = malePartnershipQueue.getFirst().getId();
                 // If the ID of the next male matches that of the first male then none of the remaining males are sutible to be married to any of the aviliable females
-            }
-            else if (malePartnershipQueue.getFirst().getId() == firstMaleId) {
+            } else if (malePartnershipQueue.getFirst().getId() == firstMaleId) {
                 break;
             }
             // While there are female in the marriage queue
@@ -117,8 +116,7 @@ public class OrganicPopulation implements IPopulation {
                     firstFemaleId = femalePartnershipQueue.getFirst().getId();
                     // If the ID of the next female matches that of the first female then all females have been considered in relation to the
                     //  currently considered female and none have been sutiable.
-                }
-                else if (femalePartnershipQueue.getFirst().getId() == firstFemaleId) {
+                } else if (femalePartnershipQueue.getFirst().getId() == firstFemaleId) {
                     // Move next male to head of queue for consideration
                     malePartnershipQueue.add(malePartnershipQueue.removeFirst());
                     maleInitialPartnershipOrderer.add(maleInitialPartnershipOrderer.removeFirst());
@@ -167,8 +165,7 @@ public class OrganicPopulation implements IPopulation {
                     firstMaleId = (Integer) null;
                     firstFemaleId = (Integer) null;
                     break;
-                }
-                else {
+                } else {
                     // Else if couple not elligable to marry move onto consider male with next female
                     femalePartnershipQueue.add(femalePartnershipQueue.removeFirst());
                     femaleInitialPartnershipOrderer.add(femaleInitialPartnershipOrderer.removeFirst());
@@ -185,10 +182,10 @@ public class OrganicPopulation implements IPopulation {
 
     /**
      * Marries up the given individuals.
-     * 
+     *
      * @param husband The male to married.
-     * @param wife he female to be married.
-     * @param days The day of the marriage in days since the 1/1/1600.
+     * @param wife    he female to be married.
+     * @param days    The day of the marriage in days since the 1/1/1600.
      */
     public void marry(final OrganicPerson husband, final OrganicPerson wife, final int days) {
 
@@ -213,7 +210,7 @@ public class OrganicPopulation implements IPopulation {
 
     /**
      * The events for each time step are progressed and handled by the mainIteration method/
-     * 
+     *
      * @param timeStepSizeInDays The size of the desired time step in days.
      */
     public void mainIteration(final int timeStepSizeInDays) {
@@ -252,8 +249,7 @@ public class OrganicPopulation implements IPopulation {
                                     if (people.get(i).getSex() == 'M') {
                                         malePartnershipQueue.add(people.get(i));
                                         maleInitialPartnershipOrderer.add(currentDay);
-                                    }
-                                    else {
+                                    } else {
                                         femalePartnershipQueue.add(people.get(i));
                                         femaleInitialPartnershipOrderer.add(currentDay);
                                     }
@@ -307,7 +303,7 @@ public class OrganicPopulation implements IPopulation {
 
     }
 
-    public void divorce(OrganicPartnership partnership){
+    public void divorce(OrganicPartnership partnership) {
 
         OrganicPopulationLogger.logDivorce();
 
@@ -316,8 +312,8 @@ public class OrganicPopulation implements IPopulation {
         int wifeID = partnership.getFemalePartnerId();
 
         OrganicPerson husband, wife;
-        husband = (OrganicPerson)findPerson(husbandID);
-        wife = (OrganicPerson)findPerson(wifeID);
+        husband = (OrganicPerson) findPerson(husbandID);
+        wife = (OrganicPerson) findPerson(wifeID);
 
         husband.updateTimeline(EventType.DIVORCE);
         wife.updateTimeline(EventType.DIVORCE);
@@ -331,8 +327,7 @@ public class OrganicPopulation implements IPopulation {
                 malePartnershipQueue.remove(index);
                 maleInitialPartnershipOrderer.remove(index);
             }
-        }
-        else {
+        } else {
             int index = femalePartnershipQueue.indexOf(person);
             if (index != -1) {
                 femalePartnershipQueue.remove(index);
@@ -424,7 +419,9 @@ public class OrganicPopulation implements IPopulation {
                 index += binaryStep;
             }
         }
-        if (people.get(index).getId() == id) { return people.get(index); }
+        if (people.get(index).getId() == id) {
+            return people.get(index);
+        }
 
         return null;
     }
@@ -441,7 +438,9 @@ public class OrganicPopulation implements IPopulation {
                 index += binaryStep;
             }
         }
-        if (partnerships.get(index).getId() == id) { return partnerships.get(index); }
+        if (partnerships.get(index).getId() == id) {
+            return partnerships.get(index);
+        }
 
         return null;
     }
@@ -471,7 +470,7 @@ public class OrganicPopulation implements IPopulation {
 
     /**
      * Temporary testing main method.
-     * 
+     *
      * @param args
      */
     public static void main(final String[] args) {
@@ -510,7 +509,7 @@ public class OrganicPopulation implements IPopulation {
 
     /**
      * Returns the earliestDate in days since the 1/1/1600.
-     * 
+     *
      * @return The earliestDate in days since the 1/1/1600.
      */
     public static int getEarliestDate() {
@@ -520,7 +519,7 @@ public class OrganicPopulation implements IPopulation {
 
     /**
      * Sets the earliest date field to the specified date.
-     * 
+     *
      * @param earlyDate The value which earliestDate is to be set to.
      */
     public static void setEarliestDate(int earlyDate) {

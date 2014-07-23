@@ -18,7 +18,7 @@ package uk.ac.standrews.cs.digitising_scotland.population_model.organic;
 
 /**
  * Enum to provide the required variables for divorce instigation.
- * 
+ *
  * @author Tom Dalton (tsd4@st-andrews.ac.uk
  */
 public enum DivorceInstigation {

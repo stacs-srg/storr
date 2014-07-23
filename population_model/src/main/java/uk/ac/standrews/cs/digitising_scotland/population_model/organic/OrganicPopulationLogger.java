@@ -44,7 +44,7 @@ public class OrganicPopulationLogger {
 
     /**
      * Returns the size of the alive population.
-     * 
+     *
      * @return The number of people alive in the population.
      */
     public static int getPopulation() {
@@ -90,8 +90,8 @@ public class OrganicPopulationLogger {
 
     /**
      * Logs all needed information pertaining to the marriage.
-     * 
-     * @param maleDays Males age in days at the point of marriage.
+     *
+     * @param maleDays   Males age in days at the point of marriage.
      * @param femaleDays Females age in days at the point of marriage.
      */
     public static void logMarriage(final int maleDays, final int femaleDays) {
