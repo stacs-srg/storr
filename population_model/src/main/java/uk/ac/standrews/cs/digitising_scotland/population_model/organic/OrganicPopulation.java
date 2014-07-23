@@ -16,22 +16,14 @@
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.organic;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Random;
-
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.AgeAtDeathDistribution;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.Distribution;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.RemarriageDistribution;
-import uk.ac.standrews.cs.digitising_scotland.population_model.model.IDFactory;
-import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPartnership;
-import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPerson;
-import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPopulation;
-import uk.ac.standrews.cs.digitising_scotland.population_model.model.PopulationLogic;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.*;
 import uk.ac.standrews.cs.digitising_scotland.population_model.util.RandomFactory;
 import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
+
+import java.util.*;
 
 /**
  * Created by victor on 11/06/14.
