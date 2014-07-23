@@ -8,16 +8,11 @@ import java.util.Stack;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
-
-import org.apache.mahout.math.DenseVector;
 import org.apache.mahout.math.Matrix;
 import org.apache.mahout.math.NamedVector;
 import org.apache.mahout.math.Vector;
-import org.apache.mahout.math.function.DoubleDoubleFunction;
-import org.apache.mahout.math.function.Functions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
 
 /**
@@ -90,7 +85,16 @@ public class OLRCrossFold {
     }
 
     public class StopListener implements Runnable {
+        private boolean processTerminated = false;
+
+
+        public void terminateProcess(){
+            stop();
+            processTerminated = true;
+        }
+
         public void commandLineStopListener() throws IOException {
+            processTerminated = false;
             try (BufferedReader in = new BufferedReader(new InputStreamReader(System.in, FileManipulation.FILE_CHARSET))) {
                 String line = "";
 
@@ -110,6 +114,8 @@ public class OLRCrossFold {
                         }
                     }
                     line = in.readLine();
+                    if(processTerminated)
+                        break;
                 }
 
                 in.close();
@@ -155,8 +161,9 @@ public class OLRCrossFold {
         executorService.shutdown();
         final int timeout = 365;
         executorService.awaitTermination(timeout, TimeUnit.DAYS);
-        stop();
+        stopListener.terminateProcess();
         stopService.shutdown();
+
 
         prepareClassifier();
 
