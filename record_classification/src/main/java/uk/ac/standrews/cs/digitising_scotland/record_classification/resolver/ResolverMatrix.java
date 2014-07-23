@@ -166,7 +166,7 @@ public class ResolverMatrix {
         }
     }
 
-    private class CodeTripleComparator implements Comparator<CodeTriple> {
+    private static class CodeTripleComparator implements Comparator<CodeTriple> {
 
         @Override
         public int compare(final CodeTriple o1, final CodeTriple o2) {
@@ -176,11 +176,11 @@ public class ResolverMatrix {
             if (measure1 < measure2) {
                 return 1;
             }
-            else if (measure1 == measure2) {
-                return 0;
+            else if (measure1 > measure2) {
+                return -1;
             }
             else {
-                return -1;
+                return 0;
             }
         }
     }
