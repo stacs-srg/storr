@@ -1,6 +1,13 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.resolver;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.AbstractClassifier;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Pair;
@@ -66,6 +73,7 @@ public class ResolverMatrix {
      * @return List<Set<CodeTriple>> the List of Sets of valid {@link CodeTriple}s
      */
     public List<Set<CodeTriple>> getValidCodeTriples(final TokenSet originalSet) {
+
         chopUntilComplexityWithinBound(10000);
         resolveHierarchies();
         List<Set<CodeTriple>> merged = new ArrayList<>();
@@ -89,11 +97,13 @@ public class ResolverMatrix {
 
         int complexity = 1;
         for (Code code : matrix.keySet()) {
-            if (matrix.get(code).size() > 0)
+            if (matrix.get(code).size() > 0) {
                 complexity = complexity * matrix.get(code).size();
+            }
         }
-        if(complexity < 1)
+        if (complexity < 1) {
             complexity = Integer.MAX_VALUE;
+        }
         return complexity;
     }
 
@@ -147,10 +157,11 @@ public class ResolverMatrix {
      * @param bound the bound
      */
     public void chopUntilComplexityWithinBound(final int bound) {
+
         int maxNoOfEachCode = (int) Math.pow(bound, (1. / (double) matrix.keySet().size()));
         maxNoOfEachCode = Math.max(6, maxNoOfEachCode);
         for (Code code : matrix.keySet()) {
-            matrix.get(code).sort(new CodeTripleComparator());
+            Collections.sort(matrix.get(code), new CodeTripleComparator());
             matrix.put(code, matrix.get(code).subList(0, Math.min(matrix.get(code).size(), maxNoOfEachCode)));
         }
     }
@@ -158,14 +169,19 @@ public class ResolverMatrix {
     private class CodeTripleComparator implements Comparator<CodeTriple> {
 
         @Override
-        public int compare(CodeTriple o1, CodeTriple o2) {
+        public int compare(final CodeTriple o1, final CodeTriple o2) {
+
             double measure1 = o1.getTokenSet().size() * o1.getConfidence();
             double measure2 = o2.getTokenSet().size() * o2.getConfidence();
-            if (measure1 < measure2)
+            if (measure1 < measure2) {
                 return 1;
-            else if (measure1 == measure2)
+            }
+            else if (measure1 == measure2) {
                 return 0;
-            else return -1;
+            }
+            else {
+                return -1;
+            }
         }
     }
 
@@ -200,23 +216,14 @@ public class ResolverMatrix {
     @Override
     public boolean equals(final Object obj) {
 
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
+        if (this == obj) { return true; }
+        if (obj == null) { return false; }
+        if (getClass() != obj.getClass()) { return false; }
         ResolverMatrix other = (ResolverMatrix) obj;
         if (matrix == null) {
-            if (other.matrix != null) {
-                return false;
-            }
-        } else if (!matrix.equals(other.matrix)) {
-            return false;
+            if (other.matrix != null) { return false; }
         }
+        else if (!matrix.equals(other.matrix)) { return false; }
         return true;
     }
 

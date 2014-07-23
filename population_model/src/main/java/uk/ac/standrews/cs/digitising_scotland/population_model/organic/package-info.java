@@ -14,23 +14,8 @@
  * You should have received a copy of the GNU General Public License along with population_model. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-package uk.ac.standrews.cs.digitising_scotland.population_model.distributions;
-
 /**
- * Exception indicating a negative standard deviation supplied to a distribution.
- * 
- * @author Graham Kirby (graham.kirby@st-andrews.ac.uk)
+ * Package for population simulation.
  */
-public class NegativeDeviationException extends Exception {
+package uk.ac.standrews.cs.digitising_scotland.population_model.organic;
 
-    private static final long serialVersionUID = -6878666381850895224L;
-
-    /**
-     * Creates an exception.
-     * @param message the message
-     */
-    public NegativeDeviationException(final String message) {
-
-        super(message);
-    }
-}

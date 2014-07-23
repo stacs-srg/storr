@@ -136,7 +136,6 @@ public class HiscoDataFormatter {
      */
     public HashMap<String, Map<String, Integer>> correctClassesRemoveMostVariable() throws IOException {
 
-        int count = 0;
         Set<Entry<String, HashMap<String, Integer>>> set = inputMap.entrySet();
         Iterator<Entry<String, HashMap<String, Integer>>> outerIterator = set.iterator();
 
@@ -166,22 +165,25 @@ public class HiscoDataFormatter {
             }
 
             while (innerIterator.hasNext()) {
-                count++;
                 Entry<String, Integer> current = innerIterator.next();
                 int number = current.getValue();
                 totalThisClass += number;
                 variance = (double) numberOfPopularClass / (double) totalThisClass;
-                for (int i = 0; i < number; i++) {
-                    innerStringBuilder.append(codings.getKey() + "\t" + current.getKey() + "\n");
-                }
+                buildInnerString(codings, innerStringBuilder, current, number);
             }
             if (variance > 0.9 && numberOfPopularClass < 25) {
                 sb.append(innerStringBuilder.toString());
             }
-
         }
         Utils.writeToFile(sb.toString(), "hiscoRemovedVariableClasses.txt");
         return sortedMap;
+    }
+
+    private void buildInnerString(Entry<String, Map<String, Integer>> codings, StringBuilder innerStringBuilder, Entry<String, Integer> current, int number) {
+
+        for (int i = 0; i < number; i++) {
+            innerStringBuilder.append(codings.getKey() + "\t" + current.getKey() + "\n");
+        }
     }
 
     /**

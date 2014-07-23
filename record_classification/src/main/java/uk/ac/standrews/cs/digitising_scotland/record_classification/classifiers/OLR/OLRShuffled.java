@@ -182,12 +182,6 @@ public class OLRShuffled implements Runnable {
         return stopped;
     }
 
-    private int getID(final NamedVector vector) {
-
-        String code = vector.getName();
-        return Integer.parseInt(code);
-    }
-
     /**
      * Allows serialization of the model to file.
      *

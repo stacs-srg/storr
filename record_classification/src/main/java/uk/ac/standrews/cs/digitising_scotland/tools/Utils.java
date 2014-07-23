@@ -98,32 +98,24 @@ public final class Utils {
      *
      * @param toMove List of files to move
      * @param toHere where we want the files moved to.
+     * @throws IOException 
      */
-    public static void moveFiles(final File[] toMove, final File toHere) {
+    public static void moveFiles(final File[] toMove, final File toHere) throws IOException {
 
         for (int i = 0; i < toMove.length; i++) {
-            if (toMove[i].exists()) {
-                try {
-                    if (toMove[i].isDirectory()) {
-                        File newFolder = new File(toHere + "/" + toMove[i].getName());
-
-                        if (!newFolder.exists()) {
-                            if (!newFolder.mkdirs()) {
-                                System.out.println("Error creating " + newFolder.getName());
-                            }
-                        }
-                        moveFiles(toMove[i].listFiles(), newFolder);
-                    }
-                    else {
-                        Files.copy(toMove[i], new File(toHere.getAbsolutePath() + "/" + toMove[i].getName()));
-                    }
-
+            if (toMove[i].exists() && toMove[i].isDirectory()) {
+                File newFolder = new File(toHere + "/" + toMove[i].getName());
+                if (!newFolder.exists() && !newFolder.mkdirs()) {
+                    System.out.println("Error creating " + newFolder.getName());
                 }
-                catch (IOException e) {
-                    e.printStackTrace();
-                }
+                moveFiles(toMove[i].listFiles(), newFolder);
+            }
+            else {
+                Files.copy(toMove[i], new File(toHere.getAbsolutePath() + "/" + toMove[i].getName()));
+
             }
         }
+
     }
 
     /**
@@ -160,8 +152,9 @@ public final class Utils {
      *
      * @param listOfFilesToMove String array of file names to move
      * @param storage           Folder to store files in.
+     * @throws IOException 
      */
-    public static void moveFilesTo(final String[] listOfFilesToMove, final File storage) {
+    public static void moveFilesTo(final String[] listOfFilesToMove, final File storage) throws IOException {
 
         File home = new File(".");
         File[] files = home.listFiles();

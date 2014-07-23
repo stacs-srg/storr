@@ -26,8 +26,7 @@ import java.util.Random;
  * @author Tom Dalton (tsd4@st-andrews.ac.uk)
  */
 public class MaleAgeAtMarriageDistribution implements Distribution<Integer> {
-    
-	/*
+    /*
      * from ageatmarriageandpreviousmaritalstatus_tcm77-366510.xls
      * from http://www.ons.gov.uk/ons/rel/vsob1/marriages-in-england-and-wales--provisional-/2012/rtd-age-at-marriage-and-previous-marital-status.xls
      * Age of husband and previous marital status, 1846–2011
@@ -65,7 +64,7 @@ public class MaleAgeAtMarriageDistribution implements Distribution<Integer> {
     private final WeightedIntegerDistribution distribution;
 
     /**
-     * Creates an age at marriage distribution
+     * Creates a male age at marriage distribution.
      *
      * @param random the random number generator to be used
      */

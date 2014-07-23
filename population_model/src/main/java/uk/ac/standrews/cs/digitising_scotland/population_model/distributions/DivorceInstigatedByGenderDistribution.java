@@ -26,7 +26,6 @@ import java.util.Random;
  * @author Tom Dalton (tsd4@st-andrews.ac.uk)
  */
 public class DivorceInstigatedByGenderDistribution implements Distribution<Integer> {
-    
     /*
      * from numberofdivorcesageatdivorceandmaritalstatusbeforemarriage_tcm77-351699
      * from http://www.ons.gov.uk/ons/rel/vsob1/divorces-in-england-and-wales/2012/rtd-divorces---number-of-divorces-age-at-divorce-and-marital-status-before-marriage.xls
@@ -40,13 +39,12 @@ public class DivorceInstigatedByGenderDistribution implements Distribution<Integ
      * No divorce   9808
      */
 
-    private static final int MAXIMUM_AGE_IN_YEARS = 100;
     private static final int[] AGE_DISTRIBUTION_WEIGHTS = new int[]{96, 96, 9808};
 
     private final WeightedIntegerDistribution distribution;
 
     /**
-     * Creates a divorce instigated by gender distribution
+     * Creates a divorce instigated by gender distribution.
      *
      * @param random the random number generator to be used
      */
@@ -58,15 +56,22 @@ public class DivorceInstigatedByGenderDistribution implements Distribution<Integ
         }
     }
 
+    /**
+     * Returns either a gender or no divorce for which party in the marriage will instigate the divorce.
+     * 
+     * @return Indicates the gender of the instigator or no divorce
+     */
     public DivorceInstigation getDefinedSample() {
         int value = getSample();
         switch (value) {
-            case 0:
-                return DivorceInstigation.MALE;
-            case 1:
-                return DivorceInstigation.FEMALE;
-            case 2:
-                return DivorceInstigation.NO_DIVORCE;
+        case 0:
+            return DivorceInstigation.MALE;
+        case 1:
+            return DivorceInstigation.FEMALE;
+        case 2:
+            return DivorceInstigation.NO_DIVORCE;
+        default:
+            break;
         }
         return null;
     }
