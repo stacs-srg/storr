@@ -18,6 +18,7 @@ import org.apache.mahout.math.NamedVector;
 import org.apache.mahout.math.Vector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
 
 /**
@@ -44,6 +45,7 @@ public class OLRCrossFold {
     private OLR classifier;
 
     public double getAverageRunningLogLikelihood() {
+
         double ll = 0.;
         for (OLRPool model : models) {
             ll += model.getAverageRunningLogLikelihood();
@@ -66,6 +68,7 @@ public class OLRCrossFold {
      * @param properties         properties
      */
     public OLRCrossFold(final ArrayList<NamedVector> trainingVectorList, final Properties properties) {
+
         this.properties = properties;
         getConfigOptions();
         ArrayList<NamedVector>[][] trainingVectors = CrossFoldedDataStructure.make(trainingVectorList, folds);
@@ -90,6 +93,7 @@ public class OLRCrossFold {
      * trains models.
      */
     public void train() {
+
         checkTrainable();
         trainIfPossible();
     }
@@ -186,6 +190,7 @@ public class OLRCrossFold {
      * @return log likelihood
      */
     public double logLikelihood(final int actual, final Vector instance) {
+
         return classifier.logLikelihood(actual, instance);
     }
 
@@ -195,6 +200,7 @@ public class OLRCrossFold {
      * @return the config options
      */
     private void getConfigOptions() {
+
         folds = Integer.parseInt(properties.getProperty("OLRFolds"));
     }
 
@@ -205,6 +211,7 @@ public class OLRCrossFold {
      * @throws IOException Signals that an I/O exception has occurred.
      */
     public void serializeModel(final String filename) throws IOException {
+
         DataOutputStream out = OLR.getDataOutputStream(filename);
         write(out);
         out.close();
@@ -218,6 +225,7 @@ public class OLRCrossFold {
      * @throws IOException Signals that an I/O exception has occurred.
      */
     public static OLRCrossFold deSerializeModel(final String filename) throws IOException {
+
         DataInputStream in = OLR.getDataInputStream(filename);
         OLRCrossFold olrCrossFold = new OLRCrossFold();
         olrCrossFold.readFields(in);
@@ -229,6 +237,7 @@ public class OLRCrossFold {
      * Instantiates a new OLR cross fold.
      */
     protected OLRCrossFold() {
+
         modelTrainable = false;
     }
 
@@ -239,6 +248,7 @@ public class OLRCrossFold {
      * @throws IOException Signals that an I/O exception has occurred.
      */
     protected void write(final DataOutputStream out) throws IOException {
+
         out.writeInt(models.size());
         for (OLRPool model : models) {
             model.write(out);
@@ -263,5 +273,90 @@ public class OLRCrossFold {
         OLR olr = new OLR();
         olr.readFields(in);
         classifier = olr;
+    }
+
+    public class StopListener implements Runnable {
+
+        private boolean processTerminated;
+        private final String stopCommand = "stop";
+        private final String getLogLikCommand = "getloglik";
+        private final String resetLogLikCommand = "resetloglik";
+        private final String logLikelihoodMessage = "\nLog likelihood is: ";
+        private final String stopMessage = "\nStop call detected. Stopping training...";
+        private final String resetMessage = "\nResetting log likelihood.";
+        private final String instructionMessage = "\n#######################--OLRCrossFold Commands--#################################" + "\n# \"" + stopCommand + "\" will halt the training process and skip straight to classification.\t#" + "\n# \"" + getLogLikCommand
+                        + "\" will return the current running average log likelihood estimate.\t#" + "\n# \"" + resetLogLikCommand + "\" will reset the running average log likelihood statistic.\t\t#" + "\n#################################################################################";
+
+        public void terminateProcess() {
+
+            stop();
+            processTerminated = true;
+        }
+
+        public void commandLineStopListener() {
+
+            LOGGER.info(instructions());
+            processTerminated = false;
+            try (BufferedReader in = new BufferedReader(new InputStreamReader(System.in, FileManipulation.FILE_CHARSET))) {
+                String line;
+                while (true) {
+                    line = in.readLine();
+                    if (processInput(line)) break;
+                }
+                in.close();
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        private boolean processInput(String line) throws InterruptedException {
+
+            switch (line.toLowerCase()) {
+                case stopCommand:
+                    LOGGER.info(stopCalled());
+                    break;
+                case getLogLikCommand:
+                    LOGGER.info(getLogLik());
+                    break;
+                case resetLogLikCommand:
+                    LOGGER.info(resetLogLik());
+                    break;
+                default:
+                    LOGGER.info(instructions());
+            }
+            return line.equalsIgnoreCase(stopCommand) || processTerminated;
+        }
+
+        private String stopCalled() {
+
+            stop();
+            return stopMessage;
+        }
+
+        private String getLogLik() {
+
+            return logLikelihoodMessage + Double.toString(getAverageRunningLogLikelihood());
+        }
+
+        private String resetLogLik() throws InterruptedException {
+
+            final int threadSleepMillis = 10;
+            String message = getLogLik() + resetMessage;
+            resetRunningLogLikelihoods();
+            Thread.sleep(threadSleepMillis);
+            return message + getLogLik();
+        }
+
+        private String instructions() {
+
+            return instructionMessage;
+        }
+
+        @Override
+        public void run() {
+
+            commandLineStopListener();
+        }
     }
 }
