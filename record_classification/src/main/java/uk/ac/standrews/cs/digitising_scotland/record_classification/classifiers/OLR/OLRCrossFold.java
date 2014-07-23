@@ -1,6 +1,10 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.OLR;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -8,11 +12,13 @@ import java.util.Stack;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+
 import org.apache.mahout.math.Matrix;
 import org.apache.mahout.math.NamedVector;
 import org.apache.mahout.math.Vector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
 
 /**
@@ -38,10 +44,10 @@ public class OLRCrossFold {
     private Properties properties;
     private OLR classifier;
 
+    public double getAverageRunningLogLikelihood() {
 
-    public double getAverageRunningLogLikelihood(){
         double ll = 0.;
-        for (OLRPool model : models){
+        for (OLRPool model : models) {
             ll += model.getAverageRunningLogLikelihood();
         }
         ll /= models.size();
@@ -49,11 +55,11 @@ public class OLRCrossFold {
     }
 
     public void resetRunningLogLikelihoods() {
+
         for (OLRPool model : models) {
             model.resetRunningLogLikelihoods();
         }
     }
-
 
     /**
      * Constructor.
@@ -62,6 +68,7 @@ public class OLRCrossFold {
      * @param properties         properties
      */
     public OLRCrossFold(final ArrayList<NamedVector> trainingVectorList, final Properties properties) {
+
         this.properties = properties;
         getConfigOptions();
         ArrayList<NamedVector>[][] trainingVectors = CrossFoldedDataStructure.make(trainingVectorList, folds);
@@ -76,21 +83,24 @@ public class OLRCrossFold {
      * Stops training on all models in the {@link OLRPool}.
      */
     public void stop() {
+
         for (OLRPool model : models) {
             model.stop();
         }
     }
 
     public class StopListener implements Runnable {
+
         private boolean processTerminated;
 
+        public void terminateProcess() {
 
-        public void terminateProcess(){
             stop();
             processTerminated = true;
         }
 
         public void commandLineStopListener() throws IOException {
+
             processTerminated = false;
             try (BufferedReader in = new BufferedReader(new InputStreamReader(System.in, FileManipulation.FILE_CHARSET))) {
                 String line = "";
@@ -110,8 +120,9 @@ public class OLRCrossFold {
                         }
                     }
                     line = in.readLine();
-                    if(processTerminated)
+                    if (processTerminated) {
                         break;
+                    }
                 }
                 in.close();
             }
@@ -119,6 +130,7 @@ public class OLRCrossFold {
 
         @Override
         public void run() {
+
             try {
                 commandLineStopListener();
             }
@@ -132,6 +144,7 @@ public class OLRCrossFold {
      * trains models.
      */
     public void train() {
+
         checkTrainable();
         trainIfPossible();
     }
@@ -142,6 +155,7 @@ public class OLRCrossFold {
      * @throws InterruptedException the interrupted exception
      */
     private void trainAllModels() throws InterruptedException {
+
         StopListener stopListener = new StopListener();
         ExecutorService stopService = Executors.newFixedThreadPool(1);
         ExecutorService executorService = Executors.newFixedThreadPool(folds);
@@ -158,12 +172,14 @@ public class OLRCrossFold {
     }
 
     private void prepareClassifier() {
+
         List<OLRShuffled> survivors = getSurvivors();
         Matrix classifierMatrix = getClassifierMatrix(survivors);
         classifier = new OLR(classifierMatrix);
     }
 
     private List<OLRShuffled> getSurvivors() {
+
         List<OLRShuffled> survivors = new ArrayList<>();
         for (OLRPool model : models) {
             survivors.addAll(model.getSurvivors());
@@ -171,13 +187,14 @@ public class OLRCrossFold {
         return survivors;
     }
 
-    private Matrix getClassifierMatrix(List<OLRShuffled> survivors) {
+    private Matrix getClassifierMatrix(final List<OLRShuffled> survivors) {
+
         Stack<Matrix> matrices = new Stack<>();
-        for (OLRShuffled model : survivors){
+        for (OLRShuffled model : survivors) {
             matrices.add(model.getBeta());
         }
         Matrix classifierMatrix = matrices.pop();
-        while (!matrices.empty()){
+        while (!matrices.empty()) {
             classifierMatrix.plus(matrices.pop());
         }
         classifierMatrix.divide(survivors.size());
@@ -188,10 +205,12 @@ public class OLRCrossFold {
      * Train if possible.
      */
     private void trainIfPossible() {
+
         checkTrainable();
         try {
             this.trainAllModels();
-        } catch (InterruptedException e) {
+        }
+        catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
@@ -200,6 +219,7 @@ public class OLRCrossFold {
      * Check trainable.
      */
     private void checkTrainable() {
+
         if (!modelTrainable) { throw new UnsupportedOperationException("This model has no files to train " + "on and may only be used for classification."); }
     }
 
@@ -210,6 +230,7 @@ public class OLRCrossFold {
      * @return vector encoding probability distribution over output classes
      */
     public Vector classifyFull(final Vector instance) {
+
         return classifier.classifyFull(instance);
     }
 
@@ -220,7 +241,8 @@ public class OLRCrossFold {
      * @return log likelihood
      */
     public double logLikelihood(final int actual, final Vector instance) {
-        return classifier.logLikelihood(actual,instance);
+
+        return classifier.logLikelihood(actual, instance);
     }
 
     /**
@@ -229,6 +251,7 @@ public class OLRCrossFold {
      * @return the config options
      */
     private void getConfigOptions() {
+
         folds = Integer.parseInt(properties.getProperty("OLRFolds"));
     }
 
@@ -239,6 +262,7 @@ public class OLRCrossFold {
      * @throws IOException Signals that an I/O exception has occurred.
      */
     public void serializeModel(final String filename) throws IOException {
+
         DataOutputStream out = OLR.getDataOutputStream(filename);
         write(out);
         out.close();
@@ -252,6 +276,7 @@ public class OLRCrossFold {
      * @throws IOException Signals that an I/O exception has occurred.
      */
     public static OLRCrossFold deSerializeModel(final String filename) throws IOException {
+
         DataInputStream in = OLR.getDataInputStream(filename);
         OLRCrossFold olrCrossFold = new OLRCrossFold();
         olrCrossFold.readFields(in);
@@ -263,6 +288,7 @@ public class OLRCrossFold {
      * Instantiates a new OLR cross fold.
      */
     protected OLRCrossFold() {
+
         modelTrainable = false;
     }
 
@@ -273,6 +299,7 @@ public class OLRCrossFold {
      * @throws IOException Signals that an I/O exception has occurred.
      */
     protected void write(final DataOutputStream out) throws IOException {
+
         out.writeInt(models.size());
         for (OLRPool model : models) {
             model.write(out);

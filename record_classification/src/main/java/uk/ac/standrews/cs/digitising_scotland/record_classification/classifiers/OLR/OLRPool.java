@@ -3,13 +3,15 @@ package uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.mahout.math.DenseVector;
-import org.apache.mahout.math.Matrix;
 import org.apache.mahout.math.NamedVector;
 import org.apache.mahout.math.Vector;
 import org.apache.mahout.math.function.DoubleDoubleFunction;
@@ -18,7 +20,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.Lists;
-import uk.ac.standrews.cs.digitising_scotland.util.ArrayIterator;
 
 /**
  * Trains a number of models on the training vectors provided. These models are then used to make predictions
@@ -37,20 +38,19 @@ public class OLRPool implements Runnable {
     private ArrayList<NamedVector> testingVectorList = Lists.newArrayList();
     private ArrayList<OLRShuffled> survivors;
 
-
-//    public Iterator<Matrix> getBetas() {
-//        Matrix[] matrices = new Matrix[models.size()];
-//        for (int i = 0; i < models.size(); i++) {
-//            matrices[i] = models.get(i).getBeta();
-//        }
-//        return new ArrayIterator<>(matrices);
-//    }
-//
-//    public void setBetas(Matrix beta) {
-//        for(OLRShuffled model : models){
-//            model.setBeta(beta);
-//        }
-//    }
+    //    public Iterator<Matrix> getBetas() {
+    //        Matrix[] matrices = new Matrix[models.size()];
+    //        for (int i = 0; i < models.size(); i++) {
+    //            matrices[i] = models.get(i).getBeta();
+    //        }
+    //        return new ArrayIterator<>(matrices);
+    //    }
+    //
+    //    public void setBetas(Matrix beta) {
+    //        for(OLRShuffled model : models){
+    //            model.setBeta(beta);
+    //        }
+    //    }
 
     /**
      * Constructor.
@@ -75,16 +75,18 @@ public class OLRPool implements Runnable {
     public double getAverageRunningLogLikelihood() {
 
         double ll = 0.;
-        for (OLRShuffled model : models)
+        for (OLRShuffled model : models) {
             ll += model.getRunningLogLikelihood();
+        }
         ll /= models.size();
         return ll;
     }
 
     public void resetRunningLogLikelihoods() {
 
-        for (OLRShuffled model : models)
+        for (OLRShuffled model : models) {
             model.resetRunningLogLikelihood();
+        }
     }
 
     /**
