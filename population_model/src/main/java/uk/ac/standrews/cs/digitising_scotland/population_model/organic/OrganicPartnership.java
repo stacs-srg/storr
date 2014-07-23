@@ -20,7 +20,6 @@ import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.Div
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.DivorceAgeForMaleDistribution;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.DivorceInstigatedByGenderDistribution;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.UniformDistribution;
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.UniformSexDistribution;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IDFactory;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPartnership;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.PopulationLogic;
@@ -46,10 +45,10 @@ public final class OrganicPartnership implements IPartnership {
 	private static DivorceAgeForFemaleDistribution divorceAgeForFemaleDistribution = new DivorceAgeForFemaleDistribution(random);
 
 	// TODO Make distributions for these
-	private final static int MAX_NUMBER_CHILDREN = 5;
-	private final static int MAX_TIME_INTO_RELATIONSHIP_UNTIL_FIRST_BIRTH = 5;	
+	private static final int MAX_NUMBER_CHILDREN = 5;
+	private static final int MAX_TIME_INTO_RELATIONSHIP_UNTIL_FIRST_BIRTH = 5;
 	private static UniformDistribution numberOfChildrenDistribution = new UniformDistribution(0, MAX_NUMBER_CHILDREN, random);
-	private static UniformDistribution daysIntoPartnershipForBirthDistribution = new UniformDistribution(0, (int)(MAX_TIME_INTO_RELATIONSHIP_UNTIL_FIRST_BIRTH * OrganicPopulation.DAYS_PER_YEAR), random);
+	private static UniformDistribution daysIntoPartnershipForBirthDistribution = new UniformDistribution(0, (int) (MAX_TIME_INTO_RELATIONSHIP_UNTIL_FIRST_BIRTH * OrganicPopulation.DAYS_PER_YEAR), random);
 
 	private Integer id;
 	private Integer husband;
@@ -57,36 +56,35 @@ public final class OrganicPartnership implements IPartnership {
 	private OrganicTimeline timeline;
 	private int marriageDay;
 	private List<Integer> childrenIds = new ArrayList<Integer>();
-    private boolean on;
+	private boolean on;
 
-    private boolean isOn(){
-        return on;
-    }
+	private boolean isOn() {
+		return on;
+	}
 
-    /**
-     * Sets partnership on value to on indicating if the relationship has concluded.
-     */
-    public void turnOn(){
-        on = true;
-    }
+	/**
+	 * Sets partnership on value to on indicating if the relationship has concluded.
+	 */
+	public void turnOn() {
+		on = true;
+	}
 
-    /**
-     * Sets partnership on value to off indicating if the relationship has concluded.
-     */
-    public void turnOff(){
-        on = false;
-    }
+	/**
+	 * Sets partnership on value to off indicating if the relationship has concluded.
+	 */
+	public void turnOff() {
+		on = false;
+	}
 
-    /**
-     * Constructs partnership objects and returns both the partnership in the first field of the array and
-     * the partnerships first child in the second
-     * 
-     * @param id
-     * @param husband
-     * @param wife
-     * @param marriageDay
-     * @return
-     */
+	/**
+	 * Constructs partnership objects and returns both the partnership in the first field of the array and the partnerships first child in the second.
+	 * 
+	 * @param id Specifies the ID of the OrganicPartnership.
+	 * @param husband The OrganicPerson object representing the husband.
+	 * @param wife The OrganicPerson object representing the wife.
+	 * @param marriageDay The marriage day specified in days since 1/1/1600
+	 * @return Returns an object array of size 2, where at index 0 can be found the newly constructed OrganicPartnership and at index 1 the partnerships child (if no child then value is null)
+	 */
 	public static Object[] createOrganicPartnership(final int id, final OrganicPerson husband, final OrganicPerson wife, final int marriageDay) {
 		Object[] returns = new Object[2];
 		// Contains OrganicPartnership object
@@ -102,7 +100,7 @@ public final class OrganicPartnership implements IPartnership {
 		this.husband = husband.getId();
 		this.wife = wife.getId();
 		this.marriageDay = marriageDay;
-        this.turnOn();
+		this.turnOn();
 	}
 
 	private OrganicPerson createPartnershipTimeline(final OrganicPerson husband, final OrganicPerson wife) {
@@ -149,21 +147,22 @@ public final class OrganicPartnership implements IPartnership {
 		int dayOfBirth = daysIntoPartnershipForBirthDistribution.getSample();
 		int lastChildDay = 0;
 		OrganicPerson child = null;
-		
+
 		int count = 0;
 		// FIXME Find a solution that dosn't need a magic number
-		while(lastChildDay == 0 && count < 100) {
-			if(PopulationLogic.earliestAcceptableBirthDate(marriageDay, 0) < dayOfBirth + marriageDay) {
-				if (PopulationLogic.parentsHaveSensibleAgesAtChildBirth(husband.getBirthDay(), husband.getDeathDay(), wife.getBirthDay(), wife.getDeathDay(), dayOfBirth + marriageDay)) {
-					lastChildDay = dayOfBirth + marriageDay;
-					child = new OrganicPerson(IDFactory.getNextID(), lastChildDay, false);
-					childrenIds.add(child.getId());
-					timeline.addEvent(lastChildDay, new OrganicEvent(EventType.BIRTH));
-				}
+		while (lastChildDay == 0 && count < 100) {
+			if (PopulationLogic.earliestAcceptableBirthDate(marriageDay, 0) < dayOfBirth + marriageDay && 
+					PopulationLogic.parentsHaveSensibleAgesAtChildBirth(husband.getBirthDay(), husband.getDeathDay(), 
+							wife.getBirthDay(), wife.getDeathDay(), dayOfBirth + marriageDay)) {
+				lastChildDay = dayOfBirth + marriageDay;
+				child = new OrganicPerson(IDFactory.getNextID(), lastChildDay, false);
+				childrenIds.add(child.getId());
+				timeline.addEvent(lastChildDay, new OrganicEvent(EventType.BIRTH));
 			}
+
 			count++;
 		}
-		
+
 
 		return child;
 	}
@@ -177,9 +176,9 @@ public final class OrganicPartnership implements IPartnership {
 	}
 
 	/**
-	 * Returns the timeline of the partnership
+	 * Returns the timeline of the partnership.
 	 * 
-	 * @return
+	 * @return Returns the timeline of the partnership
 	 */
 	public OrganicTimeline getTimeline() {
 		return timeline;
@@ -231,7 +230,7 @@ public final class OrganicPartnership implements IPartnership {
 
 	@Override
 	public int compareTo(final IPartnership o) {
-		if(this.equals(o)) {
+		if (this.equals(o)) {
 			return 0;
 		}
 		return 1;

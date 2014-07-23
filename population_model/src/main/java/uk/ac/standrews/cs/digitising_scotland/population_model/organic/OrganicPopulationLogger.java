@@ -21,79 +21,101 @@ public class OrganicPopulationLogger {
     private static int population = 0;
     private static int marriages = 0;
     private static int births = 0;
-    private static int divorces_no_remmariage = 0;
+    private static int divorcesNoRemmariage = 0;
     private static int divorces;
-    private static int[] maleAgeAtMarriage = new int[100];
-    private static int[] femaleAgeAtMarriage = new int[100];
-    private static int[] ageDifferenceAtMarriage = new int[25];
+    private static final int MAX_AGE = 100;
+    private static int[] maleAgeAtMarriage = new int[MAX_AGE];
+    private static int[] femaleAgeAtMarriage = new int[MAX_AGE];
+    private static final int AGE_DIFFERENCE_AT_MARRIAGE_DISPLAY_UPTO = 21;
+    private static int[] ageDifferenceAtMarriage = new int[AGE_DIFFERENCE_AT_MARRIAGE_DISPLAY_UPTO];
 
+    /**
+     * Increments the size of the population.
+     */
     public static void incPopulation() {
         population++;
     }
 
+    /**
+     * Decrements the size if the poulation.
+     */
     public static void decPopulation() {
         population--;
     }
-    
+
+    /**
+     * Returns the size of the alive population.
+     * 
+     * @return The number of people alive in the population.
+     */
     public static int getPopulation() {
-    	return population;
+        return population;
     }
 
+    /**
+     * Increments the number of marriages.
+     */
     public static void incMarriages() {
         marriages++;
     }
 
-    public static void decMarriages() {
-        marriages--;
-    }
-
+    /**
+     * Increments the number of divorces.
+     */
     public static void incDivorces() {
         divorces++;
     }
 
+    /**
+     * Increments the number of divorces with no remarriages.
+     */
     public static void incDivorcesNoRemmariage() {
-        divorces_no_remmariage++;
+        divorcesNoRemmariage++;
     }
 
-    public static void decDivorcesNoRemmariage() {
-        divorces_no_remmariage++;
-    }
-
-    public static void decDivorces() {
-        divorces--;
-    }
-    
+    /**
+     * Increments the number of births.
+     */
     public static void incBirths() {
         births++;
     }
 
-    public static void addMaleAgeAtMarriage(int days) {
+    private static void addMaleAgeAtMarriage(final int days) {
         int years = (int) ((float) days / OrganicPopulation.DAYS_PER_YEAR);
         maleAgeAtMarriage[years]++;
     }
 
-    public static void addFemaleAgeAtMarriage(int days) {
+    private static void addFemaleAgeAtMarriage(final int days) {
         int years = (int) ((float) days / OrganicPopulation.DAYS_PER_YEAR);
         femaleAgeAtMarriage[years]++;
     }
 
-    public static void addAgeDifferenceAtMarriage(int maleDays, int femaleDays) {
+    private static void addAgeDifferenceAtMarriage(final int maleDays, final int femaleDays) {
         int difference = Math.abs(maleDays - femaleDays);
         int years = (int) ((float) difference / OrganicPopulation.DAYS_PER_YEAR);
         ageDifferenceAtMarriage[years]++;
     }
 
-    public static void logMarriage(int maleDays, int femaleDays) {
+    /**
+     * Logs all needed information pertaining to the marriage.
+     * 
+     * @param maleDays Males age in days at the point of marriage.
+     * @param femaleDays Females age in days at the point of marriage.
+     */
+    public static void logMarriage(final int maleDays, final int femaleDays) {
         incMarriages();
         addMaleAgeAtMarriage(maleDays);
         addFemaleAgeAtMarriage(femaleDays);
         addAgeDifferenceAtMarriage(maleDays, femaleDays);
     }
 
+    /**
+     * Prints out the data that has been logged from the simulation.
+     */
     public static void printLogData() {
-    	System.out.println();
-    	System.out.println("-------Population Logger-------");
-    	System.out.println();
+        System.out.println();
+        System.out.println("-------Population Logger-------");
+        System.out.println();
         System.out.println("Population: " + population);
         System.out.println("Marriages: " + marriages);
         System.out.println("Births: " + births);

@@ -34,9 +34,9 @@ public class FemaleFirstNameDistribution extends FileBasedEnumeratedDistribution
     /**
      * Creates a distribution of female first names.
      * 
-     * @param random
-     * @throws IOException
-     * @throws InconsistentWeightException
+     * @param random Takes in random for use in creation of distribution.
+     * @throws IOException Thrown in the event of an IOException.
+     * @throws InconsistentWeightException Thrown when the weights in the underlying distribution are found to be inconsistent.
      */
     public FemaleFirstNameDistribution(final Random random) throws IOException, InconsistentWeightException {
 

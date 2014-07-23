@@ -56,7 +56,6 @@ public class DivorceAgeForFemaleDistribution implements Distribution<Integer> {
      * 90-95   0
      * 95-100  0
      */
-	
 	private static final int MINIMUM_AGE_IN_YEARS = 15;
     private static final int MAXIMUM_AGE_IN_YEARS = 69;
     private static final int[] AGE_DISTRIBUTION_WEIGHTS = new int[]{6, 166, 222, 190, 150, 114, 82, 24, 24, 15, 7};
@@ -66,7 +65,7 @@ public class DivorceAgeForFemaleDistribution implements Distribution<Integer> {
     /**
      * Creates an age at female divorce distribution.
      *
-     * @param random the random number generator to be used
+     * @param random The random number generator to be used.
      */
     public DivorceAgeForFemaleDistribution(final Random random) {
         try {

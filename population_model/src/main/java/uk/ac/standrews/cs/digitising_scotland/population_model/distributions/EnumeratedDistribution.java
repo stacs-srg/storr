@@ -44,10 +44,10 @@ public class EnumeratedDistribution implements Distribution<String> {
     /**
      * Creates an Enumerated distribution.
      * 
-     * @param item_probabilities
-     * @param random
-     * @throws IOException
-     * @throws InconsistentWeightException
+     * @param item_probabilities Take in a map of strings and double pairings to be used in the creation of the distribution.
+     * @param random Takes in random for use in creation of distribution.
+     * @throws IOException Thrown in the event of an IOException.
+     * @throws InconsistentWeightException Thrown when the weights in the underlying distribution are found to be inconsistent.
      */
     public EnumeratedDistribution(final Map<String, Double> item_probabilities, final Random random) throws IOException, InconsistentWeightException {
 

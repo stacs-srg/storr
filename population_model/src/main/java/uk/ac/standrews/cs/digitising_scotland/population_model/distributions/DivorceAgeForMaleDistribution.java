@@ -67,7 +67,7 @@ public class DivorceAgeForMaleDistribution implements Distribution<Integer> {
     /**
      * Creates an age at divorce for males distribution.
      *
-     * @param random the random number generator to be used
+     * @param random The random number generator to be used.
      */
     public DivorceAgeForMaleDistribution(final Random random) {
         try {

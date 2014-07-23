@@ -16,8 +16,6 @@
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.distributions;
 
-import uk.ac.standrews.cs.digitising_scotland.population_model.util.RandomFactory;
-
 import java.util.Random;
 
 /**
@@ -25,7 +23,7 @@ import java.util.Random;
  *
  * Created by victor on 22/07/2014.
  */
-public class RemarriageDistribution implements Distribution<Boolean>{
+public class RemarriageDistribution implements Distribution<Boolean> {
 
 
     /**
@@ -37,13 +35,22 @@ public class RemarriageDistribution implements Distribution<Boolean>{
      */
 
     private final int PROBABILITY_OF_REMARRIAGE = 21;
+    private final int DISTRIBUTION_MAX_VALUE = 100;
 
-    Random rand = RandomFactory.getRandom();
-    private UniformDistribution dist = new UniformDistribution(1,100,rand);
+    private UniformDistribution distribution;
+    
+    /**
+     * Creates a Remarriage distribution.
+     * 
+     * @param random Takes in random for use in creation of distribution.
+     */
+    public RemarriageDistribution(final Random random) {
+		distribution = new UniformDistribution(1, DISTRIBUTION_MAX_VALUE ,random);
+	}
 
     @Override
     public Boolean getSample() {
-        int cent = dist.getSample();
+        int cent = distribution.getSample();
         return (cent <= PROBABILITY_OF_REMARRIAGE);
     }
 }

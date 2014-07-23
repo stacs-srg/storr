@@ -23,9 +23,9 @@ package uk.ac.standrews.cs.digitising_scotland.population_model.organic;
  * @author Tom Dalton (tsd4@st-andrews.ac.uk)
  */
 public enum EventType {
-	/**
-	 * Indicates the point in time where an individual should be added to a marriage queue.
-	 */
+    /**
+     * Indicates the point in time where an individual should be added to a marriage queue.
+     */
     ELIGIBLE_TO_MARRY,
     /**
      * Indicates the point in time where an individual should move location.

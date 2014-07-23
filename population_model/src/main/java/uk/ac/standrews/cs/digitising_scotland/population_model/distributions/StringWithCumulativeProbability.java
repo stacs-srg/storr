@@ -28,8 +28,8 @@ public class StringWithCumulativeProbability {
     /**
      * Creates a cumulative probability string.
      * 
-     * @param item
-     * @param cumulative_probability
+     * @param item The associated string.
+     * @param cumulative_probability The strings associated cumulative probability.
      */
     public StringWithCumulativeProbability(final String item, final double cumulative_probability) {
 
@@ -39,15 +39,17 @@ public class StringWithCumulativeProbability {
 
     /**
      * Returns item string.
-     * @return
+     * 
+     * @return Returns the associated string.
      */
     public String getItem() {
         return item;
     }
 
     /**
-     * Returns the cumulative probability petaining to the given item string.
-     * @return
+     * Returns the cumulative probability pertaining to the given item string.
+     * 
+     * @return Returns the associated cumulative probability.
      */
     public Double getCumulativeProbability() {
         return cumulative_probability;
