@@ -60,7 +60,7 @@ public class MachineLearningClassificationPipeline {
 
         this.cache = new TokenClassificationCache(classifier);
         recordCache = new HashMap<>();
-        prepopulateCache(trainingBucket);
+        prePopulateCache(trainingBucket);
     }
 
     /**
@@ -135,9 +135,9 @@ public class MachineLearningClassificationPipeline {
         }
 
         resolverMatrix.chopBelowConfidence(CONFIDENCE_CHOP_LEVEL);
-        System.out.println("Resolver matrix complexity: " + resolverMatrix.complexity());
+        System.out.println("Resolver matrix complexity before chop: " + resolverMatrix.complexity());
         List<Set<CodeTriple>> triples = resolverMatrix.getValidCodeTriples(cleanedTokenSet);
-
+        System.out.println("Resolver matrix complexity after chop: " + resolverMatrix.complexity());
         Set<CodeTriple> best;
         if (triples.size() > 0) {
             best = ResolverUtils.getBest(triples);
@@ -169,10 +169,10 @@ public class MachineLearningClassificationPipeline {
      *
      * @param trainingBucket the training bucket
      */
-    private void prepopulateCache(final Bucket trainingBucket) {
+    private void prePopulateCache(final Bucket trainingBucket) {
 
         for (Record record : trainingBucket) {
-            List<CodeTriple> singles = getSinglyCodedTripes(record);
+            List<CodeTriple> singles = getSinglyCodedTriples(record);
             cache.addAll(singles);
         }
 
@@ -184,7 +184,7 @@ public class MachineLearningClassificationPipeline {
      * @param record the record
      * @return the singly coded tripes
      */
-    protected List<CodeTriple> getSinglyCodedTripes(final Record record) {
+    protected List<CodeTriple> getSinglyCodedTriples(final Record record) {
 
         List<CodeTriple> singles = new ArrayList<>();
 

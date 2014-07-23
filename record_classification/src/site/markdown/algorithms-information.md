@@ -15,7 +15,7 @@ the model parameters change slightly in the direction suggested by that particul
 process for each record.
 
 #### The OLRShuffled Object
-This is the next level up in the model training algorithm architecture. This object contains and OLR object and a set of records. The OLRShuffled object implements the Runnable
+This is the next level up in the model training algorithm architecture. This object contains an OLR object and a set of records. The OLRShuffled object implements the Runnable
 interface - the run method calls a routine which shuffles the training files and trains the OLR object on them, this process of shuffling the records and training may be repeated for
 a chosen number of repetitions.
 
@@ -26,7 +26,7 @@ on this hold-out set. The models are ranked based upon their performance and the
 routine is only successful a certain percentage of the time - we simply discard the unsuccessful models.
 
 #### The OLRCrossFold Object
-The final layer of the model training algorithm architecture. This object contains a pool of OLRPool objects. We take the training data and partition it into 'folds' each OLRPool is trained
+The final layer of the model training algorithm architecture. This object contains a pool of OLRPool objects. We take the training data and partition it into 'folds': each OLRPool is trained
 and tested on a different fold of the data. e.g. if we choose to have 10 folds then we will have 10 OLRPools each being trained on a different 9 of the 10 folds (the fold that each model does not
 see in training is used for its internal evaluation routine). Once all of the models have been trained we average the model parameters of each model (just simple matrix addition) so that
 we end up with a final model for classification.
@@ -49,8 +49,12 @@ The set of n-gram tokens is then generated, where n ranges from 1 (unigrams) to 
 Each of token sets from the n-gram set is then classified using the machine learning models and a classification and confidence assigned to each code.
 
 From this result set of classified n-gram token sets, the set of 'valid' combinations of classifications are found. 
-A set of classifications is said to be 'valid' if it is a subset of the original token set.
+A set of classifications is said to be 'valid' if 1. the codes are harmonious (we do not allow codes which belong to the same branch in the hierarchy e.g. a general code for heart disease
+as well as a more specific code for heart disease would not be allowed in the same multiple classification) and  2. the union of the token sets ascribed to each classification 
+is a subset of the original token set (i.e. we do not allow token sets to overlap each other - if a word has been used to arrive at one code it may not be used in the classification
+of another in the same multiple classification set).
 
-Each valid result set is then passed through a loss function to determine the 'best' classification set. 
+Each valid result set is then passed through a loss function to determine the 'best' classification set. The loss function is akin to a set of rules that are used to make a decision
+between the possible sets multiple classifications that we could ascribe to a record.
 
-The best result set is then assigned to the original string. 
+The best result (the one that minimises the loss as defined by the loss function) set is then assigned to the original string.

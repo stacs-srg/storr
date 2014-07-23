@@ -93,9 +93,9 @@ public class ResolverMatrix {
      *
      * @return the int numerical representation of the complexity of the matrix.
      */
-    public int complexity() {
+    public long complexity() {
 
-        int complexity = 1;
+        long complexity = 1;
         for (Code code : matrix.keySet()) {
             if (matrix.get(code).size() > 0) {
                 complexity = complexity * matrix.get(code).size();

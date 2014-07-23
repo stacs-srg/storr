@@ -8,6 +8,7 @@ import java.util.Stack;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+
 import org.apache.mahout.math.Matrix;
 import org.apache.mahout.math.NamedVector;
 import org.apache.mahout.math.Vector;
@@ -25,23 +26,31 @@ public class OLRCrossFold {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(OLRCrossFold.class);
 
-    /** The model trainable. */
+    /**
+     * The model trainable.
+     */
     private final boolean modelTrainable;
 
-    /** The models. */
+    /**
+     * The models.
+     */
     private ArrayList<OLRPool> models = new ArrayList<>();
 
-    /** The folds. */
+    /**
+     * The folds.
+     */
     private int folds;
 
-    /** The properties. */
+    /**
+     * The properties.
+     */
     private Properties properties;
     private OLR classifier;
 
 
-    public double getAverageRunningLogLikelihood(){
+    public double getAverageRunningLogLikelihood() {
         double ll = 0.;
-        for (OLRPool model : models){
+        for (OLRPool model : models) {
             ll += model.getAverageRunningLogLikelihood();
         }
         ll /= models.size();
@@ -78,53 +87,6 @@ public class OLRCrossFold {
     public void stop() {
         for (OLRPool model : models) {
             model.stop();
-        }
-    }
-
-    public class StopListener implements Runnable {
-        private boolean processTerminated;
-
-
-        public void terminateProcess(){
-            stop();
-            processTerminated = true;
-        }
-
-        public void commandLineStopListener() throws IOException {
-            processTerminated = false;
-            try (BufferedReader in = new BufferedReader(new InputStreamReader(System.in, FileManipulation.FILE_CHARSET))) {
-                String line = "";
-                while (true) {
-                    if (line != null) {
-                        if (line.equalsIgnoreCase("stop")) {
-                            LOGGER.info("Stop call detected. Stopping training...");
-                            stop();
-                            break;
-                        }
-                        if (line.equalsIgnoreCase("getloglik")) {
-                            LOGGER.info(Double.toString(getAverageRunningLogLikelihood()));
-                        }
-                        if (line.equalsIgnoreCase("resetloglik")) {
-                            resetRunningLogLikelihoods();
-                            LOGGER.info("Running log likelihood reset.");
-                        }
-                    }
-                    line = in.readLine();
-                    if(processTerminated)
-                        break;
-                }
-                in.close();
-            }
-        }
-
-        @Override
-        public void run() {
-            try {
-                commandLineStopListener();
-            }
-            catch (IOException e) {
-                e.printStackTrace();
-            }
         }
     }
 
@@ -173,11 +135,11 @@ public class OLRCrossFold {
 
     private Matrix getClassifierMatrix(List<OLRShuffled> survivors) {
         Stack<Matrix> matrices = new Stack<>();
-        for (OLRShuffled model : survivors){
+        for (OLRShuffled model : survivors) {
             matrices.add(model.getBeta());
         }
         Matrix classifierMatrix = matrices.pop();
-        while (!matrices.empty()){
+        while (!matrices.empty()) {
             classifierMatrix.plus(matrices.pop());
         }
         classifierMatrix.divide(survivors.size());
@@ -200,7 +162,9 @@ public class OLRCrossFold {
      * Check trainable.
      */
     private void checkTrainable() {
-        if (!modelTrainable) { throw new UnsupportedOperationException("This model has no files to train " + "on and may only be used for classification."); }
+        if (!modelTrainable) {
+            throw new UnsupportedOperationException("This model has no files to train " + "on and may only be used for classification.");
+        }
     }
 
     /**
@@ -215,12 +179,13 @@ public class OLRCrossFold {
 
     /**
      * Gets the log likelihood averaged over the models in the pool.
-     * @param actual the actual classification
+     *
+     * @param actual   the actual classification
      * @param instance the instance vector
      * @return log likelihood
      */
     public double logLikelihood(final int actual, final Vector instance) {
-        return classifier.logLikelihood(actual,instance);
+        return classifier.logLikelihood(actual, instance);
     }
 
     /**
@@ -297,5 +262,90 @@ public class OLRCrossFold {
         OLR olr = new OLR();
         olr.readFields(in);
         classifier = olr;
+    }
+
+    public class StopListener implements Runnable {
+        private boolean processTerminated;
+        private final String stopCommand =
+                "stop";
+        private final String getLogLikCommand =
+                "getloglik";
+        private final String resetLogLikCommand =
+                "resetloglik";
+        private final String logLikelihoodMessage =
+                "\nLog likelihood is: ";
+        private final String stopMessage =
+                "\nStop call detected. Stopping training...";
+        private final String resetMessage =
+                "\nResetting log likelihood.";
+        private final String instructionMessage =
+                "\n#######################--OLRCrossFold Commands--#################################" +
+                "\n# \"" + stopCommand + "\" will halt the training process and skip straight to classification.\t#" +
+                "\n# \"" + getLogLikCommand + "\" will return the current running average log likelihood estimate.\t#" +
+                "\n# \"" + resetLogLikCommand + "\" will reset the running average log likelihood statistic.\t\t#" +
+                "\n#################################################################################";
+
+
+        public void terminateProcess() {
+            stop();
+            processTerminated = true;
+        }
+
+        public void commandLineStopListener() {
+            LOGGER.info(instructions());
+            processTerminated = false;
+            try (BufferedReader in = new BufferedReader(new InputStreamReader(System.in, FileManipulation.FILE_CHARSET))) {
+                String line;
+                while (true) {
+                    line = in.readLine();
+                    if (processInput(line)) break;
+                }
+                in.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        private boolean processInput(String line) throws InterruptedException {
+            switch (line.toLowerCase()) {
+                case stopCommand:
+                    LOGGER.info(stopCalled());
+                    break;
+                case getLogLikCommand:
+                    LOGGER.info(getLogLik());
+                    break;
+                case resetLogLikCommand:
+                    LOGGER.info(resetLogLik());
+                    break;
+                default:
+                    LOGGER.info(instructions());
+            }
+            return line.equalsIgnoreCase(stopCommand) || processTerminated;
+        }
+
+        private String stopCalled() {
+            stop();
+            return stopMessage;
+        }
+
+        private String getLogLik() {
+            return logLikelihoodMessage + Double.toString(getAverageRunningLogLikelihood());
+        }
+
+        private String resetLogLik() throws InterruptedException {
+            String message = getLogLik() + resetMessage;
+            resetRunningLogLikelihoods();
+            Thread.sleep(10);
+            return message + getLogLik();
+        }
+
+        private String instructions() {
+            return instructionMessage;
+        }
+
+        @Override
+        public void run() {
+            commandLineStopListener();
+        }
     }
 }
