@@ -21,8 +21,7 @@ public class OrganicPopulationLogger {
     private static int population = 0;
     private static int marriages = 0;
     private static int births = 0;
-    private static int divorcesNoRemmariage = 0;
-    private static int divorces;
+    private static int divorces = 0;
     private static final int MAX_AGE = 100;
     private static int[] maleAgeAtMarriage = new int[MAX_AGE];
     private static int[] femaleAgeAtMarriage = new int[MAX_AGE];
@@ -67,13 +66,6 @@ public class OrganicPopulationLogger {
     }
 
     /**
-     * Increments the number of divorces with no remarriages.
-     */
-    public static void incDivorcesNoRemmariage() {
-        divorcesNoRemmariage++;
-    }
-
-    /**
      * Increments the number of births.
      */
     public static void incBirths() {
@@ -107,6 +99,10 @@ public class OrganicPopulationLogger {
         addMaleAgeAtMarriage(maleDays);
         addFemaleAgeAtMarriage(femaleDays);
         addAgeDifferenceAtMarriage(maleDays, femaleDays);
+    }
+
+    public static void logDivorce() {
+        incDivorces();
     }
 
     /**

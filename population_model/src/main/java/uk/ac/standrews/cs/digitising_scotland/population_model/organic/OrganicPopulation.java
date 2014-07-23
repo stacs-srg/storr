@@ -18,7 +18,6 @@ package uk.ac.standrews.cs.digitising_scotland.population_model.organic;
 
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.AgeAtDeathDistribution;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.Distribution;
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.RemarriageDistribution;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.*;
 import uk.ac.standrews.cs.digitising_scotland.population_model.util.RandomFactory;
 import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
@@ -61,7 +60,6 @@ public class OrganicPopulation implements IPopulation {
 
     private Random random = RandomFactory.getRandom();
     private Distribution<Integer> age_at_death_distribution = new AgeAtDeathDistribution(random);
-
     private List<OrganicPerson> people = new ArrayList<OrganicPerson>();
     private List<OrganicPartnership> partnerships = new ArrayList<OrganicPartnership>();
 
@@ -287,22 +285,10 @@ public class OrganicPopulation implements IPopulation {
                                 case BIRTH:
 
                                     break;
-                                case DIVORCE:
-                                    RemarriageDistribution remmariageDist = new RemarriageDistribution(random);
-                                    OrganicPopulationLogger.incDivorces();
-
-                                    partnerships.get(i).turnOff();
-
-                                    if (remmariageDist.getSample()) {
-                                        // Get right back on the horse.
-
-                                    }
-                                    else {
-
-                                        //Forever alone
-                                        OrganicPopulationLogger.incDivorcesNoRemmariage();
-                                    }
+                                case DIVORCE: {
+                                    divorce(partnerships.get(i));
                                     break;
+                                }
                                 case PARTNERSHIP_ENDED_BY_DEATH:
 
                                 default:
@@ -319,6 +305,22 @@ public class OrganicPopulation implements IPopulation {
             //            System.out.println();
         }
 
+    }
+
+    public void divorce(OrganicPartnership partnership){
+
+        OrganicPopulationLogger.logDivorce();
+
+        partnership.turnOff();
+        int husbandID = partnership.getMalePartnerId();
+        int wifeID = partnership.getFemalePartnerId();
+
+        OrganicPerson husband, wife;
+        husband = (OrganicPerson)findPerson(husbandID);
+        wife = (OrganicPerson)findPerson(wifeID);
+
+        husband.updateTimeline(EventType.DIVORCE);
+        wife.updateTimeline(EventType.DIVORCE);
     }
 
     private void removePersonFromSystem(final OrganicPerson person) {

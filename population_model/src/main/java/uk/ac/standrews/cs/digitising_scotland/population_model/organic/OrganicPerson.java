@@ -16,11 +16,7 @@
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.organic;
 
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.Distribution;
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.FemaleAgeAtMarriageDistribution;
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.MaleAgeAtMarriageDistribution;
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.UniformDistribution;
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.UniformSexDistribution;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.*;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPerson;
 import uk.ac.standrews.cs.digitising_scotland.population_model.util.RandomFactory;
 import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
@@ -46,6 +42,8 @@ public class OrganicPerson implements IPerson {
 
     private static Random random = RandomFactory.getRandom();
     private static final int MAX_AGE = 100;
+    private static Distribution<Integer> uniformDistribution;
+    private static RemarriageDistribution remmariageDist = new RemarriageDistribution(random);
     private static Distribution<Integer> seed_age_distribution = new UniformDistribution(0, MAX_AGE, random);
     private static Distribution<Integer> seed_death_distribution = new UniformDistribution(0, MAX_AGE, random);
     private static Distribution<Integer> maleAgeAtMarriageDistribution = new MaleAgeAtMarriageDistribution(random);
@@ -139,6 +137,27 @@ public class OrganicPerson implements IPerson {
 
     }
 
+    /**
+     * Changes, adds or removes events on timeline.
+     */
+    public void updateTimeline(EventType trigger){
+
+        //Change events on timeline as needed.
+
+        switch (trigger) {
+            case DIVORCE: {
+                if(remmariageDist.getSample()) {
+                    addEligibleToReMarryEvent(this.getTimeline().getEndDate());
+                }
+            }
+            case PARTNERSHIP_ENDED_BY_DEATH:
+
+            default:
+                break;
+        }
+
+    }
+
     private void addEligibleToMarryEvent() {
         // Add ELIGIBLE_TO_MARRY event
         int date;
@@ -153,6 +172,21 @@ public class OrganicPerson implements IPerson {
             if(date < getDeathDay())
             	timeline.addEvent(date, new OrganicEvent(EventType.ELIGIBLE_TO_MARRY));
         }
+    }
+
+    /**
+     * To be called in the case of remarriage after ended partnership.
+     *
+     * @param minimumDate the new marriage event will be placed AFTER this date
+     */
+    private void addEligibleToReMarryEvent(int minimumDate) {
+
+        // Add ELIGIBLE_TO_MARRY event
+        int date;
+        uniformDistribution = new UniformDistribution(minimumDate, getDeathDay(), random);
+        date = minimumDate + uniformDistribution.getSample();
+        if(date < getDeathDay())
+            timeline.addEvent(date, new OrganicEvent(EventType.ELIGIBLE_TO_MARRY));
     }
 
     /**
