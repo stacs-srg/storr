@@ -114,7 +114,7 @@ public class OrganicPerson implements IPerson {
 
 
         if (seedGeneration) {
-            dayOfBirth = DateManipulation.dateToDays(OrganicPopulation.START_YEAR, 0, 0) - ageOfDeathInDays;
+            dayOfBirth = DateManipulation.dateToDays(OrganicPopulation.START_YEAR, 0, 0) + seed_death_distribution.getSample() * 365 - ageOfDeathInDays;
 
             if (dayOfBirth < OrganicPopulation.getEarliestDate()) {
                 OrganicPopulation.setEarliestDate(dayOfBirth);
