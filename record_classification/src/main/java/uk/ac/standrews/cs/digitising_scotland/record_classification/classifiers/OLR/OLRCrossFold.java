@@ -49,7 +49,6 @@ public class OLRCrossFold {
     }
 
     public void resetRunningLogLikelihoods() {
-
         for (OLRPool model : models) {
             model.resetRunningLogLikelihoods();
         }
@@ -63,7 +62,6 @@ public class OLRCrossFold {
      * @param properties         properties
      */
     public OLRCrossFold(final ArrayList<NamedVector> trainingVectorList, final Properties properties) {
-
         this.properties = properties;
         getConfigOptions();
         ArrayList<NamedVector>[][] trainingVectors = CrossFoldedDataStructure.make(trainingVectorList, folds);
@@ -78,14 +76,13 @@ public class OLRCrossFold {
      * Stops training on all models in the {@link OLRPool}.
      */
     public void stop() {
-
         for (OLRPool model : models) {
             model.stop();
         }
     }
 
     public class StopListener implements Runnable {
-        private boolean processTerminated = false;
+        private boolean processTerminated;
 
 
         public void terminateProcess(){
@@ -97,7 +94,6 @@ public class OLRCrossFold {
             processTerminated = false;
             try (BufferedReader in = new BufferedReader(new InputStreamReader(System.in, FileManipulation.FILE_CHARSET))) {
                 String line = "";
-
                 while (true) {
                     if (line != null) {
                         if (line.equalsIgnoreCase("stop")) {
@@ -117,14 +113,12 @@ public class OLRCrossFold {
                     if(processTerminated)
                         break;
                 }
-
                 in.close();
             }
         }
 
         @Override
         public void run() {
-
             try {
                 commandLineStopListener();
             }
@@ -132,14 +126,12 @@ public class OLRCrossFold {
                 e.printStackTrace();
             }
         }
-
     }
 
     /**
      * trains models.
      */
     public void train() {
-
         checkTrainable();
         trainIfPossible();
     }
@@ -150,7 +142,6 @@ public class OLRCrossFold {
      * @throws InterruptedException the interrupted exception
      */
     private void trainAllModels() throws InterruptedException {
-
         StopListener stopListener = new StopListener();
         ExecutorService stopService = Executors.newFixedThreadPool(1);
         ExecutorService executorService = Executors.newFixedThreadPool(folds);
@@ -163,10 +154,7 @@ public class OLRCrossFold {
         executorService.awaitTermination(timeout, TimeUnit.DAYS);
         stopListener.terminateProcess();
         stopService.shutdown();
-
-
         prepareClassifier();
-
     }
 
     private void prepareClassifier() {
@@ -177,7 +165,6 @@ public class OLRCrossFold {
 
     private List<OLRShuffled> getSurvivors() {
         List<OLRShuffled> survivors = new ArrayList<>();
-
         for (OLRPool model : models) {
             survivors.addAll(model.getSurvivors());
         }
@@ -189,7 +176,6 @@ public class OLRCrossFold {
         for (OLRShuffled model : survivors){
             matrices.add(model.getBeta());
         }
-
         Matrix classifierMatrix = matrices.pop();
         while (!matrices.empty()){
             classifierMatrix.plus(matrices.pop());
@@ -202,9 +188,7 @@ public class OLRCrossFold {
      * Train if possible.
      */
     private void trainIfPossible() {
-
         checkTrainable();
-
         try {
             this.trainAllModels();
         } catch (InterruptedException e) {
@@ -216,7 +200,6 @@ public class OLRCrossFold {
      * Check trainable.
      */
     private void checkTrainable() {
-
         if (!modelTrainable) { throw new UnsupportedOperationException("This model has no files to train " + "on and may only be used for classification."); }
     }
 
@@ -227,13 +210,6 @@ public class OLRCrossFold {
      * @return vector encoding probability distribution over output classes
      */
     public Vector classifyFull(final Vector instance) {
-
-//        Vector r = new DenseVector(numCategories());
-//        DoubleDoubleFunction scale = Functions.plusMult(1.0 / (models.size()));
-//        for (OLRPool model : models) {
-//            r.assign(model.classifyFull(instance), scale);
-//        }
-//        return r;
         return classifier.classifyFull(instance);
     }
 
@@ -244,12 +220,6 @@ public class OLRCrossFold {
      * @return log likelihood
      */
     public double logLikelihood(final int actual, final Vector instance) {
-
-//        double logLikelihood = 0;
-//        for (OLRPool model : models) {
-//            logLikelihood += model.logLikelihood(actual, instance) / models.size();
-//        }
-//        return logLikelihood;
         return classifier.logLikelihood(actual,instance);
     }
 
@@ -259,18 +229,7 @@ public class OLRCrossFold {
      * @return the config options
      */
     private void getConfigOptions() {
-
         folds = Integer.parseInt(properties.getProperty("OLRFolds"));
-    }
-
-    /**
-     * Num categories.
-     *
-     * @return the int
-     */
-    protected int numCategories() {
-
-        return models.get(0).numCategories();
     }
 
     /**
@@ -280,7 +239,6 @@ public class OLRCrossFold {
      * @throws IOException Signals that an I/O exception has occurred.
      */
     public void serializeModel(final String filename) throws IOException {
-
         DataOutputStream out = OLR.getDataOutputStream(filename);
         write(out);
         out.close();
@@ -294,7 +252,6 @@ public class OLRCrossFold {
      * @throws IOException Signals that an I/O exception has occurred.
      */
     public static OLRCrossFold deSerializeModel(final String filename) throws IOException {
-
         DataInputStream in = OLR.getDataInputStream(filename);
         OLRCrossFold olrCrossFold = new OLRCrossFold();
         olrCrossFold.readFields(in);
@@ -306,7 +263,6 @@ public class OLRCrossFold {
      * Instantiates a new OLR cross fold.
      */
     protected OLRCrossFold() {
-
         modelTrainable = false;
     }
 
@@ -317,7 +273,6 @@ public class OLRCrossFold {
      * @throws IOException Signals that an I/O exception has occurred.
      */
     protected void write(final DataOutputStream out) throws IOException {
-
         out.writeInt(models.size());
         for (OLRPool model : models) {
             model.write(out);

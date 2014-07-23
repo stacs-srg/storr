@@ -40,21 +40,8 @@ import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearnin
 public class OLR {
 
     private Gradient gradient = new Gradient();
-
-    public Matrix getBeta() {
-        return beta;
-    }
-
-    public void setBeta(Matrix beta) {
-        this.beta = beta;
-    }
-
     protected org.apache.mahout.math.Matrix beta;
-
     private Properties properties;
-
-    //set in properties
-    //TODO OLR parameters object?
     private double mu0;
     private L1 prior;
     private double decayFactor;
@@ -72,6 +59,13 @@ public class OLR {
     public int getStep() {
 
         return step;
+    }
+
+    public Matrix getBeta() {
+        return beta;
+    }
+    public void setBeta(Matrix beta) {
+        this.beta = beta;
     }
 
     public Vector classifyFull(final Vector instance) {

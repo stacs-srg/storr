@@ -118,10 +118,10 @@ public class ResolverMatrix {
         keySet.addAll(matrix.keySet());
 
         for (Code code : keySet) {
-            Code anscestor = ResolverUtils.whichCodeIsAncestorOfCodeInSet(code, keySet);
-            if (anscestor != null) {
-                matrix.get(code).addAll(matrix.get(anscestor));
-                matrix.remove(anscestor);
+            Code ancestor = ResolverUtils.whichCodeIsAncestorOfCodeInSet(code, keySet);
+            if (ancestor != null) {
+                matrix.get(code).addAll(matrix.get(ancestor));
+                matrix.remove(ancestor);
             }
         }
     }
@@ -133,8 +133,8 @@ public class ResolverMatrix {
      * @param codeTriples the pairs
      * @param code        the code
      */
-    private void merge(final List<Set<CodeTriple>> merged, final List<CodeTriple> codeTriples, final Code code, final TokenSet originalSet) {
-
+    private void merge(final List<Set<CodeTriple>> merged, final List<CodeTriple> codeTriples,
+                       final Code code, final TokenSet originalSet) {
         List<Set<CodeTriple>> temporaryMerge = new ArrayList<>();
         for (Set<CodeTriple> tripleSet : merged) {
             for (CodeTriple triple : codeTriples) {

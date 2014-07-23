@@ -18,20 +18,29 @@ package uk.ac.standrews.cs.digitising_scotland.population_model.organic;
 
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.AgeAtDeathDistribution;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.Distribution;
+<<<<<<< local
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.*;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.in_memory.CompactPopulation;
+=======
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.RemarriageDistribution;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IDFactory;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPartnership;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPerson;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPopulation;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.PopulationLogic;
+>>>>>>> other
 import uk.ac.standrews.cs.digitising_scotland.population_model.util.RandomFactory;
 import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
 
+<<<<<<< local
+import java.util.*;
+=======
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
+>>>>>>> other
 
 /**
  * Created by victor on 11/06/14.
@@ -104,45 +113,48 @@ public class OrganicPopulation implements IPopulation {
      * Marries up people found in the marriage queues.
      */
     public void marryUpPeople() {
+        // Sets the IDs for the first individuals in each marriage list to null
         Integer firstMaleId = (Integer) null;
         Integer firstFemaleId = (Integer) null;
+
+        // While males exist to be married
         while (!malePartnershipQueue.isEmpty()) {
+            // Sets first male ID value to that of the first male
             if (firstMaleId == (Integer) null) {
                 firstMaleId = malePartnershipQueue.getFirst().getId();
+                // If the ID of the next male matches that of the first male then none of the remaining males are sutible to be married to any of the aviliable females
             } else if (malePartnershipQueue.getFirst().getId() == firstMaleId) {
-                firstMaleId = (Integer) null;
-                // reset female list
-                if (!femalePartnershipQueue.isEmpty()) {
-                    if (firstFemaleId == (Integer) null) {
-                        break;
-                    }
-                    while (femalePartnershipQueue.getFirst().getId() != firstFemaleId) {
-                        femalePartnershipQueue.add(femalePartnershipQueue.removeFirst());
-                        femaleInitialPartnershipOrderer.add(femaleInitialPartnershipOrderer.removeFirst());
-                    }
-                }
-                firstFemaleId = (Integer) null;
                 break;
             }
+            // While there are female in the marriage queue
             while (!femalePartnershipQueue.isEmpty()) {
+                // Sets first female ID value to that the first female
                 if (firstFemaleId == null) {
                     firstFemaleId = femalePartnershipQueue.getFirst().getId();
+                    // If the ID of the next female matches that of the first female then all females have been considered in relation to the
+                    //  currently considered female and none have been sutiable.
                 } else if (femalePartnershipQueue.getFirst().getId() == firstFemaleId) {
-                    firstFemaleId = (Integer) null;
+                    // Move next male to head of queue for consideration
                     malePartnershipQueue.add(malePartnershipQueue.removeFirst());
                     maleInitialPartnershipOrderer.add(maleInitialPartnershipOrderer.removeFirst());
-                    break;
+                    // If new lead male is same as first male then no man eligable to marry any female - thus break 
+                    if(malePartnershipQueue.getFirst().getId() == firstMaleId) {
+                        break;
+                    }
                 }
+                // If the two individuals meet the marriage conditions
                 if (eligableToMarry(malePartnershipQueue.getFirst(), femalePartnershipQueue.getFirst())) {
-                    // Calculate marriage date
-                    // Finds first day both were eligible to marry
+                    // Then calculate marriage date
+                    // Finds first day BOTH were eligible to marry
                     int firstDay = maleInitialPartnershipOrderer.getFirst();
                     if (femaleInitialPartnershipOrderer.getFirst() > firstDay) {
                         firstDay = femaleInitialPartnershipOrderer.getFirst();
                     }
-
+                    
+                    // Marries individuals
                     marry(malePartnershipQueue.getFirst(), femalePartnershipQueue.getFirst(), currentDay);
 
+                    // Holds IDs of both partners
                     int maleId = malePartnershipQueue.getFirst().getId();
                     int femaleId = femalePartnershipQueue.getFirst().getId();
 
@@ -171,6 +183,7 @@ public class OrganicPopulation implements IPopulation {
                     firstFemaleId = (Integer) null;
                     break;
                 } else {
+                	// Else if couple not elligable to marry move onto consider male with next female
                     femalePartnershipQueue.add(femalePartnershipQueue.removeFirst());
                     femaleInitialPartnershipOrderer.add(femaleInitialPartnershipOrderer.removeFirst());
                 }
@@ -244,6 +257,7 @@ public class OrganicPopulation implements IPopulation {
                         if (people.get(i).getTimeline().isDateAvailable(currentDay)) {
                             event = people.get(i).getTimeline().getEvent(currentDay).getEventType();
                             //deal with event
+                            
                             switch (event) {
                             case ELIGIBLE_TO_MARRY:
                                 if (people.get(i).getSex() == 'M') {
@@ -297,7 +311,7 @@ public class OrganicPopulation implements IPopulation {
                                     //Forever alone
                                     OrganicPopulationLogger.incDivorcesNoRemmariage();
                                 }
-                            break;
+                                break;
                             case PARTNERSHIP_ENDED_BY_DEATH:
 
                             default:
@@ -308,35 +322,24 @@ public class OrganicPopulation implements IPopulation {
 
                 }
             }
-
+//            for(int i = 0; i < malePartnershipQueue.size(); i++)
+//            	System.out.print(malePartnershipQueue.get(i).getId() + ", ");
+//            
+//            System.out.println();
         }
+        
     }
 
-    // FIXME This isn't achieving what I want it to - some people are still in the marriage queues after death
+    
     private void removePersonFromSystem(final OrganicPerson person) {
-        //        if(person.getPartnerships().size() == 0) {
-        //            System.out.println("Check me");
-        //        }
         if (person.getSex() == 'M') {
-            int index = -1;
-            for (int i = 0; i < malePartnershipQueue.size(); i++) {
-                if (person.getId() == malePartnershipQueue.get(i).getId()) {
-                    index = i;
-                }
-            }
-            //            int index = malePartnershipQueue.indexOf(person);
+            int index = malePartnershipQueue.indexOf(person);
             if (index != -1) {
                 malePartnershipQueue.remove(index);
                 maleInitialPartnershipOrderer.remove(index);
             }
         } else {
-            int index = -1;
-            for (int i = 0; i < femalePartnershipQueue.size(); i++) {
-                if (person.getId() == femalePartnershipQueue.get(i).getId()) {
-                    index = i;
-                }
-            }
-            //            int index = femalePartnershipQueue.indexOf(person);
+            int index = femalePartnershipQueue.indexOf(person);
             if (index != -1) {
                 femalePartnershipQueue.remove(index);
                 femaleInitialPartnershipOrderer.remove(index);
@@ -399,7 +402,7 @@ public class OrganicPopulation implements IPopulation {
                         iterator.remove();
                     }
                 };
-                
+
             }
         };
     }
@@ -408,7 +411,7 @@ public class OrganicPopulation implements IPopulation {
     public IPerson findPerson(final int id) {
         int index, binaryStep;
         for (binaryStep = 1; binaryStep < people.size(); binaryStep <<= 1) {
-        	continue;
+            continue;
         }
         for (index = 0; binaryStep != 0; binaryStep >>= 1) {
             if (index + binaryStep < people.size() && people.get(index + binaryStep).getId() <= id) {
@@ -426,7 +429,7 @@ public class OrganicPopulation implements IPopulation {
     public IPartnership findPartnership(final int id) {
         int index, binaryStep;
         for (binaryStep = 1; binaryStep < partnerships.size(); binaryStep <<= 1) {
-        	continue;
+            continue;
         }
         for (index = 0; binaryStep != 0; binaryStep >>= 1) {
             if (index + binaryStep < partnerships.size() && partnerships.get(index + binaryStep).getId() <= id) {
@@ -465,7 +468,7 @@ public class OrganicPopulation implements IPopulation {
      * 
      * @param args
      */
-    public static void main(final String[] args) {
+     public static void main(final String[] args) {
         System.out.println("--------MAIN HERE---------");
         OrganicPopulation op = new OrganicPopulation();
         op.makeSeed();
@@ -474,8 +477,8 @@ public class OrganicPopulation implements IPopulation {
 
         //        System.out.println("--------PEOPLE--------");
         //        for (int i = 0; i < op.getNumberOfPeople(); i++) {
-        //            System.out.println();
-        //            System.out.println("BORN: " + op.people.get(i).getBirthDate());
+            //            System.out.println();
+            //            System.out.println("BORN: " + op.people.get(i).getBirthDate());
         //            System.out.println("DIED: " + op.people.get(i).getDeathDate());
         //            int x = (DateManipulation.dateToDays(op.people.get(i).getDeathDate()) - DateManipulation.dateToDays(op.people.get(i).getBirthDate()))/365;
         //            System.out.println("ALIVE FOR: " + x);
@@ -493,25 +496,27 @@ public class OrganicPopulation implements IPopulation {
         OrganicPopulationLogger.printLogData();
         System.out.println("Female Marriage Queue Size: " + op.femalePartnershipQueue.size());
         System.out.println("Male Marriage Queue Size: " + op.malePartnershipQueue.size());
+        for(int i = 0; i < op.malePartnershipQueue.size(); i++)
+        	System.out.print(op.malePartnershipQueue.get(i) + ", ");
 
-    }
+     }
 
-    /**
-     * Returns the earliestDate in days since the 1/1/1600.
-     * 
-     * @return The earliestDate in days since the 1/1/1600.
-     */
-    public static int getEarliestDate() {
-        return earliestDate;
-    }
+     /**
+      * Returns the earliestDate in days since the 1/1/1600.
+      * 
+      * @return The earliestDate in days since the 1/1/1600.
+      */
+     public static int getEarliestDate() {
+         return earliestDate;
+     }
 
-    /**
-     * Sets the earliest date field to the specified date.
-     * 
-     * @param earlyDate The value which earliestDate is to be set to.
-     */
-    public static void setEarliestDate(int earlyDate) {
-        earliestDate = earlyDate;
-    }
+     /**
+      * Sets the earliest date field to the specified date.
+      * 
+      * @param earlyDate The value which earliestDate is to be set to.
+      */
+     public static void setEarliestDate(int earlyDate) {
+         earliestDate = earlyDate;
+     }
 
 }

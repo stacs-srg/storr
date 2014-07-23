@@ -51,6 +51,6 @@ public class RemarriageDistribution implements Distribution<Boolean> {
     @Override
     public Boolean getSample() {
         int cent = distribution.getSample();
-        return (cent <= PROBABILITY_OF_REMARRIAGE);
+        return cent <= PROBABILITY_OF_REMARRIAGE;
     }
 }

@@ -76,7 +76,6 @@ public class OLRPool implements Runnable {
 
         double ll = 0.;
         for (OLRShuffled model : models)
-            //TODO do this only for hypothetically surviving models?
             ll += model.getRunningLogLikelihood();
         ll /= models.size();
         return ll;
