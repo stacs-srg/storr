@@ -145,11 +145,13 @@ public class OrganicPerson implements IPerson {
         if (sex == 'M') {
             // time in days to birth from 1/1/1600 + marriage age in days
             date = getBirthDay() + maleAgeAtMarriageDistribution.getSample();
-            timeline.addEvent(date, new OrganicEvent(EventType.ELIGIBLE_TO_MARRY));
+            if(date < getDeathDay())
+            	timeline.addEvent(date, new OrganicEvent(EventType.ELIGIBLE_TO_MARRY));
         } else {
             // time in days to birth from 1/1/1600 + marriage age in days
             date = getBirthDay() + femaleAgeAtMarriageDistribution.getSample();
-            timeline.addEvent(date, new OrganicEvent(EventType.ELIGIBLE_TO_MARRY));
+            if(date < getDeathDay())
+            	timeline.addEvent(date, new OrganicEvent(EventType.ELIGIBLE_TO_MARRY));
         }
     }
 

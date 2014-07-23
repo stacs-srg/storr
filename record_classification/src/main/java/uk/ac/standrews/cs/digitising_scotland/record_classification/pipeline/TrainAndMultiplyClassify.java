@@ -92,8 +92,7 @@ public final class TrainAndMultiplyClassify {
     public static void main(final String[] args) throws Exception {
 
         // TODO split this up!
-        Timer timer = new Timer();
-        timer.start();
+        Timer timer = initAndStartTimer();
         setupExperimentalFolders("Experiments");
 
         File training = new File(args[0]);
@@ -148,7 +147,14 @@ public final class TrainAndMultiplyClassify {
         timer.stop();
 
         LOGGER.info("Elapsed Time: " + timer.elapsedTime());
-        LOGGER.info("Codes that were null and weren't adter chopping: " + CodeFactory.getInstance().getCodeMapNullCounter());
+
+    }
+
+    private static Timer initAndStartTimer() {
+
+        Timer timer = new Timer();
+        timer.start();
+        return timer;
     }
 
     private static void printStatusUpdate() {
