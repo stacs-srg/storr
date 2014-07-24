@@ -10,6 +10,7 @@ import java.util.Properties;
 
 import org.apache.mahout.math.NamedVector;
 import org.apache.mahout.math.Vector;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -44,6 +45,9 @@ public class OLRCrossFoldTest {
     @Before
     public void setup() throws IOException {
 
+        if (!new File("target/olrModelPath").delete()) {
+            System.err.println("Could not clean up all resources.");
+        }
         CodeFactory.getInstance().loadDictionary(new File("target/test-classes/CodeFactoryTestFile.txt"));
         vectorFactory = new VectorFactory();
         populateDictionary();
@@ -53,6 +57,14 @@ public class OLRCrossFoldTest {
         model = new OLRCrossFold(trainingVectorList, properties);
         model.train();
 
+    }
+
+    @After
+    public void tearDown() {
+
+        if (!new File("target/testOLRCrossfoldWrite.txt").delete()) {
+            System.err.println("Could not clean up all resources.");
+        }
     }
 
     /**

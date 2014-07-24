@@ -10,6 +10,7 @@ import java.util.Properties;
 
 import org.apache.mahout.math.NamedVector;
 import org.apache.mahout.math.Vector;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -51,6 +52,14 @@ public class OLRShuffledTest {
         trainingVectorList = generateTrainingVectors();
         model = new OLRShuffled(properties, trainingVectorList);
         model.run();
+    }
+
+    @After
+    public void tearDown() {
+
+        if (!new File("target/testOLRShuffledWrite.txt").delete()) {
+            System.err.println("Could not clean up all resources.");
+        }
     }
 
     /**
