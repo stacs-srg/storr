@@ -24,7 +24,7 @@ import java.util.Random;
  * @author Alan Dearle (alan.dearle@st-andrews.ac.uk)
  * @author Graham Kirby (graham.kirby@st-andrews.ac.uk)
  */
-public class UniformDistribution implements Distribution<Integer> {
+public class UniformIntegerDistribution implements Distribution<Integer> {
 
     private final int lowest;
     private final int range;
@@ -37,7 +37,7 @@ public class UniformDistribution implements Distribution<Integer> {
      * @param highest the highest value in the range
      * @param random the random number generator to be used
      */
-    public UniformDistribution(final int lowest, final int highest, final Random random) {
+    public UniformIntegerDistribution(final int lowest, final int highest, final Random random) {
 
         this.lowest = lowest;
         range = highest - lowest + 1;

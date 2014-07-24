@@ -16,11 +16,16 @@
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.model.in_memory;
 
+import uk.ac.standrews.cs.digitising_scotland.population_model.config.PopulationProperties;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.FileBasedEnumeratedDistribution;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.InconsistentWeightException;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.AbstractPartnership;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPartnership;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.RandomFactory;
 import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
 
 import javax.annotation.concurrent.NotThreadSafe;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,12 +35,24 @@ import java.util.List;
 @NotThreadSafe
 public class CompactPartnershipAdapter {
 
-    public static IPartnership convertToFullPartnership(final CompactPartnership partnership, final CompactPopulation population) {
+    public static final String ADDRESS_DISTRIBUTION_KEY = "address_distribution_filename";
+
+    private final FileBasedEnumeratedDistribution address_distribution;
+
+    public IPartnership convertToFullPartnership(final CompactPartnership partnership, final CompactPopulation population) {
 
         return partnership != null ? new FullPartnership(partnership, population) : null;
     }
 
-    private static class FullPartnership extends AbstractPartnership {
+    public CompactPartnershipAdapter() throws IOException, InconsistentWeightException {
+
+        final String address_distribution_file_name = PopulationProperties.getProperties().getProperty(ADDRESS_DISTRIBUTION_KEY);
+
+        address_distribution = new FileBasedEnumeratedDistribution(address_distribution_file_name, RandomFactory.getRandom());
+    }
+
+
+    private class FullPartnership extends AbstractPartnership {
 
         private final CompactPopulation population;
 
@@ -54,8 +71,11 @@ public class CompactPartnershipAdapter {
             male_partner_id = partner1_is_male ? partner1.getId() : partner2.getId();
             female_partner_id = partner1_is_male ? partner2.getId() : partner1.getId();
 
-            int marriage_date_in_days = compact_partnership.getMarriageDate();
-            marriage_date = marriage_date_in_days > 0 ? DateManipulation.daysToDate(marriage_date_in_days) : null;
+            final int marriage_date_in_days = compact_partnership.getMarriageDate();
+            if (marriage_date_in_days > 0) {
+                marriage_date = DateManipulation.daysToDate(marriage_date_in_days) ;
+                marriage_place = address_distribution.getSample();
+            }
 
             child_ids = copyChildren(compact_partnership.getChildren());
         }

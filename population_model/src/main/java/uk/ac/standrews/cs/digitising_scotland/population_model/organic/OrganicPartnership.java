@@ -19,7 +19,7 @@ package uk.ac.standrews.cs.digitising_scotland.population_model.organic;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.DivorceAgeForFemaleDistribution;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.DivorceAgeForMaleDistribution;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.DivorceInstigatedByGenderDistribution;
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.UniformDistribution;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.UniformIntegerDistribution;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IDFactory;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPartnership;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.PopulationLogic;
@@ -46,8 +46,8 @@ public final class OrganicPartnership implements IPartnership {
     // TODO Make distributions for these
     private static final int MAX_NUMBER_CHILDREN = 5;
     private static final int MAX_TIME_INTO_RELATIONSHIP_UNTIL_FIRST_BIRTH = 5;
-    private static UniformDistribution numberOfChildrenDistribution = new UniformDistribution(0, MAX_NUMBER_CHILDREN, random);
-    private static UniformDistribution daysIntoPartnershipForBirthDistribution = new UniformDistribution(0, (int) (MAX_TIME_INTO_RELATIONSHIP_UNTIL_FIRST_BIRTH * OrganicPopulation.DAYS_PER_YEAR), random);
+    private static UniformIntegerDistribution numberOfChildrenDistribution = new UniformIntegerDistribution(0, MAX_NUMBER_CHILDREN, random);
+    private static UniformIntegerDistribution daysIntoPartnershipForBirthDistribution = new UniformIntegerDistribution(0, (int) (MAX_TIME_INTO_RELATIONSHIP_UNTIL_FIRST_BIRTH * OrganicPopulation.DAYS_PER_YEAR), random);
 
     private Integer id;
     private Integer husband;

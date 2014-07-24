@@ -45,14 +45,15 @@ public abstract class GeneralPopulationStructureTests {
 
     public GeneralPopulationStructureTests(final IPopulation population, final boolean consistent_across_iterations) {
 
-        this.population = population;
-        this.consistent_across_iterations = consistent_across_iterations;
+        this(consistent_across_iterations);
 
+        this.population = population;
         population.setConsistentAcrossIterations(consistent_across_iterations);
     }
 
-    public GeneralPopulationStructureTests() {
+    public GeneralPopulationStructureTests(final boolean consistent_across_iterations) {
 
+        this.consistent_across_iterations = consistent_across_iterations;
     }
 
     @Test
@@ -435,11 +436,12 @@ public abstract class GeneralPopulationStructureTests {
             assertEquals(person.getFirstName(), retrieved_person.getFirstName());
             assertEquals(person.getSurname(), retrieved_person.getSurname());
             assertEquals(person.getSex(), retrieved_person.getSex());
-            assertEquals(person.getBirthPlace(), retrieved_person.getBirthPlace());
             assertEquals(person.getBirthDate(), retrieved_person.getBirthDate());
+            assertEquals(person.getBirthPlace(), retrieved_person.getBirthPlace());
             assertEquals(person.getDeathDate(), retrieved_person.getDeathDate());
-            assertEquals(person.getOccupation(), retrieved_person.getOccupation());
+            assertEquals(person.getDeathPlace(), retrieved_person.getDeathPlace());
             assertEquals(person.getDeathCause(), retrieved_person.getDeathCause());
+            assertEquals(person.getOccupation(), retrieved_person.getOccupation());
         }
     }
 
@@ -462,6 +464,7 @@ public abstract class GeneralPopulationStructureTests {
             assertEquals(partnership.getFemalePartnerId(), retrieved_person.getFemalePartnerId());
             assertEquals(partnership.getMalePartnerId(), retrieved_person.getMalePartnerId());
             assertEquals(partnership.getMarriageDate(), retrieved_person.getMarriageDate());
+            assertEquals(partnership.getMarriagePlace(), retrieved_person.getMarriagePlace());
             assertChildrenEqual(partnership.getChildIds(), retrieved_person.getChildIds());
         }
     }

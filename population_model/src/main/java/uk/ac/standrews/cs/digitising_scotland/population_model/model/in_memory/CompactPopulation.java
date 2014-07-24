@@ -23,15 +23,17 @@ import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.Inc
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.NegativeDeviationException;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.NegativeWeightException;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.NormalDistribution;
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.UniformDistribution;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.UniformIntegerDistribution;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.UniformSexDistribution;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.WeightedIntegerDistribution;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IDFactory;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.PopulationLogic;
-import uk.ac.standrews.cs.digitising_scotland.population_model.model.SearchCondition;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.RandomFactory;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.SearchCondition;
+import uk.ac.standrews.cs.digitising_scotland.util.ArrayManipulation;
 import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
 import uk.ac.standrews.cs.digitising_scotland.util.ProgressIndicator;
+import uk.ac.standrews.cs.digitising_scotland.util.SplitComparator;
 import uk.ac.standrews.cs.nds.util.QuickSort;
 
 import javax.annotation.concurrent.NotThreadSafe;
@@ -104,6 +106,7 @@ public class CompactPopulation {
     private ProgressIndicator progress_indicator;
 
     private final CompactPerson[] people;
+    private List<CompactPerson> people_as_list;
     private int number_of_partnerships = 0;
 
     /**
@@ -184,34 +187,22 @@ public class CompactPopulation {
         return people[index];
     }
 
-    /**
-     * Gets the person with the specified identifier.
-     *
-     * @param id the identifier
-     * @return the person with that identifier, or null if none is found
-     */
-    public CompactPerson findPerson(final int id) {
+    public synchronized CompactPerson findPerson(final int id) {
 
-        // Use binary split since the array is sorted by id order.
-        int low = 0;
-        int high = people.length - 1;
-
-        while (low <= high) {
-
-            final int mid = low + (high - low) / 2;
-            final CompactPerson mid_person = people[mid];
-
-            if (id < mid_person.id) {
-                high = mid - 1;
-
-            } else if (id > mid_person.id) {
-                low = mid + 1;
-
-            } else {
-                return mid_person;
-            }
+        // Avoid initialising list until it's actually needed.
+        if (people_as_list == null) {
+            people_as_list = Arrays.asList(people);
         }
-        return null;
+
+        final int index = ArrayManipulation.binarySplit(people_as_list, new SplitComparator<CompactPerson>() {
+
+            @Override
+            public int check(final CompactPerson element) {
+                return id - element.getId();
+            }
+        });
+
+        return index >= 0 ? people[index] : null;
     }
 
     public CompactPartnership findPartnership(final int id) {
@@ -265,7 +256,7 @@ public class CompactPopulation {
 
         final Random random = RandomFactory.getRandom();
 
-        date_of_birth_distribution = new UniformDistribution(earliest_date, latest_date, random);
+        date_of_birth_distribution = new UniformIntegerDistribution(earliest_date, latest_date, random);
         sex_distribution = new UniformSexDistribution(random);
         age_at_death_distribution = new AgeAtDeathDistribution(random);
         incomers_distribution = new IncomersDistribution(PROBABILITY_OF_BEING_INCOMER, random);

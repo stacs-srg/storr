@@ -18,11 +18,21 @@ package uk.ac.standrews.cs.digitising_scotland.population_model.organic;
 
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.AgeAtDeathDistribution;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.Distribution;
-import uk.ac.standrews.cs.digitising_scotland.population_model.model.*;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.IDFactory;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPartnership;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPerson;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPopulation;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.PopulationLogic;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.RandomFactory;
+import uk.ac.standrews.cs.digitising_scotland.util.ArrayManipulation;
 import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
+import uk.ac.standrews.cs.digitising_scotland.util.SplitComparator;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Random;
 
 /**
  * Created by victor on 11/06/14.
@@ -410,39 +420,29 @@ public class OrganicPopulation implements IPopulation {
     @Override
     public IPerson findPerson(final int id) {
 
-        int index, binaryStep;
-        for (binaryStep = 1; binaryStep < people.size(); binaryStep <<= 1) {
-            continue;
-        }
-        for (index = 0; binaryStep != 0; binaryStep >>= 1) {
-            if (index + binaryStep < people.size() && people.get(index + binaryStep).getId() <= id) {
-                index += binaryStep;
-            }
-        }
-        if (people.get(index).getId() == id) {
-            return people.get(index);
-        }
+        final int index = ArrayManipulation.binarySplit(people, new SplitComparator<OrganicPerson>() {
 
-        return null;
+            @Override
+            public int check(final OrganicPerson person) {
+                return id - person.getId();
+            }
+        });
+
+        return index >= 0 ? people.get(index) : null;
     }
 
     @Override
     public IPartnership findPartnership(final int id) {
 
-        int index, binaryStep;
-        for (binaryStep = 1; binaryStep < partnerships.size(); binaryStep <<= 1) {
-            continue;
-        }
-        for (index = 0; binaryStep != 0; binaryStep >>= 1) {
-            if (index + binaryStep < partnerships.size() && partnerships.get(index + binaryStep).getId() <= id) {
-                index += binaryStep;
-            }
-        }
-        if (partnerships.get(index).getId() == id) {
-            return partnerships.get(index);
-        }
+        final int index = ArrayManipulation.binarySplit(partnerships, new SplitComparator<OrganicPartnership>() {
 
-        return null;
+            @Override
+            public int check(final OrganicPartnership partnership) {
+                return id - partnership.getId();
+            }
+        });
+
+        return index >= 0 ? partnerships.get(index) : null;
     }
 
     @Override

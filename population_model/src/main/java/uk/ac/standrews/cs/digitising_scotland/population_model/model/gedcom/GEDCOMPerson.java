@@ -86,6 +86,9 @@ public class GEDCOMPerson extends AbstractPerson {
                     death_place = event.place.placeName;
                     death_cause = event.cause.toString();
                     break;
+
+                default:
+                    break;
             }
         }
     }
