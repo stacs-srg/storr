@@ -40,6 +40,9 @@ import java.util.Random;
  * @author Tom Dalton (tsd4@st-andrews.ac.uk)
  */
 public final class OrganicPartnership implements IPartnership {
+	
+	public static int kidsKilledByDecrementation = 0;
+	public static int stopedHavingEarlyDeaths = 0;
 
     private static Random random = RandomFactory.getRandom();
     private static DivorceInstigatedByGenderDistribution divorceInstigatedByGenderDistribution = new DivorceInstigatedByGenderDistribution(random);
@@ -161,6 +164,7 @@ public final class OrganicPartnership implements IPartnership {
             mean = getMeanForChildSpacingDistribution(husband, wife, currentDay);
             if (mean < PopulationLogic.getInterChildInterval() * OrganicPopulation.DAYS_PER_YEAR) {
 //                System.out.println("I'm Decrementing");
+            	kidsKilledByDecrementation++;
                 numberOfChildrenToBeHadByCouple --;
             } else {
 //                System.out.println("HERE AGAIN!");
@@ -213,6 +217,7 @@ public final class OrganicPartnership implements IPartnership {
                 }
                 return children;
             } else {
+            	stopedHavingEarlyDeaths += (numberOfChildrenToBeHadByCouple - children.length);
                 return new OrganicPerson[0];
             }
         }

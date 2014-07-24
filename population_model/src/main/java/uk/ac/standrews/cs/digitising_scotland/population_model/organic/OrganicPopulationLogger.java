@@ -27,6 +27,8 @@ public class OrganicPopulationLogger {
     private static int[] femaleAgeAtMarriage = new int[MAX_AGE];
     private static final int AGE_DIFFERENCE_AT_MARRIAGE_DISPLAY_UPTO = 21;
     private static int[] ageDifferenceAtMarriage = new int[AGE_DIFFERENCE_AT_MARRIAGE_DISPLAY_UPTO];
+    private static final int NUMBER_OF_CHILDREN_DISPLAY_UPTO = 15;
+    private static int[] numberOfChildrenPerPartnership = new int[NUMBER_OF_CHILDREN_DISPLAY_UPTO];
 
     /**
      * Increments the size of the population.
@@ -72,6 +74,10 @@ public class OrganicPopulationLogger {
         births++;
     }
 
+    public static void addNumberOfChildren(final int number) {
+        numberOfChildrenPerPartnership[number]++;
+    }
+    
     private static void addMaleAgeAtMarriage(final int days) {
         int years = (int) ((float) days / OrganicPopulation.DAYS_PER_YEAR);
         maleAgeAtMarriage[years]++;
@@ -152,6 +158,23 @@ public class OrganicPopulationLogger {
             System.out.format("%6d", ageDifferenceAtMarriage[i]);
             System.out.println(" |");
         }
+        System.out.println();
+        
+        System.out.println();
+        System.out.println("Number Of Children In Partnership Distrobution");
+        System.out.println();
+        System.out.println("| Kids | Number |");
+        for (int i = 0; i < numberOfChildrenPerPartnership.length; i++) {
+            System.out.print("|  ");
+            System.out.format("%2d", i);
+            System.out.print("  | ");
+            System.out.format("%6d", numberOfChildrenPerPartnership[i]);
+            System.out.println(" |");
+        }
+        float childrenPerFamily = (float) (births - OrganicPopulation.DEFAULT_SEED_SIZE) / (float) marriages;
+        System.out.println();
+        System.out.println("Children Per Family: ");
+        System.out.format("%.2f", childrenPerFamily);
         System.out.println();
     }
 

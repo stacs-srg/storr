@@ -42,7 +42,7 @@ public class OrganicPopulation implements IPopulation {
 
     private String description;
 
-    private static final int DEFAULT_SEED_SIZE = 1000;
+    public static final int DEFAULT_SEED_SIZE = 1000;
 
     /**
      * The approximate average number of days per year.
@@ -294,9 +294,11 @@ public class OrganicPopulation implements IPopulation {
                                 break;
                             case DIVORCE:
                                 divorce(partnerships.get(i));
+                                OrganicPopulationLogger.addNumberOfChildren(partnerships.get(i).getChildIds().size());
                                 break;
                             case PARTNERSHIP_ENDED_BY_DEATH:
-
+                            	OrganicPopulationLogger.addNumberOfChildren(partnerships.get(i).getChildIds().size());
+                            	break;
                             default:
                                 break;
                             }
@@ -480,11 +482,10 @@ public class OrganicPopulation implements IPopulation {
         //        }
 
         OrganicPopulationLogger.printLogData();
-        System.out.println("Female Marriage Queue Size: " + op.femalePartnershipQueue.size());
-        System.out.println("Male Marriage Queue Size: " + op.malePartnershipQueue.size());
-        for(int i = 0; i < op.malePartnershipQueue.size(); i++)
-            System.out.print(op.malePartnershipQueue.get(i) + ", ");
-
+        
+        System.out.println("Kids killed by decrementation: " + OrganicPartnership.kidsKilledByDecrementation);
+        System.out.println("Kids killed by early stop: " + OrganicPartnership.stopedHavingEarlyDeaths);
+        
      }
 
      /**
