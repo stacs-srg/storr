@@ -111,6 +111,7 @@
             <artifactId>guava</artifactId>
             <version>11.0.2</version>
         </dependency>
+        
         <dependency>
             <groupId>org.apache.lucene</groupId>
             <artifactId>lucene-core</artifactId>
@@ -128,13 +129,14 @@
             <artifactId>jazzy-core</artifactId>
             <version>0.5.2</version>
         </dependency>
+        
         <dependency>
             <groupId>com.sun.jna</groupId>
             <artifactId>jna</artifactId>
             <version>3.0.9</version>
         </dependency>
+        
         <dependency>
-
             <groupId>org.apache.mahout</groupId>
             <artifactId>mahout-core</artifactId>
             <version>0.9</version>
@@ -171,11 +173,9 @@
         </dependency>
 
         <dependency>
-            <groupId>uk.ac.shef.wit.simmetrics</groupId>
+            <groupId>net.sf.simmetrics</groupId>
             <artifactId>simmetrics</artifactId>
-            <version>6.2</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/simmetrics_jar_v1_6_2_d07_02_07.jar</systemPath>
+            <version>1.6.2</version>
         </dependency>
 
         <dependency>

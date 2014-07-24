@@ -6,6 +6,7 @@ then
 fi
 
 mvn clean compile assembly:single
+
 echo startTime: 
 date +"%H:%M:%S"
 
