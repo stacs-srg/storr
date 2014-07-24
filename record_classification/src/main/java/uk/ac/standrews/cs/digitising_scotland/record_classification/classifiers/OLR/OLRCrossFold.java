@@ -25,25 +25,33 @@ import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
  * Distributes training vectors across {@link OLRPool}s in a cross fold manner. Allows concurrent training
  * of the {@link OLRPool}s and provides a classify method that averages the classifications given by each pool.
  *
- * @author fraserdunlop
+ * @author fraserdunlop, jkc25
  */
 public class OLRCrossFold {
 
+    /** The Logger. */
     private static final Logger LOGGER = LoggerFactory.getLogger(OLRCrossFold.class);
 
-    /** The model trainable. */
+    /** The isModelTrainable flag. */
     private final boolean modelTrainable;
 
-    /** The models. */
+    /** The OLRPool models. */
     private ArrayList<OLRPool> models = new ArrayList<>();
 
-    /** The folds. */
+    /** The number of cross folds. */
     private int folds;
 
     /** The properties. */
     private Properties properties;
+
+    /** The classifier. */
     private OLR classifier;
 
+    /**
+     * Gets the average running log likelihood.
+     *
+     * @return the average running log likelihood
+     */
     public double getAverageRunningLogLikelihood() {
 
         double ll = 0.;
@@ -54,6 +62,9 @@ public class OLRCrossFold {
         return ll;
     }
 
+    /**
+     * Reset running log likelihoods.
+     */
     public void resetRunningLogLikelihoods() {
 
         for (OLRPool model : models) {
@@ -120,6 +131,9 @@ public class OLRCrossFold {
         prepareClassifier();
     }
 
+    /**
+     * Prepare classifier.
+     */
     private void prepareClassifier() {
 
         List<OLRShuffled> survivors = getSurvivors();
@@ -127,6 +141,11 @@ public class OLRCrossFold {
         classifier = new OLR(classifierMatrix);
     }
 
+    /**
+     * Gets the survivors.
+     *
+     * @return the survivors
+     */
     private List<OLRShuffled> getSurvivors() {
 
         List<OLRShuffled> survivors = new ArrayList<>();
@@ -136,6 +155,12 @@ public class OLRCrossFold {
         return survivors;
     }
 
+    /**
+     * Gets the classifier matrix.
+     *
+     * @param survivors the survivors
+     * @return the classifier matrix
+     */
     private Matrix getClassifierMatrix(final List<OLRShuffled> survivors) {
 
         Stack<Matrix> matrices = new Stack<>();
@@ -151,7 +176,8 @@ public class OLRCrossFold {
     }
 
     /**
-     * Train if possible.
+     * Trains all the models if it possible to do so. Models may be untrainable if the have be
+     * read back from file. These models can still be used for classification.
      */
     private void trainIfPossible() {
 
@@ -165,7 +191,8 @@ public class OLRCrossFold {
     }
 
     /**
-     * Check trainable.
+     * Checks if a model is trainable. Models may be untrainable if the have be
+     * read back from file. These models can still be used for classification.
      */
     private void checkTrainable() {
 
@@ -195,9 +222,10 @@ public class OLRCrossFold {
     }
 
     /**
-     * Gets the config options.
+     * Gets the configuration options.
      *
-     * @return the config options
+     * @return the . Models may be untrainable if the have be
+     * read back from file. These models can still be used for classification. options
      */
     private void getConfigOptions() {
 
@@ -234,7 +262,7 @@ public class OLRCrossFold {
     }
 
     /**
-     * Instantiates a new OLR cross fold.
+     * Instantiates a new OLR crossfold model.
      */
     protected OLRCrossFold() {
 
@@ -242,57 +270,76 @@ public class OLRCrossFold {
     }
 
     /**
-     * Write.
+     * Writes each model to a {@link DataOutputStream}.
      *
-     * @param out the out
+     * @param outputStream the out
      * @throws IOException Signals that an I/O exception has occurred.
      */
-    protected void write(final DataOutputStream out) throws IOException {
+    protected void write(final DataOutputStream outputStream) throws IOException {
 
-        out.writeInt(models.size());
+        outputStream.writeInt(models.size());
         for (OLRPool model : models) {
-            model.write(out);
+            model.write(outputStream);
         }
-        classifier.write(out);
+        classifier.write(outputStream);
     }
 
     /**
-     * Read fields.
+     * Read fields from a {@link DataInputStream}.
      *
-     * @param in the in
+     * @param inputStream the inputStream
      * @throws IOException Signals that an I/O exception has occurred.
      */
-    protected void readFields(final DataInputStream in) throws IOException {
+    protected void readFields(final DataInputStream inputStream) throws IOException {
 
-        int numModels = in.readInt();
+        int numModels = inputStream.readInt();
         for (int i = 0; i < numModels; i++) {
             OLRPool olrPool = new OLRPool();
-            olrPool.readFields(in);
+            olrPool.readFields(inputStream);
             models.add(olrPool);
         }
         OLR olr = new OLR();
-        olr.readFields(in);
+        olr.readFields(inputStream);
         classifier = olr;
     }
 
+    /**
+     * The listener interface for receiving stop events.
+     * The class that is interested in processing a stop
+     * event implements this interface, and the object created
+     * with that class is registered with a component using the
+     * component's <code>addStopListener<code> method. When
+     * the stop event occurs, that object's appropriate
+     * method is invoked.
+     *
+     * @see StopEvent
+     */
     public class StopListener implements Runnable {
 
+        /** The process terminated. */
         private boolean processTerminated;
-        private static final String stopCommand = "stop";
-        private static final String getLogLikCommand = "getloglik";
-        private static final String resetLogLikCommand = "resetloglik";
-        private static final String logLikelihoodMessage = "\nLog likelihood is: ";
-        private static final String stopMessage = "\nStop call detected. Stopping training...";
-        private static final String resetMessage = "\nResetting log likelihood.";
-        private static final String instructionMessage = "\n#######################--OLRCrossFold Commands--#################################" + "\n# \"" + stopCommand + "\" will halt the training process and skip straight to classification.\t#" + "\n# \"" + getLogLikCommand
-                        + "\" will return the current running average log likelihood estimate.\t#" + "\n# \"" + resetLogLikCommand + "\" will reset the running average log likelihood statistic.\t\t#" + "\n#################################################################################";
 
+        private static final String STOP_COMMAND = "stop";
+        private static final String GET_LOG_LIK_COMMAND = "getloglik";
+        private static final String RESET_LOG_LIK_COMMAND = "resetloglik";
+        private static final String LOG_LIK_MESSAGE = "\nLog likelihood is: ";
+        private static final String STOP_MESSAGE = "\nStop call detected. Stopping training...";
+        private static final String RESET_MESSAGE = "\nResetting log likelihood.";
+        private static final String INSTRUCTION_MESSAGE = "\n#######################--OLRCrossFold Commands--#################################" + "\n# \"" + STOP_COMMAND + "\" will halt the training process and skip straight to classification.\t#" + "\n# \"" + GET_LOG_LIK_COMMAND
+                        + "\" will return the current running average log likelihood estimate.\t#" + "\n# \"" + RESET_LOG_LIK_COMMAND + "\" will reset the running average log likelihood statistic.\t\t#" + "\n#################################################################################";
+
+        /**
+         * Terminates the process. Sets the processTerminated flat to true and handles the thread shutdown.
+         */
         public void terminateProcess() {
 
             stop();
             processTerminated = true;
         }
 
+        /**
+         * Initiates the command line stopListener. This waits for input from the command line and processes the input.
+         */
         public void commandLineStopListener() {
 
             LOGGER.info(instructions());
@@ -312,49 +359,81 @@ public class OLRCrossFold {
             }
         }
 
+        /**
+         * Processes the input from the command line. Calls the correct Logger reaction on input and
+         * returns true if a message is printed.
+         *
+         * @param line the line to process
+         * @return true, if successful output is printed.
+         * @throws InterruptedException the interrupted exception
+         */
         private boolean processInput(final String line) throws InterruptedException {
 
             switch (line.toLowerCase()) {
-                case stopCommand:
+                case STOP_COMMAND:
                     LOGGER.info(stopCalled());
                     break;
-                case getLogLikCommand:
+                case GET_LOG_LIK_COMMAND:
                     LOGGER.info(getLogLik());
                     break;
-                case resetLogLikCommand:
+                case RESET_LOG_LIK_COMMAND:
                     LOGGER.info(resetLogLik());
                     break;
                 default:
                     LOGGER.info(instructions());
             }
-            return line.equalsIgnoreCase(stopCommand) || processTerminated;
+            return line.equalsIgnoreCase(STOP_COMMAND) || processTerminated;
         }
 
+        /**
+         * Calls the Stop method and returns the stop message.
+         *
+         * @return the string
+         */
         private String stopCalled() {
 
             stop();
-            return stopMessage;
+            return STOP_MESSAGE;
         }
 
+        /**
+         * Gets the log likelihood.
+         *
+         * @return the log likelihood
+         */
         private String getLogLik() {
 
-            return logLikelihoodMessage + Double.toString(getAverageRunningLogLikelihood());
+            return LOG_LIK_MESSAGE + Double.toString(getAverageRunningLogLikelihood());
         }
 
+        /**
+         * Reset log likelihood.
+         *
+         * @return the string
+         * @throws InterruptedException the interrupted exception
+         */
         private String resetLogLik() throws InterruptedException {
 
             final int threadSleepMillis = 10;
-            String message = getLogLik() + resetMessage;
+            String message = getLogLik() + RESET_MESSAGE;
             resetRunningLogLikelihoods();
             Thread.sleep(threadSleepMillis);
             return message + getLogLik();
         }
 
+        /**
+         * Returns the instructions.
+         *
+         * @return the string
+         */
         private String instructions() {
 
-            return instructionMessage;
+            return INSTRUCTION_MESSAGE;
         }
 
+        /* (non-Javadoc)
+         * @see java.lang.Runnable#run()
+         */
         @Override
         public void run() {
 
