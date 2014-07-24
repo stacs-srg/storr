@@ -26,7 +26,6 @@ import uk.ac.standrews.cs.digitising_scotland.population_model.model.PopulationL
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.RandomFactory;
 import uk.ac.standrews.cs.digitising_scotland.util.ArrayManipulation;
 import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
-import uk.ac.standrews.cs.digitising_scotland.util.SplitComparator;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -420,7 +419,7 @@ public class OrganicPopulation implements IPopulation {
     @Override
     public IPerson findPerson(final int id) {
 
-        final int index = ArrayManipulation.binarySplit(people, new SplitComparator<OrganicPerson>() {
+        final int index = ArrayManipulation.binarySplit(people, new ArrayManipulation.SplitComparator<OrganicPerson>() {
 
             @Override
             public int check(final OrganicPerson person) {
@@ -434,7 +433,7 @@ public class OrganicPopulation implements IPopulation {
     @Override
     public IPartnership findPartnership(final int id) {
 
-        final int index = ArrayManipulation.binarySplit(partnerships, new SplitComparator<OrganicPartnership>() {
+        final int index = ArrayManipulation.binarySplit(partnerships, new ArrayManipulation.SplitComparator<OrganicPartnership>() {
 
             @Override
             public int check(final OrganicPartnership partnership) {

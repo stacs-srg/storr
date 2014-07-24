@@ -72,4 +72,9 @@ public class ArrayManipulation {
 
         return binarySplit(Arrays.asList(array), comparator);
     }
+
+    public interface SplitComparator<T> {
+
+        int check(T element);
+    }
 }

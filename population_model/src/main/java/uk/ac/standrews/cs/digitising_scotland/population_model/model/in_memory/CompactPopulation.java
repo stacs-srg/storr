@@ -33,7 +33,6 @@ import uk.ac.standrews.cs.digitising_scotland.population_model.model.SearchCondi
 import uk.ac.standrews.cs.digitising_scotland.util.ArrayManipulation;
 import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
 import uk.ac.standrews.cs.digitising_scotland.util.ProgressIndicator;
-import uk.ac.standrews.cs.digitising_scotland.util.SplitComparator;
 import uk.ac.standrews.cs.nds.util.QuickSort;
 
 import javax.annotation.concurrent.NotThreadSafe;
@@ -194,7 +193,7 @@ public class CompactPopulation {
             people_as_list = Arrays.asList(people);
         }
 
-        final int index = ArrayManipulation.binarySplit(people_as_list, new SplitComparator<CompactPerson>() {
+        final int index = ArrayManipulation.binarySplit(people_as_list, new ArrayManipulation.SplitComparator<CompactPerson>() {
 
             @Override
             public int check(final CompactPerson element) {
