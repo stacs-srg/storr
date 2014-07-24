@@ -40,7 +40,7 @@ public class NumberOfChildrenDistribuition implements Distribution<Integer> {
      */
 
     private static final int MAXIMUM_NUMBER_OF_CHILDREN = 11;
-    private static final int[] NUMBER_DISTRIBUTION_WEIGHTS = new int[]{543, 224, 232, 84, 61, 16, 17, 4, 4, 1, 1, 1};
+    private static final int[] NUMBER_DISTRIBUTION_WEIGHTS = new int[]{354, 224, 232, 84, 61, 16, 17, 4, 4, 1, 1, 1};
 
     private final WeightedIntegerDistribution distribution;
 

@@ -483,7 +483,7 @@ public class OrganicPopulation implements IPopulation {
 
         OrganicPopulationLogger.printLogData();
         
-        System.out.println("Kids killed by decrementation: " + OrganicPartnership.kidsKilledByDecrementation);
+        System.out.println("Left over children: " + OrganicPartnership.leftOverChildren);
         System.out.println("Kids killed by early stop: " + OrganicPartnership.stopedHavingEarlyDeaths);
         
      }
