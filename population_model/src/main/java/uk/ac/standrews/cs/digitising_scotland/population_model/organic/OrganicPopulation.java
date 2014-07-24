@@ -174,7 +174,7 @@ public class OrganicPopulation implements IPopulation {
                     firstFemaleId = (Integer) null;
                     break;
                 } else {
-                	// Else if couple not elligable to marry move onto consider male with next female
+                    // Else if couple not elligable to marry move onto consider male with next female
                     femalePartnershipQueue.add(femalePartnershipQueue.removeFirst());
                     femaleInitialPartnershipOrderer.add(femaleInitialPartnershipOrderer.removeFirst());
                 }
@@ -199,9 +199,9 @@ public class OrganicPopulation implements IPopulation {
         Object[] partnershipObjects = OrganicPartnership.createOrganicPartnership(IDFactory.getNextID(), husband, wife, days, currentDay);
         partnerships.add((OrganicPartnership) partnershipObjects[0]);
         if (partnershipObjects.length > 1) {
-        	for(int i = 1; i < partnershipObjects.length; i++) {
-        		people.add((OrganicPerson) partnershipObjects[i]);
-        	}
+            for(int i = 1; i < partnershipObjects.length; i++) {
+                people.add((OrganicPerson) partnershipObjects[i]);
+            }
         }
         OrganicPopulationLogger.logMarriage(DateManipulation.differenceInDays(husband.getBirthDay(), days), DateManipulation.differenceInDays(wife.getBirthDay(), days));
         husband.addPartnership(((OrganicPartnership) partnershipObjects[0]).getId());
@@ -287,13 +287,13 @@ public class OrganicPopulation implements IPopulation {
                             // deal with event
                             switch (event) {
                             case BIRTH:
-                            	OrganicPerson[] children = partnerships.get(i).createBirthEvent((OrganicPerson)findPerson(partnerships.get(i).getMalePartnerId()), (OrganicPerson)findPerson(partnerships.get(i).getFemalePartnerId()), currentDay);
-                            	for(OrganicPerson child : children) {
-                            		people.add(child);
-                            	}
+                                OrganicPerson[] children = partnerships.get(i).createBirthEvent((OrganicPerson)findPerson(partnerships.get(i).getMalePartnerId()), (OrganicPerson)findPerson(partnerships.get(i).getFemalePartnerId()), currentDay);
+                                for(OrganicPerson child : children) {
+                                    people.add(child);
+                                }
                                 break;
                             case DIVORCE:
-                            	divorce(partnerships.get(i));
+                                divorce(partnerships.get(i));
                                 break;
                             case PARTNERSHIP_ENDED_BY_DEATH:
 
@@ -491,7 +491,7 @@ public class OrganicPopulation implements IPopulation {
         System.out.println("Female Marriage Queue Size: " + op.femalePartnershipQueue.size());
         System.out.println("Male Marriage Queue Size: " + op.malePartnershipQueue.size());
         for(int i = 0; i < op.malePartnershipQueue.size(); i++)
-        	System.out.print(op.malePartnershipQueue.get(i) + ", ");
+            System.out.print(op.malePartnershipQueue.get(i) + ", ");
 
      }
 
