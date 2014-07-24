@@ -42,7 +42,6 @@ public class ConcatenatorTest {
         CharSequence delimiter = ",";
         String concatenatedString = Concatenator.concatenate(tokenizer, CharTermAttribute.class, delimiter);
         Assert.assertEquals("Here,is,a,String,for,testing", concatenatedString);
-        System.out.println(concatenatedString);
     }
 
     /**

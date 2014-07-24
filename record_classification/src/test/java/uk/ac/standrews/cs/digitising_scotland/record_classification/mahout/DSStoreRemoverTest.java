@@ -23,8 +23,8 @@ public class DSStoreRemoverTest {
     @Test
     public void test() throws IOException {
 
-        File dsStore = new File("resources/.DS_Store");
-        File test = new File("resources");
+        File dsStore = new File("target/.DS_Store");
+        File test = new File("target");
         if (!test.mkdirs()) {
             System.err.print("Could not create folder " + test.getAbsolutePath());
         }
@@ -36,7 +36,6 @@ public class DSStoreRemoverTest {
         assertTrue(dsStore.isFile());
         assertTrue(dsStore.exists());
         File here = new File(".");
-        System.out.println(here.list().length);
         DSStoreRemover dsr = new DSStoreRemover();
         dsr.remove(here);
         assertTrue(!dsStore.exists());

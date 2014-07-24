@@ -149,7 +149,6 @@ public class ResolverMatrixTest {
         Assert.assertEquals(16, matrix.complexity());
         matrix.resolveHierarchies();
         Assert.assertEquals(16, matrix.complexity());
-        System.out.println(matrix.toString());
     }
 
     /**

@@ -182,16 +182,11 @@ public class CombinedNaiveBayesolrTest {
         listOfRecords = RecordFactory.makeUnCodedRecordsFromFile(inputFile);
         bucketA.addCollectionOfRecords(listOfRecords);
 
-
-        System.out.println(bucketA.toString());
-
         pipeline.addTrainedClassifier(nbc);
         pipeline.addTrainedClassifier(olr);
 
         for (Record record : bucketA) {
             pipeline.classifyRecord(record);
         }
-
-        System.out.println(bucketA);
     }
 }

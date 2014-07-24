@@ -135,9 +135,7 @@ public class BestConfidenceClassifierTest {
         listOfRecords = RecordFactory.makeUnCodedRecordsFromFile(inputFile);
         bucketA.addCollectionOfRecords(listOfRecords);
 
-        System.out.println(bucketA.toString());
         bestConfClassifier.classify(bucketA);
-        System.out.println(bucketA);
     }
 
     /**
@@ -155,13 +153,11 @@ public class BestConfidenceClassifierTest {
 
         listOfRecords = RecordFactory.makeUnCodedRecordsFromFile(inputFile);
         bucketA.addCollectionOfRecords(listOfRecords);
-        System.out.println(bucketA.toString());
         for (Record r : bucketA) {
             TokenSet tokenSet = new TokenSet(r.getOriginalData().getDescription());
             Pair<Code, Double> result = bestConfClassifier.classify(tokenSet);
             r.addCodeTriples(new CodeTriple(result.getLeft(), tokenSet, result.getRight()));
         }
-        System.out.println(bucketA);
     }
 
 }

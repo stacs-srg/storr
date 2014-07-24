@@ -215,10 +215,6 @@ public class RecordFactoryTest {
         CodeFactory.getInstance().loadDictionary(codeList);
         List<Record> records = RecordFactory.makeCodedRecordsFromFile(inputFile);
         Bucket codTrainingBucket = new Bucket(records);
-        for (Record record : codTrainingBucket) {
-            System.out.println(record);
-        }
-
         CodeFactory.getInstance().loadDictionary(originalCodeList);
 
     }

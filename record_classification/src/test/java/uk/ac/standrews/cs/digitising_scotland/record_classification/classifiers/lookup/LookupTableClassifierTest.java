@@ -159,8 +159,6 @@ public class LookupTableClassifierTest {
         for (Record record : bucket) {
             record.getDescription();
         }
-
-        System.out.println(bucket.toString());
     }
 
 }
