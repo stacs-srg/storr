@@ -7,12 +7,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
 
 /**
- * Contains methods for reading and writing to file {@link Bucket}s and {@link Record}s objects ready for clerking by NRS.
+ * Contains methods for writing {@link Record}s to file in the format specified by NRS.
  *
  * @author jkc25, frjd2
  */

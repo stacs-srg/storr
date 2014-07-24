@@ -1,3 +1,5 @@
+#!/bin/sh
+
 echo startTime: 
 date +"%H:%M:%S"
 
