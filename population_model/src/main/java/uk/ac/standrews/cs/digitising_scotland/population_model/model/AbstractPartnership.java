@@ -17,7 +17,6 @@
 package uk.ac.standrews.cs.digitising_scotland.population_model.model;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -30,8 +29,8 @@ public abstract class AbstractPartnership implements IPartnership {
     protected int male_partner_id;
     protected int female_partner_id;
     protected Date marriage_date;
-    protected List<Integer> children;
-    protected List<Integer> partner_ids;
+    protected String marriage_place;
+    protected List<Integer> child_ids;
 
     @Override
     public int getId() {
@@ -55,23 +54,17 @@ public abstract class AbstractPartnership implements IPartnership {
 
     @Override
     public Date getMarriageDate() {
-        return (Date) marriage_date.clone();
+        return marriage_date != null ? (Date) marriage_date.clone() : null;
+    }
+
+    @Override
+    public String getMarriagePlace() {
+        return marriage_place;
     }
 
     @Override
     public List<Integer> getChildIds() {
-        return children;
-    }
-
-    @Override
-    public List<Integer> getPartnerIds() {
-
-        if (partner_ids == null) {
-            partner_ids = new ArrayList<>();
-            partner_ids.add(male_partner_id);
-            partner_ids.add(female_partner_id);
-        }
-        return partner_ids;
+        return child_ids;
     }
 
     @Override

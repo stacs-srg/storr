@@ -28,11 +28,12 @@ public abstract class AbstractPerson implements IPerson {
     protected String first_name;
     protected String surname;
     protected char sex;
-    protected Date date_of_birth;
-    protected Date date_of_death;
+    protected Date birth_date;
+    protected String birth_place;
+    protected Date death_date;
+    protected String death_place;
+    protected String death_cause;
     protected String occupation;
-    protected String cause_of_death;
-    protected String address;
     protected String string_rep;
     protected List<Integer> partnerships;
     protected int parents_partnership_id;
@@ -59,27 +60,32 @@ public abstract class AbstractPerson implements IPerson {
 
     @Override
     public Date getBirthDate() {
-        return (Date) date_of_birth.clone();
+        return (Date) birth_date.clone();
+    }
+
+    @Override
+    public String getBirthPlace() {
+        return birth_place;
     }
 
     @Override
     public Date getDeathDate() {
-        return date_of_death == null ? null : (Date) date_of_death.clone();
+        return death_date == null ? null : (Date) death_date.clone();
+    }
+
+    @Override
+    public String getDeathPlace() {
+        return death_place;
+    }
+
+    @Override
+    public String getDeathCause() {
+        return death_cause;
     }
 
     @Override
     public String getOccupation() {
         return occupation;
-    }
-
-    @Override
-    public String getCauseOfDeath() {
-        return cause_of_death;
-    }
-
-    @Override
-    public String getAddress() {
-        return address;
     }
 
     @Override

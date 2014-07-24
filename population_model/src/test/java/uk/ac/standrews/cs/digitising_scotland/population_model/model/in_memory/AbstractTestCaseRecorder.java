@@ -14,17 +14,16 @@
  * You should have received a copy of the GNU General Public License along with population_model. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-package uk.ac.standrews.cs.digitising_scotland.population_model.transform;
+package uk.ac.standrews.cs.digitising_scotland.population_model.model.in_memory;
 
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.InconsistentWeightException;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IDFactory;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPopulation;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPopulationWriter;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.PopulationConverter;
-import uk.ac.standrews.cs.digitising_scotland.population_model.model.in_memory.CompactPopulation;
-import uk.ac.standrews.cs.digitising_scotland.population_model.model.in_memory.CompactPopulationAdapter;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
 /**
@@ -40,13 +39,13 @@ public abstract class AbstractTestCaseRecorder {
 
             IDFactory.resetId();
 
-            final String path_string = Paths.get(
+            final Path path = Paths.get(
                     AbstractExporterTest.TEST_DIRECTORY_PATH_STRING,
-                    getDirectoryName(), AbstractExporterTest.TEST_CASE_FILE_NAME_ROOTS[i] + getIntendedOutputFileSuffix()).toString();
+                    getDirectoryName(), AbstractExporterTest.TEST_CASE_FILE_NAME_ROOTS[i] + getIntendedOutputFileSuffix());
 
             final CompactPopulation population = new CompactPopulation(AbstractExporterTest.TEST_CASE_POPULATION_SIZES[i]);
             final IPopulation abstract_population = new CompactPopulationAdapter(population);
-            final IPopulationWriter population_writer = getPopulationWriter(path_string, abstract_population);
+            final IPopulationWriter population_writer = getPopulationWriter(path, abstract_population);
 
             try (PopulationConverter converter = new PopulationConverter(abstract_population, population_writer)) {
                 converter.convert();
@@ -58,5 +57,5 @@ public abstract class AbstractTestCaseRecorder {
 
     protected abstract String getDirectoryName();
 
-    protected abstract IPopulationWriter getPopulationWriter(String path_string, IPopulation population) throws IOException, InconsistentWeightException;
+    protected abstract IPopulationWriter getPopulationWriter(Path path, IPopulation population) throws IOException, InconsistentWeightException;
 }

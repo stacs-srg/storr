@@ -52,7 +52,7 @@ public class BassJohnBass {
     private IBucket people;              // Bucket containing people extracted from birth records
     private IBucket relationships;       // Bucket containing relationships between people
 //    private IIndexedBucket identity;            // Bucket containing identities of equivalent people in records
-    private IIndexedBucket lineage;            // Bucket containing pairs of potentially linked parents and children
+    private IIndexedBucket lineage;            // Bucket containing pairs of potentially linked parents and child_ids
 
     public BassJohnBass() throws RepositoryException, RecordFormatException, JSONException, IOException, PersistentObjectException, StoreException {
 

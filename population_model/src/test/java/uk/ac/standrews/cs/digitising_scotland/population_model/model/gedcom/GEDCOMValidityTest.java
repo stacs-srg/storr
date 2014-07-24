@@ -17,15 +17,18 @@
 package uk.ac.standrews.cs.digitising_scotland.population_model.model.gedcom;
 
 import org.gedcom4j.parser.GedcomParser;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPopulation;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPopulationWriter;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.PopulationConverter;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.in_memory.CompactPopulation;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.in_memory.CompactPopulationAdapter;
-import uk.ac.standrews.cs.digitising_scotland.population_model.transform.AbstractExporterTest;
 
-import java.nio.file.Paths;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 import static org.junit.Assert.assertEquals;
 
@@ -35,22 +38,34 @@ import static org.junit.Assert.assertEquals;
  */
 public class GEDCOMValidityTest {
 
+    private Path path;
+
     @Test
     public void gedcomIsValid() throws Exception {
 
-        final String path = Paths.get(AbstractExporterTest.TEST_DIRECTORY_PATH_STRING, "gedcom", "_test.ged").toString();
-
         final IPopulation population = new CompactPopulationAdapter(new CompactPopulation(1000));
-        final IPopulationWriter population_writer = new PopulationToGEDCOM(path);
+        final IPopulationWriter population_writer = new GEDCOMPopulationWriter(path);
 
         try (PopulationConverter converter = new PopulationConverter(population, population_writer)) {
             converter.convert();
         }
 
         final GedcomParser parser = new GedcomParser();
-        parser.load(path);
+        parser.load(path.toString());
 
         assertEquals(0, parser.errors.size());
         assertEquals(0, parser.warnings.size());
+    }
+
+    @Before
+    public void setUp() throws IOException {
+
+        path = Files.createTempFile(null, ".ged");
+    }
+
+    @After
+    public void tearDown() throws IOException {
+
+        Files.delete(path);
     }
 }

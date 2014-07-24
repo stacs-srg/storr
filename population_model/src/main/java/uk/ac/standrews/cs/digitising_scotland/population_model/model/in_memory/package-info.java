@@ -16,7 +16,7 @@
  */
 
 /**
- * Interfaces and abstract classes for population simulation.
+ * In-memory population generation.
  */
-package uk.ac.standrews.cs.digitising_scotland.population_model.model;
+package uk.ac.standrews.cs.digitising_scotland.population_model.model.in_memory;
 

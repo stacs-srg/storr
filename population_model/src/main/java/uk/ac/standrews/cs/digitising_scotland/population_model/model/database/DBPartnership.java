@@ -115,9 +115,9 @@ public class DBPartnership extends AbstractPartnership {
         get_children_statement.setInt(1, id);
         final ResultSet children_result_set = get_children_statement.executeQuery();
 
-        children = new ArrayList<>();
+        child_ids = new ArrayList<>();
         while (children_result_set.next()) {
-            children.add(children_result_set.getInt(PopulationProperties.PARTNERSHIP_FIELD_PERSON_ID));
+            child_ids.add(children_result_set.getInt(PopulationProperties.PARTNERSHIP_FIELD_PERSON_ID));
         }
     }
 

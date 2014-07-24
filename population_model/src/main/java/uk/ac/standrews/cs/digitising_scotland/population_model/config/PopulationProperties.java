@@ -64,7 +64,7 @@ public class PopulationProperties {
     public static final String PARTNERSHIP_PARTNER_TABLE_NAME = "PartnershipPartner";
 
     /**
-     * The name of the table linking partnerships and children.
+     * The name of the table linking partnerships and child_ids.
      */
     public static final String PARTNERSHIP_CHILD_TABLE_NAME = "PartnershipChild";
 
@@ -94,24 +94,29 @@ public class PopulationProperties {
     public static final String PERSON_FIELD_BIRTH_DATE = "birth_date";
 
     /**
+     * The name of the column in the people table storing address.
+     */
+    public static final String PERSON_FIELD_BIRTH_PLACE = "birth_place";
+
+    /**
      * The name of the column in the people table storing date of death.
      */
     public static final String PERSON_FIELD_DEATH_DATE = "death_date";
 
     /**
-     * The name of the column in the people table storing occupation.
+     * The name of the column in the people table storing address.
      */
-    public static final String PERSON_FIELD_OCCUPATION = "occupation";
+    public static final String PERSON_FIELD_DEATH_PLACE = "death_place";
 
     /**
      * The name of the column in the people table storing cause of death.
      */
-    public static final String PERSON_FIELD_CAUSE_OF_DEATH = "cause_of_death";
+    public static final String PERSON_FIELD_DEATH_CAUSE = "death_cause";
 
     /**
-     * The name of the column in the people table storing address.
+     * The name of the column in the people table storing occupation.
      */
-    public static final String PERSON_FIELD_ADDRESS = "address";
+    public static final String PERSON_FIELD_OCCUPATION = "occupation";
 
     /**
      * The name of the column in the partnerships table storing partnership identifiers.
@@ -121,7 +126,12 @@ public class PopulationProperties {
     /**
      * The name of the column in the partnerships table storing marriage dates.
      */
-    public static final String PARTNERSHIP_FIELD_DATE = "date";
+    public static final String PARTNERSHIP_FIELD_DATE = "marriage_date";
+
+    /**
+     * The name of the column in the partnerships table storing marriage dates.
+     */
+    public static final String PARTNERSHIP_FIELD_PLACE = "marriage_place";
 
     /**
      * The name of the column in the people/partnerships table storing person identifiers.

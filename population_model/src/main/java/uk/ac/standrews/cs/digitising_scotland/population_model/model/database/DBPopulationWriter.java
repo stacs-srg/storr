@@ -37,8 +37,8 @@ import java.sql.SQLException;
  */
 public class DBPopulationWriter implements IPopulationWriter {
 
-    private static final String RECORD_PERSON_STATEMENT = makeInsertStatement(PopulationProperties.PERSON_TABLE_NAME, 9);
-    private static final String RECORD_PARTNERSHIP_STATEMENT = makeInsertStatement(PopulationProperties.PARTNERSHIP_TABLE_NAME, 2);
+    private static final String RECORD_PERSON_STATEMENT = makeInsertStatement(PopulationProperties.PERSON_TABLE_NAME, 10);
+    private static final String RECORD_PARTNERSHIP_STATEMENT = makeInsertStatement(PopulationProperties.PARTNERSHIP_TABLE_NAME, 3);
     private static final String RECORD_PARTNER_WITHIN_PARTNERSHIP_STATEMENT = makeInsertStatement(PopulationProperties.PARTNERSHIP_PARTNER_TABLE_NAME, 2);
     private static final String RECORD_CHILD_WITHIN_PARTNERSHIP_STATEMENT = makeInsertStatement(PopulationProperties.PARTNERSHIP_CHILD_TABLE_NAME, 2);
 
@@ -75,11 +75,13 @@ public class DBPopulationWriter implements IPopulationWriter {
                 String.valueOf(person.getSex()),
                 person.getFirstName(),
                 person.getSurname(),
-                DateManipulation.dateToSQLDate(person.getBirthDate()),
-                person.getDeathDate() != null ? DateManipulation.dateToSQLDate(person.getDeathDate()) : DBManipulation.NULL_DATE,
-                person.getOccupation(),
-                person.getCauseOfDeath(),
-                person.getAddress());
+                getSQLDate(person.getBirthDate()),
+                person.getBirthPlace(),
+                getSQLDate(person.getDeathDate()),
+                person.getDeathPlace(),
+                person.getDeathCause(),
+                person.getOccupation()
+        );
 
         record_person_statement.executeUpdate();
     }
@@ -88,9 +90,8 @@ public class DBPopulationWriter implements IPopulationWriter {
     public void recordPartnership(final IPartnership partnership) throws SQLException {
 
         final int partnership_id = partnership.getId();
-        final Date marriage_date = DateManipulation.dateToSQLDate(partnership.getMarriageDate());
 
-        recordPartnership(partnership_id, marriage_date);
+        recordMarriage(partnership);
         recordPartnerWithinPartnership(partnership_id, partnership.getFemalePartnerId());
         recordPartnerWithinPartnership(partnership_id, partnership.getMalePartnerId());
 
@@ -99,9 +100,14 @@ public class DBPopulationWriter implements IPopulationWriter {
         }
     }
 
-    private void recordPartnership(final int partnership_id, final Date marriage_date) throws SQLException {
+    @SuppressWarnings("FeatureEnvy")
+    private void recordMarriage(final IPartnership partnership) throws SQLException {
 
-        DBManipulation.configurePreparedStatement(record_partnership_statement, partnership_id, marriage_date);
+        final int partnership_id = partnership.getId();
+        final Object marriage_date = getSQLDate(partnership.getMarriageDate());
+        final String marriage_place = partnership.getMarriagePlace();
+
+        DBManipulation.configurePreparedStatement(record_partnership_statement, partnership_id, marriage_date, marriage_place);
         record_partnership_statement.executeUpdate();
     }
 
@@ -131,5 +137,10 @@ public class DBPopulationWriter implements IPopulationWriter {
         }
         builder.append(");");
         return builder.toString();
+    }
+
+    protected static Object getSQLDate(final java.util.Date date) {
+
+        return date != null ? DateManipulation.dateToSQLDate(date) : DBManipulation.NULL_DATE;
     }
 }

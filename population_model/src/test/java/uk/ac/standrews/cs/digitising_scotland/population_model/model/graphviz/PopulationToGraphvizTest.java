@@ -16,15 +16,17 @@
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.model.graphviz;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.in_memory.AbstractExporterTest;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPopulation;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPopulationWriter;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.PopulationConverter;
-import uk.ac.standrews.cs.digitising_scotland.population_model.transform.AbstractExporterTest;
 
-import java.nio.file.Path;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Paths;
 
 /**
@@ -36,7 +38,6 @@ import java.nio.file.Paths;
 public class PopulationToGraphvizTest extends AbstractExporterTest {
 
     protected static final String INTENDED_SUFFIX = "_intended.dot";
-    private static final String ACTUAL_SUFFIX = "_test.dot";
 
     public PopulationToGraphvizTest(final IPopulation population, final String file_name) throws Exception {
 
@@ -46,15 +47,19 @@ public class PopulationToGraphvizTest extends AbstractExporterTest {
     @Test
     public void test() throws Exception {
 
-        final Path actual_output = Paths.get(TEST_DIRECTORY_PATH_STRING, "graphviz", file_name_root + ACTUAL_SUFFIX);
-        final Path intended_output = Paths.get(TEST_DIRECTORY_PATH_STRING, "graphviz", file_name_root + INTENDED_SUFFIX);
-
-        final IPopulationWriter population_writer = new PopulationToGraphviz(actual_output.toString(), population);
+        final IPopulationWriter population_writer = new GraphvizPopulationWriter(actual_output, population);
 
         try (PopulationConverter converter = new PopulationConverter(population, population_writer)) {
             converter.convert();
         }
 
         assertThatFilesHaveSameContent(actual_output, intended_output);
+    }
+
+    @Before
+    public void setup() throws IOException {
+
+        actual_output = Files.createTempFile(null, ".dot");
+        intended_output = Paths.get(TEST_DIRECTORY_PATH_STRING, "graphviz", file_name_root + INTENDED_SUFFIX);
     }
 }

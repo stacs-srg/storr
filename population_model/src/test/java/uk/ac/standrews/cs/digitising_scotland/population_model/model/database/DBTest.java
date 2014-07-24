@@ -18,10 +18,9 @@ package uk.ac.standrews.cs.digitising_scotland.population_model.model.database;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import uk.ac.standrews.cs.digitising_scotland.population_model.config.PopulationProperties;
-import uk.ac.standrews.cs.digitising_scotland.population_model.util.RandomFactory;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.RandomFactory;
 import uk.ac.standrews.cs.digitising_scotland.util.DBManipulation;
 
 import java.io.IOException;
@@ -58,7 +57,7 @@ public class DBTest {
     @Test
     public void dbIsCreated() throws IOException, SQLException {
 
-        new DBInitialiser().setupDB();
+        DBInitialiser.setupDB();
 
         assertDBExists(database_name);
     }
@@ -66,22 +65,22 @@ public class DBTest {
     @Test
     public void personTableIsCreated() throws IOException, SQLException {
 
-        new DBInitialiser().setupDB();
+        DBInitialiser.setupDB();
 
         assertTableExists(database_name, PopulationProperties.PERSON_TABLE_NAME);
     }
 
-    private void assertDBExists(String database_name) throws SQLException {
+    private void assertDBExists(final String database_name) throws SQLException {
 
         assertTrue(DBManipulation.databaseExists(connection, database_name));
     }
 
-    private void assertDBDoesNotExist(String database_name) throws SQLException {
+    private void assertDBDoesNotExist(final String database_name) throws SQLException {
 
         assertFalse(DBManipulation.databaseExists(connection, database_name));
     }
 
-    private void assertTableExists(String database_name, String table_name) throws SQLException {
+    private void assertTableExists(final String database_name, final String table_name) throws SQLException {
 
         assertTrue(DBManipulation.tableExists(connection, database_name, table_name));
     }

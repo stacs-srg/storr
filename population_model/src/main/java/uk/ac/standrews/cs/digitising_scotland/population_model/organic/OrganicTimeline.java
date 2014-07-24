@@ -33,7 +33,7 @@ public class OrganicTimeline {
 
     /**
      * Creates a timeline beginning at the specified start day.
-     * 
+     *
      * @param startDay The start day of the timeline in days since 1/1/1600.
      */
     public OrganicTimeline(final int startDay) {
@@ -42,9 +42,9 @@ public class OrganicTimeline {
 
     /**
      * Creates a timeline beginning and ending at the specified start day and end day.
-     * 
+     *
      * @param startDay The start day of the timeline in days since 1/1/1600.
-     * @param endDay The end day of the timeline in days since 1/1/1600.
+     * @param endDay   The end day of the timeline in days since 1/1/1600.
      */
     public OrganicTimeline(final int startDay, final int endDay) {
         this.startDay = startDay;
@@ -53,8 +53,8 @@ public class OrganicTimeline {
 
     /**
      * Adds an event to the timeline on the specified day.
-     * 
-     * @param day Day of event in days since 1/1/1600.
+     *
+     * @param day   Day of event in days since 1/1/1600.
      * @param event The given event.
      */
     public void addEvent(final int day, final OrganicEvent event) {
@@ -63,7 +63,7 @@ public class OrganicTimeline {
 
     /**
      * Removes event occurring on the given day.
-     * 
+     *
      * @param day The day to clear of events.
      */
     public void removeEvent(final int day) {
@@ -72,7 +72,7 @@ public class OrganicTimeline {
 
     /**
      * Removes event from timeline.
-     * 
+     *
      * @param event The event to be removed.
      */
     public void removeEvent(final OrganicEvent event) {
@@ -91,7 +91,7 @@ public class OrganicTimeline {
 
     /**
      * Checks if a given date is free in the timeline (that no events exist on the given day).
-     * 
+     *
      * @param date The given date.
      * @return Boolean indicating day availability.
      */
@@ -102,7 +102,7 @@ public class OrganicTimeline {
 
     /**
      * Checks if a given day is free in the timeline (that no events exist on the given day).
-     * 
+     *
      * @param date The given day in days since the 1/1/1600.
      * @return Boolean indicating day availability.
      */
@@ -112,7 +112,7 @@ public class OrganicTimeline {
 
     /**
      * Returns the timelines start date.
-     * 
+     *
      * @return The timelines start date in days since the 1/1/1600.
      */
     public int getStartDate() {
@@ -121,7 +121,7 @@ public class OrganicTimeline {
 
     /**
      * Returns the event occurring on the specified date.
-     * 
+     *
      * @param date The date to be checked.
      * @return The event occurring on the given date.
      */
@@ -132,7 +132,7 @@ public class OrganicTimeline {
 
     /**
      * Returns the event occurring on the specified day.
-     * 
+     *
      * @param date The day in days since the 1/1/1600 to be checked.
      * @return The event occurring on the given day.
      */
@@ -142,7 +142,7 @@ public class OrganicTimeline {
 
     /**
      * Sets the start date.
-     * 
+     *
      * @param startDay The start date in days since the 1/1/1600.
      */
     public void setStartDay(final int startDay) {
@@ -151,7 +151,7 @@ public class OrganicTimeline {
 
     /**
      * Returns the end date of the timeline in days since the 1/1/1600.
-     * 
+     *
      * @return The end date of the timeline in days since the 1/1/1600.
      */
     public int getEndDate() {
@@ -160,7 +160,7 @@ public class OrganicTimeline {
 
     /**
      * Sets the end date.
-     * 
+     *
      * @param startDay The end date in days since the 1/1/1600.
      */
     public void setEndDate(final int endDay) {

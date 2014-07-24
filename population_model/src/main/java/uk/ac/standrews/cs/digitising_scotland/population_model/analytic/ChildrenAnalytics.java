@@ -24,7 +24,7 @@ import uk.ac.standrews.cs.digitising_scotland.util.ArrayManipulation;
 import java.util.List;
 
 /**
- * An analytic class to analyse the distribution of children.
+ * An analytic class to analyse the distribution of child_ids.
  *
  * @author Alan Dearle (alan.dearle@st-andrews.ac.uk)
  */
@@ -37,7 +37,7 @@ public class ChildrenAnalytics {
     private final IPopulation population;
 
     /**
-     * Creates an analytic instance to analyse children in a population.
+     * Creates an analytic instance to analyse child_ids in a population.
      *
      * @param population the population to analyse
      * @throws Exception if the analysis cannot be completed
@@ -58,13 +58,13 @@ public class ChildrenAnalytics {
         System.out.println("Children per marriage sizes:");
         for (int i = 0; i < children_per_marriage.length; i++) {
             if (children_per_marriage[i] != 0) {
-                System.out.println("\t" + children_per_marriage[i] + " Marriages with " + i + " children" + " = " + String.format("%.1f", children_per_marriage[i] / (double) sum * ONE_HUNDRED) + '%');
+                System.out.println("\t" + children_per_marriage[i] + " Marriages with " + i + " child_ids" + " = " + String.format("%.1f", children_per_marriage[i] / (double) sum * ONE_HUNDRED) + '%');
             }
         }
     }
 
     /**
-     * Analyses children of marriages for the population.
+     * Analyses child_ids of marriages for the population.
      *
      * @throws Exception if the analysis cannot be completed
      */

@@ -22,7 +22,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.text.NumberFormat;
 
 /**
@@ -35,7 +34,7 @@ public abstract class AbstractFilePopulationWriter implements IPopulationWriter 
 
     private static final int NUMBER_OF_DIGITS_IN_ID = 8;
 
-    protected final NumberFormat formatter;
+    private static final NumberFormat formatter;
 
     protected abstract void outputHeader(PrintWriter writer);
 
@@ -43,19 +42,22 @@ public abstract class AbstractFilePopulationWriter implements IPopulationWriter 
 
     protected PrintWriter writer;
 
-    /**
-     * Initialises the exporter. This includes potentially expensive scanning of the population graph.
-     *
-     * @param path_string the path for the output file
-     * @throws IOException if the file does not exist and cannot be created
-     */
-    public AbstractFilePopulationWriter(final String path_string) throws IOException {
+    static {
 
         formatter = NumberFormat.getInstance();
         formatter.setMinimumIntegerDigits(NUMBER_OF_DIGITS_IN_ID);
         formatter.setGroupingUsed(false);
+    }
 
-        final Path path = Paths.get(path_string);
+    /**
+     * Initialises the exporter. This includes potentially expensive scanning of the population graph.
+     *
+     * @param path the path for the output file
+     * @throws IOException if the file does not exist and cannot be created
+     */
+    public AbstractFilePopulationWriter(final Path path) throws IOException {
+
+
         FileManipulation.createParentDirectoryIfDoesNotExist(path);
 
         writer = new PrintWriter(Files.newBufferedWriter(path, FileManipulation.FILE_CHARSET));
@@ -70,15 +72,15 @@ public abstract class AbstractFilePopulationWriter implements IPopulationWriter 
         writer.close();
     }
 
-    protected String individualLabel(final int person_id) {
+    protected static String individualLabel(final int person_id) {
         return 'p' + padId(person_id);
     }
 
-    protected String familyLabel(final int partnership_id) {
+    protected static String familyLabel(final int partnership_id) {
         return 'm' + padId(partnership_id);
     }
 
-    private String padId(final int index) {
+    private static String padId(final int index) {
 
         return formatter.format(index);
     }

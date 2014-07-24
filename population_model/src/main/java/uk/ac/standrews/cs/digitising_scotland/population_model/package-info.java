@@ -14,7 +14,8 @@
  * You should have received a copy of the GNU General Public License along with population_model. If not, see
  * <http://www.gnu.org/licenses/>.
  */
+
 /**
- * This package provides a simple population model, configurable with parameters such as longevity distribution, childbirth patterns etc.
+ * Synthetic population model.
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model;

@@ -4,30 +4,27 @@ p00000001 [label="b: 15/03/1780\nd: 02/10/1863"]
 { rank = same; p00000001 p00000010; }
 p00000002 [label="b: 14/01/1788\nd: 30/01/1871"]
 { rank = same; p00000002 p00000010; }
-p00000007 [label="b: 23/03/1829\nd: 13/12/1914"]
-{ rank = same; p00000007 p00000022; }
-p00000008 [label="b: 13/06/1830\nd: 24/09/1892"]
-{ rank = same; p00000008 p00000022; }
+p00000011 [label="b: 17/11/1861\nd: 11/07/1935"]
+{ rank = same; p00000011 p00000022; }
+p00000012 [label="b: 17/12/1863\nd: 29/12/1913"]
+{ rank = same; p00000012 p00000022; }
+p00000021 [label="b: 27/12/1937\nd: 05/06/2003"]
+{ rank = same; p00000021 p00000024; }
 p00000023 [label="b: 06/08/1955"]
-{ rank = same; p00000023 p00000022; }
-p00000024 [label="b: 03/12/1964"]
-{ rank = same; p00000024 p00000022; }
+{ rank = same; p00000023 p00000024; }
 p00000007 -> m00000002 [color=red arrowhead=none]
 m00000002 -> p00000005 [color=red arrowhead=none]
 m00000002 [shape=box color=red label="m: 21/06/1839"]
 { rank = same; p00000007 p00000005 m00000002; }
-m00000002 -> p00000010
 p00000006 -> m00000003 [color=red arrowhead=none]
 m00000003 -> p00000008 [color=red arrowhead=none]
 m00000003 [shape=box color=red label="m: 22/06/1840"]
 { rank = same; p00000006 p00000008 m00000003; }
+m00000003 -> p00000010
 p00000018 -> m00000004 [color=red arrowhead=none]
 m00000004 -> p00000020 [color=red arrowhead=none]
 m00000004 [shape=box color=red label="m: 15/12/1938"]
 { rank = same; p00000018 p00000020 m00000004; }
 m00000004 -> p00000022
-p00000026 -> m00000005 [color=red arrowhead=none]
-m00000005 -> p00000028 [color=red arrowhead=none]
-m00000005 [shape=box color=red label="m: 04/06/1992"]
-{ rank = same; p00000026 p00000028 m00000005; }
+m00000004 -> p00000024
 }

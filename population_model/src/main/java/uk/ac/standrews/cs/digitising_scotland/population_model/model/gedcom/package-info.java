@@ -16,7 +16,7 @@
  */
 
 /**
- * Transformation to and from GEDCOM file format.
+ * Population export to and import from GEDCOM file.
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.model.gedcom;
 

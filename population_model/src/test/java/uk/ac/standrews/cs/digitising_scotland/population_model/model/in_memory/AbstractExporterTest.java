@@ -14,9 +14,13 @@
  * You should have received a copy of the GNU General Public License along with population_model. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-package uk.ac.standrews.cs.digitising_scotland.population_model.transform;
+package uk.ac.standrews.cs.digitising_scotland.population_model.model.in_memory;
 
+import org.junit.After;
+import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.NegativeDeviationException;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.NegativeWeightException;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IDFactory;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPopulation;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.in_memory.CompactPopulation;
@@ -36,12 +40,16 @@ import static org.junit.Assert.assertNull;
 /**
  * @author Graham Kirby (graham.kirby@st-andrews.ac.uk)
  */
+@RunWith(Parameterized.class)
 public abstract class AbstractExporterTest {
 
     public static final String TEST_DIRECTORY_PATH_STRING = "src/test/resources/";
 
     protected final IPopulation population;
     protected final String file_name_root;
+
+    protected Path actual_output = null;
+    protected Path intended_output = null;
 
     @SuppressWarnings("MagicNumber")
     protected static final int[] TEST_CASE_POPULATION_SIZES = new int[]{10, 30, 50, 200};
@@ -67,6 +75,12 @@ public abstract class AbstractExporterTest {
             configurations[i] = makeTestConfiguration(TEST_CASE_POPULATION_SIZES[i], TEST_CASE_FILE_NAME_ROOTS[i]);
         }
         return Arrays.asList(configurations);
+    }
+
+    @After
+    public void tearDown() throws IOException {
+
+        Files.delete(actual_output);
     }
 
     private static Object[] makeTestConfiguration(final int population_size, final String file_name_root) throws Exception {

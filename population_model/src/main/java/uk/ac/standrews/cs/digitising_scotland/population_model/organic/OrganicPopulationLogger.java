@@ -21,8 +21,7 @@ public class OrganicPopulationLogger {
     private static int population = 0;
     private static int marriages = 0;
     private static int births = 0;
-    private static int divorcesNoRemmariage = 0;
-    private static int divorces;
+    private static int divorces = 0;
     private static final int MAX_AGE = 100;
     private static int[] maleAgeAtMarriage = new int[MAX_AGE];
     private static int[] femaleAgeAtMarriage = new int[MAX_AGE];
@@ -45,7 +44,7 @@ public class OrganicPopulationLogger {
 
     /**
      * Returns the size of the alive population.
-     * 
+     *
      * @return The number of people alive in the population.
      */
     public static int getPopulation() {
@@ -64,13 +63,6 @@ public class OrganicPopulationLogger {
      */
     public static void incDivorces() {
         divorces++;
-    }
-
-    /**
-     * Increments the number of divorces with no remarriages.
-     */
-    public static void incDivorcesNoRemmariage() {
-        divorcesNoRemmariage++;
     }
 
     /**
@@ -98,8 +90,8 @@ public class OrganicPopulationLogger {
 
     /**
      * Logs all needed information pertaining to the marriage.
-     * 
-     * @param maleDays Males age in days at the point of marriage.
+     *
+     * @param maleDays   Males age in days at the point of marriage.
      * @param femaleDays Females age in days at the point of marriage.
      */
     public static void logMarriage(final int maleDays, final int femaleDays) {
@@ -107,6 +99,10 @@ public class OrganicPopulationLogger {
         addMaleAgeAtMarriage(maleDays);
         addFemaleAgeAtMarriage(femaleDays);
         addAgeDifferenceAtMarriage(maleDays, femaleDays);
+    }
+
+    public static void logDivorce() {
+        incDivorces();
     }
 
     /**

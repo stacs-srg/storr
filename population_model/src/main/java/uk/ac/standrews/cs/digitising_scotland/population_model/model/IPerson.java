@@ -68,10 +68,22 @@ public interface IPerson {
     Date getBirthDate();
 
     /**
+     * Gets the person's place of birth, or null if not recorded.
+     * @return the person's place of birth
+     */
+    String getBirthPlace();
+
+    /**
      * Gets the person's date of death, or null if they are living.
      * @return the person's date of death
      */
     Date getDeathDate();
+
+    /**
+     * Gets the person's place of death, or null if not recorded.
+     * @return the person's place of death
+     */
+    String getDeathPlace();
 
     /**
      * Gets the person's occupation, or null if not recorded.
@@ -83,13 +95,7 @@ public interface IPerson {
      * Gets the cause of the person's death, or null if not recorded.
      * @return the cause of the person's death
      */
-    String getCauseOfDeath();
-
-    /**
-     * Gets the person's address, or null if not recorded.
-     * @return the person's address
-     */
-    String getAddress();
+    String getDeathCause();
 
     /**
      * Gets the identifiers of the person's partnerships, or null if none are recorded.

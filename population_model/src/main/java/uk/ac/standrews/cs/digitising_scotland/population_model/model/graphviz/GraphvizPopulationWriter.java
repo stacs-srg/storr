@@ -23,6 +23,7 @@ import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPopulation
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.file.Path;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -34,7 +35,7 @@ import java.util.List;
  *
  * @author Graham Kirby (graham.kirby@st-andrews.ac.uk)
  */
-public class PopulationToGraphviz extends AbstractFilePopulationWriter {
+public class GraphvizPopulationWriter extends AbstractFilePopulationWriter {
 
     private static final String INDIVIDUAL_NODE_COLOUR = "blue";
     private static final String PARTNERSHIP_NODE_COLOUR = "red";
@@ -50,12 +51,12 @@ public class PopulationToGraphviz extends AbstractFilePopulationWriter {
     /**
      * Initialises the exporter. This includes potentially expensive scanning of the population graph.
      *
-     * @param path_string the path for the output file
+     * @param path the path for the output file
      * @throws IOException if the file does not exist and cannot be created
      */
-    public PopulationToGraphviz(final String path_string, final IPopulation population) throws IOException {
+    public GraphvizPopulationWriter(final Path path, final IPopulation population) throws IOException {
 
-        super(path_string);
+        super(path);
         this.population = population;
 
         formatter = new SimpleDateFormat("dd/MM/yyyy");

@@ -16,27 +16,25 @@
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.model.gedcom;
 
+import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.in_memory.AbstractExporterTest;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPopulation;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPopulationWriter;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.PopulationConverter;
-import uk.ac.standrews.cs.digitising_scotland.population_model.transform.AbstractExporterTest;
 
-import java.nio.file.Path;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Paths;
 
 /**
  * Tests of GEDCOM export.
- * 
+ *
  * @author Graham Kirby (graham.kirby@st-andrews.ac.uk)
  */
-@RunWith(Parameterized.class)
 public class PopulationToGEDCOMTest extends AbstractExporterTest {
 
     protected static final String INTENDED_SUFFIX = "_intended.ged";
-    private static final String ACTUAL_SUFFIX = "_test.ged";
 
     public PopulationToGEDCOMTest(final IPopulation population, final String file_name) throws Exception {
 
@@ -46,15 +44,19 @@ public class PopulationToGEDCOMTest extends AbstractExporterTest {
     @Test
     public void test() throws Exception {
 
-        final Path actual_output = Paths.get(TEST_DIRECTORY_PATH_STRING, "gedcom", file_name_root + ACTUAL_SUFFIX);
-        final Path intended_output = Paths.get(TEST_DIRECTORY_PATH_STRING, "gedcom", file_name_root + INTENDED_SUFFIX);
-
-        final IPopulationWriter population_writer = new PopulationToGEDCOM(actual_output.toString());
+        final IPopulationWriter population_writer = new GEDCOMPopulationWriter(actual_output);
 
         try (PopulationConverter converter = new PopulationConverter(population, population_writer)) {
             converter.convert();
         }
 
         assertThatFilesHaveSameContent(actual_output, intended_output);
+    }
+
+    @Before
+    public void setup() throws IOException {
+
+        actual_output = Files.createTempFile(null, ".ged");
+        intended_output = Paths.get(TEST_DIRECTORY_PATH_STRING, "gedcom", file_name_root + INTENDED_SUFFIX);
     }
 }

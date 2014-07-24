@@ -16,13 +16,9 @@
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.organic;
 
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.Distribution;
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.FemaleAgeAtMarriageDistribution;
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.MaleAgeAtMarriageDistribution;
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.UniformDistribution;
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.UniformSexDistribution;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.*;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPerson;
-import uk.ac.standrews.cs.digitising_scotland.population_model.util.RandomFactory;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.RandomFactory;
 import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
 
 import java.util.ArrayList;
@@ -46,18 +42,20 @@ public class OrganicPerson implements IPerson {
 
     private static Random random = RandomFactory.getRandom();
     private static final int MAX_AGE = 100;
+    private static Distribution<Integer> uniformDistribution;
+    private static RemarriageDistribution remmariageDist = new RemarriageDistribution(random);
     private static Distribution<Integer> seed_age_distribution = new UniformDistribution(0, MAX_AGE, random);
     private static Distribution<Integer> seed_death_distribution = new UniformDistribution(0, MAX_AGE, random);
     private static Distribution<Integer> maleAgeAtMarriageDistribution = new MaleAgeAtMarriageDistribution(random);
     private static Distribution<Integer> femaleAgeAtMarriageDistribution = new FemaleAgeAtMarriageDistribution(random);
     private static UniformSexDistribution sex_distribution = new UniformSexDistribution(random);
 
-    
+
     /**
      * Creates an OrganicPerson object given the stated id, birthday and a boolean flag to identify in the creation is for the seed population.
-     * 
-     * @param id The unique id for the new person.
-     * @param birthDay The day of birth in days since the 1/1/1600.
+     *
+     * @param id             The unique id for the new person.
+     * @param birthDay       The day of birth in days since the 1/1/1600.
      * @param seedGeneration Flag indicating is the simulation is still creating the seed population.
      */
     public OrganicPerson(final int id, final int birthDay, final boolean seedGeneration) {
@@ -73,7 +71,7 @@ public class OrganicPerson implements IPerson {
 
     /**
      * Gets age in days at the specified date.
-     * 
+     *
      * @param date Date at which age should be calculated.
      * @return The number of days since birth on the given date.
      */
@@ -84,7 +82,7 @@ public class OrganicPerson implements IPerson {
 
     /**
      * Sets timeline to specified timeline.
-     * 
+     *
      * @param timeline The new timeline.
      */
     public void setTimeline(final OrganicTimeline timeline) {
@@ -93,6 +91,7 @@ public class OrganicPerson implements IPerson {
 
     /**
      * Returns the timeline of the person.
+     *
      * @return The persons timeline.
      */
     public OrganicTimeline getTimeline() {
@@ -114,12 +113,12 @@ public class OrganicPerson implements IPerson {
 
 
         if (seedGeneration) {
-            dayOfBirth = DateManipulation.dateToDays(OrganicPopulation.START_YEAR, 0, 0) - ageOfDeathInDays;
+            dayOfBirth = DateManipulation.dateToDays(OrganicPopulation.START_YEAR, 0, 0) + seed_death_distribution.getSample() * 365 - ageOfDeathInDays;
 
             if (dayOfBirth < OrganicPopulation.getEarliestDate()) {
                 OrganicPopulation.setEarliestDate(dayOfBirth);
             }
-        } 
+        }
 
         // Calculate and set death date
         int dayOfDeath = dayOfBirth + ageOfDeathInDays;
@@ -139,25 +138,61 @@ public class OrganicPerson implements IPerson {
 
     }
 
+    /**
+     * Changes, adds or removes events on timeline.
+     */
+    public void updateTimeline(EventType trigger) {
+
+        //Change events on timeline as needed.
+
+        switch (trigger) {
+            case DIVORCE: {
+                if (remmariageDist.getSample()) {
+                    addEligibleToReMarryEvent(this.getTimeline().getEndDate());
+                }
+            }
+            case PARTNERSHIP_ENDED_BY_DEATH:
+
+            default:
+                break;
+        }
+
+    }
+
     private void addEligibleToMarryEvent() {
         // Add ELIGIBLE_TO_MARRY event
         int date;
         if (sex == 'M') {
             // time in days to birth from 1/1/1600 + marriage age in days
             date = getBirthDay() + maleAgeAtMarriageDistribution.getSample();
-            if(date < getDeathDay())
-            	timeline.addEvent(date, new OrganicEvent(EventType.ELIGIBLE_TO_MARRY));
+            if (date < getDeathDay())
+                timeline.addEvent(date, new OrganicEvent(EventType.ELIGIBLE_TO_MARRY));
         } else {
             // time in days to birth from 1/1/1600 + marriage age in days
             date = getBirthDay() + femaleAgeAtMarriageDistribution.getSample();
-            if(date < getDeathDay())
-            	timeline.addEvent(date, new OrganicEvent(EventType.ELIGIBLE_TO_MARRY));
+            if (date < getDeathDay())
+                timeline.addEvent(date, new OrganicEvent(EventType.ELIGIBLE_TO_MARRY));
         }
     }
 
     /**
+     * To be called in the case of remarriage after ended partnership.
+     *
+     * @param minimumDate the new marriage event will be placed AFTER this date
+     */
+    private void addEligibleToReMarryEvent(int minimumDate) {
+
+        // Add ELIGIBLE_TO_MARRY event
+        int date;
+        uniformDistribution = new UniformDistribution(minimumDate, getDeathDay(), random);
+        date = minimumDate + uniformDistribution.getSample();
+        if (date < getDeathDay())
+            timeline.addEvent(date, new OrganicEvent(EventType.ELIGIBLE_TO_MARRY));
+    }
+
+    /**
      * Adds a partnership id to the persons list of partnerships.
-     * 
+     *
      * @param id The id of a new partnership of which the person is part of.
      */
     public void addPartnership(final int id) {
@@ -166,7 +201,7 @@ public class OrganicPerson implements IPerson {
 
     /**
      * Returns the persons birth day in days since 1/1/1600.
-     * 
+     *
      * @return The persons birth day in days since 1/1/1600.
      */
     public int getBirthDay() {
@@ -175,7 +210,7 @@ public class OrganicPerson implements IPerson {
 
     /**
      * Returns the persons death day in days since 1/1/1600.
-     * 
+     *
      * @return The persons death day in days since 1/1/1600.
      */
     public int getDeathDay() {
@@ -213,22 +248,27 @@ public class OrganicPerson implements IPerson {
     }
 
     @Override
+    public String getBirthPlace() {
+        return null;
+    }
+
+    @Override
     public Date getDeathDate() {
         return DateManipulation.daysToDate(this.getTimeline().getEndDate());
     }
 
     @Override
+    public String getDeathPlace() {
+        return null;
+    }
+
+    @Override
+    public String getDeathCause() {
+        return null;
+    }
+
+    @Override
     public String getOccupation() {
-        return null;
-    }
-
-    @Override
-    public String getCauseOfDeath() {
-        return null;
-    }
-
-    @Override
-    public String getAddress() {
         return null;
     }
 

@@ -10,65 +10,99 @@
 1 SEX M
 1 BIRT
 2 DATE 12 Oct 1805
+2 PLAC 1 Main St, St Andrews
 1 DEAT
 2 DATE 10 Jul 1870
+2 PLAC 1 Main St, St Andrews
+2 CAUS specified causes
+1 OCCU labourer
 0 @p00000002@ INDI
-1 NAME Charles /HARRISON/
+1 NAME Alexr /BUCKNALL/
 1 SEX M
 1 BIRT
 2 DATE 13 Jun 1830
+2 PLAC 1 Main St, St Andrews
 1 DEAT
 2 DATE 24 Jan 1910
+2 PLAC 1 Main St, St Andrews
+2 CAUS diarrhoea and enteritis (over 2 years)
+1 OCCU power loom cotton weaver
 0 @p00000003@ INDI
-1 NAME Eliza /PONTON/
+1 NAME Mary /GRIFFITHS/
 1 SEX F
 1 BIRT
 2 DATE 26 Nov 1849
+2 PLAC 1 Main St, St Andrews
 1 DEAT
 2 DATE 12 Nov 1934
+2 PLAC 1 Main St, St Andrews
+2 CAUS other diseases of organs of locomotion
+1 OCCU papermaker
 0 @p00000004@ INDI
-1 NAME Ann /TEANS/
+1 NAME Margaret /BURWOOD/
 1 SEX F
 1 BIRT
 2 DATE 22 Oct 1895
+2 PLAC 1 Main St, St Andrews
 1 DEAT
 2 DATE 17 Jan 1977
+2 PLAC 1 Main St, St Andrews
+2 CAUS not specified
+1 OCCU ag lab
 0 @p00000005@ INDI
-1 NAME Margaret /WHITEHEAD/
+1 NAME Mary /ALLAN/
 1 SEX F
 1 BIRT
 2 DATE 12 Feb 1913
+2 PLAC 1 Main St, St Andrews
 1 DEAT
 2 DATE 06 Feb 1967
+2 PLAC 1 Main St, St Andrews
+2 CAUS pneumonia broncho
+1 OCCU engine winder (colliery)
 0 @p00000006@ INDI
-1 NAME Thos /FISHER/
-1 SEX M
-1 BIRT
-2 DATE 13 Apr 1930
-1 DEAT
-2 DATE 07 Apr 1996
-0 @p00000007@ INDI
 1 NAME William /JONES/
 1 SEX M
 1 BIRT
+2 DATE 13 Apr 1930
+2 PLAC 1 Main St, St Andrews
+1 DEAT
+2 DATE 07 Apr 1996
+2 PLAC 1 Main St, St Andrews
+2 CAUS specified causes
+1 OCCU blacksmith
+0 @p00000007@ INDI
+1 NAME John /BUTCHER/
+1 SEX M
+1 BIRT
 2 DATE 27 Dec 1937
+2 PLAC 1 Main St, St Andrews
 1 DEAT
 2 DATE 04 Jan 2003
+2 PLAC 1 Main St, St Andrews
+2 CAUS specified causes
+1 OCCU gardener
 0 @p00000008@ INDI
-1 NAME Catherine /GRIMES/
+1 NAME Jessie /MAYHEW/
 1 SEX F
 1 BIRT
 2 DATE 26 Nov 1952
+2 PLAC 1 Main St, St Andrews
+1 OCCU glazier
 0 @p00000009@ INDI
-1 NAME Mary /MCCRIRRICK/
+1 NAME Mary /CLARK/
 1 SEX F
 1 BIRT
 2 DATE 06 Aug 1955
+2 PLAC 1 Main St, St Andrews
+1 OCCU clogger
 0 @p00000010@ INDI
-1 NAME Annie /MAY/
+1 NAME Janet /WELSH/
 1 SEX F
 1 BIRT
 2 DATE 06 Feb 1978
+2 PLAC 1 Main St, St Andrews
+1 OCCU cabinet maker
 0 @S1@ SUBM
 1 NAME Digitising Scotland Project
 0 TRLR

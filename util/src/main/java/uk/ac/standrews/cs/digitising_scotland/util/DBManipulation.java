@@ -65,7 +65,7 @@ public class DBManipulation {
             } else if (parameter == NULL_DATE) {
                 statement.setDate(pos, null);
             } else if (parameter == null) {
-                statement.setString(pos, "");
+                statement.setString(pos, null);
             } else {
                 throw new SQLException("unknown parameter type: " + parameter.getClass().getSimpleName());
             }

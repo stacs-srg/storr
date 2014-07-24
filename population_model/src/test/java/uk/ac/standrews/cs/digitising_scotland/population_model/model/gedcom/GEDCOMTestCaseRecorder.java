@@ -19,9 +19,10 @@ package uk.ac.standrews.cs.digitising_scotland.population_model.model.gedcom;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.InconsistentWeightException;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPopulation;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPopulationWriter;
-import uk.ac.standrews.cs.digitising_scotland.population_model.transform.AbstractTestCaseRecorder;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.in_memory.AbstractTestCaseRecorder;
 
 import java.io.IOException;
+import java.nio.file.Path;
 
 /**
  * Generates test cases for GEDCOM export.
@@ -36,9 +37,9 @@ public class GEDCOMTestCaseRecorder extends AbstractTestCaseRecorder {
     }
 
     @Override
-    protected IPopulationWriter getPopulationWriter(final String path_string, final IPopulation population) throws IOException, InconsistentWeightException {
+    protected IPopulationWriter getPopulationWriter(final Path path, final IPopulation population) throws IOException, InconsistentWeightException {
 
-        return new PopulationToGEDCOM(path_string);
+        return new GEDCOMPopulationWriter(path);
     }
 
     @Override
