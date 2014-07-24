@@ -40,7 +40,8 @@ public abstract class PopulationComparisonTest extends GeneralPopulationStructur
 
     public PopulationComparisonTest(final IPopulation population) throws Exception {
 
-        super();
+        super(population, true);
+
         original_population = population;
         original_population.setConsistentAcrossIterations(true);
     }
@@ -91,13 +92,15 @@ public abstract class PopulationComparisonTest extends GeneralPopulationStructur
 
         assertEquals(person1.getSex(), person2.getSex());
         assertNotNull(person1.getBirthDate());
-        assertEqualDates(person1.getBirthDate(), person2.getBirthDate());
-        assertEqualDates(person1.getDeathDate(), person2.getDeathDate());
         assertEquals(person1.getParentsPartnership(), person2.getParentsPartnership());
 
+        assertEqualDates(person1.getBirthDate(), person2.getBirthDate());
         assertEquals(person1.getBirthPlace(), person2.getBirthPlace());
+
+        assertEqualDates(person1.getDeathDate(), person2.getDeathDate());
         assertEquals(person1.getDeathPlace(), person2.getDeathPlace());
         assertEquals(person1.getDeathCause(), person2.getDeathCause());
+
         assertEquals(person1.getOccupation(), person2.getOccupation());
     }
 
@@ -116,6 +119,7 @@ public abstract class PopulationComparisonTest extends GeneralPopulationStructur
         assertEquals(partnership1.getFemalePartnerId(), partnership2.getFemalePartnerId());
         assertEqualSets(partnership1.getChildIds(), partnership2.getChildIds());
         assertEqualDates(partnership1.getMarriageDate(), partnership2.getMarriageDate());
+        assertEquals(partnership1.getMarriagePlace(), partnership2.getMarriagePlace());
     }
 
     private static void assertEqualSets(final List<Integer> set1, final List<Integer> set2) {

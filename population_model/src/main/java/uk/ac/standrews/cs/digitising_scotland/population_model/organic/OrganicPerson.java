@@ -44,8 +44,8 @@ public class OrganicPerson implements IPerson {
     private static final int MAX_AGE = 100;
     private static Distribution<Integer> uniformDistribution;
     private static RemarriageDistribution remmariageDist = new RemarriageDistribution(random);
-    private static Distribution<Integer> seed_age_distribution = new UniformDistribution(0, MAX_AGE, random);
-    private static Distribution<Integer> seed_death_distribution = new UniformDistribution(0, MAX_AGE, random);
+    private static Distribution<Integer> seed_age_distribution = new UniformIntegerDistribution(0, MAX_AGE, random);
+    private static Distribution<Integer> seed_death_distribution = new UniformIntegerDistribution(0, MAX_AGE, random);
     private static Distribution<Integer> maleAgeAtMarriageDistribution = new MaleAgeAtMarriageDistribution(random);
     private static Distribution<Integer> femaleAgeAtMarriageDistribution = new FemaleAgeAtMarriageDistribution(random);
     private static UniformSexDistribution sex_distribution = new UniformSexDistribution(random);
@@ -105,7 +105,7 @@ public class OrganicPerson implements IPerson {
     //    }
 
     private void setPersonsBirthAndDeathDates(final int birthDay, final boolean seedGeneration) {
-        final UniformDistribution days_of_year_distribution = new UniformDistribution(1, (int) OrganicPopulation.DAYS_PER_YEAR, random);
+        final UniformIntegerDistribution days_of_year_distribution = new UniformIntegerDistribution(1, (int) OrganicPopulation.DAYS_PER_YEAR, random);
         // Find an age for person
         int ageOfDeathInYears = seed_age_distribution.getSample();
         int ageOfDeathInDays = (int) ((ageOfDeathInYears - 1) * (OrganicPopulation.DAYS_PER_YEAR)) + days_of_year_distribution.getSample();
@@ -184,7 +184,7 @@ public class OrganicPerson implements IPerson {
 
         // Add ELIGIBLE_TO_MARRY event
         int date;
-        uniformDistribution = new UniformDistribution(minimumDate, getDeathDay(), random);
+        uniformDistribution = new UniformIntegerDistribution(minimumDate, getDeathDay(), random);
         date = minimumDate + uniformDistribution.getSample();
         if (date < getDeathDay())
             timeline.addEvent(date, new OrganicEvent(EventType.ELIGIBLE_TO_MARRY));

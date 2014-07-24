@@ -16,10 +16,14 @@
  */
 package uk.ac.standrews.cs.digitising_scotland.util;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
- * Simple class for doing array manipulation.
+ * Various array manipulation utilities.
  *
  * @author Alan Dearle (alan.dearle@st-andrews.ac.uk)
+ * @author Graham Kirby (graham.kirby@st-andrews.ac.uk)
  */
 public class ArrayManipulation {
 
@@ -36,5 +40,41 @@ public class ArrayManipulation {
             count += element;
         }
         return count;
+    }
+
+    public static <T> int binarySplit(final List<T> array, final SplitComparator<T> comparator) {
+
+        int low = 0;
+        int high = array.size() - 1;
+
+        while (low <= high) {
+
+            final int mid = low + (high - low) / 2;
+            final T mid_element = array.get(mid);
+
+            final int check = comparator.check(mid_element);
+
+            if (check < 0) {
+                high = mid - 1;
+
+            } else if (check > 0) {
+                low = mid + 1;
+
+            } else {
+                return mid;
+            }
+        }
+
+        return -1;
+    }
+
+    public static <T> int binarySplit(final T[] array, final SplitComparator<T> comparator) {
+
+        return binarySplit(Arrays.asList(array), comparator);
+    }
+
+    public interface SplitComparator<T> {
+
+        int check(T element);
     }
 }

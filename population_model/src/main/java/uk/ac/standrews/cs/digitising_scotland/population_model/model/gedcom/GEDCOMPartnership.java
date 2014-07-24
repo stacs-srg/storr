@@ -18,7 +18,6 @@ package uk.ac.standrews.cs.digitising_scotland.population_model.model.gedcom;
 
 import org.gedcom4j.model.Family;
 import org.gedcom4j.model.FamilyEvent;
-import org.gedcom4j.model.FamilyEventType;
 import org.gedcom4j.model.Individual;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.AbstractPartnership;
 import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
@@ -31,6 +30,7 @@ import java.util.ArrayList;
  */
 public class GEDCOMPartnership extends AbstractPartnership {
 
+    @SuppressWarnings("FeatureEnvy")
     public GEDCOMPartnership(final Family family) throws ParseException {
 
         id = GEDCOMPopulationWriter.idToInt(family.xref);
@@ -38,9 +38,16 @@ public class GEDCOMPartnership extends AbstractPartnership {
         female_partner_id = GEDCOMPopulationWriter.idToInt(family.wife.xref);
 
         for (final FamilyEvent event : family.events) {
-            if (event.type == FamilyEventType.MARRIAGE) {
-                marriage_date = DateManipulation.parseDate(event.date.toString());
-                break;
+
+            switch (event.type) {
+
+                case MARRIAGE:
+                    marriage_date = DateManipulation.parseDate(event.date.toString());
+                    marriage_place = event.place.placeName;
+                    break;
+
+                default:
+                    break;
             }
         }
 

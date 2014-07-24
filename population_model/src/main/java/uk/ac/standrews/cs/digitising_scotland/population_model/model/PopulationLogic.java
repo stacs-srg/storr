@@ -155,4 +155,16 @@ public class PopulationLogic {
     public static int getMinimumMotherAgeAtChildBirth() {
     	return MINIMUM_MOTHER_AGE_AT_CHILDBIRTH;
     }
+    
+    public static int getMaximumFathersAgeAtChildBirth() {
+    	return MAXIMUM_FATHER_AGE_AT_CHILDBIRTH;
+    }
+    
+    public static int getMinimumFathersAgeAtChildBirth() {
+    	return MINIMUM_FATHER_AGE_AT_CHILDBIRTH;
+    }
+    
+    public static int getInterChildInterval() {
+    	return INTER_CHILD_INTERVAL;
+    }
 }

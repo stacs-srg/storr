@@ -38,9 +38,9 @@ public class DBPartnership extends AbstractPartnership {
     /**
      * Assumes result set contains rows from Partnership table.
      *
-     * @param connection
-     * @param result_set
-     * @throws SQLException
+     * @param connection the database connection
+     * @param result_set a result set with the cursor at the relevant row
+     * @throws SQLException if the partnership cannot be initialised
      */
     public DBPartnership(final Connection connection, final ResultSet result_set) throws SQLException {
 
@@ -66,94 +66,100 @@ public class DBPartnership extends AbstractPartnership {
         this.id = id;
 
         setPartners(id);
-        setMarriageDate(id);
+        setMarriageDetails(id);
         setChildren(id);
     }
 
-    private void setPartners(int id) throws SQLException {
+    private void setPartners(final int id) throws SQLException {
 
         // Get the ids of the two partners.
 
         get_partners_statement.setInt(1, id);
-        final ResultSet partners_result_set = get_partners_statement.executeQuery();
 
-        if (!partners_result_set.first()) {
-            throw new SQLException("can't find partnership id: " + id);
+        try (final ResultSet partners_result_set = get_partners_statement.executeQuery()) {
+
+            if (!partners_result_set.first()) {
+                throw new SQLException("can't find partnership id: " + id);
+            }
+
+            final int partner1_id = partners_result_set.getInt(PopulationProperties.PARTNERSHIP_FIELD_PERSON_ID);
+            partners_result_set.next();
+            final int partner2_id = partners_result_set.getInt(PopulationProperties.PARTNERSHIP_FIELD_PERSON_ID);
+
+            // Work out the sexes.
+
+            get_partner_statement.setInt(1, partner1_id);
+            try (final ResultSet partner_result_set = get_partner_statement.executeQuery()) {
+
+                if (!partner_result_set.first()) {
+                    throw new SQLException("can't find partner id: " + partner1_id);
+                }
+
+                final boolean partner1_is_female = partner_result_set.getString(PopulationProperties.PERSON_FIELD_GENDER).charAt(0) == IPerson.FEMALE;
+
+                female_partner_id = partner1_is_female ? partner1_id : partner2_id;
+                male_partner_id = partner1_is_female ? partner2_id : partner1_id;
+            }
         }
-
-        int partner1_id = partners_result_set.getInt(PopulationProperties.PARTNERSHIP_FIELD_PERSON_ID);
-        partners_result_set.next();
-        int partner2_id = partners_result_set.getInt(PopulationProperties.PARTNERSHIP_FIELD_PERSON_ID);
-
-        // Work out the sexes.
-
-        get_partner_statement.setInt(1, partner1_id);
-        final ResultSet partner_result_set = get_partner_statement.executeQuery();
-
-        if (!partner_result_set.first()) {
-            throw new SQLException("can't find partner id: " + partner1_id);
-        }
-
-        boolean partner1_is_female = partner_result_set.getString(PopulationProperties.PERSON_FIELD_GENDER).charAt(0) == IPerson.FEMALE;
-
-        female_partner_id = partner1_is_female ? partner1_id : partner2_id;
-        male_partner_id = partner1_is_female ? partner2_id : partner1_id;
     }
 
-    private void setMarriageDate(int id) throws SQLException {
+    private void setMarriageDetails(final int id) throws SQLException {
 
         get_partnership_statement.setInt(1, id);
-        final ResultSet partnership_result_set = get_partnership_statement.executeQuery();
+        try (final ResultSet partnership_result_set = get_partnership_statement.executeQuery()) {
 
-        if (partnership_result_set.first()) {
-            marriage_date = partnership_result_set.getDate(PopulationProperties.PARTNERSHIP_FIELD_DATE);
+            if (partnership_result_set.first()) {
+                marriage_date = partnership_result_set.getDate(PopulationProperties.PARTNERSHIP_FIELD_DATE);
+                marriage_place = partnership_result_set.getString(PopulationProperties.PARTNERSHIP_FIELD_PLACE);
+            }
         }
     }
 
-    private void setChildren(int id) throws SQLException {
+    private void setChildren(final int id) throws SQLException {
 
         get_children_statement.setInt(1, id);
-        final ResultSet children_result_set = get_children_statement.executeQuery();
+        try (final ResultSet children_result_set = get_children_statement.executeQuery()) {
 
-        child_ids = new ArrayList<>();
-        while (children_result_set.next()) {
-            child_ids.add(children_result_set.getInt(PopulationProperties.PARTNERSHIP_FIELD_PERSON_ID));
+            child_ids = new ArrayList<>();
+            while (children_result_set.next()) {
+                child_ids.add(children_result_set.getInt(PopulationProperties.PARTNERSHIP_FIELD_PERSON_ID));
+            }
         }
     }
 
-    private static synchronized void initStatementsIfNecessary(Connection connection) throws SQLException {
+    private static synchronized void initStatementsIfNecessary(final Connection connection) throws SQLException {
 
         // Delay initialisation of prepared statement until the first call, after the database properties have been set.
         if (connection != DBPartnership.connection || get_partners_statement == null) {
 
-            String database_name = PopulationProperties.getDatabaseName();
+            final String database_name = PopulationProperties.getDatabaseName();
 
-            String generic_query = "SELECT * FROM %1$s.%2$s WHERE %3$s = ?";
+            final String generic_query = "SELECT * FROM %1$s.%2$s WHERE %3$s = ?";
 
-            String partners_query = String.format(
+            final String partners_query = String.format(
                     generic_query,
                     database_name,
                     PopulationProperties.PARTNERSHIP_PARTNER_TABLE_NAME,
                     PopulationProperties.PARTNERSHIP_FIELD_PARTNERSHIP_ID);
 
-            String partner_query = String.format(
+            final String partner_query = String.format(
                     generic_query,
                     database_name,
                     PopulationProperties.PERSON_TABLE_NAME,
                     PopulationProperties.PERSON_FIELD_ID);
 
-            String partnership_query = String.format(
+            final String partnership_query = String.format(
                     generic_query,
                     database_name,
                     PopulationProperties.PARTNERSHIP_TABLE_NAME,
                     PopulationProperties.PARTNERSHIP_FIELD_ID);
 
-            String children_query = String.format(
+            final String children_query = String.format(
                     generic_query,
                     database_name,
                     PopulationProperties.PARTNERSHIP_CHILD_TABLE_NAME,
                     PopulationProperties.PARTNERSHIP_FIELD_PARTNERSHIP_ID
-                    );
+            );
 
             get_partners_statement = connection.prepareStatement(partners_query);
             get_partner_statement = connection.prepareStatement(partner_query);
