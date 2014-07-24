@@ -2,11 +2,13 @@ package uk.ac.standrews.cs.digitising_scotland.record_classification.resolver;
 
 import static uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.ResolverUtils.powerSet;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.AbstractClassifier;
@@ -26,6 +28,13 @@ import com.google.common.collect.Multiset;
  * Created by fraserdunlop on 10/06/2014 at 14:09.
  */
 public class ResolverMkIITest {
+
+    @Before
+    public void setUp() {
+
+        File codeFile = new File(getClass().getResource("/CodeFactoryTestFile.txt").getFile());
+        CodeFactory.getInstance().loadDictionary(codeFile);
+    }
 
     /**
      * Checks if is valid test.

@@ -302,7 +302,7 @@ public final class CodeFactory {
      *
      * @param codeMapNullCounter the new code map null counter
      */
-    public void setCodeMapNullCounter(int codeMapNullCounter) {
+    public void setCodeMapNullCounter(final int codeMapNullCounter) {
 
         this.codeMapNullCounter = codeMapNullCounter;
     }

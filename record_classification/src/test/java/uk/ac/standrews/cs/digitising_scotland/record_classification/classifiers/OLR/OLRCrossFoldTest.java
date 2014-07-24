@@ -175,20 +175,8 @@ public class OLRCrossFoldTest {
 
         String codeFromFile = getCodeFromLine(line);
         Vector testVector = vectorFactory.createVectorFromString(codeFromFile);
-        int id = getCodeID(codeFromFile);
         int classification = getClassification(model, testVector);
-        Assert.assertEquals(id, classification);
-    }
-
-    /**
-     * Gets the code id.
-     *
-     * @param codeFromFile the code from file
-     * @return the code id
-     */
-    private int getCodeID(final String codeFromFile) {
-
-        return CodeFactory.getInstance().getCode(codeFromFile).getID();
+        Assert.assertEquals(codeFromFile, CodeFactory.getInstance().getCode(classification).getCodeAsString());
     }
 
     /**
