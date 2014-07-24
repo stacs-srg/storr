@@ -46,16 +46,6 @@ public class OLRShuffled implements Runnable {
     private ArrayList<NamedVector> trainingVectorList = new ArrayList<NamedVector>();
     private boolean stopped = false;
 
-
-
-    public Matrix getBeta() {
-        return model.getBeta();
-    }
-
-    public void setBeta(Matrix beta) {
-        model.setBeta(beta);
-    }
-
     //----constructors---
 
     /**
@@ -68,11 +58,19 @@ public class OLRShuffled implements Runnable {
         this(MachineLearningConfiguration.getDefaultProperties(), trainingVectorList);
     }
 
+    /**
+     * Gets the running log likelihood.
+     *
+     * @return the running log likelihood
+     */
     public double getRunningLogLikelihood() {
 
         return model.getRunningLogLikelihood();
     }
 
+    /**
+     * Reset running log likelihood.
+     */
     public void resetRunningLogLikelihood() {
 
         model.resetRunningLogLikelihood();
@@ -81,8 +79,8 @@ public class OLRShuffled implements Runnable {
     /**
      * Constructor.
      *
-     * @param trainingVectorList the training vector list
      * @param properties         the properties object that specifies among other things the number of training repetitions
+     * @param trainingVectorList the training vector list
      */
     public OLRShuffled(final Properties properties, final ArrayList<NamedVector> trainingVectorList) {
 
@@ -142,22 +140,36 @@ public class OLRShuffled implements Runnable {
         return model.logLikelihood(actual, instance);
     }
 
+    /**
+     * Gets the configuration options.
+     *
+     * @return the configuration options
+     */
     private void getConfigOptions() {
 
         reps = Integer.parseInt(properties.getProperty("OLRShuffledReps"));
     }
 
+    /**
+     * Checks if the models are trainable and trains the models if possible.
+     */
     private void trainIfPossible() {
 
         checkTrainable();
         this.train();
     }
 
+    /**
+     * Checks if the model is trainable. Models read back in from file are not trainable.
+     */
     private void checkTrainable() {
 
         if (!modelTrainable) { throw new UnsupportedOperationException("This model has no files to train " + "on and may only be used for classification."); }
     }
 
+    /**
+     * Shuffle and train on all vectors.
+     */
     private void shuffleAndTrainOnAllVectors() {
 
         Collections.shuffle(trainingVectorList);
@@ -177,6 +189,11 @@ public class OLRShuffled implements Runnable {
         stopped = true;
     }
 
+    /**
+     * Returns the value of the stopped flag.
+     *
+     * @return true, if stopped
+     */
     private boolean stopped() {
 
         return stopped;
@@ -208,11 +225,23 @@ public class OLRShuffled implements Runnable {
         return olrShuffled;
     }
 
+    /**
+     * Writes the model to a {@link DataOutputStream}.
+     *
+     * @param outputStream the output stream
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
     protected void write(final DataOutputStream outputStream) throws IOException {
 
         model.write(outputStream);
     }
 
+    /**
+     * Reads the fields from an inputStream and creates an OLR model.
+     *
+     * @param inputStream the input stream
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
     protected void readFields(final DataInputStream inputStream) throws IOException {
 
         OLR olr = new OLR();
@@ -220,14 +249,41 @@ public class OLRShuffled implements Runnable {
         model = olr;
     }
 
+    /**
+     * Instantiates a new OLR shuffled.
+     */
     protected OLRShuffled() {
 
         modelTrainable = false;
     }
 
+    /**
+     * Gets the number of output categories.
+     *
+     * @return int the number of categories.
+     */
     protected int numCategories() {
 
         return model.getNumCategories();
     }
 
+    /**
+     * Gets the beta matrix.
+     *
+     * @return the beta maxtrix
+     */
+    protected Matrix getBeta() {
+
+        return model.getBeta();
+    }
+
+    /**
+     * Sets the beta matrix.
+     *
+     * @param beta the new beta matrix
+     */
+    protected void setBeta(final Matrix beta) {
+
+        model.setBeta(beta);
+    }
 }
