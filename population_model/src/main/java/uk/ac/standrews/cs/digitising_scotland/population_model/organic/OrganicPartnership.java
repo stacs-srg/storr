@@ -16,13 +16,7 @@
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.organic;
 
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.DivorceAgeForFemaleDistribution;
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.DivorceAgeForMaleDistribution;
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.DivorceInstigatedByGenderDistribution;
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.NegativeDeviationException;
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.NormalDistribution;
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.NumberOfChildrenDistribuition;
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.NumberOfChildrenFromMaternitiesDistribution;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.*;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IDFactory;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPartnership;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.PopulationLogic;
@@ -62,6 +56,11 @@ public final class OrganicPartnership implements IPartnership {
     private Integer id;
     private Integer husband;
     private Integer wife;
+
+    public void setTimeline(OrganicTimeline timeline) {
+        this.timeline = timeline;
+    }
+
     private OrganicTimeline timeline;
     private int marriageDay;
     private List<Integer> childrenIds = new ArrayList<Integer>();
@@ -131,7 +130,10 @@ public final class OrganicPartnership implements IPartnership {
             do {
                 maleDivorceAgeInDays = divorceAgeForMaleDistribution.getSample() + husband.getBirthDay();
             }
-            while (!PopulationLogic.divorceNotBeforeMarriage(DateManipulation.differenceInDays(husband.getBirthDay(), marriageDay), maleDivorceAgeInDays));
+            while (!PopulationLogic.divorceNotBeforeMarriage(DateManipulation.differenceInDays(husband.getBirthDay(), marriageDay), maleDivorceAgeInDays) ||
+                    !PopulationLogic.divorceNotAfterDeath(husband.getDeathDay(),maleDivorceAgeInDays) ||
+                    !PopulationLogic.divorceNotAfterDeath(wife.getDeathDay(),maleDivorceAgeInDays));
+
             timeline.addEvent(maleDivorceAgeInDays, new OrganicEvent(EventType.DIVORCE));
             timeline.setEndDate(maleDivorceAgeInDays);
             break;
@@ -141,7 +143,10 @@ public final class OrganicPartnership implements IPartnership {
             do {
                 femaleDivorceAgeInDays = divorceAgeForFemaleDistribution.getSample() + wife.getBirthDay();
             }
-            while (!PopulationLogic.divorceNotBeforeMarriage(DateManipulation.differenceInDays(husband.getBirthDay(), marriageDay), femaleDivorceAgeInDays));
+            while (!PopulationLogic.divorceNotBeforeMarriage(DateManipulation.differenceInDays(wife.getBirthDay(), marriageDay), femaleDivorceAgeInDays) ||
+                    !PopulationLogic.divorceNotAfterDeath(wife.getDeathDay(),femaleDivorceAgeInDays) ||
+                    !PopulationLogic.divorceNotAfterDeath(husband.getDeathDay(),femaleDivorceAgeInDays));
+
             timeline.addEvent(femaleDivorceAgeInDays, new OrganicEvent(EventType.DIVORCE));
             timeline.setEndDate(femaleDivorceAgeInDays);
             break;
@@ -220,7 +225,7 @@ public final class OrganicPartnership implements IPartnership {
                     wife.getBirthDay(), wife.getDeathDay(), dayOfBirth + marriageDay)) {
                 timeline.addEvent(currentDay + dayOfBirth, new OrganicEvent(EventType.BIRTH));
                 for (int i = 0; i < numberOfChildrenInPregnacy; i++) {
-                    children[i] = new OrganicPerson(IDFactory.getNextID(), currentDay + dayOfBirth, false);
+                    children[i] = new OrganicPerson(IDFactory.getNextID(), currentDay + dayOfBirth, wife.getPopulation(), false);
                     childrenIds.add(children[i].getId());
                 }
                 return children;

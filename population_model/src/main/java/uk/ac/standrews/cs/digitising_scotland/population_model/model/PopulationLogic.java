@@ -90,6 +90,11 @@ public class PopulationLogic {
     	return DateManipulation.differenceInDays(marriage_date, divorce_date) > 0;
     }
 
+    public static boolean divorceNotAfterDeath(final int death_date, final int divorce_date) {
+
+        return DateManipulation.differenceInDays(divorce_date, death_date) > 0;
+    }
+
     private static boolean motherAliveAtBirth(final Date mother_death_date, final Date child_birth_date) {
 
         return mother_death_date == null || dateNotAfter(child_birth_date, mother_death_date);

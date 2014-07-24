@@ -22,6 +22,7 @@ public class OrganicPopulationLogger {
     private static int marriages = 0;
     private static int births = 0;
     private static int divorces = 0;
+    private static int remarriages = 0;
     private static final int MAX_AGE = 100;
     private static int[] maleAgeAtMarriage = new int[MAX_AGE];
     private static int[] femaleAgeAtMarriage = new int[MAX_AGE];
@@ -58,6 +59,13 @@ public class OrganicPopulationLogger {
      */
     public static void incMarriages() {
         marriages++;
+    }
+
+    /**
+     * Increases the number of remarriages
+     */
+    public static void incRemarriages() {
+        remarriages ++;
     }
 
     /**
@@ -159,7 +167,6 @@ public class OrganicPopulationLogger {
             System.out.println(" |");
         }
         System.out.println();
-        
         System.out.println();
         System.out.println("Number Of Children In Partnership Distrobution");
         System.out.println();
@@ -176,6 +183,10 @@ public class OrganicPopulationLogger {
         System.out.println("Children Per Family: ");
         System.out.format("%.2f", childrenPerFamily);
         System.out.println();
+
+        System.out.println("Divorces: " + divorces);
+        System.out.println("Remarriages: " + remarriages);
+
     }
 
 }

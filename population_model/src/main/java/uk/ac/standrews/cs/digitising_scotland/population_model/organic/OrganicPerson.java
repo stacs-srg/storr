@@ -39,6 +39,7 @@ public class OrganicPerson implements IPerson {
     private char sex;
     private ArrayList<Integer> partnerships = new ArrayList<Integer>();
     private OrganicTimeline timeline = null;
+    private OrganicPopulation population;
 
     private static Random random = RandomFactory.getRandom();
     private static final int MAX_AGE = 100;
@@ -58,8 +59,9 @@ public class OrganicPerson implements IPerson {
      * @param birthDay       The day of birth in days since the 1/1/1600.
      * @param seedGeneration Flag indicating is the simulation is still creating the seed population.
      */
-    public OrganicPerson(final int id, final int birthDay, final boolean seedGeneration) {
+    public OrganicPerson(final int id, final int birthDay, OrganicPopulation population, final boolean seedGeneration) {
         this.id = id;
+        this.population = population;
         if (sex_distribution.getSample()) {
             sex = 'M';
             setPersonsBirthAndDeathDates(birthDay, seedGeneration);
@@ -78,6 +80,13 @@ public class OrganicPerson implements IPerson {
     public int getDayOfLife(final Date date) {
         int day = DateManipulation.dateToDays(date) - DateManipulation.dateToDays(getBirthDate());
         return day;
+    }
+
+    /**
+     * Gets the population that the current person is part of
+     */
+    public OrganicPopulation getPopulation() {
+        return population;
     }
 
     /**
@@ -148,7 +157,8 @@ public class OrganicPerson implements IPerson {
         switch (trigger) {
             case DIVORCE: {
                 if (remmariageDist.getSample()) {
-                    addEligibleToReMarryEvent(this.getTimeline().getEndDate());
+                    OrganicPartnership partnership = (OrganicPartnership)this.getPopulation().findPartnership(this.getPartnerships().get(this.getPartnerships().size()-1));
+                    addEligibleToReMarryEvent(partnership.getTimeline().getEndDate());
                 }
             }
             case PARTNERSHIP_ENDED_BY_DEATH:
@@ -184,10 +194,14 @@ public class OrganicPerson implements IPerson {
 
         // Add ELIGIBLE_TO_MARRY event
         int date;
+
         uniformDistribution = new UniformIntegerDistribution(minimumDate, getDeathDay(), random);
-        date = minimumDate + uniformDistribution.getSample();
-        if (date < getDeathDay())
+        date = uniformDistribution.getSample();
+
+        if (date < getDeathDay()) {
             timeline.addEvent(date, new OrganicEvent(EventType.ELIGIBLE_TO_MARRY));
+            OrganicPopulationLogger.incRemarriages();
+        }
     }
 
     /**
