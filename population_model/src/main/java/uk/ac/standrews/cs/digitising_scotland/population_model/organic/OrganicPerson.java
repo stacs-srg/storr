@@ -185,29 +185,20 @@ public class OrganicPerson implements IPerson {
         int date;
         if (sex == 'M') {
             // time in days to birth from 1/1/1600 + marriage age in days
-//            date = getBirthDay() + maleAgeAtMarriageDistribution.getSample();
             do {
                 date = getBirthDay() + maleAgeAtMarriageDistribution.getSample();
             } while (date > getDeathDay() && getDeathAgeInDays() > MIN_DEATH_AGE_FOR_NO_MARRIAGE_EVENT * OrganicPopulation.DAYS_PER_YEAR);
-            
-//            if (date < getDeathDay()) {
+           
             timeline.addEvent(date, new OrganicEvent(EventType.ELIGIBLE_TO_MARRY));
-//            } else {
-//                OrganicPopulationLogger.incNeverMarried();
-//            }
+            
         } else {
             // time in days to birth from 1/1/1600 + marriage age in days
             do {
                 date = getBirthDay() + femaleAgeAtMarriageDistribution.getSample();
             } while (date > getDeathDay() && getDeathAgeInDays() > MIN_DEATH_AGE_FOR_NO_MARRIAGE_EVENT * OrganicPopulation.DAYS_PER_YEAR);
+            
             timeline.addEvent(date, new OrganicEvent(EventType.ELIGIBLE_TO_MARRY));
             
-//            date = getBirthDay() + femaleAgeAtMarriageDistribution.getSample();
-//            if (date < getDeathDay()) {
-//                timeline.addEvent(date, new OrganicEvent(EventType.ELIGIBLE_TO_MARRY));
-//            } else {
-//                OrganicPopulationLogger.incNeverMarried();
-//            }
         }
     }
 
