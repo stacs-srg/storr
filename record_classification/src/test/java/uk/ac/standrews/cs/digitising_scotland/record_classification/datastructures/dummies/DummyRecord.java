@@ -16,7 +16,7 @@ public class DummyRecord extends Record {
 
     public DummyRecord() {
 
-        super((int) Math.rint(Math.random() * 1000), null);
+        super((int) Math.rint(Math.random() * 1000000), null);
     }
 
     @Override
@@ -30,7 +30,6 @@ public class DummyRecord extends Record {
 
         return null;
     }
-
 
     @Override
     public Set<CodeTriple> getGoldStandardClassificationSet() {
