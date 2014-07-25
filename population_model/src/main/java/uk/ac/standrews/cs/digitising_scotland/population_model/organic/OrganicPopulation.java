@@ -42,7 +42,9 @@ public class OrganicPopulation implements IPopulation {
 
     private String description;
 
-    public static final int DEFAULT_SEED_SIZE = 1000;
+
+    public static final int DEFAULT_SEED_SIZE = 10000;
+
 
     /**
      * The approximate average number of days per year.
@@ -87,7 +89,7 @@ public class OrganicPopulation implements IPopulation {
     public void makeSeed(final int size) {
 
         for (int i = 0; i < size; i++) {
-            OrganicPerson person = new OrganicPerson(IDFactory.getNextID(), 0, seedGeneration);
+            OrganicPerson person = new OrganicPerson(IDFactory.getNextID(), 0, this, seedGeneration);
             people.add(person);
         }
         seedGeneration = false;
@@ -263,6 +265,7 @@ public class OrganicPopulation implements IPopulation {
                                 break;
                             case DEATH: // Everyone ends up here eventually
                                 removePersonFromSystem(people.get(i));
+
                                 OrganicPopulationLogger.decPopulation();
                                 break;
                             default:
@@ -483,7 +486,7 @@ public class OrganicPopulation implements IPopulation {
 
         OrganicPopulationLogger.printLogData();
         
-        System.out.println("Kids killed by decrementation: " + OrganicPartnership.kidsKilledByDecrementation);
+        System.out.println("Left over children: " + OrganicPartnership.leftOverChildren);
         System.out.println("Kids killed by early stop: " + OrganicPartnership.stopedHavingEarlyDeaths);
         
      }

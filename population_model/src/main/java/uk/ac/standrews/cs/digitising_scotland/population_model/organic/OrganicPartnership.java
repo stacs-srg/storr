@@ -16,13 +16,7 @@
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.organic;
 
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.DivorceAgeForFemaleDistribution;
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.DivorceAgeForMaleDistribution;
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.DivorceInstigatedByGenderDistribution;
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.NegativeDeviationException;
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.NormalDistribution;
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.NumberOfChildrenDistribuition;
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.NumberOfChildrenFromMaternitiesDistribution;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.*;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IDFactory;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPartnership;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.PopulationLogic;
@@ -41,8 +35,11 @@ import java.util.Random;
  */
 public final class OrganicPartnership implements IPartnership {
 	
-	public static int kidsKilledByDecrementation = 0;
+	public static int leftOverChildren = 0;
 	public static int stopedHavingEarlyDeaths = 0;
+	
+	private final int MAX_NUMBER_OF_CHILDREN_IN_FAMILY_TO_BE_ELLIGABLE_FOR_LEFT_OVER_CHILDREN = 6;
+	private final int VOLUME_OF_LEFT_OVER_CHILDREN_TO_BE_ALLOCATED = 1;
 
     private static Random random = RandomFactory.getRandom();
     private static DivorceInstigatedByGenderDistribution divorceInstigatedByGenderDistribution = new DivorceInstigatedByGenderDistribution(random);
@@ -59,6 +56,11 @@ public final class OrganicPartnership implements IPartnership {
     private Integer id;
     private Integer husband;
     private Integer wife;
+
+    public void setTimeline(OrganicTimeline timeline) {
+        this.timeline = timeline;
+    }
+
     private OrganicTimeline timeline;
     private int marriageDay;
     private List<Integer> childrenIds = new ArrayList<Integer>();
@@ -128,7 +130,10 @@ public final class OrganicPartnership implements IPartnership {
             do {
                 maleDivorceAgeInDays = divorceAgeForMaleDistribution.getSample() + husband.getBirthDay();
             }
-            while (!PopulationLogic.divorceNotBeforeMarriage(DateManipulation.differenceInDays(husband.getBirthDay(), marriageDay), maleDivorceAgeInDays));
+            while (!PopulationLogic.divorceNotBeforeMarriage(DateManipulation.differenceInDays(husband.getBirthDay(), marriageDay), maleDivorceAgeInDays) ||
+                    !PopulationLogic.divorceNotAfterDeath(husband.getDeathDay(),maleDivorceAgeInDays) ||
+                    !PopulationLogic.divorceNotAfterDeath(wife.getDeathDay(),maleDivorceAgeInDays));
+
             timeline.addEvent(maleDivorceAgeInDays, new OrganicEvent(EventType.DIVORCE));
             timeline.setEndDate(maleDivorceAgeInDays);
             break;
@@ -138,7 +143,10 @@ public final class OrganicPartnership implements IPartnership {
             do {
                 femaleDivorceAgeInDays = divorceAgeForFemaleDistribution.getSample() + wife.getBirthDay();
             }
-            while (!PopulationLogic.divorceNotBeforeMarriage(DateManipulation.differenceInDays(husband.getBirthDay(), marriageDay), femaleDivorceAgeInDays));
+            while (!PopulationLogic.divorceNotBeforeMarriage(DateManipulation.differenceInDays(wife.getBirthDay(), marriageDay), femaleDivorceAgeInDays) ||
+                    !PopulationLogic.divorceNotAfterDeath(wife.getDeathDay(),femaleDivorceAgeInDays) ||
+                    !PopulationLogic.divorceNotAfterDeath(husband.getDeathDay(),femaleDivorceAgeInDays));
+
             timeline.addEvent(femaleDivorceAgeInDays, new OrganicEvent(EventType.DIVORCE));
             timeline.setEndDate(femaleDivorceAgeInDays);
             break;
@@ -155,6 +163,11 @@ public final class OrganicPartnership implements IPartnership {
         // Decide on a number of children for relationship
         // Will be from a distribution - just keeping things simple for now
         numberOfChildrenToBeHadByCouple = numberOfChildrenDistribution.getSample();
+        if (numberOfChildrenToBeHadByCouple < MAX_NUMBER_OF_CHILDREN_IN_FAMILY_TO_BE_ELLIGABLE_FOR_LEFT_OVER_CHILDREN 
+        		&& leftOverChildren >= VOLUME_OF_LEFT_OVER_CHILDREN_TO_BE_ALLOCATED) {
+        	numberOfChildrenToBeHadByCouple += VOLUME_OF_LEFT_OVER_CHILDREN_TO_BE_ALLOCATED;
+        	leftOverChildren -= VOLUME_OF_LEFT_OVER_CHILDREN_TO_BE_ALLOCATED;
+        }
 //        System.out.println(numberOfChildrenToBeHadByCouple);
         if (numberOfChildrenToBeHadByCouple == 0) {
             return new OrganicPerson[0];
@@ -164,7 +177,7 @@ public final class OrganicPartnership implements IPartnership {
             mean = getMeanForChildSpacingDistribution(husband, wife, currentDay);
             if (mean < PopulationLogic.getInterChildInterval() * OrganicPopulation.DAYS_PER_YEAR) {
 //                System.out.println("I'm Decrementing");
-            	kidsKilledByDecrementation++;
+            	leftOverChildren++;
                 numberOfChildrenToBeHadByCouple --;
             } else {
 //                System.out.println("HERE AGAIN!");
@@ -212,7 +225,7 @@ public final class OrganicPartnership implements IPartnership {
                     wife.getBirthDay(), wife.getDeathDay(), dayOfBirth + marriageDay)) {
                 timeline.addEvent(currentDay + dayOfBirth, new OrganicEvent(EventType.BIRTH));
                 for (int i = 0; i < numberOfChildrenInPregnacy; i++) {
-                    children[i] = new OrganicPerson(IDFactory.getNextID(), currentDay + dayOfBirth, false);
+                    children[i] = new OrganicPerson(IDFactory.getNextID(), currentDay + dayOfBirth, wife.getPopulation(), false);
                     childrenIds.add(children[i].getId());
                 }
                 return children;

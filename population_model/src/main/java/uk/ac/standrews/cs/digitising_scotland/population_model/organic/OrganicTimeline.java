@@ -103,7 +103,7 @@ public class OrganicTimeline {
     /**
      * Checks if a given day is free in the timeline (that no events exist on the given day).
      *
-     * @param date The given day in days since the 1/1/1600.
+     * @param days The given day in days since the 1/1/1600.
      * @return Boolean indicating day availability.
      */
     public boolean isDateAvailable(final int days) {
@@ -133,7 +133,7 @@ public class OrganicTimeline {
     /**
      * Returns the event occurring on the specified day.
      *
-     * @param date The day in days since the 1/1/1600 to be checked.
+     * @param days The day in days since the 1/1/1600 to be checked.
      * @return The event occurring on the given day.
      */
     public OrganicEvent getEvent(final int days) {
@@ -161,10 +161,24 @@ public class OrganicTimeline {
     /**
      * Sets the end date.
      *
-     * @param startDay The end date in days since the 1/1/1600.
+     * @param endDay The end date in days since the 1/1/1600.
      */
     public void setEndDate(final int endDay) {
         this.endDay = endDay;
+    }
+
+    /**
+     * Prints out a detailed human-readable summary of the timeline events.
+     */
+    public void printTimeline() {
+        System.out.println("TIMELINE EVENTS:");
+        System.out.println("    Start day: " + startDay);
+        for(int i : events.keySet()){
+
+            System.out.print("    Day : " + i);
+            System.out.println(" " + events.get(i).getEventType());
+        }
+        System.out.println("    End day: " + endDay);
     }
 
 }
