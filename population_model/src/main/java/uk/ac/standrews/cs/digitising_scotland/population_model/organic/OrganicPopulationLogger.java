@@ -30,6 +30,7 @@ public class OrganicPopulationLogger {
     private static int[] ageDifferenceAtMarriage = new int[AGE_DIFFERENCE_AT_MARRIAGE_DISPLAY_UPTO];
     private static final int NUMBER_OF_CHILDREN_DISPLAY_UPTO = 15;
     private static int[] numberOfChildrenPerPartnership = new int[NUMBER_OF_CHILDREN_DISPLAY_UPTO];
+    private static int neverMarried = 0;
 
     /**
      * Increments the size of the population.
@@ -80,6 +81,13 @@ public class OrganicPopulationLogger {
      */
     public static void incBirths() {
         births++;
+    }
+    
+    /**
+     * Increments the number of people who are never married.
+     */
+    public static void incNeverMarried() {
+        neverMarried++;
     }
 
     public static void addNumberOfChildren(final int number) {
@@ -187,6 +195,9 @@ public class OrganicPopulationLogger {
         System.out.println("Divorces: " + divorces);
         System.out.println("Remarriages: " + remarriages);
 
+        System.out.print("Never Married: " + neverMarried + " - ");
+        System.out.format("%.2f", ((float) neverMarried / (float) births) * 100);
+        System.out.println("%");
     }
 
 }

@@ -34,12 +34,12 @@ import java.util.Random;
  * @author Tom Dalton (tsd4@st-andrews.ac.uk)
  */
 public final class OrganicPartnership implements IPartnership {
-	
-	public static int leftOverChildren = 0;
-	public static int stopedHavingEarlyDeaths = 0;
-	
-	private final int MAX_NUMBER_OF_CHILDREN_IN_FAMILY_TO_BE_ELLIGABLE_FOR_LEFT_OVER_CHILDREN = 6;
-	private final int VOLUME_OF_LEFT_OVER_CHILDREN_TO_BE_ALLOCATED = 1;
+    
+    public static int leftOverChildren = 0;
+    public static int stopedHavingEarlyDeaths = 0;
+    
+    private final int MAX_NUMBER_OF_CHILDREN_IN_FAMILY_TO_BE_ELLIGABLE_FOR_LEFT_OVER_CHILDREN = 6;
+    private final int VOLUME_OF_LEFT_OVER_CHILDREN_TO_BE_ALLOCATED = 1;
 
     private static Random random = RandomFactory.getRandom();
     private static DivorceInstigatedByGenderDistribution divorceInstigatedByGenderDistribution = new DivorceInstigatedByGenderDistribution(random);
@@ -164,9 +164,9 @@ public final class OrganicPartnership implements IPartnership {
         // Will be from a distribution - just keeping things simple for now
         numberOfChildrenToBeHadByCouple = numberOfChildrenDistribution.getSample();
         if (numberOfChildrenToBeHadByCouple < MAX_NUMBER_OF_CHILDREN_IN_FAMILY_TO_BE_ELLIGABLE_FOR_LEFT_OVER_CHILDREN 
-        		&& leftOverChildren >= VOLUME_OF_LEFT_OVER_CHILDREN_TO_BE_ALLOCATED) {
-        	numberOfChildrenToBeHadByCouple += VOLUME_OF_LEFT_OVER_CHILDREN_TO_BE_ALLOCATED;
-        	leftOverChildren -= VOLUME_OF_LEFT_OVER_CHILDREN_TO_BE_ALLOCATED;
+                && leftOverChildren >= VOLUME_OF_LEFT_OVER_CHILDREN_TO_BE_ALLOCATED) {
+            numberOfChildrenToBeHadByCouple += VOLUME_OF_LEFT_OVER_CHILDREN_TO_BE_ALLOCATED;
+            leftOverChildren -= VOLUME_OF_LEFT_OVER_CHILDREN_TO_BE_ALLOCATED;
         }
 //        System.out.println(numberOfChildrenToBeHadByCouple);
         if (numberOfChildrenToBeHadByCouple == 0) {
@@ -177,7 +177,7 @@ public final class OrganicPartnership implements IPartnership {
             mean = getMeanForChildSpacingDistribution(husband, wife, currentDay);
             if (mean < PopulationLogic.getInterChildInterval() * OrganicPopulation.DAYS_PER_YEAR) {
 //                System.out.println("I'm Decrementing");
-            	leftOverChildren++;
+                leftOverChildren++;
                 numberOfChildrenToBeHadByCouple --;
             } else {
 //                System.out.println("HERE AGAIN!");
@@ -230,7 +230,7 @@ public final class OrganicPartnership implements IPartnership {
                 }
                 return children;
             } else {
-            	stopedHavingEarlyDeaths += (numberOfChildrenToBeHadByCouple - children.length);
+                stopedHavingEarlyDeaths += (numberOfChildrenToBeHadByCouple - children.length);
                 return new OrganicPerson[0];
             }
         }

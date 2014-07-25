@@ -43,7 +43,7 @@ public class OrganicPopulation implements IPopulation {
     private String description;
 
 
-    public static final int DEFAULT_SEED_SIZE = 10000;
+    public static final int DEFAULT_SEED_SIZE = 1000;
 
 
     /**
@@ -300,8 +300,8 @@ public class OrganicPopulation implements IPopulation {
                                 OrganicPopulationLogger.addNumberOfChildren(partnerships.get(i).getChildIds().size());
                                 break;
                             case PARTNERSHIP_ENDED_BY_DEATH:
-                            	OrganicPopulationLogger.addNumberOfChildren(partnerships.get(i).getChildIds().size());
-                            	break;
+                                OrganicPopulationLogger.addNumberOfChildren(partnerships.get(i).getChildIds().size());
+                                break;
                             default:
                                 break;
                             }
@@ -336,12 +336,14 @@ public class OrganicPopulation implements IPopulation {
             if (index != -1) {
                 malePartnershipQueue.remove(index);
                 maleInitialPartnershipOrderer.remove(index);
+                OrganicPopulationLogger.incNeverMarried();
             }
         } else {
             int index = femalePartnershipQueue.indexOf(person);
             if (index != -1) {
                 femalePartnershipQueue.remove(index);
                 femaleInitialPartnershipOrderer.remove(index);
+                OrganicPopulationLogger.incNeverMarried();
             }
         }
     }
