@@ -166,6 +166,15 @@ public class OrganicTimeline {
     public void setEndDate(final int endDay) {
         this.endDay = endDay;
     }
+    
+    public int getDay(EventType event) {
+    	for(int i : events.keySet()) {
+    		if (events.get(i).getEventType() == event) {
+    			return i;
+    		}
+    	}
+    	return (Integer) null;
+    }
 
     /**
      * Prints out a detailed human-readable summary of the timeline events.

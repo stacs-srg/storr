@@ -119,6 +119,16 @@ public class OrganicPerson implements IPerson {
     //        
     //        return null;    
     //    }
+    
+    /**
+     * Returns the day in days since 1/1/1600 of the specified event.
+     * 
+     * @param event The event to be searched for.
+     * @return The day in days since 1/1/1600 of the specified event. If event does not exist returns null.
+     */
+    public int getEvent(EventType event) {
+    	return timeline.getDay(event);
+    }
 
     private void setPersonsBirthAndDeathDates(final int birthDay, final boolean seedGeneration) {
 //        final UniformIntegerDistribution days_of_year_distribution = new UniformIntegerDistribution(1, (int) OrganicPopulation.DAYS_PER_YEAR, random);

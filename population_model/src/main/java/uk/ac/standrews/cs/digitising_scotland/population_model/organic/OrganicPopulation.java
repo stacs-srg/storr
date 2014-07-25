@@ -75,9 +75,6 @@ public class OrganicPopulation implements IPopulation {
     private LinkedList<OrganicPerson> malePartnershipQueue = new LinkedList<OrganicPerson>();
     private LinkedList<OrganicPerson> femalePartnershipQueue = new LinkedList<OrganicPerson>();
 
-    private LinkedList<Integer> maleInitialPartnershipOrderer = new LinkedList<Integer>();
-    private LinkedList<Integer> femaleInitialPartnershipOrderer = new LinkedList<Integer>();
-
     /**
      * Creates a seed population of the specified size.
      * 
@@ -123,7 +120,6 @@ public class OrganicPopulation implements IPopulation {
                 } else if (femalePartnershipQueue.getFirst().getId() == firstFemaleId) {
                     // Move next male to head of queue for consideration
                     malePartnershipQueue.add(malePartnershipQueue.removeFirst());
-                    maleInitialPartnershipOrderer.add(maleInitialPartnershipOrderer.removeFirst());
                     // If new lead male is same as first male then no man eligable to marry any female - thus break 
                     if(malePartnershipQueue.getFirst().getId() == firstMaleId) {
                         break;
@@ -133,9 +129,10 @@ public class OrganicPopulation implements IPopulation {
                 if (eligableToMarry(malePartnershipQueue.getFirst(), femalePartnershipQueue.getFirst())) {
                     // Then calculate marriage date
                     // Finds first day BOTH were eligible to marry
-                    int firstDay = maleInitialPartnershipOrderer.getFirst();
-                    if (femaleInitialPartnershipOrderer.getFirst() > firstDay) {
-                        firstDay = femaleInitialPartnershipOrderer.getFirst();
+                    int firstDay = malePartnershipQueue.getFirst().getEvent(EventType.ELIGIBLE_TO_MARRY);
+//                    		maleInitialPartnershipOrderer.getFirst();
+                    if (femalePartnershipQueue.getFirst().getEvent(EventType.ELIGIBLE_TO_MARRY) > firstDay) {
+                        firstDay = femalePartnershipQueue.getFirst().getEvent(EventType.ELIGIBLE_TO_MARRY);
                     }
                     
                     // Marries individuals
@@ -147,22 +144,18 @@ public class OrganicPopulation implements IPopulation {
 
                     // remove people from queues
                     malePartnershipQueue.removeFirst();
-                    maleInitialPartnershipOrderer.removeFirst();
                     femalePartnershipQueue.removeFirst();
-                    femaleInitialPartnershipOrderer.removeFirst();
 
                     // Resets queues
                     if (maleId != firstMaleId) {
                         while (malePartnershipQueue.getFirst().getId() != firstMaleId) {
                             malePartnershipQueue.add(malePartnershipQueue.removeFirst());
-                            maleInitialPartnershipOrderer.add(maleInitialPartnershipOrderer.removeFirst());
                         }
                     }
 
                     if (femaleId != firstFemaleId) {
                         while (femalePartnershipQueue.getFirst().getId() != firstFemaleId) {
                             femalePartnershipQueue.add(femalePartnershipQueue.removeFirst());
-                            femaleInitialPartnershipOrderer.add(femaleInitialPartnershipOrderer.removeFirst());
                         }
                     }
 
@@ -172,7 +165,6 @@ public class OrganicPopulation implements IPopulation {
                 } else {
                     // Else if couple not elligable to marry move onto consider male with next female
                     femalePartnershipQueue.add(femalePartnershipQueue.removeFirst());
-                    femaleInitialPartnershipOrderer.add(femaleInitialPartnershipOrderer.removeFirst());
                 }
             }
 
@@ -251,10 +243,8 @@ public class OrganicPopulation implements IPopulation {
                             case ELIGIBLE_TO_MARRY:
                                 if (people.get(i).getSex() == 'M') {
                                     malePartnershipQueue.add(people.get(i));
-                                    maleInitialPartnershipOrderer.add(currentDay);
-                                    } else {
+                                } else {
                                     femalePartnershipQueue.add(people.get(i));
-                                    femaleInitialPartnershipOrderer.add(currentDay);
                                 }
                                 break;
                             case DEATH: // Everyone ends up here eventually
@@ -329,14 +319,12 @@ public class OrganicPopulation implements IPopulation {
             int index = malePartnershipQueue.indexOf(person);
             if (index != -1) {
                 malePartnershipQueue.remove(index);
-                maleInitialPartnershipOrderer.remove(index);
                 OrganicPopulationLogger.incNeverMarried();
             }
         } else {
             int index = femalePartnershipQueue.indexOf(person);
             if (index != -1) {
                 femalePartnershipQueue.remove(index);
-                femaleInitialPartnershipOrderer.remove(index);
                 OrganicPopulationLogger.incNeverMarried();
             }
         }
