@@ -98,6 +98,10 @@ public final class OrganicPartnership implements IPartnership {
         this.turnOn();
     }
     
+    /*
+     * High level methods
+     */
+    
     private OrganicPerson[] createPartnershipTimeline(final OrganicPerson husband, final OrganicPerson wife, int currentDay) {
 
         timeline = new OrganicTimeline(marriageDay);

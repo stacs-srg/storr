@@ -17,19 +17,27 @@
 package uk.ac.standrews.cs.digitising_scotland.population_model.organic;
 
 import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
+import uk.ac.standrews.cs.digitising_scotland.population_model.organic.NoSuchEventException;
 
 import java.util.Date;
 import java.util.HashMap;
 
 /**
  * Created by victor on 08/07/14.
+ * 
+ * @author Tom Dalton (tsd4@st-andrews.ac.uk)
  */
 public class OrganicTimeline {
 
+    // Timeline instance variables
     private int startDay;
     private int endDay;
-
     private HashMap<Integer, OrganicEvent> events = new HashMap<Integer, OrganicEvent>();
+
+
+    /*
+     * Constructors
+     */
 
     /**
      * Creates a timeline beginning at the specified start day.
@@ -50,6 +58,10 @@ public class OrganicTimeline {
         this.startDay = startDay;
         this.endDay = endDay;
     }
+
+    /*
+     * High level methods
+     */
 
     /**
      * Adds an event to the timeline on the specified day.
@@ -110,13 +122,44 @@ public class OrganicTimeline {
         return events.containsKey(days);
     }
 
+    /*
+     * Getters and setters
+     */
+
+    /**
+     * Sets the start date.
+     *
+     * @param startDay The start date in days since the 1/1/1600.
+     */
+    public void setStartDay(final int startDay) {
+        this.startDay = startDay;
+    }
+
     /**
      * Returns the timelines start date.
      *
      * @return The timelines start date in days since the 1/1/1600.
      */
-    public int getStartDate() {
+    public int getStartDay() {
         return startDay;
+    }
+
+    /**
+     * Returns the end date of the timeline in days since the 1/1/1600.
+     *
+     * @return The end date of the timeline in days since the 1/1/1600.
+     */
+    public int getEndDate() {
+        return endDay;
+    }
+
+    /**
+     * Sets the end date.
+     *
+     * @param endDay The end date in days since the 1/1/1600.
+     */
+    public void setEndDate(final int endDay) {
+        this.endDay = endDay;
     }
 
     /**
@@ -140,41 +183,18 @@ public class OrganicTimeline {
         return events.get(days);
     }
 
-    /**
-     * Sets the start date.
-     *
-     * @param startDay The start date in days since the 1/1/1600.
-     */
-    public void setStartDay(final int startDay) {
-        this.startDay = startDay;
+    public int getDay(EventType event) throws NoSuchEventException {
+        for(int i : events.keySet()) {
+            if (events.get(i).getEventType() == event) {
+                return i;
+            }
+        }
+        throw new NoSuchEventException();
     }
 
-    /**
-     * Returns the end date of the timeline in days since the 1/1/1600.
-     *
-     * @return The end date of the timeline in days since the 1/1/1600.
+    /*
+     * Print methods
      */
-    public int getEndDate() {
-        return endDay;
-    }
-
-    /**
-     * Sets the end date.
-     *
-     * @param endDay The end date in days since the 1/1/1600.
-     */
-    public void setEndDate(final int endDay) {
-        this.endDay = endDay;
-    }
-    
-    public int getDay(EventType event) {
-    	for(int i : events.keySet()) {
-    		if (events.get(i).getEventType() == event) {
-    			return i;
-    		}
-    	}
-    	return (Integer) null;
-    }
 
     /**
      * Prints out a detailed human-readable summary of the timeline events.

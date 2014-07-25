@@ -36,36 +36,52 @@ import java.util.List;
  */
 public class OrganicPopulation implements IPopulation {
 
-	// Universal population variables
+    // Universal population variables
     private static final int DEFAULT_SEED_SIZE = 1000;
     private static final float DAYS_PER_YEAR = 365.25f;
     private static final int START_YEAR = 1780;
     private static final int END_YEAR = 2013;
     private static final int DEFAULT_STEP_SIZE = 1;
-    
+
     private int earliestDate = DateManipulation.dateToDays(getStartYear(), 0, 0);
     private int currentDay;
-    
-    
+
+
     // Population instance required variables
     private String description;
     private List<OrganicPerson> people = new ArrayList<OrganicPerson>();
     private List<OrganicPartnership> partnerships = new ArrayList<OrganicPartnership>();
 
-    
+
     // Population instance helper variables
     private boolean seedGeneration = true;
     private LinkedList<OrganicPerson> malePartnershipQueue = new LinkedList<OrganicPerson>();
     private LinkedList<OrganicPerson> femalePartnershipQueue = new LinkedList<OrganicPerson>();
 
-    
+    /*
+     * Constructors
+     */
+
+    /**
+     * Constructs a new OrganicPopulation.
+     *     
+     * @param description The population descriptor string.
+     */
+    public OrganicPopulation(String description) {
+        this.description = description;
+    }
+
+    /*
+     * High level methods
+     */
+
     /**
      * Calls the makeSeed method with the default specified seed size.
      */
     public void makeSeed() {
         makeSeed(getDefaultSeedSize());
     }
-    
+
     /**
      * Creates a seed population of the specified size.
      * 
@@ -79,7 +95,7 @@ public class OrganicPopulation implements IPopulation {
         }
         seedGeneration = false;
     }
-    
+
     /**
      * Calls to the mainIteration method using the specified default time step size.
      */
@@ -96,7 +112,7 @@ public class OrganicPopulation implements IPopulation {
 
         while (currentDay < DateManipulation.dateToDays(getEndYear(), 0, 0)) {
             printYearEndData();
-            
+
             int previousDate = currentDay;
             currentDay += timeStepSizeInDays;
 
@@ -104,9 +120,9 @@ public class OrganicPopulation implements IPopulation {
             partnerTogetherPeopleInPartnershipQueues();
             checkAllPartnershipsForEventsUptoCurrentDayFrom(previousDate);
         }
-        
+
     }
-    
+
     /*
      * CheckAll methods
      */
@@ -169,11 +185,11 @@ public class OrganicPopulation implements IPopulation {
             }
         }
     }
-    
+
     /*
      * Event handle methods
      */
-    
+
     private void handlePartnershipEndedByDeathEvent(int partnershipListIndex) {
         OrganicPopulationLogger.addNumberOfChildren(partnerships.get(partnershipListIndex).getChildIds().size());
     }
@@ -197,7 +213,7 @@ public class OrganicPopulation implements IPopulation {
             femalePartnershipQueue.add(people.get(peopleListIndex));
         }
     }
-    
+
     private void handleDeathEvent(final OrganicPerson person) {
         if (person.getSex() == 'M') {
             int index = malePartnershipQueue.indexOf(person);
@@ -214,7 +230,7 @@ public class OrganicPopulation implements IPopulation {
         }
         OrganicPopulationLogger.decPopulation();
     }
-    
+
     /*
      * Helper methods
      */
@@ -259,11 +275,15 @@ public class OrganicPopulation implements IPopulation {
                 if (eligableToMarry(malePartnershipQueue.getFirst(), femalePartnershipQueue.getFirst())) {
                     // Then calculate marriage date
                     // Finds first day BOTH were eligible to marry
-                    int firstDay = malePartnershipQueue.getFirst().getEvent(EventType.ELIGIBLE_TO_MARRY);
-                    if (femalePartnershipQueue.getFirst().getEvent(EventType.ELIGIBLE_TO_MARRY) > firstDay) {
-                        firstDay = femalePartnershipQueue.getFirst().getEvent(EventType.ELIGIBLE_TO_MARRY);
+                    try {
+                        int firstDay = malePartnershipQueue.getFirst().getEvent(EventType.ELIGIBLE_TO_MARRY);
+                        if (femalePartnershipQueue.getFirst().getEvent(EventType.ELIGIBLE_TO_MARRY) > firstDay) {
+                            firstDay = femalePartnershipQueue.getFirst().getEvent(EventType.ELIGIBLE_TO_MARRY);
+                        }
+                    } catch (NoSuchEventException e) {
+                        break;
                     }
-                    
+
                     // Marries individuals
                     marry(malePartnershipQueue.getFirst(), femalePartnershipQueue.getFirst(), currentDay);
 
@@ -324,47 +344,47 @@ public class OrganicPopulation implements IPopulation {
         husband.addPartnership(((OrganicPartnership) partnershipObjects[0]).getId());
         wife.addPartnership(((OrganicPartnership) partnershipObjects[0]).getId());
     }   
-    
+
     /*
      * Getters and setters
      */
-    
+
     /**
-	 * Size of initially generated seed population.
-	 * 
-	 * @return the defaultSeedSize
-	 */
-	public static int getDefaultSeedSize() {
-		return DEFAULT_SEED_SIZE;
-	}
+     * Size of initially generated seed population.
+     * 
+     * @return the defaultSeedSize
+     */
+    public static int getDefaultSeedSize() {
+        return DEFAULT_SEED_SIZE;
+    }
 
-	/**
-	 * The approximate average number of days per year.
-	 * 
-	 * @return the daysPerYear
-	 */
-	public static float getDaysPerYear() {
-		return DAYS_PER_YEAR;
-	}
+    /**
+     * The approximate average number of days per year.
+     * 
+     * @return the daysPerYear
+     */
+    public static float getDaysPerYear() {
+        return DAYS_PER_YEAR;
+    }
 
-	/**
-	 * The start year of the simulation.
-	 * 
-	 * @return the startYear
-	 */
-	public static int getStartYear() {
-		return START_YEAR;
-	}
+    /**
+     * The start year of the simulation.
+     * 
+     * @return the startYear
+     */
+    public static int getStartYear() {
+        return START_YEAR;
+    }
 
-	/**
-	 * The end year of the simulation.
-	 * 
-	 * @return the endYear
-	 */
-	public static int getEndYear() {
-		return END_YEAR;
-	}
-    
+    /**
+     * The end year of the simulation.
+     * 
+     * @return the endYear
+     */
+    public static int getEndYear() {
+        return END_YEAR;
+    }
+
     /**
      * Returns the earliestDate in days since the 1/1/1600.
      * 
@@ -379,14 +399,18 @@ public class OrganicPopulation implements IPopulation {
      * 
      * @param earlyDate The value which earliestDate is to be set to.
      */
-    public void setEarliestDate(int earlyDate) {
+    public void setEarliestDate(final int earlyDate) {
         earliestDate = earlyDate;
     }
-    
+
+    public String getDescription() {
+        return description;
+    }
+
     /*
      * Interface methods
      */
-    
+
     @Override
     public Iterable<IPerson> getPeople() {
         return new Iterable<IPerson>() {
@@ -444,7 +468,7 @@ public class OrganicPopulation implements IPopulation {
             }
         };
     }
-    
+
     private OrganicPerson findOrganicPerson(final int id) {
         return (OrganicPerson) findPerson(id);
     }
@@ -504,15 +528,16 @@ public class OrganicPopulation implements IPopulation {
      */
      public static void main(final String[] args) {
         System.out.println("--------MAIN HERE---------");
-        OrganicPopulation op = new OrganicPopulation();
+        OrganicPopulation op = new OrganicPopulation("Test Population");
+        System.out.println(op.getDescription());
         op.makeSeed();
         op.currentDay = op.getEarliestDate() - 1;
         op.mainIteration();
 
         //        System.out.println("--------PEOPLE--------");
         //        for (int i = 0; i < op.getNumberOfPeople(); i++) {
-            //            System.out.println();
-            //            System.out.println("BORN: " + op.people.get(i).getBirthDate());
+        //            System.out.println();
+        //            System.out.println("BORN: " + op.people.get(i).getBirthDate());
         //            System.out.println("DIED: " + op.people.get(i).getDeathDate());
         //            int x = (DateManipulation.dateToDays(op.people.get(i).getDeathDate()) - DateManipulation.dateToDays(op.people.get(i).getBirthDate()))/365;
         //            System.out.println("ALIVE FOR: " + x);
@@ -528,9 +553,9 @@ public class OrganicPopulation implements IPopulation {
         //        }
 
         OrganicPopulationLogger.printLogData();
-        
+
         System.out.println("Left over children: " + OrganicPartnership.leftOverChildren);
         System.out.println("Kids killed by early stop: " + OrganicPartnership.stopedHavingEarlyDeaths);
-        
+
      }
 }
