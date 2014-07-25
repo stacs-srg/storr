@@ -2,10 +2,21 @@ package uk.ac.standrews.cs.digitising_scotland.record_classification.lda;
 
 import java.io.File;
 
+import org.apache.commons.io.FileUtils;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
 
 public class TopicModelTest {
+
+    @After
+    public void tearDown() {
+
+        FileUtils.deleteQuietly(new File("target/LDAExecutionTimes.txt"));
+        FileUtils.deleteQuietly(new File("target/ldaTagged.txt"));
+        FileUtils.deleteQuietly(new File("target/ldaModel.model"));
+
+    }
 
     @Test
     public void test() {

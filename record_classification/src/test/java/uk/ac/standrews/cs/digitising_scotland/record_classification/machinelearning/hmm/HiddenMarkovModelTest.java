@@ -1,14 +1,27 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.machinelearning.hmm;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 
+import org.apache.commons.io.FileUtils;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
 
 import cc.mallet.types.Alphabet;
 
 public class HiddenMarkovModelTest {
+
+    static final String outputFilePath = "target/hmmOutput.txt";
+
+    @After
+    public void tearDown() {
+
+        File outputFile = new File(outputFilePath);
+        FileUtils.deleteQuietly(outputFile);
+
+    }
 
     @Test
     public void test() throws IOException {
@@ -39,6 +52,6 @@ public class HiddenMarkovModelTest {
         String trainingFilename = getClass().getResource("/hmmTrainingTest.txt").getFile();
         String testingFilename = getClass().getResource("/hmmOutputTest.txt").getFile();
         HiddenMarkovModel hmm = new HiddenMarkovModel(trainingFilename, testingFilename);
-        hmm.trainHmm("target/hmmOutput.txt");
+        hmm.trainHmm(outputFilePath);
     }
 }

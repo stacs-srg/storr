@@ -17,7 +17,6 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.RecordFactory;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.vectors.VectorFactory;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datacleaning.LevenshteinCleaner;
 
 /**
  * The Class NaiveBayesClassifierTest.
@@ -60,8 +59,13 @@ public class NaiveBayesClassifierTest {
     public static void tearDown() throws IOException {
 
         File tempFiles = new File("temp/");
+        File labelIndex = new File("labelindex.csv");
+        File naiveBayesModelPath = new File("naiveBayesModelPath/");
         if (tempFiles.exists()) {
             FileUtils.deleteDirectory(tempFiles);
+            FileUtils.deleteDirectory(naiveBayesModelPath);
+            FileUtils.deleteQuietly(labelIndex);
+
         }
     }
 
@@ -114,7 +118,7 @@ public class NaiveBayesClassifierTest {
      */
     public void addVectorsToBucket(final Bucket bucket) throws Exception {
 
-//        LevenShteinCleaner.cleanData(bucket);
+        //        LevenShteinCleaner.cleanData(bucket);
 
         System.out.println(bucket.toString());
 
@@ -136,7 +140,7 @@ public class NaiveBayesClassifierTest {
         listOfRecords = RecordFactory.makeUnCodedRecordsFromFile(inputFile);
         bucketA.addCollectionOfRecords(listOfRecords);
 
-//        LevenShteinCleaner.cleanData(bucketA);
+        //        LevenShteinCleaner.cleanData(bucketA);
 
         System.out.println(bucketA.toString());
         nbc.classify(bucketA);
@@ -159,7 +163,7 @@ public class NaiveBayesClassifierTest {
         listOfRecords = RecordFactory.makeUnCodedRecordsFromFile(inputFile);
         bucketA.addCollectionOfRecords(listOfRecords);
 
-//        LevenShteinCleaner.cleanData(bucketA);
+        //        LevenShteinCleaner.cleanData(bucketA);
 
         System.out.println(bucketA.toString());
         for (Record r : bucketA) {

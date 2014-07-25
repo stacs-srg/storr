@@ -92,8 +92,13 @@ public class CombinedNaiveBayesolrTest {
     public static void tearDown() throws IOException {
 
         File tempFiles = new File("temp/");
+        File labelIndex = new File("labelindex.csv");
+        File naiveBayesModelPath = new File("naiveBayesModelPath/");
         if (tempFiles.exists()) {
             FileUtils.deleteDirectory(tempFiles);
+            FileUtils.deleteDirectory(naiveBayesModelPath);
+            FileUtils.deleteQuietly(labelIndex);
+
         }
     }
 

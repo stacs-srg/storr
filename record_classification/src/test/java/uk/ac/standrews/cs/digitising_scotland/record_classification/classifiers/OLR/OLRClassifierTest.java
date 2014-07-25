@@ -9,6 +9,7 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.List;
 
+import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -69,6 +70,10 @@ public class OLRClassifierTest {
     public void tearDown() {
 
         System.setOut(originalOut);
+        FileUtils.deleteQuietly(new File("target/olrClassifierWriteTest"));
+        FileUtils.deleteQuietly(new File("target/OLRWriteTest.txt"));
+        FileUtils.deleteQuietly(new File("target/olrModelPath"));
+
     }
 
     /**

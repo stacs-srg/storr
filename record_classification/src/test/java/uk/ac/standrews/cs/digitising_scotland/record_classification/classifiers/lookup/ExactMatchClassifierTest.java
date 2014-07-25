@@ -4,6 +4,8 @@ import java.io.File;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.io.FileUtils;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -42,6 +44,14 @@ public class ExactMatchClassifierTest {
         trainingBucket = getTrainingBucket();
         testingBucket = createTestingBucket();
         train();
+
+    }
+
+    @After
+    public void tearDown() {
+
+        FileUtils.deleteQuietly(new File("target/lookupTable.ser"));
+        FileUtils.deleteQuietly(new File("target/exactmatchlookuptable.ser"));
 
     }
 
