@@ -43,8 +43,8 @@ public class OrganicPopulation implements IPopulation {
     private String description;
 
     /**
-	 * Size of initially generated seed population.
-	 */
+     * Size of initially generated seed population.
+     */
     public static final int DEFAULT_SEED_SIZE = 1000;
 
     /**
@@ -75,6 +75,14 @@ public class OrganicPopulation implements IPopulation {
     private LinkedList<OrganicPerson> malePartnershipQueue = new LinkedList<OrganicPerson>();
     private LinkedList<OrganicPerson> femalePartnershipQueue = new LinkedList<OrganicPerson>();
 
+    
+    /**
+     * Calls the makeSeed method with the default specified seed size.
+     */
+    public void makeSeed() {
+        makeSeed(DEFAULT_SEED_SIZE);
+    }
+    
     /**
      * Creates a seed population of the specified size.
      * 
@@ -88,15 +96,155 @@ public class OrganicPopulation implements IPopulation {
         }
         seedGeneration = false;
     }
-
+    
     /**
-     * Calls the makeSeed method with the default specified seed size.
+     * Calls to the mainIteration method using the specified default time step size.
      */
-    public void makeSeed() {
-        makeSeed(DEFAULT_SEED_SIZE);
+    public void mainIteration() {
+        mainIteration(DEFAULT_STEP_SIZE);
     }
 
-    private void marryUpPeople() {
+    /**
+     * The events for each time step are progressed and handled by the mainIteration method/
+     * 
+     * @param timeStepSizeInDays The size of the desired time step in days.
+     */
+    public void mainIteration(final int timeStepSizeInDays) {
+
+        while (currentDay < DateManipulation.dateToDays(END_YEAR, 0, 0)) {
+            printYearEndData();
+            
+            int previousDate = currentDay;
+            currentDay += timeStepSizeInDays;
+
+            checkAllPeopleForEventsUptoCurrentDayFrom(previousDate);
+            partnerTogetherPeopleInPartnershipQueues();
+            checkAllPartnershipsForEventsUptoCurrentDayFrom(previousDate);
+        }
+        
+    }
+    
+    /*
+     * CheckAll methods
+     */
+
+    private void checkAllPartnershipsForEventsUptoCurrentDayFrom(int previousDate) {
+        for (int i = 0; i < partnerships.size(); i++) {
+            if (partnerships.get(i).getTimeline() != null) {
+                // Check all dates between the previous and current date after taking the time step
+                for (int j = previousDate; j < currentDay; j++) {
+                    EventType event;
+                    if (partnerships.get(i).getTimeline().isDateAvailable(j)) {
+                        event = partnerships.get(i).getTimeline().getEvent(j).getEventType();
+                        // deal with event
+                        switch (event) {
+                        case BIRTH:
+                            handleBirthEvent(i);
+                            break;
+                        case DIVORCE:
+                            handleDivorceEvent(i);
+                            break;
+                        case PARTNERSHIP_ENDED_BY_DEATH:
+                            handlePartnershipEndedByDeathEvent(i);
+                            break;
+                        default:
+                            break;
+                        }
+                    }
+                }
+
+            }
+        }
+    }
+
+    private void checkAllPeopleForEventsUptoCurrentDayFrom(int previousDate) {
+        for (int i = 0; i < people.size(); i++) {
+            if (DateManipulation.differenceInDays(currentDay, DateManipulation.dateToDays(people.get(i).getBirthDate())) == 0) {
+                OrganicPopulationLogger.incPopulation();
+                OrganicPopulationLogger.incBirths();
+                people.get(i).populateTimeline();
+            }
+            // TODO make more efficient
+            if (people.get(i).getTimeline() != null) {
+                //Check all dates between the previous and current date after taking the time step
+                for (int j = previousDate; j < currentDay; j++) {
+                    EventType event;
+                    if (people.get(i).getTimeline().isDateAvailable(j)) {
+                        event = people.get(i).getTimeline().getEvent(j).getEventType();
+                        //deal with event
+                        switch (event) {
+                        case ELIGIBLE_TO_MARRY:
+                            handleEligibleToMarryEvent(i);
+                            break;
+                        case DEATH: // Everyone ends up here eventually
+                            handleDeathEvent(people.get(i));
+                            break;
+                        default:
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    /*
+     * Event handle methods
+     */
+    
+    private void handlePartnershipEndedByDeathEvent(int partnershipListIndex) {
+        OrganicPopulationLogger.addNumberOfChildren(partnerships.get(partnershipListIndex).getChildIds().size());
+    }
+
+    private void handleDivorceEvent(int partnershipListIndex) {
+        partnerships.get(partnershipListIndex).divorce(findOrganicPerson(partnerships.get(partnershipListIndex).getMalePartnerId()), findOrganicPerson(partnerships.get(partnershipListIndex).getFemalePartnerId()));
+        handlePartnershipEndedByDeathEvent(partnershipListIndex);
+    }
+
+    private void handleBirthEvent(int partnershipListIndex) {
+        OrganicPerson[] children = partnerships.get(partnershipListIndex).setUpBirthEvent((OrganicPerson)findPerson(partnerships.get(partnershipListIndex).getMalePartnerId()), (OrganicPerson)findPerson(partnerships.get(partnershipListIndex).getFemalePartnerId()), currentDay);
+        for(OrganicPerson child : children) {
+            people.add(child);
+        }
+    }
+
+    private void handleEligibleToMarryEvent(int peopleListIndex) {
+        if (people.get(peopleListIndex).getSex() == 'M') {
+            malePartnershipQueue.add(people.get(peopleListIndex));
+        } else {
+            femalePartnershipQueue.add(people.get(peopleListIndex));
+        }
+    }
+    
+    private void handleDeathEvent(final OrganicPerson person) {
+        if (person.getSex() == 'M') {
+            int index = malePartnershipQueue.indexOf(person);
+            if (index != -1) {
+                malePartnershipQueue.remove(index);
+                OrganicPopulationLogger.incNeverMarried();
+            }
+        } else {
+            int index = femalePartnershipQueue.indexOf(person);
+            if (index != -1) {
+                femalePartnershipQueue.remove(index);
+                OrganicPopulationLogger.incNeverMarried();
+            }
+        }
+        OrganicPopulationLogger.decPopulation();
+    }
+    
+    /*
+     * Helper methods
+     */
+
+    private void printYearEndData() {
+        if(currentDay % (int) DAYS_PER_YEAR == 0) {
+            System.out.println(1600 + (int) (currentDay / DAYS_PER_YEAR));
+            System.out.println("Population: " + OrganicPopulationLogger.getPopulation());
+        }
+    }
+
+    private void partnerTogetherPeopleInPartnershipQueues() {
         // Sets the IDs for the first individuals in each marriage list to null
         Integer firstMaleId = (Integer) null;
         Integer firstFemaleId = (Integer) null;
@@ -130,7 +278,6 @@ public class OrganicPopulation implements IPopulation {
                     // Then calculate marriage date
                     // Finds first day BOTH were eligible to marry
                     int firstDay = malePartnershipQueue.getFirst().getEvent(EventType.ELIGIBLE_TO_MARRY);
-//                    		maleInitialPartnershipOrderer.getFirst();
                     if (femalePartnershipQueue.getFirst().getEvent(EventType.ELIGIBLE_TO_MARRY) > firstDay) {
                         firstDay = femalePartnershipQueue.getFirst().getEvent(EventType.ELIGIBLE_TO_MARRY);
                     }
@@ -194,143 +341,8 @@ public class OrganicPopulation implements IPopulation {
         OrganicPopulationLogger.logMarriage(DateManipulation.differenceInDays(husband.getBirthDay(), days), DateManipulation.differenceInDays(wife.getBirthDay(), days));
         husband.addPartnership(((OrganicPartnership) partnershipObjects[0]).getId());
         wife.addPartnership(((OrganicPartnership) partnershipObjects[0]).getId());
-    }
-
-    /**
-     * Calls to the mainIteration method using the specified default time step size.
-     */
-    public void mainIteration() {
-        mainIteration(DEFAULT_STEP_SIZE);
-    }
-
-    /**
-     * The events for each time step are progressed and handled by the mainIteration method/
-     * 
-     * @param timeStepSizeInDays The size of the desired time step in days.
-     */
-    public void mainIteration(final int timeStepSizeInDays) {
-
-        while (currentDay < DateManipulation.dateToDays(END_YEAR, 0, 0)) {
-            if(currentDay % (int) DAYS_PER_YEAR == 0) {
-                System.out.println(1600 + (int) (currentDay / DAYS_PER_YEAR));
-                System.out.println("Population: " + OrganicPopulationLogger.getPopulation());
-            }
-            int previousDate = currentDay;
-            currentDay += timeStepSizeInDays;
-
-            //Checking all time-lines for new events
-
-            //People
-            for (int i = 0; i < people.size(); i++) {
-                if (DateManipulation.differenceInDays(currentDay, DateManipulation.dateToDays(people.get(i).getBirthDate())) == 0) {
-                    //                    System.out.println("Person " + people.get(i).getId() + " born");
-                    OrganicPopulationLogger.incPopulation();
-                    OrganicPopulationLogger.incBirths();
-                    people.get(i).populateTimeline();
-                }
-                // TODO make more efficient
-                // FIXME potential bug: aren't all of those currentDay's supposed to be actually j's
-                if (people.get(i).getTimeline() != null) {
-
-                    //Check all dates between the previous and current date after taking the time step
-                    for (int j = previousDate; j < currentDay; j++) {
-                        EventType event;
-                        if (people.get(i).getTimeline().isDateAvailable(currentDay)) {
-                            event = people.get(i).getTimeline().getEvent(currentDay).getEventType();
-                            //deal with event
-                            
-                            switch (event) {
-                            case ELIGIBLE_TO_MARRY:
-                                if (people.get(i).getSex() == 'M') {
-                                    malePartnershipQueue.add(people.get(i));
-                                } else {
-                                    femalePartnershipQueue.add(people.get(i));
-                                }
-                                break;
-                            case DEATH: // Everyone ends up here eventually
-                                removePersonFromSystem(people.get(i));
-
-                                OrganicPopulationLogger.decPopulation();
-                                break;
-                            default:
-                                break;
-                            }
-                        }
-
-
-                    }
-
-                }
-            }
-            marryUpPeople();
-            // Partnerships
-            for (int i = 0; i < partnerships.size(); i++) {
-                if (partnerships.get(i).getTimeline() != null) {
-                    // Check all dates between the previous and current date after taking the time step
-                    for (int j = previousDate; j < currentDay; j++) {
-                        EventType event;
-                        if (partnerships.get(i).getTimeline().isDateAvailable(currentDay)) {
-                            event = partnerships.get(i).getTimeline().getEvent(currentDay).getEventType();
-                            // deal with event
-                            switch (event) {
-                            case BIRTH:
-                                OrganicPerson[] children = partnerships.get(i).createBirthEvent((OrganicPerson)findPerson(partnerships.get(i).getMalePartnerId()), (OrganicPerson)findPerson(partnerships.get(i).getFemalePartnerId()), currentDay);
-                                for(OrganicPerson child : children) {
-                                    people.add(child);
-                                }
-                                break;
-                            case DIVORCE:
-                                divorce(partnerships.get(i));
-                                OrganicPopulationLogger.addNumberOfChildren(partnerships.get(i).getChildIds().size());
-                                break;
-                            case PARTNERSHIP_ENDED_BY_DEATH:
-                                OrganicPopulationLogger.addNumberOfChildren(partnerships.get(i).getChildIds().size());
-                                break;
-                            default:
-                                break;
-                            }
-                        }
-                    }
-
-                }
-            }
-        }
-        
-    }
-
-    public void divorce(OrganicPartnership partnership) {
-
-        OrganicPopulationLogger.logDivorce();
-
-        partnership.turnOff();
-        int husbandID = partnership.getMalePartnerId();
-        int wifeID = partnership.getFemalePartnerId();
-
-        OrganicPerson husband, wife;
-        husband = (OrganicPerson) findPerson(husbandID);
-        wife = (OrganicPerson) findPerson(wifeID);
-
-        husband.updateTimeline(EventType.DIVORCE);
-        wife.updateTimeline(EventType.DIVORCE);
-    }
+    }   
     
-    private void removePersonFromSystem(final OrganicPerson person) {
-        if (person.getSex() == 'M') {
-            int index = malePartnershipQueue.indexOf(person);
-            if (index != -1) {
-                malePartnershipQueue.remove(index);
-                OrganicPopulationLogger.incNeverMarried();
-            }
-        } else {
-            int index = femalePartnershipQueue.indexOf(person);
-            if (index != -1) {
-                femalePartnershipQueue.remove(index);
-                OrganicPopulationLogger.incNeverMarried();
-            }
-        }
-    }
-
-
     // Interface methods
     @Override
     public Iterable<IPerson> getPeople() {
@@ -388,6 +400,10 @@ public class OrganicPopulation implements IPopulation {
 
             }
         };
+    }
+    
+    public OrganicPerson findOrganicPerson(final int id) {
+        return (OrganicPerson) findPerson(id);
     }
 
     @Override
