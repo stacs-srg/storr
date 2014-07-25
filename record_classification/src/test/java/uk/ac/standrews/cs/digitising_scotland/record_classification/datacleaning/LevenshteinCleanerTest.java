@@ -5,8 +5,9 @@ import org.junit.Test;
 public class LevenshteinCleanerTest {
 
     @Test
-    public void test() {
+    public void testCleaning() {
 
+        //TODO
     }
 
 }
