@@ -66,10 +66,10 @@ public class OrganicPerson implements IPerson {
         this.population = population;
         if (sex_distribution.getSample()) {
             sex = 'M';
-            setPersonsBirthAndDeathDates(birthDay, seedGeneration);
+            setPersonsBirthAndDeathDates(birthDay, seedGeneration, population);
         } else {
             sex = 'F';
-            setPersonsBirthAndDeathDates(birthDay, seedGeneration);
+            setPersonsBirthAndDeathDates(birthDay, seedGeneration, population);
         }
     }
 
@@ -113,12 +113,6 @@ public class OrganicPerson implements IPerson {
     public OrganicTimeline getTimeline() {
         return timeline;
     }
-
-    //    public OrganicEvent getCurrentEvent() {
-    //        timeline = getTimeline();
-    //        
-    //        return null;    
-    //    }
     
     /**
      * Returns the day in days since 1/1/1600 of the specified event.
@@ -130,7 +124,7 @@ public class OrganicPerson implements IPerson {
     	return timeline.getDay(event);
     }
 
-    private void setPersonsBirthAndDeathDates(final int birthDay, final boolean seedGeneration) {
+    private void setPersonsBirthAndDeathDates(final int birthDay, final boolean seedGeneration, OrganicPopulation population) {
 //        final UniformIntegerDistribution days_of_year_distribution = new UniformIntegerDistribution(1, (int) OrganicPopulation.DAYS_PER_YEAR, random);
         // Find an age for person
         int ageOfDeathInDays = seed_death_distribution.getSample();
@@ -140,13 +134,13 @@ public class OrganicPerson implements IPerson {
 
         if (seedGeneration) {
             if(sex == 'M') {
-                dayOfBirth = DateManipulation.dateToDays(OrganicPopulation.START_YEAR, 0, 0) + maleSeedAgeDistribution.getSample() - ageOfDeathInDays;
+                dayOfBirth = DateManipulation.dateToDays(OrganicPopulation.getStartYear(), 0, 0) + maleSeedAgeDistribution.getSample() - ageOfDeathInDays;
             } else {
-                dayOfBirth = DateManipulation.dateToDays(OrganicPopulation.START_YEAR, 0, 0) + femaleSeedAgeDistribution.getSample() - ageOfDeathInDays;
+                dayOfBirth = DateManipulation.dateToDays(OrganicPopulation.getStartYear(), 0, 0) + femaleSeedAgeDistribution.getSample() - ageOfDeathInDays;
             }
             
-            if (dayOfBirth < OrganicPopulation.getEarliestDate()) {
-                OrganicPopulation.setEarliestDate(dayOfBirth);
+            if (dayOfBirth < population.getEarliestDate()) {
+                population.setEarliestDate(dayOfBirth);
             }
         }
 
@@ -197,7 +191,7 @@ public class OrganicPerson implements IPerson {
             // time in days to birth from 1/1/1600 + marriage age in days
             do {
                 date = getBirthDay() + maleAgeAtMarriageDistribution.getSample();
-            } while (date > getDeathDay() && getDeathAgeInDays() > MIN_DEATH_AGE_FOR_NO_MARRIAGE_EVENT * OrganicPopulation.DAYS_PER_YEAR);
+            } while (date > getDeathDay() && getDeathAgeInDays() > MIN_DEATH_AGE_FOR_NO_MARRIAGE_EVENT * OrganicPopulation.getDaysPerYear());
            
             timeline.addEvent(date, new OrganicEvent(EventType.ELIGIBLE_TO_MARRY));
             
@@ -205,7 +199,7 @@ public class OrganicPerson implements IPerson {
             // time in days to birth from 1/1/1600 + marriage age in days
             do {
                 date = getBirthDay() + femaleAgeAtMarriageDistribution.getSample();
-            } while (date > getDeathDay() && getDeathAgeInDays() > MIN_DEATH_AGE_FOR_NO_MARRIAGE_EVENT * OrganicPopulation.DAYS_PER_YEAR);
+            } while (date > getDeathDay() && getDeathAgeInDays() > MIN_DEATH_AGE_FOR_NO_MARRIAGE_EVENT * OrganicPopulation.getDaysPerYear());
             
             timeline.addEvent(date, new OrganicEvent(EventType.ELIGIBLE_TO_MARRY));
             

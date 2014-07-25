@@ -35,31 +35,34 @@ import java.util.Random;
  */
 public final class OrganicPartnership implements IPartnership {
     
+	// Tempoary logging variables
     public static int leftOverChildren = 0;
     public static int stopedHavingEarlyDeaths = 0;
     
-    private final int MAX_NUMBER_OF_CHILDREN_IN_FAMILY_TO_BE_ELLIGABLE_FOR_LEFT_OVER_CHILDREN = 6;
-    private final int VOLUME_OF_LEFT_OVER_CHILDREN_TO_BE_ALLOCATED = 1;
+    // Left over children protocol variables
+    private static final int MAX_NUMBER_OF_CHILDREN_IN_FAMILY_TO_BE_ELLIGABLE_FOR_LEFT_OVER_CHILDREN = 6;
+    private static final int VOLUME_OF_LEFT_OVER_CHILDREN_TO_BE_ALLOCATED = 1;
 
+    // Universal partnership ditributions
     private static Random random = RandomFactory.getRandom();
     private static DivorceInstigatedByGenderDistribution divorceInstigatedByGenderDistribution = new DivorceInstigatedByGenderDistribution(random);
     private static DivorceAgeForMaleDistribution divorceAgeForMaleDistribution = new DivorceAgeForMaleDistribution(random);
     private static DivorceAgeForFemaleDistribution divorceAgeForFemaleDistribution = new DivorceAgeForFemaleDistribution(random);
-
     private static NumberOfChildrenDistribuition numberOfChildrenDistribution = new NumberOfChildrenDistribuition(random);
     private static NumberOfChildrenFromMaternitiesDistribution numberOfChildrenFromMaternitiesDistribution = new NumberOfChildrenFromMaternitiesDistribution(random);
-    
-    private NormalDistribution timeBetweenMaternitiesDistrobution;
 
+    // Partnership instance required variables
     private Integer id;
     private Integer husband;
     private Integer wife;
-
-    private OrganicTimeline timeline;
     private int marriageDay;
     private List<Integer> childrenIds = new ArrayList<Integer>();
+    
+    // Partnership instance helper variables
+    private OrganicTimeline timeline;
     private boolean on;
     private int numberOfChildrenToBeHadByCouple;
+    private NormalDistribution timeBetweenMaternitiesDistrobution;
     
     /*
      * Factory and constructor
@@ -124,7 +127,7 @@ public final class OrganicPartnership implements IPartnership {
         int mean = 0;
         while (numberOfChildrenToBeHadByCouple > 0) {
             mean = getMeanForChildSpacingDistribution(husband, wife, currentDay);
-            if (mean < PopulationLogic.getInterChildInterval() * OrganicPopulation.DAYS_PER_YEAR) {
+            if (mean < PopulationLogic.getInterChildInterval() * OrganicPopulation.getDaysPerYear()) {
                 leftOverChildren++;
                 numberOfChildrenToBeHadByCouple --;
             } else {
@@ -218,6 +221,12 @@ public final class OrganicPartnership implements IPartnership {
         }
     }
     
+    /**
+     * Instigates a divorce in the partnership.
+     * 
+     * @param husband An OrganicPartnership object representing the male.
+     * @param wife An OrganicPartnership object representing the female.
+     */
     public void divorce(OrganicPerson husband, OrganicPerson wife) {
 
         OrganicPopulationLogger.logDivorce();
@@ -246,11 +255,11 @@ public final class OrganicPartnership implements IPartnership {
 
     private int getLastPossibleBirthDate(OrganicPerson husband, OrganicPerson wife) {
         int lastEndDate = getEndDate();
-        if (lastEndDate > wife.getBirthDay() + PopulationLogic.getMaximumMotherAgeAtChildBirth() * OrganicPopulation.DAYS_PER_YEAR) {
-            lastEndDate = wife.getBirthDay() + (int) (PopulationLogic.getMaximumMotherAgeAtChildBirth() * OrganicPopulation.DAYS_PER_YEAR);
+        if (lastEndDate > wife.getBirthDay() + PopulationLogic.getMaximumMotherAgeAtChildBirth() * OrganicPopulation.getDaysPerYear()) {
+            lastEndDate = wife.getBirthDay() + (int) (PopulationLogic.getMaximumMotherAgeAtChildBirth() * OrganicPopulation.getDaysPerYear());
         }
-        if (lastEndDate > husband.getBirthDay() + PopulationLogic.getMaximumFathersAgeAtChildBirth() * OrganicPopulation.DAYS_PER_YEAR) {
-            lastEndDate = husband.getBirthDay() + (int) (PopulationLogic.getMaximumFathersAgeAtChildBirth() * OrganicPopulation.DAYS_PER_YEAR);
+        if (lastEndDate > husband.getBirthDay() + PopulationLogic.getMaximumFathersAgeAtChildBirth() * OrganicPopulation.getDaysPerYear()) {
+            lastEndDate = husband.getBirthDay() + (int) (PopulationLogic.getMaximumFathersAgeAtChildBirth() * OrganicPopulation.getDaysPerYear());
         }
         return lastEndDate;
     }

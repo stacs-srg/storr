@@ -95,18 +95,18 @@ public class OrganicPopulationLogger {
     }
     
     private static void addMaleAgeAtMarriage(final int days) {
-        int years = (int) ((float) days / OrganicPopulation.DAYS_PER_YEAR);
+        int years = (int) ((float) days / OrganicPopulation.getDaysPerYear());
         maleAgeAtMarriage[years]++;
     }
 
     private static void addFemaleAgeAtMarriage(final int days) {
-        int years = (int) ((float) days / OrganicPopulation.DAYS_PER_YEAR);
+        int years = (int) ((float) days / OrganicPopulation.getDaysPerYear());
         femaleAgeAtMarriage[years]++;
     }
 
     private static void addAgeDifferenceAtMarriage(final int maleDays, final int femaleDays) {
         int difference = Math.abs(maleDays - femaleDays);
-        int years = (int) ((float) difference / OrganicPopulation.DAYS_PER_YEAR);
+        int years = (int) ((float) difference / OrganicPopulation.getDaysPerYear());
         ageDifferenceAtMarriage[years]++;
     }
 
@@ -186,7 +186,7 @@ public class OrganicPopulationLogger {
             System.out.format("%6d", numberOfChildrenPerPartnership[i]);
             System.out.println(" |");
         }
-        float childrenPerFamily = (float) (births - OrganicPopulation.DEFAULT_SEED_SIZE) / (float) marriages;
+        float childrenPerFamily = (float) (births - OrganicPopulation.getDefaultSeedSize()) / (float) marriages;
         System.out.println();
         System.out.println("Children Per Family: ");
         System.out.format("%.2f", childrenPerFamily);

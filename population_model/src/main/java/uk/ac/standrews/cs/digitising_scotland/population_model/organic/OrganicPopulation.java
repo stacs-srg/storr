@@ -16,14 +16,11 @@
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.organic;
 
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.AgeAtDeathDistribution;
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.Distribution;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IDFactory;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPartnership;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPerson;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPopulation;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.PopulationLogic;
-import uk.ac.standrews.cs.digitising_scotland.population_model.model.RandomFactory;
 import uk.ac.standrews.cs.digitising_scotland.util.ArrayManipulation;
 import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
 
@@ -31,7 +28,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Random;
 
 /**
  * Created by victor on 11/06/14.
@@ -40,38 +36,25 @@ import java.util.Random;
  */
 public class OrganicPopulation implements IPopulation {
 
-    private String description;
-
-    /**
-     * Size of initially generated seed population.
-     */
-    public static final int DEFAULT_SEED_SIZE = 1000;
-
-    /**
-     * The approximate average number of days per year.
-     */
-    public static final float DAYS_PER_YEAR = 365.25f;
-
-    /**
-     * The start year of the simulation.
-     */
-    public static final int START_YEAR = 1780;
-
-    /**
-     * The end year of the simulation.
-     */
-    public static final int END_YEAR = 2013;
-
-    private static int earliestDate = DateManipulation.dateToDays(START_YEAR, 0, 0);
-    private int currentDay;
+	// Universal population variables
+    private static final int DEFAULT_SEED_SIZE = 1000;
+    private static final float DAYS_PER_YEAR = 365.25f;
+    private static final int START_YEAR = 1780;
+    private static final int END_YEAR = 2013;
     private static final int DEFAULT_STEP_SIZE = 1;
-    private boolean seedGeneration = true;
-
-    private Random random = RandomFactory.getRandom();
     
+    private int earliestDate = DateManipulation.dateToDays(getStartYear(), 0, 0);
+    private int currentDay;
+    
+    
+    // Population instance required variables
+    private String description;
     private List<OrganicPerson> people = new ArrayList<OrganicPerson>();
     private List<OrganicPartnership> partnerships = new ArrayList<OrganicPartnership>();
 
+    
+    // Population instance helper variables
+    private boolean seedGeneration = true;
     private LinkedList<OrganicPerson> malePartnershipQueue = new LinkedList<OrganicPerson>();
     private LinkedList<OrganicPerson> femalePartnershipQueue = new LinkedList<OrganicPerson>();
 
@@ -80,7 +63,7 @@ public class OrganicPopulation implements IPopulation {
      * Calls the makeSeed method with the default specified seed size.
      */
     public void makeSeed() {
-        makeSeed(DEFAULT_SEED_SIZE);
+        makeSeed(getDefaultSeedSize());
     }
     
     /**
@@ -111,7 +94,7 @@ public class OrganicPopulation implements IPopulation {
      */
     public void mainIteration(final int timeStepSizeInDays) {
 
-        while (currentDay < DateManipulation.dateToDays(END_YEAR, 0, 0)) {
+        while (currentDay < DateManipulation.dateToDays(getEndYear(), 0, 0)) {
             printYearEndData();
             
             int previousDate = currentDay;
@@ -164,14 +147,13 @@ public class OrganicPopulation implements IPopulation {
                 OrganicPopulationLogger.incBirths();
                 people.get(i).populateTimeline();
             }
-            // TODO make more efficient
             if (people.get(i).getTimeline() != null) {
-                //Check all dates between the previous and current date after taking the time step
+                // Check all dates between the previous and current date after taking the time step
                 for (int j = previousDate; j < currentDay; j++) {
                     EventType event;
                     if (people.get(i).getTimeline().isDateAvailable(j)) {
                         event = people.get(i).getTimeline().getEvent(j).getEventType();
-                        //deal with event
+                        // handle with event
                         switch (event) {
                         case ELIGIBLE_TO_MARRY:
                             handleEligibleToMarryEvent(i);
@@ -238,8 +220,8 @@ public class OrganicPopulation implements IPopulation {
      */
 
     private void printYearEndData() {
-        if(currentDay % (int) DAYS_PER_YEAR == 0) {
-            System.out.println(1600 + (int) (currentDay / DAYS_PER_YEAR));
+        if(currentDay % (int) getDaysPerYear() == 0) {
+            System.out.println(1600 + (int) (currentDay / getDaysPerYear()));
             System.out.println("Population: " + OrganicPopulationLogger.getPopulation());
         }
     }
@@ -318,7 +300,7 @@ public class OrganicPopulation implements IPopulation {
         }
     }
 
-    public boolean eligableToMarry(final OrganicPerson male, final OrganicPerson female) {
+    private boolean eligableToMarry(final OrganicPerson male, final OrganicPerson female) {
         return PopulationLogic.partnerAgeDifferenceIsReasonable(DateManipulation.dateToDays(male.getBirthDate()), DateManipulation.dateToDays(female.getBirthDate()));
     }
 
@@ -343,14 +325,75 @@ public class OrganicPopulation implements IPopulation {
         wife.addPartnership(((OrganicPartnership) partnershipObjects[0]).getId());
     }   
     
-    // Interface methods
+    /*
+     * Getters and setters
+     */
+    
+    /**
+	 * Size of initially generated seed population.
+	 * 
+	 * @return the defaultSeedSize
+	 */
+	public static int getDefaultSeedSize() {
+		return DEFAULT_SEED_SIZE;
+	}
+
+	/**
+	 * The approximate average number of days per year.
+	 * 
+	 * @return the daysPerYear
+	 */
+	public static float getDaysPerYear() {
+		return DAYS_PER_YEAR;
+	}
+
+	/**
+	 * The start year of the simulation.
+	 * 
+	 * @return the startYear
+	 */
+	public static int getStartYear() {
+		return START_YEAR;
+	}
+
+	/**
+	 * The end year of the simulation.
+	 * 
+	 * @return the endYear
+	 */
+	public static int getEndYear() {
+		return END_YEAR;
+	}
+    
+    /**
+     * Returns the earliestDate in days since the 1/1/1600.
+     * 
+     * @return The earliestDate in days since the 1/1/1600.
+     */
+    public int getEarliestDate() {
+        return earliestDate;
+    }
+
+    /**
+     * Sets the earliest date field to the specified date.
+     * 
+     * @param earlyDate The value which earliestDate is to be set to.
+     */
+    public void setEarliestDate(int earlyDate) {
+        earliestDate = earlyDate;
+    }
+    
+    /*
+     * Interface methods
+     */
+    
     @Override
     public Iterable<IPerson> getPeople() {
         return new Iterable<IPerson>() {
             @Override
             public Iterator<IPerson> iterator() {
 
-                final Iterator iterator = people.iterator();
+                final Iterator<OrganicPerson> iterator = people.iterator();
 
                 return new Iterator<IPerson>() {
 
@@ -379,7 +422,7 @@ public class OrganicPopulation implements IPopulation {
         return new Iterable<IPartnership>() {
             @Override
             public Iterator<IPartnership> iterator() {
-                final Iterator iterator = partnerships.iterator();
+                final Iterator<OrganicPartnership> iterator = partnerships.iterator();
 
                 return new Iterator<IPartnership>() {
                     @Override
@@ -402,7 +445,7 @@ public class OrganicPopulation implements IPopulation {
         };
     }
     
-    public OrganicPerson findOrganicPerson(final int id) {
+    private OrganicPerson findOrganicPerson(final int id) {
         return (OrganicPerson) findPerson(id);
     }
 
@@ -490,23 +533,4 @@ public class OrganicPopulation implements IPopulation {
         System.out.println("Kids killed by early stop: " + OrganicPartnership.stopedHavingEarlyDeaths);
         
      }
-
-     /**
-      * Returns the earliestDate in days since the 1/1/1600.
-      * 
-      * @return The earliestDate in days since the 1/1/1600.
-      */
-     public static int getEarliestDate() {
-         return earliestDate;
-     }
-
-     /**
-      * Sets the earliest date field to the specified date.
-      * 
-      * @param earlyDate The value which earliestDate is to be set to.
-      */
-     public static void setEarliestDate(int earlyDate) {
-         earliestDate = earlyDate;
-     }
-
 }
