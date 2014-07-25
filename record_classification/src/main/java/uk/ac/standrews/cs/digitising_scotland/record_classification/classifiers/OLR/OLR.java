@@ -127,7 +127,7 @@ public class OLR {
      * Classifies an instance vector and returns a result vector.
      *
      * @param instance the instance vector to classify
-     * @return the result vector 
+     * @return the result vector
      */
     public Vector classifyFull(final Vector instance) {
 

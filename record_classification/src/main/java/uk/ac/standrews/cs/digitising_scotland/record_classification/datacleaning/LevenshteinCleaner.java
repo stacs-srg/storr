@@ -32,17 +32,17 @@ public class LevenshteinCleaner extends AbstractDataCleaner {
     /**
      * The Constant SIMILARITY.
      */
-    private static double similarity = 0.85;
+    private double similarity = 0.85;
     private static final AbstractStringMetric METRIC = new Levenshtein();
 
     public static void main(final String... args) throws IOException, InputFormatException {
 
         LevenshteinCleaner cleaner = new LevenshteinCleaner();
-        setSimilarity(args);
+        cleaner.setSimilarity(args);
         cleaner.runOnFile(args);
     }
 
-    private static void setSimilarity(final String... args) {
+    private void setSimilarity(final String... args) {
 
         try {
             similarity = Double.parseDouble(args[3]);
@@ -84,7 +84,7 @@ public class LevenshteinCleaner extends AbstractDataCleaner {
      * @return the possible matches
      */
     //TODO test
-    private static List<Pair<String, Float>> getPossibleMatches(final String token, final Multiset<String> wordMultiset) {
+    private List<Pair<String, Float>> getPossibleMatches(final String token, final Multiset<String> wordMultiset) {
 
         List<Pair<String, Float>> possibleMatches = new ArrayList<>();
         Set<String> allWords = wordMultiset.elementSet();

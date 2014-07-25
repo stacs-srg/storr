@@ -27,10 +27,13 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearningConfiguration;
 
 /**
- * OLRClassifier
- * //TODO some nice javadoc
+ * OLRClassifier class that provides methods for training and classifying records.
+ * This classifier utilises the {@link OLRCrossFold} objects in order to build the best possible models.
+ * More information can be found on the project algorithms page:
+ *  <a href="http://digitisingscotland.cs.st-andrews.ac.uk/record_classification/algorithms-information.html"> Algorithms Page</a>
  * <p/>
- * Created by fraserdunlop on 25/04/2014 at 15:21.
+ * @author frjd2, jkc25
+ * 
  */
 public class OLRClassifier extends AbstractClassifier {
 

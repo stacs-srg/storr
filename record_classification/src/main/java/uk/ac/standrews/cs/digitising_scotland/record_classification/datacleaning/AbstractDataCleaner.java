@@ -34,7 +34,7 @@ import com.google.common.collect.Multiset;
 public abstract class AbstractDataCleaner {
 
     /**
-     * The Constant TOKENLIMIT.
+     * The Constant TOKENLIMIT. The default is 4 but this can be changed by calling setTokenLimit.
      */
     private static int tokenLimit = 4;
 
