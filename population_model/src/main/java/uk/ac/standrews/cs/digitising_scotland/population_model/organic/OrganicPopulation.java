@@ -42,9 +42,10 @@ public class OrganicPopulation implements IPopulation {
 
     private String description;
 
-
+    /**
+	 * Size of initially generated seed population.
+	 */
     public static final int DEFAULT_SEED_SIZE = 1000;
-
 
     /**
      * The approximate average number of days per year.
@@ -56,22 +57,18 @@ public class OrganicPopulation implements IPopulation {
      */
     public static final int START_YEAR = 1780;
 
-    private static int earliestDate = DateManipulation.dateToDays(START_YEAR, 0, 0);
-
-    private int currentDay;
-
     /**
      * The end year of the simulation.
      */
     public static final int END_YEAR = 2013;
 
+    private static int earliestDate = DateManipulation.dateToDays(START_YEAR, 0, 0);
+    private int currentDay;
     private static final int DEFAULT_STEP_SIZE = 1;
-
     private boolean seedGeneration = true;
 
     private Random random = RandomFactory.getRandom();
-    private Distribution<Integer> age_at_death_distribution = new AgeAtDeathDistribution(random);
-
+    
     private List<OrganicPerson> people = new ArrayList<OrganicPerson>();
     private List<OrganicPartnership> partnerships = new ArrayList<OrganicPartnership>();
 
@@ -102,10 +99,7 @@ public class OrganicPopulation implements IPopulation {
         makeSeed(DEFAULT_SEED_SIZE);
     }
 
-    /**
-     * Marries up people found in the marriage queues.
-     */
-    public void marryUpPeople() {
+    private void marryUpPeople() {
         // Sets the IDs for the first individuals in each marriage list to null
         Integer firstMaleId = (Integer) null;
         Integer firstFemaleId = (Integer) null;
@@ -196,7 +190,7 @@ public class OrganicPopulation implements IPopulation {
      * @param wife he female to be married.
      * @param days The day of the marriage in days since the 1/1/1600.
      */
-    public void marry(final OrganicPerson husband, final OrganicPerson wife, final int days) {
+    private void marry(final OrganicPerson husband, final OrganicPerson wife, final int days) {
         // Create partnership
         Object[] partnershipObjects = OrganicPartnership.createOrganicPartnership(IDFactory.getNextID(), husband, wife, days, currentDay);
         partnerships.add((OrganicPartnership) partnershipObjects[0]);
