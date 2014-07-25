@@ -45,38 +45,90 @@ import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearnin
  */
 public class OLR {
 
+    /** The gradient. */
     private Gradient gradient = new Gradient();
+
+    /** The beta. */
     protected org.apache.mahout.math.Matrix beta;
+
+    /** The properties. */
     private Properties properties;
+
+    /** The mu0. */
     private double mu0;
+
+    /** The prior. */
     private L1 prior;
+
+    /** The decay factor. */
     private double decayFactor;
+
+    /** The per term annealing rate. */
     private double perTermAnnealingRate;
+
+    /** Are we per term annealing. */
     private boolean weArePerTermAnnealing;
+
+    /** Are we regularizing. */
     private boolean weAreRegularizing;
+
+    /** The number of features. */
     private int numFeatures;
+
+    /** The number of output categories. */
     private int numCategories;
+
+    /** The update steps. */
     private Vector updateSteps;
+
+    /** The update counts. */
     private Vector updateCounts;
+
+    /** The step. */
     private int step;
+
+    /** The running log likelihood. */
     private volatile double runningLogLikelihood;
+
+    /** The number log likelihood sum updates. */
     private volatile AtomicInteger numLogLikelihoodSumUpdates;
 
+    /**
+     * Gets the step.
+     *
+     * @return the step
+     */
     public int getStep() {
 
         return step;
     }
 
+    /**
+     * Gets the beta.
+     *
+     * @return the beta
+     */
     public Matrix getBeta() {
 
         return beta;
     }
 
+    /**
+     * Sets the beta matrix.
+     *
+     * @param beta the new beta
+     */
     public void setBeta(final Matrix beta) {
 
         this.beta = beta;
     }
 
+    /**
+     * Classifies an instance vector and returns a result vector.
+     *
+     * @param instance the instance vector to classify
+     * @return the result vector 
+     */
     public Vector classifyFull(final Vector instance) {
 
         Vector r = new DenseVector(numCategories);
@@ -85,17 +137,32 @@ public class OLR {
         return r;
     }
 
+    /**
+     * Gets the running log likelihood.
+     *
+     * @return the running log likelihood
+     */
     public double getRunningLogLikelihood() {
 
         return runningLogLikelihood / numLogLikelihoodSumUpdates.get();
     }
 
+    /**
+     * Reset running log likelihood.
+     */
     public void resetRunningLogLikelihood() {
 
         runningLogLikelihood = 0.;
         numLogLikelihoodSumUpdates = new AtomicInteger(1);
     }
 
+    /**
+     * Calculates the log likelihood.
+     *
+     * @param actual the actual output category ID
+     * @param instance the instance vector
+     * @return the double log likelihood
+     */
     public double logLikelihood(final int actual, final Vector instance) {
 
         Vector p = classify(instance);
@@ -107,6 +174,12 @@ public class OLR {
         }
     }
 
+    /**
+     * Update log likelihood sum.
+     *
+     * @param actual the actual
+     * @param classification the classification
+     */
     private void updateLogLikelihoodSum(final int actual, final Vector classification) {
 
         double thisloglik;
@@ -127,13 +200,27 @@ public class OLR {
         numLogLikelihoodSumUpdates.getAndIncrement();
     }
 
+    /**
+     * Gets the num categories.
+     *
+     * @return the num categories
+     */
     public int getNumCategories() {
 
         return numCategories;
     }
 
+    /**
+     * The Class Gradient.
+     */
     private class Gradient {
 
+        /**
+         * Apply.
+         *
+         * @param instance the instance
+         * @return the vector
+         */
         public final Vector apply(final NamedVector instance) {
 
             int actual = Integer.parseInt(instance.getName());
@@ -171,6 +258,11 @@ public class OLR {
         initialiseModel();
     }
 
+    /**
+     * Instantiates a new olr.
+     *
+     * @param beta the beta
+     */
     public OLR(final Matrix beta) {
 
         initialiseMode(beta);
@@ -188,11 +280,19 @@ public class OLR {
         nextStep();
     }
 
+    /**
+     * Next step.
+     */
     private void nextStep() {
 
         step++;
     }
 
+    /**
+     * Update model parameters.
+     *
+     * @param instance the instance
+     */
     private void updateModelParameters(final NamedVector instance) {
 
         Vector gradient = this.gradient.apply(instance);
@@ -201,6 +301,13 @@ public class OLR {
         }
     }
 
+    /**
+     * Update beta category.
+     *
+     * @param instance the instance
+     * @param gradient the gradient
+     * @param category the category
+     */
     private void updateBetaCategory(final Vector instance, final Vector gradient, final int category) {
 
         double gradientBase = gradient.get(category);
@@ -211,6 +318,13 @@ public class OLR {
 
     }
 
+    /**
+     * Update category at non zero feature.
+     *
+     * @param category the category
+     * @param gradientBase the gradient base
+     * @param featureElement the feature element
+     */
     private void updateCategoryAtNonZeroFeature(final int category, final double gradientBase, final Vector.Element featureElement) {
 
         final double aSmallNumber = 0.000001;
@@ -224,12 +338,26 @@ public class OLR {
         }
     }
 
+    /**
+     * Update coefficient.
+     *
+     * @param category the category
+     * @param feature the feature
+     * @param featureElement the feature element
+     * @param gradientBase the gradient base
+     */
     private void updateCoefficient(final int category, final int feature, final Vector.Element featureElement, final double gradientBase) {
 
         double newValue = beta.getQuick(category, feature) + gradientBase * getLearningRate(feature) * featureElement.get();
         beta.setQuick(category, feature, newValue);
     }
 
+    /**
+     * Regularize.
+     *
+     * @param category the category
+     * @param feature the feature
+     */
     private void regularize(final int category, final int feature) {
 
         double lastUpdated = updateSteps.get(feature);
@@ -239,6 +367,13 @@ public class OLR {
         }
     }
 
+    /**
+     * Regularize in proportion to missing updates.
+     *
+     * @param category the category
+     * @param feature the feature
+     * @param missingUpdates the missing updates
+     */
     private void regularizeInProportionToMissingUpdates(final int category, final int feature, final double missingUpdates) {
 
         double rate = getLearningRate(feature);
@@ -246,6 +381,12 @@ public class OLR {
         beta.set(category, feature, newValue);
     }
 
+    /**
+     * Gets the learning rate.
+     *
+     * @param feature the feature
+     * @return the learning rate
+     */
     private double getLearningRate(final int feature) {
 
         if (weArePerTermAnnealing) {
@@ -268,6 +409,12 @@ public class OLR {
         return link(classifyNoLink(instance));
     }
 
+    /**
+     * Link.
+     *
+     * @param v the v
+     * @return the vector
+     */
     public Vector link(final Vector v) {
 
         double max = v.maxValue();
@@ -283,6 +430,12 @@ public class OLR {
         }
     }
 
+    /**
+     * Classify no link.
+     *
+     * @param instance the instance
+     * @return the vector
+     */
     public Vector classifyNoLink(final Vector instance) {
 
         //must be overridden due to fact that superclass regularizes here
@@ -291,16 +444,32 @@ public class OLR {
         return beta.times(instance);
     }
 
+    /**
+     * Current learning rate.
+     *
+     * @return the double
+     */
     public double currentLearningRate() {
 
         return mu0 * Math.pow(decayFactor, getStep());
     }
 
+    /**
+     * Per term learning rate.
+     *
+     * @param j the j
+     * @return the double
+     */
     public double perTermLearningRate(final int j) {
 
         return mu0 * Math.pow(perTermAnnealingRate, updateCounts.get(j));
     }
 
+    /**
+     * Update counts and steps.
+     *
+     * @param instance the instance
+     */
     private void updateCountsAndSteps(final Vector instance) {
 
         Iterable<Element> instanceFeatures = instance.nonZeroes();
@@ -311,6 +480,11 @@ public class OLR {
 
     }
 
+    /**
+     * Update counts and steps at index.
+     *
+     * @param j the j
+     */
     private void updateCountsAndStepsAtIndex(final int j) {
 
         if (weAreRegularizing) {
@@ -321,16 +495,31 @@ public class OLR {
         }
     }
 
+    /**
+     * Update counts.
+     *
+     * @param j the j
+     */
     private void updateCounts(final int j) {
 
         updateCounts.setQuick(j, updateCounts.getQuick(j) + 1);
     }
 
+    /**
+     * Update steps.
+     *
+     * @param j the j
+     */
     private void updateSteps(final int j) {
 
         updateSteps.setQuick(j, getStep());
     }
 
+    /**
+     * Gets the config options.
+     *
+     * @return the config options
+     */
     private void getConfigOptions() {
 
         weArePerTermAnnealing = Boolean.parseBoolean(properties.getProperty("perTermLearning"));
@@ -342,6 +531,9 @@ public class OLR {
         numFeatures = Integer.parseInt(properties.getProperty("numFeatures"));
     }
 
+    /**
+     * Initialise model.
+     */
     private void initialiseModel() {
 
         updateSteps = new DenseVector(numFeatures);
@@ -349,6 +541,11 @@ public class OLR {
         beta = new DenseMatrix(numCategories - 1, numFeatures);
     }
 
+    /**
+     * Initialise mode.
+     *
+     * @param beta the beta
+     */
     private void initialiseMode(final Matrix beta) {
 
         this.beta = beta;
@@ -362,7 +559,7 @@ public class OLR {
      * Writes model to file.
      *
      * @param filename name of file to write model to
-     * @throws IOException
+     * @throws IOException Signals that an I/O exception has occurred.
      */
     public void serializeModel(final String filename) throws IOException {
 
@@ -386,6 +583,13 @@ public class OLR {
         return olr;
     }
 
+    /**
+     * Creates the new olr.
+     *
+     * @param dataInputStream the data input stream
+     * @return the olr
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
     protected static OLR createNewOLR(final DataInputStream dataInputStream) throws IOException {
 
         OLR olr = new OLR();
@@ -393,18 +597,38 @@ public class OLR {
         return olr;
     }
 
+    /**
+     * Gets the data output stream.
+     *
+     * @param filename the filename
+     * @return the data output stream
+     * @throws FileNotFoundException the file not found exception
+     */
     protected static DataOutputStream getDataOutputStream(final String filename) throws FileNotFoundException {
 
         FileOutputStream fileOutputStream = new FileOutputStream(filename);
         return new DataOutputStream(fileOutputStream);
     }
 
+    /**
+     * Gets the data input stream.
+     *
+     * @param filename the filename
+     * @return the data input stream
+     * @throws FileNotFoundException the file not found exception
+     */
     protected static DataInputStream getDataInputStream(final String filename) throws FileNotFoundException {
 
         FileInputStream fileInputStream = new FileInputStream(filename);
         return new DataInputStream(fileInputStream);
     }
 
+    /**
+     * Write.
+     *
+     * @param out the out
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
     protected void write(final DataOutputStream out) throws IOException {
 
         out.writeDouble(mu0);
@@ -421,6 +645,12 @@ public class OLR {
 
     }
 
+    /**
+     * Read fields.
+     *
+     * @param in the in
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
     protected void readFields(final DataInputStream in) throws IOException {
 
         mu0 = in.readDouble();
