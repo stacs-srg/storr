@@ -21,7 +21,9 @@ import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
 import java.util.Date;
 
 /**
- * Created by graham on 03/07/2014.
+ * Defines various population logic checks.
+ *
+ * @author Graham Kirby (graham.kirby@st-andrews.ac.uk)
  * @author Tom Dalton (tsd4@st-andrews.ac.uk)
  */
 public class PopulationLogic {
@@ -38,19 +40,39 @@ public class PopulationLogic {
     private static final int MAXIMUM_AGE_DIFFERENCE_IN_PARTNERSHIP = 15;
     private static final int MINIMUM_PERIOD_BETWEEN_PARTNERSHIPS = 7;
 
+    /**
+     * Checks whether the ages of the given parents are sensible for the given child.
+     *
+     * @param father the father
+     * @param mother the mother
+     * @param child  the child
+     * @return true if the parents' ages are sensible
+     */
+    @SuppressWarnings("FeatureEnvy")
     public static boolean parentsHaveSensibleAgesAtChildBirth(final IPerson father, final IPerson mother, final IPerson child) {
 
-        Date mother_birth_date = mother.getBirthDate();
-        Date mother_death_date = mother.getDeathDate();
+        final Date mother_birth_date = mother.getBirthDate();
+        final Date mother_death_date = mother.getDeathDate();
 
-        Date father_birth_date = father.getBirthDate();
-        Date father_death_date = father.getDeathDate();
+        final Date father_birth_date = father.getBirthDate();
+        final Date father_death_date = father.getDeathDate();
 
-        Date child_birth_date = child.getBirthDate();
+        final Date child_birth_date = child.getBirthDate();
 
         return parentsHaveSensibleAgesAtChildBirth(father_birth_date, father_death_date, mother_birth_date, mother_death_date, child_birth_date);
     }
 
+    /**
+     * Checks whether the ages of the given parents are sensible for the given child.
+     *
+     * @param father_birth_date the birth date of the father
+     * @param father_death_date the death date of the father
+     * @param mother_birth_date the birth date of the mother
+     * @param mother_death_date the death date of the mother
+     * @param child_birth_date  the birth date of the child
+     * @return true if the parents' ages are sensible
+     */
+    @SuppressWarnings("FeatureEnvy")
     public static boolean parentsHaveSensibleAgesAtChildBirth(final int father_birth_date, final int father_death_date, final int mother_birth_date, final int mother_death_date, final int child_birth_date) {
 
         return parentsHaveSensibleAgesAtChildBirth(
@@ -84,15 +106,35 @@ public class PopulationLogic {
 
         return DateManipulation.differenceInYears(previous_marriage_date, candidate_marriage_date) > MINIMUM_PERIOD_BETWEEN_PARTNERSHIPS;
     }
-    
+
     public static boolean divorceNotBeforeMarriage(final int marriage_date, final int divorce_date) {
-    	
-    	return DateManipulation.differenceInDays(marriage_date, divorce_date) > 0;
+
+        return DateManipulation.differenceInDays(marriage_date, divorce_date) > 0;
     }
 
     public static boolean divorceNotAfterDeath(final int death_date, final int divorce_date) {
 
         return DateManipulation.differenceInDays(divorce_date, death_date) > 0;
+    }
+
+    public static int getMaximumMotherAgeAtChildBirth() {
+        return MAXIMUM_MOTHER_AGE_AT_CHILDBIRTH;
+    }
+
+    public static int getMinimumMotherAgeAtChildBirth() {
+        return MINIMUM_MOTHER_AGE_AT_CHILDBIRTH;
+    }
+
+    public static int getMaximumFathersAgeAtChildBirth() {
+        return MAXIMUM_FATHER_AGE_AT_CHILDBIRTH;
+    }
+
+    public static int getMinimumFathersAgeAtChildBirth() {
+        return MINIMUM_FATHER_AGE_AT_CHILDBIRTH;
+    }
+
+    public static int getInterChildInterval() {
+        return INTER_CHILD_INTERVAL;
     }
 
     private static boolean motherAliveAtBirth(final Date mother_death_date, final Date child_birth_date) {
@@ -151,25 +193,5 @@ public class PopulationLogic {
     private static boolean dateNotAfter(final Date date1, final Date date2) {
 
         return DateManipulation.differenceInDays(date1, date2) >= 0;
-    }
-    
-    public static int getMaximumMotherAgeAtChildBirth() {
-    	return MAXIMUM_MOTHER_AGE_AT_CHILDBIRTH;
-    }
-    
-    public static int getMinimumMotherAgeAtChildBirth() {
-    	return MINIMUM_MOTHER_AGE_AT_CHILDBIRTH;
-    }
-    
-    public static int getMaximumFathersAgeAtChildBirth() {
-    	return MAXIMUM_FATHER_AGE_AT_CHILDBIRTH;
-    }
-    
-    public static int getMinimumFathersAgeAtChildBirth() {
-    	return MINIMUM_FATHER_AGE_AT_CHILDBIRTH;
-    }
-    
-    public static int getInterChildInterval() {
-    	return INTER_CHILD_INTERVAL;
     }
 }

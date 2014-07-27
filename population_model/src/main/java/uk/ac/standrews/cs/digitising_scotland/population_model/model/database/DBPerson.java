@@ -32,18 +32,18 @@ public class DBPerson extends AbstractPerson {
 
     private static Connection connection;
 
-    private static synchronized void initStatementIfNecessary(Connection connection) throws SQLException {
+    private static synchronized void initStatementIfNecessary(final Connection connection) throws SQLException {
 
         // Delay initialisation of prepared statement until the first call, after the database properties have been set.
         if (connection != DBPerson.connection || get_person_statement == null) {
 
-            String person_query = String.format(
+            final String person_query = String.format(
                     "SELECT * FROM %1$s.%2$s WHERE %3$s = ?",
                     PopulationProperties.getDatabaseName(),
                     PopulationProperties.PERSON_TABLE_NAME,
                     PopulationProperties.PERSON_FIELD_ID);
 
-            String parents_query = String.format(
+            final String parents_query = String.format(
                     "SELECT %1$s FROM %2$s.%3$s WHERE %4$s = ?",
                     PopulationProperties.PARTNERSHIP_FIELD_PARTNERSHIP_ID,
                     PopulationProperties.getDatabaseName(),
@@ -94,11 +94,11 @@ public class DBPerson extends AbstractPerson {
         init(person_result_set);
     }
 
-    private void init(ResultSet result_set) throws SQLException {
+    private void init(final ResultSet result_set) throws SQLException {
 
-        int person_id = result_set.getInt(PopulationProperties.PERSON_FIELD_ID);
+        final int person_id = result_set.getInt(PopulationProperties.PERSON_FIELD_ID);
 
-        int parents_partnership_id = getParentsPartnershipId(person_id);
+        final int parents_partnership_id = getParentsPartnershipId(person_id);
 
         init(
                 person_id,
@@ -114,19 +114,20 @@ public class DBPerson extends AbstractPerson {
                 parents_partnership_id);
     }
 
-    private int getParentsPartnershipId(int person_id) throws SQLException {
+    private static int getParentsPartnershipId(final int person_id) throws SQLException {
 
         get_parents_statement.setInt(1, person_id);
-        final ResultSet parents_result_set = get_parents_statement.executeQuery();
+        try (final ResultSet parents_result_set = get_parents_statement.executeQuery()) {
 
-        if (!parents_result_set.first()) {
-            return -1;
+            if (!parents_result_set.first()) {
+                return -1;
+            }
+
+            return parents_result_set.getInt(PopulationProperties.PARTNERSHIP_FIELD_PARTNERSHIP_ID);
         }
-
-        return parents_result_set.getInt(PopulationProperties.PARTNERSHIP_FIELD_PARTNERSHIP_ID);
     }
 
-    private void init(final int id, final String first_name, final String surname, final char sex, final Date birth_date, final String birth_place, final Date death_date, final String death_place, final String death_cause, final String occupation, int parents_partnership_id) {
+    private void init(final int id, final String first_name, final String surname, final char sex, final Date birth_date, final String birth_place, final Date death_date, final String death_place, final String death_cause, final String occupation, final int parents_partnership_id) {
 
         this.id = id;
         this.first_name = first_name;
