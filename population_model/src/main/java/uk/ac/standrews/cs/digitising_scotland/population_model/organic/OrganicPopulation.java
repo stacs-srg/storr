@@ -556,8 +556,13 @@ public class OrganicPopulation implements IPopulation {
         //        }
 
         OrganicPopulationLogger.printLogData();
-
-        System.out.println("Left over children: " + OrganicPartnership.leftOverChildren);
+        int count = 0;
+        for (int i = 0; i < OrganicPartnership.adjustedNumberOfChildren.length; i++) {
+        	for (int j = 0; j < OrganicPartnership.adjustedNumberOfChildren[i].size(); j++) {
+        		count += OrganicPartnership.adjustedNumberOfChildren[i].get(j) - i;
+        	}
+        }
+        System.out.println("Left over children: " + count);
         System.out.println("Kids killed by early stop: " + OrganicPartnership.stopedHavingEarlyDeaths);
 
      }

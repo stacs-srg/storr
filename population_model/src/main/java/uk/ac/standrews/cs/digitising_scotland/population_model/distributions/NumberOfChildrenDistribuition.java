@@ -24,6 +24,8 @@ public class NumberOfChildrenDistribuition implements Distribution<Integer> {
      * from http://www.ons.gov.uk/ons/about-ons/business-transparency/freedom-of-information/what-can-i-request/published-ad-hoc-data/pop/july-2014/families-by-number-of-dependent-and-non-dependent-children--uk--1996-2013.xls
      * Families by number of dependent and non-dependent children in the household, UK, 1996-2013
      * 
+     * Data for 1996
+     * 
      * Number  per 1000 families
      * 0        354
      * 1        224
@@ -39,9 +41,13 @@ public class NumberOfChildrenDistribuition implements Distribution<Integer> {
      * 11       1
      */
 
-    private static final int MAXIMUM_NUMBER_OF_CHILDREN = 11;
-    private static final int[] NUMBER_DISTRIBUTION_WEIGHTS = new int[]{354, 224, 232, 84, 61, 16, 17, 4, 4, 1, 1, 1};
-
+    public static final int MAXIMUM_NUMBER_OF_CHILDREN = 11;
+    // Date for 1996 - births below replacment rate
+    //    private static final int[] NUMBER_DISTRIBUTION_WEIGHTS = new int[]{354, 224, 232, 84, 61, 16, 17, 4, 4, 1, 1, 1};
+    // Appriximated data for 1950 - births meet replacement rate
+    private static final int[] NUMBER_DISTRIBUTION_WEIGHTS = new int[]{140, 130, 440, 200, 50, 25, 10, 6, 5, 2, 1, 1};
+    
+    
     private final WeightedIntegerDistribution distribution;
 
     /**

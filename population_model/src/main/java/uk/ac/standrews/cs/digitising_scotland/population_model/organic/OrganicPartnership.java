@@ -39,9 +39,8 @@ public final class OrganicPartnership implements IPartnership {
     public static int leftOverChildren = 0;
     public static int stopedHavingEarlyDeaths = 0;
     
-    // Left over children protocol variables
-    private static final int MAX_NUMBER_OF_CHILDREN_IN_FAMILY_TO_BE_ELLIGABLE_FOR_LEFT_OVER_CHILDREN = 6;
-    private static final int VOLUME_OF_LEFT_OVER_CHILDREN_TO_BE_ALLOCATED = 1;
+    // Adjusted number of children variables
+    public static ArrayList<Integer>[] adjustedNumberOfChildren = null;
 
     // Universal partnership ditributions
     private static Random random = RandomFactory.getRandom();
@@ -79,6 +78,9 @@ public final class OrganicPartnership implements IPartnership {
      */
     public static Object[] createOrganicPartnership(final int id, final OrganicPerson husband, final OrganicPerson wife, final int marriageDay, int currentDay) {
         OrganicPartnership partnership = new OrganicPartnership(id, husband, wife, marriageDay);
+        if (adjustedNumberOfChildren == null) {
+        	setUpArray();
+        }
         // Contains OrganicPerson objects aka the children - if no children returns null
         OrganicPerson[] children = partnership.createPartnershipTimeline(husband, wife, currentDay);
         Object[] returns = new Object[children.length + 1];
@@ -112,19 +114,39 @@ public final class OrganicPartnership implements IPartnership {
         // Decide on a number of children for relationship
         return setUpBirthPlan(husband, wife, currentDay);
     }
+    
+    /*
+     * Adjusted number of children methods
+     */
 
+    private static void setUpArray() {
+	    adjustedNumberOfChildren = new ArrayList[NumberOfChildrenDistribuition.MAXIMUM_NUMBER_OF_CHILDREN + 1];
+    	for (int i = 0; i < NumberOfChildrenDistribuition.MAXIMUM_NUMBER_OF_CHILDREN + 1; i++) {
+    	    adjustedNumberOfChildren[i] = new ArrayList<Integer>();
+    	}
+    }
+    
+    private static int checkForFamilySize(int assignedNumberOfChilren) {
+    	if (adjustedNumberOfChildren[assignedNumberOfChilren].size() != 0) {
+    		return adjustedNumberOfChildren[assignedNumberOfChilren].remove(0);
+    	}
+   		return assignedNumberOfChilren;
+    }
+    
+    private static void addUndersizedFamily(int intendedNumberOfChildren, int actualNumberOfChildren) {
+    	adjustedNumberOfChildren[actualNumberOfChildren].add(intendedNumberOfChildren);
+    }
+    
     /*
      * SetUp methods
      */
     
     private OrganicPerson[] setUpBirthPlan(final OrganicPerson husband, final OrganicPerson wife, int currentDay) {
         numberOfChildrenToBeHadByCouple = numberOfChildrenDistribution.getSample();
-        // FIXME Rewrite left over children protcol as not to make distribution squint - try swap size for size
-        if (numberOfChildrenToBeHadByCouple < MAX_NUMBER_OF_CHILDREN_IN_FAMILY_TO_BE_ELLIGABLE_FOR_LEFT_OVER_CHILDREN 
-                && leftOverChildren >= VOLUME_OF_LEFT_OVER_CHILDREN_TO_BE_ALLOCATED) {
-            numberOfChildrenToBeHadByCouple += VOLUME_OF_LEFT_OVER_CHILDREN_TO_BE_ALLOCATED;
-            leftOverChildren -= VOLUME_OF_LEFT_OVER_CHILDREN_TO_BE_ALLOCATED;
-        }
+        
+        numberOfChildrenToBeHadByCouple = checkForFamilySize(numberOfChildrenToBeHadByCouple);
+        int intendedNumberOfChildren = numberOfChildrenToBeHadByCouple;
+        
         if (numberOfChildrenToBeHadByCouple == 0) {
             return new OrganicPerson[0];
         }
@@ -145,8 +167,14 @@ public final class OrganicPartnership implements IPartnership {
             } catch (NegativeDeviationException e) {
                 return new OrganicPerson[0];
             }
+            if(intendedNumberOfChildren != numberOfChildrenToBeHadByCouple) {
+            	addUndersizedFamily(intendedNumberOfChildren, numberOfChildrenToBeHadByCouple);
+            }
             return setUpBirthEvent(husband, wife, currentDay);
         } else {
+        	if(intendedNumberOfChildren != numberOfChildrenToBeHadByCouple) {
+            	addUndersizedFamily(intendedNumberOfChildren, numberOfChildrenToBeHadByCouple);
+            }
             return new OrganicPerson[0];
         }
     }
