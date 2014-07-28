@@ -26,16 +26,34 @@ import java.text.ParseException;
 import java.util.ArrayList;
 
 /**
- * Created by graham on 19/07/2014.
+ * Partnership implementation for a population represented in a GEDCOM file.
+ *
+ * @author Graham Kirby (graham.kirby@st-andrews.ac.uk>
  */
 public class GEDCOMPartnership extends AbstractPartnership {
 
-    @SuppressWarnings("FeatureEnvy")
+    /**
+     * Initialises the partnership.
+     *
+     * @param family the GEDCOM family representation
+     * @throws ParseException if the marriage date is incorrectly formatted
+     */
     public GEDCOMPartnership(final Family family) throws ParseException {
 
-        id = GEDCOMPopulationWriter.idToInt(family.xref);
-        male_partner_id = GEDCOMPopulationWriter.idToInt(family.husband.xref);
-        female_partner_id = GEDCOMPopulationWriter.idToInt(family.wife.xref);
+        id = getId(family.xref);
+        male_partner_id = getId(family.husband.xref);
+        female_partner_id = getId(family.wife.xref);
+
+        setMarriage(family);
+        setChildren(family);
+    }
+
+    private static int getId(final String reference) {
+
+        return GEDCOMPopulationWriter.idToInt(reference);
+    }
+
+    private void setMarriage(final Family family) throws ParseException {
 
         for (final FamilyEvent event : family.events) {
 
@@ -50,6 +68,9 @@ public class GEDCOMPartnership extends AbstractPartnership {
                     break;
             }
         }
+    }
+
+    private void setChildren(final Family family) {
 
         child_ids = new ArrayList<>();
         for (final Individual child : family.children) {

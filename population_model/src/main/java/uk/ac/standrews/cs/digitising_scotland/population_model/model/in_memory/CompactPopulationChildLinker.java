@@ -85,7 +85,7 @@ public class CompactPopulationChildLinker {
         final List<Integer> children = new ArrayList<>(number_of_children);
         partnership.setChildren(children);
 
-        int previous_child_birth_date = 0;
+        int previous_child_birth_date = -1;
 
         int start_index = Math.max(partnership.getPartner1(), partnership.getPartner2()) + 1; // the index at which we start to search for possible child_ids.
 

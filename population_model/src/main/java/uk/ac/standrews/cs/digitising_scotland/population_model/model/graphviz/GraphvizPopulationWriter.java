@@ -49,12 +49,13 @@ public class GraphvizPopulationWriter extends AbstractFilePopulationWriter {
     private final IPopulation population;
 
     /**
-     * Initialises the exporter. This includes potentially expensive scanning of the population graph.
+     * Initialises the writer.
      *
+     * @param population the population to be written
      * @param path the path for the output file
      * @throws IOException if the file does not exist and cannot be created
      */
-    public GraphvizPopulationWriter(final Path path, final IPopulation population) throws IOException {
+     public GraphvizPopulationWriter(final IPopulation population, final Path path) throws IOException {
 
         super(path);
         this.population = population;

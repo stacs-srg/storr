@@ -32,7 +32,7 @@ import java.text.ParseException;
 import java.util.Iterator;
 
 /**
- * Provides a population interface to a GEDCOM file.
+ * Provides abstract interface to a population represented in a GEDCOM file.
  *
  * @author Alan Dearle (alan.dearle@st-andrews.ac.uk)
  * @author Graham Kirby (graham.kirby@st-andrews.ac.uk)
@@ -42,6 +42,13 @@ public class GEDCOMPopulationAdapter implements IPopulation {
     private final GedcomParser parser;
     private String description;
 
+    /**
+     * Initialises the adapter for a given GEDCOM file.
+     *
+     * @param path the path of the GEDCOM file
+     * @throws IOException           if the file cannot be accessed
+     * @throws GedcomParserException if the GEDCOM file is not well formed
+     */
     public GEDCOMPopulationAdapter(final Path path) throws IOException, GedcomParserException {
 
         parser = new GedcomParser();

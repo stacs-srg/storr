@@ -28,9 +28,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Writes a representation of the population to file in GEDCOM format.
- * <p/>
- * GEDCOM specification: http://homepages.rootsweb.ancestry.com/~pmcbride/gedcom/55gctoc.htm
+ * Implementation of population export to GEDCOM format file.
  *
  * @author Graham Kirby (graham.kirby@st-andrews.ac.uk)
  * @author Alan Dearle (alan.dearle@st-andrews.ac.uk)

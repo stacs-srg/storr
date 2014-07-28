@@ -17,6 +17,7 @@
 
 /**
  * Population export to and import from GEDCOM file.
+ * GEDCOM specification: http://homepages.rootsweb.ancestry.com/~pmcbride/gedcom/55gctoc.htm
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.model.gedcom;
 
