@@ -107,14 +107,12 @@ public class PopulationLogic {
         return DateManipulation.differenceInYears(previous_marriage_date, candidate_marriage_date) > MINIMUM_PERIOD_BETWEEN_PARTNERSHIPS;
     }
 
-    public static boolean divorceNotBeforeMarriage(final int marriage_date, final int divorce_date) {
-
-        return DateManipulation.differenceInDays(marriage_date, divorce_date) > 0;
+    public static boolean divorceBeforeMarriage(final int marriage_date, final int divorce_date) {
+    	return marriage_date > divorce_date;
     }
 
-    public static boolean divorceNotAfterDeath(final int death_date, final int divorce_date) {
-
-        return DateManipulation.differenceInDays(divorce_date, death_date) > 0;
+    public static boolean divorceAfterDeath(final int death_date, final int divorce_date) {
+    	return divorce_date > death_date;
     }
 
     public static int getMaximumMotherAgeAtChildBirth() {

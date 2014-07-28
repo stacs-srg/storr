@@ -49,7 +49,8 @@ public class OrganicPopulation implements IPopulation {
 
     // Population instance required variables
     private String description;
-    private List<OrganicPerson> people = new ArrayList<OrganicPerson>();
+    private List<OrganicPerson> livingPeople = new ArrayList<OrganicPerson>();
+    private List<OrganicPerson> deadPeople = new ArrayList<OrganicPerson>();
     private List<OrganicPartnership> partnerships = new ArrayList<OrganicPartnership>();
 
 
@@ -91,7 +92,7 @@ public class OrganicPopulation implements IPopulation {
 
         for (int i = 0; i < size; i++) {
             OrganicPerson person = new OrganicPerson(IDFactory.getNextID(), 0, this, seedGeneration);
-            people.add(person);
+            livingPeople.add(person);
         }
         seedGeneration = false;
     }
@@ -157,25 +158,25 @@ public class OrganicPopulation implements IPopulation {
     }
 
     private void checkAllPeopleForEventsUptoCurrentDayFrom(int previousDate) {
-        for (int i = 0; i < people.size(); i++) {
-            if (DateManipulation.differenceInDays(currentDay, DateManipulation.dateToDays(people.get(i).getBirthDate())) == 0) {
+        for (int i = 0; i < livingPeople.size(); i++) {
+            if (DateManipulation.differenceInDays(currentDay, DateManipulation.dateToDays(livingPeople.get(i).getBirthDate())) == 0) {
                 OrganicPopulationLogger.incPopulation();
                 OrganicPopulationLogger.incBirths();
-                people.get(i).populateTimeline();
+                livingPeople.get(i).populateTimeline();
             }
-            if (people.get(i).getTimeline() != null) {
+            if (livingPeople.get(i).getTimeline() != null) {
                 // Check all dates between the previous and current date after taking the time step
                 for (int j = previousDate; j < currentDay; j++) {
                     EventType event;
-                    if (people.get(i).getTimeline().isDateAvailable(j)) {
-                        event = people.get(i).getTimeline().getEvent(j).getEventType();
+                    if (livingPeople.get(i).getTimeline().isDateAvailable(j)) {
+                        event = livingPeople.get(i).getTimeline().getEvent(j).getEventType();
                         // handle with event
                         switch (event) {
                         case ELIGIBLE_TO_MARRY:
                             handleEligibleToMarryEvent(i);
                             break;
                         case DEATH: // Everyone ends up here eventually
-                            handleDeathEvent(people.get(i));
+                            handleDeathEvent(i);
                             break;
                         default:
                             break;
@@ -202,19 +203,20 @@ public class OrganicPopulation implements IPopulation {
     private void handleBirthEvent(int partnershipListIndex) {
         OrganicPerson[] children = partnerships.get(partnershipListIndex).setUpBirthEvent((OrganicPerson)findPerson(partnerships.get(partnershipListIndex).getMalePartnerId()), (OrganicPerson)findPerson(partnerships.get(partnershipListIndex).getFemalePartnerId()), currentDay);
         for(OrganicPerson child : children) {
-            people.add(child);
+            livingPeople.add(child);
         }
     }
 
     private void handleEligibleToMarryEvent(int peopleListIndex) {
-        if (people.get(peopleListIndex).getSex() == 'M') {
-            malePartnershipQueue.add(people.get(peopleListIndex));
+        if (livingPeople.get(peopleListIndex).getSex() == 'M') {
+            malePartnershipQueue.add(livingPeople.get(peopleListIndex));
         } else {
-            femalePartnershipQueue.add(people.get(peopleListIndex));
+            femalePartnershipQueue.add(livingPeople.get(peopleListIndex));
         }
     }
 
-    private void handleDeathEvent(final OrganicPerson person) {
+    private void handleDeathEvent(int peopleListIndex) {
+    	OrganicPerson person = livingPeople.get(peopleListIndex);
         if (person.getSex() == 'M') {
             int index = malePartnershipQueue.indexOf(person);
             if (index != -1) {
@@ -228,6 +230,7 @@ public class OrganicPopulation implements IPopulation {
                 OrganicPopulationLogger.incNeverMarried();
             }
         }
+        deadPeople.add(livingPeople.remove(peopleListIndex));
         OrganicPopulationLogger.decPopulation();
     }
 
@@ -337,7 +340,7 @@ public class OrganicPopulation implements IPopulation {
         partnerships.add((OrganicPartnership) partnershipObjects[0]);
         if (partnershipObjects.length > 1) {
             for(int i = 1; i < partnershipObjects.length; i++) {
-                people.add((OrganicPerson) partnershipObjects[i]);
+                livingPeople.add((OrganicPerson) partnershipObjects[i]);
             }
         }
         OrganicPopulationLogger.logMarriage(DateManipulation.differenceInDays(husband.getBirthDay(), days), DateManipulation.differenceInDays(wife.getBirthDay(), days));
@@ -417,7 +420,7 @@ public class OrganicPopulation implements IPopulation {
             @Override
             public Iterator<IPerson> iterator() {
 
-                final Iterator<OrganicPerson> iterator = people.iterator();
+                final Iterator<OrganicPerson> iterator = livingPeople.iterator();
 
                 return new Iterator<IPerson>() {
 
@@ -476,7 +479,7 @@ public class OrganicPopulation implements IPopulation {
     @Override
     public IPerson findPerson(final int id) {
 
-        final int index = ArrayManipulation.binarySplit(people, new ArrayManipulation.SplitComparator<OrganicPerson>() {
+        final int index = ArrayManipulation.binarySplit(livingPeople, new ArrayManipulation.SplitComparator<OrganicPerson>() {
 
             @Override
             public int check(final OrganicPerson person) {
@@ -484,7 +487,7 @@ public class OrganicPopulation implements IPopulation {
             }
         });
 
-        return index >= 0 ? people.get(index) : null;
+        return index >= 0 ? livingPeople.get(index) : null;
     }
 
     @Override
@@ -503,7 +506,7 @@ public class OrganicPopulation implements IPopulation {
 
     @Override
     public int getNumberOfPeople() {
-        return people.size();
+        return livingPeople.size();
     }
 
     @Override
