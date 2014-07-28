@@ -16,6 +16,7 @@
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.model.in_memory;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.NegativeWeightException;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.WeightedIntegerDistribution;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.PopulationLogic;
@@ -39,6 +40,7 @@ public class CompactPopulationChildLinker {
 
     private final WeightedIntegerDistribution number_of_children_distribution;
 
+    @SuppressFBWarnings(value = "EI_EXPOSE_REP", justification = "too expensive...")
     public CompactPopulationChildLinker(final CompactPerson[] people, final ProgressIndicator progress_indicator) throws NegativeWeightException {
 
         this.people = people;

@@ -16,6 +16,7 @@
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.model.in_memory;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.NegativeDeviationException;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.NegativeWeightException;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.NormalDistribution;
@@ -62,6 +63,7 @@ public class CompactPopulationPartnerLinker {
 
     private int number_of_partnerships = 0;
 
+    @SuppressFBWarnings(value = "EI_EXPOSE_REP", justification = "too expensive...")
     public CompactPopulationPartnerLinker(final CompactPerson[] people, final ProgressIndicator progress_indicator) throws NegativeWeightException, NegativeDeviationException {
 
         this.people = people;
