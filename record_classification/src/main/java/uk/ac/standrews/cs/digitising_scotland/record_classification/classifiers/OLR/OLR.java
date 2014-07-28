@@ -45,6 +45,9 @@ import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearnin
  */
 public class OLR {
 
+    /** The minimum permitted value for the log likelihood. */
+    private static final double LOGLIK_MINIMUM = -100.0;
+
     /** The gradient. */
     private Gradient gradient = new Gradient();
 
@@ -167,10 +170,10 @@ public class OLR {
 
         Vector p = classify(instance);
         if (actual > 0) {
-            return Math.max(-100.0, Math.log(p.get(actual - 1)));
+            return Math.max(LOGLIK_MINIMUM, Math.log(p.get(actual - 1)));
         }
         else {
-            return Math.max(-100.0, Math.log1p(-p.zSum()));
+            return Math.max(LOGLIK_MINIMUM, Math.log1p(-p.zSum()));
         }
     }
 
@@ -184,10 +187,10 @@ public class OLR {
 
         double thisloglik;
         if (actual > 0) {
-            thisloglik = Math.max(-100.0, Math.log(classification.get(actual - 1)));
+            thisloglik = Math.max(LOGLIK_MINIMUM, Math.log(classification.get(actual - 1)));
         }
         else {
-            thisloglik = Math.max(-100.0, Math.log1p(-classification.zSum()));
+            thisloglik = Math.max(LOGLIK_MINIMUM, Math.log1p(-classification.zSum()));
         }
 
         if (numLogLikelihoodSumUpdates.get() != 0) {
