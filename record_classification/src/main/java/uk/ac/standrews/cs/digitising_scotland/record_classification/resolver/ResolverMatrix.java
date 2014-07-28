@@ -32,6 +32,10 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
  */
 public class ResolverMatrix {
 
+    private static final int COMPLEXITY_UPPERLIMIT = 5000;
+
+    private static final int LOWER_BOUND = 3;
+
     /**
      * The Code, List<Pair> matrix.
      */
@@ -75,7 +79,7 @@ public class ResolverMatrix {
      */
     public List<Set<CodeTriple>> getValidCodeTriples(final TokenSet originalSet) {
 
-        chopUntilComplexityWithinBound(10000);
+        chopUntilComplexityWithinBound(COMPLEXITY_UPPERLIMIT);
         resolveHierarchies();
         List<Set<CodeTriple>> merged = new ArrayList<>();
         merged.add(null);
@@ -133,8 +137,8 @@ public class ResolverMatrix {
      * @param codeTriples the pairs
      * @param code        the code
      */
-    private void merge(final List<Set<CodeTriple>> merged, final List<CodeTriple> codeTriples,
-                       final Code code, final TokenSet originalSet) {
+    private void merge(final List<Set<CodeTriple>> merged, final List<CodeTriple> codeTriples, final Code code, final TokenSet originalSet) {
+
         List<Set<CodeTriple>> temporaryMerge = new ArrayList<>();
         for (Set<CodeTriple> tripleSet : merged) {
             for (CodeTriple triple : codeTriples) {
@@ -160,7 +164,7 @@ public class ResolverMatrix {
     public void chopUntilComplexityWithinBound(final int bound) {
 
         int maxNoOfEachCode = (int) Math.pow(bound, (1. / (double) matrix.keySet().size()));
-        maxNoOfEachCode = Math.max(6, maxNoOfEachCode);
+        maxNoOfEachCode = Math.max(LOWER_BOUND, maxNoOfEachCode);
         for (Code code : matrix.keySet()) {
             Collections.sort(matrix.get(code), new CodeTripleComparator());
             matrix.put(code, matrix.get(code).subList(0, Math.min(matrix.get(code).size(), maxNoOfEachCode)));
