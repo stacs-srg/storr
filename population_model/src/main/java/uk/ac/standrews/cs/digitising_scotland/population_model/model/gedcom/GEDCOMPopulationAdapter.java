@@ -62,7 +62,7 @@ public class GEDCOMPopulationAdapter implements IPopulation {
 
         return new Iterable<IPerson>() {
 
-            Map<Individual, IPerson> mapper = new Map<Individual, IPerson>() {
+            private final Map<Individual, IPerson> mapper = new Map<Individual, IPerson>() {
 
                 @Override
                 public IPerson map(final Individual individual) {
@@ -89,7 +89,7 @@ public class GEDCOMPopulationAdapter implements IPopulation {
 
         return new Iterable<IPartnership>() {
 
-            Map<Family, IPartnership> mapper = new Map<Family, IPartnership>() {
+            private final Map<Family, IPartnership> mapper = new Map<Family, IPartnership>() {
 
                 @Override
                 public IPartnership map(final Family family) {
@@ -153,6 +153,7 @@ public class GEDCOMPopulationAdapter implements IPopulation {
 
     }
 
+    @Override
     public String toString() {
 
         return description;
