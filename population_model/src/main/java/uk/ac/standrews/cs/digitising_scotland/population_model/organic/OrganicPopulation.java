@@ -37,7 +37,7 @@ import java.util.List;
 public class OrganicPopulation implements IPopulation {
 
     // Universal population variables
-    private static final int DEFAULT_SEED_SIZE = 500;
+    private static final int DEFAULT_SEED_SIZE = 1000;
     private static final float DAYS_PER_YEAR = 365.25f;
     private static final int START_YEAR = 1780;
     private static final int END_YEAR = 2013;
@@ -196,11 +196,8 @@ public class OrganicPopulation implements IPopulation {
     }
 
     private void handleDivorceEvent(int partnershipListIndex) {
-    	System.out.println(partnerships.get(partnershipListIndex));
     	OrganicPerson husband = findOrganicPerson(partnerships.get(partnershipListIndex).getMalePartnerId());
-    	System.out.println(husband + " - " + partnershipListIndex);
     	OrganicPerson wife = findOrganicPerson(partnerships.get(partnershipListIndex).getFemalePartnerId());
-    	System.out.println(wife);
         partnerships.get(partnershipListIndex).divorce(husband, wife);
         handlePartnershipEndedByDeathEvent(partnershipListIndex);
     }
@@ -330,7 +327,7 @@ public class OrganicPopulation implements IPopulation {
     private boolean eligableToMarry(final OrganicPerson male, final OrganicPerson female) {
         boolean resonableAgeDifference = PopulationLogic.partnerAgeDifferenceIsReasonable(DateManipulation.dateToDays(male.getBirthDate()), DateManipulation.dateToDays(female.getBirthDate()));
     	boolean notSiblings;
-    	if (male.getParentsPartnership() == female.getParentsPartnership()) {
+    	if (male.getParentsPartnership() == female.getParentsPartnership() && male.getParentsPartnership() != -1) {
     		notSiblings = false;
     	} else {
     		notSiblings = true;
@@ -573,13 +570,13 @@ public class OrganicPopulation implements IPopulation {
 
         OrganicPopulationLogger.printLogData();
         int count = 0;
-        for (int i = 0; i < OrganicPartnership.adjustedNumberOfChildren.length; i++) {
-        	for (int j = 0; j < OrganicPartnership.adjustedNumberOfChildren[i].size(); j++) {
-        		count += OrganicPartnership.adjustedNumberOfChildren[i].get(j) - i;
+        for (int i = 0; i < OrganicPartnership.getAdjustedNumberOfChildren().length; i++) {
+        	for (int j = 0; j < OrganicPartnership.getAdjustedNumberOfChildren()[i].size(); j++) {
+        		count += OrganicPartnership.getAdjustedNumberOfChildren()[i].get(j) - i;
         	}
         }
         System.out.println("Left over children: " + count);
-        System.out.println("Kids killed by early stop: " + OrganicPartnership.stopedHavingEarlyDeaths);
+        System.out.println("Kids killed by early stop: " + OrganicPopulationLogger.stopedHavingEarlyDeaths);
 
      }
 
