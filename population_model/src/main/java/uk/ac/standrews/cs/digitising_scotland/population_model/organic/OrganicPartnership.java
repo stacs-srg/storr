@@ -62,6 +62,7 @@ public final class OrganicPartnership implements IPartnership {
     private Integer wife;
     private int marriageDay;
     private List<Integer> childrenIds = new ArrayList<Integer>();
+    private String location = "St Andrews";
 
     // Partnership instance helper variables
     private OrganicTimeline timeline;
@@ -245,7 +246,7 @@ public final class OrganicPartnership implements IPartnership {
                     wife.getBirthDay(), wife.getDeathDay(), dayOfBirth + marriageDay)) {
                 timeline.addEvent(currentDay + dayOfBirth, new OrganicEvent(EventType.BIRTH));
                 for (int i = 0; i < numberOfChildrenInPregnacy; i++) {
-                    children[i] = new OrganicPerson(IDFactory.getNextID(), currentDay + dayOfBirth, wife.getPopulation(), false);
+                    children[i] = new OrganicPerson(IDFactory.getNextID(), currentDay + dayOfBirth, id, wife.getPopulation(), false);
                     childrenIds.add(children[i].getId());
                 }
                 return children;
@@ -267,6 +268,11 @@ public final class OrganicPartnership implements IPartnership {
         OrganicPopulationLogger.logDivorce();
 
         turnOff();
+        
+        System.out.println(husband);
+        if (husband == null) {
+        	System.out.println("...");
+        }
 
         husband.updateTimeline(EventType.DIVORCE);
         wife.updateTimeline(EventType.DIVORCE);
@@ -394,7 +400,7 @@ public final class OrganicPartnership implements IPartnership {
 
     @Override
     public String getMarriagePlace() {
-        throw new RuntimeException("not implemented");
+        return location;
     }
 
     @Override

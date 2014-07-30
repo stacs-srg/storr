@@ -17,6 +17,8 @@
 package uk.ac.standrews.cs.digitising_scotland.population_model.model;
 
 import org.junit.Test;
+
+import uk.ac.standrews.cs.digitising_scotland.population_model.organic.OrganicPerson;
 import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
 
 import java.util.Date;
@@ -267,7 +269,17 @@ public abstract class GeneralPopulationStructureTests {
             for (final int child_id : child_ids) {
 
                 final IPerson child = population.findPerson(child_id);
-                assertEquals(child.getParentsPartnership(), partnership.getId());
+//                System.out.println(child.getClass().getName());
+                if (child == null) {
+                	System.out.println("...");
+                }
+                if (child.getClass().getName() == OrganicPerson.class.getName()) {
+                	if (((OrganicPerson)child).isSeedPerson()) {
+                		assertEquals(child.getParentsPartnership(), -1);
+                	} else {
+                		assertEquals(child.getParentsPartnership(), partnership.getId());
+                	}
+                }
             }
         }
     }

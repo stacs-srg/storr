@@ -37,7 +37,7 @@ import java.util.List;
 public class OrganicPopulation implements IPopulation {
 
     // Universal population variables
-    private static final int DEFAULT_SEED_SIZE = 1000;
+    private static final int DEFAULT_SEED_SIZE = 500;
     private static final float DAYS_PER_YEAR = 365.25f;
     private static final int START_YEAR = 1780;
     private static final int END_YEAR = 2013;
@@ -91,7 +91,7 @@ public class OrganicPopulation implements IPopulation {
     public void makeSeed(final int size) {
 
         for (int i = 0; i < size; i++) {
-            OrganicPerson person = new OrganicPerson(IDFactory.getNextID(), 0, this, seedGeneration);
+            OrganicPerson person = new OrganicPerson(IDFactory.getNextID(), 0, -1, this, seedGeneration);
             livingPeople.add(person);
         }
         seedGeneration = false;
@@ -196,7 +196,12 @@ public class OrganicPopulation implements IPopulation {
     }
 
     private void handleDivorceEvent(int partnershipListIndex) {
-        partnerships.get(partnershipListIndex).divorce(findOrganicPerson(partnerships.get(partnershipListIndex).getMalePartnerId()), findOrganicPerson(partnerships.get(partnershipListIndex).getFemalePartnerId()));
+    	System.out.println(partnerships.get(partnershipListIndex));
+    	OrganicPerson husband = findOrganicPerson(partnerships.get(partnershipListIndex).getMalePartnerId());
+    	System.out.println(husband + " - " + partnershipListIndex);
+    	OrganicPerson wife = findOrganicPerson(partnerships.get(partnershipListIndex).getFemalePartnerId());
+    	System.out.println(wife);
+        partnerships.get(partnershipListIndex).divorce(husband, wife);
         handlePartnershipEndedByDeathEvent(partnershipListIndex);
     }
 
@@ -418,8 +423,12 @@ public class OrganicPopulation implements IPopulation {
         return new Iterable<IPerson>() {
             @Override
             public Iterator<IPerson> iterator() {
+            	
+            	ArrayList<OrganicPerson> all = new ArrayList<OrganicPerson>();
+            	all.addAll(livingPeople);
+            	all.addAll(deadPeople);
 
-                final Iterator<OrganicPerson> iterator = livingPeople.iterator();
+                final Iterator<OrganicPerson> iterator = all.iterator();
 
                 return new Iterator<IPerson>() {
 
@@ -477,16 +486,17 @@ public class OrganicPopulation implements IPopulation {
 
     @Override
     public IPerson findPerson(final int id) {
-
-        final int index = ArrayManipulation.binarySplit(livingPeople, new ArrayManipulation.SplitComparator<OrganicPerson>() {
-
-            @Override
-            public int check(final OrganicPerson person) {
-                return id - person.getId();
-            }
-        });
-
-        return index >= 0 ? livingPeople.get(index) : null;
+    	
+    	ArrayList<OrganicPerson> all = new ArrayList<OrganicPerson>();
+    	all.addAll(livingPeople);
+    	all.addAll(deadPeople);
+    	
+    	for (OrganicPerson person : all) {
+    		if (person.getId() == id) {
+    			return person;
+    		}
+    	}
+    	return null;
     }
 
     @Override

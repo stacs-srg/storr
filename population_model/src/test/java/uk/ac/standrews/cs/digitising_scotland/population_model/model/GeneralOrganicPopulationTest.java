@@ -32,5 +32,4 @@ public class GeneralOrganicPopulationTest extends GeneralPopulationStructureTest
         op.mainIteration(false);
         super.population = op;
     }
-
 }
