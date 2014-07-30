@@ -115,10 +115,8 @@ public class OrganicPopulation implements IPopulation {
         	if (print) {
         		printYearEndData();
         	}
-
             int previousDate = getCurrentDay();
             setCurrentDay(getCurrentDay() + timeStepSizeInDays);
-
             checkAllPeopleForEventsUptoCurrentDayFrom(previousDate);
             partnerTogetherPeopleInPartnershipQueues();
             checkAllPartnershipsForEventsUptoCurrentDayFrom(previousDate);
@@ -251,7 +249,6 @@ public class OrganicPopulation implements IPopulation {
         // Sets the IDs for the first individuals in each marriage list to null
         Integer firstMaleId = (Integer) null;
         Integer firstFemaleId = (Integer) null;
-
         // While males exist to be married
         while (!malePartnershipQueue.isEmpty()) {
             // Sets first male ID value to that of the first male
@@ -288,10 +285,10 @@ public class OrganicPopulation implements IPopulation {
                     } catch (NoSuchEventException e) {
                         break;
                     }
-
+                    
                     // Marries individuals
                     marry(malePartnershipQueue.getFirst(), femalePartnershipQueue.getFirst(), getCurrentDay());
-
+                    
                     // Holds IDs of both partners
                     int maleId = malePartnershipQueue.getFirst().getId();
                     int femaleId = femalePartnershipQueue.getFirst().getId();
