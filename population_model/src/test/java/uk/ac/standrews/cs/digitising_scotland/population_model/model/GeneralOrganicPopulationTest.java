@@ -16,23 +16,21 @@
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.model;
 
-import org.junit.Test;
 import uk.ac.standrews.cs.digitising_scotland.population_model.organic.OrganicPopulation;
 
 /**
  * @author Victor Andrei (va9@st-andrews.ac.uk)
+ * @author Tom Dalton (tsd4@st-andrews.ac.uk)
  */
 public class GeneralOrganicPopulationTest extends GeneralPopulationStructureTests{
 
-    private IPopulation population = new OrganicPopulation("Test Population");
-    private boolean consistent = true;
-
-    public GeneralOrganicPopulationTest(IPopulation population, boolean consistent_across_iterations) {
-        super(population, consistent_across_iterations);
+    public GeneralOrganicPopulationTest() {
+    	super(new OrganicPopulation("Test Pop"), true);
+    	OrganicPopulation op = new OrganicPopulation("Test Population");
+        op.makeSeed(10);
+        op.setCurrentDay(op.getEarliestDate() - 1);
+        op.mainIteration(false);
+        super.population = op;
     }
 
-    @Test
-    public void generalTest(){
-        new GeneralOrganicPopulationTest(population,consistent);
-    }
 }

@@ -100,8 +100,8 @@ public class OrganicPopulation implements IPopulation {
     /**
      * Calls to the mainIteration method using the specified default time step size.
      */
-    public void mainIteration() {
-        mainIteration(DEFAULT_STEP_SIZE);
+    public void mainIteration(boolean print) {
+        mainIteration(DEFAULT_STEP_SIZE, print);
     }
 
     /**
@@ -109,13 +109,15 @@ public class OrganicPopulation implements IPopulation {
      * 
      * @param timeStepSizeInDays The size of the desired time step in days.
      */
-    public void mainIteration(final int timeStepSizeInDays) {
+    public void mainIteration(final int timeStepSizeInDays, boolean print) {
 
-        while (currentDay < DateManipulation.dateToDays(getEndYear(), 0, 0)) {
-            printYearEndData();
+        while (getCurrentDay() < DateManipulation.dateToDays(getEndYear(), 0, 0)) {
+        	if (print) {
+        		printYearEndData();
+        	}
 
-            int previousDate = currentDay;
-            currentDay += timeStepSizeInDays;
+            int previousDate = getCurrentDay();
+            setCurrentDay(getCurrentDay() + timeStepSizeInDays);
 
             checkAllPeopleForEventsUptoCurrentDayFrom(previousDate);
             partnerTogetherPeopleInPartnershipQueues();
@@ -132,7 +134,7 @@ public class OrganicPopulation implements IPopulation {
         for (int i = 0; i < partnerships.size(); i++) {
             if (partnerships.get(i).getTimeline() != null) {
                 // Check all dates between the previous and current date after taking the time step
-                for (int j = previousDate; j < currentDay; j++) {
+                for (int j = previousDate; j < getCurrentDay(); j++) {
                     EventType event;
                     if (partnerships.get(i).getTimeline().isDateAvailable(j)) {
                         event = partnerships.get(i).getTimeline().getEvent(j).getEventType();
@@ -159,14 +161,14 @@ public class OrganicPopulation implements IPopulation {
 
     private void checkAllPeopleForEventsUptoCurrentDayFrom(int previousDate) {
         for (int i = 0; i < livingPeople.size(); i++) {
-            if (DateManipulation.differenceInDays(currentDay, DateManipulation.dateToDays(livingPeople.get(i).getBirthDate())) == 0) {
+            if (DateManipulation.differenceInDays(getCurrentDay(), DateManipulation.dateToDays(livingPeople.get(i).getBirthDate())) == 0) {
                 OrganicPopulationLogger.incPopulation();
                 OrganicPopulationLogger.incBirths();
                 livingPeople.get(i).populateTimeline();
             }
             if (livingPeople.get(i).getTimeline() != null) {
                 // Check all dates between the previous and current date after taking the time step
-                for (int j = previousDate; j < currentDay; j++) {
+                for (int j = previousDate; j < getCurrentDay(); j++) {
                     EventType event;
                     if (livingPeople.get(i).getTimeline().isDateAvailable(j)) {
                         event = livingPeople.get(i).getTimeline().getEvent(j).getEventType();
@@ -201,7 +203,7 @@ public class OrganicPopulation implements IPopulation {
     }
 
     private void handleBirthEvent(int partnershipListIndex) {
-        OrganicPerson[] children = partnerships.get(partnershipListIndex).setUpBirthEvent((OrganicPerson)findPerson(partnerships.get(partnershipListIndex).getMalePartnerId()), (OrganicPerson)findPerson(partnerships.get(partnershipListIndex).getFemalePartnerId()), currentDay);
+        OrganicPerson[] children = partnerships.get(partnershipListIndex).setUpBirthEvent((OrganicPerson)findPerson(partnerships.get(partnershipListIndex).getMalePartnerId()), (OrganicPerson)findPerson(partnerships.get(partnershipListIndex).getFemalePartnerId()), getCurrentDay());
         for(OrganicPerson child : children) {
             livingPeople.add(child);
         }
@@ -239,8 +241,8 @@ public class OrganicPopulation implements IPopulation {
      */
 
     private void printYearEndData() {
-        if(currentDay % (int) getDaysPerYear() == 0) {
-            System.out.println(1600 + (int) (currentDay / getDaysPerYear()));
+        if(getCurrentDay() % (int) getDaysPerYear() == 0) {
+            System.out.println(1600 + (int) (getCurrentDay() / getDaysPerYear()));
             System.out.println("Population: " + OrganicPopulationLogger.getPopulation());
         }
     }
@@ -288,7 +290,7 @@ public class OrganicPopulation implements IPopulation {
                     }
 
                     // Marries individuals
-                    marry(malePartnershipQueue.getFirst(), femalePartnershipQueue.getFirst(), currentDay);
+                    marry(malePartnershipQueue.getFirst(), femalePartnershipQueue.getFirst(), getCurrentDay());
 
                     // Holds IDs of both partners
                     int maleId = malePartnershipQueue.getFirst().getId();
@@ -336,7 +338,7 @@ public class OrganicPopulation implements IPopulation {
      */
     private void marry(final OrganicPerson husband, final OrganicPerson wife, final int days) {
         // Create partnership
-        Object[] partnershipObjects = OrganicPartnership.createOrganicPartnership(IDFactory.getNextID(), husband, wife, days, currentDay);
+        Object[] partnershipObjects = OrganicPartnership.createOrganicPartnership(IDFactory.getNextID(), husband, wife, days, getCurrentDay());
         partnerships.add((OrganicPartnership) partnershipObjects[0]);
         if (partnershipObjects.length > 1) {
             for(int i = 1; i < partnershipObjects.length; i++) {
@@ -534,8 +536,8 @@ public class OrganicPopulation implements IPopulation {
         OrganicPopulation op = new OrganicPopulation("Test Population");
         System.out.println(op.getDescription());
         op.makeSeed();
-        op.currentDay = op.getEarliestDate() - 1;
-        op.mainIteration();
+        op.setCurrentDay(op.getEarliestDate() - 1);
+        op.mainIteration(true);
 
         //        System.out.println("--------PEOPLE--------");
         //        for (int i = 0; i < op.getNumberOfPeople(); i++) {
@@ -566,4 +568,18 @@ public class OrganicPopulation implements IPopulation {
         System.out.println("Kids killed by early stop: " + OrganicPartnership.stopedHavingEarlyDeaths);
 
      }
+
+	/**
+	 * @return the currentDay
+	 */
+	public int getCurrentDay() {
+		return currentDay;
+	}
+
+	/**
+	 * @param currentDay the currentDay to set
+	 */
+	public void setCurrentDay(int currentDay) {
+		this.currentDay = currentDay;
+	}
 }
