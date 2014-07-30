@@ -32,7 +32,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
  */
 public class ResolverMatrix {
 
-    private static final int COMPLEXITY_UPPERLIMIT = 5000;
+    private static final int COMPLEXITY_UPPERLIMIT = 2000;
 
     private static final int LOWER_BOUND = 3;
 
