@@ -53,10 +53,12 @@ public class OrganicPerson implements IPerson {
     private String lastName;
     private char sex;
     private ArrayList<Integer> partnerships = new ArrayList<Integer>();
+    private int parentPartnershipId;
 
     // Person instance helper variables
     private OrganicTimeline timeline = null;
     private OrganicPopulation population;
+    private boolean seedPerson;
 
     /*
      * Constructor
@@ -69,9 +71,11 @@ public class OrganicPerson implements IPerson {
      * @param birthDay       The day of birth in days since the 1/1/1600.
      * @param seedGeneration Flag indicating is the simulation is still creating the seed population.
      */
-    public OrganicPerson(final int id, final int birthDay, OrganicPopulation population, final boolean seedGeneration) {
+    public OrganicPerson(final int id, final int birthDay, int parentPartnershipId, OrganicPopulation population, final boolean seedGeneration) {
         this.id = id;
         this.population = population;
+        this.parentPartnershipId = parentPartnershipId;
+        setSeedPerson(seedGeneration);
         if (sex_distribution.getSample()) {
             sex = 'M';
             setPersonsBirthAndDeathDates(birthDay, seedGeneration, population);
@@ -335,6 +339,20 @@ public class OrganicPerson implements IPerson {
 
     @Override
     public int getParentsPartnership() {
-        throw new RuntimeException("unimplemented");
+        return parentPartnershipId;
     }
+
+	/**
+	 * @return the seedPerson
+	 */
+	public boolean isSeedPerson() {
+		return seedPerson;
+	}
+
+	/**
+	 * @param seedPerson the seedPerson to set
+	 */
+	private void setSeedPerson(boolean seedPerson) {
+		this.seedPerson = seedPerson;
+	}
 }

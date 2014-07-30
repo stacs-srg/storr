@@ -62,6 +62,7 @@ public final class OrganicPartnership implements IPartnership {
     private Integer wife;
     private int marriageDay;
     private List<Integer> childrenIds = new ArrayList<Integer>();
+    private String location = "St Andrews";
 
     // Partnership instance helper variables
     private OrganicTimeline timeline;
@@ -83,8 +84,8 @@ public final class OrganicPartnership implements IPartnership {
      * @return Returns an object array of size 2, where at index 0 can be found the newly constructed OrganicPartnership and at index 1 the partnerships child (if no child then value is null)
      */
     public static Object[] createOrganicPartnership(final int id, final OrganicPerson husband, final OrganicPerson wife, final int marriageDay, int currentDay) {
-        OrganicPartnership partnership = new OrganicPartnership(id, husband, wife, marriageDay);
-        if (adjustedNumberOfChildren == null) {
+    	OrganicPartnership partnership = new OrganicPartnership(id, husband, wife, marriageDay);
+    	if (adjustedNumberOfChildren == null) {
             setUpArray();
         }
         // Contains OrganicPerson objects aka the children - if no children returns null
@@ -111,12 +112,9 @@ public final class OrganicPartnership implements IPartnership {
      */
 
     private OrganicPerson[] createPartnershipTimeline(final OrganicPerson husband, final OrganicPerson wife, int currentDay) {
-
         timeline = new OrganicTimeline(marriageDay);
-
         // Decide if/when relationship terminates
         setUpDivorceEvent(husband, wife);
-
         // Decide on a number of children for relationship
         return setUpBirthPlan(husband, wife, currentDay);
     }
@@ -194,9 +192,9 @@ public final class OrganicPartnership implements IPartnership {
                 do {
                     maleDivorceAgeInDays = divorceAgeForMaleDistribution.getSample() + husband.getBirthDay();
                 }
-                while (!PopulationLogic.divorceAfterMarriage(DateManipulation.differenceInDays(husband.getBirthDay(), marriageDay), maleDivorceAgeInDays) ||
-                        !PopulationLogic.divorceBeforeDeath(husband.getDeathDay(), maleDivorceAgeInDays) ||
-                        !PopulationLogic.divorceBeforeDeath(wife.getDeathDay(), maleDivorceAgeInDays));
+                while (PopulationLogic.divorceAfterMarriage(DateManipulation.differenceInDays(husband.getBirthDay(), marriageDay), maleDivorceAgeInDays) ||
+                        PopulationLogic.divorceBeforeDeath(husband.getDeathDay(), maleDivorceAgeInDays) ||
+                        PopulationLogic.divorceBeforeDeath(wife.getDeathDay(), maleDivorceAgeInDays));
 
                 timeline.addEvent(maleDivorceAgeInDays, new OrganicEvent(EventType.DIVORCE));
                 timeline.setEndDate(maleDivorceAgeInDays);
@@ -207,9 +205,9 @@ public final class OrganicPartnership implements IPartnership {
                 do {
                     femaleDivorceAgeInDays = divorceAgeForFemaleDistribution.getSample() + wife.getBirthDay();
                 }
-                while (!PopulationLogic.divorceAfterMarriage(DateManipulation.differenceInDays(wife.getBirthDay(), marriageDay), femaleDivorceAgeInDays) ||
-                        !PopulationLogic.divorceBeforeDeath(wife.getDeathDay(), femaleDivorceAgeInDays) ||
-                        !PopulationLogic.divorceBeforeDeath(husband.getDeathDay(), femaleDivorceAgeInDays));
+                while (PopulationLogic.divorceAfterMarriage(DateManipulation.differenceInDays(wife.getBirthDay(), marriageDay), femaleDivorceAgeInDays) ||
+                        PopulationLogic.divorceBeforeDeath(wife.getDeathDay(), femaleDivorceAgeInDays) ||
+                        PopulationLogic.divorceBeforeDeath(husband.getDeathDay(), femaleDivorceAgeInDays));
 
                 timeline.addEvent(femaleDivorceAgeInDays, new OrganicEvent(EventType.DIVORCE));
                 timeline.setEndDate(femaleDivorceAgeInDays);
@@ -245,10 +243,10 @@ public final class OrganicPartnership implements IPartnership {
 
             int dayOfBirth = timeBetweenMaternitiesDistrobution.getSample().intValue();
             if (husband != null && wife != null && PopulationLogic.parentsHaveSensibleAgesAtChildBirth(husband.getBirthDay(), husband.getDeathDay(),
-                    wife.getBirthDay(), wife.getDeathDay(), dayOfBirth + marriageDay)) {
+                    wife.getBirthDay(), wife.getDeathDay(), dayOfBirth + currentDay)) {
                 timeline.addEvent(currentDay + dayOfBirth, new OrganicEvent(EventType.BIRTH));
                 for (int i = 0; i < numberOfChildrenInPregnacy; i++) {
-                    children[i] = new OrganicPerson(IDFactory.getNextID(), currentDay + dayOfBirth, wife.getPopulation(), false);
+                    children[i] = new OrganicPerson(IDFactory.getNextID(), currentDay + dayOfBirth, id, wife.getPopulation(), false);
                     childrenIds.add(children[i].getId());
                 }
                 return children;
@@ -270,6 +268,11 @@ public final class OrganicPartnership implements IPartnership {
         OrganicPopulationLogger.logDivorce();
 
         turnOff();
+        
+        System.out.println(husband);
+        if (husband == null) {
+        	System.out.println("...");
+        }
 
         husband.updateTimeline(EventType.DIVORCE);
         wife.updateTimeline(EventType.DIVORCE);
@@ -397,7 +400,7 @@ public final class OrganicPartnership implements IPartnership {
 
     @Override
     public String getMarriagePlace() {
-        throw new RuntimeException("not implemented");
+        return location;
     }
 
     @Override
