@@ -16,7 +16,15 @@
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.organic;
 
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.*;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.AgeAtDeathDistribution;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.Distribution;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.FemaleAgeAtMarriageDistribution;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.FemaleAgeAtSeedDistribution;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.MaleAgeAtMarriageDistribution;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.MaleAgeAtSeedDistribution;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.RemarriageDistribution;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.UniformIntegerDistribution;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.UniformSexDistribution;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPerson;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.RandomFactory;
 import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
@@ -43,8 +51,8 @@ public class OrganicPerson implements IPerson {
     private static MaleAgeAtSeedDistribution maleSeedAgeDistribution = new MaleAgeAtSeedDistribution(random);
     private static FemaleAgeAtSeedDistribution femaleSeedAgeDistribution = new FemaleAgeAtSeedDistribution(random);
     private static AgeAtDeathDistribution seed_death_distribution = new AgeAtDeathDistribution(random);
-    private static Distribution<Integer> maleAgeAtMarriageDistribution = new MaleAgeAtMarriageDistribution(random);
-    private static Distribution<Integer> femaleAgeAtMarriageDistribution = new FemaleAgeAtMarriageDistribution(random);
+    private static MaleAgeAtMarriageDistribution maleAgeAtMarriageDistribution = new MaleAgeAtMarriageDistribution(random);
+    private static FemaleAgeAtMarriageDistribution femaleAgeAtMarriageDistribution = new FemaleAgeAtMarriageDistribution(random);
     private static UniformSexDistribution sex_distribution = new UniformSexDistribution(random);
 
     // Person instance required variables
@@ -75,7 +83,7 @@ public class OrganicPerson implements IPerson {
      * @param seedGeneration       Flag indicating is the simulation is still creating the seed population.
 
      */
-    public OrganicPerson(final int id, final int birthDay, int parentPartnershipId, final OrganicPopulation population, final boolean seedGeneration) {
+    public OrganicPerson(final int id, final int birthDay, final int parentPartnershipId, final OrganicPopulation population, final boolean seedGeneration) {
         this.id = id;
         this.population = population;
         this.parentPartnershipId = parentPartnershipId;
