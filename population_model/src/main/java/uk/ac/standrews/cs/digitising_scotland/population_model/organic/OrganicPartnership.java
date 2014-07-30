@@ -243,7 +243,7 @@ public final class OrganicPartnership implements IPartnership {
 
             int dayOfBirth = timeBetweenMaternitiesDistrobution.getSample().intValue();
             if (husband != null && wife != null && PopulationLogic.parentsHaveSensibleAgesAtChildBirth(husband.getBirthDay(), husband.getDeathDay(),
-                    wife.getBirthDay(), wife.getDeathDay(), dayOfBirth + marriageDay)) {
+                    wife.getBirthDay(), wife.getDeathDay(), dayOfBirth + currentDay)) {
                 timeline.addEvent(currentDay + dayOfBirth, new OrganicEvent(EventType.BIRTH));
                 for (int i = 0; i < numberOfChildrenInPregnacy; i++) {
                     children[i] = new OrganicPerson(IDFactory.getNextID(), currentDay + dayOfBirth, id, wife.getPopulation(), false);

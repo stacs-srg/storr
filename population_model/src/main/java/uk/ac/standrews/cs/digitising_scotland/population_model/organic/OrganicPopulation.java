@@ -328,7 +328,14 @@ public class OrganicPopulation implements IPopulation {
     }
 
     private boolean eligableToMarry(final OrganicPerson male, final OrganicPerson female) {
-        return PopulationLogic.partnerAgeDifferenceIsReasonable(DateManipulation.dateToDays(male.getBirthDate()), DateManipulation.dateToDays(female.getBirthDate()));
+        boolean resonableAgeDifference = PopulationLogic.partnerAgeDifferenceIsReasonable(DateManipulation.dateToDays(male.getBirthDate()), DateManipulation.dateToDays(female.getBirthDate()));
+    	boolean notSiblings;
+    	if (male.getParentsPartnership() == female.getParentsPartnership()) {
+    		notSiblings = false;
+    	} else {
+    		notSiblings = true;
+    	}
+        return resonableAgeDifference && notSiblings;
     }
 
     /**
@@ -515,7 +522,7 @@ public class OrganicPopulation implements IPopulation {
 
     @Override
     public int getNumberOfPeople() {
-        return livingPeople.size();
+        return livingPeople.size() + deadPeople.size();
     }
 
     @Override
