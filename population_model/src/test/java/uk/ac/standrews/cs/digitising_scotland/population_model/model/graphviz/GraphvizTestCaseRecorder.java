@@ -39,7 +39,7 @@ public class GraphvizTestCaseRecorder extends AbstractTestCaseRecorder {
     @Override
     protected IPopulationWriter getPopulationWriter(final Path path, final IPopulation population) throws IOException, InconsistentWeightException {
 
-        return new GraphvizPopulationWriter(path, population);
+        return new GraphvizPopulationWriter(population, path);
     }
 
     @Override

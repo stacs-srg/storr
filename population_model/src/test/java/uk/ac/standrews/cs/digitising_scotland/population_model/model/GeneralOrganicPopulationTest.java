@@ -14,10 +14,25 @@
  * You should have received a copy of the GNU General Public License along with population_model. If not, see
  * <http://www.gnu.org/licenses/>.
  */
+package uk.ac.standrews.cs.digitising_scotland.population_model.model;
+
+import org.junit.Test;
+import uk.ac.standrews.cs.digitising_scotland.population_model.organic.OrganicPopulation;
 
 /**
- * Population export to and import from GEDCOM file.
- * GEDCOM specification: http://homepages.rootsweb.ancestry.com/~pmcbride/gedcom/55gctoc.htm
+ * @author Victor Andrei (va9@st-andrews.ac.uk)
  */
-package uk.ac.standrews.cs.digitising_scotland.population_model.model.gedcom;
+public class GeneralOrganicPopulationTest extends GeneralPopulationStructureTests{
 
+    private IPopulation population = new OrganicPopulation("Test Population");
+    private boolean consistent = true;
+
+    public GeneralOrganicPopulationTest(IPopulation population, boolean consistent_across_iterations) {
+        super(population, consistent_across_iterations);
+    }
+
+    @Test
+    public void generalTest(){
+        new GeneralOrganicPopulationTest(population,consistent);
+    }
+}

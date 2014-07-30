@@ -21,9 +21,7 @@ import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
 import java.util.Date;
 
 /**
- * Defines various population logic checks.
- *
- * @author Graham Kirby (graham.kirby@st-andrews.ac.uk)
+ * Created by graham on 03/07/2014.
  * @author Tom Dalton (tsd4@st-andrews.ac.uk)
  */
 public class PopulationLogic {
@@ -51,19 +49,20 @@ public class PopulationLogic {
     @SuppressWarnings("FeatureEnvy")
     public static boolean parentsHaveSensibleAgesAtChildBirth(final IPerson father, final IPerson mother, final IPerson child) {
 
-        final Date mother_birth_date = mother.getBirthDate();
-        final Date mother_death_date = mother.getDeathDate();
+        Date mother_birth_date = mother.getBirthDate();
+        Date mother_death_date = mother.getDeathDate();
 
-        final Date father_birth_date = father.getBirthDate();
-        final Date father_death_date = father.getDeathDate();
+        Date father_birth_date = father.getBirthDate();
+        Date father_death_date = father.getDeathDate();
 
-        final Date child_birth_date = child.getBirthDate();
+        Date child_birth_date = child.getBirthDate();
 
         return parentsHaveSensibleAgesAtChildBirth(father_birth_date, father_death_date, mother_birth_date, mother_death_date, child_birth_date);
     }
 
     /**
      * Checks whether the ages of the given parents are sensible for the given child.
+     * Dates are expressed as defined in {@link uk.ac.standrews.cs.digitising_scotland.util.DateManipulation#dateToDays(java.util.Date)}.
      *
      * @param father_birth_date the birth date of the father
      * @param father_death_date the death date of the father
@@ -83,7 +82,118 @@ public class PopulationLogic {
                 DateManipulation.daysToDate(child_birth_date));
     }
 
-    public static boolean parentsHaveSensibleAgesAtChildBirth(final Date father_birth_date, final Date father_death_date, final Date mother_birth_date, final Date mother_death_date, final Date child_birth_date) {
+    /**
+     * Returns the earliest possible child birth date, for a given marriage date and optional previous child birth date.
+     * Dates are expressed as defined in {@link uk.ac.standrews.cs.digitising_scotland.util.DateManipulation#dateToDays(java.util.Date)}.
+     *
+     * @param marriage_date             the marriage date
+     * @param previous_child_birth_date the previous child birth date, or -1 if there is no previous birth
+     * @return the earliest possible birth date
+     */
+    public static int earliestAcceptableBirthDate(final int marriage_date, final int previous_child_birth_date) {
+
+        return previous_child_birth_date == -1 ? DateManipulation.addYears(marriage_date, TIME_BEFORE_FIRST_CHILD) : DateManipulation.addYears(previous_child_birth_date, INTER_CHILD_INTERVAL);
+    }
+
+    /**
+     * Checks whether the age difference between the two prospective partners is reasonable.
+     * Dates are expressed as defined in {@link uk.ac.standrews.cs.digitising_scotland.util.DateManipulation#dateToDays(java.util.Date)}.
+     *
+     * @param birth_date1 the first birth date
+     * @param birth_date2 the second birth date
+     * @return true if the age difference is reasonable
+     */
+    public static boolean partnerAgeDifferenceIsReasonable(final int birth_date1, final int birth_date2) {
+
+        return Math.abs(DateManipulation.differenceInYears(birth_date1, birth_date2)) <= MAXIMUM_AGE_DIFFERENCE_IN_PARTNERSHIP;
+    }
+
+    /**
+     * Checks whether there is a long enough period between the two given marriage dates.
+     * Dates are expressed as defined in {@link uk.ac.standrews.cs.digitising_scotland.util.DateManipulation#dateToDays(java.util.Date)}.
+     *
+     * @param marriage_date          the prospective marriage date
+     * @param previous_marriage_date the previous marriage date
+     * @return true if the period is long enough
+     */
+    public static boolean longEnoughBetweenMarriages(final int marriage_date, final int previous_marriage_date) {
+
+        return DateManipulation.differenceInYears(previous_marriage_date, marriage_date) > MINIMUM_PERIOD_BETWEEN_PARTNERSHIPS;
+    }
+
+    /**
+     * Checks whether the given divorce date is after the given marriage date.
+     * Dates are expressed as defined in {@link uk.ac.standrews.cs.digitising_scotland.util.DateManipulation#dateToDays(java.util.Date)}.
+     *
+     * @param divorce_date  the divorce date
+     * @param marriage_date the marriage date
+     * @return true if the divorce date is after the marriage date
+     */
+    public static boolean divorceAfterMarriage(final int divorce_date, final int marriage_date) {
+
+        return DateManipulation.differenceInDays(marriage_date, divorce_date) > 0;
+    }
+
+    /**
+     * Checks whether the given divorce date is before the given death date.
+     * Dates are expressed as defined in {@link uk.ac.standrews.cs.digitising_scotland.util.DateManipulation#dateToDays(java.util.Date)}.
+     *
+     * @param divorce_date the divorce date
+     * @param death_date   the death date
+     * @return true if the divorce date is after the marriage date
+     */
+    public static boolean divorceBeforeDeath(final int divorce_date, final int death_date) {
+
+        return DateManipulation.differenceInDays(divorce_date, death_date) > 0;
+    }
+
+    /**
+     * Returns the maximum mother's age at child birth.
+     *
+     * @return the maximum mother's age at child birth
+     */
+    public static int getMaximumMotherAgeAtChildBirth() {
+        return MAXIMUM_MOTHER_AGE_AT_CHILDBIRTH;
+    }
+
+    /**
+     * Returns the minimum mother's age at child birth.
+     *
+     * @return the minimum mother's age at child birth
+     */
+    public static int getMinimumMotherAgeAtChildBirth() {
+        return MINIMUM_MOTHER_AGE_AT_CHILDBIRTH;
+    }
+
+    /**
+     * Returns the maximum father's age at child birth.
+     *
+     * @return the maximum father's age at child birth
+     */
+    public static int getMaximumFathersAgeAtChildBirth() {
+        return MAXIMUM_FATHER_AGE_AT_CHILDBIRTH;
+    }
+
+    /**
+     * Returns the minimum father's age at child birth.
+     *
+     * @return the minimum father's age at child birth
+     */
+    public static int getMinimumFathersAgeAtChildBirth() {
+        return MINIMUM_FATHER_AGE_AT_CHILDBIRTH;
+    }
+
+    /**
+     * Returns the mean inter-child interval in years.
+     *
+     * @return the mean inter-child interval in years
+     */
+    public static int getInterChildInterval() {
+        // TODO is the Javadoc right?
+        return INTER_CHILD_INTERVAL;
+    }
+
+    private static boolean parentsHaveSensibleAgesAtChildBirth(final Date father_birth_date, final Date father_death_date, final Date mother_birth_date, final Date mother_death_date, final Date child_birth_date) {
 
         return motherAliveAtBirth(mother_death_date, child_birth_date) &&
                 motherNotTooYoungAtBirth(mother_birth_date, child_birth_date) &&
@@ -91,48 +201,6 @@ public class PopulationLogic {
                 fatherAliveAtConception(father_death_date, child_birth_date) &&
                 fatherNotTooYoungAtBirth(father_birth_date, child_birth_date) &&
                 fatherNotTooOldAtBirth(father_birth_date, child_birth_date);
-    }
-
-    public static int earliestAcceptableBirthDate(final int marriage_date, final int previous_child_birth_date) {
-
-        return previous_child_birth_date == 0 ? DateManipulation.addYears(marriage_date, TIME_BEFORE_FIRST_CHILD) : DateManipulation.addYears(previous_child_birth_date, INTER_CHILD_INTERVAL);
-    }
-
-    public static boolean partnerAgeDifferenceIsReasonable(final int person_birth_date, final int candidate_birth_date) {
-        return Math.abs(DateManipulation.differenceInYears(person_birth_date, candidate_birth_date)) <= MAXIMUM_AGE_DIFFERENCE_IN_PARTNERSHIP;
-    }
-
-    public static boolean longEnoughBetweenMarriages(final int candidate_marriage_date, final int previous_marriage_date) {
-
-        return DateManipulation.differenceInYears(previous_marriage_date, candidate_marriage_date) > MINIMUM_PERIOD_BETWEEN_PARTNERSHIPS;
-    }
-
-    public static boolean divorceBeforeMarriage(final int marriage_date, final int divorce_date) {
-    	return marriage_date > divorce_date;
-    }
-
-    public static boolean divorceAfterDeath(final int death_date, final int divorce_date) {
-    	return divorce_date > death_date;
-    }
-
-    public static int getMaximumMotherAgeAtChildBirth() {
-        return MAXIMUM_MOTHER_AGE_AT_CHILDBIRTH;
-    }
-
-    public static int getMinimumMotherAgeAtChildBirth() {
-        return MINIMUM_MOTHER_AGE_AT_CHILDBIRTH;
-    }
-
-    public static int getMaximumFathersAgeAtChildBirth() {
-        return MAXIMUM_FATHER_AGE_AT_CHILDBIRTH;
-    }
-
-    public static int getMinimumFathersAgeAtChildBirth() {
-        return MINIMUM_FATHER_AGE_AT_CHILDBIRTH;
-    }
-
-    public static int getInterChildInterval() {
-        return INTER_CHILD_INTERVAL;
     }
 
     private static boolean motherAliveAtBirth(final Date mother_death_date, final Date child_birth_date) {

@@ -30,12 +30,20 @@ import java.text.ParseException;
 import java.util.List;
 
 /**
- * Created by graham on 19/07/2014.
+ * Person implementation for a population represented in a GEDCOM file.
+ *
+ * @author Graham Kirby (graham.kirby@st-andrews.ac.uk>
  */
 public class GEDCOMPerson extends AbstractPerson {
 
-    public static final String MALE_STRING = String.valueOf(IPerson.MALE);
+    private static final String MALE_STRING = String.valueOf(IPerson.MALE);
 
+    /**
+     * Initialises the partnership.
+     *
+     * @param individual the GEDCOM person representation
+     * @throws ParseException if the birth or death date is incorrectly formatted
+     */
     public GEDCOMPerson(final Individual individual) throws ParseException {
 
         setId(individual);

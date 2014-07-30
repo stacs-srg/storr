@@ -46,7 +46,7 @@ public class GenerateCompactPopulationInGraphvizFile extends AbstractPopulationT
     @Override
     public AbstractFilePopulationWriter getPopulationWriter(final Path path, final IPopulation population) throws IOException {
 
-        return new GraphvizPopulationWriter(path, population);
+        return new GraphvizPopulationWriter(population, path);
     }
 
     public static void main(final String[] args) throws Exception {

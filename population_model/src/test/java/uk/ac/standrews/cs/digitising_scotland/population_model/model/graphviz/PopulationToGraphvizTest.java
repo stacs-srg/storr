@@ -47,7 +47,7 @@ public class PopulationToGraphvizTest extends AbstractExporterTest {
     @Test
     public void test() throws Exception {
 
-        final IPopulationWriter population_writer = new GraphvizPopulationWriter(actual_output, population);
+        final IPopulationWriter population_writer = new GraphvizPopulationWriter(population, actual_output);
 
         try (PopulationConverter converter = new PopulationConverter(population, population_writer)) {
             converter.convert();
