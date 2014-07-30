@@ -18,6 +18,11 @@ package uk.ac.standrews.cs.digitising_scotland.population_model.distributions;
 
 import java.util.Random;
 
+/**
+ * Distribution ofnumber of children that can be born in a single maternity.
+ * 
+ * @author Tom Dalton (tsd4@st-andrews.ac.uk)
+ */
 public class NumberOfChildrenFromMaternitiesDistribution implements Distribution<Integer> {
     /*
      * characteristicsofbirth2finala_tcm77-338092
@@ -53,5 +58,4 @@ public class NumberOfChildrenFromMaternitiesDistribution implements Distribution
     public Integer getSample() {
         return distribution.getSample();
     }
-
 }

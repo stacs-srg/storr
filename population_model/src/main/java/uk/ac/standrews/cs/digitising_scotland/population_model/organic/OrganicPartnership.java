@@ -251,7 +251,7 @@ public final class OrganicPartnership implements IPartnership {
                 }
                 return children;
             } else {
-                stopedHavingEarlyDeaths += (numberOfChildrenToBeHadByCouple - children.length);
+                stopedHavingEarlyDeaths += numberOfChildrenToBeHadByCouple - children.length;
                 return new OrganicPerson[0];
             }
         }

@@ -20,6 +20,11 @@ import uk.ac.standrews.cs.digitising_scotland.population_model.model.in_memory.C
 
 import java.util.Random;
 
+/**
+ * Provides a distribution of ages for female seed population at start date.
+ * 
+ * @author Tom Dalton (tsd4@st-andrews.co.uk)
+ */
 public class FemaleAgeAtSeedDistribution implements Distribution<Integer> {
 
     private static final int MINIMUM_AGE_IN_YEARS = 0;

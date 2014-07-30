@@ -18,6 +18,11 @@ package uk.ac.standrews.cs.digitising_scotland.population_model.distributions;
 
 import java.util.Random;
 
+/**
+ * Distribution for number of children in a partnership.
+ * 
+ * @author Tom Dalton (tsd4@st-andrews.ac.uk)
+ */
 public class NumberOfChildrenDistribuition implements Distribution<Integer> {
     /*
      * familiesbynumberofchildrenfinaladhoc_tcm77-371401
@@ -41,6 +46,9 @@ public class NumberOfChildrenDistribuition implements Distribution<Integer> {
      * 11       1
      */
 
+	/**
+	 * Maximum number of children for a relationship.
+	 */
     public static final int MAXIMUM_NUMBER_OF_CHILDREN = 11;
     // Date for 1996 - births below replacment rate
     //    private static final int[] NUMBER_DISTRIBUTION_WEIGHTS = new int[]{354, 224, 232, 84, 61, 16, 17, 4, 4, 1, 1, 1};

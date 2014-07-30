@@ -19,12 +19,12 @@ package uk.ac.standrews.cs.digitising_scotland.population_model.distributions;
 import java.util.Random;
 
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.in_memory.CompactPopulation;
-
+/**
+ * Provides a distribution of ages for male seed population at start date.
+ * 
+ * @author Tom Dalton (tsd4@st-andrews.co.uk)
+ */
 public class MaleAgeAtSeedDistribution implements Distribution<Integer> {
-
-    /*
-     * 
-     */
 
     private static final int MINIMUM_AGE_IN_YEARS = 0;
     private static final int MAXIMUM_AGE_IN_YEARS = 100;
