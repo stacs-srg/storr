@@ -10,6 +10,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.AbstractClassifier;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Pair;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
@@ -31,6 +34,8 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
  *         Created by fraserdunlop on 10/06/2014 at 14:57.
  */
 public class ResolverMatrix {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ResolverMatrix.class);
 
     private static final int COMPLEXITY_UPPERLIMIT = 2000;
 
@@ -80,9 +85,11 @@ public class ResolverMatrix {
     public List<Set<CodeTriple>> getValidCodeTriples(final TokenSet originalSet) {
 
         chopUntilComplexityWithinBound(COMPLEXITY_UPPERLIMIT);
+        LOGGER.info("Resolving Hierachies");
         resolveHierarchies();
         List<Set<CodeTriple>> merged = new ArrayList<>();
         merged.add(null);
+        LOGGER.info("Merging");
         for (Code code : matrix.keySet()) {
             merge(merged, matrix.get(code), code, originalSet);
         }
@@ -163,6 +170,7 @@ public class ResolverMatrix {
      */
     public void chopUntilComplexityWithinBound(final int bound) {
 
+        LOGGER.info("Chopping until with bound");
         int maxNoOfEachCode = (int) Math.pow(bound, (1. / (double) matrix.keySet().size()));
         maxNoOfEachCode = Math.max(LOWER_BOUND, maxNoOfEachCode);
         for (Code code : matrix.keySet()) {
