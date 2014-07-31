@@ -37,4 +37,19 @@ The full machine learning algorithm for classification to multiple records can b
 
 ### Output
 
-Output is currently being sent to "target/NRSOutput.txt" and is pipe delimited, one record per line. 
+Output is currently being sent to "target/NRSOutput.txt" and is pipe delimited, one record per line.
+ 
+### Running the Classifier
+
+To run the classifier in testing mode using a single file for training and classification execute the 'runMultipleClassifications.sh' script
+in the scripts folder. This script takes as an argument the file to train and test on.     
+
+For example:    
+
+$ sh runMultipleClassifications.sh recordsToClassify.txt    
+
+This script will use Maven to do build the software, split the file into a training portion (80%) and a testing proportion (20%).    
+The classifier is then trained and the testing files classifed using the trained model. Output and analysis metrics are then written to the Experiments Folder.
+ 
+
+
