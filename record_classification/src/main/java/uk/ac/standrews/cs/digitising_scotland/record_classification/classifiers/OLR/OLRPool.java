@@ -72,6 +72,10 @@ public class OLRPool implements Runnable {
         modelTrainable = true;
     }
 
+    /**
+     * Gets the average running log likelihood totals. Sums across each of the models and divides by pool size to get the average.
+     * @return double the running loglikelihood average across all models
+     */
     public double getAverageRunningLogLikelihood() {
 
         double ll = 0.;
@@ -82,6 +86,9 @@ public class OLRPool implements Runnable {
         return ll;
     }
 
+    /**
+     * Rests the running log likelihood count in each of the {@link OLRShuffled} models.
+     */
     public void resetRunningLogLikelihoods() {
 
         for (OLRShuffled model : models) {
@@ -109,6 +116,10 @@ public class OLRPool implements Runnable {
         }
     }
 
+    /**
+     * Get the survivors from the model pool.
+     * @return List of {@link OLRShuffled} models
+     */
     public List<OLRShuffled> getSurvivors() {
 
         LOGGER.info("Getting survivors...");
