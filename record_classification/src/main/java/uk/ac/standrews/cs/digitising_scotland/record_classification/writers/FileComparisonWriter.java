@@ -90,7 +90,7 @@ public class FileComparisonWriter extends OutputDataFormatter implements Closeab
 
             }
             else {
-                sb.append("[missing]" + dlim + goldCodeTriple.getTokenSet() + dlim + goldCode.getDescription() + dlim + "1" + dlim);
+                sb.append("[missing]" + dlim + goldCodeTriple.getTokenSet() + dlim + goldCode.getDescription() + dlim + "GoldStandard" + dlim);
             }
         }
 
