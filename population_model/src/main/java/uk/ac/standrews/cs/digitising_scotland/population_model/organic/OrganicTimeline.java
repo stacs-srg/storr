@@ -182,8 +182,15 @@ public class OrganicTimeline {
         return events.get(days);
     }
 
+    /**
+     * Returns the day of the specified event.
+     * 
+     * @param event The event to be searched for.
+     * @return The date on which the event occurs in days since 1/1/1600.
+     * @throws NoSuchEventException Thown where the specified event is not found.
+     */
     public int getDay(EventType event) throws NoSuchEventException {
-        for(int i : events.keySet()) {
+        for (int i : events.keySet()) {
             if (events.get(i).getEventType() == event) {
                 return i;
             }
@@ -201,7 +208,7 @@ public class OrganicTimeline {
     public void printTimeline() {
         System.out.println("TIMELINE EVENTS:");
         System.out.println("    Start day: " + startDay);
-        for(int i : events.keySet()){
+        for (int i : events.keySet()) {
 
             System.out.print("    Day : " + i);
             System.out.println(" " + events.get(i).getEventType());

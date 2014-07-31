@@ -31,11 +31,11 @@ public class OrganicPopulationLogger {
     private static final int NUMBER_OF_CHILDREN_DISPLAY_UPTO = 15;
     private static int[] numberOfChildrenPerPartnership = new int[NUMBER_OF_CHILDREN_DISPLAY_UPTO];
     private static int neverMarried = 0;
-    
-	public static int leftOverChildren = 0;
-	public static int stopedHavingEarlyDeaths = 0;
 
-    /**
+    private static int leftOverChildren = 0;
+    private static int stopedHavingEarlyDeaths = 0;
+
+	/**
      * Increments the size of the population.
      */
     public static void incPopulation() {
@@ -66,10 +66,10 @@ public class OrganicPopulationLogger {
     }
 
     /**
-     * Increases the number of remarriages
+     * Increases the number of remarriages.
      */
     public static void incRemarriages() {
-        remarriages ++;
+        remarriages++;
     }
 
     /**
@@ -85,7 +85,7 @@ public class OrganicPopulationLogger {
     public static void incBirths() {
         births++;
     }
-    
+
     /**
      * Increments the number of people who are never married.
      */
@@ -93,10 +93,58 @@ public class OrganicPopulationLogger {
         neverMarried++;
     }
 
+    /**
+     * Returns the number of left over children.
+     * 
+     * @return The number of left over children.
+     */
+    public static int getLeftOverChildren() {
+        return leftOverChildren;
+    }
+
+    /**
+     * Increments the number of left over children.
+     * 
+     * @param number The number to increment by.
+     */
+    public static void incLeftOverChildren(int number) {
+        leftOverChildren += number;
+    }
+
+    /**
+     * Decrements the number of left over children.
+     * 
+     * @param number The number to decremented by.
+     */
+    public static void decLeftOverChildren(int number) {
+        leftOverChildren -= number;
+    }
+
+    /**
+     * Increments count for the specified number of children in a partnership.
+     * 
+     * @param number The number of children count to be incremented.
+     */
     public static void addNumberOfChildren(final int number) {
         numberOfChildrenPerPartnership[number]++;
     }
     
+    /**
+     * Returns the number of children stoped early by death of parents.
+     * @return The number of children stoped early by death of parents.
+     */
+    public static int getStopedHavingEarlyDeaths() {
+		return stopedHavingEarlyDeaths;
+	}
+
+    /**
+     * Increments the number of children stoped early by death of parents.
+     * @param number The number to increment by.
+     */
+	public static void incStopedHavingEarlyDeaths(int number) {
+		OrganicPopulationLogger.stopedHavingEarlyDeaths += stopedHavingEarlyDeaths;
+	}
+
     private static void addMaleAgeAtMarriage(final int days) {
         int years = (int) ((float) days / OrganicPopulation.getDaysPerYear());
         maleAgeAtMarriage[years]++;
@@ -126,6 +174,9 @@ public class OrganicPopulationLogger {
         addAgeDifferenceAtMarriage(maleDays, femaleDays);
     }
 
+    /**
+     * Logs and increments divorce.
+     */
     public static void logDivorce() {
         incDivorces();
     }
