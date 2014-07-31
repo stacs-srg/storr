@@ -16,7 +16,7 @@
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.distributions;
 
-import uk.ac.standrews.cs.digitising_scotland.population_model.model.in_memory.CompactPopulation;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.PopulationLogic;
 
 import java.util.Random;
 
@@ -42,7 +42,7 @@ public class FemaleAgeAtSeedDistribution implements Distribution<Integer> {
      */
     public FemaleAgeAtSeedDistribution(final Random random) {
         try {
-            distribution = new WeightedIntegerDistribution((int) (MINIMUM_AGE_IN_YEARS * CompactPopulation.DAYS_PER_YEAR), (int) (MAXIMUM_AGE_IN_YEARS * CompactPopulation.DAYS_PER_YEAR) - 1, AGE_DISTRIBUTION_WEIGHTS, random);
+            distribution = new WeightedIntegerDistribution((int) (MINIMUM_AGE_IN_YEARS * PopulationLogic.DAYS_PER_YEAR), (int) (MAXIMUM_AGE_IN_YEARS * PopulationLogic.DAYS_PER_YEAR) - 1, AGE_DISTRIBUTION_WEIGHTS, random);
 
         } catch (final NegativeWeightException e) {
             throw new RuntimeException("negative weight exception: " + e.getMessage());

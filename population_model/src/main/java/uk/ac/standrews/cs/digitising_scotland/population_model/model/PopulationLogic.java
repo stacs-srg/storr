@@ -21,10 +21,30 @@ import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
 import java.util.Date;
 
 /**
- * Created by graham on 03/07/2014.
+ * @author Graham Kirby (graham.kirby@st-andrews.ac.uk)
  * @author Tom Dalton (tsd4@st-andrews.ac.uk)
  */
 public class PopulationLogic {
+
+    /**
+     * The approximate average number of days per year.
+     */
+    public static final float DAYS_PER_YEAR = 365.25f;
+
+    /**
+     * The start year of the simulation.
+     */
+    public static final int START_YEAR = 1780;
+
+    /**
+     * The end year of the simulation.
+     */
+    public static final int END_YEAR = 2013;
+
+    public static final int DAYS_IN_DECEMBER = 31;
+    public static final int DECEMBER_INDEX = 11;
+
+    public static final double PROBABILITY_OF_BEING_INCOMER = 0.125;
 
     private static final int MINIMUM_MOTHER_AGE_AT_CHILDBIRTH = 12;
     private static final int MAXIMUM_MOTHER_AGE_AT_CHILDBIRTH = 50;

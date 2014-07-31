@@ -16,9 +16,9 @@
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.distributions;
 
-import java.util.Random;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.PopulationLogic;
 
-import uk.ac.standrews.cs.digitising_scotland.population_model.model.in_memory.CompactPopulation;
+import java.util.Random;
 
 /**
  * Distribution modelling ages at death, represented in days.
@@ -57,6 +57,8 @@ public class AgeAtDeathDistribution implements Distribution<Integer> {
      */
 
     private static final int MAXIMUM_AGE_IN_YEARS = 100;
+
+    @SuppressWarnings("MagicNumber")
     private static final int[] AGE_DISTRIBUTION_WEIGHTS = new int[]{2, 2, 2, 3, 7, 4, 3, 5, 20, 21, 35, 63, 115, 139, 143, 143, 149, 94, 20, 20};
 
     private final WeightedIntegerDistribution distribution;
@@ -68,7 +70,7 @@ public class AgeAtDeathDistribution implements Distribution<Integer> {
     public AgeAtDeathDistribution(final Random random) {
 
         try {
-            distribution = new WeightedIntegerDistribution(0, (int) (MAXIMUM_AGE_IN_YEARS * CompactPopulation.DAYS_PER_YEAR) - 1, AGE_DISTRIBUTION_WEIGHTS, random);
+            distribution = new WeightedIntegerDistribution(0, (int) (MAXIMUM_AGE_IN_YEARS * PopulationLogic.DAYS_PER_YEAR) - 1, AGE_DISTRIBUTION_WEIGHTS, random);
         }
         catch (final NegativeWeightException e) {
             throw new RuntimeException("negative weight exception: " + e.getMessage());

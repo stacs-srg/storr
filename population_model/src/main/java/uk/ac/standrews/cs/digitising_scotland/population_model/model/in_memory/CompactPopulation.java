@@ -25,6 +25,7 @@ import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.Neg
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.UniformIntegerDistribution;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.UniformSexDistribution;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IDFactory;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.PopulationLogic;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.RandomFactory;
 import uk.ac.standrews.cs.digitising_scotland.util.ArrayManipulation;
 import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
@@ -53,26 +54,6 @@ public class CompactPopulation {
 
     // TODO provide a way to configure the parameters dynamically
 
-    /**
-     * The approximate average number of days per year.
-     */
-    public static final float DAYS_PER_YEAR = 365.25f;
-
-    /**
-     * The start year of the simulation.
-     */
-    private static final int START_YEAR = 1780;
-
-    /**
-     * The end year of the simulation.
-     */
-    private static final int END_YEAR = 2013;
-
-    private static final int DAYS_IN_DECEMBER = 31;
-    private static final int DECEMBER_INDEX = 11;
-
-    private static final double PROBABILITY_OF_BEING_INCOMER = 0.125;
-
     private static final int NUMBER_OF_STAGES_IN_POPULATION_GENERATION = 5;
 
     private final int earliest_date;
@@ -96,6 +77,8 @@ public class CompactPopulation {
      * @param earliest_date      the earliest date of any event (birth, death, marriage, parenthood), represented as days since {@link uk.ac.standrews.cs.digitising_scotland.util.DateManipulation#START_YEAR}
      * @param latest_date        the latest date of any event, represented as days since {@link uk.ac.standrews.cs.digitising_scotland.util.DateManipulation#START_YEAR}
      * @param progress_indicator a progress indicator
+     * @throws NegativeWeightException    if one of the underlying distributions cannot be initialised
+     * @throws NegativeDeviationException if one of the underlying distributions cannot be initialised
      */
     public CompactPopulation(final int population_size, final int earliest_date, final int latest_date, final ProgressIndicator progress_indicator) throws NegativeWeightException, NegativeDeviationException {
 
@@ -120,16 +103,20 @@ public class CompactPopulation {
      *
      * @param population_size    the number of people in the population
      * @param progress_indicator a progress indicator
+     * @throws NegativeWeightException    if one of the underlying distributions cannot be initialised
+     * @throws NegativeDeviationException if one of the underlying distributions cannot be initialised
      */
     public CompactPopulation(final int population_size, final ProgressIndicator progress_indicator) throws NegativeDeviationException, NegativeWeightException {
 
-        this(population_size, DateManipulation.dateToDays(START_YEAR, 0, 1), DateManipulation.dateToDays(END_YEAR, DECEMBER_INDEX, DAYS_IN_DECEMBER), progress_indicator); // 1st January of start year to 31st December of end year.
+        this(population_size, DateManipulation.dateToDays(PopulationLogic.START_YEAR, 0, 1), DateManipulation.dateToDays(PopulationLogic.END_YEAR, PopulationLogic.DECEMBER_INDEX, PopulationLogic.DAYS_IN_DECEMBER), progress_indicator); // 1st January of start year to 31st December of end year.
     }
 
     /**
      * Creates a synthetic population with default start and end dates.
      *
      * @param population_size the number of people in the population
+     * @throws NegativeWeightException    if one of the underlying distributions cannot be initialised
+     * @throws NegativeDeviationException if one of the underlying distributions cannot be initialised
      */
     public CompactPopulation(final int population_size) throws NegativeDeviationException, NegativeWeightException {
 
@@ -167,6 +154,11 @@ public class CompactPopulation {
         return people[index];
     }
 
+    /**
+     * Finds the person with the specified id, or null if it cannot be found.
+     * @param id the id
+     * @return the corresponding person
+     */
     public synchronized CompactPerson findPerson(final int id) {
 
         // Avoid initialising list until it's actually needed.
@@ -185,6 +177,11 @@ public class CompactPopulation {
         return index >= 0 ? people[index] : null;
     }
 
+    /**
+     * Finds the partnership with the specified id, or null if it cannot be found.
+     * @param id the id
+     * @return the corresponding partnership
+     */
     public CompactPartnership findPartnership(final int id) {
 
         for (final CompactPerson person : people) {
@@ -200,28 +197,36 @@ public class CompactPopulation {
         return null;
     }
 
+    /**
+     * Returns the number of people in the population.
+     * @return the number of people in the population
+     */
     public int getNumberOfPeople() {
         return people.length;
     }
 
+    /**
+     * Returns the number of partnerships in the population.
+     * @return the number of partnerships in the population
+     */
     public int getNumberOfPartnerships() {
         return number_of_partnerships;
     }
 
     @SuppressFBWarnings(value = "EI_EXPOSE_REP", justification = "too expensive...")
-    public CompactPerson[] getPeopleArray() {
+    protected CompactPerson[] getPeopleArray() {
 
         return people;
     }
 
-    private void initialiseDistributions() throws NegativeWeightException, NegativeDeviationException {
+    private void initialiseDistributions() {
 
         final Random random = RandomFactory.getRandom();
 
         date_of_birth_distribution = new UniformIntegerDistribution(earliest_date, latest_date, random);
         sex_distribution = new UniformSexDistribution(random);
         age_at_death_distribution = new AgeAtDeathDistribution(random);
-        incomers_distribution = new IncomersDistribution(PROBABILITY_OF_BEING_INCOMER, random);
+        incomers_distribution = new IncomersDistribution(PopulationLogic.PROBABILITY_OF_BEING_INCOMER, random);
     }
 
     /**
@@ -250,7 +255,7 @@ public class CompactPopulation {
             final int age_at_death_in_days = age_at_death_distribution.getSample();
             final int date_of_death = person.birth_date + age_at_death_in_days;
 
-            if (DateManipulation.daysToYear(date_of_death) <= END_YEAR) {
+            if (DateManipulation.daysToYear(date_of_death) <= PopulationLogic.END_YEAR) {
                 person.death_date = date_of_death;
             }
 
@@ -296,7 +301,7 @@ public class CompactPopulation {
 
     private void sortPeopleByAge() {
 
-        final List<CompactPerson> people_list = Arrays.asList(getPeopleArray());
+        final List<CompactPerson> people_list = Arrays.asList(people);
         final QuickSort<CompactPerson> sorter = new QuickSort<>(people_list, new Comparator<CompactPerson>() {
 
             @Override
