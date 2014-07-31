@@ -86,11 +86,11 @@ public class FileComparisonWriter extends OutputDataFormatter implements Closeab
             Code goldCode = goldCodeTriple.getCode();
 
             if (Utils.contains(goldCode, classifications)) {
-                sb.append("[correct]" + dlim + Utils.getCodeTripleWithCode(goldCode, classifications).getTokenSet() + dlim + goldCode.getDescription() + dlim);
+                sb.append("[correct]" + dlim + Utils.getCodeTripleWithCode(goldCode, classifications).getTokenSet() + dlim + goldCode.getDescription() + dlim + Utils.getCodeTripleWithCode(goldCode, classifications).getConfidence() + dlim);
 
             }
             else {
-                sb.append("[missing]" + dlim + goldCodeTriple.getTokenSet() + dlim + goldCode.getDescription() + dlim);
+                sb.append("[missing]" + dlim + goldCodeTriple.getTokenSet() + dlim + goldCode.getDescription() + dlim + "1" + dlim);
             }
         }
 
@@ -98,7 +98,7 @@ public class FileComparisonWriter extends OutputDataFormatter implements Closeab
             Code code = codeTriple.getCode();
 
             if (!Utils.contains(code, goldStandardSet)) {
-                sb.append("[extra]" + dlim + codeTriple.getTokenSet() + dlim + code.getDescription() + dlim);
+                sb.append("[extra]" + dlim + codeTriple.getTokenSet() + dlim + code.getDescription() + dlim + codeTriple.getConfidence() + dlim);
             }
         }
 

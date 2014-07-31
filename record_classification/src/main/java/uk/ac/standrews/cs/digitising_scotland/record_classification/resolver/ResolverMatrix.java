@@ -90,7 +90,9 @@ public class ResolverMatrix {
         List<Set<CodeTriple>> merged = new ArrayList<>();
         merged.add(null);
         LOGGER.info("Merging");
+        LOGGER.info("matrix keySet size " + matrix.keySet().size());
         for (Code code : matrix.keySet()) {
+            LOGGER.info(code.toString() + " codeList is of size " + matrix.get(code).size());
             merge(merged, matrix.get(code), code, originalSet);
         }
         merged.remove(null);
@@ -147,6 +149,7 @@ public class ResolverMatrix {
     private void merge(final List<Set<CodeTriple>> merged, final List<CodeTriple> codeTriples, final Code code, final TokenSet originalSet) {
 
         List<Set<CodeTriple>> temporaryMerge = new ArrayList<>();
+        LOGGER.info(arg0);
         for (Set<CodeTriple> tripleSet : merged) {
             for (CodeTriple triple : codeTriples) {
                 CodeTriple tempCodeTriple = new CodeTriple(code, triple.getTokenSet(), triple.getConfidence());
