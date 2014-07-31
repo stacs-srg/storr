@@ -31,6 +31,9 @@ public class OrganicPopulationLogger {
     private static final int NUMBER_OF_CHILDREN_DISPLAY_UPTO = 15;
     private static int[] numberOfChildrenPerPartnership = new int[NUMBER_OF_CHILDREN_DISPLAY_UPTO];
     private static int neverMarried = 0;
+    
+	public static int leftOverChildren = 0;
+	public static int stopedHavingEarlyDeaths = 0;
 
     /**
      * Increments the size of the population.

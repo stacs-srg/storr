@@ -17,7 +17,6 @@
 package uk.ac.standrews.cs.digitising_scotland.population_model.organic;
 
 import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
-import uk.ac.standrews.cs.digitising_scotland.population_model.organic.NoSuchEventException;
 
 import java.util.Date;
 import java.util.HashMap;

@@ -16,7 +16,15 @@
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.organic;
 
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.*;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.AgeAtDeathDistribution;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.Distribution;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.FemaleAgeAtMarriageDistribution;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.FemaleAgeAtSeedDistribution;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.MaleAgeAtMarriageDistribution;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.MaleAgeAtSeedDistribution;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.RemarriageDistribution;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.UniformIntegerDistribution;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.UniformSexDistribution;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPerson;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.RandomFactory;
 import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
@@ -43,8 +51,8 @@ public class OrganicPerson implements IPerson {
     private static MaleAgeAtSeedDistribution maleSeedAgeDistribution = new MaleAgeAtSeedDistribution(random);
     private static FemaleAgeAtSeedDistribution femaleSeedAgeDistribution = new FemaleAgeAtSeedDistribution(random);
     private static AgeAtDeathDistribution seed_death_distribution = new AgeAtDeathDistribution(random);
-    private static Distribution<Integer> maleAgeAtMarriageDistribution = new MaleAgeAtMarriageDistribution(random);
-    private static Distribution<Integer> femaleAgeAtMarriageDistribution = new FemaleAgeAtMarriageDistribution(random);
+    private static MaleAgeAtMarriageDistribution maleAgeAtMarriageDistribution = new MaleAgeAtMarriageDistribution(random);
+    private static FemaleAgeAtMarriageDistribution femaleAgeAtMarriageDistribution = new FemaleAgeAtMarriageDistribution(random);
     private static UniformSexDistribution sex_distribution = new UniformSexDistribution(random);
 
     // Person instance required variables
@@ -65,13 +73,17 @@ public class OrganicPerson implements IPerson {
      */
 
     /**
+     * 
      * Creates an OrganicPerson object given the stated id, birthday and a boolean flag to identify in the creation is for the seed population.
      *
-     * @param id             The unique id for the new person.
-     * @param birthDay       The day of birth in days since the 1/1/1600.
-     * @param seedGeneration Flag indicating is the simulation is still creating the seed population.
+     * @param id                   The unique id for the new person.
+     * @param birthDay             The day of birth in days since the 1/1/1600.
+     * @param parentPartnershipId  The id of the parents partnership.
+     * @param population           The population which the person is a part of.
+     * @param seedGeneration       Flag indicating is the simulation is still creating the seed population.
+
      */
-    public OrganicPerson(final int id, final int birthDay, int parentPartnershipId, OrganicPopulation population, final boolean seedGeneration) {
+    public OrganicPerson(final int id, final int birthDay, final int parentPartnershipId, final OrganicPopulation population, final boolean seedGeneration) {
         this.id = id;
         this.population = population;
         this.parentPartnershipId = parentPartnershipId;
@@ -89,13 +101,13 @@ public class OrganicPerson implements IPerson {
      * High level methods
      */
 
-    private void setPersonsBirthAndDeathDates(final int birthDay, final boolean seedGeneration, OrganicPopulation population) {
+    private void setPersonsBirthAndDeathDates(final int birthDay, final boolean seedGeneration, final OrganicPopulation population) {
         // Find an age for person
         int ageOfDeathInDays = seed_death_distribution.getSample();
         int dayOfBirth = birthDay;
 
         if (seedGeneration) {
-            if(sex == 'M') {
+            if (sex == 'M') {
                 dayOfBirth = DateManipulation.dateToDays(OrganicPopulation.getStartYear(), 0, 0) + maleSeedAgeDistribution.getSample() - ageOfDeathInDays;
             } else {
                 dayOfBirth = DateManipulation.dateToDays(OrganicPopulation.getStartYear(), 0, 0) + femaleSeedAgeDistribution.getSample() - ageOfDeathInDays;
@@ -142,18 +154,18 @@ public class OrganicPerson implements IPerson {
      * 
      * @param trigger The EventType to be handled
      */
-    public void updateTimeline(EventType trigger) {
+    public void updateTimeline(final EventType trigger) {
 
         //Change events on timeline as needed.
         switch (trigger) {
-        case DIVORCE: {
+        case DIVORCE:
             if (remmariageDist.getSample()) {
-                OrganicPartnership partnership = (OrganicPartnership)this.getPopulation().findPartnership(this.getPartnerships().get(this.getPartnerships().size()-1));
+                OrganicPartnership partnership = (OrganicPartnership) this.getPopulation().findPartnership(this.getPartnerships().get(this.getPartnerships().size() - 1));
                 addEligibleToReMarryEvent(partnership.getTimeline().getEndDate());
             }
-        }
+            break;
         case PARTNERSHIP_ENDED_BY_DEATH:
-
+        	break;
         default:
             break;
         }
@@ -186,7 +198,7 @@ public class OrganicPerson implements IPerson {
      *
      * @param minimumDate the new marriage event will be placed AFTER this date
      */
-    private void addEligibleToReMarryEvent(int minimumDate) {
+    private void addEligibleToReMarryEvent(final int minimumDate) {
 
         // Add ELIGIBLE_TO_MARRY event
         int date;
@@ -225,7 +237,9 @@ public class OrganicPerson implements IPerson {
      */
 
     /**
-     * Gets the population that the current person is part of
+     * Returns the population the person is a member of.
+     * 
+     * @return The population the person is a member of.
      */
     public OrganicPopulation getPopulation() {
         return population;
@@ -254,8 +268,9 @@ public class OrganicPerson implements IPerson {
      * 
      * @param event The event to be searched for.
      * @return The day in days since 1/1/1600 of the specified event. If event does not exist returns null.
+     * @throws NoSuchEventException Thown when the specified event is not found in the timeline.
      */
-    public int getEvent(EventType event) throws NoSuchEventException {
+    public int getEvent(final EventType event) throws NoSuchEventException {
         return timeline.getDay(event);
     }
 
@@ -277,8 +292,26 @@ public class OrganicPerson implements IPerson {
         return timeline.getEndDate();
     }
 
+	/**
+	 * Returns the boolean indicating if the person is a member of the origonal seed population.
+	 * 
+	 * @return the seedPerson
+	 */
+	public boolean isSeedPerson() {
+		return seedPerson;
+	}
 
-    /**
+	/**
+	 * Sets boolean to indicate if the person is a member of the origonal seed population.
+	 * 
+	 * @param seedPerson the seedPerson to set
+	 */
+	private void setSeedPerson(final boolean seedPerson) {
+		this.seedPerson = seedPerson;
+	}
+
+
+    /*
      * INTERFACE METHODS
      */
 
@@ -342,17 +375,4 @@ public class OrganicPerson implements IPerson {
         return parentPartnershipId;
     }
 
-	/**
-	 * @return the seedPerson
-	 */
-	public boolean isSeedPerson() {
-		return seedPerson;
-	}
-
-	/**
-	 * @param seedPerson the seedPerson to set
-	 */
-	private void setSeedPerson(boolean seedPerson) {
-		this.seedPerson = seedPerson;
-	}
 }

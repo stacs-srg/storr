@@ -16,6 +16,11 @@
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.organic;
 
+/**
+ * Thrown when a specified event is not found in the stated map/array.
+ * 
+ * @author Tom Dalton (tsd4@st-andrews.ac.uk)
+ */
 public class NoSuchEventException extends Exception {
 
 }
