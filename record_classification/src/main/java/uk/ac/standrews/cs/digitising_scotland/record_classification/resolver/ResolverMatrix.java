@@ -91,9 +91,15 @@ public class ResolverMatrix {
         merged.add(null);
         LOGGER.info("Merging");
         LOGGER.info("matrix keySet size " + matrix.keySet().size());
-        for (Code code : matrix.keySet()) {
-            LOGGER.info(code.toString() + " codeList is of size " + matrix.get(code).size());
-            merge(merged, matrix.get(code), code, originalSet);
+
+        if (matrix.keySet().size() > 30) {
+            LOGGER.info("codeList too big - skipping"); //TODO quick hack to test theory
+        }
+        else {
+            for (Code code : matrix.keySet()) {
+                LOGGER.info(code.toString() + " codeList is of size " + matrix.get(code).size());
+                merge(merged, matrix.get(code), code, originalSet);
+            }
         }
         merged.remove(null);
         return merged;
