@@ -12,7 +12,7 @@
     <artifactId>record_classification</artifactId>
     <packaging>jar</packaging>
     <name>record_classification</name>
-
+    <description>Automatic record attribute classification.</description>
 
     <build>
         <plugins>

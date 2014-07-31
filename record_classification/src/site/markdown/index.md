@@ -31,8 +31,4 @@ The Maven repository is here:
 
 ## Tutorial
 
-A brief tutorial on how to use the record classification software can be found here:
-
-<div class="source">
-    <pre><a href="tutorial.html">Record Classification Tutorial</a></pre>
-</div>
+A <a href="tutorial.html">brief tutorial</a> on how to use the record classification software is available.
