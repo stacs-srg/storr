@@ -207,8 +207,8 @@ public class OrganicPopulation implements IPopulation {
     }
 
     private void handleBirthEvent(final int partnershipListIndex) {
-        OrganicPerson[] children = partnerships.get(partnershipListIndex).setUpBirthEvent((OrganicPerson)findPerson(partnerships.get(partnershipListIndex).getMalePartnerId()), (OrganicPerson)findPerson(partnerships.get(partnershipListIndex).getFemalePartnerId()), getCurrentDay());
-        for(OrganicPerson child : children) {
+        OrganicPerson[] children = partnerships.get(partnershipListIndex).setUpBirthEvent((OrganicPerson) findPerson(partnerships.get(partnershipListIndex).getMalePartnerId()), (OrganicPerson) findPerson(partnerships.get(partnershipListIndex).getFemalePartnerId()), getCurrentDay());
+        for (OrganicPerson child : children) {
             livingPeople.add(child);
         }
     }
@@ -245,7 +245,7 @@ public class OrganicPopulation implements IPopulation {
      */
 
     private void printYearEndData() {
-        if(getCurrentDay() % (int) getDaysPerYear() == 0) {
+        if (getCurrentDay() % (int) getDaysPerYear() == 0) {
             System.out.println(EPOCH_YEAR + (int) (getCurrentDay() / getDaysPerYear()));
             System.out.println("Population: " + OrganicPopulationLogger.getPopulation());
         }
@@ -274,7 +274,7 @@ public class OrganicPopulation implements IPopulation {
                 } else if (femalePartnershipQueue.getFirst().getId() == firstFemaleId) {
                     // Move next male to head of queue for consideration
                     malePartnershipQueue.add(malePartnershipQueue.removeFirst());
-                    // If new lead male is same as first male then no man eligable to marry any female - thus break 
+                    // If new lead male is same as first male then no man eligable to marry any female - thus break
                     if(malePartnershipQueue.getFirst().getId() == firstMaleId) {
                         break;
                     }
@@ -351,7 +351,7 @@ public class OrganicPopulation implements IPopulation {
         Object[] partnershipObjects = OrganicPartnership.createOrganicPartnership(IDFactory.getNextID(), husband, wife, days, getCurrentDay());
         partnerships.add((OrganicPartnership) partnershipObjects[0]);
         if (partnershipObjects.length > 1) {
-            for(int i = 1; i < partnershipObjects.length; i++) {
+            for (int i = 1; i < partnershipObjects.length; i++) {
                 livingPeople.add((OrganicPerson) partnershipObjects[i]);
             }
         }
@@ -567,7 +567,7 @@ public class OrganicPopulation implements IPopulation {
             }
         }
         System.out.println("Left over children: " + count);
-        System.out.println("Kids killed by early stop: " + OrganicPopulationLogger.stopedHavingEarlyDeaths);
+        System.out.println("Kids killed by early stop: " + OrganicPopulationLogger.getStopedHavingEarlyDeaths());
 
     }
 

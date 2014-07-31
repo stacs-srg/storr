@@ -165,7 +165,7 @@ public class OrganicPerson implements IPerson {
             }
             break;
         case PARTNERSHIP_ENDED_BY_DEATH:
-        	break;
+            break;
         default:
             break;
         }
@@ -292,23 +292,23 @@ public class OrganicPerson implements IPerson {
         return timeline.getEndDate();
     }
 
-	/**
-	 * Returns the boolean indicating if the person is a member of the origonal seed population.
-	 * 
-	 * @return the seedPerson
-	 */
-	public boolean isSeedPerson() {
-		return seedPerson;
-	}
+    /**
+     * Returns the boolean indicating if the person is a member of the origonal seed population.
+     * 
+     * @return the seedPerson
+     */
+    public boolean isSeedPerson() {
+        return seedPerson;
+    }
 
-	/**
-	 * Sets boolean to indicate if the person is a member of the origonal seed population.
-	 * 
-	 * @param seedPerson the seedPerson to set
-	 */
-	private void setSeedPerson(final boolean seedPerson) {
-		this.seedPerson = seedPerson;
-	}
+    /**
+     * Sets boolean to indicate if the person is a member of the origonal seed population.
+     * 
+     * @param seedPerson the seedPerson to set
+     */
+    private void setSeedPerson(final boolean seedPerson) {
+        this.seedPerson = seedPerson;
+    }
 
 
     /*
