@@ -30,8 +30,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * Created by victor on 11/06/14.
- *
+ * @author  Victor Andrei (va9@st-andrews.ac.uk)
  * @author Tom Dalton (tsd4@st-andrews.ac.uk)
  */
 public class OrganicPopulation implements IPopulation {

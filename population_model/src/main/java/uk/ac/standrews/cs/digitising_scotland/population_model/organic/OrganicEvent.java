@@ -17,8 +17,7 @@
 package uk.ac.standrews.cs.digitising_scotland.population_model.organic;
 
 /**
- * Created by victor on 08/07/14.
- *
+ * @author Victor Andrei (va9@st-andrews.ac.uk)
  * @author Tom Dalton (tsd4@st-andrews.ac.uk)
  */
 public class OrganicEvent {

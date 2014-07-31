@@ -16,27 +16,20 @@
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.organic;
 
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.AgeAtDeathDistribution;
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.Distribution;
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.FemaleAgeAtMarriageDistribution;
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.FemaleAgeAtSeedDistribution;
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.MaleAgeAtMarriageDistribution;
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.MaleAgeAtSeedDistribution;
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.RemarriageDistribution;
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.UniformIntegerDistribution;
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.UniformSexDistribution;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.*;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPerson;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.RandomFactory;
 import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
 /**
- * Created by victor on 08/07/14.
  *
+ * @author Victor Andrei (va9@st-andrews.ac.uk)
  * @author Tom Dalton (tsd4@st-andrews.ac.uk)
  */
 public class OrganicPerson implements IPerson {
@@ -54,6 +47,9 @@ public class OrganicPerson implements IPerson {
     private static MaleAgeAtMarriageDistribution maleAgeAtMarriageDistribution = new MaleAgeAtMarriageDistribution(random);
     private static FemaleAgeAtMarriageDistribution femaleAgeAtMarriageDistribution = new FemaleAgeAtMarriageDistribution(random);
     private static UniformSexDistribution sex_distribution = new UniformSexDistribution(random);
+    private static MaleFirstNameDistribution maleFirstNames;
+    private static FemaleFirstNameDistribution femaleFirstNames;
+    private static SurnameDistribution surnames;
 
     // Person instance required variables
     private int id;
@@ -88,11 +84,27 @@ public class OrganicPerson implements IPerson {
         this.population = population;
         this.parentPartnershipId = parentPartnershipId;
         setSeedPerson(seedGeneration);
+
+        try{
+            maleFirstNames = new MaleFirstNameDistribution(random);
+            femaleFirstNames = new FemaleFirstNameDistribution(random);
+            surnames = new SurnameDistribution(random);
+
+        } catch (InconsistentWeightException e){
+            e.printStackTrace();
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+
+        lastName = surnames.getSample();
+
         if (sex_distribution.getSample()) {
             sex = 'M';
+            firstName = maleFirstNames.getSample();
             setPersonsBirthAndDeathDates(birthDay, seedGeneration, population);
         } else {
             sex = 'F';
+            firstName = femaleFirstNames.getSample();
             setPersonsBirthAndDeathDates(birthDay, seedGeneration, population);
         }
     }
