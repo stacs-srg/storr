@@ -149,7 +149,6 @@ public class ResolverMatrix {
     private void merge(final List<Set<CodeTriple>> merged, final List<CodeTriple> codeTriples, final Code code, final TokenSet originalSet) {
 
         List<Set<CodeTriple>> temporaryMerge = new ArrayList<>();
-        LOGGER.info(arg0);
         for (Set<CodeTriple> tripleSet : merged) {
             for (CodeTriple triple : codeTriples) {
                 CodeTriple tempCodeTriple = new CodeTriple(code, triple.getTokenSet(), triple.getConfidence());
