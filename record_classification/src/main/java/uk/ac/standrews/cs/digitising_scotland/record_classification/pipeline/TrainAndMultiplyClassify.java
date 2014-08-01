@@ -69,7 +69,7 @@ public final class TrainAndMultiplyClassify {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TrainAndMultiplyClassify.class);
 
-    private static final double TRAINING_PCT = 0.8;
+    private static double trainingRatio = 0.8;
 
     private static VectorFactory vectorFactory;
     private static Bucket trainingBucket;
@@ -94,6 +94,13 @@ public final class TrainAndMultiplyClassify {
 
         // TODO split this up!
         Timer timer = initAndStartTimer();
+
+        if (args.length > 1 && args[1] != null) {
+            double userRatio = Double.valueOf(args[1]);
+            if (userRatio > 0 && userRatio < 1) {
+                trainingRatio = userRatio;
+            }
+        }
 
         setupExperimentalFolders("Experiments");
 
@@ -295,7 +302,7 @@ public final class TrainAndMultiplyClassify {
         trainingBucket = new Bucket();
         predictionBucket = new Bucket();
         for (Record record : bucket) {
-            if (Math.random() < TRAINING_PCT) {
+            if (Math.random() < trainingRatio) {
                 trainingBucket.addRecordToBucket(record);
             }
             else {

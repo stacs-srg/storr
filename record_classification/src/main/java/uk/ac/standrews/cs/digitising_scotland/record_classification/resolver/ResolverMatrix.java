@@ -37,6 +37,8 @@ public class ResolverMatrix {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ResolverMatrix.class);
 
+    private static final int KEYSET_SIZE_LIMIT = 30;
+
     private static final int COMPLEXITY_UPPERLIMIT = 2000;
 
     private static final int LOWER_BOUND = 3;
@@ -92,7 +94,7 @@ public class ResolverMatrix {
         LOGGER.info("Merging");
         LOGGER.info("matrix keySet size " + matrix.keySet().size());
 
-        if (matrix.keySet().size() > 30) {
+        if (matrix.keySet().size() > KEYSET_SIZE_LIMIT) {
             LOGGER.info("codeList too big - skipping"); //TODO quick hack to test theory
         }
         else {
