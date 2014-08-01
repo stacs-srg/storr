@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl;
 
+import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.BucketKind;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IBucket;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IIndexedBucket;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IRepository;
@@ -43,29 +44,42 @@ public class Repository implements IRepository {
     @Override
     public IBucket makeBucket(final String name) throws RepositoryException {
 
-        createBucket(name);
+        createBucket(name, BucketKind.DIRECTORYBACKED);
         return getBucket(name);
+    }
+
+    @Override
+    public IBucket makeIndirectBucket(final String name) throws RepositoryException {
+
+        createBucket(name, BucketKind.INDIRECT);
+        return getIndirectBucket(name);
     }
 
     @Override
     public IIndexedBucket makeIndexedBucket(final String name) throws RepositoryException {
 
-        createBucket(name);
+        createBucket(name, BucketKind.INDIRECT);
         return getIndexedBucket(name);
     }
 
-    private void createBucket(final String name) throws RepositoryException {
+    private void createBucket(final String name, BucketKind kind) throws RepositoryException {
 
         if (bucketExists(name)) {
             throw new RepositoryException("Bucket: " + name + " already exists");
         }
 
         try {
-            FileManipulation.createDirectoryIfDoesNotExist(getBucketPath(name));
+            Path path = getBucketPath(name);
+            FileManipulation.createDirectoryIfDoesNotExist(path);
+            addBucketLabel( path,kind );
 
         } catch (IOException e) {
             throw new RepositoryException(e.getMessage());
         }
+    }
+
+    private void addBucketLabel(Path path, BucketKind kind) throws IOException {
+        FileManipulation.createDirectoryIfDoesNotExist(path.resolve(kind.name())); // create a directory labellled with the kind in the new bucket dir!
     }
 
     private Path getBucketPath(final String name) {
@@ -98,17 +112,43 @@ public class Repository implements IRepository {
     public IBucket getBucket(final String name) throws RepositoryException {
 
         try {
-            return new Bucket(name, repo_path);
+            IBucket bucket = new DirectoryBackedBucket(name, repo_path);
+            if( bucket.kind().equals(BucketKind.DIRECTORYBACKED)) {
+                return bucket;
+            } else {
+                throw new RepositoryException("Specified bucket is not directory backed " + name);
+            }
 
         } catch (IOException e) {
             throw new RepositoryException("Cannot get bucket called " + name);
         }
     }
 
+    public IBucket getIndirectBucket(final String name) throws RepositoryException {
+
+        try {
+            IBucket bucket = new DirectoryBackedIndirectBucket(name, repo_path);
+            if( bucket.kind().equals(BucketKind.INDIRECT)) {
+                return bucket;
+            } else {
+                throw new RepositoryException("Specified bucket is not indirect " + name);
+            }
+
+        } catch (IOException e) {
+            throw new RepositoryException("Cannot get indexed bucket called " + name);
+        }
+    }
+
+
     public IIndexedBucket getIndexedBucket(final String name) throws RepositoryException {
 
         try {
-            return new IndexedBucket(name, repo_path);
+            IIndexedBucket bucket = new DirectoryBackedIndexedBucket(name, repo_path);
+            if( bucket.kind().equals(BucketKind.INDEXED)) {
+                return bucket;
+            } else {
+                throw new RepositoryException("Specified bucket is not indexed " + name);
+            }
 
         } catch (IOException e) {
             throw new RepositoryException("Cannot get indexed bucket called " + name);

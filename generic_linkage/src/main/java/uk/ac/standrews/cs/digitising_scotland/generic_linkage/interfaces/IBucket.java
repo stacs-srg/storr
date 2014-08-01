@@ -51,4 +51,9 @@ public interface IBucket {
      */
     boolean contains(int id);
 
+    /**
+    * @return the kind of the bucket
+    */
+    BucketKind kind();
+
 }

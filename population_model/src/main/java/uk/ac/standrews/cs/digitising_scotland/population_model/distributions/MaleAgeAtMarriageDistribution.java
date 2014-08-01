@@ -16,7 +16,7 @@
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.distributions;
 
-import uk.ac.standrews.cs.digitising_scotland.population_model.model.in_memory.CompactPopulation;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.PopulationLogic;
 
 import java.util.Random;
 
@@ -26,6 +26,7 @@ import java.util.Random;
  * @author Tom Dalton (tsd4@st-andrews.ac.uk)
  */
 public class MaleAgeAtMarriageDistribution implements Distribution<Integer> {
+
     /*
      * from ageatmarriageandpreviousmaritalstatus_tcm77-366510.xls
      * from http://www.ons.gov.uk/ons/rel/vsob1/marriages-in-england-and-wales--provisional-/2012/rtd-age-at-marriage-and-previous-marital-status.xls
@@ -59,6 +60,8 @@ public class MaleAgeAtMarriageDistribution implements Distribution<Integer> {
      */
 
     private static final int MAXIMUM_AGE_IN_YEARS = 100;
+
+    @SuppressWarnings("MagicNumber")
     private static final int[] AGE_DISTRIBUTION_WEIGHTS = new int[]{0, 0, 0, 20, 107, 49, 18, 10, 7, 5, 4, 4, 4, 3, 3, 3, 1, 1, 0, 0};
 
     private final WeightedIntegerDistribution distribution;
@@ -70,7 +73,7 @@ public class MaleAgeAtMarriageDistribution implements Distribution<Integer> {
      */
     public MaleAgeAtMarriageDistribution(final Random random) {
         try {
-            distribution = new WeightedIntegerDistribution(0, (int) (MAXIMUM_AGE_IN_YEARS * CompactPopulation.DAYS_PER_YEAR) - 1, AGE_DISTRIBUTION_WEIGHTS, random);
+            distribution = new WeightedIntegerDistribution(0, (int) (MAXIMUM_AGE_IN_YEARS * PopulationLogic.DAYS_PER_YEAR) - 1, AGE_DISTRIBUTION_WEIGHTS, random);
         } catch (final NegativeWeightException e) {
             throw new RuntimeException("negative weight exception: " + e.getMessage());
         }

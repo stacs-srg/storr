@@ -48,7 +48,7 @@ public final class Diagnostic {
     private static boolean use_timestamp = false;
     private static boolean use_timestamp_delimiter = true;
 
-    private static volatile DateFormat date_format = new SimpleDateFormat(DEFAULT_DATE_FORMAT_PATTERN);
+    private static final DateFormat date_format = new SimpleDateFormat(DEFAULT_DATE_FORMAT_PATTERN);
 
     private static final String SEPARATOR = " : ";
 

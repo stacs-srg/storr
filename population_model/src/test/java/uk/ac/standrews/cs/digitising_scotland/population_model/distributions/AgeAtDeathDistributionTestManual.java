@@ -16,9 +16,9 @@
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.distributions;
 
-import java.util.Random;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.PopulationLogic;
 
-import uk.ac.standrews.cs.digitising_scotland.population_model.model.in_memory.CompactPopulation;
+import java.util.Random;
 
 public class AgeAtDeathDistributionTestManual {
 
@@ -41,7 +41,7 @@ public class AgeAtDeathDistributionTestManual {
         for (int i = 0; i < iterations; i++) {
 
             final int age_in_days = distribution.getSample();
-            final int age_in_years = (int) ((double) age_in_days / CompactPopulation.DAYS_PER_YEAR);
+            final int age_in_years = (int) ((double) age_in_days / PopulationLogic.DAYS_PER_YEAR);
             buckets[age_in_years]++;
         }
         return buckets;

@@ -35,8 +35,7 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * Created by victor on 08/07/14.
- *
+ * @author Victor Andrei (va9@st-andrews.ac.uk)
  * @author Tom Dalton (tsd4@st-andrews.ac.uk)
  */
 public final class OrganicPartnership implements IPartnership {
@@ -62,6 +61,9 @@ public final class OrganicPartnership implements IPartnership {
     private String location = "St Andrews";
 
     // Partnership instance helper variables
+    private boolean cohabiting;
+    private boolean married;
+    
     private OrganicTimeline timeline;
     private boolean on;
     private int numberOfChildrenToBeHadByCouple;
@@ -82,7 +84,13 @@ public final class OrganicPartnership implements IPartnership {
      * @return Returns an object array of size 2, where at index 0 can be found the newly constructed OrganicPartnership and at index 1 the partnerships child (if no child then value is null)
      */
     public static Object[] createOrganicPartnership(final int id, final OrganicPerson husband, final OrganicPerson wife, final int marriageDay, final int currentDay) {
-        OrganicPartnership partnership = new OrganicPartnership(id, husband, wife, marriageDay);
+        // Decide Family Type
+    	
+    	// Set up associated dates
+    	
+    	// Handle children appropriately
+    	
+    	OrganicPartnership partnership = new OrganicPartnership(id, husband, wife, marriageDay);
         if (adjustedNumberOfChildren == null) {
             setUpArray();
         }

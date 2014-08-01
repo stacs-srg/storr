@@ -16,7 +16,7 @@
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.distributions;
 
-import uk.ac.standrews.cs.digitising_scotland.population_model.model.in_memory.CompactPopulation;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.PopulationLogic;
 
 import java.util.Random;
 
@@ -58,6 +58,8 @@ public class DivorceAgeForFemaleDistribution implements Distribution<Integer> {
      */
     private static final int MINIMUM_AGE_IN_YEARS = 15;
     private static final int MAXIMUM_AGE_IN_YEARS = 69;
+
+    @SuppressWarnings("MagicNumber")
     private static final int[] AGE_DISTRIBUTION_WEIGHTS = new int[]{6, 166, 222, 190, 150, 114, 82, 24, 24, 15, 7};
 
     private final WeightedIntegerDistribution distribution;
@@ -69,7 +71,7 @@ public class DivorceAgeForFemaleDistribution implements Distribution<Integer> {
      */
     public DivorceAgeForFemaleDistribution(final Random random) {
         try {
-            distribution = new WeightedIntegerDistribution((int) (MINIMUM_AGE_IN_YEARS * CompactPopulation.DAYS_PER_YEAR), (int) (MAXIMUM_AGE_IN_YEARS * CompactPopulation.DAYS_PER_YEAR) - 1, AGE_DISTRIBUTION_WEIGHTS, random);
+            distribution = new WeightedIntegerDistribution((int) (MINIMUM_AGE_IN_YEARS * PopulationLogic.DAYS_PER_YEAR), (int) (MAXIMUM_AGE_IN_YEARS * PopulationLogic.DAYS_PER_YEAR) - 1, AGE_DISTRIBUTION_WEIGHTS, random);
         } catch (final NegativeWeightException e) {
             throw new RuntimeException("negative weight exception: " + e.getMessage());
         }
@@ -79,5 +81,4 @@ public class DivorceAgeForFemaleDistribution implements Distribution<Integer> {
     public Integer getSample() {
         return distribution.getSample();
     }
-
 }
