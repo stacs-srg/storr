@@ -179,7 +179,7 @@ public class HiscoDataFormatter {
         return sortedMap;
     }
 
-    private void buildInnerString(Entry<String, Map<String, Integer>> codings, StringBuilder innerStringBuilder, Entry<String, Integer> current, int number) {
+    private void buildInnerString(final Entry<String, Map<String, Integer>> codings, final StringBuilder innerStringBuilder, final Entry<String, Integer> current, final int number) {
 
         for (int i = 0; i < number; i++) {
             innerStringBuilder.append(codings.getKey() + "\t" + current.getKey() + "\n");
