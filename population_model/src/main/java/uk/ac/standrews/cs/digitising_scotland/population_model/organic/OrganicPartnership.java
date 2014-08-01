@@ -86,6 +86,7 @@ public final class OrganicPartnership implements IPartnership {
     public static Object[] createOrganicPartnership(final int id, final OrganicPerson husband, final OrganicPerson wife, final int marriageDay, final int currentDay) {
         // Decide Family Type
     	
+    	
     	// Set up associated dates
     	
     	// Handle children appropriately

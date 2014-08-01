@@ -36,7 +36,8 @@ public class OrganicPerson implements IPerson {
 
     // Univeral person variables
     private static Random random = RandomFactory.getRandom();
-    private static final int MIN_DEATH_AGE_FOR_NO_MARRIAGE_EVENT = 20;
+    private static final int MIN_DEATH_AGE_FOR_NO_PARTNERSHIP_EVENT = 20;
+    private static final int COMING_OF_AGE = 15;
 
     // Universal person ditributions
     private static Distribution<Integer> uniformDistribution;
@@ -50,8 +51,11 @@ public class OrganicPerson implements IPerson {
     private static MaleFirstNameDistribution maleFirstNames;
     private static FemaleFirstNameDistribution femaleFirstNames;
     private static SurnameDistribution surnames;
+//  private static PartnershipCharacteristicDistribution partnershipCharacteristicDistribution = new PartnershipCharacteristicDistribution(random);
+//  private static MaleAgeAtCohabitationDistribution maleAgeAtCohabitationDistribution = new MaleAgeAtCohabitationDistribution(random);
     private static OccupationDistribution occupationDist;
     private static CauseOfDeathDistribution codDist;
+//  private static FemaleAgeAtCohabitationDistribution femaleAgeAtCohabitationDistribution = new FemaleAgeAtCohabitationDistribution(random);
     
     // Person instance required variables
     private int id;
@@ -160,9 +164,32 @@ public class OrganicPerson implements IPerson {
      * Populates timeline with events.
      */
     public void populateTimeline() {
-
+    	// Decide family type
+    	addEligibleToMarryEvent();
+//    	FamilyType partnershipCharacteristic = decideFuturePartnershipCharacteristics();
+//    	switch(partnershipCharacteristic) {
+//    	    case SINGLE:
+//    	    	addSingleComingOfAgeEvent();
+//    	    	break;
+//    	    case COHABITATION:
+//    	    	addEligibleToCohabitEvent();
+//    	    	break;
+//    	    case COHABITATION_THEN_MARRIAGE:
+//    	    	addEligableToCohabitThenMarryEvent();
+//    	    	break;
+//    	    case MARRIAGE:
+//    	    	addEligibleToMarryEvent();
+//    	    	break;
+//    	    default:
+//    	    	break;
+//    	}
+    	
+    	
+    	// hanlde family type
+    	
+    	
         // Add events to timeline
-        addEligibleToMarryEvent();
+//        addEligibleToMarryEvent();
 
     }
 
@@ -200,7 +227,59 @@ public class OrganicPerson implements IPerson {
             break;
         }
     }
+   /* 
+    private FamilyType decideFuturePartnershipCharacteristics() {
+    	return partnershipCharacteristicDistribution.getSample();
+    }
+    
+    private void addSingleComingOfAgeEvent() {
+    	timeline.addEvent((int) (COMING_OF_AGE * OrganicPopulation.getDaysPerYear()), new OrganicEvent(EventType.COMING_OF_AGE));
+    }
+    
+    private void addEligibleToCohabitEvent() {
+    	// Add ELIGIBLE_TO_COHABIT event
+        int date;
+        if (sex == 'M') {
+            // time in days to birth from 1/1/1600 + marriage age in days
+            do {
+                date = getBirthDay() + maleAgeAtCohabitationDistribution.getSample();
+            } while (date > getDeathDay() && getDeathAgeInDays() > MIN_DEATH_AGE_FOR_NO_PARTNERSHIP_EVENT * OrganicPopulation.getDaysPerYear());
 
+            timeline.addEvent(date, new OrganicEvent(EventType.ELIGIBLE_TO_COHABIT));
+
+        } else {
+            // time in days to birth from 1/1/1600 + marriage age in days
+            do {
+                date = getBirthDay() + femaleAgeAtCohabitationDistribution.getSample();
+            } while (date > getDeathDay() && getDeathAgeInDays() > MIN_DEATH_AGE_FOR_NO_PARTNERSHIP_EVENT * OrganicPopulation.getDaysPerYear());
+
+            timeline.addEvent(date, new OrganicEvent(EventType.ELIGIBLE_TO_COHABIT));
+
+        }
+    }
+    
+    private void addEligableToCohabitThenMarryEvent() {
+    	// Add ELIGIBLE_TO_COHABIT_THEN_MARRY event
+        int date;
+        if (sex == 'M') {
+            // time in days to birth from 1/1/1600 + marriage age in days
+            do {
+                date = getBirthDay() + maleAgeAtCohabitationDistribution.getSample();
+            } while (date > getDeathDay() && getDeathAgeInDays() > MIN_DEATH_AGE_FOR_NO_PARTNERSHIP_EVENT * OrganicPopulation.getDaysPerYear());
+
+            timeline.addEvent(date, new OrganicEvent(EventType.ELIGIBLE_TO_COHABIT_THEN_MARRY));
+
+        } else {
+            // time in days to birth from 1/1/1600 + marriage age in days
+            do {
+                date = getBirthDay() + femaleAgeAtCohabitationDistribution.getSample();
+            } while (date > getDeathDay() && getDeathAgeInDays() > MIN_DEATH_AGE_FOR_NO_PARTNERSHIP_EVENT * OrganicPopulation.getDaysPerYear());
+
+            timeline.addEvent(date, new OrganicEvent(EventType.ELIGIBLE_TO_COHABIT_THEN_MARRY));
+
+        }
+    }
+*/
     private void addEligibleToMarryEvent() {
         // Add ELIGIBLE_TO_MARRY event
         int date;
@@ -208,7 +287,7 @@ public class OrganicPerson implements IPerson {
             // time in days to birth from 1/1/1600 + marriage age in days
             do {
                 date = getBirthDay() + maleAgeAtMarriageDistribution.getSample();
-            } while (date > getDeathDay() && getDeathAgeInDays() > MIN_DEATH_AGE_FOR_NO_MARRIAGE_EVENT * OrganicPopulation.getDaysPerYear());
+            } while (date > getDeathDay() && getDeathAgeInDays() > MIN_DEATH_AGE_FOR_NO_PARTNERSHIP_EVENT * OrganicPopulation.getDaysPerYear());
 
             timeline.addEvent(date, new OrganicEvent(EventType.ELIGIBLE_TO_MARRY));
 
@@ -216,7 +295,7 @@ public class OrganicPerson implements IPerson {
             // time in days to birth from 1/1/1600 + marriage age in days
             do {
                 date = getBirthDay() + femaleAgeAtMarriageDistribution.getSample();
-            } while (date > getDeathDay() && getDeathAgeInDays() > MIN_DEATH_AGE_FOR_NO_MARRIAGE_EVENT * OrganicPopulation.getDaysPerYear());
+            } while (date > getDeathDay() && getDeathAgeInDays() > MIN_DEATH_AGE_FOR_NO_PARTNERSHIP_EVENT * OrganicPopulation.getDaysPerYear());
 
             timeline.addEvent(date, new OrganicEvent(EventType.ELIGIBLE_TO_MARRY));
 
