@@ -18,7 +18,7 @@ package uk.ac.standrews.cs.digitising_scotland.population_model.distributions;
 
 import java.util.Random;
 
-public class FamilyTypeDistribution implements Distribution<FamilyType> {
+public class PartnershipCharacteristicDistribution implements Distribution<FamilyType> {
     /*
      * from cohabitationandcohortanalyses_tcm77-366514
      * from http://www.ons.gov.uk/ons/rel/vsob1/marriages-in-england-and-wales--provisional-/2012/rtd-marriage-statistics-cohabitation-and-cohort-analyses.xls
@@ -31,7 +31,7 @@ public class FamilyTypeDistribution implements Distribution<FamilyType> {
      * Data for the year 2011
      * 
      * Type            per 1000 People
-     * Single               143
+     * Single               143 // In below distribution Lone parents are folded into single due to implementation
      * Lone Mother          74
      * Lone Father          12
      * Cohabitation         159     
@@ -39,7 +39,7 @@ public class FamilyTypeDistribution implements Distribution<FamilyType> {
      * Marriage             91
      */
 
-    private static final int[] TYPE_DISTRIBUTION_WEIGHTS = new int[]{143, 74, 12, 159, 520, 91};
+    private static final int[] TYPE_DISTRIBUTION_WEIGHTS = new int[]{229, 159, 520, 91};
 
     private final WeightedIntegerDistribution distribution;
 
@@ -48,9 +48,9 @@ public class FamilyTypeDistribution implements Distribution<FamilyType> {
      *
      * @param random the random number generator to be used
      */
-    public FamilyTypeDistribution(final Random random) {
+    public PartnershipCharacteristicDistribution(final Random random) {
         try {
-            distribution = new WeightedIntegerDistribution(0, 5, TYPE_DISTRIBUTION_WEIGHTS, random);
+            distribution = new WeightedIntegerDistribution(0, 3, TYPE_DISTRIBUTION_WEIGHTS, random);
         } catch (final NegativeWeightException e) {
             throw new RuntimeException("negative weight exception: " + e.getMessage());
         }
@@ -68,14 +68,10 @@ public class FamilyTypeDistribution implements Distribution<FamilyType> {
             case 0:
                 return FamilyType.SINGLE;
             case 1:
-                return FamilyType.LONE_MOTHER;
-            case 2:
-                return FamilyType.LONE_FATHER;
-            case 3:
             	return FamilyType.COHABITATION;
-            case 4:
+            case 2:
             	return FamilyType.COHABITATION_THEN_MARRIAGE;
-            case 5:
+            case 3:
             	return FamilyType.MARRIAGE;
             default:
                 throw new RuntimeException("unexpected sample value");
