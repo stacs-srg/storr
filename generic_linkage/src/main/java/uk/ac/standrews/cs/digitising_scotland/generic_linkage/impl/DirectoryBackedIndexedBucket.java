@@ -1,6 +1,7 @@
 package uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl;
 
 import org.json.JSONException;
+import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.BucketKind;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IBucketIndex;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IIndexedBucket;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXP;
@@ -20,7 +21,7 @@ import java.util.Set;
  * <p/>
  * Provides an index over the Records stored in the Bucket
  */
-public class IndexedBucket extends Bucket implements IIndexedBucket {
+public class DirectoryBackedIndexedBucket extends DirectoryBackedBucket implements IIndexedBucket {
 
     private Map<String, IBucketIndex> indexes = new HashMap<>();
 
@@ -34,7 +35,7 @@ public class IndexedBucket extends Bucket implements IIndexedBucket {
      * @param name      the name of the bucket (also used as directory name).
      * @param base_path the repository path in which the bucket is created.
      */
-    public IndexedBucket(final String name, final String base_path) throws IOException {
+    public DirectoryBackedIndexedBucket(final String name, final String base_path) throws IOException {
 
         super(name, base_path);
         initIndexes();
@@ -93,5 +94,10 @@ public class IndexedBucket extends Bucket implements IIndexedBucket {
     private Iterator<File> createFileIterator() {
 
         return FileIteratorFactory.createFileIterator(directory, true, false);
+    }
+
+    @Override
+    public BucketKind kind() {
+        return BucketKind.INDEXED;
     }
 }

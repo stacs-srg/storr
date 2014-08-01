@@ -1,9 +1,6 @@
 package uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl;
 
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IBucket;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IRepository;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IStore;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IStoreIndex;
+import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.*;
 
 import java.util.Iterator;
 
@@ -36,7 +33,7 @@ public class StoreIndex implements IStoreIndex {
 
                 IBucket bucket = bucket_iterator.next();
 
-                if( bucket.contains(id) ) {
+                if( ! bucket.kind().equals(BucketKind.INDIRECT ) && bucket.contains(id) ) {  // only look at primary storage
 
                     return bucket;
                 }

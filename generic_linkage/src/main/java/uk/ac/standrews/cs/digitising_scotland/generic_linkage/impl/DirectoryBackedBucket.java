@@ -2,10 +2,7 @@ package uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl;
 
 import org.json.JSONException;
 import org.json.JSONWriter;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IBucket;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXP;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXPInputStream;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXPOutputStream;
+import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.*;
 import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
 import uk.ac.standrews.cs.nds.persistence.PersistentObjectException;
 import uk.ac.standrews.cs.nds.rpc.stream.JSONReader;
@@ -20,7 +17,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Iterator;
 
-public class Bucket implements IBucket {
+public class DirectoryBackedBucket implements IBucket {
 
     private String base_path; // the name of the parent directory in which this bucket (itself a directory) is stored.
     private String name;     // the name of this bucket - used as the directory name
@@ -33,7 +30,7 @@ public class Bucket implements IBucket {
      * @param name      the name of the bucket (also used as directory name)
      * @param base_path the path of the parent directory
      */
-    public Bucket(final String name, final String base_path) throws IOException {
+    public DirectoryBackedBucket(final String name, final String base_path) throws IOException {
 
         this.name = name;
         this.base_path = base_path;
@@ -87,17 +84,6 @@ public class Bucket implements IBucket {
     }
 
     @Override
-    public ILXPInputStream getInputStream() {
-
-        return new BucketBackedInputStream();
-    }
-
-    @Override
-    public ILXPOutputStream getOutputStream() {
-        return new BucketBackedOutputStream(this);
-    }
-
-    @Override
     public String getName() {
         return this.name;
     }
@@ -108,8 +94,26 @@ public class Bucket implements IBucket {
         return Paths.get(filePath(id)).toFile().exists();
     }
 
-    private Iterator<File> getFileIterator() {
+    @Override
+    public BucketKind kind() {
+        return BucketKind.DIRECTORYBACKED;
+    }
+
+    protected Iterator<File> getFileIterator() {
         return FileIteratorFactory.createFileIterator(directory, true, false);
+    }
+
+    // Stream operations
+
+    @Override
+    public ILXPInputStream getInputStream() {
+
+        return new BucketBackedInputStream();
+    }
+
+    @Override
+    public ILXPOutputStream getOutputStream() {
+        return new BucketBackedOutputStream(this);
     }
 
     private class BucketBackedInputStream implements ILXPInputStream {

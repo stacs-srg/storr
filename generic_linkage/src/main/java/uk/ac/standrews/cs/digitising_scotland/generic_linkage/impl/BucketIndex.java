@@ -24,7 +24,7 @@ import static uk.ac.standrews.cs.digitising_scotland.util.FileManipulation.FILE_
 public class BucketIndex implements IBucketIndex {
 
     private final Path dir;
-    private final IndexedBucket indexed_bucket;
+    private final DirectoryBackedIndexedBucket indexed_bucket;
     private final String label;
     private Map<String, List<Integer>> map = null; // a map of values to the record with fields with those values.
 
@@ -37,7 +37,7 @@ public class BucketIndex implements IBucketIndex {
      * @param dir            - the dir holding the index
      * @param indexed_bucket - the bucket being indexed
      */
-    public BucketIndex(final String label, final Path dir, final IndexedBucket indexed_bucket) {
+    public BucketIndex(final String label, final Path dir, final DirectoryBackedIndexedBucket indexed_bucket) {
 
         this.label = label; // the label being indexed
         this.dir = dir; // the path to the dir being used to hold the index
