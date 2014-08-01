@@ -51,11 +51,11 @@ public class OrganicPerson implements IPerson {
     private static MaleFirstNameDistribution maleFirstNames;
     private static FemaleFirstNameDistribution femaleFirstNames;
     private static SurnameDistribution surnames;
-//  private static PartnershipCharacteristicDistribution partnershipCharacteristicDistribution = new PartnershipCharacteristicDistribution(random);
-//  private static MaleAgeAtCohabitationDistribution maleAgeAtCohabitationDistribution = new MaleAgeAtCohabitationDistribution(random);
+    private static PartnershipCharacteristicDistribution partnershipCharacteristicDistribution = new PartnershipCharacteristicDistribution(random);
+  	private static MaleAgeAtCohabitationDistribution maleAgeAtCohabitationDistribution = new MaleAgeAtCohabitationDistribution(random);
     private static OccupationDistribution occupationDist;
     private static CauseOfDeathDistribution codDist;
-//  private static FemaleAgeAtCohabitationDistribution femaleAgeAtCohabitationDistribution = new FemaleAgeAtCohabitationDistribution(random);
+    private static FemaleAgeAtCohabitationDistribution femaleAgeAtCohabitationDistribution = new FemaleAgeAtCohabitationDistribution(random);
     
     // Person instance required variables
     private int id;
