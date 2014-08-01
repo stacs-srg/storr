@@ -50,11 +50,15 @@ public class OrganicPerson implements IPerson {
     private static MaleFirstNameDistribution maleFirstNames;
     private static FemaleFirstNameDistribution femaleFirstNames;
     private static SurnameDistribution surnames;
-
+    private static OccupationDistribution occupationDist;
+    private static CauseOfDeathDistribution codDist;
+    
     // Person instance required variables
     private int id;
     private String firstName;
     private String lastName;
+    private String occupation;
+    private String causeOfDeath;
     private char sex;
     private ArrayList<Integer> partnerships = new ArrayList<Integer>();
     private int parentPartnershipId;
@@ -64,6 +68,24 @@ public class OrganicPerson implements IPerson {
     private OrganicPopulation population;
     private boolean seedPerson;
 
+    /**
+     * Distribution initialization 
+     */
+    public static void initializeDistributions () {
+    	try{
+            maleFirstNames = new MaleFirstNameDistribution(random);
+            femaleFirstNames = new FemaleFirstNameDistribution(random);
+            surnames = new SurnameDistribution(random);
+            occupationDist = new OccupationDistribution(random);
+            codDist = new CauseOfDeathDistribution(random);
+
+        } catch (InconsistentWeightException e){
+            e.printStackTrace();
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+    
     /*
      * Constructor
      */
@@ -86,18 +108,14 @@ public class OrganicPerson implements IPerson {
         setSeedPerson(seedGeneration);
 
         try{
-            maleFirstNames = new MaleFirstNameDistribution(random);
-            femaleFirstNames = new FemaleFirstNameDistribution(random);
-            surnames = new SurnameDistribution(random);
-
-        } catch (InconsistentWeightException e){
-            e.printStackTrace();
-        } catch (IOException e){
-            e.printStackTrace();
+        	lastName = surnames.getSample();
+        	occupation = occupationDist.getSample();
+        	causeOfDeath = codDist.getSample();
         }
-
-        lastName = surnames.getSample();
-
+        catch(NullPointerException e){
+        	initializeDistributions();
+        }
+        
         if (sex_distribution.getSample()) {
             sex = 'M';
             firstName = maleFirstNames.getSample();

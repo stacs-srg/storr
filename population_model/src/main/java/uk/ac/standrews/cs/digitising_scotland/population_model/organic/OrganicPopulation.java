@@ -90,6 +90,8 @@ public class OrganicPopulation implements IPopulation {
      */
     public void makeSeed(final int size) {
 
+    	OrganicPerson.initializeDistributions();
+    	
         for (int i = 0; i < size; i++) {
             OrganicPerson person = new OrganicPerson(IDFactory.getNextID(), 0, -1, this, seedGeneration);
             livingPeople.add(person);
