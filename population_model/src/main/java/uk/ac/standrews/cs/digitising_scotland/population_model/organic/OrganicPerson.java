@@ -227,7 +227,7 @@ public class OrganicPerson implements IPerson {
             break;
         }
     }
-   /* 
+    
     private FamilyType decideFuturePartnershipCharacteristics() {
     	return partnershipCharacteristicDistribution.getSample();
     }
@@ -279,7 +279,7 @@ public class OrganicPerson implements IPerson {
 
         }
     }
-*/
+
     private void addEligibleToMarryEvent() {
         // Add ELIGIBLE_TO_MARRY event
         int date;

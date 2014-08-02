@@ -16,6 +16,7 @@
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.organic;
 
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.FamilyType;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IDFactory;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPartnership;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPerson;
@@ -133,7 +134,7 @@ public class OrganicPopulation implements IPopulation {
             int previousDate = getCurrentDay();
             setCurrentDay(getCurrentDay() + timeStepSizeInDays);
             checkAllPeopleForEventsUptoCurrentDayFrom(previousDate);
-            partnerTogetherPeopleInPartnershipQueues();
+            partnerTogetherPeopleInPartnershipQueue(FamilyType.MARRIAGE);
             checkAllPartnershipsForEventsUptoCurrentDayFrom(previousDate);
         }
 
@@ -234,17 +235,28 @@ public class OrganicPopulation implements IPopulation {
     }
     
     private void handleComingOfAgeEvent(final int peopleListIndex) {
-
+    	if (livingPeople.get(peopleListIndex).getSex() == 'M') {
+            maleSingleQueue.add(livingPeople.get(peopleListIndex));
+        } else {
+        	femaleSingleQueue.add(livingPeople.get(peopleListIndex));
+        }
     }
     
     private void handleEligableToCohabitEvent(final int peopleListIndex) {
-
+    	if (livingPeople.get(peopleListIndex).getSex() == 'M') {
+            maleCohabitationQueue.add(livingPeople.get(peopleListIndex));
+        } else {
+        	femaleCohabitationQueue.add(livingPeople.get(peopleListIndex));
+        }
     }
     
     private void handleEligableToCohabitThenMarriageEvent(final int peopleListIndex) {
-
+    	if (livingPeople.get(peopleListIndex).getSex() == 'M') {
+            maleCohabitationThenMarriageQueue.add(livingPeople.get(peopleListIndex));
+        } else {
+        	femaleCohabitationThenMarriageQueue.add(livingPeople.get(peopleListIndex));
+        }
     }
-    
 
     private void handleEligibleToMarryEvent(final int peopleListIndex) {
         if (livingPeople.get(peopleListIndex).getSex() == 'M') {
@@ -283,82 +295,142 @@ public class OrganicPopulation implements IPopulation {
             System.out.println("Population: " + OrganicPopulationLogger.getPopulation());
         }
     }
+    
+    private LinkedList<OrganicPerson> getMaleQueueOf(FamilyType type) {
+    	switch(type) {
+    	    case SINGLE:
+    	    	return maleSingleQueue;
+    	    case COHABITATION:
+    	    	return maleCohabitationQueue;
+    	    case COHABITATION_THEN_MARRIAGE:
+    	    	return maleCohabitationThenMarriageQueue;
+    	    case MARRIAGE:
+    	    	return maleMarriageQueue;
+    	    default:
+    	    	return null;
+    	}
+    }
+    
+    private LinkedList<OrganicPerson> getFemaleQueueOf(FamilyType type) {
+    	switch(type) {
+    	    case SINGLE:
+    	    	return femaleSingleQueue;
+    	    case COHABITATION:
+    	    	return femaleCohabitationQueue;
+    	    case COHABITATION_THEN_MARRIAGE:
+    	    	return femaleCohabitationThenMarriageQueue;
+    	    case MARRIAGE:
+    	    	return femaleMarriageQueue;
+    	    default:
+    	    	return null;
+    	}
+    }
 
-    private void partnerTogetherPeopleInPartnershipQueues() {
+    private void partnerTogetherPeopleInPartnershipQueue(FamilyType type) {
+    	LinkedList<OrganicPerson> maleQueue = getMaleQueueOf(type);
+    	LinkedList<OrganicPerson> femaleQueue = getFemaleQueueOf(type);
+    	
         // Sets the IDs for the first individuals in each marriage list to null
         Integer firstMaleId = (Integer) null;
         Integer firstFemaleId = (Integer) null;
         // While males exist to be married
-        while (!maleMarriageQueue.isEmpty()) {
+        while (!maleQueue.isEmpty()) {
             // Sets first male ID value to that of the first male
             if (firstMaleId == (Integer) null) {
-                firstMaleId = maleMarriageQueue.getFirst().getId();
+                firstMaleId = maleQueue.getFirst().getId();
                 // If the ID of the next male matches that of the first male then none of the remaining males are sutible to be married to any of the aviliable females
-            } else if (maleMarriageQueue.getFirst().getId() == firstMaleId) {
+            } else if (maleQueue.getFirst().getId() == firstMaleId) {
                 break;
             }
             // While there are female in the marriage queue
-            while (!femaleMarriageQueue.isEmpty()) {
+            while (!femaleQueue.isEmpty()) {
                 // Sets first female ID value to that the first female
                 if (firstFemaleId == null) {
-                    firstFemaleId = femaleMarriageQueue.getFirst().getId();
+                    firstFemaleId = femaleQueue.getFirst().getId();
                     // If the ID of the next female matches that of the first female then all females have been considered in relation to the
                     //  currently considered female and none have been sutiable.
-                } else if (femaleMarriageQueue.getFirst().getId() == firstFemaleId) {
+                } else if (femaleQueue.getFirst().getId() == firstFemaleId) {
                     // Move next male to head of queue for consideration
-                    maleMarriageQueue.add(maleMarriageQueue.removeFirst());
+                    maleQueue.add(maleQueue.removeFirst());
                     // If new lead male is same as first male then no man eligable to marry any female - thus break
-                    if(maleMarriageQueue.getFirst().getId() == firstMaleId) {
+                    if(maleQueue.getFirst().getId() == firstMaleId) {
                         break;
                     }
                 }
                 // If the two individuals meet the marriage conditions
-                if (eligableToMarry(maleMarriageQueue.getFirst(), femaleMarriageQueue.getFirst())) {
-                    // Then calculate marriage date
-                    // Finds first day BOTH were eligible to marry
-                    try {
-                        int firstDay = maleMarriageQueue.getFirst().getEvent(EventType.ELIGIBLE_TO_MARRY);
-                        if (femaleMarriageQueue.getFirst().getEvent(EventType.ELIGIBLE_TO_MARRY) > firstDay) {
-                            firstDay = femaleMarriageQueue.getFirst().getEvent(EventType.ELIGIBLE_TO_MARRY);
-                        }
-                    } catch (NoSuchEventException e) {
+                if (type == FamilyType.COHABITATION) {
+                	if (eligableToCohabit(maleQueue.getFirst(), femaleQueue.getFirst())) {
+                		cohabit(maleQueue.getFirst(), femaleQueue.getFirst(), getCurrentDay());
+                	} else {
+                        // Else if couple not elligable to marry move onto consider male with next female
+                        femaleQueue.add(femaleQueue.removeFirst());
                         break;
                     }
-
-                    // Marries individuals
-                    marry(maleMarriageQueue.getFirst(), femaleMarriageQueue.getFirst(), getCurrentDay());
-
-                    // Holds IDs of both partners
-                    int maleId = maleMarriageQueue.getFirst().getId();
-                    int femaleId = femaleMarriageQueue.getFirst().getId();
-
-                    // remove people from queues
-                    maleMarriageQueue.removeFirst();
-                    femaleMarriageQueue.removeFirst();
-
-                    // Resets queues
-                    if (maleId != firstMaleId) {
-                        while (maleMarriageQueue.getFirst().getId() != firstMaleId) {
-                            maleMarriageQueue.add(maleMarriageQueue.removeFirst());
-                        }
+                } else if (type == FamilyType.COHABITATION_THEN_MARRIAGE) {
+                	if (eligableToCohabitThenMarry(maleQueue.getFirst(), femaleQueue.getFirst())) {
+                		cohabitThenMarry(maleQueue.getFirst(), femaleQueue.getFirst(), getCurrentDay());
+                	} else {
+                        // Else if couple not elligable to marry move onto consider male with next female
+                        femaleQueue.add(femaleQueue.removeFirst());
+                        break;
                     }
-
-                    if (femaleId != firstFemaleId) {
-                        while (femaleMarriageQueue.getFirst().getId() != firstFemaleId) {
-                            femaleMarriageQueue.add(femaleMarriageQueue.removeFirst());
+                } else if (type == FamilyType.MARRIAGE) {
+                	if (eligableToMarry(maleQueue.getFirst(), femaleQueue.getFirst())) {
+                        try {
+                        	marry(maleQueue.getFirst(), femaleQueue.getFirst(), getCurrentDay());
+                        } catch (NoSuchEventException e) {
+                            break;
                         }
+                	} else {
+                        // Else if couple not elligable to marry move onto consider male with next female
+                        femaleQueue.add(femaleQueue.removeFirst());
+                        break;
                     }
-
-                    firstMaleId = (Integer) null;
-                    firstFemaleId = (Integer) null;
-                    break;
-                } else {
-                    // Else if couple not elligable to marry move onto consider male with next female
-                    femaleMarriageQueue.add(femaleMarriageQueue.removeFirst());
                 }
+                    
+                removeFromQueue(maleQueue, firstMaleId);
+                removeFromQueue(femaleQueue, firstFemaleId);
+                firstMaleId = (Integer) null;
+                firstFemaleId = (Integer) null;
+                break;
+                
             }
 
         }
+    }
+
+	private void removeFromQueue(LinkedList<OrganicPerson> queue, Integer firstId) {
+		int maleId = queue.getFirst().getId();
+		queue.removeFirst();
+		if (maleId != firstId) {
+		    while (queue.getFirst().getId() != firstId) {
+		        queue.add(queue.removeFirst());
+		    }
+		}
+	}
+	
+	// TODO this is just the same as marriage at the moment - needs some thought/statistics
+	private boolean eligableToCohabit(final OrganicPerson male, final OrganicPerson female) {
+        boolean resonableAgeDifference = PopulationLogic.partnerAgeDifferenceIsReasonable(DateManipulation.dateToDays(male.getBirthDate()), DateManipulation.dateToDays(female.getBirthDate()));
+        boolean notSiblings;
+        if (male.getParentsPartnership() == female.getParentsPartnership() && male.getParentsPartnership() != -1) {
+            notSiblings = false;
+        } else {
+            notSiblings = true;
+        }
+        return resonableAgeDifference && notSiblings;
+    }
+	
+	// TODO this is just the same as marriage at the moment - needs some thought/statistics
+	private boolean eligableToCohabitThenMarry(final OrganicPerson male, final OrganicPerson female) {
+        boolean resonableAgeDifference = PopulationLogic.partnerAgeDifferenceIsReasonable(DateManipulation.dateToDays(male.getBirthDate()), DateManipulation.dateToDays(female.getBirthDate()));
+        boolean notSiblings;
+        if (male.getParentsPartnership() == female.getParentsPartnership() && male.getParentsPartnership() != -1) {
+            notSiblings = false;
+        } else {
+            notSiblings = true;
+        }
+        return resonableAgeDifference && notSiblings;
     }
 
     private boolean eligableToMarry(final OrganicPerson male, final OrganicPerson female) {
@@ -379,8 +451,13 @@ public class OrganicPopulation implements IPopulation {
      * @param wife he female to be married.
      * @param days The day of the marriage in days since the 1/1/1600.
      */
-    private void marry(final OrganicPerson husband, final OrganicPerson wife, final int days) {
-        // Create partnership
+    private void marry(final OrganicPerson husband, final OrganicPerson wife, final int days) throws NoSuchEventException {
+    	int firstDay = husband.getEvent(EventType.ELIGIBLE_TO_MARRY);
+        if (wife.getEvent(EventType.ELIGIBLE_TO_MARRY) > firstDay) {
+            firstDay = wife.getEvent(EventType.ELIGIBLE_TO_MARRY);
+        }
+    	
+    	// Create partnership
         Object[] partnershipObjects = OrganicPartnership.createOrganicPartnership(IDFactory.getNextID(), husband, wife, days, getCurrentDay());
         partnerships.add((OrganicPartnership) partnershipObjects[0]);
         if (partnershipObjects.length > 1) {
@@ -392,6 +469,16 @@ public class OrganicPopulation implements IPopulation {
         husband.addPartnership(((OrganicPartnership) partnershipObjects[0]).getId());
         wife.addPartnership(((OrganicPartnership) partnershipObjects[0]).getId());
     }   
+    
+    // TODO 
+    private void cohabit(final OrganicPerson husband, final OrganicPerson wife, final int days) {
+    	
+    }
+    
+    // TODO 
+    private void cohabitThenMarry(final OrganicPerson husband, final OrganicPerson wife, final int days) {
+    	
+    }
 
     /*
      * Getters and setters
@@ -588,9 +675,7 @@ public class OrganicPopulation implements IPopulation {
         System.out.println("--------MAIN HERE---------");
         OrganicPopulation op = new OrganicPopulation("Test Population");
         System.out.println(op.getDescription());
-        System.out.println("1");
         op.makeSeed();
-        System.out.println("2");
         op.setCurrentDay(op.getEarliestDate() - 1);
         op.mainIteration(true);
 
