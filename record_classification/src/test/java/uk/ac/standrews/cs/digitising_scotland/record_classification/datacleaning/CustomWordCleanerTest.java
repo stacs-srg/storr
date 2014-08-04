@@ -3,6 +3,7 @@ package uk.ac.standrews.cs.digitising_scotland.record_classification.datacleanin
 import java.io.File;
 import java.io.IOException;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeFactory;
@@ -10,6 +11,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.exceptions.I
 
 public class CustomWordCleanerTest {
 
+    @Ignore("Need to implement proper checking on this")
     @Test
     public void test() throws IOException, InputFormatException {
 
