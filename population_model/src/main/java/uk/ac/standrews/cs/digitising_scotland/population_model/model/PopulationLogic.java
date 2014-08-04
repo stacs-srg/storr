@@ -150,10 +150,10 @@ public class PopulationLogic {
     }
 
     /**
-     * Checks whether the given divorce date is before the given death date.
+     * Checks whether the given date is before the given death date.
      * Dates are expressed as defined in {@link uk.ac.standrews.cs.digitising_scotland.util.DateManipulation#dateToDays(java.util.Date)}.
      *
-     * @param divorce_date the divorce date
+     * @param candidate_date the divorce date
      * @param death_date   the death date
      * @return true if the divorce date is after the marriage date
      */

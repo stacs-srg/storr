@@ -33,21 +33,14 @@ import java.util.Random;
  */
 public class CompactPopulationPartnerLinker {
 
-    /**
-     * The approximate average number of days per year.
-     */
-    public static final float DAYS_PER_YEAR = 365.25f;
-
-    /**
-     * The end year of the simulation.
-     */
-    public static final int END_YEAR = 2013;
-
+    private static final float DAYS_PER_YEAR = 365.25f;
+    private static final int END_YEAR = 2013;
 
     private static final int AGE_AT_FIRST_MARRIAGE_STD_DEV = 3;
     private static final int AGE_AT_FIRST_MARRIAGE_MEAN = 18;
     private static final int MARRIAGE_SEPARATION_MEAN = 7;
     private static final int MARRIAGE_SEPARATION_STD_DEV = 2;
+    private static final int MINIMUM_AGE_AT_MARRIAGE = 14;
     private static final int MAX_MARRIAGES = 3;
 
     @SuppressWarnings("MagicNumber")
@@ -125,8 +118,9 @@ public class CompactPopulationPartnerLinker {
         }
         return -1;
     }
+
     /**
-     * Linearly search up people starting at @param index looking for a partner who is sufficiently close in age to the first person and who is either unmarried or not married recently.
+     * Linearly search looking for a partner who is sufficiently close in age to the first person and who is either unmarried or not married recently.
      *
      * @return the index if a person is found and -1 otherwise.
      */
@@ -142,6 +136,7 @@ public class CompactPopulationPartnerLinker {
                 final CompactPerson candidate_partner = people[person_index];
 
                 final boolean opposite_sex = person.getSex() != candidate_partner.getSex();
+                final boolean old_enough_to_marry = oldEnoughToMarry(candidate_partner, marriage_date);
                 final boolean age_difference_is_reasonable = PopulationLogic.partnerAgeDifferenceIsReasonable(person.birth_date, candidate_partner.birth_date);
                 final boolean not_previously_partners = notPreviouslyPartners(person, first_partner_index, candidate_partner);
                 final boolean not_too_many_partnerships = notTooManyPartnerships(candidate_partner);
@@ -149,11 +144,17 @@ public class CompactPopulationPartnerLinker {
                 final boolean still_alive = marriage_date < candidate_partner.getDeathDate();
 
                 return opposite_sex &&
+                        old_enough_to_marry &&
                         age_difference_is_reasonable &&
                         not_previously_partners &&
                         not_too_many_partnerships &&
                         not_too_recent_partnership &&
                         still_alive ? ConditionResult.POSITIVE : ConditionResult.NEGATIVE_CONTINUE;
+            }
+
+            private boolean oldEnoughToMarry(final CompactPerson person, final int marriage_date) {
+
+                return DateManipulation.differenceInYears(person.getBirthDate(), marriage_date) > MINIMUM_AGE_AT_MARRIAGE;
             }
 
             private boolean notPreviouslyPartners(final CompactPerson person, final int index, final CompactPerson candidate_partner) {

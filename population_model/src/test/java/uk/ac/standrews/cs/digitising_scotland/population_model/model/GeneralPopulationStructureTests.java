@@ -17,7 +17,6 @@
 package uk.ac.standrews.cs.digitising_scotland.population_model.model;
 
 import org.junit.Test;
-
 import uk.ac.standrews.cs.digitising_scotland.population_model.organic.OrganicPerson;
 import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
 
@@ -274,14 +273,14 @@ public abstract class GeneralPopulationStructureTests {
                 final IPerson child = population.findPerson(child_id);
 //                System.out.println(child.getClass().getName());
                 if (child == null) {
-                	System.out.println("...");
+                    System.out.println("...");
                 }
                 if (child.getClass().getName() == OrganicPerson.class.getName()) {
-                	if (((OrganicPerson)child).isSeedPerson()) {
-                		assertEquals(child.getParentsPartnership(), -1);
-                	} else {
-                		assertEquals(child.getParentsPartnership(), partnership.getId());
-                	}
+                    if (((OrganicPerson) child).isSeedPerson()) {
+                        assertEquals(child.getParentsPartnership(), -1);
+                    } else {
+                        assertEquals(child.getParentsPartnership(), partnership.getId());
+                    }
                 }
             }
         }
@@ -407,7 +406,12 @@ public abstract class GeneralPopulationStructureTests {
                     final IPartnership partnership = population.findPartnership(partnership_id);
                     final Date marriage_date = partnership.getMarriageDate();
                     if (marriage_date != null) {
-                        assertTrue(DateManipulation.differenceInYears(birth_date, marriage_date) >= 0);
+                        int difference = DateManipulation.differenceInYears(birth_date, marriage_date);
+                        if (difference < 0) {
+                            System.out.println("birth: " + birth_date);
+                            System.out.println("marriage: " + marriage_date);
+                        }
+                        assertTrue(difference >= 0);
                     }
                 }
             }
