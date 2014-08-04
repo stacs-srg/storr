@@ -55,6 +55,15 @@ public enum EventType {
      * Indicates where a relationship is ended by death.
      */
     PARTNERSHIP_ENDED_BY_DEATH,
+    /**
+     * Indicatees the point of the end of a cohabitation on relationship timline.
+     */
+    END_OF_COHABITATION,
+    MALE_BEGINS_AFFAIR,
+    MALE_ENDS_AFFAIR,
+    FEMALE_BEGINS_AFFAIR,
+    FEMALE_ENDS_AFFAIR,
+    
      
     /*
      * Geographical Events

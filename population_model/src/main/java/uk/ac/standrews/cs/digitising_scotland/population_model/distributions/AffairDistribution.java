@@ -18,22 +18,22 @@ package uk.ac.standrews.cs.digitising_scotland.population_model.distributions;
 
 import java.util.Random;
 
-import uk.ac.standrews.cs.digitising_scotland.population_model.model.PopulationLogic;
+import uk.ac.standrews.cs.digitising_scotland.population_model.organic.OrganicPerson;
 
-public class TimeFromCohabitationToMarriageDistribution extends NormalDistribution {
-
-	public static final int mean = (int) (22 * PopulationLogic.DAYS_PER_YEAR) / 12;
+public class AffairDistribution extends NormalDistribution {
 	
-	public static TimeFromCohabitationToMarriageDistribution TimeFromCohabitationToMarriageDistributionFactory(Random random) {
+	public static AffairDistribution AffairDistributionFactory(OrganicPerson person, Random random) {
+		double midPoint = (person.getTimeline().getEndDate() - person.getTimeline().getStartDay())/2;
+    	double mean = person.getTimeline().getStartDay() + midPoint;	
 		try {
-			return new TimeFromCohabitationToMarriageDistribution(mean, mean/4, random);
+			return new AffairDistribution(mean, midPoint/4, random);
 		} catch (NegativeDeviationException e) {
 			e.printStackTrace();
 		}
 		return null;
 	}
 	
-	private TimeFromCohabitationToMarriageDistribution(double mean, double standard_deviation, Random random) throws NegativeDeviationException {
+	private AffairDistribution(double mean, double standard_deviation, Random random) throws NegativeDeviationException {
 		super(mean, standard_deviation, random);
 	}
 	

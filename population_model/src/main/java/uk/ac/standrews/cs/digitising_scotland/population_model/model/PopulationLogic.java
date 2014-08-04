@@ -55,7 +55,7 @@ public class PopulationLogic {
     private static final int INTER_CHILD_INTERVAL = 3;
     private static final int TIME_BEFORE_FIRST_CHILD = 1;
 
-    private static final int MAXIMUM_AGE_DIFFERENCE_IN_PARTNERSHIP = 15;
+    private static final int MAXIMUM_AGE_DIFFERENCE_IN_PARTNERSHIP = 100;
     private static final int MINIMUM_PERIOD_BETWEEN_PARTNERSHIPS = 7;
 
     /**
@@ -162,9 +162,9 @@ public class PopulationLogic {
      * @param death_date   the death date
      * @return true if the divorce date is after the marriage date
      */
-    public static boolean divorceBeforeDeath(final int divorce_date, final int death_date) {
+    public static boolean dateBeforeDeath(final int candidate_date, final int death_date) {
 
-        return DateManipulation.differenceInDays(divorce_date, death_date) > 0;
+        return DateManipulation.differenceInDays(candidate_date, death_date) > 0;
     }
 
     /**

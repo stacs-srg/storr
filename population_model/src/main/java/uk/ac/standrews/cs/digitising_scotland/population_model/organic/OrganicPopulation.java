@@ -26,9 +26,11 @@ import uk.ac.standrews.cs.digitising_scotland.util.ArrayManipulation;
 import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.PriorityQueue;
 
 /**
  * @author  Victor Andrei (va9@st-andrews.ac.uk)
@@ -36,8 +38,9 @@ import java.util.List;
  */
 public class OrganicPopulation implements IPopulation {
 
+	// 23:39
     // Universal population variables
-    private static final int DEFAULT_SEED_SIZE = 1000;
+    private static final int DEFAULT_SEED_SIZE = 100;
     private static final float DAYS_PER_YEAR = 365.25f;
     private static final int START_YEAR = 1780;
     private static final int END_YEAR = 2013;
@@ -68,6 +71,12 @@ public class OrganicPopulation implements IPopulation {
     
     private LinkedList<OrganicPerson> maleCohabitationThenMarriageQueue = new LinkedList<OrganicPerson>();
     private LinkedList<OrganicPerson> femaleCohabitationThenMarriageQueue = new LinkedList<OrganicPerson>();
+    
+    private LinkedList<OrganicPerson> maleAffairsQueue = new LinkedList<OrganicPerson>();
+    private LinkedList<OrganicPerson> femaleAffairsQueue = new LinkedList<OrganicPerson>();
+    
+    private PriorityQueue<AffairWaitingQueueMember> maleAffairsWaitingQueue = new PriorityQueue<AffairWaitingQueueMember>();
+    private PriorityQueue<AffairWaitingQueueMember> femaleAffairsWaitingQueue = new PriorityQueue<AffairWaitingQueueMember>();
     
 
     /*
@@ -286,6 +295,18 @@ public class OrganicPopulation implements IPopulation {
     }
 
     /*
+     * Queue methods
+     */
+    
+    public void addPersonToAffairsWaitingQueue(OrganicPerson person, int affairDay) {
+    	if (person.getSex() == 'M') {
+    		maleAffairsWaitingQueue.add(new AffairWaitingQueueMember(person, affairDay));
+    	} else {
+    		femaleAffairsWaitingQueue.add(new AffairWaitingQueueMember(person, affairDay));
+    	}
+    }
+    
+    /*
      * Helper methods
      */
 
@@ -293,6 +314,8 @@ public class OrganicPopulation implements IPopulation {
         if (getCurrentDay() % (int) getDaysPerYear() == 0) {
             System.out.println(EPOCH_YEAR + (int) (getCurrentDay() / getDaysPerYear()));
             System.out.println("Population: " + OrganicPopulationLogger.getPopulation());
+            System.out.println();
+//            OrganicPopulationLogger.printLogData();
         }
     }
     
@@ -448,7 +471,7 @@ public class OrganicPopulation implements IPopulation {
      * Marries up the given individuals.
      * 
      * @param husband The male to married.
-     * @param wife he female to be married.
+     * @param wife The female to be married.
      * @param days The day of the marriage in days since the 1/1/1600.
      */
     private void marry(final OrganicPerson husband, final OrganicPerson wife, final int days) throws NoSuchEventException {
@@ -458,7 +481,7 @@ public class OrganicPopulation implements IPopulation {
         }
     	
     	// Create partnership
-        Object[] partnershipObjects = OrganicPartnership.createOrganicPartnership(IDFactory.getNextID(), husband, wife, days, getCurrentDay());
+        Object[] partnershipObjects = OrganicPartnership.createOrganicPartnership(IDFactory.getNextID(), husband, wife, days, getCurrentDay(), FamilyType.MARRIAGE);
         partnerships.add((OrganicPartnership) partnershipObjects[0]);
         if (partnershipObjects.length > 1) {
             for (int i = 1; i < partnershipObjects.length; i++) {
@@ -632,6 +655,10 @@ public class OrganicPopulation implements IPopulation {
         return null;
     }
 
+    public OrganicPartnership findOrganicPartnership(final int id) {
+    	return (OrganicPartnership) findPartnership(id);
+    }
+    
     @Override
     public IPartnership findPartnership(final int id) {
 
@@ -688,6 +715,7 @@ public class OrganicPopulation implements IPopulation {
         }
         System.out.println("Left over children: " + count);
         System.out.println("Kids killed by early stop: " + OrganicPopulationLogger.getStopedHavingEarlyDeaths());
+        System.out.println(System.nanoTime());
 
     }
 
