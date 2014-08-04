@@ -21,7 +21,6 @@ import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.Neg
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.WeightedIntegerDistribution;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.PopulationLogic;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.RandomFactory;
-import uk.ac.standrews.cs.digitising_scotland.population_model.model.SearchCondition;
 import uk.ac.standrews.cs.digitising_scotland.util.ProgressIndicator;
 
 import java.util.ArrayList;
@@ -115,7 +114,7 @@ public class CompactPopulationChildLinker {
         final int husband_index = getHusbandIndex(partnership);
         final int wife_index = getWifeIndex(partnership);
 
-        final SearchCondition conditions = new SearchCondition() {
+        final SearchCondition child_compatible = new SearchCondition() {
 
             @Override
             public ConditionResult check(final int child_index) {
@@ -132,7 +131,7 @@ public class CompactPopulationChildLinker {
                 final boolean not_incomer = !child.isIncomer();
                 final boolean not_born_too_early = child.birth_date > earliest_birth_date;
                 final boolean not_born_too_late = child.birth_date < latest_birth_date;
-                final boolean does_not_have_parents = !child.hasParents();
+                final boolean does_not_have_parents = child.hasNoParents();
                 final boolean parents_have_sensible_ages = PopulationLogic.parentsHaveSensibleAgesAtChildBirth(father.birth_date, father.death_date, mother.birth_date, mother.death_date, child.birth_date);
                 final boolean child_not_married_to_existing_child = !marriedToAnyChildrenOf(child_index, partnership);
 
@@ -179,7 +178,7 @@ public class CompactPopulationChildLinker {
             }
         };
 
-        return findPerson(start_search_index, conditions);
+        return findPerson(start_search_index, child_compatible);
     }
 
     private int findPerson(final int start_index, final SearchCondition condition) {

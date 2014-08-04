@@ -122,9 +122,9 @@ public class CompactPerson {
         bits = BitManipulation.writeBit(bits, marked, POSITION_OF_MARKED_BIT);
     }
 
-    public boolean hasParents() {
+    public boolean hasNoParents() {
 
-        return BitManipulation.readBit(bits, POSITION_OF_PARENTS_BIT);
+        return !BitManipulation.readBit(bits, POSITION_OF_PARENTS_BIT);
     }
 
     /**

@@ -19,47 +19,62 @@ package uk.ac.standrews.cs.digitising_scotland.population_model.model;
 import uk.ac.standrews.cs.digitising_scotland.util.ProgressIndicator;
 
 /**
- * Created by graham on 11/06/2014.
+ * Converts a population from one representation to another.
+ *
+ * @author Graham Kirby (graham.kirby@st-andrews.ac.uk)
  */
 public class PopulationConverter implements AutoCloseable {
 
     private final IPopulation population;
-    private final IPopulationWriter writer;
+    private final IPopulationWriter population_writer;
 
-    private final ProgressIndicator progress_indicator;
+    private ProgressIndicator progress_indicator;
 
-    public PopulationConverter(final IPopulation population, final IPopulationWriter writer, final ProgressIndicator progress_indicator) throws Exception {
+    /**
+     * Initialises the population converter.
+     *
+     * @param population        the population to be converted
+     * @param population_writer the population writer to be used to create the new representation
+     */
+    public PopulationConverter(final IPopulation population, final IPopulationWriter population_writer) {
 
         this.population = population;
-        this.writer = writer;
+        this.population_writer = population_writer;
+        progress_indicator = null;
+    }
+
+    /**
+     * Initialises the population converter.
+     *
+     * @param population         the population to be converted
+     * @param population_writer  the population writer to be used to create the new representation
+     * @param progress_indicator a progress indicator
+     * @throws Exception if the progress indicator cannot be initialised
+     */
+    public PopulationConverter(final IPopulation population, final IPopulationWriter population_writer, final ProgressIndicator progress_indicator) throws Exception {
+
+        this(population, population_writer);
+
         this.progress_indicator = progress_indicator;
-
         initialiseProgressIndicator();
-
-        // Copy the set of people before outputting them, to avoid problems with overlapping iterations of the population.
-
-//        Collection<IPerson> people = new HashSet<>();
-//        for (IPerson p : population.getPeople()) {
-//            people.add(p);
-//        }
     }
 
-    public PopulationConverter(final IPopulation population, final IPopulationWriter writer) throws Exception {
-
-        this(population, writer, null);
-    }
-
+    /**
+     * Creates a new population representation by passing each person and partnership in the population to the population writer.
+     *
+     * @throws Exception if a person or partnership cannot be converted
+     */
     public void convert() throws Exception {
 
-        for (IPerson person : population.getPeople()) {
+        for (final IPerson person : population.getPeople()) {
 
-            writer.recordPerson(person);
+            population_writer.recordPerson(person);
             progressStep();
         }
 
-        for (IPartnership partnership : population.getPartnerships()) {
+        for (final IPartnership partnership : population.getPartnerships()) {
 
-            writer.recordPartnership(partnership);
+            population_writer.recordPartnership(partnership);
             progressStep();
         }
     }
@@ -67,7 +82,7 @@ public class PopulationConverter implements AutoCloseable {
     @Override
     public void close() throws Exception {
 
-        writer.close();
+        population_writer.close();
     }
 
     private void initialiseProgressIndicator() throws Exception {

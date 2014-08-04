@@ -268,6 +268,9 @@ public abstract class GeneralPopulationStructureTests {
 
             for (final int child_id : child_ids) {
 
+                // TODO anything specific to OrganicPopulation should be in a subclass.
+                // TODO why is this logic necessary anyway - why would children be seed people?
+
                 final IPerson child = population.findPerson(child_id);
 //                System.out.println(child.getClass().getName());
                 if (child == null) {

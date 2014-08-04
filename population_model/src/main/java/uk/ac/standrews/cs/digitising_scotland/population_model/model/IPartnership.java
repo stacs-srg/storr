@@ -47,6 +47,7 @@ public interface IPartnership extends Comparable<IPartnership> {
     /**
      * Gets the identifier of the partner of the person with the given identifier, or -1 if neither member
      * of this partnership has the given identifier.
+     * @param id the identifier
      * @return the identifier of the partner of the person with the given identifier
      */
     int getPartnerOf(int id);

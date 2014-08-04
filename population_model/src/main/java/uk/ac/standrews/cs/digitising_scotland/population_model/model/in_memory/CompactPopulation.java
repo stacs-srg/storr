@@ -54,6 +54,10 @@ public class CompactPopulation {
 
     // TODO provide a way to configure the parameters dynamically
 
+    private static final int DAYS_IN_DECEMBER = 31;
+    private static final int DECEMBER_INDEX = 11;
+    private static final double PROBABILITY_OF_BEING_INCOMER = 0.125;
+
     private static final int NUMBER_OF_STAGES_IN_POPULATION_GENERATION = 5;
 
     private final int earliest_date;
@@ -108,7 +112,7 @@ public class CompactPopulation {
      */
     public CompactPopulation(final int population_size, final ProgressIndicator progress_indicator) throws NegativeDeviationException, NegativeWeightException {
 
-        this(population_size, DateManipulation.dateToDays(PopulationLogic.START_YEAR, 0, 1), DateManipulation.dateToDays(PopulationLogic.END_YEAR, PopulationLogic.DECEMBER_INDEX, PopulationLogic.DAYS_IN_DECEMBER), progress_indicator); // 1st January of start year to 31st December of end year.
+        this(population_size, DateManipulation.dateToDays(PopulationLogic.START_YEAR, 0, 1), DateManipulation.dateToDays(PopulationLogic.END_YEAR, DECEMBER_INDEX, DAYS_IN_DECEMBER), progress_indicator); // 1st January of start year to 31st December of end year.
     }
 
     /**
@@ -156,6 +160,7 @@ public class CompactPopulation {
 
     /**
      * Finds the person with the specified id, or null if it cannot be found.
+     *
      * @param id the id
      * @return the corresponding person
      */
@@ -179,6 +184,7 @@ public class CompactPopulation {
 
     /**
      * Finds the partnership with the specified id, or null if it cannot be found.
+     *
      * @param id the id
      * @return the corresponding partnership
      */
@@ -199,6 +205,7 @@ public class CompactPopulation {
 
     /**
      * Returns the number of people in the population.
+     *
      * @return the number of people in the population
      */
     public int getNumberOfPeople() {
@@ -207,6 +214,7 @@ public class CompactPopulation {
 
     /**
      * Returns the number of partnerships in the population.
+     *
      * @return the number of partnerships in the population
      */
     public int getNumberOfPartnerships() {
@@ -226,7 +234,7 @@ public class CompactPopulation {
         date_of_birth_distribution = new UniformIntegerDistribution(earliest_date, latest_date, random);
         sex_distribution = new UniformSexDistribution(random);
         age_at_death_distribution = new AgeAtDeathDistribution(random);
-        incomers_distribution = new IncomersDistribution(PopulationLogic.PROBABILITY_OF_BEING_INCOMER, random);
+        incomers_distribution = new IncomersDistribution(PROBABILITY_OF_BEING_INCOMER, random);
     }
 
     /**

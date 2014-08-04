@@ -21,7 +21,9 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Created by graham on 04/07/2014.
+ * Abstract partnership implementation.
+ *
+ * @author Graham Kirby (graham.kirby@st-andrews.ac.uk)
  */
 public abstract class AbstractPartnership implements IPartnership {
 
