@@ -166,6 +166,13 @@ public abstract class AbstractDataCleaner {
         }
     }
 
+    public void setTokenLimit(final int tokenLimit) {
+
+        AbstractDataCleaner.tokenLimit = tokenLimit;
+        System.out.println("TOKENLIMIT set to " + tokenLimit);
+
+    }
+
     /**
      * Gets the word Multiset contains the word counts.
      * @return  Multiset<String> word multiset
