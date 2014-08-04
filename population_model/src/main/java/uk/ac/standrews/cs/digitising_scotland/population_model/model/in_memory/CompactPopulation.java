@@ -42,7 +42,7 @@ import java.util.Set;
 
 /**
  * Model of synthetic population.
- * <p/>
+ *
  * This class is not thread-safe.
  *
  * @author Alan Dearle (alan.dearle@st-andrews.ac.uk)
@@ -50,7 +50,7 @@ import java.util.Set;
  * @author Victor Andrei (va9@st-andrews.ac.uk)
  */
 @NotThreadSafe
-public class CompactPopulation {
+class CompactPopulation {
 
     // TODO provide a way to configure the parameters dynamically
 
@@ -84,7 +84,7 @@ public class CompactPopulation {
      * @throws NegativeWeightException    if one of the underlying distributions cannot be initialised
      * @throws NegativeDeviationException if one of the underlying distributions cannot be initialised
      */
-    public CompactPopulation(final int population_size, final int earliest_date, final int latest_date, final ProgressIndicator progress_indicator) throws NegativeWeightException, NegativeDeviationException {
+    protected CompactPopulation(final int population_size, final int earliest_date, final int latest_date, final ProgressIndicator progress_indicator) throws NegativeWeightException, NegativeDeviationException {
 
         this.earliest_date = earliest_date;
         this.latest_date = latest_date;
@@ -110,7 +110,7 @@ public class CompactPopulation {
      * @throws NegativeWeightException    if one of the underlying distributions cannot be initialised
      * @throws NegativeDeviationException if one of the underlying distributions cannot be initialised
      */
-    public CompactPopulation(final int population_size, final ProgressIndicator progress_indicator) throws NegativeDeviationException, NegativeWeightException {
+    protected CompactPopulation(final int population_size, final ProgressIndicator progress_indicator) throws NegativeDeviationException, NegativeWeightException {
 
         this(population_size, DateManipulation.dateToDays(PopulationLogic.START_YEAR, 0, 1), DateManipulation.dateToDays(PopulationLogic.END_YEAR, DECEMBER_INDEX, DAYS_IN_DECEMBER), progress_indicator); // 1st January of start year to 31st December of end year.
     }
@@ -122,7 +122,7 @@ public class CompactPopulation {
      * @throws NegativeWeightException    if one of the underlying distributions cannot be initialised
      * @throws NegativeDeviationException if one of the underlying distributions cannot be initialised
      */
-    public CompactPopulation(final int population_size) throws NegativeDeviationException, NegativeWeightException {
+    protected CompactPopulation(final int population_size) throws NegativeDeviationException, NegativeWeightException {
 
         this(population_size, null);
     }
@@ -142,7 +142,7 @@ public class CompactPopulation {
      *
      * @return the number of people in the population
      */
-    public int size() {
+    protected int size() {
 
         return people.length;
     }
@@ -153,7 +153,7 @@ public class CompactPopulation {
      * @param index the index
      * @return the person at that position in the population
      */
-    public CompactPerson getPerson(final int index) {
+    protected CompactPerson getPerson(final int index) {
 
         return people[index];
     }
@@ -164,7 +164,7 @@ public class CompactPopulation {
      * @param id the id
      * @return the corresponding person
      */
-    public synchronized CompactPerson findPerson(final int id) {
+    protected synchronized CompactPerson findPerson(final int id) {
 
         // Avoid initialising list until it's actually needed.
         if (people_as_list == null) {
@@ -188,7 +188,7 @@ public class CompactPopulation {
      * @param id the id
      * @return the corresponding partnership
      */
-    public CompactPartnership findPartnership(final int id) {
+    protected CompactPartnership findPartnership(final int id) {
 
         for (final CompactPerson person : people) {
             final List<CompactPartnership> partnerships = person.getPartnerships();
@@ -200,6 +200,7 @@ public class CompactPopulation {
                 }
             }
         }
+
         return null;
     }
 
@@ -208,7 +209,7 @@ public class CompactPopulation {
      *
      * @return the number of people in the population
      */
-    public int getNumberOfPeople() {
+    protected int getNumberOfPeople() {
         return people.length;
     }
 
@@ -217,7 +218,7 @@ public class CompactPopulation {
      *
      * @return the number of partnerships in the population
      */
-    public int getNumberOfPartnerships() {
+    protected int getNumberOfPartnerships() {
         return number_of_partnerships;
     }
 

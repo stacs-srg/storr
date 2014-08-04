@@ -16,9 +16,8 @@
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.analytic;
 
-import uk.ac.standrews.cs.digitising_scotland.population_model.model.in_memory.CompactPopulation;
-import uk.ac.standrews.cs.digitising_scotland.population_model.model.in_memory.CompactPopulationAdapter;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPopulation;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.in_memory.CompactPopulationAdapter;
 
 /**
  * @author Alan Dearle (alan.dearle@st-andrews.ac.uk)
@@ -31,7 +30,7 @@ public class PopulationAnalyticsTestManual {
     public static void main(final String[] args) throws Exception {
 
         final int population_size = 1000;
-        final IPopulation population = new CompactPopulationAdapter(new CompactPopulation(population_size));
+        final IPopulation population = new CompactPopulationAdapter(population_size);
 
         new PopulationAnalytics(population).printAllAnalytics();
         new MarriageAnalytics(population).printAllAnalytics();

@@ -30,27 +30,28 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by graham on 01/07/2014.
+ * Adapter class to convert a compact partnership representation to a full partnership.
+ *
+ * @author Graham Kirby (graham.kirby@st-andrews.ac.uk)
  */
 @NotThreadSafe
-public class CompactPartnershipAdapter {
+ class CompactPartnershipAdapter {
 
-    public static final String ADDRESS_DISTRIBUTION_KEY = "address_distribution_filename";
+    private static final String ADDRESS_DISTRIBUTION_KEY = "address_distribution_filename";
 
     private final FileBasedEnumeratedDistribution address_distribution;
 
-    public IPartnership convertToFullPartnership(final CompactPartnership partnership, final CompactPopulation population) {
-
-        return partnership != null ? new FullPartnership(partnership, population) : null;
-    }
-
-    public CompactPartnershipAdapter() throws IOException, InconsistentWeightException {
+    protected CompactPartnershipAdapter() throws IOException, InconsistentWeightException {
 
         final String address_distribution_file_name = PopulationProperties.getProperties().getProperty(ADDRESS_DISTRIBUTION_KEY);
 
         address_distribution = new FileBasedEnumeratedDistribution(address_distribution_file_name, RandomFactory.getRandom());
     }
 
+    protected IPartnership convertToFullPartnership(final CompactPartnership partnership, final CompactPopulation population) {
+
+        return partnership != null ? new FullPartnership(partnership, population) : null;
+    }
 
     private class FullPartnership extends AbstractPartnership {
 
@@ -73,7 +74,7 @@ public class CompactPartnershipAdapter {
 
             final int marriage_date_in_days = compact_partnership.getMarriageDate();
             if (marriage_date_in_days > 0) {
-                marriage_date = DateManipulation.daysToDate(marriage_date_in_days) ;
+                marriage_date = DateManipulation.daysToDate(marriage_date_in_days);
                 marriage_place = address_distribution.getSample();
             }
 

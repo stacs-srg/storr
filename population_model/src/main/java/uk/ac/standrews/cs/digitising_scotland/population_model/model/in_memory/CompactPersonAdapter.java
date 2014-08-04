@@ -37,11 +37,11 @@ import java.util.Random;
  * Created by graham on 01/07/2014.
  */
 @NotThreadSafe
-public class CompactPersonAdapter {
+ class CompactPersonAdapter {
 
-    public static final String OCCUPATION_DISTRIBUTION_KEY = "occupation_distribution_filename";
-    public static final String CAUSE_OF_DEATH_DISTRIBUTION_KEY = "cause_of_death_distribution_filename";
-    public static final String ADDRESS_DISTRIBUTION_KEY = "address_distribution_filename";
+    private static final String OCCUPATION_DISTRIBUTION_KEY = "occupation_distribution_filename";
+    private static final String CAUSE_OF_DEATH_DISTRIBUTION_KEY = "cause_of_death_distribution_filename";
+    private static final String ADDRESS_DISTRIBUTION_KEY = "address_distribution_filename";
 
     private final MaleFirstNameDistribution male_first_name_distribution;
     private final FemaleFirstNameDistribution female_first_name_distribution;
@@ -53,7 +53,7 @@ public class CompactPersonAdapter {
     private String current_surname;
 
     @SuppressWarnings("FeatureEnvy")
-    public CompactPersonAdapter() throws IOException, InconsistentWeightException {
+    protected CompactPersonAdapter() throws IOException, InconsistentWeightException {
 
         final String occupation_distribution_file_name = PopulationProperties.getProperties().getProperty(OCCUPATION_DISTRIBUTION_KEY);
         final String cause_of_death_distribution_file_name = PopulationProperties.getProperties().getProperty(CAUSE_OF_DEATH_DISTRIBUTION_KEY);
@@ -71,7 +71,7 @@ public class CompactPersonAdapter {
         generateNextSurname();
     }
 
-    public void generateNextSurname() {
+    protected void generateNextSurname() {
 
         current_surname = surname_distribution.getSample();
     }

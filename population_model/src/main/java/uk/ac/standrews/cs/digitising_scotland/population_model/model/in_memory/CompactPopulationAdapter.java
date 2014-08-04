@@ -17,9 +17,12 @@
 package uk.ac.standrews.cs.digitising_scotland.population_model.model.in_memory;
 
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.InconsistentWeightException;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.NegativeDeviationException;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.NegativeWeightException;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPartnership;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPerson;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPopulation;
+import uk.ac.standrews.cs.digitising_scotland.util.ProgressIndicator;
 
 import javax.annotation.concurrent.NotThreadSafe;
 import java.io.IOException;
@@ -50,7 +53,17 @@ public class CompactPopulationAdapter implements IPopulation {
 
     private String description;
 
-    public CompactPopulationAdapter(final CompactPopulation population) throws IOException, InconsistentWeightException {
+    public CompactPopulationAdapter(final int population_size) throws IOException, InconsistentWeightException, NegativeDeviationException, NegativeWeightException {
+
+        this(new CompactPopulation(population_size));
+    }
+
+    public CompactPopulationAdapter(final int population_size, final ProgressIndicator progress_indicator) throws IOException, InconsistentWeightException, NegativeDeviationException, NegativeWeightException {
+
+        this(new CompactPopulation(population_size, progress_indicator));
+    }
+
+    protected CompactPopulationAdapter(final CompactPopulation population) throws IOException, InconsistentWeightException {
 
         this.population = population;
         people = population.getPeopleArray();

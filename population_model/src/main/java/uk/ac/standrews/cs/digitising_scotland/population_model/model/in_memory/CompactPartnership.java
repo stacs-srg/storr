@@ -29,7 +29,7 @@ import java.util.List;
  * @author Ilia Shumailov (is33@st-andrews.ac.uk)
  * @author Victor Andrei (va9@st-andrews.ac.uk)
  */
-public class CompactPartnership implements Comparable<CompactPartnership> {
+ class CompactPartnership implements Comparable<CompactPartnership> {
 
     private final int id;
 
@@ -42,11 +42,11 @@ public class CompactPartnership implements Comparable<CompactPartnership> {
     /**
      * Creates a partnership with a given marriage date.
      *
-     * @param partner1_index the first partner's index in the People array
-     * @param partner2_index the second partner's index in the People array
+     * @param partner1_index the index of the first partner
+     * @param partner2_index the index of the second partner
      * @param marriage_date  the marriage date
      */
-    public CompactPartnership(final int partner1_index, final int partner2_index, final int marriage_date) {
+    protected CompactPartnership(final int partner1_index, final int partner2_index, final int marriage_date) {
 
         this.partner1_index = partner1_index;
         this.partner2_index = partner2_index;
@@ -59,11 +59,13 @@ public class CompactPartnership implements Comparable<CompactPartnership> {
     /**
      * Creates a new partnership with the given people, and links each person to the partnership.
      *
-     * @param partner1      the index of first partner
-     * @param partner2      the index of second partner
-     * @param marriage_date the marriage date
+     * @param partner1       the first partner
+     * @param partner1_index the index of the first partner
+     * @param partner2       the second partner
+     * @param partner2_index the index of the second partner
+     * @param marriage_date  the marriage date
      */
-    public CompactPartnership(final CompactPerson partner1, final int partner1_index, final CompactPerson partner2, final int partner2_index, final int marriage_date) {
+    protected CompactPartnership(final CompactPerson partner1, final int partner1_index, final CompactPerson partner2, final int partner2_index, final int marriage_date) {
 
         this(partner1_index, partner2_index, marriage_date);
 
@@ -76,7 +78,7 @@ public class CompactPartnership implements Comparable<CompactPartnership> {
      *
      * @return the id of this object
      */
-    public int getId() {
+    protected int getId() {
 
         return id;
     }
@@ -87,7 +89,7 @@ public class CompactPartnership implements Comparable<CompactPartnership> {
      * @param p the index of one person in this partnership
      * @return the partner index of the given person, or -1 if the person is not in the partnership
      */
-    public int getPartner(final int p) {
+    protected int getPartner(final int p) {
 
         return partner1_index == p ? partner2_index : partner2_index == p ? partner1_index : -1;
     }
@@ -97,7 +99,7 @@ public class CompactPartnership implements Comparable<CompactPartnership> {
      *
      * @return the first member of this partnership
      */
-    public int getPartner1() {
+    protected int getPartner1() {
 
         return partner1_index;
     }
@@ -107,7 +109,7 @@ public class CompactPartnership implements Comparable<CompactPartnership> {
      *
      * @return the second member of this partnership
      */
-    public int getPartner2() {
+    protected int getPartner2() {
 
         return partner2_index;
     }
@@ -147,7 +149,7 @@ public class CompactPartnership implements Comparable<CompactPartnership> {
      *
      * @return the date.
      */
-    public int getMarriageDate() {
+    protected int getMarriageDate() {
 
         return marriage_date;
     }
@@ -157,7 +159,7 @@ public class CompactPartnership implements Comparable<CompactPartnership> {
      *
      * @return the child_ids.
      */
-    public List<Integer> getChildren() {
+    protected List<Integer> getChildren() {
 
         return children;
     }
@@ -167,16 +169,24 @@ public class CompactPartnership implements Comparable<CompactPartnership> {
      *
      * @param children to associate with the partnership.
      */
-    public void setChildren(final List<Integer> children) {
+    protected void setChildren(final List<Integer> children) {
 
         this.children = children;
     }
 
-    public boolean isMarked() {
+    /**
+     * Tests whether this partnership has been marked.
+     * @return true if this partnership has been marked
+     */
+    protected boolean isMarked() {
         return marked;
     }
 
-    public void setMarked(final boolean marked) {
+    /**
+     * Sets the marked status of this partnership.
+     * @param marked the new marked status
+     */
+    protected void setMarked(final boolean marked) {
         this.marked = marked;
     }
 }
