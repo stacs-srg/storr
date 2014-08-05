@@ -16,30 +16,10 @@
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.distributions;
 
-import java.util.Random;
-
-import uk.ac.standrews.cs.digitising_scotland.population_model.model.PopulationLogic;
-
-public class TimeFromCohabitationToMarriageDistribution extends NormalDistribution {
-
-	public static final int mean = (int) (22 * PopulationLogic.DAYS_PER_YEAR) / 12;
-	
-	public static TimeFromCohabitationToMarriageDistribution TimeFromCohabitationToMarriageDistributionFactory(Random random) {
-		try {
-			return new TimeFromCohabitationToMarriageDistribution(mean, mean/4, random);
-		} catch (NegativeDeviationException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-	
-	private TimeFromCohabitationToMarriageDistribution(double mean, double standard_deviation, Random random) throws NegativeDeviationException {
-		super(mean, standard_deviation, random);
-	}
-	
-	public int getIntSample() {
-		int temp = super.getSample().intValue();
-		return temp;
-	}
-	
+public enum DivorceReason {
+    ADULTERY,
+    BEHAVIOUR,
+    DESERTION,
+    SEPARATION_WITH_CONSENT,
+    SEPARATION
 }

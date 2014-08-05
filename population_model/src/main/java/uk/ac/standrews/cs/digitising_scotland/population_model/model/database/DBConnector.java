@@ -79,8 +79,8 @@ public class DBConnector {
         if (port > 0) {
             connection_string += ":" + port;
         }
-        if (database_name.length() > 0) {
-            connection_string += "/" + database_name;
+        if (!database_name.isEmpty()) {
+            connection_string += '/' + database_name;
         }
     }
 

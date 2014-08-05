@@ -14,16 +14,16 @@
  * You should have received a copy of the GNU General Public License along with population_model. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-package uk.ac.standrews.cs.digitising_scotland.population_model.model;
+package uk.ac.standrews.cs.digitising_scotland.population_model.model.in_memory;
 
 /**
  * Created by graham on 03/07/2014.
  */
-public interface SearchCondition {
+interface SearchCondition {
 
     ConditionResult check(int index);
 
-    public static enum ConditionResult {
+    static enum ConditionResult {
 
         POSITIVE, NEGATIVE_CONTINUE, NEGATIVE_STOP
     }

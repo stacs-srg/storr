@@ -162,6 +162,7 @@ public class PopulationProperties {
 
     /**
      * Sets the file path of the properties to be used.
+     *
      * @param properties_path the file path
      */
     @SuppressWarnings("UnusedDeclaration")
@@ -172,6 +173,7 @@ public class PopulationProperties {
 
     /**
      * Gets the name of the database.
+     *
      * @return the name of the database
      */
     public static String getDatabaseName() {
@@ -181,6 +183,7 @@ public class PopulationProperties {
 
     /**
      * Sets the name of the database.
+     *
      * @param database_name the name of the database
      */
     public static void setDatabaseName(final String database_name) {
@@ -190,6 +193,7 @@ public class PopulationProperties {
 
     /**
      * Checks whether pseudo-random elements are generated deterministically.
+     *
      * @return true if elements are generated deterministically
      * @throws IOException if the check cannot be completed
      */

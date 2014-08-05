@@ -30,7 +30,7 @@ public class OrganicPopulationLogger {
     private static final int MAX_AGE = 100;
     private static int[] maleAgeAtMarriage = new int[MAX_AGE];
     private static int[] femaleAgeAtMarriage = new int[MAX_AGE];
-    private static final int AGE_DIFFERENCE_AT_MARRIAGE_DISPLAY_UPTO = 21;
+    private static final int AGE_DIFFERENCE_AT_MARRIAGE_DISPLAY_UPTO = 101;
     private static int[] ageDifferenceAtMarriage = new int[AGE_DIFFERENCE_AT_MARRIAGE_DISPLAY_UPTO];
     private static final int NUMBER_OF_CHILDREN_DISPLAY_UPTO = 15;
     private static int[] numberOfChildrenPerPartnership = new int[NUMBER_OF_CHILDREN_DISPLAY_UPTO];

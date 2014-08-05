@@ -19,7 +19,6 @@ package uk.ac.standrews.cs.digitising_scotland.population_model.tools;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPopulation;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPopulationWriter;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.gedcom.GEDCOMPopulationWriter;
-import uk.ac.standrews.cs.digitising_scotland.population_model.model.in_memory.CompactPopulation;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.in_memory.CompactPopulationAdapter;
 import uk.ac.standrews.cs.nds.util.CommandLineArgs;
 
@@ -39,7 +38,7 @@ public class GenerateCompactPopulationInGEDCOMFile extends AbstractPopulationToF
     public IPopulation getPopulation(final String[] args) throws Exception {
 
         final int population_size = CommandLineArgs.extractIntFromCommandLineArgs(args, SIZE_FLAG, DEFAULT_SIZE);
-        return new CompactPopulationAdapter(new CompactPopulation(population_size));
+        return new CompactPopulationAdapter(population_size);
     }
 
     @Override

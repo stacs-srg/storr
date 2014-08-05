@@ -1,96 +1,23 @@
 digraph familyTree {
 node [shape=box style=solid color=blue]
 p00000001 [label="b: 15/03/1780\nd: 06/11/1853"]
-{ rank = same; p00000001 p00000007; }
-p00000007 [label="b: 12/10/1805\nd: 03/09/1872"]
-p00000010 [label="b: 16/01/1821\nd: 07/02/1899"]
+{ rank = same; p00000001 p00000008; }
 p00000002 [label="b: 14/01/1788\nd: 26/01/1838"]
 { rank = same; p00000002 p00000008; }
-p00000003 [label="b: 29/09/1793\nd: 30/04/1860"]
-{ rank = same; p00000003 p00000008; }
 p00000008 [label="b: 29/10/1815\nd: 30/04/1860"]
-p00000011 [label="b: 31/01/1826\nd: 10/07/1891"]
-p00000018 [label="b: 08/06/1852\nd: 10/06/1902"]
-p00000024 [label="b: 29/01/1874\nd: 19/07/1963"]
-p00000026 [label="b: 22/10/1895\nd: 05/10/1951"]
-p00000021 [label="b: 12/06/1863\nd: 28/01/1952"]
-p00000025 [label="b: 04/12/1880\nd: 15/12/1948"]
-p00000023 [label="b: 18/06/1869\nd: 26/05/1951"]
+p00000010 [label="b: 16/01/1821\nd: 07/02/1899"]
+p00000003 [label="b: 29/09/1793\nd: 30/04/1860"]
+{ rank = same; p00000003 p00000010; }
 p00000004 [label="b: 24/12/1793\nd: 21/07/1872"]
-{ rank = same; p00000004 p00000012; }
-p00000005 [label="b: 11/03/1796\nd: 16/07/1842"]
-{ rank = same; p00000005 p00000012; }
-p00000013 [label="b: 13/06/1830\nd: 15/12/1923"]
-{ rank = same; p00000013 p00000016; }
-p00000016 [label="b: 06/04/1849\nd: 21/05/1906"]
-p00000015 [label="b: 07/08/1838\nd: 21/07/1898"]
-{ rank = same; p00000015 p00000032; }
-p00000017 [label="b: 26/11/1849\nd: 28/11/1910"]
-{ rank = same; p00000017 p00000032; }
-p00000029 [label="b: 12/02/1913\nd: 24/04/1991"]
-{ rank = same; p00000029 p00000034; }
-p00000030 [label="b: 26/05/1916\nd: 21/04/2000"]
-{ rank = same; p00000030 p00000034; }
+{ rank = same; p00000004 p00000010; }
 p00000004 -> m00000002 [color=red arrowhead=none]
-m00000002 -> p00000001 [color=red arrowhead=none]
-m00000002 [shape=box color=red label="m: 13/09/1798"]
-{ rank = same; p00000004 p00000001 m00000002; }
-m00000002 -> p00000007
+m00000002 -> p00000002 [color=red arrowhead=none]
+m00000002 [shape=box color=red label="m: 25/07/1809"]
+{ rank = same; p00000004 p00000002 m00000002; }
+m00000002 -> p00000008
 m00000002 -> p00000010
 p00000005 -> m00000003 [color=red arrowhead=none]
-m00000003 -> p00000002 [color=red arrowhead=none]
-m00000003 [shape=box color=red label="m: 25/06/1802"]
-{ rank = same; p00000005 p00000002 m00000003; }
-p00000005 -> m00000004 [color=red arrowhead=none]
-m00000004 -> p00000003 [color=red arrowhead=none]
-m00000004 [shape=box color=red label="m: 25/05/1812"]
-{ rank = same; p00000005 p00000003 m00000004; }
-m00000004 -> p00000008
-m00000004 -> p00000011
-p00000008 -> m00000005 [color=red arrowhead=none]
-m00000005 -> p00000006 [color=red arrowhead=none]
-m00000005 [shape=box color=red label="m: 18/04/1823"]
-{ rank = same; p00000008 p00000006 m00000005; }
-m00000005 -> p00000012
-p00000012 -> m00000006 [color=red arrowhead=none]
-m00000006 -> p00000009 [color=red arrowhead=none]
-m00000006 [shape=box color=red label="m: 10/04/1834"]
-{ rank = same; p00000012 p00000009 m00000006; }
-p00000010 -> m00000007 [color=red arrowhead=none]
-m00000007 -> p00000013 [color=red arrowhead=none]
-m00000007 [shape=box color=red label="m: 24/06/1839"]
-{ rank = same; p00000010 p00000013 m00000007; }
-m00000007 -> p00000016
-p00000015 -> m00000008 [color=red arrowhead=none]
-m00000008 -> p00000011 [color=red arrowhead=none]
-m00000008 [shape=box color=red label="m: 09/12/1841"]
-{ rank = same; p00000015 p00000011 m00000008; }
-m00000008 -> p00000018
-m00000008 -> p00000021
-m00000008 -> p00000023
-p00000017 -> m00000009 [color=red arrowhead=none]
-m00000009 -> p00000021 [color=red arrowhead=none]
-m00000009 [shape=box color=red label="m: 07/03/1864"]
-{ rank = same; p00000017 p00000021 m00000009; }
-m00000009 -> p00000025
-p00000020 -> m00000010 [color=red arrowhead=none]
-m00000010 -> p00000018 [color=red arrowhead=none]
-m00000010 [shape=box color=red label="m: 29/10/1869"]
-{ rank = same; p00000020 p00000018 m00000010; }
-m00000010 -> p00000024
-m00000010 -> p00000026
-p00000022 -> m00000011 [color=red arrowhead=none]
-m00000011 -> p00000024 [color=red arrowhead=none]
-m00000011 [shape=box color=red label="m: 11/07/1884"]
-{ rank = same; p00000022 p00000024 m00000011; }
-p00000029 -> m00000012 [color=red arrowhead=none]
-m00000012 -> p00000027 [color=red arrowhead=none]
-m00000012 [shape=box color=red label="m: 22/06/1926"]
-{ rank = same; p00000029 p00000027 m00000012; }
-m00000012 -> p00000032
-p00000031 -> m00000013 [color=red arrowhead=none]
-m00000013 -> p00000028 [color=red arrowhead=none]
-m00000013 [shape=box color=red label="m: 08/04/1926"]
-{ rank = same; p00000031 p00000028 m00000013; }
-m00000013 -> p00000034
+m00000003 -> p00000003 [color=red arrowhead=none]
+m00000003 [shape=box color=red label="m: 07/04/1812"]
+{ rank = same; p00000005 p00000003 m00000003; }
 }

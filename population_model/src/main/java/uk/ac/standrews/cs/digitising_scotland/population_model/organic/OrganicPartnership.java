@@ -16,23 +16,35 @@
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.organic;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Random;
+
+import org.apache.bcel.generic.GETSTATIC;
+
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.AffairDistribution;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.AffairNumberOfChildrenDistribution;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.AffairsNumberOfDistribution;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.CohabitationLengthDistribution;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.Distribution;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.DivorceAgeForFemaleDistribution;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.DivorceAgeForMaleDistribution;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.DivorceInstigatedByGenderDistribution;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.DivorceReason;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.DivorceReasonFemaleDistribution;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.DivorceReasonMaleDistribution;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.FamilyType;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.NegativeDeviationException;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.NormalDistribution;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.NumberOfChildrenDistribuition;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.NumberOfChildrenFromMaternitiesDistribution;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.TimeFromCohabitationToMarriageDistribution;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IDFactory;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPartnership;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.PopulationLogic;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.RandomFactory;
 import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Random;
 
 /**
  * @author Victor Andrei (va9@st-andrews.ac.uk)
@@ -48,15 +60,21 @@ public final class OrganicPartnership implements IPartnership {
     private static DivorceInstigatedByGenderDistribution divorceInstigatedByGenderDistribution = new DivorceInstigatedByGenderDistribution(random);
     private static DivorceAgeForMaleDistribution divorceAgeForMaleDistribution = new DivorceAgeForMaleDistribution(random);
     private static DivorceAgeForFemaleDistribution divorceAgeForFemaleDistribution = new DivorceAgeForFemaleDistribution(random);
-    private static NumberOfChildrenDistribuition numberOfChildrenDistribution = new NumberOfChildrenDistribuition(random);
+    private static Distribution<Integer> numberOfChildrenDistribution = new NumberOfChildrenDistribuition(random);
     private static NumberOfChildrenFromMaternitiesDistribution numberOfChildrenFromMaternitiesDistribution = new NumberOfChildrenFromMaternitiesDistribution(random);
+    private static TimeFromCohabitationToMarriageDistribution timeFromCohabitationToMarriageDistribution = TimeFromCohabitationToMarriageDistribution.TimeFromCohabitationToMarriageDistributionFactory(random);
+    private static CohabitationLengthDistribution cohabitationLengthDistribution = new CohabitationLengthDistribution(random);
+    private static DivorceReasonMaleDistribution divorceReasonMaleDistribution = new DivorceReasonMaleDistribution(random);
+    private static DivorceReasonFemaleDistribution divorceReasonFemaleDistribution = new DivorceReasonFemaleDistribution(random);
+    private static AffairsNumberOfDistribution affairsNumberOfDistribution = new AffairsNumberOfDistribution(random);
+    private static Distribution<Integer> affairNumberOfChildrenDistribution = new AffairNumberOfChildrenDistribution(random);
     private static final int STANDARD_DEVIATION_FACTOR = 4;
 
     // Partnership instance required variables
     private Integer id;
     private Integer husband;
     private Integer wife;
-    private int marriageDay;
+    private int partnershipDay;
     private List<Integer> childrenIds = new ArrayList<Integer>();
     private String location = "St Andrews";
 
@@ -64,10 +82,13 @@ public final class OrganicPartnership implements IPartnership {
     private boolean cohabiting;
     private boolean married;
     
+    private int cohabThenMarriageMarriageDay = -1;
+    
     private OrganicTimeline timeline;
     private boolean on;
     private int numberOfChildrenToBeHadByCouple;
     private NormalDistribution timeBetweenMaternitiesDistrobution;
+    private DivorceReason divorceReason;
 
     /*
      * Factory and constructor
@@ -79,19 +100,15 @@ public final class OrganicPartnership implements IPartnership {
      * @param id          Specifies the ID of the OrganicPartnership.
      * @param husband     The OrganicPerson object representing the husband.
      * @param wife        The OrganicPerson object representing the wife.
-     * @param marriageDay The marriage day specified in days since 1/1/1600.
+     * @param partnershipDay The marriage day specified in days since 1/1/1600.
      * @param currentDay  The current day of the simulation in days since 1/1/1600.
+     * @param familyType  The type of family as defined in the enum {@link FamilyType}
      * @return Returns an object array of size 2, where at index 0 can be found the newly constructed OrganicPartnership and at index 1 the partnerships child (if no child then value is null)
      */
-    public static Object[] createOrganicPartnership(final int id, final OrganicPerson husband, final OrganicPerson wife, final int marriageDay, final int currentDay) {
-        // Decide Family Type
+    public static Object[] createOrganicPartnership(final int id, final OrganicPerson husband, final OrganicPerson wife, final int partnershipDay, final int currentDay, final FamilyType familyType) {
+        // Handle children appropriately
     	
-    	
-    	// Set up associated dates
-    	
-    	// Handle children appropriately
-    	
-    	OrganicPartnership partnership = new OrganicPartnership(id, husband, wife, marriageDay);
+    	OrganicPartnership partnership = new OrganicPartnership(id, husband, wife, partnershipDay, familyType);
         if (adjustedNumberOfChildren == null) {
             setUpArray();
         }
@@ -106,24 +123,40 @@ public final class OrganicPartnership implements IPartnership {
         return returns;
     }
 
-    private OrganicPartnership(final int id, final OrganicPerson husband, final OrganicPerson wife, final int marriageDay) {
+    private OrganicPartnership(final int id, final OrganicPerson husband, final OrganicPerson wife, final int partnershipDay, final FamilyType familyType) {
         this.id = id;
         this.husband = husband.getId();
         this.wife = wife.getId();
-        this.marriageDay = marriageDay;
+        this.partnershipDay = partnershipDay;
+        if (familyType == FamilyType.COHABITATION_THEN_MARRIAGE) {
+        	cohabThenMarriageMarriageDay = partnershipDay + timeFromCohabitationToMarriageDistribution.getIntSample();
+        }
         this.turnOn();
+        setCohabMarriageFlags(familyType);
     }
 
     /*
      * High level methods
      */
 
-    private OrganicPerson[] createPartnershipTimeline(final OrganicPerson husband, final OrganicPerson wife, final int currentDay) {
-        timeline = new OrganicTimeline(marriageDay);
-        // Decide if/when relationship terminates
-        setUpDivorceEvent(husband, wife);
+	private OrganicPerson[] createPartnershipTimeline(final OrganicPerson male, final OrganicPerson female, final int currentDay) {
+        timeline = new OrganicTimeline(partnershipDay);
+        // Decide if/when partnership terminates
+        if (!cohabiting && !married) {
+        	// Single / lone parent family
+        	// model affairs in here
+        	// Nothing to do here I think, end needs to be set once child births have been decided.
+        	setUpAffairEndEvent(male, female, currentDay);
+        } else if (cohabiting && !married) {
+        	// cohabiting
+        	setUpCohabitationEndEvent(male, female, currentDay);
+        } else if (cohabiting && married) {
+        	// cohab then marriage / marriage
+        	setUpDivorceEvent(male, female);
+        }
+
         // Decide on a number of children for relationship
-        return setUpBirthPlan(husband, wife, currentDay);
+        return setUpBirthPlan(male, female, currentDay);
     }
 
     /*
@@ -155,9 +188,20 @@ public final class OrganicPartnership implements IPartnership {
      */
 
     private OrganicPerson[] setUpBirthPlan(final OrganicPerson husband, final OrganicPerson wife, final int currentDay) {
-        numberOfChildrenToBeHadByCouple = numberOfChildrenDistribution.getSample();
-
-        numberOfChildrenToBeHadByCouple = checkForFamilySize(numberOfChildrenToBeHadByCouple);
+    	if (!cohabiting && !married) {
+        	// Single / lone parent family
+    		numberOfChildrenToBeHadByCouple = affairNumberOfChildrenDistribution.getSample();
+        } else if (cohabiting && !married) {
+        	// cohabiting
+        	numberOfChildrenToBeHadByCouple = numberOfChildrenDistribution.getSample();
+        	numberOfChildrenToBeHadByCouple = checkForFamilySize(numberOfChildrenToBeHadByCouple);
+        } else if (cohabiting && married) {
+        	// cohab then marriage / marriage
+        	numberOfChildrenToBeHadByCouple = numberOfChildrenDistribution.getSample();
+        	numberOfChildrenToBeHadByCouple = checkForFamilySize(numberOfChildrenToBeHadByCouple);
+        }
+    	
+        
         int intendedNumberOfChildren = numberOfChildrenToBeHadByCouple;
 
         if (numberOfChildrenToBeHadByCouple == 0) {
@@ -177,22 +221,54 @@ public final class OrganicPartnership implements IPartnership {
             try {
                 timeBetweenMaternitiesDistrobution = new NormalDistribution(mean, standardDeviation, random);
             } catch (NegativeDeviationException e) {
-                return new OrganicPerson[0];
+                if (!cohabiting && !married) {
+                	setUpAffairEndEvent(husband, wife, currentDay);
+                }
+            	return new OrganicPerson[0];
             }
-            if (intendedNumberOfChildren != numberOfChildrenToBeHadByCouple) {
+            if (intendedNumberOfChildren != numberOfChildrenToBeHadByCouple && cohabiting) {
                 addUndersizedFamily(intendedNumberOfChildren, numberOfChildrenToBeHadByCouple);
             }
             return setUpBirthEvent(husband, wife, currentDay);
         } else {
-            if (intendedNumberOfChildren != numberOfChildrenToBeHadByCouple) {
+            if (intendedNumberOfChildren != numberOfChildrenToBeHadByCouple && cohabiting) {
                 addUndersizedFamily(intendedNumberOfChildren, numberOfChildrenToBeHadByCouple);
+            }
+            if (!cohabiting && !married) {
+            	setUpAffairEndEvent(husband, wife, currentDay);
             }
             return new OrganicPerson[0];
         }
     }
+    
+    // FIXME Should end on last child
+    private void setUpAffairEndEvent(final OrganicPerson male, final OrganicPerson female, final int currentDay) {
+	
+    }
+    
+    private void setUpCohabitationEndEvent(final OrganicPerson male, final OrganicPerson female, final int currentDay) {
+    	int lengthOfCohab = cohabitationLengthDistribution.getSample();
+    	int endDayOfCohab = currentDay + lengthOfCohab;
+    	if (PopulationLogic.dateBeforeDeath(endDayOfCohab, male.getDeathDay())) {
+    		if (PopulationLogic.dateBeforeDeath(endDayOfCohab, female.getDeathDay())) {
+    			timeline.addEvent(endDayOfCohab, new OrganicEvent(EventType.END_OF_COHABITATION));
+    			timeline.setEndDate(endDayOfCohab);
+    		} else {
+    			timeline.addEvent(female.getDeathDay(), new OrganicEvent(EventType.PARTNERSHIP_ENDED_BY_DEATH));
+    			timeline.setEndDate(female.getDeathDay());
+    		}
+    	} else {
+			timeline.addEvent(male.getDeathDay(), new OrganicEvent(EventType.PARTNERSHIP_ENDED_BY_DEATH));
+			timeline.setEndDate(male.getDeathDay());
+		}
+    	
+    }
 
-    private void setUpDivorceEvent(final OrganicPerson husband,
-            final OrganicPerson wife) {
+    private void setUpDivorceEvent(final OrganicPerson husband, final OrganicPerson wife) {
+    	int actualMarriageDay = partnershipDay;
+    	if (cohabThenMarriageMarriageDay != -1) {
+    		actualMarriageDay = cohabThenMarriageMarriageDay;
+    	}
         switch (divorceInstigatedByGenderDistribution.getSample()) {
         case MALE:
             // get male age at divorce
@@ -200,12 +276,17 @@ public final class OrganicPartnership implements IPartnership {
             do {
                 maleDivorceAgeInDays = divorceAgeForMaleDistribution.getSample() + husband.getBirthDay();
             }
-            while (PopulationLogic.divorceAfterMarriage(DateManipulation.differenceInDays(husband.getBirthDay(), marriageDay), maleDivorceAgeInDays) ||
-                    PopulationLogic.divorceBeforeDeath(husband.getDeathDay(), maleDivorceAgeInDays) ||
-                    PopulationLogic.divorceBeforeDeath(wife.getDeathDay(), maleDivorceAgeInDays));
-
+            while (PopulationLogic.divorceAfterMarriage(DateManipulation.differenceInDays(husband.getBirthDay(), actualMarriageDay), maleDivorceAgeInDays) ||
+                    PopulationLogic.dateBeforeDeath(husband.getDeathDay(), maleDivorceAgeInDays) ||
+                    PopulationLogic.dateBeforeDeath(wife.getDeathDay(), maleDivorceAgeInDays));
+            
+            // TODO handles only the adultery special case - could be used to enforce geographical movement to support seperation.
+            divorceReason = divorceReasonMaleDistribution.getSample();
             timeline.addEvent(maleDivorceAgeInDays, new OrganicEvent(EventType.DIVORCE));
             timeline.setEndDate(maleDivorceAgeInDays);
+            if (divorceReason == DivorceReason.ADULTERY) {
+            	setupAffair(wife);
+            }
             break;
         case FEMALE:
             // get female age at divorce
@@ -213,12 +294,20 @@ public final class OrganicPartnership implements IPartnership {
             do {
                 femaleDivorceAgeInDays = divorceAgeForFemaleDistribution.getSample() + wife.getBirthDay();
             }
-            while (PopulationLogic.divorceAfterMarriage(DateManipulation.differenceInDays(wife.getBirthDay(), marriageDay), femaleDivorceAgeInDays) ||
-                    PopulationLogic.divorceBeforeDeath(wife.getDeathDay(), femaleDivorceAgeInDays) ||
-                    PopulationLogic.divorceBeforeDeath(husband.getDeathDay(), femaleDivorceAgeInDays));
+            while (PopulationLogic.divorceAfterMarriage(DateManipulation.differenceInDays(wife.getBirthDay(), actualMarriageDay), femaleDivorceAgeInDays) ||
+                    PopulationLogic.dateBeforeDeath(wife.getDeathDay(), femaleDivorceAgeInDays) ||
+                    PopulationLogic.dateBeforeDeath(husband.getDeathDay(), femaleDivorceAgeInDays));
 
+            
+            // TODO handles only the adultery special case - could be used to enforce geographical movement to support seperation.
+            divorceReason = divorceReasonFemaleDistribution.getSample();
             timeline.addEvent(femaleDivorceAgeInDays, new OrganicEvent(EventType.DIVORCE));
             timeline.setEndDate(femaleDivorceAgeInDays);
+            if (divorceReason == DivorceReason.ADULTERY) {
+            	setupAffair(husband);
+            }
+            
+            
             break;
         case NO_DIVORCE:
             // If not then added earliest death date
@@ -231,7 +320,15 @@ public final class OrganicPartnership implements IPartnership {
         }
     }
 
-    /**
+    private void setupAffair(OrganicPerson marriedPerson) {
+    	int numberOfAffairs = affairsNumberOfDistribution.getSample();
+    	AffairDistribution affairDistribution = AffairDistribution.AffairDistributionFactory(marriedPerson, random);
+    	for (int i = 0; i < numberOfAffairs; i++) {
+    		marriedPerson.getPopulation().addPersonToAffairsWaitingQueue(marriedPerson, affairDistribution.getIntSample());
+    	}
+	}
+
+	/**
      * Sets up next birth event on partnership timeline, checking the number of births still due and giving the possibility of multiple children in pregnancy.
      *
      * @param husband    An OrganicPerson object representing the father
@@ -245,6 +342,9 @@ public final class OrganicPartnership implements IPartnership {
             numberOfChildrenInPregnacy = numberOfChildrenToBeHadByCouple - childrenIds.size();
         }
         if (numberOfChildrenInPregnacy == 0) {
+        	if (!cohabiting && !married && lastChildBorn()) {
+            	setUpAffairEndEvent(husband, wife, currentDay);
+            }
             return new OrganicPerson[0];
         } else {
             OrganicPerson[] children = new OrganicPerson[numberOfChildrenInPregnacy];
@@ -257,12 +357,25 @@ public final class OrganicPartnership implements IPartnership {
                     children[i] = new OrganicPerson(IDFactory.getNextID(), currentDay + dayOfBirth, id, wife.getPopulation(), false);
                     childrenIds.add(children[i].getId());
                 }
+                if (!cohabiting && !married && lastChildBorn()) {
+                	setUpAffairEndEvent(husband, wife, dayOfBirth + 1);
+                }
                 return children;
             } else {
                 OrganicPopulationLogger.incStopedHavingEarlyDeaths(numberOfChildrenToBeHadByCouple - children.length);
+                if (!cohabiting && !married && lastChildBorn()) {
+                	setUpAffairEndEvent(husband, wife, currentDay);
+                }
                 return new OrganicPerson[0];
             }
         }
+    }
+    
+    public boolean lastChildBorn() {
+    	if (childrenIds.size() >= numberOfChildrenToBeHadByCouple) {
+    		return true;
+      	}
+    	return false;
     }
 
     /**
@@ -298,7 +411,13 @@ public final class OrganicPartnership implements IPartnership {
      */
 
     private int getLastPossibleBirthDate(final OrganicPerson husband, final OrganicPerson wife) {
-        int lastEndDate = getEndDate();
+    	int lastEndDate;
+    	if (!married && !cohabiting) {
+    		lastEndDate = wife.getBirthDay() + (int) (PopulationLogic.getMaximumMotherAgeAtChildBirth() * OrganicPopulation.getDaysPerYear());
+    	} else {
+    		lastEndDate = getEndDate();
+    	}
+        
         if (lastEndDate > wife.getBirthDay() + PopulationLogic.getMaximumMotherAgeAtChildBirth() * OrganicPopulation.getDaysPerYear()) {
             lastEndDate = wife.getBirthDay() + (int) (PopulationLogic.getMaximumMotherAgeAtChildBirth() * OrganicPopulation.getDaysPerYear());
         }
@@ -414,7 +533,7 @@ public final class OrganicPartnership implements IPartnership {
 
     @Override
     public Date getMarriageDate() {
-        return DateManipulation.daysToDate(marriageDay);
+        return DateManipulation.daysToDate(partnershipDay);
     }
 
     @Override
@@ -426,6 +545,29 @@ public final class OrganicPartnership implements IPartnership {
     public List<Integer> getChildIds() {
         return childrenIds;
     }
+    
+    private void setCohabMarriageFlags(FamilyType familyType) {
+		switch (familyType) {
+		case SINGLE:
+		case LONE_MOTHER:
+		case LONE_FATHER:
+			cohabiting = false;
+			married = false;			
+			break;
+		case COHABITATION:
+			cohabiting = true;
+			married = false;
+			break;
+		case COHABITATION_THEN_MARRIAGE:
+		case MARRIAGE:
+			cohabiting = true;
+			married = true;
+			break;
+		default:
+			break;
+		}
+		
+	}
 
     @Override
     public int compareTo(final IPartnership o) {

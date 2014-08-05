@@ -45,7 +45,6 @@ public interface IPopulation {
      * Retrieves a person by id.
      * @param id the id
      * @return the corresponding person
-     * @throws Exception if there is an error retrieving the person
      */
     IPerson findPerson(int id);
 
@@ -53,7 +52,6 @@ public interface IPopulation {
      * Retrieves a partnership by id.
      * @param id the id
      * @return the corresponding partnership
-     * @throws Exception if there is an error retrieving the partnership
      */
     IPartnership findPartnership(int id);
 

@@ -22,31 +22,40 @@ import java.io.IOException;
 import java.util.Random;
 
 /**
- * Created by graham on 29/04/2014.
+ * Manages use of random number generators.
+ *
+ * @author Graham Kirby (graham.kirby@st-andrews.ac.uk)
  */
 public class RandomFactory {
 
-    public static final long SEED = 534534524234234L;
+    private static final long SEED = 534534524234234L;
 
     private static boolean deterministic = true;
     private static boolean configured = false;
 
+    /**
+     * Gets a new random number generator.
+     * If determinism is set, as defined by {@link uk.ac.standrews.cs.digitising_scotland.population_model.config.PopulationProperties#isDeterministic()},
+     * then the same seed is used every time.
+     *
+     * @return the random number generator
+     */
     public static synchronized Random getRandom() {
 
         if (!configured) {
 
             try {
                 deterministic = PopulationProperties.isDeterministic();
-            } catch (IOException e) {
+
+            } catch (final IOException e) {
                 throw new RuntimeException("Couldn't read determinism flag from properties");
             }
             configured = true;
         }
 
-        /*
-        Create a new Random instance every time, so that the user that wants determinism isn't affected
-        by previous calls to the Random instance.
-        */
+        // Create a new Random instance every time, so that the user that wants determinism isn't affected
+        // by previous calls to the Random instance.
+
         return deterministic ? new Random(SEED) : new Random();
     }
 }

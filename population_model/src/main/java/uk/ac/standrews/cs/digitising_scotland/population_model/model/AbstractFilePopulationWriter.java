@@ -25,7 +25,7 @@ import java.nio.file.Path;
 import java.text.NumberFormat;
 
 /**
- * Writes a representation of the population to file in some external format - specialised by subclasses.
+ * Writes a representation of the population to file in some external format.
  *
  * @author Graham Kirby (graham.kirby@st-andrews.ac.uk)
  * @author Alan Dearle (alan.dearle@st-andrews.ac.uk)

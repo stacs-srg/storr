@@ -35,7 +35,7 @@ import java.util.List;
  * @author Graham Kirby (graham.kirby@st-andrews.ac.uk)
  */
 @NotThreadSafe
-public class CompactPerson {
+ class CompactPerson {
 
     private static final int POSITION_OF_MALE_BIT = 0;
     private static final int POSITION_OF_PARENTS_BIT = 1;
@@ -55,13 +55,13 @@ public class CompactPerson {
      * @param birth_date the date of birth represented in days elapsed from the start of the simulation
      * @param male       true if the person is male
      */
-    public CompactPerson(final int birth_date, final boolean male) {
+    protected CompactPerson(final int birth_date, final boolean male) {
 
         this.birth_date = birth_date;
         setMale(male);
     }
 
-    public CompactPerson(final int birth_date, final boolean male, final int id) {
+    protected CompactPerson(final int birth_date, final boolean male, final int id) {
 
         this(birth_date, male);
         this.id = id;
@@ -72,17 +72,17 @@ public class CompactPerson {
      *
      * @return the id of this person
      */
-    public int getId() {
+    protected int getId() {
 
         return id;
     }
 
-    public CompactPartnership mostRecentPartnership() {
+    protected CompactPartnership mostRecentPartnership() {
 
         return partnership_list != null ? partnership_list.get(getPartnerships().size() - 1) : null;
     }
 
-    public char getSex() {
+    protected char getSex() {
 
         return isMale() ? IPerson.MALE : IPerson.FEMALE;
     }
@@ -92,7 +92,7 @@ public class CompactPerson {
      *
      * @return true if this person is male
      */
-    public boolean isMale() {
+    protected boolean isMale() {
 
         return BitManipulation.readBit(bits, POSITION_OF_MALE_BIT);
     }
@@ -102,12 +102,12 @@ public class CompactPerson {
      *
      * @param male true if this person is male
      */
-    public void setMale(final boolean male) {
+    protected void setMale(final boolean male) {
 
         bits = BitManipulation.writeBit(bits, male, POSITION_OF_MALE_BIT);
     }
 
-    public boolean isMarked() {
+    protected boolean isMarked() {
 
         return BitManipulation.readBit(bits, POSITION_OF_MARKED_BIT);
     }
@@ -117,25 +117,25 @@ public class CompactPerson {
      *
      * @param marked true if a record has been visited
      */
-    public void setMarked(final boolean marked) {
+    protected void setMarked(final boolean marked) {
 
         bits = BitManipulation.writeBit(bits, marked, POSITION_OF_MARKED_BIT);
     }
 
-    public boolean hasParents() {
+    protected boolean hasNoParents() {
 
-        return BitManipulation.readBit(bits, POSITION_OF_PARENTS_BIT);
+        return !BitManipulation.readBit(bits, POSITION_OF_PARENTS_BIT);
     }
 
     /**
      * Records this person as having parents.
      */
-    public void setHasParents() {
+    protected void setHasParents() {
 
         bits = BitManipulation.writeBit(bits, true, POSITION_OF_PARENTS_BIT);
     }
 
-    public boolean isIncomer() {
+    protected boolean isIncomer() {
 
         return BitManipulation.readBit(bits, POSITION_OF_INCOMERS_BIT);
     }
@@ -143,7 +143,7 @@ public class CompactPerson {
     /**
      * Records this person as being an incomer.
      */
-    public void setIsIncomer() {
+    protected void setIsIncomer() {
 
         bits = BitManipulation.writeBit(bits, true, POSITION_OF_INCOMERS_BIT);
     }
@@ -153,12 +153,12 @@ public class CompactPerson {
      *
      * @return the date of birth.
      */
-    public int getBirthDate() {
+    protected int getBirthDate() {
 
         return birth_date;
     }
 
-    public int getDeathDate() {
+    protected int getDeathDate() {
 
         return death_date;
     }
@@ -191,7 +191,7 @@ public class CompactPerson {
      *
      * @return the partnerships
      */
-    public List<CompactPartnership> getPartnerships() {
+    protected List<CompactPartnership> getPartnerships() {
 
         return partnership_list;
     }
@@ -201,7 +201,7 @@ public class CompactPerson {
      *
      * @param partnership_list list to set
      */
-    public void setPartnerships(final List<CompactPartnership> partnership_list) {
+    protected void setPartnerships(final List<CompactPartnership> partnership_list) {
 
         this.partnership_list = partnership_list;
     }

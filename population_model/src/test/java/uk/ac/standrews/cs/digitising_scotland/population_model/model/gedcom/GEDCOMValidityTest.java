@@ -23,7 +23,6 @@ import org.junit.Test;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPopulation;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPopulationWriter;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.PopulationConverter;
-import uk.ac.standrews.cs.digitising_scotland.population_model.model.in_memory.CompactPopulation;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.in_memory.CompactPopulationAdapter;
 
 import java.io.IOException;
@@ -43,7 +42,7 @@ public class GEDCOMValidityTest {
     @Test
     public void gedcomIsValid() throws Exception {
 
-        final IPopulation population = new CompactPopulationAdapter(new CompactPopulation(1000));
+        final IPopulation population = new CompactPopulationAdapter(1000);
         final IPopulationWriter population_writer = new GEDCOMPopulationWriter(path);
 
         try (PopulationConverter converter = new PopulationConverter(population, population_writer)) {

@@ -41,11 +41,6 @@ public class PopulationLogic {
      */
     public static final int END_YEAR = 2013;
 
-    public static final int DAYS_IN_DECEMBER = 31;
-    public static final int DECEMBER_INDEX = 11;
-
-    public static final double PROBABILITY_OF_BEING_INCOMER = 0.125;
-
     private static final int MINIMUM_MOTHER_AGE_AT_CHILDBIRTH = 12;
     private static final int MAXIMUM_MOTHER_AGE_AT_CHILDBIRTH = 50;
     private static final int MAX_GESTATION_IN_DAYS = 300;
@@ -55,7 +50,7 @@ public class PopulationLogic {
     private static final int INTER_CHILD_INTERVAL = 3;
     private static final int TIME_BEFORE_FIRST_CHILD = 1;
 
-    private static final int MAXIMUM_AGE_DIFFERENCE_IN_PARTNERSHIP = 15;
+    private static final int MAXIMUM_AGE_DIFFERENCE_IN_PARTNERSHIP = 100;
     private static final int MINIMUM_PERIOD_BETWEEN_PARTNERSHIPS = 7;
 
     /**
@@ -69,13 +64,13 @@ public class PopulationLogic {
     @SuppressWarnings("FeatureEnvy")
     public static boolean parentsHaveSensibleAgesAtChildBirth(final IPerson father, final IPerson mother, final IPerson child) {
 
-        Date mother_birth_date = mother.getBirthDate();
-        Date mother_death_date = mother.getDeathDate();
+        final Date mother_birth_date = mother.getBirthDate();
+        final Date mother_death_date = mother.getDeathDate();
 
-        Date father_birth_date = father.getBirthDate();
-        Date father_death_date = father.getDeathDate();
+        final Date father_birth_date = father.getBirthDate();
+        final Date father_death_date = father.getDeathDate();
 
-        Date child_birth_date = child.getBirthDate();
+        final Date child_birth_date = child.getBirthDate();
 
         return parentsHaveSensibleAgesAtChildBirth(father_birth_date, father_death_date, mother_birth_date, mother_death_date, child_birth_date);
     }
@@ -155,16 +150,16 @@ public class PopulationLogic {
     }
 
     /**
-     * Checks whether the given divorce date is before the given death date.
+     * Checks whether the given date is before the given death date.
      * Dates are expressed as defined in {@link uk.ac.standrews.cs.digitising_scotland.util.DateManipulation#dateToDays(java.util.Date)}.
      *
-     * @param divorce_date the divorce date
+     * @param candidate_date the divorce date
      * @param death_date   the death date
      * @return true if the divorce date is after the marriage date
      */
-    public static boolean divorceBeforeDeath(final int divorce_date, final int death_date) {
+    public static boolean dateBeforeDeath(final int candidate_date, final int death_date) {
 
-        return DateManipulation.differenceInDays(divorce_date, death_date) > 0;
+        return DateManipulation.differenceInDays(candidate_date, death_date) > 0;
     }
 
     /**
@@ -177,15 +172,6 @@ public class PopulationLogic {
     }
 
     /**
-     * Returns the minimum mother's age at child birth.
-     *
-     * @return the minimum mother's age at child birth
-     */
-    public static int getMinimumMotherAgeAtChildBirth() {
-        return MINIMUM_MOTHER_AGE_AT_CHILDBIRTH;
-    }
-
-    /**
      * Returns the maximum father's age at child birth.
      *
      * @return the maximum father's age at child birth
@@ -195,21 +181,12 @@ public class PopulationLogic {
     }
 
     /**
-     * Returns the minimum father's age at child birth.
-     *
-     * @return the minimum father's age at child birth
-     */
-    public static int getMinimumFathersAgeAtChildBirth() {
-        return MINIMUM_FATHER_AGE_AT_CHILDBIRTH;
-    }
-
-    /**
      * Returns the mean inter-child interval in years.
      *
      * @return the mean inter-child interval in years
      */
     public static int getInterChildInterval() {
-        // TODO is the Javadoc right?
+
         return INTER_CHILD_INTERVAL;
     }
 
