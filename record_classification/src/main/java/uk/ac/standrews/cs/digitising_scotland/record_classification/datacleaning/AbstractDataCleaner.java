@@ -166,7 +166,7 @@ public abstract class AbstractDataCleaner {
         }
     }
 
-    public void setTokenLimit(final int tokenLimit) {
+    public static void setTokenLimit(final int tokenLimit) {
 
         AbstractDataCleaner.tokenLimit = tokenLimit;
         System.out.println("TOKENLIMIT set to " + tokenLimit);
