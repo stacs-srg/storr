@@ -165,24 +165,24 @@ public class OrganicPerson implements IPerson {
      */
     public void populateTimeline() {
     	// Decide family type
-    	addEligibleToMarryEvent();
-//    	FamilyType partnershipCharacteristic = decideFuturePartnershipCharacteristics();
-//    	switch(partnershipCharacteristic) {
-//    	    case SINGLE:
-//    	    	addSingleComingOfAgeEvent();
-//    	    	break;
-//    	    case COHABITATION:
-//    	    	addEligibleToCohabitEvent();
-//    	    	break;
-//    	    case COHABITATION_THEN_MARRIAGE:
-//    	    	addEligableToCohabitThenMarryEvent();
-//    	    	break;
-//    	    case MARRIAGE:
-//    	    	addEligibleToMarryEvent();
-//    	    	break;
-//    	    default:
-//    	    	break;
-//    	}
+//    	addEligibleToMarryEvent();
+    	FamilyType partnershipCharacteristic = decideFuturePartnershipCharacteristics();
+    	switch(partnershipCharacteristic) {
+    	    case SINGLE:
+    	    	addSingleComingOfAgeEvent();
+    	    	break;
+    	    case COHABITATION:
+    	    	addEligibleToCohabitEvent();
+    	    	break;
+    	    case COHABITATION_THEN_MARRIAGE:
+    	    	addEligableToCohabitThenMarryEvent();
+    	    	break;
+    	    case MARRIAGE:
+    	    	addEligibleToMarryEvent();
+    	    	break;
+    	    default:
+    	    	break;
+    	}
     	
     	
     	// hanlde family type

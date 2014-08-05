@@ -40,7 +40,7 @@ public class OrganicPopulation implements IPopulation {
 
 	// 23:39
     // Universal population variables
-    private static final int DEFAULT_SEED_SIZE = 100;
+    private static final int DEFAULT_SEED_SIZE = 1000;
     private static final float DAYS_PER_YEAR = 365.25f;
     private static final int START_YEAR = 1780;
     private static final int END_YEAR = 2013;
@@ -143,7 +143,8 @@ public class OrganicPopulation implements IPopulation {
             int previousDate = getCurrentDay();
             setCurrentDay(getCurrentDay() + timeStepSizeInDays);
             checkAllPeopleForEventsUptoCurrentDayFrom(previousDate);
-            partnerTogetherPeopleInPartnershipQueue(FamilyType.MARRIAGE);
+            partnerTogetherPeopleInRegularPartnershipQueues();
+            
             checkAllPartnershipsForEventsUptoCurrentDayFrom(previousDate);
         }
 
@@ -348,6 +349,12 @@ public class OrganicPopulation implements IPopulation {
     	    	return null;
     	}
     }
+    
+    private void partnerTogetherPeopleInRegularPartnershipQueues() {
+    	partnerTogetherPeopleInPartnershipQueue(FamilyType.COHABITATION);
+    	partnerTogetherPeopleInPartnershipQueue(FamilyType.COHABITATION_THEN_MARRIAGE);
+    	partnerTogetherPeopleInPartnershipQueue(FamilyType.MARRIAGE);
+    }
 
     private void partnerTogetherPeopleInPartnershipQueue(FamilyType type) {
     	LinkedList<OrganicPerson> maleQueue = getMaleQueueOf(type);
@@ -380,35 +387,16 @@ public class OrganicPopulation implements IPopulation {
                         break;
                     }
                 }
-                // If the two individuals meet the marriage conditions
-                if (type == FamilyType.COHABITATION) {
-                	if (eligableToCohabit(maleQueue.getFirst(), femaleQueue.getFirst())) {
-                		cohabit(maleQueue.getFirst(), femaleQueue.getFirst(), getCurrentDay());
-                	} else {
-                        // Else if couple not elligable to marry move onto consider male with next female
-                        femaleQueue.add(femaleQueue.removeFirst());
+                if (eligableToPartner(maleQueue.getFirst(), femaleQueue.getFirst())) {
+                    try {
+                    	partner(type, maleQueue.getFirst(), femaleQueue.getFirst(), getCurrentDay());
+                    } catch (NoSuchEventException e) {
                         break;
                     }
-                } else if (type == FamilyType.COHABITATION_THEN_MARRIAGE) {
-                	if (eligableToCohabitThenMarry(maleQueue.getFirst(), femaleQueue.getFirst())) {
-                		cohabitThenMarry(maleQueue.getFirst(), femaleQueue.getFirst(), getCurrentDay());
-                	} else {
-                        // Else if couple not elligable to marry move onto consider male with next female
-                        femaleQueue.add(femaleQueue.removeFirst());
-                        break;
-                    }
-                } else if (type == FamilyType.MARRIAGE) {
-                	if (eligableToMarry(maleQueue.getFirst(), femaleQueue.getFirst())) {
-                        try {
-                        	marry(maleQueue.getFirst(), femaleQueue.getFirst(), getCurrentDay());
-                        } catch (NoSuchEventException e) {
-                            break;
-                        }
-                	} else {
-                        // Else if couple not elligable to marry move onto consider male with next female
-                        femaleQueue.add(femaleQueue.removeFirst());
-                        break;
-                    }
+                } else {
+                    // Else if couple not elligable to marry move onto consider male with next female
+                    femaleQueue.add(femaleQueue.removeFirst());
+                    break;
                 }
                     
                 removeFromQueue(maleQueue, firstMaleId);
@@ -431,32 +419,8 @@ public class OrganicPopulation implements IPopulation {
 		    }
 		}
 	}
-	
-	// TODO this is just the same as marriage at the moment - needs some thought/statistics
-	private boolean eligableToCohabit(final OrganicPerson male, final OrganicPerson female) {
-        boolean resonableAgeDifference = PopulationLogic.partnerAgeDifferenceIsReasonable(DateManipulation.dateToDays(male.getBirthDate()), DateManipulation.dateToDays(female.getBirthDate()));
-        boolean notSiblings;
-        if (male.getParentsPartnership() == female.getParentsPartnership() && male.getParentsPartnership() != -1) {
-            notSiblings = false;
-        } else {
-            notSiblings = true;
-        }
-        return resonableAgeDifference && notSiblings;
-    }
-	
-	// TODO this is just the same as marriage at the moment - needs some thought/statistics
-	private boolean eligableToCohabitThenMarry(final OrganicPerson male, final OrganicPerson female) {
-        boolean resonableAgeDifference = PopulationLogic.partnerAgeDifferenceIsReasonable(DateManipulation.dateToDays(male.getBirthDate()), DateManipulation.dateToDays(female.getBirthDate()));
-        boolean notSiblings;
-        if (male.getParentsPartnership() == female.getParentsPartnership() && male.getParentsPartnership() != -1) {
-            notSiblings = false;
-        } else {
-            notSiblings = true;
-        }
-        return resonableAgeDifference && notSiblings;
-    }
 
-    private boolean eligableToMarry(final OrganicPerson male, final OrganicPerson female) {
+    private boolean eligableToPartner(final OrganicPerson male, final OrganicPerson female) {
         boolean resonableAgeDifference = PopulationLogic.partnerAgeDifferenceIsReasonable(DateManipulation.dateToDays(male.getBirthDate()), DateManipulation.dateToDays(female.getBirthDate()));
         boolean notSiblings;
         if (male.getParentsPartnership() == female.getParentsPartnership() && male.getParentsPartnership() != -1) {
@@ -474,34 +438,39 @@ public class OrganicPopulation implements IPopulation {
      * @param wife The female to be married.
      * @param days The day of the marriage in days since the 1/1/1600.
      */
-    private void marry(final OrganicPerson husband, final OrganicPerson wife, final int days) throws NoSuchEventException {
-    	int firstDay = husband.getEvent(EventType.ELIGIBLE_TO_MARRY);
-        if (wife.getEvent(EventType.ELIGIBLE_TO_MARRY) > firstDay) {
-            firstDay = wife.getEvent(EventType.ELIGIBLE_TO_MARRY);
+    private void partner(final FamilyType familyType, final OrganicPerson husband, final OrganicPerson wife, final int days) throws NoSuchEventException {
+    	EventType checkEvent = null;
+    	switch(familyType) {
+    	    case COHABITATION:
+    	    	checkEvent = EventType.ELIGIBLE_TO_COHABIT;
+    	    	break;
+    	    case COHABITATION_THEN_MARRIAGE:
+    	    	checkEvent = EventType.ELIGIBLE_TO_COHABIT_THEN_MARRY;
+    	    	break;
+    	    case MARRIAGE:
+    	    	checkEvent = EventType.ELIGIBLE_TO_MARRY;
+    	    	break;
+    	}
+    	
+    	int firstDay = husband.getEvent(checkEvent);
+        if (wife.getEvent(checkEvent) > firstDay) {
+            firstDay = wife.getEvent(checkEvent);
         }
     	
     	// Create partnership
-        Object[] partnershipObjects = OrganicPartnership.createOrganicPartnership(IDFactory.getNextID(), husband, wife, days, getCurrentDay(), FamilyType.MARRIAGE);
+        Object[] partnershipObjects = OrganicPartnership.createOrganicPartnership(IDFactory.getNextID(), husband, wife, days, getCurrentDay(), familyType);
         partnerships.add((OrganicPartnership) partnershipObjects[0]);
         if (partnershipObjects.length > 1) {
             for (int i = 1; i < partnershipObjects.length; i++) {
                 livingPeople.add((OrganicPerson) partnershipObjects[i]);
             }
         }
+        // TODO adapt logging methods
         OrganicPopulationLogger.logMarriage(DateManipulation.differenceInDays(husband.getBirthDay(), days), DateManipulation.differenceInDays(wife.getBirthDay(), days));
         husband.addPartnership(((OrganicPartnership) partnershipObjects[0]).getId());
         wife.addPartnership(((OrganicPartnership) partnershipObjects[0]).getId());
     }   
     
-    // TODO 
-    private void cohabit(final OrganicPerson husband, final OrganicPerson wife, final int days) {
-    	
-    }
-    
-    // TODO 
-    private void cohabitThenMarry(final OrganicPerson husband, final OrganicPerson wife, final int days) {
-    	
-    }
 
     /*
      * Getters and setters

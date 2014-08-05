@@ -63,6 +63,7 @@ public enum EventType {
     MALE_ENDS_AFFAIR,
     FEMALE_BEGINS_AFFAIR,
     FEMALE_ENDS_AFFAIR,
+    END_OF_AFFAIR,
     
      
     /*

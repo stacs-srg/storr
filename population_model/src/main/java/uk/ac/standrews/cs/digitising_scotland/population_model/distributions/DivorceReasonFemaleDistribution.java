@@ -35,7 +35,7 @@ public class DivorceReasonFemaleDistribution implements Distribution<DivorceReas
      * Seperation      9
      */
 
-    private static final int[] REASON_DISTRIBUTION_WEIGHTS = new int[]{14, 37, 1, 32, 17};
+    private static final int[] REASON_DISTRIBUTION_WEIGHTS = new int[]{14, 54, 1, 22, 9};
 
     private final WeightedIntegerDistribution distribution;
 
