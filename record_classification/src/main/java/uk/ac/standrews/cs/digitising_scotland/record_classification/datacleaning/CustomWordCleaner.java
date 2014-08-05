@@ -16,6 +16,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.exceptions.InputFormatException;
 import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
 
+// TODO: Auto-generated Javadoc
 /**
  * Reads a {@link Bucket} and performs data cleaning such as spelling correction and feature selection on the descriptions in each {@link Record}.
  * OriginalData.description is not changed, instead the cleanedDescripion field is populated.
@@ -24,10 +25,22 @@ import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
  */
 public class CustomWordCleaner extends AbstractDataCleaner {
 
+    /** The Constant LOGGER. */
     private static final Logger LOGGER = LoggerFactory.getLogger(CustomWordCleaner.class);
+
+    /** The Constant WORD_FILE. */
     private static final File WORD_FILE = new File(CustomWordCleaner.class.getResource("/customRemovalWords.txt").getFile());
+
+    /** The Constant WORD_LIST. */
     private static final List<String> WORD_LIST = new ArrayList<>();
 
+    /**
+     * The main method.
+     *
+     * @param args the arguments
+     * @throws IOException Signals that an I/O exception has occurred.
+     * @throws InputFormatException the input format exception
+     */
     public static void main(final String... args) throws IOException, InputFormatException {
 
         CustomWordCleaner cleaner = new CustomWordCleaner();
@@ -36,6 +49,11 @@ public class CustomWordCleaner extends AbstractDataCleaner {
         cleaner.runOnFile(args);
     }
 
+    /**
+     * Builds the word list.
+     *
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
     private void buildWordList() throws IOException {
 
         String line = "";
@@ -67,6 +85,11 @@ public class CustomWordCleaner extends AbstractDataCleaner {
         return token;
     }
 
+    /**
+     * Prints the debug info.
+     *
+     * @param token the token
+     */
     private void printDebugInfo(final String token) {
 
         LOGGER.info("Original token: " + token + " removed");

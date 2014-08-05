@@ -127,7 +127,7 @@ public class NumberOfExamplesPerClassHelper {
      */
     public static void printMap(final Map<?, ?> mapToPrint) {
 
-        Iterator it = mapToPrint.entrySet().iterator();
+        Iterator<?> it = mapToPrint.entrySet().iterator();
         while (it.hasNext()) {
             Map.Entry pairs = (Map.Entry) it.next();
             System.out.println(pairs.getKey() + " = " + pairs.getValue());

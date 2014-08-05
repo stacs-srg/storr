@@ -19,6 +19,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.exceptions.I
 
 import com.google.common.collect.Multiset;
 
+// TODO: Auto-generated Javadoc
 /**
  * Reads a {@link Bucket} and performs data cleaning such as spelling correction and feature selection on the descriptions in each {@link Record}.
  * OriginalData.description is not changed, instead the cleanedDescripion field is populated.
@@ -27,14 +28,24 @@ import com.google.common.collect.Multiset;
  */
 public class LevenshteinCleaner extends AbstractDataCleaner {
 
+    /** The Constant LOGGER. */
     private static final Logger LOGGER = LoggerFactory.getLogger(LevenshteinCleaner.class);
 
     /**
      * The Constant SIMILARITY.
      */
     private double similarity = 0.85;
+
+    /** The Constant METRIC. */
     private static final AbstractStringMetric METRIC = new Levenshtein();
 
+    /**
+     * The main method.
+     *
+     * @param args the arguments
+     * @throws IOException Signals that an I/O exception has occurred.
+     * @throws InputFormatException the input format exception
+     */
     public static void main(final String... args) throws IOException, InputFormatException {
 
         LevenshteinCleaner cleaner = new LevenshteinCleaner();
@@ -42,6 +53,11 @@ public class LevenshteinCleaner extends AbstractDataCleaner {
         cleaner.runOnFile(args);
     }
 
+    /**
+     * Sets the similarity.
+     *
+     * @param args the new similarity
+     */
     private void setSimilarity(final String... args) {
 
         try {
@@ -69,6 +85,12 @@ public class LevenshteinCleaner extends AbstractDataCleaner {
         return bestMatch;
     }
 
+    /**
+     * Prints the debug info.
+     *
+     * @param token the token
+     * @param bestMatch the best match
+     */
     private void printDebugInfo(final String token, final String bestMatch) {
 
         if (!token.equals(bestMatch)) {
@@ -80,7 +102,7 @@ public class LevenshteinCleaner extends AbstractDataCleaner {
      * Gets the possible matches.
      *
      * @param token  the token
-     * @param METRIC the metric
+     * @param wordMultiset the word multiset
      * @return the possible matches
      */
     //TODO test

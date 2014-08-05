@@ -43,6 +43,7 @@ public abstract class AbstractDataCleaner {
      */
     private static Multiset<String> wordMultiset;
 
+    /** The correction map. */
     private static Map<String, String> correctionMap;
 
     /**
@@ -72,6 +73,11 @@ public abstract class AbstractDataCleaner {
         correctTokensInFile(file, correctedFile);
     }
 
+    /**
+     * Builds the correction map.
+     *
+     * @param bucket the bucket
+     */
     private void buildCorrectionMap(final Bucket bucket) {
 
         correctionMap = new HashMap<>();
@@ -114,6 +120,13 @@ public abstract class AbstractDataCleaner {
         }
     }
 
+    /**
+     * Correct tokens in file.
+     *
+     * @param file the file
+     * @param correctedFile the corrected file
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
     private void correctTokensInFile(final File file, final File correctedFile) throws IOException {
 
         BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"));
@@ -128,6 +141,12 @@ public abstract class AbstractDataCleaner {
         bw.close();
     }
 
+    /**
+     * Correct line.
+     *
+     * @param line the line
+     * @return the string
+     */
     private String correctLine(final String line) {
 
         String[] commaSplits = line.split(Utils.getCSVComma());
@@ -140,6 +159,12 @@ public abstract class AbstractDataCleaner {
         return correctedLine.subSequence(0, correctedLine.length() - 1).toString();
     }
 
+    /**
+     * Tokenize and clean string.
+     *
+     * @param str the str
+     * @return the string
+     */
     private String tokenizeAndCleanString(final String str) {
 
         StringBuilder sb = new StringBuilder();
@@ -155,6 +180,11 @@ public abstract class AbstractDataCleaner {
         return sb.toString().trim();
     }
 
+    /**
+     * Sets the token limit.
+     *
+     * @param args the new token limit
+     */
     private void setTokenLimit(final String... args) {
 
         try {
@@ -166,6 +196,10 @@ public abstract class AbstractDataCleaner {
         }
     }
 
+    /**
+     * Overrides the default tokenLimit and sets it to the supplied value.
+     * @param tokenLimit new tokenLimit
+     */
     public static void setTokenLimit(final int tokenLimit) {
 
         AbstractDataCleaner.tokenLimit = tokenLimit;

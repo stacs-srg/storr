@@ -137,8 +137,9 @@ public class ClassCounter {
     private String getFileType() {
 
         String fileName = input.getName();
-        if (fileName.substring(fileName.length() - 3, fileName.length()).equalsIgnoreCase("txt")) { return "txt"; }
-        if (fileName.substring(fileName.length() - 3, fileName.length()).equalsIgnoreCase("csv")) { return "csv"; }
+        final int extensionLength = 3;
+        if (fileName.substring(fileName.length() - extensionLength, fileName.length()).equalsIgnoreCase("txt")) { return "txt"; }
+        if (fileName.substring(fileName.length() - extensionLength, fileName.length()).equalsIgnoreCase("csv")) { return "csv"; }
 
         return "unknown";
     }

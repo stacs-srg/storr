@@ -7,6 +7,9 @@ package uk.ac.standrews.cs.digitising_scotland.record_classification.datacleanin
  */
 public final class LevenshteinDistance {
 
+    /**
+     * Instantiates a new levenshtein distance.
+     */
     private LevenshteinDistance() {
 
         //private constructor - utility class
@@ -80,7 +83,8 @@ public final class LevenshteinDistance {
 
     /**
      * Main method. Currently runs as a test for the string similarity method.
-     * @param args
+     *
+     * @param args the arguments
      */
     public static void main(final String[] args) {
 
