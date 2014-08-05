@@ -16,14 +16,32 @@
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.organic;
 
+import java.util.Random;
+
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.AffairWithMarriedOrSingleDistribution;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.RandomFactory;
+
 public class AffairWaitingQueueMember implements Comparable<AffairWaitingQueueMember>{
 
 	OrganicPerson person;
 	int affairDay;
+	boolean interMarital;
+	
+	private static Random random = RandomFactory.getRandom();
+    private static AffairWithMarriedOrSingleDistribution affairWithMarriedOrSingleDistribution = new AffairWithMarriedOrSingleDistribution(random); 
+
 	
 	public AffairWaitingQueueMember(OrganicPerson person, int affairDay) {
 		this.person = person;
 		this.affairDay = affairDay;
+		switch (affairWithMarriedOrSingleDistribution.getSample()) {
+		    case SINGLE_AFFAIR:
+		    	this.interMarital = false;
+			    break;
+		    case INTER_MARITAL_AFFAIR:
+		    	this.interMarital = true;
+		    	break;
+		}	
 	}
 
 	@Override

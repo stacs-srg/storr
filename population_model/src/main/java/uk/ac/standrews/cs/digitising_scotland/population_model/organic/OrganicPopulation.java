@@ -16,12 +16,14 @@
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.organic;
 
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.AffairWithMarriedOrSingleDistribution;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.FamilyType;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IDFactory;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPartnership;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPerson;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPopulation;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.PopulationLogic;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.RandomFactory;
 import uk.ac.standrews.cs.digitising_scotland.util.ArrayManipulation;
 import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
 
@@ -31,6 +33,11 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.PriorityQueue;
+import java.util.Random;
+
+import org.omg.CORBA.INTERNAL;
+
+import com.sun.mail.util.MailSSLSocketFactory;
 
 /**
  * @author  Victor Andrei (va9@st-andrews.ac.uk)
@@ -72,8 +79,11 @@ public class OrganicPopulation implements IPopulation {
     private LinkedList<OrganicPerson> maleCohabitationThenMarriageQueue = new LinkedList<OrganicPerson>();
     private LinkedList<OrganicPerson> femaleCohabitationThenMarriageQueue = new LinkedList<OrganicPerson>();
     
-    private LinkedList<OrganicPerson> maleAffairsQueue = new LinkedList<OrganicPerson>();
-    private LinkedList<OrganicPerson> femaleAffairsQueue = new LinkedList<OrganicPerson>();
+    private LinkedList<OrganicPerson> maleSingleAffairsQueue = new LinkedList<OrganicPerson>();
+    private LinkedList<OrganicPerson> femaleSingleAffairsQueue = new LinkedList<OrganicPerson>();
+    
+    private LinkedList<OrganicPerson> maleMaritalAffairsQueue = new LinkedList<OrganicPerson>();
+    private LinkedList<OrganicPerson> femaleMaritalAffairsQueue = new LinkedList<OrganicPerson>();
     
     private PriorityQueue<AffairWaitingQueueMember> maleAffairsWaitingQueue = new PriorityQueue<AffairWaitingQueueMember>();
     private PriorityQueue<AffairWaitingQueueMember> femaleAffairsWaitingQueue = new PriorityQueue<AffairWaitingQueueMember>();
@@ -330,6 +340,13 @@ public class OrganicPopulation implements IPopulation {
     	    	return maleCohabitationThenMarriageQueue;
     	    case MARRIAGE:
     	    	return maleMarriageQueue;
+    	    case MALE_SINGLE_AFFAIR:
+    	    	return maleSingleAffairsQueue;
+      	    case MALE_MARITAL_AFFAIR:
+      	    case FEMALE_MARITAL_AFFAIR:
+      	    	return maleMaritalAffairsQueue;
+      	    case FEMALE_SINGLE_AFFAIR:
+      	    	return maleSingleQueue;
     	    default:
     	    	return null;
     	}
@@ -345,18 +362,54 @@ public class OrganicPopulation implements IPopulation {
     	    	return femaleCohabitationThenMarriageQueue;
     	    case MARRIAGE:
     	    	return femaleMarriageQueue;
+    	    case FEMALE_SINGLE_AFFAIR:
+    	    	return femaleSingleAffairsQueue;
+      	    case FEMALE_MARITAL_AFFAIR:
+      	    case MALE_MARITAL_AFFAIR:
+      	    	return femaleMaritalAffairsQueue;
+      	    case MALE_SINGLE_AFFAIR:
+      	    	return femaleSingleQueue;
     	    default:
     	    	return null;
     	}
+    }
+    
+    private void partnerUpMembersOfAffairsQueue() {
+    	// check the waiting queue for people ready to have affair
+    	while (maleAffairsWaitingQueue.peek() != null) {
+	    	if (maleAffairsWaitingQueue.peek().affairDay <= currentDay) {
+	    		if (maleAffairsWaitingQueue.peek().interMarital) {
+	    			maleMaritalAffairsQueue.add(maleAffairsWaitingQueue.poll().person);
+	    		} else {
+	    			maleSingleAffairsQueue.add(maleAffairsWaitingQueue.poll().person);	    			
+	    		}
+	    	}
+    	}
+    	while (femaleAffairsWaitingQueue.peek() != null) {
+	    	if (femaleAffairsWaitingQueue.peek().affairDay <= currentDay) {
+	    		if (femaleAffairsWaitingQueue.peek().interMarital) {
+	    			femaleMaritalAffairsQueue.add(femaleAffairsWaitingQueue.poll().person);
+	    		} else {
+	    			femaleSingleAffairsQueue.add(femaleAffairsWaitingQueue.poll().person);	    			
+	    		}
+	    	}
+    	}
+    	// Decide if affair between married people or with single person
+    	partnerTogetherPeopleInPartnershipQueue(FamilyType.MALE_SINGLE_AFFAIR);
+    	partnerTogetherPeopleInPartnershipQueue(FamilyType.MALE_MARITAL_AFFAIR);
+    	partnerTogetherPeopleInPartnershipQueue(FamilyType.FEMALE_SINGLE_AFFAIR);
+    	partnerTogetherPeopleInPartnershipQueue(FamilyType.FEMALE_MARITAL_AFFAIR);
+
     }
     
     private void partnerTogetherPeopleInRegularPartnershipQueues() {
     	partnerTogetherPeopleInPartnershipQueue(FamilyType.COHABITATION);
     	partnerTogetherPeopleInPartnershipQueue(FamilyType.COHABITATION_THEN_MARRIAGE);
     	partnerTogetherPeopleInPartnershipQueue(FamilyType.MARRIAGE);
+    	partnerUpMembersOfAffairsQueue();
     }
 
-    private void partnerTogetherPeopleInPartnershipQueue(FamilyType type) {
+    private void partnerTogetherPeopleInPartnershipQueue(FamilyType type) {   	
     	LinkedList<OrganicPerson> maleQueue = getMaleQueueOf(type);
     	LinkedList<OrganicPerson> femaleQueue = getFemaleQueueOf(type);
     	
@@ -365,6 +418,7 @@ public class OrganicPopulation implements IPopulation {
         Integer firstFemaleId = (Integer) null;
         // While males exist to be married
         while (!maleQueue.isEmpty()) {
+        	
             // Sets first male ID value to that of the first male
             if (firstMaleId == (Integer) null) {
                 firstMaleId = maleQueue.getFirst().getId();
@@ -439,23 +493,6 @@ public class OrganicPopulation implements IPopulation {
      * @param days The day of the marriage in days since the 1/1/1600.
      */
     private void partner(final FamilyType familyType, final OrganicPerson husband, final OrganicPerson wife, final int days) throws NoSuchEventException {
-    	EventType checkEvent = null;
-    	switch(familyType) {
-    	    case COHABITATION:
-    	    	checkEvent = EventType.ELIGIBLE_TO_COHABIT;
-    	    	break;
-    	    case COHABITATION_THEN_MARRIAGE:
-    	    	checkEvent = EventType.ELIGIBLE_TO_COHABIT_THEN_MARRY;
-    	    	break;
-    	    case MARRIAGE:
-    	    	checkEvent = EventType.ELIGIBLE_TO_MARRY;
-    	    	break;
-    	}
-    	
-    	int firstDay = husband.getEvent(checkEvent);
-        if (wife.getEvent(checkEvent) > firstDay) {
-            firstDay = wife.getEvent(checkEvent);
-        }
     	
     	// Create partnership
         Object[] partnershipObjects = OrganicPartnership.createOrganicPartnership(IDFactory.getNextID(), husband, wife, days, getCurrentDay(), familyType);

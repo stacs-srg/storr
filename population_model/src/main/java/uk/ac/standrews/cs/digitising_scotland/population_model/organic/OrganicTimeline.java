@@ -18,8 +18,10 @@ package uk.ac.standrews.cs.digitising_scotland.population_model.organic;
 
 import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 
 /**
  * @author Victor Andrei (va9@st-andrews.ac.uk)
@@ -123,6 +125,20 @@ public class OrganicTimeline {
     /*
      * Getters and setters
      */
+    
+    public Integer[] getAllDaysOfEventType(EventType event) {
+    	ArrayList<Integer> temp = new ArrayList<Integer>();
+    	Iterator<Integer> iter = events.keySet().iterator();
+    	while (iter.hasNext()) {
+    		int i = iter.next();
+    		OrganicEvent e = events.get(i);
+    		if (e.getEventType() == event) {
+    			temp.add(i);
+    		}
+    	}
+    	
+    	return temp.toArray(new Integer[temp.size()]);
+    }
 
     /**
      * Sets the start date.

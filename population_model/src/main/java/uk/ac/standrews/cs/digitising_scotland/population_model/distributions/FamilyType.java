@@ -18,6 +18,15 @@ package uk.ac.standrews.cs.digitising_scotland.population_model.distributions;
 
 public enum FamilyType {
     SINGLE,
+    AFFAIR,
+    MALE_AFFAIR,
+    FEMALE_AFFAIR,
+    SINGLE_AFFAIR,
+    MALE_SINGLE_AFFAIR,
+    MALE_MARITAL_AFFAIR,
+    FEMALE_SINGLE_AFFAIR,
+    FEMALE_MARITAL_AFFAIR,
+    INTER_MARITAL_AFFAIR,
     LONE_MOTHER,
     LONE_FATHER,
     COHABITATION,
