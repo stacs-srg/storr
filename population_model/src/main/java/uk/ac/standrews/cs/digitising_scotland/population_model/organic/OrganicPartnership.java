@@ -241,9 +241,8 @@ public final class OrganicPartnership implements IPartnership {
         }
     }
     
-    // FIXME Should end on last child
     private void setUpAffairEndEvent(final OrganicPerson male, final OrganicPerson female, final int currentDay) {
-	
+    	timeline.addEvent(currentDay + 1, new OrganicEvent(EventType.END_OF_AFFAIR));
     }
     
     private void setUpCohabitationEndEvent(final OrganicPerson male, final OrganicPerson female, final int currentDay) {
