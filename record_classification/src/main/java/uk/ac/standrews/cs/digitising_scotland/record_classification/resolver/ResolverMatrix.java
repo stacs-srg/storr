@@ -39,9 +39,9 @@ public class ResolverMatrix {
 
     private static final int KEYSET_SIZE_LIMIT = 30;
 
-    private static final int COMPLEXITY_UPPERLIMIT = 10000;
+    private static final int COMPLEXITY_UPPERLIMIT = 2000;
 
-    private static final int LOWER_BOUND = 6;
+    private static final int LOWER_BOUND = 1;
 
     /**
      * The Code, List<Pair> matrix.
