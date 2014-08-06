@@ -80,7 +80,7 @@ public class ExactMatchClassifier extends AbstractClassifier {
     @Override
     public Record classify(final Record record) throws IOException {
 
-        Set<CodeTriple> result = lookupTable.get(record.getDescription());
+        Set<CodeTriple> result = lookupTable.get(new TokenSet(record.getDescription()));
         if (result == null) {
             return record;
         }
@@ -216,7 +216,7 @@ public class ExactMatchClassifier extends AbstractClassifier {
      */
     public Set<CodeTriple> classifyTokenSetToCodeTripleSet(final TokenSet tokenSet) throws IOException {
 
-        Set<CodeTriple> result = lookupTable.get(tokenSet.toString());
+        Set<CodeTriple> result = lookupTable.get(tokenSet);
 
         if (result != null) {
             result = setConfidenceLevels(result, 2.0);
@@ -241,7 +241,7 @@ public class ExactMatchClassifier extends AbstractClassifier {
     @Override
     public Pair<Code, Double> classify(final TokenSet tokenSet) throws IOException {
 
-        Set<CodeTriple> result = lookupTable.get(tokenSet.toString());
+        Set<CodeTriple> result = lookupTable.get(tokenSet);
 
         if (result != null) {
             CodeTriple current = result.iterator().next();
