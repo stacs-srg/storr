@@ -28,7 +28,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
  */
 public class ExactMatchClassifier extends AbstractClassifier {
 
-    private Map<String, Set<CodeTriple>> lookupTable;
+    private Map<TokenSet, Set<CodeTriple>> lookupTable;
     private String modelFileName = "target/lookupTable";
 
     /**
@@ -115,7 +115,7 @@ public class ExactMatchClassifier extends AbstractClassifier {
      */
     private void addRecordToLookupTable(final Record record) {
 
-        lookupTable.put(record.getDescription(), record.getOriginalData().getGoldStandardCodeTriples());
+        lookupTable.put(new TokenSet(record.getDescription()), record.getOriginalData().getGoldStandardCodeTriples());
 
     }
 
@@ -148,7 +148,7 @@ public class ExactMatchClassifier extends AbstractClassifier {
 
         try {
 
-            Map<String, Set<CodeTriple>> recoveredMap = (Map<String, Set<CodeTriple>>) input.readObject();
+            Map<TokenSet, Set<CodeTriple>> recoveredMap = (Map<TokenSet, Set<CodeTriple>>) input.readObject();
             lookupTable = recoveredMap;
         }
         finally {
