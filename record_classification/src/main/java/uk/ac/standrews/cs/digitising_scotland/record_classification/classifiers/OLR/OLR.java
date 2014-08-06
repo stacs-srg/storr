@@ -48,25 +48,22 @@ public class OLR {
     /** The minimum permitted value for the log likelihood. */
     private static final double LOGLIK_MINIMUM = -100.0;
 
-    /** The gradient. */
-    private Gradient gradient = new Gradient();
-
-    /** The beta. */
+    /** The model parameters. */
     protected org.apache.mahout.math.Matrix beta;
 
     /** The properties. */
     private Properties properties;
 
-    /** The mu0. */
+    /** The initial learning rate. */
     private double mu0;
 
-    /** The prior. */
+    /** The prior function (controls regularization of model parameters). */
     private L1 prior;
 
-    /** The decay factor. */
+    /** The rate of decay in jump size (stochastic gradient descent parameter). */
     private double decayFactor;
 
-    /** The per term annealing rate. */
+    /** The decay rates for per term annealing - allows each feature its own learning. */
     private double perTermAnnealingRate;
 
     /** Are we per term annealing. */
@@ -95,6 +92,13 @@ public class OLR {
 
     /** The number log likelihood sum updates. */
     private volatile AtomicInteger numLogLikelihoodSumUpdates;
+
+    private volatile AtomicInteger numTrained;
+
+
+    public int getNumTrained(){
+        return numTrained.get();
+    }
 
     /**
      * Gets the step.
@@ -157,6 +161,7 @@ public class OLR {
 
         runningLogLikelihood = 0.;
         numLogLikelihoodSumUpdates = new AtomicInteger(1);
+        numTrained = new AtomicInteger(0);
     }
 
     /**
@@ -214,32 +219,6 @@ public class OLR {
     }
 
     /**
-     * The Class Gradient.
-     */
-    private class Gradient {
-
-        /**
-         * Apply.
-         *
-         * @param instance the instance
-         * @return the vector
-         */
-        public final Vector apply(final NamedVector instance) {
-
-            int actual = Integer.parseInt(instance.getName());
-            // what does the current model say?
-            Vector v = classify(instance);
-            updateLogLikelihoodSum(actual, v);
-            Vector r = v.like();
-            if (actual != 0) {
-                r.setQuick(actual - 1, 1);
-            }
-            r.assign(v, Functions.MINUS);
-            return r;
-        }
-    }
-
-    /**
      * Constructor with default properties.
      */
     public OLR() {
@@ -277,7 +256,7 @@ public class OLR {
      * @param instance feature vector
      */
     public void train(final NamedVector instance) {
-
+        numTrained.getAndIncrement();
         updateModelParameters(instance);
         updateCountsAndSteps(instance);
         nextStep();
@@ -298,10 +277,23 @@ public class OLR {
      */
     private void updateModelParameters(final NamedVector instance) {
 
-        Vector gradient = this.gradient.apply(instance);
+        Vector gradient = calcGradient(instance);
         for (int category = 0; category < numCategories - 1; category++) {
             updateBetaCategory(instance, gradient, category);
         }
+    }
+
+    private Vector calcGradient(NamedVector instance) {
+        int actual = Integer.parseInt(instance.getName());
+        // what does the current model say?
+        Vector v = classify(instance);
+        updateLogLikelihoodSum(actual, v);
+        Vector r = v.like();
+        if (actual != 0) {
+            r.setQuick(actual - 1, 1);
+        }
+        r.assign(v, Functions.MINUS);
+        return r;
     }
 
     /**
