@@ -25,7 +25,6 @@ import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
 
 import java.io.IOException;
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
@@ -48,6 +47,12 @@ public class DBPopulationWriter implements IPopulationWriter {
     private final PreparedStatement record_partner_within_partnership_statement;
     private final PreparedStatement record_child_within_partnership_statement;
 
+    /**
+     * Initialises a writer using the standard database as specified in {@link uk.ac.standrews.cs.digitising_scotland.population_model.config.PopulationProperties}.
+     *
+     * @throws IOException if the database name cannot be loaded
+     * @throws SQLException if the database cannot be accessed
+     */
     public DBPopulationWriter() throws IOException, SQLException {
 
         connection = new DBConnector(PopulationProperties.getDatabaseName()).createConnection();

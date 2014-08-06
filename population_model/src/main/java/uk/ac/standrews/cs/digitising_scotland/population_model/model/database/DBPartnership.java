@@ -26,7 +26,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-public class DBPartnership extends AbstractPartnership {
+class DBPartnership extends AbstractPartnership {
 
     private static PreparedStatement get_partners_statement = null;
     private static PreparedStatement get_partner_statement = null;

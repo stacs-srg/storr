@@ -28,14 +28,14 @@ import java.util.List;
  * A compact representation of a person, designed for minimal space overhead.
  * Encodes multiple attributes into a field wherever possible.
  * Dates are encoded as integers.
- *
+ * <p/>
  * This class is not thread-safe.
  *
  * @author Alan Dearle (alan.dearle@st-andrews.ac.uk)
  * @author Graham Kirby (graham.kirby@st-andrews.ac.uk)
  */
 @NotThreadSafe
- class CompactPerson {
+class CompactPerson {
 
     private static final int POSITION_OF_MALE_BIT = 0;
     private static final int POSITION_OF_PARENTS_BIT = 1;

@@ -25,7 +25,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class DBPerson extends AbstractPerson {
+class DBPerson extends AbstractPerson {
 
     private static PreparedStatement get_person_statement = null;
     private static PreparedStatement get_parents_statement = null;

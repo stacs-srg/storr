@@ -27,9 +27,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by graham on 24/07/2014.
+ * Links people to children within a compact population.
+ *
+ * @author Graham Kirby (graham.kirby@st-andrews.ac.uk)
  */
-public class CompactPopulationChildLinker {
+class CompactPopulationChildLinker {
 
     private static final int MAX_CHILDREN = 6;
     private static final int[] NUMBER_OF_CHILDREN_DISTRIBUTION = new int[]{2, 3, 2, 1, 1, 1, 1};
@@ -40,7 +42,7 @@ public class CompactPopulationChildLinker {
     private final WeightedIntegerDistribution number_of_children_distribution;
 
     @SuppressFBWarnings(value = "EI_EXPOSE_REP", justification = "too expensive...")
-    public CompactPopulationChildLinker(final CompactPerson[] people, final ProgressIndicator progress_indicator) throws NegativeWeightException {
+    protected CompactPopulationChildLinker(final CompactPerson[] people, final ProgressIndicator progress_indicator) throws NegativeWeightException {
 
         this.people = people;
         this.progress_indicator = progress_indicator;
@@ -48,7 +50,7 @@ public class CompactPopulationChildLinker {
         number_of_children_distribution = new WeightedIntegerDistribution(0, MAX_CHILDREN, NUMBER_OF_CHILDREN_DISTRIBUTION, RandomFactory.getRandom());
     }
 
-    public void linkChildren() {
+    protected void linkChildren() {
 
         for (final CompactPerson person : people) {
 
@@ -122,7 +124,7 @@ public class CompactPopulationChildLinker {
                 final CompactPerson child = people[child_index];
 
                 if (child.birth_date >= latest_birth_date) {
-                    return ConditionResult.NEGATIVE_STOP;
+                    return ConditionResult.NOT_FOUND_STOP;
                 }
 
                 final CompactPerson father = people[husband_index];
@@ -142,7 +144,7 @@ public class CompactPopulationChildLinker {
                         parents_have_sensible_ages &&
                         child_not_married_to_existing_child ?
 
-                        ConditionResult.POSITIVE : ConditionResult.NEGATIVE_CONTINUE;
+                        ConditionResult.FOUND : ConditionResult.NOT_FOUND_CONTINUE;
             }
 
             private boolean marriedToAnyChildrenOf(final int person_index, final CompactPartnership partnership) {
@@ -188,11 +190,11 @@ public class CompactPopulationChildLinker {
 
             switch (condition.check(i)) {
 
-                case POSITIVE:
+                case FOUND:
                     return i;
-                case NEGATIVE_CONTINUE:
+                case NOT_FOUND_CONTINUE:
                     continue;
-                case NEGATIVE_STOP:
+                case NOT_FOUND_STOP:
                     return -1;
             }
         }

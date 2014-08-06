@@ -37,7 +37,7 @@ import java.util.Random;
  * Created by graham on 01/07/2014.
  */
 @NotThreadSafe
- class CompactPersonAdapter {
+class CompactPersonAdapter {
 
     private static final String OCCUPATION_DISTRIBUTION_KEY = "occupation_distribution_filename";
     private static final String CAUSE_OF_DEATH_DISTRIBUTION_KEY = "cause_of_death_distribution_filename";

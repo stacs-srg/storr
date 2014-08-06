@@ -35,7 +35,7 @@ import java.util.List;
  * @author Graham Kirby (graham.kirby@st-andrews.ac.uk)
  */
 @NotThreadSafe
- class CompactPartnershipAdapter {
+class CompactPartnershipAdapter {
 
     private static final String ADDRESS_DISTRIBUTION_KEY = "address_distribution_filename";
 

@@ -29,6 +29,12 @@ import java.sql.SQLException;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+/**
+ * Provides an abstract population interface over a database representation.
+ *
+ * @author Graham Kirby (graham.kirby@st-andrews.ac.uk)
+ */
+@SuppressWarnings("IteratorNextCanNotThrowNoSuchElementException")
 public class DBPopulationAdapter implements IPopulation {
 
     private String description;
@@ -37,6 +43,11 @@ public class DBPopulationAdapter implements IPopulation {
     private final PreparedStatement person_select_statement;
     private final PreparedStatement partnership_select_statement;
 
+    /**
+     * Initialises an adapter using the standard database as specified in {@link uk.ac.standrews.cs.digitising_scotland.population_model.config.PopulationProperties}.
+     *
+     * @throws SQLException if the population cannot be accessed
+     */
     public DBPopulationAdapter() throws SQLException {
 
         final String get_people_query = getAllQuery(PopulationProperties.PERSON_TABLE_NAME);
@@ -48,6 +59,11 @@ public class DBPopulationAdapter implements IPopulation {
         partnership_select_statement = connection.prepareStatement(get_partnerships_query);
     }
 
+    /**
+     * Closes the database connection.
+     *
+     * @throws SQLException if the database connection cannot be closed
+     */
     public void close() throws SQLException {
 
         person_select_statement.close();
@@ -67,7 +83,7 @@ public class DBPopulationAdapter implements IPopulation {
     @Override
     public void setConsistentAcrossIterations(final boolean consistent_across_iterations) {
 
-        // Ignored, since this implementation does not perform cacheing.
+        // Ignored, since this implementation does not perform caching.
     }
 
     @Override
