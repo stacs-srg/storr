@@ -152,12 +152,12 @@ public class ExactMatchClassifier extends AbstractClassifier {
             lookupTable = recoveredMap;
         }
         finally {
-            closeStrams(file, input);
+            closeStreams(file, input);
 
         }
     }
 
-    private void closeStrams(final InputStream file, final ObjectInput input) throws IOException {
+    private void closeStreams(final InputStream file, final ObjectInput input) throws IOException {
 
         if (input != null) {
             input.close();
