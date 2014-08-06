@@ -1,7 +1,5 @@
 /**
- * 
- */
-/**
+ * Package contains all different loss function implementations.
  * @author jkc25
  *
  */
