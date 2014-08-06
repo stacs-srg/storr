@@ -157,7 +157,8 @@ public class OrganicPerson implements IPerson {
 
         // Create timeline
         timeline = new OrganicTimeline(dayOfBirth, dayOfDeath);
-        timeline.addEvent(dayOfDeath, new OrganicEvent(EventType.DEATH));
+        timeline.addEvent(dayOfBirth, new OrganicEvent(EventType.BORN, this, dayOfBirth));
+        timeline.addEvent(dayOfDeath, new OrganicEvent(EventType.DEATH, this, dayOfDeath));
     }
 
     /**
@@ -233,7 +234,7 @@ public class OrganicPerson implements IPerson {
     }
     
     private void addSingleComingOfAgeEvent() {
-    	timeline.addEvent((int) (COMING_OF_AGE * OrganicPopulation.getDaysPerYear()), new OrganicEvent(EventType.COMING_OF_AGE));
+    	timeline.addEvent(getBirthDay() + (int) (COMING_OF_AGE * OrganicPopulation.getDaysPerYear()), new OrganicEvent(EventType.COMING_OF_AGE, this, getBirthDay() + (int) (COMING_OF_AGE * OrganicPopulation.getDaysPerYear())));
     }
     
     private void addEligibleToCohabitEvent() {
@@ -245,7 +246,7 @@ public class OrganicPerson implements IPerson {
                 date = getBirthDay() + maleAgeAtCohabitationDistribution.getSample();
             } while (date > getDeathDay() && getDeathAgeInDays() > MIN_DEATH_AGE_FOR_NO_PARTNERSHIP_EVENT * OrganicPopulation.getDaysPerYear());
 
-            timeline.addEvent(date, new OrganicEvent(EventType.ELIGIBLE_TO_COHABIT));
+            timeline.addEvent(date, new OrganicEvent(EventType.ELIGIBLE_TO_COHABIT, this, date));
 
         } else {
             // time in days to birth from 1/1/1600 + marriage age in days
@@ -253,7 +254,7 @@ public class OrganicPerson implements IPerson {
                 date = getBirthDay() + femaleAgeAtCohabitationDistribution.getSample();
             } while (date > getDeathDay() && getDeathAgeInDays() > MIN_DEATH_AGE_FOR_NO_PARTNERSHIP_EVENT * OrganicPopulation.getDaysPerYear());
 
-            timeline.addEvent(date, new OrganicEvent(EventType.ELIGIBLE_TO_COHABIT));
+            timeline.addEvent(date, new OrganicEvent(EventType.ELIGIBLE_TO_COHABIT, this, date));
 
         }
     }
@@ -267,7 +268,7 @@ public class OrganicPerson implements IPerson {
                 date = getBirthDay() + maleAgeAtCohabitationDistribution.getSample();
             } while (date > getDeathDay() && getDeathAgeInDays() > MIN_DEATH_AGE_FOR_NO_PARTNERSHIP_EVENT * OrganicPopulation.getDaysPerYear());
 
-            timeline.addEvent(date, new OrganicEvent(EventType.ELIGIBLE_TO_COHABIT_THEN_MARRY));
+            timeline.addEvent(date, new OrganicEvent(EventType.ELIGIBLE_TO_COHABIT_THEN_MARRY, this, date));
 
         } else {
             // time in days to birth from 1/1/1600 + marriage age in days
@@ -275,7 +276,7 @@ public class OrganicPerson implements IPerson {
                 date = getBirthDay() + femaleAgeAtCohabitationDistribution.getSample();
             } while (date > getDeathDay() && getDeathAgeInDays() > MIN_DEATH_AGE_FOR_NO_PARTNERSHIP_EVENT * OrganicPopulation.getDaysPerYear());
 
-            timeline.addEvent(date, new OrganicEvent(EventType.ELIGIBLE_TO_COHABIT_THEN_MARRY));
+            timeline.addEvent(date, new OrganicEvent(EventType.ELIGIBLE_TO_COHABIT_THEN_MARRY, this, date));
 
         }
     }
@@ -289,7 +290,7 @@ public class OrganicPerson implements IPerson {
                 date = getBirthDay() + maleAgeAtMarriageDistribution.getSample();
             } while (date > getDeathDay() && getDeathAgeInDays() > MIN_DEATH_AGE_FOR_NO_PARTNERSHIP_EVENT * OrganicPopulation.getDaysPerYear());
 
-            timeline.addEvent(date, new OrganicEvent(EventType.ELIGIBLE_TO_MARRY));
+            timeline.addEvent(date, new OrganicEvent(EventType.ELIGIBLE_TO_MARRY, this, date));
 
         } else {
             // time in days to birth from 1/1/1600 + marriage age in days
@@ -297,7 +298,7 @@ public class OrganicPerson implements IPerson {
                 date = getBirthDay() + femaleAgeAtMarriageDistribution.getSample();
             } while (date > getDeathDay() && getDeathAgeInDays() > MIN_DEATH_AGE_FOR_NO_PARTNERSHIP_EVENT * OrganicPopulation.getDaysPerYear());
 
-            timeline.addEvent(date, new OrganicEvent(EventType.ELIGIBLE_TO_MARRY));
+            timeline.addEvent(date, new OrganicEvent(EventType.ELIGIBLE_TO_MARRY, this, date));
 
         }
     }
@@ -316,7 +317,7 @@ public class OrganicPerson implements IPerson {
         date = uniformDistribution.getSample();
 
         if (date < getDeathDay()) {
-            timeline.addEvent(date, new OrganicEvent(EventType.ELIGIBLE_TO_MARRY));
+            timeline.addEvent(date, new OrganicEvent(EventType.ELIGIBLE_TO_MARRY, this, date));
             OrganicPopulationLogger.incRemarriages();
         }
     }
