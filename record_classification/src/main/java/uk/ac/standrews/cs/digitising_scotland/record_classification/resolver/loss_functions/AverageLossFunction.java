@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.digitising_scotland.record_classification.resolver;
+package uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.loss_functions;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,7 +6,13 @@ import java.util.Set;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeTriple;
 
-public class AverageLossFunction extends LossFunction {
+/**
+ * Calculates the loss for a set of CodeTriples.
+ * The loss function is defined as the average confidence of all the {@link CodeTriple} in the set.
+ * @author jkc25
+ *
+ */
+public class AverageLossFunction extends AbstractLossFunction {
 
     @Override
     public double calculate(final Set<CodeTriple> set) {
