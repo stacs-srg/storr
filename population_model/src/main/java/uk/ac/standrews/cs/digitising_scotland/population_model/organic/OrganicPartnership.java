@@ -54,6 +54,8 @@ public final class OrganicPartnership implements IPartnership {
 
     // Adjusted number of children variables
     private static ArrayList<Integer>[] adjustedNumberOfChildren = null;
+    
+    
 
     // Universal partnership ditributions
     private static Random random = RandomFactory.getRandom();
