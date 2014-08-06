@@ -43,6 +43,7 @@ public enum EventType {
      * Indicates the point in time where an individual should be added to a marriage queue.
      */
     ELIGIBLE_TO_MARRY,
+    BORN,
     /**
      * Indicates the point in time on the partnership timeline where the birth will occur.
      */
