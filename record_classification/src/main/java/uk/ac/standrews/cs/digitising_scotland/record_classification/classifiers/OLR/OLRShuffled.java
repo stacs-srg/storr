@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Properties;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.mahout.math.Matrix;
 import org.apache.mahout.math.NamedVector;
@@ -47,6 +48,10 @@ public class OLRShuffled implements Runnable {
     private boolean stopped = false;
 
     //----constructors---
+
+    public int getNumTrained(){
+        return model.getNumTrained();
+    }
 
     /**
      * Constructor.
