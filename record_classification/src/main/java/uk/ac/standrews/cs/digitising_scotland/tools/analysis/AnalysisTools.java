@@ -51,7 +51,7 @@ public class AnalysisTools {
     /** The classification map. */
     private HashMap<String, AccuracyMetrics> classificationMap;
 
-    private final int multiplier1000 = 1000;
+    private static final int multiplier1000 = 1000;
 
     /**
      * Constructs a hashmap contains the classification name as the key and the
