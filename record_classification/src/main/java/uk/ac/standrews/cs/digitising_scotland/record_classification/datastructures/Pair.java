@@ -11,6 +11,11 @@ public class Pair<L, R> {
     /** The left. */
     private L left;
 
+    /**
+     * Sets the right object.
+     *
+     * @param right the new right
+     */
     public void setRight(final R right) {
 
         this.right = right;
@@ -31,6 +36,11 @@ public class Pair<L, R> {
         this.right = right;
     }
 
+    /**
+     * Sets the left object.
+     *
+     * @param left the new left
+     */
     public void setLeft(final L left) {
 
         this.left = left;
@@ -56,6 +66,9 @@ public class Pair<L, R> {
         return right;
     }
 
+    /* (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
     @Override
     public String toString() {
 
