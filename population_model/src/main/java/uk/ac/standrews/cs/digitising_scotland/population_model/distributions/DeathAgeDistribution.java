@@ -26,7 +26,7 @@ import java.util.Random;
  * @author Alan Dearle (alan.dearle@st-andrews.ac.uk)
  * @author Graham Kirby (graham.kirby@st-andrews.ac.uk)
  */
-public class AgeAtDeathDistribution implements Distribution<Integer> {
+public class DeathAgeDistribution implements Distribution<Integer> {
 
     /*
      * from referencetablefinal_tcm77-301305.xls
@@ -67,7 +67,7 @@ public class AgeAtDeathDistribution implements Distribution<Integer> {
      * Creates an age at death distribution.
      * @param random the random number generator to be used
      */
-    public AgeAtDeathDistribution(final Random random) {
+    public DeathAgeDistribution(final Random random) {
 
         try {
             distribution = new WeightedIntegerDistribution(0, (int) (MAXIMUM_AGE_IN_YEARS * PopulationLogic.DAYS_PER_YEAR) - 1, AGE_DISTRIBUTION_WEIGHTS, random);

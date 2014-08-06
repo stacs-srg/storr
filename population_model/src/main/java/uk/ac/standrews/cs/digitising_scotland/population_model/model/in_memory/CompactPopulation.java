@@ -17,13 +17,8 @@
 package uk.ac.standrews.cs.digitising_scotland.population_model.model.in_memory;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.AgeAtDeathDistribution;
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.Distribution;
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.IncomersDistribution;
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.NegativeDeviationException;
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.NegativeWeightException;
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.UniformIntegerDistribution;
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.UniformSexDistribution;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.*;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.DeathAgeDistribution;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IDFactory;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.PopulationLogic;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.RandomFactory;
@@ -234,7 +229,7 @@ class CompactPopulation {
 
         date_of_birth_distribution = new UniformIntegerDistribution(earliest_date, latest_date, random);
         sex_distribution = new UniformSexDistribution(random);
-        age_at_death_distribution = new AgeAtDeathDistribution(random);
+        age_at_death_distribution = new DeathAgeDistribution(random);
         incomers_distribution = new IncomersDistribution(PROBABILITY_OF_BEING_INCOMER, random);
     }
 

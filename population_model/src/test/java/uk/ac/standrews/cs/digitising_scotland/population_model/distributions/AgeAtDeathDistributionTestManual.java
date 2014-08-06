@@ -35,7 +35,7 @@ public class AgeAtDeathDistributionTestManual {
 
     public static int[] gatherSamplesIntoBuckets(final int iterations) throws NegativeWeightException {
 
-        final AgeAtDeathDistribution distribution = new AgeAtDeathDistribution(new Random());
+        final DeathAgeDistribution distribution = new DeathAgeDistribution(new Random());
         final int[] buckets = new int[100];
 
         for (int i = 0; i < iterations; i++) {

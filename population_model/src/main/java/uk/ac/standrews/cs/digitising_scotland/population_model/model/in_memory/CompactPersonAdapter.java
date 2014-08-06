@@ -17,11 +17,8 @@
 package uk.ac.standrews.cs.digitising_scotland.population_model.model.in_memory;
 
 import uk.ac.standrews.cs.digitising_scotland.population_model.config.PopulationProperties;
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.FemaleFirstNameDistribution;
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.FileBasedEnumeratedDistribution;
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.InconsistentWeightException;
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.MaleFirstNameDistribution;
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.SurnameDistribution;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.*;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.FirstNameForFemalesDistribution;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.AbstractPerson;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPerson;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.RandomFactory;
@@ -43,8 +40,8 @@ class CompactPersonAdapter {
     private static final String CAUSE_OF_DEATH_DISTRIBUTION_KEY = "cause_of_death_distribution_filename";
     private static final String ADDRESS_DISTRIBUTION_KEY = "address_distribution_filename";
 
-    private final MaleFirstNameDistribution male_first_name_distribution;
-    private final FemaleFirstNameDistribution female_first_name_distribution;
+    private final FirstNameForMalesDistribution male_first_name_distribution;
+    private final FirstNameForFemalesDistribution female_first_name_distribution;
     private final SurnameDistribution surname_distribution;
     private final FileBasedEnumeratedDistribution occupation_distribution;
     private final FileBasedEnumeratedDistribution cause_of_death_distribution;
@@ -61,8 +58,8 @@ class CompactPersonAdapter {
 
         final Random random = RandomFactory.getRandom();
 
-        male_first_name_distribution = new MaleFirstNameDistribution(random);
-        female_first_name_distribution = new FemaleFirstNameDistribution(random);
+        male_first_name_distribution = new FirstNameForMalesDistribution(random);
+        female_first_name_distribution = new FirstNameForFemalesDistribution(random);
         surname_distribution = new SurnameDistribution(random);
         occupation_distribution = new FileBasedEnumeratedDistribution(occupation_distribution_file_name, random);
         cause_of_death_distribution = new FileBasedEnumeratedDistribution(cause_of_death_distribution_file_name, random);

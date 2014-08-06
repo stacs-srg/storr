@@ -25,7 +25,7 @@ import java.util.Random;
  *
  * @author Tom Dalton (tsd4@st-andrews.ac.uk)
  */
-public class FemaleAgeAtMarriageDistribution implements Distribution<Integer> {
+public class MarriageAgeForFemalesDistribution implements Distribution<Integer> {
     /*
      * from ageatmarriageandpreviousmaritalstatus_tcm77-366510.xls
      * from http://www.ons.gov.uk/ons/rel/vsob1/marriages-in-england-and-wales--provisional-/2012/rtd-age-at-marriage-and-previous-marital-status.xls
@@ -70,7 +70,7 @@ public class FemaleAgeAtMarriageDistribution implements Distribution<Integer> {
      *
      * @param random The random number generator to be used.
      */
-    public FemaleAgeAtMarriageDistribution(final Random random) {
+    public MarriageAgeForFemalesDistribution(final Random random) {
         try {
             distribution = new WeightedIntegerDistribution(0, (int) (MAXIMUM_AGE_IN_YEARS * PopulationLogic.DAYS_PER_YEAR) - 1, AGE_DISTRIBUTION_WEIGHTS, random);
         } catch (final NegativeWeightException e) {
