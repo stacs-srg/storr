@@ -26,8 +26,7 @@ public class RecordGenerator {
     public static final String DEATH_RECORDS_PATH = "output/death_records.txt";
     public static final String MARRIAGE_RECORDS_PATH = "output/marriage_records.txt";
 
-    // TODO allow output file paths to be configured
-    // TODO add -i option to output to console
+    // TODO allow output file paths to be configured, add -i option to output to console
 
     public static final int DEFAULT_NUMBER_OF_PROGRESS_UPDATES = 10;
     private static final String NUMBER_OF_PROGRESS_UPDATES_FLAG = "-u";
@@ -45,7 +44,6 @@ public class RecordGenerator {
 
         final int number_of_progress_updates = CommandLineArgs.extractIntFromCommandLineArgs(args, NUMBER_OF_PROGRESS_UPDATES_FLAG, DEFAULT_NUMBER_OF_PROGRESS_UPDATES);
 
-        // TODO use standard logging.
         Diagnostic.traceNoSource("Generating birth records");
         exportRecords(RecordIterator.getBirthRecordIterator(population), BIRTH_RECORDS_PATH, population.getNumberOfPeople(), number_of_progress_updates);
         TimeManipulation.reportElapsedTime(start_time);

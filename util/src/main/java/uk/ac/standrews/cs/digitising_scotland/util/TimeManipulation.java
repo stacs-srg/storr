@@ -25,9 +25,7 @@ public class TimeManipulation {
 
     public static void reportElapsedTime(final long start_time) {
 
-        // TODO use standard logging.
-
-        System.out.println("Elapsed time: " + formatMillis(System.currentTimeMillis() - start_time));
+        Diagnostic.traceNoSource("Elapsed time: " + formatMillis(System.currentTimeMillis() - start_time));
     }
 
     private static String formatMillis(final long millis) {

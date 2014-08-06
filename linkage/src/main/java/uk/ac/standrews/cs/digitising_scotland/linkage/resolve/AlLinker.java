@@ -1,11 +1,14 @@
 package uk.ac.standrews.cs.digitising_scotland.linkage.resolve;
 
 import org.json.JSONException;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.*;
+import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.LXP;
+import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.RepositoryException;
+import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.Store;
+import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.StoreException;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.*;
 import uk.ac.standrews.cs.digitising_scotland.linkage.EventImporter;
 import uk.ac.standrews.cs.digitising_scotland.linkage.RecordFormatException;
-import uk.ac.standrews.cs.digitising_scotland.linkage.blocking.FNLNSOverPerson;
+import uk.ac.standrews.cs.digitising_scotland.linkage.blocking.MultipleBlockerOverPerson;
 import uk.ac.standrews.cs.digitising_scotland.linkage.labels.*;
 import uk.ac.standrews.cs.digitising_scotland.linkage.visualise.IndexedBucketVisualiser;
 import uk.ac.standrews.cs.nds.persistence.PersistentObjectException;
@@ -15,47 +18,63 @@ import java.util.Iterator;
 
 
 /**
- * Performs pairwise linkage on babies and fathers
- * <p/>
- * Created by al on 11/05/2014.
+ * Attempt to create a linking framework
+ * Created by al on 6/8/2014.
  */
-public class BassJohnBass {
+public class AlLinker {
+
+    // Repositories and stores
 
     private static String store_path = "src/test/resources/STORE";
+    private static String input_repo_name = "BDM_repo";                         // input repository containing event records
+    private static String linkage_repo_name = "linkage_repo";                   // repository for linked records
+    private static String blocked_people_repo_name = "blocked_people_repo";     // repository for blocked records
 
-    private static String input_repo_name = "BDM_repo";          // input repository containing event records
-    private static String linkage_repo_name = "linkage_repo";    // repository for linked records
-    private static String blocked_people_repo_name = "blocked_people_repo";    // repository for blocked records
+    private Store store;
+    private IRepository input_repo;             // Repository containing buckets of BDM records
+    private IRepository linkage_repo;
+    private IRepository blocked_people_repo;
 
-    private static String source_base_path = "src/test/resources/BDMSet1";          // Path to source of vital event records in Digitising Scotland format
-    private static String births_name = "birth_records";                            // Name of bucket containing birth records (inputs).
-    private static String marriages_name = "marriage_records";                      // Name of bucket containing marriage records (inputs).
-    private static String people_name = "people";                                   // Name of bucket containing maximal people extracted from birth records
-    private static String relationships_name = "relationships";                     // Name of bucket containing relationships between people extracted from birth records
-    private static String identities_name = "identity";                             // Name of bucket containing equivalent identities of people
-    private static String lineage_name = "lineage";                                 // Name of bucket of pais of (mother/father- baby links).
-
-
-    private static String births_source_path = source_base_path + "/" + births_name + ".txt";
-    private static String marriages_source_path = source_base_path + "/" + marriages_name + ".txt";
-
-    private final IRepository input_repo;
-    private final IRepository linkage_repo;
-    private final IRepository blocked_people_repo;
-    private final Store store
-            ;
-
-    // input buckets containing BDM records in LXP format
+    // Bucket declarations
 
     private IBucket births;                     // Bucket containing birth records (inputs).
-    private IBucket marriages;                     // Bucket containing marriage records (inputs).
-    private IBucket people;              // Bucket containing people extracted from birth records
-    private IBucket relationships;       // Bucket containing relationships between people
-//    private IIndexedBucket identity;            // Bucket containing identities of equivalent people in records
-    private IIndexedBucket lineage;            // Bucket containing pairs of potentially linked parents and child_ids
+    private IBucket marriages;                  // Bucket containing marriage records (inputs).
+    private IBucket deaths;                     // Bucket containing death records (inputs).
+    private IBucket people;                     // Bucket containing people extracted from birth records
+    private IBucket relationships;              // Bucket containing relationships between people
+    private IIndexedBucket lineage;             // Bucket containing pairs of potentially linked parents and child_ids
 
-    public BassJohnBass() throws RepositoryException, RecordFormatException, JSONException, IOException, PersistentObjectException, StoreException {
+    // Paths to sources
 
+    private static String source_base_path = "src/test/resources/BDMSet1";          // Path to source of vital event records in Digitising Scotland format
+
+    private static String births_name = "birth_records";                            // Name of bucket & input file containing birth records (inputs).
+    private static String marriages_name = "marriage_records";                      // Name of bucket & input file containing marriage records (inputs).
+    private static String deaths_name = "death_records";                            // Name of bucket & input file containing marriage records (inputs).
+    private static String births_source_path = source_base_path + "/" + births_name + ".txt";
+    private static String marriages_source_path = source_base_path + "/" + marriages_name + ".txt";
+    private static String deaths_source_path = source_base_path + "/" + deaths_name + ".txt";
+
+    // Names of buckets
+
+    private static String people_name = "people";                                   // Name of bucket containing maximal people extracted from birth records
+    private static String relationships_name = "relationships";                     // Name of bucket containing relationships between people
+    private static String lineage_name = "lineage";
+
+
+    public AlLinker() throws RepositoryException, RecordFormatException, JSONException, IOException, PersistentObjectException, StoreException {
+
+        initialise();
+        injestBDMRecords();
+        block();
+        link();
+
+        System.out.println("Identity table:");
+        IndexedBucketVisualiser v = new IndexedBucketVisualiser( lineage, people );
+        v.show();
+    }
+
+    private void initialise() throws StoreException, IOException, RepositoryException, RecordFormatException, JSONException {
         store = new Store(store_path);
 
         input_repo = store.makeRepository(input_repo_name);
@@ -71,27 +90,41 @@ public class BassJohnBass {
 
         lineage = linkage_repo.makeIndexedBucket(lineage_name);  // a bucket of Pairs of ids of records for people with the same first name, last name, sex, indexed by first id.
         lineage.addIndex(SameAsLabels.first);
+    }
 
-        // import the birth,death, marriage records
+    /**
+     *  Import the birth,death, marriage records
+     *  Initialises the people bucket with the people injected - one record for each person referenced in the original record
+     *  Initialises the known(100% certain) relationships between people and stores the relationships in the relationships bucket
+     */
+    private void injestBDMRecords() throws RecordFormatException, JSONException, IOException {
+
         EventImporter importer = new EventImporter();
         importer.importBirths(births, births_source_path);
         importer.importMarriages(marriages, marriages_source_path);
+        importer.importDeaths(deaths, deaths_source_path);
 
         createPeopleAndRelationshipsFromBirths();
+        createPeopleAndRelationshipsFromMarriages();
+        createPeopleAndRelationshipsFromDeaths();
+    }
 
+    private void block() {
         try {
 
-            IBlocker blocker = new FNLNSOverPerson( people, blocked_people_repo );
+            IBlocker blocker = new MultipleBlockerOverPerson( people, blocked_people_repo );
             blocker.apply();
-            pairwiseLinkBlockedRecords(blocked_people_repo, lineage );
 
         } catch (RepositoryException e) {
             e.printStackTrace();
         }
-        System.out.println("Identity table:");
-        IndexedBucketVisualiser v = new IndexedBucketVisualiser( lineage, people );
-        v.show();
     }
+
+    private void link() {
+
+            pairwiseLinkBlockedRecords(blocked_people_repo, lineage );
+    }
+
 
     private void pairwiseLinkBlockedRecords( IRepository from, IBucket to ) {
 
@@ -109,8 +142,9 @@ public class BassJohnBass {
     }
 
     /**
-     * Populates the maximal_people_repo with 1 person from each birth record.
+     * Populates the people bucket with 1 person from each birth record.
      * For each birth record there will be 1 person created - mother, father baby
+     * Thus the people bucket will contain multiple copies of a person - one instance per record that they appear in.
      */
     private void createPeopleAndRelationshipsFromBirths() {
 
@@ -126,6 +160,14 @@ public class BassJohnBass {
 
             addBMF(birth_record, baby_id, dad_id, mum_id, relationships_stream);
         }
+    }
+
+    private void createPeopleAndRelationshipsFromMarriages() {
+        //TODO Al is here
+    }
+
+    private void createPeopleAndRelationshipsFromDeaths() {
+        //TODO Al is here
     }
 
     /**
@@ -161,6 +203,7 @@ public class BassJohnBass {
     }
 
     /**
+     * Populates the people bucket with 1 baby for a given birth record.
      * @param birth_record  a record from which to extract baby information and add to the stream
      * @param people_stream a stream to which to add a new Person record
      * @return the id of the baby in the birth record
@@ -211,6 +254,7 @@ public class BassJohnBass {
     }
 
     /**
+     * Populates the people bucket with 1 father for a given birth record.
      * @param birth_record  a record from which to extract father information and add to the stream
      * @param people_stream a stream to which to add a new Person record
      * @return the id of the father in the birth record or -1 if there is no father record.
@@ -246,6 +290,7 @@ public class BassJohnBass {
     }
 
     /**
+     * Populates the people bucket with 1 mother for a given birth record.
      * @param birth_record  a record from which to extract mother information and add to the stream
      * @param people_stream a stream to which to add a new Person record
      * @return the id of the mother in the birth record or -1 if there is no mother record.
@@ -285,6 +330,6 @@ public class BassJohnBass {
 
     public static void main(String[] args) throws Exception {
 
-        new BassJohnBass();
+        new AlLinker();
     }
 }

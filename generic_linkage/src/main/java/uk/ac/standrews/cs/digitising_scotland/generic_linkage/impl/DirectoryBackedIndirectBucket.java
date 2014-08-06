@@ -20,7 +20,7 @@ import static java.nio.file.LinkOption.NOFOLLOW_LINKS;
  * Each filename is the id of a record held elsewhere
  * The files are currently empty!
  *
- * TODO consider making into a sym link in future?
+ * Consider making into a sym link in future - but wouldn't work in windows.
  *
  */
 public class DirectoryBackedIndirectBucket extends DirectoryBackedBucket implements IBucket {
@@ -42,7 +42,7 @@ public class DirectoryBackedIndirectBucket extends DirectoryBackedBucket impleme
 
         if( Files.exists(Paths.get(filePath(id)), NOFOLLOW_LINKS) ) {
 
-            return Store.getInstance().get(id); // go find the record where ever it is (TODO optimise later)
+            return Store.getInstance().get(id); // go find the record where ever it is (TODO optimise later - could build a real index to buckets each time a record is added to bucket)
 
         } else {
             throw new PersistentObjectException( "Record does not exist in indexed bucket");

@@ -46,11 +46,19 @@ public class BirthBirthLinker extends AbstractPairwiseLinker {
         ILXP first = pair.first();
         ILXP second = pair.second();
 
+        // get the people in the right order parent first
+
+        if( ! second.get(PersonLabels.ROLE).equals("baby") ) {
+            ILXP temp = second;
+            second = first;
+            first = temp;
+        }
+
         ILXP result_record = new LXP();
         result_record.put(SameAsLabels.first, Integer.toString(first.getId()));
         result_record.put(SameAsLabels.second, Integer.toString(second.getId()));
-        result_record.put(SameAsLabels.relationship, first.get(PersonLabels.ROLE) + "-" + second.get(PersonLabels.ROLE) );
-        result_record.put(SameAsLabels.resolver, this.getClass().toString());
+        result_record.put(SameAsLabels.relationship, first.get(PersonLabels.ROLE) + "-" +second.get(PersonLabels.ROLE) );
+    //    result_record.put(SameAsLabels.resolver, this.getClass().toString());
 
         results.add(result_record);
     }

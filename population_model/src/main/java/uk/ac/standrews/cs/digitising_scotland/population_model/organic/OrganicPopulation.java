@@ -47,7 +47,7 @@ public class OrganicPopulation implements IPopulation {
 
 	// 23:39
     // Universal population variables
-    private static final int DEFAULT_SEED_SIZE = 1000;
+    private static final int DEFAULT_SEED_SIZE = 300;
     private static final float DAYS_PER_YEAR = 365.25f;
     private static final int START_YEAR = 1780;
     private static final int END_YEAR = 2013;
@@ -127,6 +127,7 @@ public class OrganicPopulation implements IPopulation {
             livingPeople.add(person);
         }
         seedGeneration = false;
+        OrganicPopulationLogger.initPopulationAtYearEndsArray((int) (getEarliestDate() / DAYS_PER_YEAR) + EPOCH_YEAR, END_YEAR);
     }
 
     /**
@@ -148,7 +149,7 @@ public class OrganicPopulation implements IPopulation {
 
         while (getCurrentDay() < DateManipulation.dateToDays(getEndYear(), 0, 0)) {
             if (print) {
-                printYearEndData();
+                handleYearEndData(print);
             }
             int previousDate = getCurrentDay();
             setCurrentDay(getCurrentDay() + timeStepSizeInDays);
@@ -321,12 +322,14 @@ public class OrganicPopulation implements IPopulation {
      * Helper methods
      */
 
-    private void printYearEndData() {
+    private void handleYearEndData(boolean print) {
         if (getCurrentDay() % (int) getDaysPerYear() == 0) {
-            System.out.println(EPOCH_YEAR + (int) (getCurrentDay() / getDaysPerYear()));
-            System.out.println("Population: " + OrganicPopulationLogger.getPopulation());
-            System.out.println();
-//            OrganicPopulationLogger.printLogData();
+        	OrganicPopulationLogger.addPopulationForYear((int) (getCurrentDay() / DAYS_PER_YEAR) + EPOCH_YEAR, OrganicPopulationLogger.getPopulation());
+        	if (print) {
+	            System.out.println(EPOCH_YEAR + (int) (getCurrentDay() / getDaysPerYear()));
+	            System.out.println("Population: " + OrganicPopulationLogger.getPopulation());
+	            System.out.println();
+        	}
         }
     }
     
@@ -512,6 +515,10 @@ public class OrganicPopulation implements IPopulation {
     /*
      * Getters and setters
      */
+    
+    public static int getEpochYear() {
+    	return EPOCH_YEAR;
+    }
 
     /**
      * Size of initially generated seed population.
@@ -713,14 +720,9 @@ public class OrganicPopulation implements IPopulation {
         op.mainIteration(true);
 
         OrganicPopulationLogger.printLogData();
-        int count = 0;
-        for (int i = 0; i < OrganicPartnership.getAdjustedNumberOfChildren().length; i++) {
-            for (int j = 0; j < OrganicPartnership.getAdjustedNumberOfChildren()[i].size(); j++) {
-                count += OrganicPartnership.getAdjustedNumberOfChildren()[i].get(j) - i;
-            }
-        }
-        System.out.println("Left over children: " + count);
-        System.out.println("Kids killed by early stop: " + OrganicPopulationLogger.getStopedHavingEarlyDeaths());
+        
+        System.out.println();
+        
         System.out.println(System.nanoTime());
 
     }

@@ -16,9 +16,9 @@ import uk.ac.standrews.cs.nds.util.ErrorHandling;
  * This class blocks based on persons' first name, last name and first name of parents over streams of BDM Marriage records.
  * Created by al on 02/05/2014. x
  */
-public class BlockingPFPLMFFFoverBDMrecords extends Blocker {
+public class FNLFFMFOverBDM extends Blocker {
 
-    public BlockingPFPLMFFFoverBDMrecords(final IBucket birthsBucket, final IBucket deathsBucket, final IRepository output_repo) throws RepositoryException {
+    public FNLFFMFOverBDM(final IBucket birthsBucket, final IBucket deathsBucket, final IRepository output_repo) throws RepositoryException {
 
         super(new TailToTailMergedStream(new ILXPInputStream[]{birthsBucket.getInputStream(), deathsBucket.getInputStream()}), output_repo);
     }

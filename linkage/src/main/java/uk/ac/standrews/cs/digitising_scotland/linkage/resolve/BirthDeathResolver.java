@@ -8,7 +8,7 @@ import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.stream_operat
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.*;
 import uk.ac.standrews.cs.digitising_scotland.linkage.EventImporter;
 import uk.ac.standrews.cs.digitising_scotland.linkage.RecordFormatException;
-import uk.ac.standrews.cs.digitising_scotland.linkage.blocking.BlockingPFPLMFFFoverBDMrecords;
+import uk.ac.standrews.cs.digitising_scotland.linkage.blocking.FNLFFMFOverBDM;
 import uk.ac.standrews.cs.digitising_scotland.linkage.event_records.DeathRecord;
 import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
 import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
@@ -86,7 +86,7 @@ public class BirthDeathResolver {
         importer.importBirths(births, births_source_path);
         importer.importDeaths(deaths, deaths_source_path);
 
-        BlockingPFPLMFFFoverBDMrecords blocker = new BlockingPFPLMFFFoverBDMrecords(births, deaths, blocked_repo);
+        FNLFFMFOverBDM blocker = new FNLFFMFOverBDM(births, deaths, blocked_repo);
 
         blocker.apply();
     }
@@ -120,8 +120,6 @@ public class BirthDeathResolver {
         }
 
         public boolean compare(final IPair pair) {
-
-            // TODO we need to sort out naming and project linkage for fieldnames etc. - come back and look at properly.
 
             ILXP first = pair.first();
             ILXP second = pair.second();
