@@ -34,8 +34,12 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 
 /**
- * Created by graham on 10/06/2014.
+ * Provides an abstract population interface over a compact population representation.
+ * The person and partnership attributes not included in the compact representation are
+ * generated according to specified probability distributions.
  * This class is not thread-safe.
+ *
+ * @author Graham Kirby (graham.kirby@st-andrews.ac.uk)
  */
 @NotThreadSafe
 public class CompactPopulationAdapter implements IPopulation {
@@ -53,11 +57,30 @@ public class CompactPopulationAdapter implements IPopulation {
 
     private String description;
 
+    /**
+     * Creates a population of a given size.
+     *
+     * @param population_size the population size
+     * @throws IOException                 if a required probability distribution cannot be accessed
+     * @throws InconsistentWeightException if a required probability distribution is not legal
+     * @throws NegativeDeviationException  if a required probability distribution is not legal
+     * @throws NegativeWeightException     if a required probability distribution is not legal
+     */
     public CompactPopulationAdapter(final int population_size) throws IOException, InconsistentWeightException, NegativeDeviationException, NegativeWeightException {
 
         this(new CompactPopulation(population_size));
     }
 
+    /**
+     * Creates a population of a given size.
+     *
+     * @param population_size    the population size
+     * @param progress_indicator a progress indicator
+     * @throws IOException                 if a required probability distribution cannot be accessed
+     * @throws InconsistentWeightException if a required probability distribution is not legal
+     * @throws NegativeDeviationException  if a required probability distribution is not legal
+     * @throws NegativeWeightException     if a required probability distribution is not legal
+     */
     public CompactPopulationAdapter(final int population_size, final ProgressIndicator progress_indicator) throws IOException, InconsistentWeightException, NegativeDeviationException, NegativeWeightException {
 
         this(new CompactPopulation(population_size, progress_indicator));
@@ -373,8 +396,7 @@ public class CompactPopulationAdapter implements IPopulation {
 
             if (person_cache.containsKey(id)) {
                 return person_cache.get(id);
-            }
-            else {
+            } else {
 
                 final IPerson full_person = compact_person_adapter.convertToFullPerson(person, getParentsPartnershipId(person));
                 person_cache.put(id, full_person);
@@ -422,8 +444,7 @@ public class CompactPopulationAdapter implements IPopulation {
 
             if (partnership_cache.containsKey(id)) {
                 return partnership_cache.get(id);
-            }
-            else {
+            } else {
 
                 final IPartnership full_partnership = compact_partnership_adapter.convertToFullPartnership(partnership, population);
                 partnership_cache.put(id, full_partnership);

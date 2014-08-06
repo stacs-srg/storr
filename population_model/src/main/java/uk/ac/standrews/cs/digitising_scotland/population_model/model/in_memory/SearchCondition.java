@@ -17,14 +17,35 @@
 package uk.ac.standrews.cs.digitising_scotland.population_model.model.in_memory;
 
 /**
- * Created by graham on 03/07/2014.
+ * Interface for a condition checked while searching the population.
+ *
+ * @author Graham Kirby (graham.kirby@st-andrews.ac.uk)
  */
 interface SearchCondition {
 
+    /**
+     * Checks whether the person at the given index meets the search condition.
+     *
+     * @param index the index of the person to be checked
+     * @return result specifying whether to continue searching
+     */
     ConditionResult check(int index);
 
     static enum ConditionResult {
 
-        POSITIVE, NEGATIVE_CONTINUE, NEGATIVE_STOP
+        /**
+         * Specifies that the required person has been found.
+         */
+        FOUND,
+
+        /**
+         * Specifies that the required person has not been found, and the search should continue.
+         */
+        NOT_FOUND_CONTINUE,
+
+        /**
+         * Specifies that the required person has not been found, and the search should terminate.
+         */
+        NOT_FOUND_STOP
     }
 }

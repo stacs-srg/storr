@@ -345,6 +345,10 @@ public class OrganicPerson implements IPerson {
      * Getters and setters
      */
 
+    public Integer[] getListOfAffairStartDays() {
+    	return timeline.getAllDaysOfEventType(EventType.AFFAIR);
+    }
+    
     /**
      * Returns the population the person is a member of.
      * 

@@ -59,6 +59,7 @@ public enum EventType {
      * Indicatees the point of the end of a cohabitation on relationship timline.
      */
     END_OF_COHABITATION,
+    AFFAIR,
     MALE_BEGINS_AFFAIR,
     MALE_ENDS_AFFAIR,
     FEMALE_BEGINS_AFFAIR,

@@ -323,7 +323,15 @@ public final class OrganicPartnership implements IPartnership {
     	int numberOfAffairs = affairsNumberOfDistribution.getSample();
     	AffairDistribution affairDistribution = AffairDistribution.AffairDistributionFactory(marriedPerson, random);
     	for (int i = 0; i < numberOfAffairs; i++) {
-    		marriedPerson.getPopulation().addPersonToAffairsWaitingQueue(marriedPerson, affairDistribution.getIntSample());
+    		int day = affairDistribution.getIntSample();
+    		marriedPerson.getPopulation().addPersonToAffairsWaitingQueue(marriedPerson, day);
+    		marriedPerson.getTimeline().addEvent(day, new OrganicEvent(EventType.AFFAIR));
+    		if (marriedPerson.getSex() == 'M') {
+    			timeline.addEvent(day, new OrganicEvent(EventType.MALE_BEGINS_AFFAIR));
+    		} else {
+    			timeline.addEvent(day, new OrganicEvent(EventType.FEMALE_BEGINS_AFFAIR));
+    		}
+    		
     	}
 	}
 

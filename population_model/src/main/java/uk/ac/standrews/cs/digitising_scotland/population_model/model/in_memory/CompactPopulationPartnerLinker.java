@@ -29,9 +29,11 @@ import uk.ac.standrews.cs.digitising_scotland.util.ProgressIndicator;
 import java.util.Random;
 
 /**
- * Created by graham on 24/07/2014.
+ * Links people to partners within a compact population.
+ *
+ * @author Graham Kirby (graham.kirby@st-andrews.ac.uk)
  */
-public class CompactPopulationPartnerLinker {
+class CompactPopulationPartnerLinker {
 
     private static final float DAYS_PER_YEAR = 365.25f;
     private static final int END_YEAR = 2013;
@@ -56,7 +58,7 @@ public class CompactPopulationPartnerLinker {
     private int number_of_partnerships = 0;
 
     @SuppressFBWarnings(value = "EI_EXPOSE_REP", justification = "too expensive...")
-    public CompactPopulationPartnerLinker(final CompactPerson[] people, final ProgressIndicator progress_indicator) throws NegativeWeightException, NegativeDeviationException {
+    protected CompactPopulationPartnerLinker(final CompactPerson[] people, final ProgressIndicator progress_indicator) throws NegativeWeightException, NegativeDeviationException {
 
         this.people = people;
         this.progress_indicator = progress_indicator;
@@ -68,7 +70,7 @@ public class CompactPopulationPartnerLinker {
         marriage_separation_distribution = new NormalDistribution(MARRIAGE_SEPARATION_MEAN * DAYS_PER_YEAR, MARRIAGE_SEPARATION_STD_DEV * DAYS_PER_YEAR, random);
     }
 
-    public int linkPartners() {
+    protected int linkPartners() {
 
         for (int i = 0; i < people.length; i++) {
 
@@ -149,7 +151,7 @@ public class CompactPopulationPartnerLinker {
                         not_previously_partners &&
                         not_too_many_partnerships &&
                         not_too_recent_partnership &&
-                        still_alive ? ConditionResult.POSITIVE : ConditionResult.NEGATIVE_CONTINUE;
+                        still_alive ? ConditionResult.FOUND : ConditionResult.NOT_FOUND_CONTINUE;
             }
 
             private boolean oldEnoughToMarry(final CompactPerson person, final int marriage_date) {
@@ -199,11 +201,11 @@ public class CompactPopulationPartnerLinker {
 
             switch (condition.check(i)) {
 
-                case POSITIVE:
+                case FOUND:
                     return i;
-                case NEGATIVE_CONTINUE:
+                case NOT_FOUND_CONTINUE:
                     continue;
-                case NEGATIVE_STOP:
+                case NOT_FOUND_STOP:
                     return -1;
             }
         }
