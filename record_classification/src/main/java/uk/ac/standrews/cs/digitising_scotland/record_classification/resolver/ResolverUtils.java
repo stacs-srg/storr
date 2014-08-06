@@ -28,6 +28,8 @@ import com.google.common.collect.Multiset;
  */
 public final class ResolverUtils {
 
+    private static LossFunction lossFunction = new SumLossFunction();
+
     private ResolverUtils() {
 
         //Utility class -  private constructor
@@ -97,17 +99,9 @@ public final class ResolverUtils {
      * @param set the set to evaluate
      * @return the double loss value
      */
-    public static Double lossFunction(final Set<CodeTriple> set) {
+    public static double lossFunction(final Set<CodeTriple> set) {
 
-        List<Double> confidences = new ArrayList<>();
-        for (CodeTriple triple : set) {
-            confidences.add(triple.getConfidence());
-        }
-        Double confidenceSum = 0.;
-        for (Double conf : confidences) {
-            confidenceSum += conf;
-        }
-        return confidenceSum;
+        return lossFunction.calculate(set);
     }
 
     /**

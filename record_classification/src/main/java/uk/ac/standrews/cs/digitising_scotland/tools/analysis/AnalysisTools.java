@@ -51,6 +51,8 @@ public class AnalysisTools {
     /** The classification map. */
     private HashMap<String, AccuracyMetrics> classificationMap;
 
+    private final int multiplier1000 = 1000;
+
     /**
      * Constructs a hashmap contains the classification name as the key and the
      * accuracy metrics as the value.
@@ -94,7 +96,8 @@ public class AnalysisTools {
 
         int i = 0;
         int noOfLines = getNumberOfLines();
-        stringInput = new String[noOfLines][16];
+        final int inputLength = 16;
+        stringInput = new String[noOfLines][inputLength];
         try {
             String line;
             while ((line = br.readLine()) != null) {
@@ -578,7 +581,7 @@ public class AnalysisTools {
 
             public int compare(final AccuracyMetrics o1, final AccuracyMetrics o2) {
 
-                return (int) ((int) (o1.getRecall() * 1000) - (int) (o2.getRecall() * 1000));
+                return (int) ((int) (o1.getRecall() * multiplier1000) - (int) (o2.getRecall() * multiplier1000));
             }
         });
 
@@ -604,7 +607,7 @@ public class AnalysisTools {
 
             public int compare(final AccuracyMetrics o1, final AccuracyMetrics o2) {
 
-                return (int) ((int) (o1.getPrecision() * 1000) - (int) (o2.getPrecision() * 1000));
+                return (int) ((int) (o1.getPrecision() * multiplier1000) - (int) (o2.getPrecision() * multiplier1000));
             }
         });
 
@@ -630,7 +633,7 @@ public class AnalysisTools {
 
             public int compare(final AccuracyMetrics o1, final AccuracyMetrics o2) {
 
-                return (int) ((int) (o1.getAccuracy() * 1000) - (int) (o2.getAccuracy() * 1000));
+                return (int) ((int) (o1.getAccuracy() * multiplier1000) - (int) (o2.getAccuracy() * multiplier1000));
             }
         });
 

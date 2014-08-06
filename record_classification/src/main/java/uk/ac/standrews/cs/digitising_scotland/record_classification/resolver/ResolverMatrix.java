@@ -87,6 +87,7 @@ public class ResolverMatrix {
     public List<Set<CodeTriple>> getValidCodeTriples(final TokenSet originalSet) {
 
         chopUntilComplexityWithinBound(COMPLEXITY_UPPERLIMIT);
+
         LOGGER.info("Resolving Hierachies");
         resolveHierarchies();
         List<Set<CodeTriple>> merged = new ArrayList<>();
