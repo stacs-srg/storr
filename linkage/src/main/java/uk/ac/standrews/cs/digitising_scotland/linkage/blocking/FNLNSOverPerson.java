@@ -12,9 +12,9 @@ import uk.ac.standrews.cs.nds.util.ErrorHandling;
  * This class blocks based on persons' first name, last name over person records
  * Created by al on 03/06/2014. x
  */
-public class BlockingFirstLastSexOverPerson extends Blocker {
+public class FNLNSOverPerson extends Blocker {
 
-    public BlockingFirstLastSexOverPerson(final IBucket people, final IRepository output_repo) throws RepositoryException {
+    public FNLNSOverPerson(final IBucket people, final IRepository output_repo) throws RepositoryException {
 
         super(people.getInputStream(), output_repo);
     }
@@ -34,6 +34,7 @@ public class BlockingFirstLastSexOverPerson extends Blocker {
             StringBuilder builder = new StringBuilder();
 
             builder.append(forename);
+
             if (sex.equals("F") && mmsurname != null && !mmsurname.equals("")) {
                 builder.append(mmsurname);
             } else {

@@ -9,7 +9,7 @@ import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.StoreExceptio
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IBucket;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IRepository;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IStore;
-import uk.ac.standrews.cs.digitising_scotland.linkage.blocking.BlockingPFPLMFFFoverBDMrecords;
+import uk.ac.standrews.cs.digitising_scotland.linkage.blocking.FNLFFMFOverBDM;
 import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
 
 import java.io.IOException;
@@ -69,7 +69,7 @@ public class BlockingTest {
         importer.importDeaths(deaths, deaths_source_path);
         importer.importMarriages(marriages, marriages_source_path);
 
-        BlockingPFPLMFFFoverBDMrecords blocker = new BlockingPFPLMFFFoverBDMrecords( births, deaths, repo);
+        FNLFFMFOverBDM blocker = new FNLFFMFOverBDM( births, deaths, repo);
 
         blocker.apply();
     }

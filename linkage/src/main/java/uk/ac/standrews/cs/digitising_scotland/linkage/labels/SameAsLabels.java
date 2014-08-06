@@ -29,7 +29,7 @@ public class SameAsLabels implements ILabels {
     public Type getType(String label) {
         if( label.equals(first)) return Type.REFERENCE;
         if( label.equals(second)) return Type.REFERENCE;
-        if( label.equals(resolver)) return Type.STRING;     // TODO should be class-name or something?
+        if( label.equals(resolver)) return Type.STRING;
         if( label.equals(confidence)) return Type.FLOAT;
         return Type.UNKNOWN;
     }
