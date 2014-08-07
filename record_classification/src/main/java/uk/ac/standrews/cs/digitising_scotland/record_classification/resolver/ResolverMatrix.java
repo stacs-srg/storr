@@ -182,7 +182,7 @@ public class ResolverMatrix {
     public void chopUntilComplexityWithinBound(final int bound) {
 
         LOGGER.info("Chopping until with bound");
-        int maxNoOfEachCode = (int) Math.pow(bound, (1. / (double) matrix.keySet().size()));
+        int maxNoOfEachCode = (int) Math.pow(bound, 1.0 / (double) matrix.keySet().size());
         maxNoOfEachCode = Math.max(LOWER_BOUND, maxNoOfEachCode);
         for (Code code : matrix.keySet()) {
             Collections.sort(matrix.get(code), new CodeTripleComparator());

@@ -49,7 +49,7 @@ public class OLR {
     private static final double LOGLIK_MINIMUM = -100.0;
 
     /** The model parameters. */
-    protected org.apache.mahout.math.Matrix beta;
+    protected Matrix beta;
 
     /** The properties. */
     private Properties properties;
