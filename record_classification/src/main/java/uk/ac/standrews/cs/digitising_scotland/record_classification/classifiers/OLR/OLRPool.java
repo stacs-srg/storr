@@ -54,8 +54,8 @@ public class OLRPool implements Runnable {
     //    }
 
 
-    public int getNumTrained(){
-        int numTrained = 0;
+    public long getNumTrained(){
+        long numTrained = 0;
         for(OLRShuffled model : models){
            numTrained += model.getNumTrained();
         }

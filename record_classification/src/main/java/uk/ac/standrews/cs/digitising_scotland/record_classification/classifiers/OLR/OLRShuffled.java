@@ -49,7 +49,7 @@ public class OLRShuffled implements Runnable {
 
     //----constructors---
 
-    public int getNumTrained(){
+    public long getNumTrained(){
         return model.getNumTrained();
     }
 

@@ -63,8 +63,8 @@ public class OLRCrossFold {
     }
 
 
-    public int getNumTrained(){
-        int numTrained = 0;
+    public long getNumTrained(){
+        long numTrained = 0;
         for(OLRPool model : models){
             numTrained += model.getNumTrained();
         }
@@ -406,7 +406,7 @@ public class OLRCrossFold {
 
         private String countCalled() {
 
-            return COUNT_MESSAGE + Integer.toString(getNumTrained());
+            return COUNT_MESSAGE + Long.toString(getNumTrained());
         }
 
         /**

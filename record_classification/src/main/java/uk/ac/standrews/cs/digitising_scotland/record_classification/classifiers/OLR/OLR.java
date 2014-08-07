@@ -25,6 +25,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Properties;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 import org.apache.mahout.classifier.sgd.L1;
 import org.apache.mahout.math.DenseMatrix;
@@ -93,10 +94,10 @@ public class OLR {
     /** The number log likelihood sum updates. */
     private volatile AtomicInteger numLogLikelihoodSumUpdates;
 
-    private volatile AtomicInteger numTrained;
+    private volatile AtomicLong numTrained;
 
 
-    public int getNumTrained(){
+    public long getNumTrained(){
         return numTrained.get();
     }
 
@@ -161,7 +162,7 @@ public class OLR {
 
         runningLogLikelihood = 0.;
         numLogLikelihoodSumUpdates = new AtomicInteger(1);
-        numTrained = new AtomicInteger(0);
+        numTrained = new AtomicLong(0);
     }
 
     /**
