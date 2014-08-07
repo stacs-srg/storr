@@ -25,7 +25,7 @@ import java.util.Random;
  *
  * @author Tom Dalton (tsd4@st-andrews.ac.uk)
  */
-public class MaleAgeAtMarriageDistribution implements Distribution<Integer> {
+public class MarriageAgeForMalesDistribution implements Distribution<Integer> {
 
     /*
      * from ageatmarriageandpreviousmaritalstatus_tcm77-366510.xls
@@ -71,7 +71,7 @@ public class MaleAgeAtMarriageDistribution implements Distribution<Integer> {
      *
      * @param random the random number generator to be used
      */
-    public MaleAgeAtMarriageDistribution(final Random random) {
+    public MarriageAgeForMalesDistribution(final Random random) {
         try {
             distribution = new WeightedIntegerDistribution(0, (int) (MAXIMUM_AGE_IN_YEARS * PopulationLogic.DAYS_PER_YEAR) - 1, AGE_DISTRIBUTION_WEIGHTS, random);
         } catch (final NegativeWeightException e) {

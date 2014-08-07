@@ -42,20 +42,20 @@ public class OrganicPerson implements IPerson {
     // Universal person ditributions
     private static Distribution<Integer> uniformDistribution;
     private static RemarriageDistribution remmariageDist = new RemarriageDistribution(random);
-    private static MaleAgeAtSeedDistribution maleSeedAgeDistribution = new MaleAgeAtSeedDistribution(random);
-    private static FemaleAgeAtSeedDistribution femaleSeedAgeDistribution = new FemaleAgeAtSeedDistribution(random);
-    private static AgeAtDeathDistribution seed_death_distribution = new AgeAtDeathDistribution(random);
-    private static MaleAgeAtMarriageDistribution maleAgeAtMarriageDistribution = new MaleAgeAtMarriageDistribution(random);
-    private static FemaleAgeAtMarriageDistribution femaleAgeAtMarriageDistribution = new FemaleAgeAtMarriageDistribution(random);
+    private static SeedAgeForMalesDistribution maleSeedAgeDistribution = new SeedAgeForMalesDistribution(random);
+    private static SeedAgeForFemalesDistribution femaleSeedAgeDistribution = new SeedAgeForFemalesDistribution(random);
+    private static DeathAgeDistribution seed_death_distribution = new DeathAgeDistribution(random);
+    private static MarriageAgeForMalesDistribution maleAgeAtMarriageDistribution = new MarriageAgeForMalesDistribution(random);
+    private static MarriageAgeForFemalesDistribution femaleAgeAtMarriageDistribution = new MarriageAgeForFemalesDistribution(random);
     private static UniformSexDistribution sex_distribution = new UniformSexDistribution(random);
-    private static MaleFirstNameDistribution maleFirstNames;
-    private static FemaleFirstNameDistribution femaleFirstNames;
+    private static FirstNameForMalesDistribution maleFirstNames;
+    private static FirstNameForFemalesDistribution femaleFirstNames;
     private static SurnameDistribution surnames;
     private static PartnershipCharacteristicDistribution partnershipCharacteristicDistribution = new PartnershipCharacteristicDistribution(random);
-  	private static MaleAgeAtCohabitationDistribution maleAgeAtCohabitationDistribution = new MaleAgeAtCohabitationDistribution(random);
+  	private static CohabitationAgeForMalesDistribution maleAgeAtCohabitationDistribution = new CohabitationAgeForMalesDistribution(random);
     private static OccupationDistribution occupationDist;
     private static CauseOfDeathDistribution codDist;
-    private static FemaleAgeAtCohabitationDistribution femaleAgeAtCohabitationDistribution = new FemaleAgeAtCohabitationDistribution(random);
+    private static CohabitationAgeForFemalesDistribution femaleAgeAtCohabitationDistribution = new CohabitationAgeForFemalesDistribution(random);
     
     // Person instance required variables
     private int id;
@@ -77,8 +77,8 @@ public class OrganicPerson implements IPerson {
      */
     public static void initializeDistributions () {
     	try{
-            maleFirstNames = new MaleFirstNameDistribution(random);
-            femaleFirstNames = new FemaleFirstNameDistribution(random);
+            maleFirstNames = new FirstNameForMalesDistribution(random);
+            femaleFirstNames = new FirstNameForFemalesDistribution(random);
             surnames = new SurnameDistribution(random);
             occupationDist = new OccupationDistribution(random);
             codDist = new CauseOfDeathDistribution(random);
@@ -157,7 +157,8 @@ public class OrganicPerson implements IPerson {
 
         // Create timeline
         timeline = new OrganicTimeline(dayOfBirth, dayOfDeath);
-        timeline.addEvent(dayOfDeath, new OrganicEvent(EventType.DEATH));
+        timeline.addEvent(dayOfBirth, new OrganicEvent(EventType.BORN, this, dayOfBirth));
+        timeline.addEvent(dayOfDeath, new OrganicEvent(EventType.DEATH, this, dayOfDeath));
     }
 
     /**
@@ -233,7 +234,7 @@ public class OrganicPerson implements IPerson {
     }
     
     private void addSingleComingOfAgeEvent() {
-    	timeline.addEvent((int) (COMING_OF_AGE * OrganicPopulation.getDaysPerYear()), new OrganicEvent(EventType.COMING_OF_AGE));
+    	timeline.addEvent(getBirthDay() + (int) (COMING_OF_AGE * OrganicPopulation.getDaysPerYear()), new OrganicEvent(EventType.COMING_OF_AGE, this, getBirthDay() + (int) (COMING_OF_AGE * OrganicPopulation.getDaysPerYear())));
     }
     
     private void addEligibleToCohabitEvent() {
@@ -245,7 +246,7 @@ public class OrganicPerson implements IPerson {
                 date = getBirthDay() + maleAgeAtCohabitationDistribution.getSample();
             } while (date > getDeathDay() && getDeathAgeInDays() > MIN_DEATH_AGE_FOR_NO_PARTNERSHIP_EVENT * OrganicPopulation.getDaysPerYear());
 
-            timeline.addEvent(date, new OrganicEvent(EventType.ELIGIBLE_TO_COHABIT));
+            timeline.addEvent(date, new OrganicEvent(EventType.ELIGIBLE_TO_COHABIT, this, date));
 
         } else {
             // time in days to birth from 1/1/1600 + marriage age in days
@@ -253,7 +254,7 @@ public class OrganicPerson implements IPerson {
                 date = getBirthDay() + femaleAgeAtCohabitationDistribution.getSample();
             } while (date > getDeathDay() && getDeathAgeInDays() > MIN_DEATH_AGE_FOR_NO_PARTNERSHIP_EVENT * OrganicPopulation.getDaysPerYear());
 
-            timeline.addEvent(date, new OrganicEvent(EventType.ELIGIBLE_TO_COHABIT));
+            timeline.addEvent(date, new OrganicEvent(EventType.ELIGIBLE_TO_COHABIT, this, date));
 
         }
     }
@@ -267,7 +268,7 @@ public class OrganicPerson implements IPerson {
                 date = getBirthDay() + maleAgeAtCohabitationDistribution.getSample();
             } while (date > getDeathDay() && getDeathAgeInDays() > MIN_DEATH_AGE_FOR_NO_PARTNERSHIP_EVENT * OrganicPopulation.getDaysPerYear());
 
-            timeline.addEvent(date, new OrganicEvent(EventType.ELIGIBLE_TO_COHABIT_THEN_MARRY));
+            timeline.addEvent(date, new OrganicEvent(EventType.ELIGIBLE_TO_COHABIT_THEN_MARRY, this, date));
 
         } else {
             // time in days to birth from 1/1/1600 + marriage age in days
@@ -275,7 +276,7 @@ public class OrganicPerson implements IPerson {
                 date = getBirthDay() + femaleAgeAtCohabitationDistribution.getSample();
             } while (date > getDeathDay() && getDeathAgeInDays() > MIN_DEATH_AGE_FOR_NO_PARTNERSHIP_EVENT * OrganicPopulation.getDaysPerYear());
 
-            timeline.addEvent(date, new OrganicEvent(EventType.ELIGIBLE_TO_COHABIT_THEN_MARRY));
+            timeline.addEvent(date, new OrganicEvent(EventType.ELIGIBLE_TO_COHABIT_THEN_MARRY, this, date));
 
         }
     }
@@ -289,7 +290,7 @@ public class OrganicPerson implements IPerson {
                 date = getBirthDay() + maleAgeAtMarriageDistribution.getSample();
             } while (date > getDeathDay() && getDeathAgeInDays() > MIN_DEATH_AGE_FOR_NO_PARTNERSHIP_EVENT * OrganicPopulation.getDaysPerYear());
 
-            timeline.addEvent(date, new OrganicEvent(EventType.ELIGIBLE_TO_MARRY));
+            timeline.addEvent(date, new OrganicEvent(EventType.ELIGIBLE_TO_MARRY, this, date));
 
         } else {
             // time in days to birth from 1/1/1600 + marriage age in days
@@ -297,7 +298,7 @@ public class OrganicPerson implements IPerson {
                 date = getBirthDay() + femaleAgeAtMarriageDistribution.getSample();
             } while (date > getDeathDay() && getDeathAgeInDays() > MIN_DEATH_AGE_FOR_NO_PARTNERSHIP_EVENT * OrganicPopulation.getDaysPerYear());
 
-            timeline.addEvent(date, new OrganicEvent(EventType.ELIGIBLE_TO_MARRY));
+            timeline.addEvent(date, new OrganicEvent(EventType.ELIGIBLE_TO_MARRY, this, date));
 
         }
     }
@@ -316,7 +317,7 @@ public class OrganicPerson implements IPerson {
         date = uniformDistribution.getSample();
 
         if (date < getDeathDay()) {
-            timeline.addEvent(date, new OrganicEvent(EventType.ELIGIBLE_TO_MARRY));
+            timeline.addEvent(date, new OrganicEvent(EventType.ELIGIBLE_TO_MARRY, this, date));
             OrganicPopulationLogger.incRemarriages();
         }
     }

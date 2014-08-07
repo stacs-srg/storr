@@ -22,6 +22,13 @@ length comma separated format used for current mortality coding.
 
 Each file must contain only 1 record per line and the format must be consistent through out the file. In both formats missing information
 is acceptable, but the file must contain an empty section where that data should be been, ie, two separators next to each other with no content.
+     
+     
+### Data Cleaning
+
+Data cleaning is an important first step before training or using any machine learning system. For more information on the data cleaning classes 
+included with this software please see the [data cleaning](dataCleaning.html) page.    
+
 
 ### Training
 

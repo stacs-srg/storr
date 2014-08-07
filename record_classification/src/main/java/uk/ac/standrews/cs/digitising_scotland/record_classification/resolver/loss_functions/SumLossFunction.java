@@ -28,9 +28,7 @@ public class SumLossFunction extends AbstractLossFunction {
             confidenceSum += conf;
         }
 
-        double average = confidenceSum / (double) confidences.size();
-
-        return average;
+        return confidenceSum;
     }
 
 }

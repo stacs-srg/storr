@@ -13,11 +13,6 @@
  *
  * You should have received a copy of the GNU General Public License along with population_model. If not, see
  * <http://www.gnu.org/licenses/>.
- *
- * Population export to and import from GEDCOM file.
- * GEDCOM specification: http://homepages.rootsweb.ancestry.com/~pmcbride/gedcom/55gctoc.htm
- *
- * @author Graham Kirby (graham.kirby@st-andrews.ac.uk)
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.model.gedcom;
 

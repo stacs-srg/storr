@@ -191,23 +191,23 @@ public class ResolverMatrixTest {
      */
     private void addMockEntryToMatrix(final String string, final int id, final double conf) {
 
-        TokenSet tokenSet3 = new TokenSet(string);
-        Code code3 = CodeFactory.getInstance().getCode(id);
-        matrix.add(tokenSet3, new Pair<>(code3, conf));
+        TokenSet tokenSet = new TokenSet(string);
+        Code code = CodeFactory.getInstance().getCode(id);
+        matrix.add(tokenSet, new Pair<>(code, conf));
     }
 
     /**
      * Adds the mock entry to matrix.
      *
      * @param string the string
-     * @param code the code
+     * @param codeAsString the code
      * @param conf the conf
      */
-    private void addMockEntryToMatrix(final String string, final String code, final double conf) {
+    private void addMockEntryToMatrix(final String string, final String codeAsString, final double conf) {
 
-        TokenSet tokenSet3 = new TokenSet(string);
-        Code code3 = CodeFactory.getInstance().getCode(code);
-        matrix.add(tokenSet3, new Pair<>(code3, conf));
+        TokenSet tokenSet = new TokenSet(string);
+        Code code = CodeFactory.getInstance().getCode(codeAsString);
+        matrix.add(tokenSet, new Pair<>(code, conf));
     }
 
 }

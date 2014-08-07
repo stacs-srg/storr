@@ -22,24 +22,24 @@ import java.io.IOException;
 import java.util.Random;
 
 /**
- * Provides a distribution of male first names.
+ * Provides a distribution of female first names.
  * 
  * @author Alan Dearle (alan.dearle@st-andrews.ac.uk)
  * @author Graham Kirby (graham.kirby@st-andrews.ac.uk)
  */
-public class MaleFirstNameDistribution extends FileBasedEnumeratedDistribution {
+public class FirstNameForFemalesDistribution extends FileBasedEnumeratedDistribution {
 
-    private static final String MALE_FIRST_NAME_DISTRIBUTION_KEY = "male_first_name_distribution_filename";
+    private static final String FEMALE_FIRST_NAME_DISTRIBUTION_KEY = "female_first_name_distribution_filename";
 
     /**
-     * Creates a distribution of male first names.
+     * Creates a distribution of female first names.
      * 
      * @param random Takes in random for use in creation of distribution.
      * @throws IOException Thrown in the event of an IOException.
      * @throws InconsistentWeightException Thrown when the weights in the underlying distribution are found to be inconsistent.
      */
-    public MaleFirstNameDistribution(final Random random) throws IOException, InconsistentWeightException {
+    public FirstNameForFemalesDistribution(final Random random) throws IOException, InconsistentWeightException {
 
-        super(PopulationProperties.getProperties().getProperty(MALE_FIRST_NAME_DISTRIBUTION_KEY), random);
+        super(PopulationProperties.getProperties().getProperty(FEMALE_FIRST_NAME_DISTRIBUTION_KEY), random);
     }
 }

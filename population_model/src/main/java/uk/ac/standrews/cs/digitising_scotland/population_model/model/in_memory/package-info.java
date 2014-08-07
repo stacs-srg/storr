@@ -13,10 +13,6 @@
  *
  * You should have received a copy of the GNU General Public License along with population_model. If not, see
  * <http://www.gnu.org/licenses/>.
- *
- * In-memory population generation.
- *
- * @author Graham Kirby (graham.kirby@st-andrews.ac.uk)
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.model.in_memory;
 

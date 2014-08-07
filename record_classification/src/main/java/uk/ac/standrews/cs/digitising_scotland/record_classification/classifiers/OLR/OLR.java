@@ -50,7 +50,7 @@ public class OLR {
     private static final double LOGLIK_MINIMUM = -100.0;
 
     /** The model parameters. */
-    protected org.apache.mahout.math.Matrix beta;
+    protected Matrix beta;
 
     /** The properties. */
     private Properties properties;
@@ -96,7 +96,10 @@ public class OLR {
 
     private volatile AtomicLong numTrained;
 
-
+    /**
+     * Gets the number of records that have been used for training across all models so far.
+     * @return int number of training records used
+     */
     public long getNumTrained(){
         return numTrained.get();
     }
@@ -284,7 +287,8 @@ public class OLR {
         }
     }
 
-    private Vector calcGradient(NamedVector instance) {
+    private Vector calcGradient(final NamedVector instance) {
+
         int actual = Integer.parseInt(instance.getName());
         // what does the current model say?
         Vector v = classify(instance);

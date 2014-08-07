@@ -53,6 +53,10 @@ public class OLRPool implements Runnable {
     //        }
     //    }
 
+    /**
+     * Gets the number of records used for training so far across all the models in the pool.
+     * @return int the number of training records used so far
+     */
 
     public long getNumTrained(){
         long numTrained = 0;

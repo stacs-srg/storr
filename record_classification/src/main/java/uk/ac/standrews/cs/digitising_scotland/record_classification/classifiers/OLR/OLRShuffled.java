@@ -49,10 +49,6 @@ public class OLRShuffled implements Runnable {
 
     //----constructors---
 
-    public long getNumTrained(){
-        return model.getNumTrained();
-    }
-
     /**
      * Constructor.
      *
@@ -291,4 +287,14 @@ public class OLRShuffled implements Runnable {
 
         model.setBeta(beta);
     }
+
+    /**
+     * Gets the number of records used for training so far across all the models in the pool.
+     * @return int the number of training records used so far
+     */
+    public long getNumTrained() {
+
+        return model.getNumTrained();
+    }
+
 }

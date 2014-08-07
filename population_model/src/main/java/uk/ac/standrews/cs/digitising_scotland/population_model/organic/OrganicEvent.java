@@ -20,17 +20,32 @@ package uk.ac.standrews.cs.digitising_scotland.population_model.organic;
  * @author Victor Andrei (va9@st-andrews.ac.uk)
  * @author Tom Dalton (tsd4@st-andrews.ac.uk)
  */
-public class OrganicEvent {
+public class OrganicEvent implements Comparable<OrganicEvent> {
 
     private EventType eventType;
+    private OrganicPerson person = null;
+    private OrganicPartnership partnership = null;
+    private int day;
 
     /**
      * Initialises an OrganicEvent given the eventType which is an Enum of possible events.
      *
      * @param eventType Specifies the event type
      */
-    public OrganicEvent(final EventType eventType) {
+    public OrganicEvent(final EventType eventType, OrganicPerson person, int day) {
         this.eventType = eventType;
+        this.person = person;
+        this.day = day;
+//        System.out.println("Adding Person Event - " + eventType.toString());
+        person.getPopulation().addEventToGlobalQueue(this);
+    }
+    
+    public OrganicEvent(final EventType eventType, OrganicPartnership partnership, int day) {
+        this.eventType = eventType;
+        this.partnership = partnership;
+        this.day = day;
+//        System.out.println("Adding Partnership Event - " + eventType.toString());
+        partnership.getPopulation().addEventToGlobalQueue(this);
     }
 
 
@@ -42,5 +57,35 @@ public class OrganicEvent {
     public EventType getEventType() {
         return eventType;
     }
+
+	@Override
+	public int compareTo(OrganicEvent o) {
+		if (day < o.day) {
+			return -1;
+		} else if (day == o.day) {
+			return 0;
+		} else {
+			return 1;
+		}
+	}
+
+	/**
+	 * @return the person
+	 */
+	public OrganicPerson getPerson() {
+		return person;
+	}
+
+	/**
+	 * @return the partnership
+	 */
+	public OrganicPartnership getPartnership() {
+		return partnership;
+	}
+	
+	public int getDay() {
+		return day;
+	}
+
 
 }
