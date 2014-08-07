@@ -23,7 +23,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Properties;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.mahout.math.Matrix;
 import org.apache.mahout.math.NamedVector;
@@ -48,10 +47,6 @@ public class OLRShuffled implements Runnable {
     private boolean stopped = false;
 
     //----constructors---
-
-    public int getNumTrained(){
-        return model.getNumTrained();
-    }
 
     /**
      * Constructor.
@@ -291,4 +286,14 @@ public class OLRShuffled implements Runnable {
 
         model.setBeta(beta);
     }
+
+    /**
+     * Gets the number of records used for training so far across all the models in the pool.
+     * @return int the number of training records used so far
+     */
+    public int getNumTrained() {
+
+        return model.getNumTrained();
+    }
+
 }

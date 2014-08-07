@@ -95,8 +95,12 @@ public class OLR {
 
     private volatile AtomicInteger numTrained;
 
+    /**
+     * Gets the number of records that have been used for training across all models so far.
+     * @return int number of training records used
+     */
+    public int getNumTrained() {
 
-    public int getNumTrained(){
         return numTrained.get();
     }
 
@@ -256,6 +260,7 @@ public class OLR {
      * @param instance feature vector
      */
     public void train(final NamedVector instance) {
+
         numTrained.getAndIncrement();
         updateModelParameters(instance);
         updateCountsAndSteps(instance);
@@ -283,7 +288,8 @@ public class OLR {
         }
     }
 
-    private Vector calcGradient(NamedVector instance) {
+    private Vector calcGradient(final NamedVector instance) {
+
         int actual = Integer.parseInt(instance.getName());
         // what does the current model say?
         Vector v = classify(instance);

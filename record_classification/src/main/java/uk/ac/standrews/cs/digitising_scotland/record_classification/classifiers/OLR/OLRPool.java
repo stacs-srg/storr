@@ -10,7 +10,6 @@ import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.mahout.math.DenseVector;
 import org.apache.mahout.math.NamedVector;
@@ -53,11 +52,15 @@ public class OLRPool implements Runnable {
     //        }
     //    }
 
+    /**
+     * Gets the number of records used for training so far across all the models in the pool.
+     * @return int the number of training records used so far
+     */
+    public int getNumTrained() {
 
-    public int getNumTrained(){
         int numTrained = 0;
-        for(OLRShuffled model : models){
-           numTrained += model.getNumTrained();
+        for (OLRShuffled model : models) {
+            numTrained += model.getNumTrained();
         }
         return numTrained;
     }
