@@ -66,14 +66,14 @@ public class OLRCrossFold {
      * Gets the number of records used for training so far across all the models in the pool.
      * @return int the number of training records used so far
      */
-    public long getNumTrained(){
+    public long getNumTrained() {
+
         long numTrained = 0;
-        for(OLRPool model : models){
+        for (OLRPool model : models) {
             numTrained += model.getNumTrained();
         }
         return numTrained;
     }
-
 
     /**
      * Reset running log likelihoods.
@@ -339,12 +339,8 @@ public class OLRCrossFold {
         private static final String LOG_LIK_MESSAGE = "\nLog likelihood is: ";
         private static final String STOP_MESSAGE = "\nStop call detected. Stopping training...";
         private static final String RESET_MESSAGE = "\nResetting log likelihood.";
-        private static final String INSTRUCTION_MESSAGE =
-                          "\n#######################--OLRCrossFold Commands--#################################"
-                        + "\n# \"" + STOP_COMMAND + "\" will halt the training process and skip straight to classification.\t#"
-                        + "\n# \"" + GET_LOG_LIK_COMMAND + "\" will return the current running average log likelihood estimate.\t#"
-                        + "\n# \"" + RESET_LOG_LIK_COMMAND + "\" will reset the running average log likelihood statistic.\t#"
-                        + "\n# \"" + COUNT_COMMAND + "\" will return the number of records used in training so far.\t\t#"
+        private static final String INSTRUCTION_MESSAGE = "\n#######################--OLRCrossFold Commands--#################################" + "\n# \"" + STOP_COMMAND + "\" will halt the training process and skip straight to classification.\t#" + "\n# \"" + GET_LOG_LIK_COMMAND
+                        + "\" will return the current running average log likelihood estimate.\t#" + "\n# \"" + RESET_LOG_LIK_COMMAND + "\" will reset the running average log likelihood statistic.\t#" + "\n# \"" + COUNT_COMMAND + "\" will return the number of records used in training so far.\t\t#"
                         + "\n#################################################################################";
 
         /**
