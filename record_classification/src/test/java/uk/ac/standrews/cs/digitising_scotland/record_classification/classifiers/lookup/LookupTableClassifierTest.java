@@ -16,7 +16,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 /**
  * Test class to test {@link LookupTableClassifier}.
  * @author jkc25
- *
+ * FIXME
  */
 public class LookupTableClassifierTest {
 
@@ -142,7 +142,6 @@ public class LookupTableClassifierTest {
         File inputFileTraining = new File(getClass().getResource("/occupationTestFormatPipe.txt").getFile());
         List<Record> listOfRecordsTraining = RecordFactory.makeUnCodedRecordsFromFile(inputFileTraining);
         trainingBucket = new Bucket(listOfRecordsTraining);
-        //  trainingBucket = helper.giveBucketTestingOccCodes(trainingBucket); FIXME
         addVectorsToBucket(trainingBucket);
 
         return trainingBucket;

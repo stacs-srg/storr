@@ -24,9 +24,6 @@ import com.google.common.collect.Multiset;
  *
  * @author frjd2
  *
- *         TODO error and exception handling TODO general tidying and
- *         refactoring for neatness and readability
- *
  *
  */
 public class NGramSubstrings implements Iterable<TokenSet> {

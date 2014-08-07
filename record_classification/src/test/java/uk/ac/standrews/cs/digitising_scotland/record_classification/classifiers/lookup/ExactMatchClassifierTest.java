@@ -31,7 +31,6 @@ public class ExactMatchClassifierTest {
     /** The exact match classifier. */
     private ExactMatchClassifier exactMatchClassifier;
 
-    // private ClassifierTestingHelper helper = new ClassifierTestingHelper(); //FIXME
 
     /**
      * Sets the up.
@@ -153,7 +152,6 @@ public class ExactMatchClassifierTest {
         File inputFileTraining = new File(getClass().getResource("/occupationTestFormatPipe.txt").getFile());
         List<Record> listOfRecordsTraining = RecordFactory.makeUnCodedRecordsFromFile(inputFileTraining);
         trainingBucket = new Bucket(listOfRecordsTraining);
-        // trainingBucket = helper.giveBucketTestingOccCodes(trainingBucket); FIXME
 
         return trainingBucket;
     }

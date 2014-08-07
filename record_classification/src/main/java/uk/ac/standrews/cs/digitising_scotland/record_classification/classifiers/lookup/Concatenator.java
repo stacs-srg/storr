@@ -26,7 +26,6 @@ public final class Concatenator {
      * @param delimiter -  the character that separates the tokens
      * @return String - the tokens concatenated into a string
      * 
-     * TODO Tidy up by extracting methods from the concatenate method for ease of reading
      */
     public static String concatenate(final TokenStream tokenizer, final Class<CharTermAttribute> attributeType, final CharSequence delimiter) {
 

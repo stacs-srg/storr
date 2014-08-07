@@ -8,6 +8,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.ClassifierTestingHelper;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeTriple;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
@@ -26,7 +27,7 @@ public class NGramClassifierTest {
     private NGramClassifier nGramClassifier;
     private String modelPath = "target/nGramClassifierLookuptable";
 
-    // private ClassifierTestingHelper helper = new ClassifierTestingHelper(); FIXME
+     private ClassifierTestingHelper helper = new ClassifierTestingHelper(); // FIXME
 
     @Before
     public void setUp() throws Exception {
@@ -48,7 +49,6 @@ public class NGramClassifierTest {
     @Test
     public void testClassify() throws Exception {
 
-//        LevenShteinCleaner.cleanData(testingBucket);
         NGramClassifier nGramClassifer = train();
         for (Record record : testingBucket) {
             Record classifiedRecord = nGramClassifer.classify(record);
@@ -90,7 +90,7 @@ public class NGramClassifierTest {
         File inputFileTraining = new File(getClass().getResource("/occupationTestFormatPipe.txt").getFile());
         List<Record> listOfRecordsTraining = RecordFactory.makeUnCodedRecordsFromFile(inputFileTraining);
         trainingBucket = new Bucket(listOfRecordsTraining);
-        //  trainingBucket = helper.giveBucketTestingOccCodes(trainingBucket); //FIXME
+          trainingBucket = helper.giveBucketTestingOccCodes(trainingBucket); //FIXME
 
         return trainingBucket;
     }
