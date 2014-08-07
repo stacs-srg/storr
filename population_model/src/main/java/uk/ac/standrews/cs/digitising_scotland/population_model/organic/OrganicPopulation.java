@@ -45,7 +45,9 @@ import com.sun.mail.util.MailSSLSocketFactory;
  */
 public class OrganicPopulation implements IPopulation {
 
-	// 23:39
+	public static boolean DEBUG = false;
+	private static final int START_DEBUG_YEAR = 3000;
+	
     // Universal population variables
     private static final int DEFAULT_SEED_SIZE = 1000;
     private static final float DAYS_PER_YEAR = 365.25f;
@@ -138,9 +140,19 @@ public class OrganicPopulation implements IPopulation {
                 handleYearEndData(print);
             }
             while (globalEventsQueue.peek().getDay() == getCurrentDay()) {
-//            	System.out.println("TO HANDLE EVENT - " + globalEventsQueue.peek().getEventType().toString());
+            	if (DEBUG) {
+            		System.out.println("TO HANDLE EVENT - " + globalEventsQueue.peek().getEventType().toString());
+            	}
             	handleEvent(globalEventsQueue.remove());
             }
+            
+            if (DEBUG && globalEventsQueue.peek().getDay() < currentDay) {
+            	System.out.println("Current Day: " + getCurrentDay());
+            	System.out.println("Event Day: " + globalEventsQueue.peek().getDay());
+            	System.out.println("Event Type: " + globalEventsQueue.peek().getEventType().toString());
+            }
+            
+            
             setCurrentDay(getCurrentDay() + timeStepSizeInDays);
             partnerTogetherPeopleInRegularPartnershipQueues();
         }
@@ -434,6 +446,9 @@ public class OrganicPopulation implements IPopulation {
 
     private void handleYearEndData(boolean print) {
         if (getCurrentDay() % (int) getDaysPerYear() == 0) {
+        	if(getCurrentDay() / (int) getDaysPerYear() == START_DEBUG_YEAR - 1600) {
+        		DEBUG = true;
+        	}
         	OrganicPopulationLogger.addPopulationForYear((int) (getCurrentDay() / DAYS_PER_YEAR) + EPOCH_YEAR, OrganicPopulationLogger.getPopulation());
         	if (print) {
 	            System.out.println(EPOCH_YEAR + (int) (getCurrentDay() / getDaysPerYear()));
@@ -523,7 +538,12 @@ public class OrganicPopulation implements IPopulation {
     	partnerUpMembersOfAffairsQueue();
     }
 
-    private void partnerTogetherPeopleInPartnershipQueue(FamilyType type) {   	
+    private void partnerTogetherPeopleInPartnershipQueue(FamilyType type) {
+//    	if (DEBUG) {
+//    		System.out.println("PARTNERING UP QUEUE - " + type.toString());
+//    	}
+    	if (OrganicPopulation.DEBUG)
+        	System.out.println("P - " + type.toString());
     	LinkedList<OrganicPerson> maleQueue = getMaleQueueOf(type);
     	LinkedList<OrganicPerson> femaleQueue = getFemaleQueueOf(type);
     	
@@ -566,6 +586,9 @@ public class OrganicPopulation implements IPopulation {
                 if (eligableToPartner(maleQueue.getFirst(), femaleQueue.getFirst())) {
                     try {
                     	partner(type, maleQueue.getFirst(), femaleQueue.getFirst(), getCurrentDay());
+                    	
+                    	if (OrganicPopulation.DEBUG)
+                        	System.out.println("P8");
                     } catch (NoSuchEventException e) {
                         break;
                     }
@@ -574,7 +597,8 @@ public class OrganicPopulation implements IPopulation {
                     femaleQueue.add(femaleQueue.removeFirst());
                     break;
                 }
-                    
+                if (OrganicPopulation.DEBUG)
+                	System.out.println("P9");    
                 removeFromQueue(maleQueue, firstMaleId);
                 removeFromQueue(femaleQueue, firstFemaleId);
                 firstMaleId = (Integer) null;
@@ -615,15 +639,22 @@ public class OrganicPopulation implements IPopulation {
      * @param days The day of the marriage in days since the 1/1/1600.
      */
     private void partner(final FamilyType familyType, final OrganicPerson husband, final OrganicPerson wife, final int days) throws NoSuchEventException {
-    	
+    	if (OrganicPopulation.DEBUG)
+        	System.out.println("P S");
     	// Create partnership
         Object[] partnershipObjects = OrganicPartnership.createOrganicPartnership(IDFactory.getNextID(), husband, wife, days, getCurrentDay(), familyType, this);
+        if (OrganicPopulation.DEBUG)
+        	System.out.println("P5");
         partnerships.add((OrganicPartnership) partnershipObjects[0]);
+        if (OrganicPopulation.DEBUG)
+        	System.out.println("P6");
         if (partnershipObjects.length > 1) {
             for (int i = 1; i < partnershipObjects.length; i++) {
                 livingPeople.add((OrganicPerson) partnershipObjects[i]);
             }
         }
+        if (OrganicPopulation.DEBUG)
+        	System.out.println("P7");
         // TODO adapt logging methods
         OrganicPopulationLogger.logMarriage(DateManipulation.differenceInDays(husband.getBirthDay(), days), DateManipulation.differenceInDays(wife.getBirthDay(), days));
         husband.addPartnership(((OrganicPartnership) partnershipObjects[0]).getId());
