@@ -60,7 +60,7 @@ public class OrganicPerson implements IPerson {
     // Person instance required variables
     private int id;
     private String firstName;
-    private String lastName;
+    private String lastName = null;
     private String occupation;
     private String causeOfDeath;
     private char sex;
@@ -112,7 +112,14 @@ public class OrganicPerson implements IPerson {
         setSeedPerson(seedGeneration);
 
         try{
-        	lastName = surnames.getSample();
+            if(parentPartnershipId > 0){
+                lastName = population.findOrganicPartnership(parentPartnershipId).getFamilyName();
+            }
+
+            // in case no name was found or it's the seed
+            if(lastName == null)
+                lastName = surnames.getSample();
+
         	occupation = occupationDist.getSample();
         	causeOfDeath = codDist.getSample();
         }

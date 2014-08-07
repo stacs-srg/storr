@@ -16,35 +16,17 @@
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.organic;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Random;
-
-import org.apache.bcel.generic.GETSTATIC;
-
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.AffairDistribution;
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.AffairNumberOfChildrenDistribution;
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.AffairsNumberOfDistribution;
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.CohabitationLengthDistribution;
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.Distribution;
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.DivorceAgeForFemaleDistribution;
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.DivorceAgeForMaleDistribution;
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.DivorceInstigatedByGenderDistribution;
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.DivorceReason;
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.DivorceReasonFemaleDistribution;
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.DivorceReasonMaleDistribution;
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.FamilyType;
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.NegativeDeviationException;
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.NormalDistribution;
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.NumberOfChildrenDistribuition;
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.NumberOfChildrenFromMaternitiesDistribution;
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.TimeFromCohabitationToMarriageDistribution;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.*;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IDFactory;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPartnership;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.PopulationLogic;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.RandomFactory;
 import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Random;
 
 /**
  * @author Victor Andrei (va9@st-andrews.ac.uk)
@@ -77,6 +59,7 @@ public final class OrganicPartnership implements IPartnership {
     private int partnershipDay;
     private List<Integer> childrenIds = new ArrayList<Integer>();
     private String location = "St Andrews";
+    private String familyName = null;
 
     // Partnership instance helper variables
     private boolean cohabiting;
@@ -131,6 +114,9 @@ public final class OrganicPartnership implements IPartnership {
         this.wife = wife.getId();
         this.partnershipDay = partnershipDay;
         this.population = population;
+        if (familyType == FamilyType.MARRIAGE) {
+            familyName = husband.getSurname();
+        }
         if (familyType == FamilyType.COHABITATION_THEN_MARRIAGE) {
         	cohabThenMarriageMarriageDay = partnershipDay + timeFromCohabitationToMarriageDistribution.getIntSample();
         }
@@ -439,6 +425,22 @@ public final class OrganicPartnership implements IPartnership {
             lastEndDate = husband.getBirthDay() + (int) (PopulationLogic.getMaximumFathersAgeAtChildBirth() * OrganicPopulation.getDaysPerYear());
         }
         return lastEndDate;
+    }
+
+    /**
+     * Family Name getter.
+     *
+     * @return familyName
+     */
+    public String getFamilyName() {
+        return familyName;
+    }
+
+    /**
+     * Family Name setter.
+     */
+    public void setFamilyName(String familyName) {
+        this.familyName = familyName;
     }
 
     private int dateOfFirstPartnersDeath(final int husbandDeath, final int wifeDeath) {
