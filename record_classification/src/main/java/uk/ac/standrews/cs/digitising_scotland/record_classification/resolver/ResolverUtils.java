@@ -15,7 +15,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeTriple;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.loss_functions.AbstractLossFunction;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.loss_functions.SumLossFunction;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.loss_functions.LengthWeightedLossFunction;
 
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multiset;
@@ -30,7 +30,7 @@ import com.google.common.collect.Multiset;
  */
 public final class ResolverUtils {
 
-    private static AbstractLossFunction lossFunction = new SumLossFunction();
+    private static AbstractLossFunction lossFunction = new LengthWeightedLossFunction();
 
     private ResolverUtils() {
 
