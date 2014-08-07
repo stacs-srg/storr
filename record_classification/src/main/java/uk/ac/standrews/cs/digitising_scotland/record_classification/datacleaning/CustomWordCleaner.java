@@ -16,7 +16,6 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.exceptions.InputFormatException;
 import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
 
-// TODO: Auto-generated Javadoc
 /**
  * Reads a {@link Bucket} and performs data cleaning such as spelling correction and feature selection on the descriptions in each {@link Record}.
  * OriginalData.description is not changed, instead the cleanedDescripion field is populated.
@@ -43,8 +42,8 @@ public class CustomWordCleaner extends AbstractDataCleaner {
      */
     public static void main(final String... args) throws IOException, InputFormatException {
 
+        AbstractDataCleaner.setTokenLimit(Integer.MAX_VALUE);
         CustomWordCleaner cleaner = new CustomWordCleaner();
-        cleaner.setTokenLimit(Integer.MAX_VALUE);
         cleaner.buildWordList();
         cleaner.runOnFile(args);
     }
