@@ -59,7 +59,7 @@ public class DivorceAgeForMaleDistribution implements Distribution<Integer> {
      */
 
     private static final int MINIMUM_AGE_IN_YEARS = 15;
-    private static final int MAXIMUM_AGE_IN_YEARS = 74;
+    private static final int MAXIMUM_AGE_IN_YEARS = 100;
 
     @SuppressWarnings("MagicNumber")
     private static final int[] AGE_DISTRIBUTION_WEIGHTS = new int[]{6, 137, 214, 192, 161, 122, 91, 28, 28, 14, 6, 1, 1, 1, 1, 1, 1};

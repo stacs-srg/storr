@@ -19,6 +19,7 @@ package uk.ac.standrews.cs.digitising_scotland.population_model.distributions;
 import java.util.Random;
 
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.PopulationLogic;
+import uk.ac.standrews.cs.digitising_scotland.population_model.organic.OrganicPopulation;
 
 public class TimeFromCohabitationToMarriageDistribution extends NormalDistribution {
 
@@ -38,7 +39,12 @@ public class TimeFromCohabitationToMarriageDistribution extends NormalDistributi
 	}
 	
 	public int getIntSample() {
-		int temp = super.getSample().intValue();
+		int temp;
+		do {
+		temp = super.getSample().intValue();
+		} while (temp <= 0);
+		if (temp < 0)
+			System.out.println("Temp: " + temp);
 		return temp;
 	}
 	
