@@ -5,6 +5,7 @@ import java.io.IOException;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Pair;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeTriple;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.vectors.VectorFactory;
@@ -64,7 +65,16 @@ public abstract class AbstractClassifier {
      *             including using invalid training data, codes or malformed
      *             data
      */
-    public abstract Record classify(Record record) throws IOException;
+    public Record classify(Record record) throws IOException{
+        for(CodeTriple codeTriple : record.getOriginalData().getGoldStandardCodeTriples()){
+            TokenSet tokenSet = codeTriple.getTokenSet();
+            Pair<Code,Double> classification = classify(tokenSet);
+            Code code = classification.getLeft();
+            Double confidence = classification.getRight();
+            record.addCodeTriples(new CodeTriple(code, tokenSet, confidence));
+        }
+        return record;
+    }
 
     /**
      * Classifies all {@link Record}s in a {@link Bucket}.

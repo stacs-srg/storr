@@ -115,40 +115,13 @@ public class OLRClassifier extends AbstractClassifier {
         }
     }
 
-    /* (non-Javadoc)
-     * @see uk.ac.standrews.cs.digitising_scotland.parser.classifiers.AbstractClassifier#classify(uk.ac.standrews.cs.digitising_scotland.parser.datastructures.Record)
-     */
-    @Override
-    public Record classify(final Record record) {
-
-        if (model == null) {
-            LOGGER.error("Model has not been trained.");
-            return record;
-        }
-
-        List<NamedVector> vectorList = vectorFactory.generateVectorsFromRecord(record);
-        Integer classificationID;
-        Code code;
-        Set<CodeTriple> codeTripleSet = new HashSet<>();
-        for (NamedVector vector : vectorList) {
-            classificationID = model.classifyFull(vector).maxValueIndex();
-
-            code = CodeFactory.getInstance().getCode(classificationID);
-            double confidence = Math.exp(model.logLikelihood(classificationID, vector)); //TODO test
-            codeTripleSet.add(new CodeTriple(code, new TokenSet(record.getDescription()), confidence));
-        }
-
-        record.addAllCodeTriples(codeTripleSet);
-
-        return record;
-    }
 
     /* (non-Javadoc)
      * @see uk.ac.standrews.cs.digitising_scotland.parser.classifiers.AbstractClassifier#classify(uk.ac.standrews.cs.digitising_scotland.parser.datastructures.Bucket)
      */
     @Override
     public Bucket classify(final Bucket bucket) throws IOException {
-
+        //TODO remove this check and do not override
         if (model == null) {
             LOGGER.error("Model has not been trained.");
             return bucket;
@@ -158,7 +131,6 @@ public class OLRClassifier extends AbstractClassifier {
 
     @Override
     public Pair<Code, Double> classify(final TokenSet tokenSet) throws IOException {
-
         Pair<Code, Double> pair;
         NamedVector vector = vectorFactory.createNamedVectorFromString(tokenSet.toString(), "unknown");
         Vector classifyFull = model.classifyFull(vector);
