@@ -42,7 +42,7 @@ public final class OrganicPartnership implements IPartnership {
 	private static DivorceInstigatedByGenderDistribution divorceInstigatedByGenderDistribution = new DivorceInstigatedByGenderDistribution(random);
 	private static DivorceAgeForMaleDistribution divorceAgeForMaleDistribution = new DivorceAgeForMaleDistribution(random);
 	private static DivorceAgeForFemaleDistribution divorceAgeForFemaleDistribution = new DivorceAgeForFemaleDistribution(random);
-	private static NumberOfChildrenDistribuition numberOfChildrenDistribution = new NumberOfChildrenDistribuition(random);
+//	private static NumberOfChildrenDistribuition numberOfChildrenDistribution = new NumberOfChildrenDistribuition(random);
 	private static TemporalDistribution temporalNumberOfChildrenDistribution;
 	private static NumberOfChildrenFromMaternitiesDistribution numberOfChildrenFromMaternitiesDistribution = new NumberOfChildrenFromMaternitiesDistribution(random);
 	private static TimeFromCohabitationToMarriageDistribution timeFromCohabitationToMarriageDistribution = TimeFromCohabitationToMarriageDistribution.TimeFromCohabitationToMarriageDistributionFactory(random);
@@ -129,9 +129,10 @@ public final class OrganicPartnership implements IPartnership {
 		this.population = population;
 		if (OrganicPopulation.DEBUG)
 			System.out.println("Q2");
-		if (familyType == FamilyType.MARRIAGE) {
-			familyName = husband.getSurname();
-		}
+		// TODO inheritance of male name - need considertion of naming if not coming from a marriage
+//		if (familyType == FamilyType.MARRIAGE) {
+		familyName = husband.getSurname();
+//		}
 		if (OrganicPopulation.DEBUG)
 			System.out.println("Q3");
 		if (familyType == FamilyType.COHABITATION_THEN_MARRIAGE) {
@@ -226,11 +227,11 @@ public final class OrganicPartnership implements IPartnership {
 			numberOfChildrenToBeHadByCouple = affairNumberOfChildrenDistribution.getSample();
 		} else if (cohabiting && !married) {
 			// cohabiting
-			numberOfChildrenToBeHadByCouple = numberOfChildrenDistribution.getSample();
+			numberOfChildrenToBeHadByCouple = temporalNumberOfChildrenDistribution.getSample();
 			numberOfChildrenToBeHadByCouple = checkForFamilySize(numberOfChildrenToBeHadByCouple);
 		} else if (cohabiting && married) {
 			// cohab then marriage / marriage
-			numberOfChildrenToBeHadByCouple = numberOfChildrenDistribution.getSample();
+			numberOfChildrenToBeHadByCouple = temporalNumberOfChildrenDistribution.getSample();
 			numberOfChildrenToBeHadByCouple = checkForFamilySize(numberOfChildrenToBeHadByCouple);
 		}
 		if (OrganicPopulation.DEBUG)

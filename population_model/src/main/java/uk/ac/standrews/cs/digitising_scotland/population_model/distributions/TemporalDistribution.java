@@ -42,11 +42,9 @@ public class TemporalDistribution implements Distribution<Integer> {
     private HashMap<Integer, WeightedIntegerDistribution> map = new HashMap<Integer, WeightedIntegerDistribution>();
     private static String line;
     private static boolean firstLine = true;
-    private static int minimum, maximum, range;
+    private static int minimum, maximum;
     private Random random = RandomFactory.getRandom();
 
-    private static String CONTEXT_PATH; //absolute path prefix
-    private final static String RELATIVE_PATH = "/digitising_scotland/population_model/src/main/resources/distributions/"; //where files should be in the project folders
     private final static String TAB = "\t";
     private final static String COMMENT_INDICATOR = "%";
 
@@ -61,8 +59,6 @@ public class TemporalDistribution implements Distribution<Integer> {
     public TemporalDistribution(OrganicPopulation population, String distributionKey) {
     	this.population = population;
     	
-        CONTEXT_PATH = new File("").getAbsolutePath();
-
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(getClass().getClassLoader().getResourceAsStream(PopulationProperties.getProperties().getProperty(distributionKey)), FileManipulation.FILE_CHARSET))) {
 
             try {
@@ -77,9 +73,8 @@ public class TemporalDistribution implements Distribution<Integer> {
                     }
 
                     if (firstLine) {
-                        range = Integer.parseInt(line.split(TAB)[0]);
-                        minimum = Integer.parseInt(line.split(TAB)[1]);
-                        maximum = Integer.parseInt(line.split(TAB)[2]);
+                        minimum = Integer.parseInt(line.split(TAB)[0]);
+                        maximum = Integer.parseInt(line.split(TAB)[1]);
                         firstLine = false;
                     } else {
 
@@ -92,10 +87,6 @@ public class TemporalDistribution implements Distribution<Integer> {
                             for (int i = 1; i < lineComponents.length; i++) {
                                 weights[i - 1] = Integer.parseInt(lineComponents[i]);
                             }
-//                            System.out.println(year);
-//                        	for (int i : weights) {
-//                        		System.out.print(weights[i] +  " ");
-//                        	}
                             WeightedIntegerDistribution currentDistribution = new WeightedIntegerDistribution(minimum, maximum, weights, random);
                             map.put((int) ((year - OrganicPopulation.getEpochYear()) * OrganicPopulation.getDaysPerYear()) , currentDistribution);
                         } catch (NumberFormatException e) {
@@ -116,19 +107,12 @@ public class TemporalDistribution implements Distribution<Integer> {
         ArrayList<Integer> keyList = new ArrayList<>(keys);
         keyArray = keyList.toArray(new Integer[keyList.size()]);
         Arrays.sort(keyArray);
-//        for (Integer i : keyArray) {
-//        	System.out.println(i);
-//        	for (Integer j : map.get(keyArray[i])) {
-//        		
-//        	}
-//        }
     }
 
     @Override
     public Integer getSample() {
     	int key = keyArray[keyArray.length - 1];
     	int day = population.getCurrentDay();
-//    	System.out.println("day: " + day);    	
     	if (keyArray[0] > day) {
     		key = keyArray[0];
     		return map.get(key).getSample();
@@ -139,8 +123,7 @@ public class TemporalDistribution implements Distribution<Integer> {
     			return map.get(key).getSample();
     		}
     	}
-//    	System.out.println(key);
-    	key = keyArray.length - 1;
+    	key = keyArray[keyArray.length - 1];
         return map.get(key).getSample();
     }
 }
