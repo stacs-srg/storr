@@ -16,14 +16,18 @@
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.distributions;
 
+import uk.ac.standrews.cs.digitising_scotland.population_model.config.PopulationProperties;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.RandomFactory;
 import uk.ac.standrews.cs.digitising_scotland.population_model.organic.OrganicPopulation;
 import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
+import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
 import uk.ac.standrews.cs.nds.util.ErrorHandling;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Random;
 import java.util.Set;
@@ -38,24 +42,24 @@ public class TemporalDistribution implements Distribution<Integer> {
     private HashMap<Integer, WeightedIntegerDistribution> map = new HashMap<Integer, WeightedIntegerDistribution>();
     private static String line;
     private static boolean firstLine = true;
-    private static int minimum, maximum, range;
+    private static int minimum, maximum;
     private Random random = RandomFactory.getRandom();
 
-    private static String CONTEXT_PATH; //absolute path prefix
-    private final static String RELATIVE_PATH = "/digitising_scotland/population_model/src/main/resources/distributions/"; //where files should be in the project folders
     private final static String TAB = "\t";
     private final static String COMMENT_INDICATOR = "%";
 
+    private Integer[] keyArray;
+    private OrganicPopulation population;
+    
     /**
      * Constructor that takes in a file name with the weights information.
      *
      * @param filename
      */
-    public TemporalDistribution(String filename) {
-
-        CONTEXT_PATH = new File("").getAbsolutePath();
-
-        try (BufferedReader reader = new BufferedReader(new FileReader(CONTEXT_PATH + RELATIVE_PATH + filename))) {
+    public TemporalDistribution(OrganicPopulation population, String distributionKey) {
+    	this.population = population;
+    	
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(getClass().getClassLoader().getResourceAsStream(PopulationProperties.getProperties().getProperty(distributionKey)), FileManipulation.FILE_CHARSET))) {
 
             try {
                 do {
@@ -69,9 +73,8 @@ public class TemporalDistribution implements Distribution<Integer> {
                     }
 
                     if (firstLine) {
-                        range = Integer.parseInt(line.split(TAB)[0]);
-                        minimum = Integer.parseInt(line.split(TAB)[1]);
-                        maximum = Integer.parseInt(line.split(TAB)[2]);
+                        minimum = Integer.parseInt(line.split(TAB)[0]);
+                        maximum = Integer.parseInt(line.split(TAB)[1]);
                         firstLine = false;
                     } else {
 
@@ -84,9 +87,8 @@ public class TemporalDistribution implements Distribution<Integer> {
                             for (int i = 1; i < lineComponents.length; i++) {
                                 weights[i - 1] = Integer.parseInt(lineComponents[i]);
                             }
-
                             WeightedIntegerDistribution currentDistribution = new WeightedIntegerDistribution(minimum, maximum, weights, random);
-                            map.put(year, currentDistribution);
+                            map.put((int) ((year - OrganicPopulation.getEpochYear()) * OrganicPopulation.getDaysPerYear()) , currentDistribution);
                         } catch (NumberFormatException e) {
                             // do nothing
                         }
@@ -101,25 +103,27 @@ public class TemporalDistribution implements Distribution<Integer> {
 
             e.printStackTrace();
         }
+        Set<Integer> keys = map.keySet();
+        ArrayList<Integer> keyList = new ArrayList<>(keys);
+        keyArray = keyList.toArray(new Integer[keyList.size()]);
+        Arrays.sort(keyArray);
     }
 
     @Override
     public Integer getSample() {
-        return getSample(DateManipulation.dateToDays(OrganicPopulation.getEndYear(), 0, 0));
-    }
-
-    public Integer getSample(int currentDay) {
-        Set<Integer> keys = map.keySet();
-        int minimumDistance = Integer.MAX_VALUE;
-        int yearOfMinDistance = 0;
-        for (int i : keys) {
-            int keyInDays = DateManipulation.dateToDays(i, 0, 0);
-            if (Math.abs(keyInDays - currentDay) < minimumDistance) {
-                yearOfMinDistance = i;
-                minimumDistance = Math.abs(keyInDays - currentDay);
-            }
-        }
-
-        return yearOfMinDistance != 0 ? map.get(yearOfMinDistance).getSample() : 0;
+    	int key = keyArray[keyArray.length - 1];
+    	int day = population.getCurrentDay();
+    	if (keyArray[0] > day) {
+    		key = keyArray[0];
+    		return map.get(key).getSample();
+    	}
+    	for (int i = 0; i < keyArray.length - 1; i++) {
+    		if (keyArray[i] < day && day < keyArray[i + 1]) {
+    			key = keyArray[i];
+    			return map.get(key).getSample();
+    		}
+    	}
+    	key = keyArray[keyArray.length - 1];
+        return map.get(key).getSample();
     }
 }

@@ -49,18 +49,19 @@ public class DivorceAgeForFemaleDistribution implements Distribution<Integer> {
      * 55-59   24
      * 60-64   15 // By interpolation
      * 65-69   7 // By interpolation
-     * 70-74   0
-     * 75-79   0
-     * 80-84   0
-     * 85-89   0
-     * 90-95   0
-     * 95-100  0
+     * 70-74   1 // Only here to allow for corner case possibility
+     * 75-79   1
+     * 80-84   1
+     * 85-89   1
+     * 90-95   1
+     * 95-100  1
+     * 
      */
     private static final int MINIMUM_AGE_IN_YEARS = 15;
-    private static final int MAXIMUM_AGE_IN_YEARS = 69;
+    private static final int MAXIMUM_AGE_IN_YEARS = 100;
 
     @SuppressWarnings("MagicNumber")
-    private static final int[] AGE_DISTRIBUTION_WEIGHTS = new int[]{6, 166, 222, 190, 150, 114, 82, 24, 24, 15, 7};
+    private static final int[] AGE_DISTRIBUTION_WEIGHTS = new int[]{6, 166, 222, 190, 150, 114, 82, 24, 24, 15, 7, 1, 1, 1, 1, 1, 1};
 
     private final WeightedIntegerDistribution distribution;
 

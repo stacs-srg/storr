@@ -40,7 +40,7 @@ public class OrganicPopulationLogger {
 	
 	public static void printPopulationGraph() {
 		System.out.println("POPULATION GRAPH");
-		printGraph(populationAtYearEnds, new Integer(startYear).toString(), new Integer(startYear + populationAtYearEnds.length).toString(), true);
+		printGraph(populationAtYearEnds, new Integer(startYear).toString(), new Integer(startYear + populationAtYearEnds.length).toString(), true, 30);
 	}
 
     private static int population = 0;
@@ -53,14 +53,14 @@ public class OrganicPopulationLogger {
     
     public static void printMaleAgeAtMarriageGraph() {
     	System.out.println("MALE AGE AT MARRIAGE GRAPH");
-    	printGraph(maleAgeAtMarriage, "0", new Integer(MAX_AGE).toString(), false);
+    	printGraph(maleAgeAtMarriage, "0", new Integer(MAX_AGE).toString(), false, 10);
     }
     
     private static int[] femaleAgeAtMarriage = new int[MAX_AGE];
     
     public static void printFemaleAgeAtMarriageGraph() {
     	System.out.println("FEMALE AGE AT MARRIAGE GRAPH");
-    	printGraph(femaleAgeAtMarriage, "0", new Integer(MAX_AGE).toString(), false);
+    	printGraph(femaleAgeAtMarriage, "0", new Integer(MAX_AGE).toString(), false, 10);
     }
     
     private static final int AGE_DIFFERENCE_AT_MARRIAGE_DISPLAY_UPTO = 101;
@@ -68,7 +68,7 @@ public class OrganicPopulationLogger {
     
     public static void printAgeDifferenceAtMarriageGraph() {
     	System.out.println("AGE DIFFERENCE AT MARRIAGE GRAPH");
-    	printGraph(ageDifferenceAtMarriage, "0", new Integer(AGE_DIFFERENCE_AT_MARRIAGE_DISPLAY_UPTO).toString(), false);
+    	printGraph(ageDifferenceAtMarriage, "0", new Integer(AGE_DIFFERENCE_AT_MARRIAGE_DISPLAY_UPTO).toString(), false, 10);
     }
     
     private static final int NUMBER_OF_CHILDREN_DISPLAY_UPTO = 15;
@@ -76,7 +76,7 @@ public class OrganicPopulationLogger {
     
     public static void printNumberOfChildrenInMarriageGraph() {
     	System.out.println("NUMBER OF CHILDREN IN MARRIAGE GRAPH");
-    	printGraph(numberOfChildrenPerPartnership, "0", new Integer(NUMBER_OF_CHILDREN_DISPLAY_UPTO).toString(), false);
+    	printGraph(numberOfChildrenPerPartnership, "0", new Integer(NUMBER_OF_CHILDREN_DISPLAY_UPTO).toString(), false, 10);
     }
     
     private static int neverMarried = 0;
@@ -230,8 +230,7 @@ public class OrganicPopulationLogger {
         incDivorces();
     }
     
-    public static void printGraph(int[] values, String xStartValue, String xEndValue, boolean line) {
-		int lineDepth = 10;
+    public static void printGraph(int[] values, String xStartValue, String xEndValue, boolean line, int lineDepth) {
 		int sum = 0;
 		int max = 0;
 		for (int i = 0; i < values.length; i++) {
@@ -335,7 +334,7 @@ public class OrganicPopulationLogger {
     	for (int i = 0; i < temp.length; i++) {
     		temp[i] = OrganicPartnership.getAdjustedNumberOfChildren()[i].size();
     	}
-    	printGraph(temp, "0", new Integer(NumberOfChildrenDistribuition.MAXIMUM_NUMBER_OF_CHILDREN + 1).toString(), false);
+    	printGraph(temp, "0", new Integer(NumberOfChildrenDistribuition.MAXIMUM_NUMBER_OF_CHILDREN + 1).toString(), false, 10);
     }
 
 	private static int getNumberOfLeftOverChildren() {

@@ -18,13 +18,19 @@ package uk.ac.standrews.cs.digitising_scotland.population_model.distributions;
 
 import java.util.Random;
 
+import uk.ac.standrews.cs.digitising_scotland.population_model.organic.OrganicPartnership;
 import uk.ac.standrews.cs.digitising_scotland.population_model.organic.OrganicPerson;
+import uk.ac.standrews.cs.digitising_scotland.population_model.organic.OrganicPopulation;
 
 public class AffairDistribution extends NormalDistribution {
 	
-	public static AffairDistribution AffairDistributionFactory(OrganicPerson person, Random random) {
-		double midPoint = (person.getTimeline().getEndDate() - person.getTimeline().getStartDay())/2;
-    	double mean = person.getTimeline().getStartDay() + midPoint;	
+	public static AffairDistribution AffairDistributionFactory(OrganicPartnership partnership, Random random) {
+		double midPoint = (partnership.getTimeline().getEndDate() - partnership.getTimeline().getStartDay())/2;
+    	double mean = partnership.getTimeline().getStartDay() + midPoint;
+    	if (OrganicPopulation.DEBUG) {
+    		System.out.println("Midpoint: " + midPoint);
+    		System.out.println("Mean: " + mean);
+    	}
 		try {
 			return new AffairDistribution(mean, midPoint/4, random);
 		} catch (NegativeDeviationException e) {

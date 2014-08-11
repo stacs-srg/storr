@@ -36,7 +36,9 @@ public class OrganicEvent implements Comparable<OrganicEvent> {
         this.eventType = eventType;
         this.person = person;
         this.day = day;
-//        System.out.println("Adding Person Event - " + eventType.toString());
+        if (OrganicPopulation.DEBUG) {
+        	System.out.println("Adding Person Event - " + eventType.toString() + " - On day: " + day);
+        }
         person.getPopulation().addEventToGlobalQueue(this);
     }
     
@@ -44,7 +46,9 @@ public class OrganicEvent implements Comparable<OrganicEvent> {
         this.eventType = eventType;
         this.partnership = partnership;
         this.day = day;
-//        System.out.println("Adding Partnership Event - " + eventType.toString());
+        if (OrganicPopulation.DEBUG) {
+        	System.out.println("Adding Partnership Event - " + eventType.toString() + " - On day: " + day);
+        }
         partnership.getPopulation().addEventToGlobalQueue(this);
     }
 
