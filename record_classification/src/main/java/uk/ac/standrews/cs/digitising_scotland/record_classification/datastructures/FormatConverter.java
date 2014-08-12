@@ -113,11 +113,15 @@ public final class FormatConverter {
      */
     private static void populateGoldStandardSet(final String[] lineSplit, final HashSet<CodeTriple> goldStandard) {
 
-        for (int i = 6; i < 31; i = i + 3) {
+        final int start_pos = 6;
+        final int end_pos = 31;
+        final int jump_size = 3;
+
+        for (int i = start_pos; i < end_pos; i = i + jump_size) {
             if (lineSplit[i].length() != 0) {
                 int causeIdentifier = Integer.parseInt(lineSplit[i]);
 
-                if (causeIdentifier != 6) {
+                if (causeIdentifier != start_pos) {
                     Code code = CodeFactory.getInstance().getCode(removeQuotes(lineSplit[i + 2]));
 
                     TokenSet tokenSet = new TokenSet(lineSplit[causeIdentifier]);
@@ -167,7 +171,8 @@ public final class FormatConverter {
         //     * TODO make sure this is the correct format
 
         int group = Integer.parseInt(lineSplit);
-        if (group > 5) { return 5; }
+        final int max_age_group = 5;
+        if (group > max_age_group) { return max_age_group; }
 
         return group;
     }
