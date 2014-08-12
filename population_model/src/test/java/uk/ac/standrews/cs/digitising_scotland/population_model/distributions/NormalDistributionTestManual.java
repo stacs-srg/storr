@@ -16,6 +16,8 @@
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.distributions;
 
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.general.NegativeDeviationException;
+
 public class NormalDistributionTestManual {
 
     private static final double DESIRED_MEAN = 15.2;

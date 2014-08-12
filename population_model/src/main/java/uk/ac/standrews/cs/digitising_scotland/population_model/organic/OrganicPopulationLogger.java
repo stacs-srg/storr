@@ -18,7 +18,7 @@ package uk.ac.standrews.cs.digitising_scotland.population_model.organic;
 
 import java.util.Arrays;
 
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.NumberOfChildrenDistribuition;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.old.NumberOfChildrenDistribuition;
 
 /**
  * @author Victor Andrei (va9@st-andrews.ac.uk)

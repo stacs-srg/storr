@@ -27,6 +27,9 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.general.NegativeDeviationException;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.general.NormalDistribution;
+
 @RunWith(Parameterized.class)
 public class NormalDistributionTest {
 

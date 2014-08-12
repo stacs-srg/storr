@@ -18,29 +18,19 @@ package uk.ac.standrews.cs.digitising_scotland.population_model.distributions;
 
 import java.util.Random;
 
-public class AffairWithMarriedOrSingleDistribution implements Distribution<FamilyType> {
-    /*
-     *  
-     * With       per 100
-     * Single      90
-     * Married     10
-     */
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.temporal.TemporalDistribution;
+import uk.ac.standrews.cs.digitising_scotland.population_model.organic.FamilyType;
+import uk.ac.standrews.cs.digitising_scotland.population_model.organic.OrganicPopulation;
 
-    private static final int[] WITH_DISTRIBUTION_WEIGHTS = new int[]{90, 10};
-
-    private final WeightedIntegerDistribution distribution;
+public class AffairWithMarriedOrSingleDistribution extends TemporalDistribution<FamilyType> {
 
     /**
      * Creates a divorce reason by gender distribution.
      *
      * @param random the random number generator to be used
      */
-    public AffairWithMarriedOrSingleDistribution(final Random random) {
-        try {
-            distribution = new WeightedIntegerDistribution(0, 1, WITH_DISTRIBUTION_WEIGHTS, random);
-        } catch (final NegativeWeightException e) {
-            throw new RuntimeException("negative weight exception: " + e.getMessage());
-        }
+    public AffairWithMarriedOrSingleDistribution(OrganicPopulation population, String distributionKey, Random random) {
+		super(population, distributionKey, random);
     }
 
     /**
@@ -51,7 +41,7 @@ public class AffairWithMarriedOrSingleDistribution implements Distribution<Famil
     @Override
     public FamilyType getSample() {
 
-        switch ((int) distribution.getSample()) {
+        switch (getIntSample()) {
             case 0:
                 return FamilyType.SINGLE_AFFAIR;
             case 1:

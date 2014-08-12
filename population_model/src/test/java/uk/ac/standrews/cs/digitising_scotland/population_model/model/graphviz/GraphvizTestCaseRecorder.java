@@ -16,7 +16,7 @@
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.model.graphviz;
 
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.InconsistentWeightException;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.general.InconsistentWeightException;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPopulation;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPopulationWriter;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.in_memory.AbstractTestCaseRecorder;

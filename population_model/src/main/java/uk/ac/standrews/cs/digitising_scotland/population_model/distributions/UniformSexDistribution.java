@@ -18,6 +18,8 @@ package uk.ac.standrews.cs.digitising_scotland.population_model.distributions;
 
 import java.util.Random;
 
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.general.Distribution;
+
 /**
  * Creates a sequence of uniformly distributed boolean values.
  * 

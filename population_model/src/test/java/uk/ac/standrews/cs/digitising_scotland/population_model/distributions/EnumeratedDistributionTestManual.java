@@ -21,6 +21,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.general.EnumeratedDistribution;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.general.InconsistentWeightException;
+
 public class EnumeratedDistributionTestManual {
 
     public static void main(final String[] args) throws IOException, InconsistentWeightException {

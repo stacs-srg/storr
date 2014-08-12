@@ -19,8 +19,9 @@ package uk.ac.standrews.cs.digitising_scotland.population_model.model.in_memory;
 import org.junit.After;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.NegativeDeviationException;
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.NegativeWeightException;
+
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.general.NegativeDeviationException;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.general.NegativeWeightException;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IDFactory;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPopulation;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.in_memory.CompactPopulation;

@@ -17,14 +17,15 @@
 package uk.ac.standrews.cs.digitising_scotland.population_model.model.in_memory;
 
 import uk.ac.standrews.cs.digitising_scotland.population_model.config.PopulationProperties;
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.FileBasedEnumeratedDistribution;
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.InconsistentWeightException;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.general.FileBasedEnumeratedDistribution;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.general.InconsistentWeightException;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.AbstractPartnership;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPartnership;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.RandomFactory;
 import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
 
 import javax.annotation.concurrent.NotThreadSafe;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;

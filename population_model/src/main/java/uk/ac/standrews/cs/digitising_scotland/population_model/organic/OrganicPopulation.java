@@ -16,12 +16,12 @@
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.organic;
 
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.FamilyType;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IDFactory;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPartnership;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPerson;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPopulation;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.PopulationLogic;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.RandomFactory;
 import uk.ac.standrews.cs.digitising_scotland.util.ArrayManipulation;
 import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
 
@@ -30,9 +30,10 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.PriorityQueue;
+import java.util.Random;
 
 /**
- * @author  Victor Andrei (va9@st-andrews.ac.uk)
+ * @author Victor Andrei (va9@st-andrews.ac.uk)
  * @author Tom Dalton (tsd4@st-andrews.ac.uk)
  */
 public class OrganicPopulation implements IPopulation {
@@ -48,6 +49,7 @@ public class OrganicPopulation implements IPopulation {
 	private static final int END_YEAR = 2013;
 	private static final int DEFAULT_STEP_SIZE = 1;
 	private static final int EPOCH_YEAR = 1600;
+	private static Random random = RandomFactory.getRandom();
 
 	private int earliestDate = DateManipulation.dateToDays(getStartYear(), 0, 0);
 	private int currentDay;
@@ -85,6 +87,7 @@ public class OrganicPopulation implements IPopulation {
 	private PriorityQueue<AffairWaitingQueueMember> maleAffairsWaitingQueue = new PriorityQueue<AffairWaitingQueueMember>();
 	private PriorityQueue<AffairWaitingQueueMember> femaleAffairsWaitingQueue = new PriorityQueue<AffairWaitingQueueMember>();
 
+	private int maximumNumberOfChildrenInFamily;
 
 	/*
 	 * Constructors
@@ -117,7 +120,8 @@ public class OrganicPopulation implements IPopulation {
 	 */
 	public void makeSeed(final int size) {
 
-		OrganicPerson.initializeDistributions();
+		OrganicPerson.initializeDistributions(this);
+		AffairWaitingQueueMember.initialiseAffairWithMarrieadOrDingleDistribution(this, "affair_with_single_or_married_distributions_data_filename", random);
 
 		for (int i = 0; i < size; i++) {
 			OrganicPerson person = new OrganicPerson(IDFactory.getNextID(), 0, -1, this, seedGeneration, null);
@@ -146,7 +150,6 @@ public class OrganicPopulation implements IPopulation {
 				System.out.println("Event Day: " + globalEventsQueue.peek().getDay());
 				System.out.println("Event Type: " + globalEventsQueue.peek().getEventType().toString());
 			}
-
 
 			setCurrentDay(getCurrentDay() + timeStepSizeInDays);
 			partnerTogetherPeopleInRegularPartnershipQueues();
@@ -895,5 +898,19 @@ public class OrganicPopulation implements IPopulation {
 	 */
 	public void setCurrentDay(final int currentDay) {
 		this.currentDay = currentDay;
+	}
+
+	/**
+	 * @return the maximumNumberOfChildrenInFamily
+	 */
+	public int getMaximumNumberOfChildrenInFamily() {
+		return maximumNumberOfChildrenInFamily;
+	}
+
+	/**
+	 * @param maximumNumberOfChildrenInFamily the maximumNumberOfChildrenInFamily to set
+	 */
+	public void setMaximumNumberOfChildrenInFamily(int maximumNumberOfChildrenInFamily) {
+		this.maximumNumberOfChildrenInFamily = maximumNumberOfChildrenInFamily;
 	}
 }

@@ -27,10 +27,13 @@ public class AffairWaitingQueueMember implements Comparable<AffairWaitingQueueMe
 	int affairDay;
 	boolean interMarital;
 	
-	private static Random random = RandomFactory.getRandom();
-    private static AffairWithMarriedOrSingleDistribution affairWithMarriedOrSingleDistribution = new AffairWithMarriedOrSingleDistribution(random); 
+    private static AffairWithMarriedOrSingleDistribution affairWithMarriedOrSingleDistribution;
 
+	public static void initialiseAffairWithMarrieadOrDingleDistribution(OrganicPopulation population, String distributionKey, Random random) {
+		affairWithMarriedOrSingleDistribution = new AffairWithMarriedOrSingleDistribution(population, distributionKey, random);
+	}
 	
+    
 	public AffairWaitingQueueMember(OrganicPerson person, int affairDay) {
 		this.person = person;
 		this.affairDay = affairDay;

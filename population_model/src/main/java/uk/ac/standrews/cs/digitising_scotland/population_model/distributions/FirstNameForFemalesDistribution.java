@@ -17,6 +17,8 @@
 package uk.ac.standrews.cs.digitising_scotland.population_model.distributions;
 
 import uk.ac.standrews.cs.digitising_scotland.population_model.config.PopulationProperties;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.general.FileBasedEnumeratedDistribution;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.general.InconsistentWeightException;
 
 import java.io.IOException;
 import java.util.Random;

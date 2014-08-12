@@ -18,7 +18,11 @@ package uk.ac.standrews.cs.digitising_scotland.population_model.model.in_memory;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.*;
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.DeathAgeDistribution;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.general.Distribution;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.general.NegativeDeviationException;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.general.NegativeWeightException;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.general.UniformIntegerDistribution;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.old.DeathAgeDistribution;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IDFactory;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.PopulationLogic;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.RandomFactory;
@@ -28,6 +32,7 @@ import uk.ac.standrews.cs.digitising_scotland.util.ProgressIndicator;
 import uk.ac.standrews.cs.nds.util.QuickSort;
 
 import javax.annotation.concurrent.NotThreadSafe;
+
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashSet;
