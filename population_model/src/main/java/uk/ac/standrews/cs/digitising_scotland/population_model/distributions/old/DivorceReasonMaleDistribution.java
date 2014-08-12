@@ -18,12 +18,8 @@ package uk.ac.standrews.cs.digitising_scotland.population_model.distributions.ol
 
 import java.util.Random;
 
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.general.Distribution;
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.general.NegativeWeightException;
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.general.WeightedIntegerDistribution;
-import uk.ac.standrews.cs.digitising_scotland.population_model.organic.DivorceReason;
+public class DivorceReasonMaleDistribution extends DivorceReasonDistribution {
 
-public class DivorceReasonMaleDistribution implements Distribution<DivorceReason> {
     /*
      * from numberofdivorcesageatdivorceandmaritalstatusbeforemarriage_tcm77-351699
      * from http://www.ons.gov.uk/ons/rel/vsob1/divorces-in-england-and-wales/2012/rtd-divorces---number-of-divorces-age-at-divorce-and-marital-status-before-marriage.xls
@@ -35,14 +31,14 @@ public class DivorceReasonMaleDistribution implements Distribution<DivorceReason
      * Adultery        14
      * Behaviour       37
      * Desertion       1
-     * Seperation      32
+     * Separation      32
      *   with consent
-     * Seperation      17
+     * Separation      17
      */
 
+    @SuppressWarnings("MagicNumber")
     private static final int[] REASON_DISTRIBUTION_WEIGHTS = new int[]{14, 37, 1, 32, 17};
 
-    private final WeightedIntegerDistribution distribution;
 
     /**
      * Creates a divorce reason by gender distribution.
@@ -50,34 +46,6 @@ public class DivorceReasonMaleDistribution implements Distribution<DivorceReason
      * @param random the random number generator to be used
      */
     public DivorceReasonMaleDistribution(final Random random) {
-        try {
-            distribution = new WeightedIntegerDistribution(0, 4, REASON_DISTRIBUTION_WEIGHTS, random);
-        } catch (final NegativeWeightException e) {
-            throw new RuntimeException("negative weight exception: " + e.getMessage());
-        }
-    }
-
-    /**
-     * Returns the reason for divorce.
-     *
-     * @return Indicates the gender of the instigator or no divorce
-     */
-    @Override
-    public DivorceReason getSample() {
-
-        switch ((int) distribution.getSample()) {
-            case 0:
-                return DivorceReason.ADULTERY;
-            case 1:
-                return DivorceReason.BEHAVIOUR;
-            case 2:
-                return DivorceReason.DESERTION;
-            case 3:
-            	return DivorceReason.SEPARATION_WITH_CONSENT;
-            case 4:
-            	return DivorceReason.SEPARATION;
-            default:
-                throw new RuntimeException("unexpected sample value");
-        }
+        super(random, REASON_DISTRIBUTION_WEIGHTS);
     }
 }
