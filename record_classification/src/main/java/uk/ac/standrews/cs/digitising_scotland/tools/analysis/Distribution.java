@@ -1,14 +1,3 @@
-/*
- * | ______________________________________________________________________________________________ | Understanding
- * Scotland's People (USP) project. | | The aim of the project is to produce a linked pedigree for all publicly | |
- * available Scottish birth/death/marriage records from 1855 to the present day. | | | | Digitization of the records is
- * being carried out by the ESRC-funded Digitising | | Scotland project, run by University of St Andrews and National
- * Records of Scotland. | | | | The project is led by Chris Dibben at the Longitudinal Studies Centre at St Andrews. | |
- * The other project members are Lee Williamson (also at the Longitudinal Studies Centre) | | Graham Kirby, Alan Dearle
- * and Jamie Carson at the School of Computer Science at St Andrews; | | and Eilidh Garret and Alice Reid at the
- * Department of Geography at Cambridge. | | | |
- * ______________________________________________________________________________________________
- */
 package uk.ac.standrews.cs.digitising_scotland.tools.analysis;
 
 import java.io.File;
