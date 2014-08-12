@@ -62,6 +62,7 @@ public final class OrganicPartnership implements IPartnership {
 	
 	private static final int STANDARD_DEVIATION_FACTOR = 4;
 	private static final int DEATH_BED_MARRIAGE_CUTOFF = 500;
+	private static final int MINUMUM_DIVORCE_WINDOW = 25;
 
 	// Partnership instance required variables
 	private Integer id;
@@ -340,6 +341,8 @@ public final class OrganicPartnership implements IPartnership {
 		}
 		if (OrganicPopulation.DEBUG)
 			System.out.println("S2");
+		if (PopulationLogic.dateBeforeDeath(actualMarriageDay + MINUMUM_DIVORCE_WINDOW, husband.getDeathDay()) && 
+				PopulationLogic.dateBeforeDeath(actualMarriageDay + MINUMUM_DIVORCE_WINDOW, wife.getDeathDay()))
 		switch (temporalDivorceInstigatedByGenderDistribution.getSample()) {
 		case MALE:
 			// get male age at divorce
