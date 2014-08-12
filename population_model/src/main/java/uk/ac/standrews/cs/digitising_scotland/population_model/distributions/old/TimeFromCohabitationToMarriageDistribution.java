@@ -27,7 +27,7 @@ public class TimeFromCohabitationToMarriageDistribution extends NormalDistributi
 
 	public static final int mean = (int) (22 * PopulationLogic.DAYS_PER_YEAR) / 12;
 	
-	public static TimeFromCohabitationToMarriageDistribution TimeFromCohabitationToMarriageDistributionFactory(Random random) {
+	public static TimeFromCohabitationToMarriageDistribution timeFromCohabitationToMarriageDistributionFactory(Random random) {
 		try {
 			return new TimeFromCohabitationToMarriageDistribution(mean, mean/4, random);
 		} catch (NegativeDeviationException e) {

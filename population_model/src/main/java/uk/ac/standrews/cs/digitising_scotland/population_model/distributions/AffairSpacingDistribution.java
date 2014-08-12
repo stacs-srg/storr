@@ -21,18 +21,12 @@ import java.util.Random;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.general.NegativeDeviationException;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.general.NormalDistribution;
 import uk.ac.standrews.cs.digitising_scotland.population_model.organic.OrganicPartnership;
-import uk.ac.standrews.cs.digitising_scotland.population_model.organic.OrganicPerson;
-import uk.ac.standrews.cs.digitising_scotland.population_model.organic.OrganicPopulation;
 
 public class AffairSpacingDistribution extends NormalDistribution {
 	
-	public static AffairSpacingDistribution AffairDistributionFactory(OrganicPartnership partnership, Random random) {
-		double midPoint = (partnership.getTimeline().getEndDate() - partnership.getTimeline().getStartDay())/2;
-    	double mean = partnership.getTimeline().getStartDay() + midPoint;
-    	if (OrganicPopulation.DEBUG) {
-    		System.out.println("Midpoint: " + midPoint);
-    		System.out.println("Mean: " + mean);
-    	}
+	public static AffairSpacingDistribution affairDistributionFactory(OrganicPartnership partnership, Random random) {
+		int midPoint = (partnership.getTimeline().getEndDate() - partnership.getTimeline().getStartDay()) / 2;
+    	int mean = partnership.getTimeline().getStartDay() + midPoint;
 		try {
 			return new AffairSpacingDistribution(mean, midPoint/4, random);
 		} catch (NegativeDeviationException e) {
