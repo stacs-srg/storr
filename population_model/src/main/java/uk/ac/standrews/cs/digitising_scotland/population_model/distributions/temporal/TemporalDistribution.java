@@ -41,7 +41,7 @@ import java.util.Set;
  * @author Victor Andrei (va9@st-andrews.ac.uk)
  * @author Tom Dalton (tsd4@st-andrews.ac.uk)
  */
-public abstract class TemporalDistribution<Value> implements Distribution<Value> {
+public abstract class TemporalDistribution<Value> implements ITemporalDistribution<Value> {
 
 	private HashMap<Integer, Distribution<?>> map = new HashMap<Integer, Distribution<?>>();
 	private String line;
@@ -53,7 +53,6 @@ public abstract class TemporalDistribution<Value> implements Distribution<Value>
 	private final static String COMMENT_INDICATOR = "%";
 
 	private Integer[] keyArray;
-	private OrganicPopulation population;
 
 	/**
 	 * Constructor that takes in a file name with the weights information.
@@ -61,7 +60,6 @@ public abstract class TemporalDistribution<Value> implements Distribution<Value>
 	 * @param filename
 	 */
 	public TemporalDistribution(OrganicPopulation population, String distributionKey, Random random) {
-		this.population = population;
 
 		try (BufferedReader reader = new BufferedReader(new InputStreamReader(getClass().getClassLoader().getResourceAsStream(PopulationProperties.getProperties().getProperty(distributionKey)), FileManipulation.FILE_CHARSET))) {
 
@@ -123,15 +121,14 @@ public abstract class TemporalDistribution<Value> implements Distribution<Value>
 		Arrays.sort(keyArray);
 	}
 
-	protected Integer getIntSample() {
+	protected Integer getIntSample(int date) {
 		int key = keyArray[keyArray.length - 1];
-		int day = population.getCurrentDay();
 		Integer returnValue;
-		if (keyArray[0] > day) {
+		if (keyArray[0] > date) {
 			key = keyArray[0];
 		}
 		for (int i = 0; i < keyArray.length - 1; i++) {
-			if (keyArray[i] < day && day < keyArray[i + 1]) {
+			if (keyArray[i] < date && date < keyArray[i + 1]) {
 				key = keyArray[i];
 			}
 		}
@@ -145,4 +142,6 @@ public abstract class TemporalDistribution<Value> implements Distribution<Value>
 
 	@Override
 	public abstract Value getSample();
+	
+	public abstract Value getSample(int date);
 }

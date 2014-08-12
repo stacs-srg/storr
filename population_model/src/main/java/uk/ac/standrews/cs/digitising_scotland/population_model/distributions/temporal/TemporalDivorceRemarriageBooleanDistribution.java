@@ -37,8 +37,8 @@ public class TemporalDivorceRemarriageBooleanDistribution extends TemporalDistri
     }
 
     @Override
-    public Boolean getSample() {
-    	switch (getIntSample()) {
+    public Boolean getSample(int date) {
+    	switch (getIntSample(date)) {
     	case 0:
     		return true;
     	case 1:
@@ -47,4 +47,9 @@ public class TemporalDivorceRemarriageBooleanDistribution extends TemporalDistri
     		throw new RuntimeException("unexpected sample value");
     	}
     }
+
+	@Override
+	public Boolean getSample() {
+		return getSample(0);
+	}
 }

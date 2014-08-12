@@ -66,23 +66,23 @@ public class OrganicPopulation implements IPopulation {
 
 	// Population instance helper variables
 	private boolean seedGeneration = true;
-	private LinkedList<OrganicPerson> maleMarriageQueue = new LinkedList<OrganicPerson>();
-	private LinkedList<OrganicPerson> femaleMarriageQueue = new LinkedList<OrganicPerson>();
+	private List<OrganicPerson> maleMarriageQueue = new LinkedList<OrganicPerson>();
+	private List<OrganicPerson> femaleMarriageQueue = new LinkedList<OrganicPerson>();
 
-	private LinkedList<OrganicPerson> maleSingleQueue = new LinkedList<OrganicPerson>();
-	private LinkedList<OrganicPerson> femaleSingleQueue = new LinkedList<OrganicPerson>();
+	private List<OrganicPerson> maleSingleQueue = new LinkedList<OrganicPerson>();
+	private List<OrganicPerson> femaleSingleQueue = new LinkedList<OrganicPerson>();
 
-	private LinkedList<OrganicPerson> maleCohabitationQueue = new LinkedList<OrganicPerson>();
-	private LinkedList<OrganicPerson> femaleCohabitationQueue = new LinkedList<OrganicPerson>();
+	private List<OrganicPerson> maleCohabitationQueue = new LinkedList<OrganicPerson>();
+	private List<OrganicPerson> femaleCohabitationQueue = new LinkedList<OrganicPerson>();
 
-	private LinkedList<OrganicPerson> maleCohabitationThenMarriageQueue = new LinkedList<OrganicPerson>();
-	private LinkedList<OrganicPerson> femaleCohabitationThenMarriageQueue = new LinkedList<OrganicPerson>();
+	private List<OrganicPerson> maleCohabitationThenMarriageQueue = new LinkedList<OrganicPerson>();
+	private List<OrganicPerson> femaleCohabitationThenMarriageQueue = new LinkedList<OrganicPerson>();
 
-	private LinkedList<OrganicPerson> maleSingleAffairsQueue = new LinkedList<OrganicPerson>();
-	private LinkedList<OrganicPerson> femaleSingleAffairsQueue = new LinkedList<OrganicPerson>();
+	private List<OrganicPerson> maleSingleAffairsQueue = new LinkedList<OrganicPerson>();
+	private List<OrganicPerson> femaleSingleAffairsQueue = new LinkedList<OrganicPerson>();
 
-	private LinkedList<OrganicPerson> maleMaritalAffairsQueue = new LinkedList<OrganicPerson>();
-	private LinkedList<OrganicPerson> femaleMaritalAffairsQueue = new LinkedList<OrganicPerson>();
+	private List<OrganicPerson> maleMaritalAffairsQueue = new LinkedList<OrganicPerson>();
+	private List<OrganicPerson> femaleMaritalAffairsQueue = new LinkedList<OrganicPerson>();
 
 	private PriorityQueue<AffairWaitingQueueMember> maleAffairsWaitingQueue = new PriorityQueue<AffairWaitingQueueMember>();
 	private PriorityQueue<AffairWaitingQueueMember> femaleAffairsWaitingQueue = new PriorityQueue<AffairWaitingQueueMember>();
@@ -131,6 +131,28 @@ public class OrganicPopulation implements IPopulation {
 		OrganicPopulationLogger.initPopulationAtYearEndsArray((int) (getEarliestDate() / DAYS_PER_YEAR) + EPOCH_YEAR, END_YEAR);
 	}
 
+	public void newEventIteration(boolean print) {
+		while (getCurrentDay() < DateManipulation.dateToDays(getEndYear(), 0, 0)) {
+			OrganicEvent event = globalEventsQueue.poll();
+			if (event == null) {
+				break;
+			}
+			while ((int) (getCurrentDay() / getDaysPerYear()) != (int) (event.getDay() / getDaysPerYear())) {
+				OrganicPopulationLogger.addPopulationForYear((int) (getCurrentDay() / DAYS_PER_YEAR) + 1 + EPOCH_YEAR, OrganicPopulationLogger.getPopulation());
+				if (print) {
+					System.out.println(EPOCH_YEAR + 1 + (int) (getCurrentDay() / getDaysPerYear()));
+					System.out.println("Population: " + OrganicPopulationLogger.getPopulation());
+//					System.out.println((int) (2 + (getCurrentDay() / DAYS_PER_YEAR) / 100));
+				}
+				setCurrentDay(DateManipulation.dateToDays((int) (getCurrentDay() / DAYS_PER_YEAR) + 1 + EPOCH_YEAR, 0, (int) (2 + (getCurrentDay() / DAYS_PER_YEAR) / 100)));
+			}
+			setCurrentDay(event.getDay());
+			handleEvent(event);
+			
+			partnerTogetherPeopleInRegularPartnershipQueues();
+		}
+	}
+	
 	public void eventIteration(final boolean print, final int timeStepSizeInDays) {
 		while (getCurrentDay() < DateManipulation.dateToDays(getEndYear(), 0, 0)) {
 			if (print) {
@@ -384,7 +406,7 @@ public class OrganicPopulation implements IPopulation {
 		handleEligibleToMarryEvent(livingPeople.get(peopleListIndex));
 	}
 
-	private void removePersonFromQueue(LinkedList<OrganicPerson> queue, final OrganicPerson person) {
+	private void removePersonFromQueue(List<OrganicPerson> queue, final OrganicPerson person) {
 		int index = queue.indexOf(person);
 		if (index != -1) {
 			queue.remove(index);
@@ -412,7 +434,7 @@ public class OrganicPopulation implements IPopulation {
 	}
 
 	private void handleDeathEvent(final OrganicPerson person) {
-		removePersonFromAllPartnershipQueues(person);
+//		removePersonFromAllPartnershipQueues(person);
 
 		deadPeople.add(livingPeople.remove(livingPeople.indexOf(person)));
 		OrganicPopulationLogger.decPopulation();
@@ -455,12 +477,11 @@ public class OrganicPopulation implements IPopulation {
 			if (print) {
 				System.out.println(EPOCH_YEAR + (int) (getCurrentDay() / getDaysPerYear()));
 				System.out.println("Population: " + OrganicPopulationLogger.getPopulation());
-				System.out.println();
 			}
 		}
 	}
 
-	private LinkedList<OrganicPerson> getMaleQueueOf(FamilyType type) {
+	private List<OrganicPerson> getMaleQueueOf(FamilyType type) {
 		switch(type) {
 		case SINGLE:
 		case FEMALE_SINGLE_AFFAIR:
@@ -481,7 +502,7 @@ public class OrganicPopulation implements IPopulation {
 		}
 	}
 
-	private LinkedList<OrganicPerson> getFemaleQueueOf(FamilyType type) {
+	private List<OrganicPerson> getFemaleQueueOf(FamilyType type) {
 		switch(type) {
 		case SINGLE:
 		case MALE_SINGLE_AFFAIR:
@@ -546,17 +567,18 @@ public class OrganicPopulation implements IPopulation {
 		//    	}
 		if (OrganicPopulation.DEBUG)
 			System.out.println("P - " + type.toString());
-		LinkedList<OrganicPerson> maleQueue = getMaleQueueOf(type);
-		LinkedList<OrganicPerson> femaleQueue = getFemaleQueueOf(type);
+		LinkedList<OrganicPerson> maleQueue = (LinkedList<OrganicPerson>) getMaleQueueOf(type);
+		LinkedList<OrganicPerson> femaleQueue = (LinkedList<OrganicPerson>) getFemaleQueueOf(type);
 
 		// Sets the IDs for the first individuals in each marriage list to null
 		Integer firstMaleId = (Integer) null;
 		Integer firstFemaleId = (Integer) null;
 		// While males exist to be married
 		while (!maleQueue.isEmpty()) {
-			// FIXME This is a hack
+			// This is an optimisation
 			if (maleQueue.getFirst().getDeathDay() < currentDay) {
 				maleQueue.removeFirst();
+				OrganicPopulationLogger.incNeverMarried();
 				break;
 			}
 			// Sets first male ID value to that of the first male
@@ -570,6 +592,7 @@ public class OrganicPopulation implements IPopulation {
 			while (!femaleQueue.isEmpty()) {
 				if (femaleQueue.getFirst().getDeathDay() < currentDay) {
 					femaleQueue.removeFirst();
+					OrganicPopulationLogger.incNeverMarried();
 					break;
 				}
 				// Sets first female ID value to that the first female
@@ -861,7 +884,7 @@ public class OrganicPopulation implements IPopulation {
 	/**
 	 * Temporary testing main method.
 	 * 
-	 * @param args Sring Arguments.
+	 * @param args String Arguments.
 	 */
 	public static void main(final String[] args) {
 		long startTime = System.nanoTime();
@@ -872,7 +895,7 @@ public class OrganicPopulation implements IPopulation {
 		op.makeSeed();
 		op.setCurrentDay(op.getEarliestDate() - 1);
 		op.eventIteration(true, DEFAULT_STEP_SIZE);
-		//        op.mainIteration(true);
+//		op.newEventIteration(true);
 
 		OrganicPopulationLogger.printLogData();
 

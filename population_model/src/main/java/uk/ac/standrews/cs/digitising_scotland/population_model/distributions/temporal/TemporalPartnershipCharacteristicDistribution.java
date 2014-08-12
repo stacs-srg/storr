@@ -38,9 +38,9 @@ public class TemporalPartnershipCharacteristicDistribution extends TemporalDistr
      * @return Indicates the gender of the instigator or no divorce
      */
     @Override
-    public FamilyType getSample() {
-
-        switch (getIntSample()) {
+    public FamilyType getSample(int date) {
+    	
+        switch (getIntSample(date)) {
             case 0:
                 return FamilyType.SINGLE;
             case 1:
@@ -53,4 +53,9 @@ public class TemporalPartnershipCharacteristicDistribution extends TemporalDistr
                 throw new RuntimeException("unexpected sample value");
         }
     }
+
+	@Override
+	public FamilyType getSample() {
+		return getSample(0);
+	}
 }

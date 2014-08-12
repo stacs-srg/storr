@@ -14,11 +14,10 @@
  * You should have received a copy of the GNU General Public License along with population_model. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-package uk.ac.standrews.cs.digitising_scotland.population_model.distributions;
+package uk.ac.standrews.cs.digitising_scotland.population_model.distributions.temporal;
 
 import java.util.Random;
 
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.temporal.TemporalDistribution;
 import uk.ac.standrews.cs.digitising_scotland.population_model.organic.FamilyType;
 import uk.ac.standrews.cs.digitising_scotland.population_model.organic.OrganicPopulation;
 
@@ -39,9 +38,9 @@ public class AffairWithMarriedOrSingleDistribution extends TemporalDistribution<
      * @return Indicates the gender of the instigator or no divorce
      */
     @Override
-    public FamilyType getSample() {
+    public FamilyType getSample(int date) {
 
-        switch (getIntSample()) {
+        switch (getIntSample(date)) {
             case 0:
                 return FamilyType.SINGLE_AFFAIR;
             case 1:
@@ -50,4 +49,9 @@ public class AffairWithMarriedOrSingleDistribution extends TemporalDistribution<
                 throw new RuntimeException("unexpected sample value");
         }
     }
+
+	@Override
+	public FamilyType getSample() {
+		return getSample(0);
+	}
 }

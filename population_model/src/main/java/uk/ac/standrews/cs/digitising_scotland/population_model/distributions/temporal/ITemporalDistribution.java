@@ -16,24 +16,10 @@
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.distributions.temporal;
 
-import java.util.Random;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.general.Distribution;
 
-import uk.ac.standrews.cs.digitising_scotland.population_model.organic.OrganicPopulation;
+public interface ITemporalDistribution<Value> extends Distribution<Value> {
 
-public class TemporalIntegerDistribution extends TemporalDistribution<Integer> {
-
-	public TemporalIntegerDistribution(OrganicPopulation population, String distributionKey, Random random) {
-		super(population, distributionKey, random);
-	}
-
-	@Override
-	public Integer getSample(int date) {
-		return getIntSample(date);
-	}
-
-	@Override
-	public Integer getSample() {
-		return getSample(0);
-	}
-
+    Value getSample(int date);
+    
 }

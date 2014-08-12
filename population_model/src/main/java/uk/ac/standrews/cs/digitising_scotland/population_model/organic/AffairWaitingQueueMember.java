@@ -18,7 +18,7 @@ package uk.ac.standrews.cs.digitising_scotland.population_model.organic;
 
 import java.util.Random;
 
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.AffairWithMarriedOrSingleDistribution;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.temporal.AffairWithMarriedOrSingleDistribution;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.RandomFactory;
 
 public class AffairWaitingQueueMember implements Comparable<AffairWaitingQueueMember>{
@@ -37,12 +37,14 @@ public class AffairWaitingQueueMember implements Comparable<AffairWaitingQueueMe
 	public AffairWaitingQueueMember(OrganicPerson person, int affairDay) {
 		this.person = person;
 		this.affairDay = affairDay;
-		switch (affairWithMarriedOrSingleDistribution.getSample()) {
+		switch (affairWithMarriedOrSingleDistribution.getSample(affairDay)) {
 		    case SINGLE_AFFAIR:
 		    	this.interMarital = false;
 			    break;
 		    case INTER_MARITAL_AFFAIR:
 		    	this.interMarital = true;
+		    	break;
+		    default:
 		    	break;
 		}	
 	}

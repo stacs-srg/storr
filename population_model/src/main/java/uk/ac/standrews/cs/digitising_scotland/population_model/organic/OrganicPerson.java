@@ -168,14 +168,14 @@ public class OrganicPerson implements IPerson {
 
     private void setPersonsBirthAndDeathDates(final int birthDay, final boolean seedGeneration, final OrganicPopulation population) {
         // Find an age for person
-        int ageOfDeathInDays = deathAgeAtDistribution.getSample();
+        int ageOfDeathInDays = deathAgeAtDistribution.getSample(population.getCurrentDay());
         int dayOfBirth = birthDay;
 
         if (seedGeneration) {
             if (sex == 'M') {
-                dayOfBirth = DateManipulation.dateToDays(OrganicPopulation.getStartYear(), 0, 0) + seedAgeForMalesDistribution.getSample() - ageOfDeathInDays;
+                dayOfBirth = DateManipulation.dateToDays(OrganicPopulation.getStartYear(), 0, 0) + seedAgeForMalesDistribution.getSample(population.getCurrentDay()) - ageOfDeathInDays;
             } else {
-                dayOfBirth = DateManipulation.dateToDays(OrganicPopulation.getStartYear(), 0, 0) + seedAgeForFemalesDistribution.getSample() - ageOfDeathInDays;
+                dayOfBirth = DateManipulation.dateToDays(OrganicPopulation.getStartYear(), 0, 0) + seedAgeForFemalesDistribution.getSample(population.getCurrentDay()) - ageOfDeathInDays;
             }
 
             if (dayOfBirth < population.getEarliestDate()) {
@@ -239,13 +239,13 @@ public class OrganicPerson implements IPerson {
      */
     
     public void addRemarriageEventIfApplicable(int earlistRemarriageDay) {
-    	 if (temporalDivorceRemarriageBooleanDeistribution.getSample()) {
+    	 if (temporalDivorceRemarriageBooleanDeistribution.getSample(population.getCurrentDay())) {
              addEligibleToReMarryEvent(earlistRemarriageDay);
          }
     }
     
     private FamilyType decideFuturePartnershipCharacteristics() {
-    	return temporalPartnershipCharacteristicDistribution.getSample();
+    	return temporalPartnershipCharacteristicDistribution.getSample(population.getCurrentDay());
     }
     
     private void addSingleComingOfAgeEvent() {
@@ -258,7 +258,7 @@ public class OrganicPerson implements IPerson {
         if (sex == 'M') {
             // time in days to birth from 1/1/1600 + marriage age in days
             do {
-                date = getBirthDay() + temporalCohabitationAgeForMalesDistribution.getSample();
+                date = getBirthDay() + temporalCohabitationAgeForMalesDistribution.getSample(population.getCurrentDay());
             } while (date >= getDeathDay() && getDeathAgeInDays() > MIN_DEATH_AGE_FOR_NO_PARTNERSHIP_EVENT * OrganicPopulation.getDaysPerYear());
 
             timeline.addEvent(date, new OrganicEvent(EventType.ELIGIBLE_TO_COHABIT, this, date));
@@ -266,7 +266,7 @@ public class OrganicPerson implements IPerson {
         } else {
             // time in days to birth from 1/1/1600 + marriage age in days
             do {
-                date = getBirthDay() + temporalCohabitationAgeForFemalesDistribution.getSample();
+                date = getBirthDay() + temporalCohabitationAgeForFemalesDistribution.getSample(population.getCurrentDay());
             } while (date >= getDeathDay() && getDeathAgeInDays() > MIN_DEATH_AGE_FOR_NO_PARTNERSHIP_EVENT * OrganicPopulation.getDaysPerYear());
 
             timeline.addEvent(date, new OrganicEvent(EventType.ELIGIBLE_TO_COHABIT, this, date));
@@ -280,7 +280,7 @@ public class OrganicPerson implements IPerson {
         if (sex == 'M') {
             // time in days to birth from 1/1/1600 + marriage age in days
             do {
-                date = getBirthDay() + temporalCohabitationAgeForMalesDistribution.getSample();
+                date = getBirthDay() + temporalCohabitationAgeForMalesDistribution.getSample(population.getCurrentDay());
             } while (date >= getDeathDay() && getDeathAgeInDays() > MIN_DEATH_AGE_FOR_NO_PARTNERSHIP_EVENT * OrganicPopulation.getDaysPerYear());
 
             timeline.addEvent(date, new OrganicEvent(EventType.ELIGIBLE_TO_COHABIT_THEN_MARRY, this, date));
@@ -288,7 +288,7 @@ public class OrganicPerson implements IPerson {
         } else {
             // time in days to birth from 1/1/1600 + marriage age in days
             do {
-                date = getBirthDay() + temporalCohabitationAgeForFemalesDistribution.getSample();
+                date = getBirthDay() + temporalCohabitationAgeForFemalesDistribution.getSample(population.getCurrentDay());
             } while (date >= getDeathDay() && getDeathAgeInDays() > MIN_DEATH_AGE_FOR_NO_PARTNERSHIP_EVENT * OrganicPopulation.getDaysPerYear());
 
             timeline.addEvent(date, new OrganicEvent(EventType.ELIGIBLE_TO_COHABIT_THEN_MARRY, this, date));
@@ -302,7 +302,7 @@ public class OrganicPerson implements IPerson {
         if (sex == 'M') {
             // time in days to birth from 1/1/1600 + marriage age in days
             do {
-                date = getBirthDay() + temporalMarriageAgeForMalesDistribution.getSample();
+                date = getBirthDay() + temporalMarriageAgeForMalesDistribution.getSample(population.getCurrentDay());
             } while (date >= getDeathDay() && getDeathAgeInDays() > MIN_DEATH_AGE_FOR_NO_PARTNERSHIP_EVENT * OrganicPopulation.getDaysPerYear());
 
             timeline.addEvent(date, new OrganicEvent(EventType.ELIGIBLE_TO_MARRY, this, date));
@@ -310,7 +310,7 @@ public class OrganicPerson implements IPerson {
         } else {
             // time in days to birth from 1/1/1600 + marriage age in days
             do {
-                date = getBirthDay() + temporalMarriageAgeForFemalesDistribution.getSample();
+                date = getBirthDay() + temporalMarriageAgeForFemalesDistribution.getSample(population.getCurrentDay());
             } while (date >= getDeathDay() && getDeathAgeInDays() > MIN_DEATH_AGE_FOR_NO_PARTNERSHIP_EVENT * OrganicPopulation.getDaysPerYear());
 
             timeline.addEvent(date, new OrganicEvent(EventType.ELIGIBLE_TO_MARRY, this, date));
@@ -327,7 +327,7 @@ public class OrganicPerson implements IPerson {
         // Add ELIGIBLE_TO_MARRY event
         int date;
         do {
-        	date = temporalRemarriageTimeToDistribution.getSample() + minimumDate;
+        	date = temporalRemarriageTimeToDistribution.getSample(population.getCurrentDay()) + minimumDate;
         } while (!PopulationLogic.dateBeforeDeath(date, getDeathDay()));
 
         timeline.addEvent(date, new OrganicEvent(EventType.ELIGIBLE_TO_MARRY, this, date));
