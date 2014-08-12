@@ -16,7 +16,6 @@
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.organic;
 
-import java.util.Arrays;
 
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.old.NumberOfChildrenDistribuition;
 
@@ -30,7 +29,7 @@ public class OrganicPopulationLogger {
 	private static int startYear;
 	
 	public static void initPopulationAtYearEndsArray(final int startYear, final int endYear) {
-		populationAtYearEnds = new int[endYear - startYear];
+		populationAtYearEnds = new int[endYear - startYear + 1];
 		OrganicPopulationLogger.startYear = startYear;
 	}
 	

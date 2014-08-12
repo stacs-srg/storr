@@ -31,5 +31,4 @@ public interface Distribution<Value> {
      */
     Value getSample();
 
-    // TODO add method parameterised by date
 }

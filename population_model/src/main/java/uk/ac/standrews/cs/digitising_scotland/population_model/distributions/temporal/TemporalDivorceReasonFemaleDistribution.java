@@ -38,8 +38,8 @@ public class TemporalDivorceReasonFemaleDistribution extends TemporalDistributio
 	}
 
 	@Override
-	public DivorceReason getSample() {
-		switch (getIntSample()) {
+	public DivorceReason getSample(int date) {
+		switch (getIntSample(date)) {
 		case 0:
             return DivorceReason.ADULTERY;
         case 1:
@@ -53,6 +53,11 @@ public class TemporalDivorceReasonFemaleDistribution extends TemporalDistributio
         default:
             throw new RuntimeException("unexpected sample value");
 		}
+	}
+
+	@Override
+	public DivorceReason getSample() {
+		return getSample(0);
 	}
 
 

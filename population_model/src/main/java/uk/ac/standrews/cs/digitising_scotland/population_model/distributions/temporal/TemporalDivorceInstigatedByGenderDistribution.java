@@ -38,8 +38,8 @@ public class TemporalDivorceInstigatedByGenderDistribution extends TemporalDistr
 	}
 
 	@Override
-	public DivorceInstigation getSample() {
-		switch (getIntSample()) {
+	public DivorceInstigation getSample(int date) {
+		switch (getIntSample(date)) {
 		case 0:
 			return DivorceInstigation.MALE;
 		case 1:
@@ -49,6 +49,11 @@ public class TemporalDivorceInstigatedByGenderDistribution extends TemporalDistr
 		default:
 			throw new RuntimeException("unexpected sample value");
 		}
+	}
+
+	@Override
+	public DivorceInstigation getSample() {
+		return getSample(0);
 	}
 
 

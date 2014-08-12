@@ -157,7 +157,7 @@ public final class OrganicPartnership implements IPartnership {
 			System.out.println("Q3");
 		if (familyType == FamilyType.COHABITATION_THEN_MARRIAGE) {
 			do {
-				cohabThenMarriageMarriageDay = partnershipDay + temporalCohabitaitonToMarriageTimeDistribution.getSample();
+				cohabThenMarriageMarriageDay = partnershipDay + temporalCohabitaitonToMarriageTimeDistribution.getSample(population.getCurrentDay());
 				if (OrganicPopulation.DEBUG) {
 					System.out.println("Partnership day: " + partnershipDay);
 					System.out.println("Cohab then marry marriage Day: " + cohabThenMarriageMarriageDay);
@@ -243,14 +243,14 @@ public final class OrganicPartnership implements IPartnership {
 	private OrganicPerson[] setUpBirthPlan(final OrganicPerson husband, final OrganicPerson wife, final int currentDay) {
 		if (!cohabiting && !married) {
 			// Single / lone parent family
-			numberOfChildrenToBeHadByCouple = temporalAffairNumberOfChildrenDistribution.getSample();
+			numberOfChildrenToBeHadByCouple = temporalAffairNumberOfChildrenDistribution.getSample(population.getCurrentDay());
 		} else if (cohabiting && !married) {
 			// cohabiting
-			numberOfChildrenToBeHadByCouple = temporalChildrenNumberOfInMarriageOrCohabDistribution.getSample();
+			numberOfChildrenToBeHadByCouple = temporalChildrenNumberOfInMarriageOrCohabDistribution.getSample(population.getCurrentDay());
 			numberOfChildrenToBeHadByCouple = checkForFamilySize(numberOfChildrenToBeHadByCouple);
 		} else if (cohabiting && married) {
 			// cohab then marriage / marriage
-			numberOfChildrenToBeHadByCouple = temporalChildrenNumberOfInMarriageOrCohabDistribution.getSample();
+			numberOfChildrenToBeHadByCouple = temporalChildrenNumberOfInMarriageOrCohabDistribution.getSample(population.getCurrentDay());
 			numberOfChildrenToBeHadByCouple = checkForFamilySize(numberOfChildrenToBeHadByCouple);
 		}
 		if (OrganicPopulation.DEBUG)
@@ -311,7 +311,7 @@ public final class OrganicPartnership implements IPartnership {
 	}
 
 	private void setUpCohabitationEndEvent(final OrganicPerson male, final OrganicPerson female, final int currentDay) {
-		int lengthOfCohab = temporalCohabitationLengthDistribution.getSample();
+		int lengthOfCohab = temporalCohabitationLengthDistribution.getSample(population.getCurrentDay());
 		int endDayOfCohab = currentDay + lengthOfCohab;
 		if (PopulationLogic.dateBeforeDeath(endDayOfCohab, male.getDeathDay())) {
 			if (PopulationLogic.dateBeforeDeath(endDayOfCohab, female.getDeathDay())) {
@@ -343,12 +343,12 @@ public final class OrganicPartnership implements IPartnership {
 			System.out.println("S2");
 		if (PopulationLogic.dateBeforeDeath(actualMarriageDay + MINUMUM_DIVORCE_WINDOW, husband.getDeathDay()) && 
 				PopulationLogic.dateBeforeDeath(actualMarriageDay + MINUMUM_DIVORCE_WINDOW, wife.getDeathDay()))
-		switch (temporalDivorceInstigatedByGenderDistribution.getSample()) {
+		switch (temporalDivorceInstigatedByGenderDistribution.getSample(population.getCurrentDay())) {
 		case MALE:
 			// get male age at divorce
 			int maleDivorceAgeInDays;
 			do {
-				maleDivorceAgeInDays = temporalDivorceAgeForMaleDistribution.getSample() + husband.getBirthDay(); 
+				maleDivorceAgeInDays = temporalDivorceAgeForMaleDistribution.getSample(population.getCurrentDay()) + husband.getBirthDay(); 
 				if (OrganicPopulation.DEBUG) {
 					System.out.println("S3");
 					System.out.println("Male Divorce Age In Days: " + maleDivorceAgeInDays);
@@ -375,7 +375,7 @@ public final class OrganicPartnership implements IPartnership {
 				System.out.println("Actual Marriage day: " + actualMarriageDay);
 			}
 			// TODO handles only the adultery special case - could be used to enforce geographical movement to support seperation.
-			divorceReason = temporalDivorceReasonMaleDistribution.getSample();
+			divorceReason = temporalDivorceReasonMaleDistribution.getSample(population.getCurrentDay());
 			if (divorceReason == DivorceReason.ADULTERY) {
 				setupAffair(wife);
 			}
@@ -384,7 +384,7 @@ public final class OrganicPartnership implements IPartnership {
 			// get female age at divorce
 			int femaleDivorceAgeInDays;
 			do {
-				femaleDivorceAgeInDays = temporalDivorceAgeForFemaleDistribution.getSample() + wife.getBirthDay();
+				femaleDivorceAgeInDays = temporalDivorceAgeForFemaleDistribution.getSample(population.getCurrentDay()) + wife.getBirthDay();
 				if (OrganicPopulation.DEBUG) {
 					System.out.println("S4");
 					System.out.println("Female Divorce Age In Days: " + femaleDivorceAgeInDays);
@@ -404,7 +404,7 @@ public final class OrganicPartnership implements IPartnership {
 
 
 			// TODO handles only the adultery special case - could be used to enforce geographical movement to support seperation.
-			divorceReason = temporalDivorceReasonFemaleDistribution.getSample();
+			divorceReason = temporalDivorceReasonFemaleDistribution.getSample(population.getCurrentDay());
 			timeline.addEvent(femaleDivorceAgeInDays, new OrganicEvent(EventType.DIVORCE, this, femaleDivorceAgeInDays));
 			timeline.setEndDate(femaleDivorceAgeInDays);
 			if (divorceReason == DivorceReason.ADULTERY) {
@@ -425,7 +425,7 @@ public final class OrganicPartnership implements IPartnership {
 	}
 
 	private void setupAffair(OrganicPerson marriedPerson) {
-		int numberOfAffairs = temporalAffairNumberOfDistribution.getSample();
+		int numberOfAffairs = temporalAffairNumberOfDistribution.getSample(population.getCurrentDay());
 		AffairSpacingDistribution affairDistribution = AffairSpacingDistribution.AffairDistributionFactory(this, random);
 		for (int i = 0; i < numberOfAffairs; i++) {
 			int day = affairDistribution.getIntSample();
@@ -449,7 +449,7 @@ public final class OrganicPartnership implements IPartnership {
 	 * @return An OrganicPerson array containing any children to be born in the birth event. Size zero if none.
 	 */
 	public OrganicPerson[] setUpBirthEvent(final OrganicPerson husband, final OrganicPerson wife, final int currentDay) {
-		int numberOfChildrenInPregnacy = temporalChildrenNumberOfInMaternityDistribution.getSample();
+		int numberOfChildrenInPregnacy = temporalChildrenNumberOfInMaternityDistribution.getSample(population.getCurrentDay());
 		if (numberOfChildrenInPregnacy > numberOfChildrenToBeHadByCouple - childrenIds.size()) {
 			numberOfChildrenInPregnacy = numberOfChildrenToBeHadByCouple - childrenIds.size();
 		}

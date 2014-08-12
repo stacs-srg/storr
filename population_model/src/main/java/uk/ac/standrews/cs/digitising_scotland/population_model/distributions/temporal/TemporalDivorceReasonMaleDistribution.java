@@ -37,10 +37,12 @@ public class TemporalDivorceReasonMaleDistribution extends TemporalDistribution<
 	public TemporalDivorceReasonMaleDistribution(OrganicPopulation population, String distributionKey, final Random random) {
 		super(population, distributionKey, random);
 	}
+	
+	
 
 	@Override
-	public DivorceReason getSample() {
-		switch (getIntSample()) {
+	public DivorceReason getSample(int date) {
+		switch (getIntSample(date)) {
 		case 0:
             return DivorceReason.ADULTERY;
         case 1:
@@ -54,6 +56,13 @@ public class TemporalDivorceReasonMaleDistribution extends TemporalDistribution<
         default:
             throw new RuntimeException("unexpected sample value");
 		}
+	}
+
+
+
+	@Override
+	public DivorceReason getSample() {
+		return getSample(0);
 	}
 
 
