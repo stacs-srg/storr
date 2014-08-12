@@ -426,7 +426,7 @@ public final class OrganicPartnership implements IPartnership {
 
 	private void setupAffair(OrganicPerson marriedPerson) {
 		int numberOfAffairs = temporalAffairNumberOfDistribution.getSample(population.getCurrentDay());
-		AffairSpacingDistribution affairDistribution = AffairSpacingDistribution.AffairDistributionFactory(this, random);
+		AffairSpacingDistribution affairDistribution = AffairSpacingDistribution.affairDistributionFactory(this, random);
 		for (int i = 0; i < numberOfAffairs; i++) {
 			int day = affairDistribution.getIntSample();
 			marriedPerson.getPopulation().addPersonToAffairsWaitingQueue(marriedPerson, day);

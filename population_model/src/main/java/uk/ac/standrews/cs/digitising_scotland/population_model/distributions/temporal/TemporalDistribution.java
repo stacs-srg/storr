@@ -18,6 +18,8 @@ package uk.ac.standrews.cs.digitising_scotland.population_model.distributions.te
 
 import uk.ac.standrews.cs.digitising_scotland.population_model.config.PopulationProperties;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.general.Distribution;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.general.NegativeDeviationException;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.general.NegativeWeightException;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.general.NormalDistribution;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.general.WeightedIntegerDistribution;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.RandomFactory;
@@ -28,6 +30,7 @@ import uk.ac.standrews.cs.nds.util.ErrorHandling;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -63,56 +66,55 @@ public abstract class TemporalDistribution<Value> implements ITemporalDistributi
 
 		try (BufferedReader reader = new BufferedReader(new InputStreamReader(getClass().getClassLoader().getResourceAsStream(PopulationProperties.getProperties().getProperty(distributionKey)), FileManipulation.FILE_CHARSET))) {
 
-			try {
-				do {
-					line = reader.readLine();
+			while ((line = reader.readLine()) != null) {
 
-					if (line == null)
-						break;
+				if (line.startsWith(COMMENT_INDICATOR)) {
+					continue;
+				}
 
-					if (line.startsWith(COMMENT_INDICATOR)) {
-						continue;
+				if (firstLine) {
+					minimum = Integer.parseInt(line.split(TAB)[0]);
+					maximum = Integer.parseInt(line.split(TAB)[1]);
+					if (distributionKey.equals("children_number_of_in_marriage_or_cohab_distributions_filename")) {
+						population.setMaximumNumberOfChildrenInFamily(maximum);
 					}
+					if (line.split(TAB).length > 2 && line.split(TAB)[2].equalsIgnoreCase("NORMAL")) {
+						normal = true;
+					}
+					firstLine = false;
+				} else {
 
-					if (firstLine) {
-						minimum = Integer.parseInt(line.split(TAB)[0]);
-						maximum = Integer.parseInt(line.split(TAB)[1]);
-						if (distributionKey == "children_number_of_in_marriage_or_cohab_distributions_filename") {
-							population.setMaximumNumberOfChildrenInFamily(maximum);
-						}
-						if (line.split(TAB).length > 2 && line.split(TAB)[2].equalsIgnoreCase("NORMAL")) {
-							normal = true;
-						}
-						firstLine = false;
-					} else {
 
-						try {
-							String[] lineComponents = line.split(TAB);
-							int year = Integer.parseInt(lineComponents[0]);
-							Distribution<?> currentDistribution;
-							if (normal) {
-								currentDistribution = new NormalDistribution(Double.valueOf(lineComponents[1]), Double.valueOf(lineComponents[2]), random);
-							} else {
-								int[] weights = new int[lineComponents.length - 1];
+						String[] lineComponents = line.split(TAB);
+						int year = Integer.parseInt(lineComponents[0]);
+						Distribution<?> currentDistribution;
+						if (normal) {
+							currentDistribution = new NormalDistribution(Double.valueOf(lineComponents[1]), Double.valueOf(lineComponents[2]), random);
+						} else {
+							int[] weights = new int[lineComponents.length - 1];
 
-								for (int i = 1; i < lineComponents.length; i++) {
-									weights[i - 1] = Integer.parseInt(lineComponents[i]);
-								}
-								currentDistribution = new WeightedIntegerDistribution(minimum, maximum, weights, random);
+							for (int i = 1; i < lineComponents.length; i++) {
+								weights[i - 1] = Integer.parseInt(lineComponents[i]);
 							}
-							map.put((int) ((year - OrganicPopulation.getEpochYear()) * OrganicPopulation.getDaysPerYear()) , currentDistribution);
-						} catch (NumberFormatException e) {
-							// do nothing
+							currentDistribution = new WeightedIntegerDistribution(minimum, maximum, weights, random);
 						}
-					}
-				} while (line != null);
-
-			} catch (Exception e) {
-				e.printStackTrace();
-				ErrorHandling.exceptionError(e, "Could not process line:" + line);
+						map.put((int) ((year - OrganicPopulation.getEpochYear()) * OrganicPopulation.getDaysPerYear()) , currentDistribution);
+					
+				}
 			}
-		} catch (Exception e) {
 
+
+		} catch (NumberFormatException e) {
+			ErrorHandling.exceptionError(e, "Could not process line:" + line);
+			e.printStackTrace();
+		} catch (IOException e) {
+			ErrorHandling.exceptionError(e, "IO Exception");
+			e.printStackTrace();
+		} catch (NegativeWeightException e) {
+			ErrorHandling.exceptionError(e, "NegativeWeightException");
+			e.printStackTrace();
+		} catch (NegativeDeviationException e) {
+			ErrorHandling.exceptionError(e, "NegativeDeviationException");
 			e.printStackTrace();
 		}
 		Set<Integer> keys = map.keySet();
@@ -132,16 +134,16 @@ public abstract class TemporalDistribution<Value> implements ITemporalDistributi
 				key = keyArray[i];
 			}
 		}
-		
+
 		do {
 			returnValue = Double.valueOf(map.get(key).getSample().toString()).intValue();
 		} while (returnValue > maximum || returnValue < minimum);
-		
+
 		return returnValue;
 	}
 
 	@Override
 	public abstract Value getSample();
-	
+
 	public abstract Value getSample(int date);
 }
