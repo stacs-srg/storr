@@ -4,20 +4,25 @@ import org.apache.mahout.math.DenseMatrix;
 import org.apache.mahout.math.Matrix;
 
 /**
+* Utility class that can be used to enlarge the size of a {@link Matrix}.
 * Created by fraserdunlop on 07/08/2014 at 15:44.
 */
-class MatrixEnlarger {
-    MatrixEnlarger() {
+final class MatrixEnlarger {
+
+    private MatrixEnlarger() {
+
     }
 
-    public static Matrix enlarge(Matrix matrix, int additionalCols, int additionalRows) {
-        Matrix largerMatrix =  new DenseMatrix(matrix.numRows() + additionalRows, matrix.numCols() + additionalCols);
+    public static Matrix enlarge(final Matrix matrix, final int additionalCols, final int additionalRows) {
+
+        Matrix largerMatrix = new DenseMatrix(matrix.numRows() + additionalRows, matrix.numCols() + additionalCols);
         return copyInto(largerMatrix, matrix);
     }
 
-    private static Matrix copyInto(Matrix largerMatrix, Matrix matrix) {
-        for(int i = 0; i < matrix.numRows(); i++){
-            for(int j = 0; j < matrix.numCols(); j++ ){
+    private static Matrix copyInto(final Matrix largerMatrix, final Matrix matrix) {
+
+        for (int i = 0; i < matrix.numRows(); i++) {
+            for (int j = 0; j < matrix.numCols(); j++) {
                 largerMatrix.set(i, j, matrix.get(i, j));
             }
         }
