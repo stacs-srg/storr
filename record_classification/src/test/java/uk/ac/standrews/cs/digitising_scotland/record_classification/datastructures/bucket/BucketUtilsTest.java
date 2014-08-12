@@ -16,16 +16,13 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.exceptions.I
 public class BucketUtilsTest {
 
     /** The bucket a. */
-    Bucket bucketA;
+    private static Bucket bucketA;
 
     /** The bucket b. */
-    Bucket bucketB;
+    private static Bucket bucketB;
 
     /** The bucket c. */
-    Bucket bucketC;
-
-    /** The empty bucket. */
-    Bucket emptyBucket;
+    private static Bucket bucketC;
 
     /**
      * Sets the up.
@@ -36,7 +33,6 @@ public class BucketUtilsTest {
     @Before
     public void setUp() throws IOException, InputFormatException {
 
-        emptyBucket = new Bucket();
         bucketC = new Bucket();
 
         File inputFileA = new File(getClass().getResource("/BucketUtilsTestFile1.txt").getFile());
