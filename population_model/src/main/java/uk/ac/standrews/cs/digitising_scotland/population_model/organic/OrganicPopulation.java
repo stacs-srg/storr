@@ -406,36 +406,7 @@ public class OrganicPopulation implements IPopulation {
 		handleEligibleToMarryEvent(livingPeople.get(peopleListIndex));
 	}
 
-	private void removePersonFromQueue(List<OrganicPerson> queue, final OrganicPerson person) {
-		int index = queue.indexOf(person);
-		if (index != -1) {
-			queue.remove(index);
-			// FIXME Correct logging method
-			OrganicPopulationLogger.incNeverMarried();
-		}
-	}
-
-	private void removePersonFromAllPartnershipQueues(OrganicPerson person) {
-		if (person.getSex() == 'M') {
-			removePersonFromQueue(maleMarriageQueue, person);
-			removePersonFromQueue(maleSingleQueue, person);
-			removePersonFromQueue(maleCohabitationQueue, person);
-			removePersonFromQueue(maleCohabitationThenMarriageQueue, person);
-			removePersonFromQueue(maleSingleAffairsQueue, person);
-			removePersonFromQueue(maleMaritalAffairsQueue, person);
-		} else {
-			removePersonFromQueue(femaleMarriageQueue, person);
-			removePersonFromQueue(femaleSingleQueue, person);
-			removePersonFromQueue(femaleCohabitationQueue, person);
-			removePersonFromQueue(femaleCohabitationThenMarriageQueue, person);
-			removePersonFromQueue(femaleSingleAffairsQueue, person);
-			removePersonFromQueue(femaleMaritalAffairsQueue, person);
-		}
-	}
-
 	private void handleDeathEvent(final OrganicPerson person) {
-//		removePersonFromAllPartnershipQueues(person);
-
 		deadPeople.add(livingPeople.remove(livingPeople.indexOf(person)));
 		OrganicPopulationLogger.decPopulation();
 	}

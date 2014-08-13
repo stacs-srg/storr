@@ -21,7 +21,6 @@ import java.util.Random;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.general.NegativeDeviationException;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.general.NormalDistribution;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.PopulationLogic;
-import uk.ac.standrews.cs.digitising_scotland.population_model.organic.OrganicPopulation;
 
 public class TimeFromCohabitationToMarriageDistribution extends NormalDistribution {
 

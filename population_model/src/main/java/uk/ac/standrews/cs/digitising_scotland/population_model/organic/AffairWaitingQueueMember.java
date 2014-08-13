@@ -19,7 +19,6 @@ package uk.ac.standrews.cs.digitising_scotland.population_model.organic;
 import java.util.Random;
 
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.temporal.AffairWithMarriedOrSingleDistribution;
-import uk.ac.standrews.cs.digitising_scotland.population_model.model.RandomFactory;
 
 public class AffairWaitingQueueMember implements Comparable<AffairWaitingQueueMember>{
 

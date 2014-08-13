@@ -43,7 +43,7 @@ public final class OrganicPartnership implements IPartnership {
 	// Adjusted number of children variables
 	private static ArrayList<Integer>[] adjustedNumberOfChildren = null;
 
-	// Universal partnership ditributions
+	// Universal partnership distributions
 	private static Random random = RandomFactory.getRandom();
 	private static TemporalDivorceInstigatedByGenderDistribution temporalDivorceInstigatedByGenderDistribution;
 	private static TemporalIntegerDistribution temporalDivorceAgeForMaleDistribution;
@@ -282,7 +282,7 @@ public final class OrganicPartnership implements IPartnership {
 				timeBetweenMaternitiesDistrobution = new NormalDistribution(mean, standardDeviation, random);
 			} catch (NegativeDeviationException e) {
 				if (!cohabiting && !married) {
-					setUpAffairEndEvent(husband, wife, currentDay);
+					setUpAffairEndEvent(currentDay);
 				}
 				return new OrganicPerson[0];
 			}
@@ -297,7 +297,7 @@ public final class OrganicPartnership implements IPartnership {
 				addUndersizedFamily(intendedNumberOfChildren, numberOfChildrenToBeHadByCouple);
 			}
 			if (!cohabiting && !married) {
-				setUpAffairEndEvent(husband, wife, currentDay);
+				setUpAffairEndEvent(currentDay);
 			}
 			if (OrganicPopulation.DEBUG)
 				System.out.println("R9");
@@ -306,7 +306,7 @@ public final class OrganicPartnership implements IPartnership {
 
 	}
 
-	private void setUpAffairEndEvent(final OrganicPerson male, final OrganicPerson female, final int currentDay) {
+	private void setUpAffairEndEvent(final int currentDay) {
 		timeline.addEvent(currentDay + 1, new OrganicEvent(EventType.END_OF_AFFAIR, this, currentDay + 1));
 	}
 
@@ -318,14 +318,10 @@ public final class OrganicPartnership implements IPartnership {
 				timeline.addEvent(endDayOfCohab, new OrganicEvent(EventType.END_OF_COHABITATION, this, endDayOfCohab));
 				timeline.setEndDate(endDayOfCohab);
 			} else {
-				if (female.getDeathDay() < currentDay) {
-				}
 				timeline.addEvent(female.getDeathDay(), new OrganicEvent(EventType.PARTNERSHIP_ENDED_BY_DEATH, this, female.getDeathDay()));
 				timeline.setEndDate(female.getDeathDay());
 			}
 		} else {
-			if (male.getDeathDay() < currentDay) {
-			}
 			timeline.addEvent(male.getDeathDay(), new OrganicEvent(EventType.PARTNERSHIP_ENDED_BY_DEATH, this, male.getDeathDay()));
 			timeline.setEndDate(male.getDeathDay());
 		}
@@ -455,7 +451,7 @@ public final class OrganicPartnership implements IPartnership {
 		}
 		if (numberOfChildrenInPregnacy == 0) {
 			if (!cohabiting && !married && lastChildBorn()) {
-				setUpAffairEndEvent(husband, wife, currentDay);
+				setUpAffairEndEvent(currentDay);
 			}
 			return new OrganicPerson[0];
 		} else {
@@ -478,7 +474,7 @@ public final class OrganicPartnership implements IPartnership {
 				if (OrganicPopulation.DEBUG)
 					System.out.println("P1");
 				if (!cohabiting && !married && lastChildBorn()) {
-					setUpAffairEndEvent(husband, wife, currentDay + dayOfBirth + 1);
+					setUpAffairEndEvent(currentDay + dayOfBirth + 1);
 				}
 				if (OrganicPopulation.DEBUG)
 					System.out.println("P2");
@@ -486,7 +482,7 @@ public final class OrganicPartnership implements IPartnership {
 			} else {
 				OrganicPopulationLogger.incStopedHavingEarlyDeaths(numberOfChildrenToBeHadByCouple - children.length);
 				if (!cohabiting && !married && lastChildBorn()) {
-					setUpAffairEndEvent(husband, wife, currentDay);
+					setUpAffairEndEvent(currentDay);
 				}
 				return new OrganicPerson[0];
 			}

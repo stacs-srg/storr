@@ -44,12 +44,12 @@ import java.util.Random;
  */
 public class OrganicPerson implements IPerson {
 
-    // Univeral person variables
+    // Universal person variables
     private static Random random = RandomFactory.getRandom();
     private static final int MIN_DEATH_AGE_FOR_NO_PARTNERSHIP_EVENT = 20;
     private static final int COMING_OF_AGE = 15;
 
-    // Universal person ditributions
+    // Universal person distributions
     
     private static UniformSexDistribution sexDistribution = new UniformSexDistribution(random);
     private static FirstNameForMalesDistribution maleFirstNamesDistribution;
@@ -144,8 +144,8 @@ public class OrganicPerson implements IPerson {
             if(lastName == null)
                 lastName = surnamesDistribution.getSample();
 
-        	occupation = occupationDistribution.getSample();
-        	causeOfDeath = deathCauseOfDistribution.getSample();
+        	setOccupation(occupationDistribution.getSample());
+        	setCauseOfDeath(deathCauseOfDistribution.getSample());
         }
         catch(NullPointerException e){
         	initializeDistributions(population);
@@ -483,12 +483,12 @@ public class OrganicPerson implements IPerson {
 
     @Override
     public String getDeathCause() {
-        return null;
+        return causeOfDeath;
     }
 
     @Override
     public String getOccupation() {
-        return null;
+        return occupation;
     }
 
     @Override
@@ -500,5 +500,17 @@ public class OrganicPerson implements IPerson {
     public int getParentsPartnership() {
         return parentPartnershipId;
     }
+
+	public void setOccupation(String occupation) {
+		this.occupation = occupation;
+	}
+
+	public String getCauseOfDeath() {
+		return causeOfDeath;
+	}
+
+	public void setCauseOfDeath(String causeOfDeath) {
+		this.causeOfDeath = causeOfDeath;
+	}
 
 }
