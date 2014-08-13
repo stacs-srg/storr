@@ -809,6 +809,7 @@ public class OrganicPopulation implements IPopulation {
 		for (OrganicPerson person : all) {
 			if (person.getId() == id) {
 				return person;
+				
 			}
 		}
 		return null;
