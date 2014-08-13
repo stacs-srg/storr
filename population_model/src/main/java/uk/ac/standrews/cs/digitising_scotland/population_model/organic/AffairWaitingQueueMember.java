@@ -28,7 +28,7 @@ public class AffairWaitingQueueMember implements Comparable<AffairWaitingQueueMe
 	
     private static AffairWithMarriedOrSingleDistribution affairWithMarriedOrSingleDistribution;
 
-	public static void initialiseAffairWithMarrieadOrDingleDistribution(OrganicPopulation population, String distributionKey, Random random) {
+	public static void initialiseAffairWithMarrieadOrSingleDistribution(OrganicPopulation population, String distributionKey, Random random) {
 		affairWithMarriedOrSingleDistribution = new AffairWithMarriedOrSingleDistribution(population, distributionKey, random);
 	}
 	

@@ -47,7 +47,7 @@ public class OrganicPerson implements IPerson {
     // Universal person variables
     private static Random random = RandomFactory.getRandom();
     private static final int MIN_DEATH_AGE_FOR_NO_PARTNERSHIP_EVENT = 20;
-    private static final int COMING_OF_AGE = 15;
+    private static final int COMING_OF_AGE_AGE = 15;
 
     // Universal person distributions
     
@@ -87,7 +87,7 @@ public class OrganicPerson implements IPerson {
     private boolean seedPerson;
 
     /**
-     * Distribution initialization 
+     * Distribution initialisation 
      */
     public static void initializeDistributions (OrganicPopulation population) {
     	try{
@@ -249,7 +249,7 @@ public class OrganicPerson implements IPerson {
     }
     
     private void addSingleComingOfAgeEvent() {
-    	timeline.addEvent(getBirthDay() + (int) (COMING_OF_AGE * OrganicPopulation.getDaysPerYear()), new OrganicEvent(EventType.COMING_OF_AGE, this, getBirthDay() + (int) (COMING_OF_AGE * OrganicPopulation.getDaysPerYear())));
+    	timeline.addEvent(getBirthDay() + (int) (COMING_OF_AGE_AGE * OrganicPopulation.getDaysPerYear()), new OrganicEvent(EventType.COMING_OF_AGE, this, getBirthDay() + (int) (COMING_OF_AGE_AGE * OrganicPopulation.getDaysPerYear())));
     }
     
     private void addEligibleToCohabitEvent() {
