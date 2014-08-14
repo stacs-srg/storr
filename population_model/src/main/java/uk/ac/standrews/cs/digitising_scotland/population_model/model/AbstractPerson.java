@@ -112,6 +112,7 @@ public abstract class AbstractPerson implements IPerson {
         return id;
     }
 
+    @Override
     public String toString() {
         return string_rep;
     }
