@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2014 Digitising Scotland project:
  * <http://digitisingscotland.cs.st-andrews.ac.uk/>
  *
@@ -34,7 +34,7 @@ public abstract class AbstractFilePopulationWriter implements IPopulationWriter 
 
     private static final int NUMBER_OF_DIGITS_IN_ID = 8;
 
-    private static final NumberFormat formatter;
+    private static final NumberFormat FORMATTER;
 
     protected abstract void outputHeader(PrintWriter writer);
 
@@ -44,9 +44,9 @@ public abstract class AbstractFilePopulationWriter implements IPopulationWriter 
 
     static {
 
-        formatter = NumberFormat.getInstance();
-        formatter.setMinimumIntegerDigits(NUMBER_OF_DIGITS_IN_ID);
-        formatter.setGroupingUsed(false);
+        FORMATTER = NumberFormat.getInstance();
+        FORMATTER.setMinimumIntegerDigits(NUMBER_OF_DIGITS_IN_ID);
+        FORMATTER.setGroupingUsed(false);
     }
 
     /**
@@ -82,6 +82,6 @@ public abstract class AbstractFilePopulationWriter implements IPopulationWriter 
 
     private static String padId(final int index) {
 
-        return formatter.format(index);
+        return FORMATTER.format(index);
     }
 }

@@ -87,6 +87,12 @@
                 <version>2.4</version>
                 <configuration>
                     <header>src/main/resources/license-template.txt</header>
+                    <headerDefinitions>
+                        <headerDefinition>src/main/resources/license-custom-style.xml</headerDefinition>
+                    </headerDefinitions>
+                    <mapping>
+                        <java>JAVA_STYLE</java>
+                    </mapping>
                     <excludes>
                         <exclude>**/README</exclude>
                         <exclude>src/test/resources/**</exclude>
