@@ -1,5 +1,4 @@
 # Overview
----
 The population is used to generate to generate populations of individuals conforming to the IPerson interface.
 
 The organic approach to the population model is event driven. For everything that occurs within the simulation an event is created on a given day and then placed into a global event queue.
@@ -11,8 +10,6 @@ The way in which the simulation progresses is defined by the types of events whi
 ---
 
 ## Events
-
----
 
 ### Person Event
 __BORN__ - Marks the point in time when this individual is to be born into the population. At this point the family type for their first partnership. Types that can be allocated at this point are:
@@ -29,25 +26,25 @@ An age at which the person will become eligible to begin the specified partnersh
 | :---: | :---: | :--- |
 | SINGLE | COMING\_OF\_AGE | _COMING\_OF\_AGE_AGE (15)_ |
 | COHABITATION | ELIGABLE\_TO\_COHABIT | cohabitation\_age\_for\_{gender}\_distributions\_data.tsv |
-| COHABITATION\_THEN | ELIGABLE\_TO | cohabitation\_age\_for\_{gender}\_distributions\_data.tsv |
-| _MARRIAGE| _COHABIT\_THEN\_MARRIAGE | cohabitation_to_marriage_time_distributions_data.tsv |
+| COHABITATION\_THEN\_MARRIAGE | ELIGABLE\_TO\_COHABIT\_THEN\_MARRIAGE | cohabitation\_age\_for\_{gender}\_distributions\_data.tsv |
+|  |  | cohabitation_to_marriage_time_distributions_data.tsv |
 | MARRIAGE | ELIGABLE\_TO\_MARRY | cohabitation\_age\_for\_{gender}\_distributions\_data.tsv |
 
 ---
 
-__COMING_OF_AGE__ - At the point of coming of age the person is placed into the gender specific singles queue. Although these persons won't be part of any cohabitation or marriage partnerships they may still be used in affairs and extramarital partnerships.
+__COMING\_OF\_AGE__ - At the point of coming of age the person is placed into the gender specific singles queue. Although these persons won't be part of any cohabitation or marriage partnerships they may still be used in affairs and extramarital partnerships.
 
 ---
 
-__ELIGABLE_TO_COHABIT__ - At the point of a person becoming eligible to cohabit the person is placed into the gender specific cohabitation queue.
+__ELIGABLE\_TO\_COHABIT__ - At the point of a person becoming eligible to cohabit the person is placed into the gender specific cohabitation queue.
 
 ---
 
-__ELIGABLE_TO_COHABIT_THEN_MARRY__ - At the point of a person becoming eligible to cohabit then marry the person is placed into the gender specific cohabitation then marriage queue.
+__ELIGABLE\_TO\_COHABIT_THEN_MARRY__ - At the point of a person becoming eligible to cohabit then marry the person is placed into the gender specific cohabitation then marriage queue.
 
 ---
 
-__ELIGABLE_TO_MARRY__ - At the point of a person becoming eligible to cohabit the person is placed into the gender specific marriage queue.
+__ELIGABLE\_TO\_MARRY__ - At the point of a person becoming eligible to cohabit the person is placed into the gender specific marriage queue.
 
 ---
 
@@ -185,3 +182,79 @@ Currently only used in conjunction with the affairs queues.
 * Female Single Queue
 
 ####_Relevant distributions:_
+
+
+
+---
+
+## Distributions
+
+Statistical distributions are used throughout the population model to allow control over the resulting behaviours of the persons in the population. The values of these distributions can be modified by adjusting the tsv file that are identified throughout the documentation.
+
+---
+
+### Types of Distributions
+
+The implementation of the population model is accepting of the weighted integer and normal distribution types for most types of user editable distributions. A probability based distribution is also used in certain cases as detailed below.
+
+#### General Distribution File Layout
+
+All distributions apart from the probability based distribution follow the below format. All fields are separated by a tab character.
+
+> % For Normal Distribution
+
+> {MIN VALUE}   {MAX VALUE} NORMAL
+
+> {YEAR}    {MEAN}  {STANDARD DEVIATION}
+
+> ---
+
+> % For weighted integer distribution
+
+> {MIN VALUE}   {MAX VALUE} WEIGHTED
+
+> {YEAR}    {VALUES ... }
+
+The distribution data files allow for different distributions to be stated to be used at different years in the simulation. In the likely event that a distribution is not supplied for the current year of the simulation the model will make use of the previous provided distribution. For example in the below example in 1799 the distribution from 1779 will be used. If a distribution hasn't been provided from the start year of the simulation then the earliest provided distribution will be used.
+
+___Max and min values should be provided in number of days when they pertain to an amount of time.___
+
+#### Weighted Integer Distributions
+
+In the case of the weighted integer distribution the max and minimum values are hard values, which limit the return values from the distribution. The values provided against each year then dictate the weighting of the values that are returned by the distribution.
+
+An example of a weighted integer distribution is shown below.
+
+> %	Children - Number of per family
+
+> 0	11
+
+> 1679	10	0	0	0	700	100	75	25	15	5	3	2
+
+> 1779	1000	0	0	0	0	0	0	0	0	0	0	0
+
+> 1800	10	90	100	250	300	100	75	25	15	5	3	2
+
+> 1950	140	130	440	200	50	25	10	6	5	2	1	1
+
+
+> 1996	354	224	232	84	61	16	17	4	4	1	1	1
+
+#### Normal Distributions
+
+In the case of the normal distribution the max and min values are hard values but the real control over which values are returned should be performed using the mean and standard deviation to adjust the dimensions of the normal curve. It is important to consider a safe minimum to be set as the min value to prevent unexpected behavior in the model due to extreme values that can be returned due to the nature of a normal distribution. Therefore when dealing with time periods such as in the example below it is important to set a non negative value as the minimum as to prevent events being created in the past. The max value can be set as high as desired to allow for the occasional outlying value to be returned by the distribution if such behavior is desirably.
+
+An example of a weighted integer distribution is shown below.
+
+> % Cohabitation to marriage - Time in days
+
+> 0	1339	NORMAL
+
+> 1600	669	167
+
+> 1923	213	53
+
+#### Probability distributions
+
+
+
