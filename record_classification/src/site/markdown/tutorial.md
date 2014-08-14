@@ -54,7 +54,7 @@ in the scripts folder. This script takes as an argument the file to train and te
 For example:    
 
 <div class="source">
-	$ sh runMultipleClassifications.sh recordsToClassify.txt    
+	$sh runMultipleClassifications.sh recordsToClassify.txt    
 </div>
 
 This script will use Maven to do build the software, split the file into a training portion (80%) and a testing proportion (20%).    

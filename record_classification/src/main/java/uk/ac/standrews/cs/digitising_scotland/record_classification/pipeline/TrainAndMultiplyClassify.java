@@ -14,7 +14,8 @@ import org.slf4j.LoggerFactory;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.AbstractClassifier;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.OLR.OLRClassifier;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.lookup.ExactMatchClassifier;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.FormatConverter;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datareaders.AbstractFormatConverter;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datareaders.LongFormatConverter;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.analysis_metrics.AbstractConfusionMatrix;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.analysis_metrics.CodeMetrics;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.analysis_metrics.InvertedSoftConfusionMatrix;
@@ -68,6 +69,8 @@ import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearnin
 public final class TrainAndMultiplyClassify {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TrainAndMultiplyClassify.class);
+
+    private static AbstractFormatConverter formatConverter = new LongFormatConverter();
 
     private static double trainingRatio = 0.8;
 
@@ -343,7 +346,7 @@ public final class TrainAndMultiplyClassify {
         boolean longFormat = checkFileType(training);
 
         if (longFormat) {
-            records = FormatConverter.convert(training);
+            records = formatConverter.convert(training);
         }
         else {
             records = RecordFactory.makeCodedRecordsFromFile(training);

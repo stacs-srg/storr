@@ -13,13 +13,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.CODOrignalData;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeFactory;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeTriple;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.exceptions.InputFormatException;
-import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
 
 /**
  * The Class FormatConverter converts a comma separated text file in the format that is used by the modern cod data
@@ -33,25 +29,27 @@ public final class PilotDataFormatConverter extends AbstractFormatConverter {
     private static final String CHARSET_NAME = "UTF8";
 
     /** The Constant CODLINELENGTH. */
-    static final int CODLINELENGTH = 38;
+    static final int CODLINELENGTH = 8;
 
     /** The Constant idPosition. */
-    private static final int ID_POSITION = 0;
+    private static final int ID_POSITION = 1;
 
     /** The Constant agePosition. */
-    private static final int AGE_POSITION = 34;
+    private static final int AGE_POSITION = 3;
 
     /** The Constant sexPosition. */
-    private static final int SEX_POSITION = 35;
+    private static final int SEX_POSITION = 2;
 
     /** The Constant descriptionStart. */
-    private static final int DESC_START = 1;
+    private static final int DESC_START = 4;
 
     /** The Constant descriptionEnd. */
-    private static final int DESC_END = 4;
+    private static final int DESC_END = 6;
 
     /** The Constant yearPosition. */
-    private static final int YEAR_POSITION = 37;
+    private static final int YEAR_POSITION = 0;
+
+    private static final int IMAGE_QUALITY_POS = 7;
 
     /**
      * Converts the data in the inputFile (one record per line, comma separated) into {@link Record}s.
@@ -69,12 +67,12 @@ public final class PilotDataFormatConverter extends AbstractFormatConverter {
         List<Record> recordList = new ArrayList<>();
 
         while ((line = br.readLine()) != null) {
-            String[] lineSplit = line.split(Utils.getCSVComma());
+            String[] lineSplit = line.split("\t");
 
             checkLineLength(lineSplit);
 
             int id = Integer.parseInt(lineSplit[ID_POSITION]);
-            int imageQuality = 1;
+            int imageQuality = parseImageQuality(lineSplit);
             int ageGroup = convertAgeGroup(removeQuotes(lineSplit[AGE_POSITION]));
             int sex = convertSex(removeQuotes(lineSplit[SEX_POSITION]));
             String description = formDescription(lineSplit, DESC_START, DESC_END);
@@ -82,49 +80,24 @@ public final class PilotDataFormatConverter extends AbstractFormatConverter {
 
             CODOrignalData originalData = new CODOrignalData(description, year, ageGroup, sex, imageQuality, inputFile.getName());
             HashSet<CodeTriple> goldStandard = new HashSet<>();
-            populateGoldStandardSet(lineSplit, goldStandard);
 
             Record r = new Record(id, originalData);
             r.getOriginalData().setGoldStandardClassification(goldStandard);
 
-            if (goldStandard.size() == 0) {
-                LOGGER.info("Gold Standard Set Empty: " + r.getDescription());
-            }
-            else {
-                recordList.add(r);
-            }
+            recordList.add(r);
+
         }
 
         br.close();
         return recordList;
     }
 
-    /**
-     * Populate gold standard set.
-     *
-     * @param lineSplit the line split
-     * @param goldStandard the gold standard
-     */
-    private static void populateGoldStandardSet(final String[] lineSplit, final HashSet<CodeTriple> goldStandard) {
+    private int parseImageQuality(String[] lineSplit) {
 
-        final int start_pos = 6;
-        final int end_pos = 31;
-        final int jump_size = 3;
-
-        for (int i = start_pos; i < end_pos; i = i + jump_size) {
-            if (lineSplit[i].length() != 0) {
-                int causeIdentifier = Integer.parseInt(lineSplit[i]);
-
-                if (causeIdentifier != start_pos) {
-                    Code code = CodeFactory.getInstance().getCode(removeQuotes(lineSplit[i + 2]));
-
-                    TokenSet tokenSet = new TokenSet(lineSplit[causeIdentifier]);
-
-                    CodeTriple codeTriple = new CodeTriple(code, tokenSet, 1.0);
-                    goldStandard.add(codeTriple);
-                }
-            }
+        if (lineSplit[IMAGE_QUALITY_POS].equalsIgnoreCase("null")) {
+            return 0;
         }
+        else return Integer.parseInt(lineSplit[IMAGE_QUALITY_POS]);
     }
 
     /**
@@ -140,7 +113,7 @@ public final class PilotDataFormatConverter extends AbstractFormatConverter {
         String description = "";
 
         for (int currentPosition = startPosition; currentPosition <= endPosition; currentPosition++) {
-            if (stringArray[currentPosition].length() != 0) {
+            if (stringArray[currentPosition].length() != 0 && !stringArray[currentPosition].equalsIgnoreCase("null")) {
                 if (currentPosition != startPosition) {
                     description = description + ", " + stringArray[currentPosition];
                 }
