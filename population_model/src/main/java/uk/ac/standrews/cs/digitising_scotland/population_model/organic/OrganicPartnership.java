@@ -164,8 +164,6 @@ public final class OrganicPartnership implements IPartnership {
 
 	private OrganicPerson[] createPartnershipTimeline(final OrganicPerson male, final OrganicPerson female, final int currentDay) {
 		timeline = new OrganicTimeline(partnershipDay);
-		if (OrganicPopulation.DEBUG)
-			System.out.println("R2");
 		// Decide if/when partnership terminates
 		if (!cohabiting && !married) {
 			// Single / lone parent family
@@ -178,8 +176,6 @@ public final class OrganicPartnership implements IPartnership {
 			// cohab then marriage / marriage
 			setUpDivorceEvent(male, female);
 		}
-		if (OrganicPopulation.DEBUG)
-			System.out.println("R3");
 		// Decide on a number of children for relationship
 		return setUpBirthPlan(male, female, currentDay);
 	}
@@ -225,19 +221,13 @@ public final class OrganicPartnership implements IPartnership {
 			numberOfChildrenToBeHadByCouple = temporalChildrenNumberOfInMarriageOrCohabDistribution.getSample(population.getCurrentDay());
 			numberOfChildrenToBeHadByCouple = checkForFamilySize(numberOfChildrenToBeHadByCouple);
 		}
-		if (OrganicPopulation.DEBUG)
-			System.out.println("R4");
 
 		int intendedNumberOfChildren = numberOfChildrenToBeHadByCouple;
 
-		if (OrganicPopulation.DEBUG)
-			System.out.println("R5");
 		if (numberOfChildrenToBeHadByCouple == 0) {
 			return new OrganicPerson[0];
 		}
 		int mean = 0;
-		if (OrganicPopulation.DEBUG)
-			System.out.println("R6");
 		while (numberOfChildrenToBeHadByCouple > 0) {
 			mean = getMeanForChildSpacingDistribution(husband, wife, currentDay);
 			if (mean < PopulationLogic.getInterChildInterval() * OrganicPopulation.getDaysPerYear()) {
@@ -246,8 +236,6 @@ public final class OrganicPartnership implements IPartnership {
 				break;
 			}
 		}
-		if (OrganicPopulation.DEBUG)
-			System.out.println("R7");
 		if (numberOfChildrenToBeHadByCouple != 0) {
 			int standardDeviation = (mean - PopulationLogic.getInterChildInterval()) / STANDARD_DEVIATION_FACTOR;
 			try {
@@ -261,8 +249,6 @@ public final class OrganicPartnership implements IPartnership {
 			if (intendedNumberOfChildren != numberOfChildrenToBeHadByCouple && cohabiting) {
 				addUndersizedFamily(intendedNumberOfChildren, numberOfChildrenToBeHadByCouple);
 			}
-			if (OrganicPopulation.DEBUG)
-				System.out.println("R8");
 			return setUpBirthEvent(husband, wife, currentDay);
 		} else {
 			if (intendedNumberOfChildren != numberOfChildrenToBeHadByCouple && cohabiting) {
@@ -271,8 +257,6 @@ public final class OrganicPartnership implements IPartnership {
 			if (!cohabiting && !married) {
 				setUpAffairEndEvent(currentDay);
 			}
-			if (OrganicPopulation.DEBUG)
-				System.out.println("R9");
 			return new OrganicPerson[0];
 		}
 
