@@ -233,7 +233,7 @@ public class OrganicPopulation implements IPopulation {
 		OrganicPerson husband = findOrganicPerson(partnership.getMalePartnerId());
 		OrganicPerson wife = findOrganicPerson(partnership.getFemalePartnerId());
 		partnership.divorce(husband, wife);
-		handlePartnershipEndedByDeathEvent(partnership);
+		OrganicPopulationLogger.addNumberOfChildren(partnership.getChildIds().size());
 	}
 
 	private void handleBirthEvent(final OrganicPartnership partnership) {
@@ -500,22 +500,14 @@ public class OrganicPopulation implements IPopulation {
 	 * @param days The day of the marriage in days since the 1/1/1600.
 	 */
 	private void partner(final FamilyType familyType, final OrganicPerson husband, final OrganicPerson wife, final int days) throws NoSuchEventException {
-		if (OrganicPopulation.DEBUG)
-			System.out.println("P S");
 		// Create partnership
 		Object[] partnershipObjects = OrganicPartnership.createOrganicPartnership(IDFactory.getNextID(), husband, wife, days, getCurrentDay(), familyType, this);
-		if (OrganicPopulation.DEBUG)
-			System.out.println("P5/Q6");
 		partnerships.add((OrganicPartnership) partnershipObjects[0]);
-		if (OrganicPopulation.DEBUG)
-			System.out.println("P6");
 		if (partnershipObjects.length > 1) {
 			for (int i = 1; i < partnershipObjects.length; i++) {
 				livingPeople.add((OrganicPerson) partnershipObjects[i]);
 			}
 		}
-		if (OrganicPopulation.DEBUG)
-			System.out.println("P7");
 		// TODO adapt logging methods
 		OrganicPopulationLogger.logMarriage(DateManipulation.differenceInDays(husband.getBirthDay(), days), DateManipulation.differenceInDays(wife.getBirthDay(), days));
 		husband.addPartnership(((OrganicPartnership) partnershipObjects[0]).getId());
