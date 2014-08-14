@@ -57,7 +57,6 @@ public final class OrganicPartnership implements IPartnership {
 	private static TemporalDivorceReasonMaleDistribution temporalDivorceReasonMaleDistribution;
 	private static TemporalDivorceReasonFemaleDistribution temporalDivorceReasonFemaleDistribution;
 	
-	// TODO make temporal for normal distribution
 	private static TemporalIntegerDistribution temporalCohabitaitonToMarriageTimeDistribution;
 	
 	private static final int STANDARD_DEVIATION_FACTOR = 4;
@@ -149,7 +148,7 @@ public final class OrganicPartnership implements IPartnership {
 		this.population = population;
 		if (OrganicPopulation.DEBUG)
 			System.out.println("Q2");
-		// TODO inheritance of male name - need considertion of naming if not coming from a marriage
+		// TODO inheritance of male name - need consideration of naming if not coming from a marriage
 //		if (familyType == FamilyType.MARRIAGE) {
 		familyName = husband.getSurname();
 //		}
@@ -448,6 +447,7 @@ public final class OrganicPartnership implements IPartnership {
 		int numberOfChildrenInPregnacy = temporalChildrenNumberOfInMaternityDistribution.getSample(population.getCurrentDay());
 		if (numberOfChildrenInPregnacy > numberOfChildrenToBeHadByCouple - childrenIds.size()) {
 			numberOfChildrenInPregnacy = numberOfChildrenToBeHadByCouple - childrenIds.size();
+			// FIXME Loosing children here
 		}
 		if (numberOfChildrenInPregnacy == 0) {
 			if (!cohabiting && !married && lastChildBorn()) {
@@ -464,20 +464,12 @@ public final class OrganicPartnership implements IPartnership {
 					wife.getBirthDay(), wife.getDeathDay(), dayOfBirth + currentDay)) {
 				timeline.addEvent(currentDay + dayOfBirth, new OrganicEvent(EventType.BIRTH, this, currentDay + dayOfBirth));
 				for (int i = 0; i < numberOfChildrenInPregnacy; i++) {
-					if (OrganicPopulation.DEBUG)
-						System.out.println("Im a here");
 					children[i] = new OrganicPerson(IDFactory.getNextID(), currentDay + dayOfBirth, id, wife.getPopulation(), false, this);
-					if (OrganicPopulation.DEBUG)
-						System.out.println("Or a herea");
 					childrenIds.add(children[i].getId());
 				}
-				if (OrganicPopulation.DEBUG)
-					System.out.println("P1");
 				if (!cohabiting && !married && lastChildBorn()) {
 					setUpAffairEndEvent(currentDay + dayOfBirth + 1);
 				}
-				if (OrganicPopulation.DEBUG)
-					System.out.println("P2");
 				return children;
 			} else {
 				OrganicPopulationLogger.incStopedHavingEarlyDeaths(numberOfChildrenToBeHadByCouple - children.length);
