@@ -117,25 +117,17 @@ public final class OrganicPartnership implements IPartnership {
 	 */
 	public static Object[] createOrganicPartnership(final int id, final OrganicPerson husband, final OrganicPerson wife, final int partnershipDay, final int currentDay, final FamilyType familyType, final OrganicPopulation population) {
 		// Handle children appropriately
-		if (OrganicPopulation.DEBUG)
-			System.out.println("Q1");
 		OrganicPartnership partnership = new OrganicPartnership(id, husband, wife, partnershipDay, familyType, population);
 		if (adjustedNumberOfChildren == null) {
 			setUpArray(population);
 		}
 		// Contains OrganicPerson objects aka the children - if no children returns null
-		if (OrganicPopulation.DEBUG)
-			System.out.println("R1");
 		OrganicPerson[] children = partnership.createPartnershipTimeline(husband, wife, currentDay);
-		if (OrganicPopulation.DEBUG)
-			System.out.println("P3");
 		Object[] returns = new Object[children.length + 1];
 		int i = 1;
 		for (OrganicPerson child : children) {
 			returns[i++] = child;
 		}
-		if (OrganicPopulation.DEBUG)
-			System.out.println("P4");
 		returns[0] = partnership;
 		return returns;
 	}
@@ -146,27 +138,13 @@ public final class OrganicPartnership implements IPartnership {
 		this.wife = wife.getId();
 		this.partnershipDay = partnershipDay;
 		this.population = population;
-		if (OrganicPopulation.DEBUG)
-			System.out.println("Q2");
 		// TODO inheritance of male name - need consideration of naming if not coming from a marriage
 //		if (familyType == FamilyType.MARRIAGE) {
 		familyName = husband.getSurname();
 //		}
-		if (OrganicPopulation.DEBUG)
-			System.out.println("Q3");
 		if (familyType == FamilyType.COHABITATION_THEN_MARRIAGE) {
 			do {
 				cohabThenMarriageMarriageDay = partnershipDay + temporalCohabitaitonToMarriageTimeDistribution.getSample(population.getCurrentDay());
-				if (OrganicPopulation.DEBUG) {
-					System.out.println("Partnership day: " + partnershipDay);
-					System.out.println("Cohab then marry marriage Day: " + cohabThenMarriageMarriageDay);
-					System.out.println("Wife Birth Day: " + wife.getBirthDay());
-					System.out.println("Wife Death Day: " + wife.getDeathDay());
-					System.out.println("Husband Birth Day: " + husband.getBirthDay());
-					System.out.println("Husband Death Day: " + husband.getDeathDay());
-					System.out.println(PopulationLogic.dateBeforeDeath(cohabThenMarriageMarriageDay, wife.getDeathDay()));
-					System.out.println(PopulationLogic.dateBeforeDeath(cohabThenMarriageMarriageDay, husband.getDeathDay()));
-				}
 				if (DateManipulation.differenceInDays(partnershipDay, wife.getDeathDay()) < DEATH_BED_MARRIAGE_CUTOFF) {
 					cohabThenMarriageMarriageDay = partnershipDay + DateManipulation.differenceInDays(partnershipDay, wife.getDeathDay()) / 2;
 				}
@@ -177,12 +155,7 @@ public final class OrganicPartnership implements IPartnership {
 					!PopulationLogic.dateBeforeDeath(cohabThenMarriageMarriageDay, wife.getDeathDay()));
 		}
 		this.turnOn();
-		if (OrganicPopulation.DEBUG)
-			System.out.println("Q4");
 		setCohabMarriageFlags(familyType);
-		if (OrganicPopulation.DEBUG)
-			System.out.println("Q6");
-
 	}
 
 	/*
