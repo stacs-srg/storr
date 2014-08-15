@@ -70,7 +70,8 @@ public final class TrainAndMultiplyClassify {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TrainAndMultiplyClassify.class);
 
-    private static AbstractFormatConverter formatConverter = new LongFormatConverter();
+    private static AbstractFormatConverter trainingFormatConverter = new LongFormatConverter();
+    private static AbstractFormatConverter classificationFormatConverter = new LongFormatConverter();
 
     private static double trainingRatio = 0.8;
 
@@ -108,15 +109,15 @@ public final class TrainAndMultiplyClassify {
         setupExperimentalFolders("Experiments");
 
         File training = new File(args[0]);
-        // File prediction = new File(args[1]);
+        File prediction = new File(args[1]);
 
         LOGGER.info("********** Generating Training Bucket **********");
-        Bucket allRecords = createBucketOfRecords(training);
+        Bucket trainingRecords = createBucketTrainingRecords(training);
+        Bucket classificationRecords = createPredictionBucket(prediction);
 
-        generateActualCodeMappings(allRecords);
+        generateActualCodeMappings(trainingRecords);
 
-        Bucket bucket = createBucketOfRecords(training);
-        randomlyAssignToTrainingAndPrediction(bucket);
+        //randomlyAssignToTrainingAndPrediction(bucket);
 
         vectorFactory = new VectorFactory(trainingBucket);
 
@@ -315,21 +316,21 @@ public final class TrainAndMultiplyClassify {
     }
 
     //    Commented out while testing - FIXME
-    //    private static Bucket createPredictionBucket(final File prediction) {
-    //
-    //        Bucket toClassify = null;
-    //        try {
-    //            toClassify = new Bucket(RecordFactory.makeCodedRecordsFromFile(prediction));
-    //        }
-    //        catch (IOException e) {
-    //            e.printStackTrace();
-    //        }
-    //        catch (InputFormatException e) {
-    //            e.printStackTrace();
-    //        }
-    //
-    //        return toClassify;
-    //    }
+    private static Bucket createPredictionBucket(final File prediction) {
+
+        Bucket toClassify = null;
+        try {
+            toClassify = new Bucket(classificationFormatConverter.convert(prediction));
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+        catch (InputFormatException e) {
+            e.printStackTrace();
+        }
+
+        return toClassify;
+    }
 
     private static AbstractClassifier trainOLRClassifier(final Bucket bucket, final VectorFactory vectorFactory) throws Exception {
 
@@ -339,14 +340,14 @@ public final class TrainAndMultiplyClassify {
         return olrClassifier;
     }
 
-    private static Bucket createBucketOfRecords(final File training) throws IOException, InputFormatException {
+    private static Bucket createBucketTrainingRecords(final File training) throws IOException, InputFormatException {
 
         Bucket bucket = new Bucket();
         Iterable<Record> records;
         boolean longFormat = checkFileType(training);
 
         if (longFormat) {
-            records = formatConverter.convert(training);
+            records = trainingFormatConverter.convert(training);
         }
         else {
             records = RecordFactory.makeCodedRecordsFromFile(training);

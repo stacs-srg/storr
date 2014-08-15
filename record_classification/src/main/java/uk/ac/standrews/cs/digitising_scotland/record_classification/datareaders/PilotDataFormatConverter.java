@@ -115,10 +115,10 @@ public final class PilotDataFormatConverter extends AbstractFormatConverter {
         for (int currentPosition = startPosition; currentPosition <= endPosition; currentPosition++) {
             if (stringArray[currentPosition].length() != 0 && !stringArray[currentPosition].equalsIgnoreCase("null")) {
                 if (currentPosition != startPosition) {
-                    description = description + ", " + stringArray[currentPosition];
+                    description = description + ", " + stringArray[currentPosition].toLowerCase();
                 }
                 else {
-                    description = stringArray[currentPosition];
+                    description = stringArray[currentPosition].toLowerCase();
                 }
             }
         }
