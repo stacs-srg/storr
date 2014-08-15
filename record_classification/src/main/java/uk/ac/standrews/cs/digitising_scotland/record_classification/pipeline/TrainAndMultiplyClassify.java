@@ -74,8 +74,6 @@ public final class TrainAndMultiplyClassify {
     private static AbstractFormatConverter trainingFormatConverter = new LongFormatConverter();
     private static AbstractFormatConverter classificationFormatConverter = new PilotDataFormatConverter();
 
-    private static double trainingRatio = 0.8;
-
     private static VectorFactory vectorFactory;
     private static String experimentalFolderName;
 
@@ -97,13 +95,6 @@ public final class TrainAndMultiplyClassify {
 
         // TODO split this up!
         Timer timer = initAndStartTimer();
-
-        //        if (args.length > 1 && args[1] != null) {
-        //            double userRatio = Double.valueOf(args[1]);
-        //            if (userRatio > 0 && userRatio < 1) {
-        //                trainingRatio = userRatio;
-        //            }
-        //        }
 
         setupExperimentalFolders("Experiments");
 
@@ -319,6 +310,7 @@ public final class TrainAndMultiplyClassify {
 
     private static AbstractClassifier trainOLRClassifier(final Bucket bucket, final VectorFactory vectorFactory) throws Exception {
 
+        LOGGER.info("Training bucket has " + bucket.size() + " records");
         AbstractClassifier olrClassifier = new OLRClassifier(vectorFactory);
         OLRClassifier.setModelPath(experimentalFolderName + "/Models/olrModel");
         olrClassifier.train(bucket);
