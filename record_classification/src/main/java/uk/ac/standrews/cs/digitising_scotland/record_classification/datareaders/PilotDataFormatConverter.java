@@ -9,9 +9,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.CODOrignalData;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeTriple;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
@@ -23,8 +20,6 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.exceptions.I
  * @author jkc25
  */
 public final class PilotDataFormatConverter {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(PilotDataFormatConverter.class);
 
     private static final String CHARSET_NAME = "UTF8";
 
