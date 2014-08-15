@@ -70,7 +70,7 @@ public final class TrainAndMultiplyClassify {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TrainAndMultiplyClassify.class);
 
-    private static LongFormatConverter trainingFormatConverter = new LongFormatConverter();
+    //  private static LongFormatConverter trainingFormatConverter = new LongFormatConverter();
     private static PilotDataFormatConverter classificationFormatConverter = new PilotDataFormatConverter();
 
     private static Bucket trainingRecords;
@@ -326,7 +326,7 @@ public final class TrainAndMultiplyClassify {
         boolean longFormat = checkFileType(training);
 
         if (longFormat) {
-            records = trainingFormatConverter.convert(training);
+            records = LongFormatConverter.convert(training);
         }
         else {
             records = RecordFactory.makeCodedRecordsFromFile(training);
