@@ -16,7 +16,7 @@ __BORN__ - Marks the point in time when this individual is to be born into the p
 
 * __SINGLE__ - Never to have a marriage or cohabitation partnership.
 * __COHABITATION__ - First partnership to be purely cohabitation.
-* __COHABITATION_THEN_MARRIAGE__ - First partnership to be begin with cohabitation but lead to marriage.
+* __COHABITATION\_THEN\_MARRIAGE__ - First partnership to be begin with cohabitation but lead to marriage.
 * __MARRIAGE__ - First partnership to be marriage with no period of prior cohabitation.
 
 An age at which the person will become eligible to begin the specified partnership will also be assigned and an associated event added to the person's time line and to the global event queue. The created events are typed as shown below:
@@ -30,23 +30,13 @@ An age at which the person will become eligible to begin the specified partnersh
 |  |  | cohabitation_to_marriage_time_distributions_data.tsv |
 | MARRIAGE | ELIGABLE\_TO\_MARRY | cohabitation\_age\_for\_{gender}\_distributions\_data.tsv |
 
----
-
 __COMING\_OF\_AGE__ - At the point of coming of age the person is placed into the gender specific singles queue. Although these persons won't be part of any cohabitation or marriage partnerships they may still be used in affairs and extramarital partnerships.
-
----
 
 __ELIGABLE\_TO\_COHABIT__ - At the point of a person becoming eligible to cohabit the person is placed into the gender specific cohabitation queue.
 
----
-
-__ELIGABLE\_TO\_COHABIT_THEN_MARRY__ - At the point of a person becoming eligible to cohabit then marry the person is placed into the gender specific cohabitation then marriage queue.
-
----
+__ELIGABLE\_TO\_COHABIT\_THEN\_MARRY__ - At the point of a person becoming eligible to cohabit then marry the person is placed into the gender specific cohabitation then marriage queue.
 
 __ELIGABLE\_TO\_MARRY__ - At the point of a person becoming eligible to cohabit the person is placed into the gender specific marriage queue.
-
----
 
 __DEATH__ - Marks the point of death of the individual at which point they are moved from the living population to the deceased population.
 
@@ -72,8 +62,6 @@ __DIVORCE__ - The point in time at which the partnership is terminated. On handl
 ---
 
 ## Partnership Queues
-
----
 
 A pair of queues exist which hold the individuals ready to undertake each type of partnership. Following each time iteration in the simulation an attempt is made to pair up as many of the persons in the queues as possible. Details of the creation of the different types of partnership are detailed below.
 
@@ -242,7 +230,7 @@ An example of a weighted integer distribution is shown below.
 
 #### Normal Distributions
 
-In the case of the normal distribution the max and min values are hard values but the real control over which values are returned should be performed using the mean and standard deviation to adjust the dimensions of the normal curve. It is important to consider a safe minimum to be set as the min value to prevent unexpected behavior in the model due to extreme values that can be returned due to the nature of a normal distribution. Therefore when dealing with time periods such as in the example below it is important to set a non negative value as the minimum as to prevent events being created in the past. The max value can be set as high as desired to allow for the occasional outlying value to be returned by the distribution if such behavior is desirably.
+In the case of the normal distribution the max and min values are hard values, which limit the returns values from the distribution. Control over which values are returned should be performed using the mean and standard deviation to adjust the dimensions of the normal curve. It is important to set a safe minimum value to prevent unexpected behavior in the model due to extreme values that can be returned due to the nature of a normal distribution. Therefore when dealing with time periods such as in the example below it is important to set a non negative value as the minimum as to prevent events being created in the past. The max value can be set as high as desired to allow for the occasional outlying value to be returned by the distribution if such behavior is desirably.
 
 An example of a weighted integer distribution is shown below.
 
@@ -255,6 +243,24 @@ An example of a weighted integer distribution is shown below.
 > 1923	213	53
 
 #### Probability distributions
+The probability distributions work in a different way to the afore mentioned distributions. Below can be seen a snippet from the probability file for occupation. First to be noted is that a single set of data is used for the full time period and secondly that the probability values provided should sum to 1.
 
+> % Generated from source file: resources/original/tasmania_occupations.txt at 21:19 01/05/2014.
 
+> [butcher and] jobber	1.5631105900742477E-5
 
+> [railway] engineer	1.5631105900742477E-5
+
+> a.t.s. clerk	1.5631105900742477E-5
+
+> able bodied seaman, royal navy	1.5631105900742477E-5
+
+> able seaman	3.1262211801484954E-5
+
+> able seaman - royal navy	1.5631105900742477E-5
+
+> able seaman in rn	1.5631105900742477E-5
+
+> able seaman merchant navy	1.5631105900742477E-5
+
+---
