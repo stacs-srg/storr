@@ -19,7 +19,7 @@ public abstract class AbstractFormatConverter {
      * @param endPosition the last index to concatenate
      * @return the concatenated string, comma separated
      */
-    private String formDescription(final String[] stringArray, final int startPosition, final int endPosition) {
+    protected String formDescription(final String[] stringArray, final int startPosition, final int endPosition) {
 
         String description = "";
 

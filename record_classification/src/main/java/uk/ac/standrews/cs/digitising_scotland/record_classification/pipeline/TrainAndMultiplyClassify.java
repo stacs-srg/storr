@@ -16,6 +16,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.lookup.ExactMatchClassifier;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datareaders.AbstractFormatConverter;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datareaders.LongFormatConverter;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datareaders.PilotDataFormatConverter;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.analysis_metrics.AbstractConfusionMatrix;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.analysis_metrics.CodeMetrics;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.analysis_metrics.InvertedSoftConfusionMatrix;
@@ -71,13 +72,11 @@ public final class TrainAndMultiplyClassify {
     private static final Logger LOGGER = LoggerFactory.getLogger(TrainAndMultiplyClassify.class);
 
     private static AbstractFormatConverter trainingFormatConverter = new LongFormatConverter();
-    private static AbstractFormatConverter classificationFormatConverter = new LongFormatConverter();
+    private static AbstractFormatConverter classificationFormatConverter = new PilotDataFormatConverter();
 
     private static double trainingRatio = 0.8;
 
     private static VectorFactory vectorFactory;
-    private static Bucket trainingBucket;
-    private static Bucket predictionBucket;
     private static String experimentalFolderName;
 
     private TrainAndMultiplyClassify() {
@@ -99,12 +98,12 @@ public final class TrainAndMultiplyClassify {
         // TODO split this up!
         Timer timer = initAndStartTimer();
 
-        if (args.length > 1 && args[1] != null) {
-            double userRatio = Double.valueOf(args[1]);
-            if (userRatio > 0 && userRatio < 1) {
-                trainingRatio = userRatio;
-            }
-        }
+        //        if (args.length > 1 && args[1] != null) {
+        //            double userRatio = Double.valueOf(args[1]);
+        //            if (userRatio > 0 && userRatio < 1) {
+        //                trainingRatio = userRatio;
+        //            }
+        //        }
 
         setupExperimentalFolders("Experiments");
 
@@ -119,24 +118,24 @@ public final class TrainAndMultiplyClassify {
 
         //randomlyAssignToTrainingAndPrediction(bucket);
 
-        vectorFactory = new VectorFactory(trainingBucket);
+        vectorFactory = new VectorFactory(trainingRecords);
 
         printStatusUpdate();
 
         LOGGER.info("********** Training OLR Classifiers **********");
-        AbstractClassifier classifier = trainOLRClassifier(trainingBucket, vectorFactory);
+        AbstractClassifier classifier = trainOLRClassifier(trainingRecords, vectorFactory);
 
         LOGGER.info("********** Creating Lookup Tables **********");
-        ExactMatchClassifier exactMatchClassifier = trainExactMatchClassifier();
+        ExactMatchClassifier exactMatchClassifier = trainExactMatchClassifier(trainingRecords);
 
         // Bucket predicitionBucket = createPredictionBucket(prediction);
 
         LOGGER.info("********** Classifying Bucket **********");
         ExactMatchPipeline exactMatchPipeline = new ExactMatchPipeline(exactMatchClassifier);
-        MachineLearningClassificationPipeline machineLearningClassifier = new MachineLearningClassificationPipeline(classifier, trainingBucket);
+        MachineLearningClassificationPipeline machineLearningClassifier = new MachineLearningClassificationPipeline(classifier, classificationRecords);
 
-        Bucket exactMatched = exactMatchPipeline.classify(predictionBucket);
-        Bucket notExactMatched = BucketUtils.getComplement(predictionBucket, exactMatched);
+        Bucket exactMatched = exactMatchPipeline.classify(classificationRecords);
+        Bucket notExactMatched = BucketUtils.getComplement(classificationRecords, exactMatched);
         Bucket machineLearned = machineLearningClassifier.classify(notExactMatched);
         Bucket allClassified = BucketUtils.getUnion(machineLearned, exactMatched);
 
@@ -268,11 +267,11 @@ public final class TrainAndMultiplyClassify {
         return true;
     }
 
-    private static ExactMatchClassifier trainExactMatchClassifier() throws Exception {
+    private static ExactMatchClassifier trainExactMatchClassifier(Bucket trainingRecords) throws Exception {
 
         ExactMatchClassifier exactMatchClassifier = new ExactMatchClassifier();
         exactMatchClassifier.setModelFileName(experimentalFolderName + "/Models/lookupTable");
-        exactMatchClassifier.train(trainingBucket);
+        exactMatchClassifier.train(trainingRecords);
         return exactMatchClassifier;
     }
 
@@ -299,20 +298,6 @@ public final class TrainAndMultiplyClassify {
             comparisonWriter.write(record);
         }
         comparisonWriter.close();
-    }
-
-    private static void randomlyAssignToTrainingAndPrediction(final Bucket bucket) {
-
-        trainingBucket = new Bucket();
-        predictionBucket = new Bucket();
-        for (Record record : bucket) {
-            if (Math.random() < trainingRatio) {
-                trainingBucket.addRecordToBucket(record);
-            }
-            else {
-                predictionBucket.addRecordToBucket(record);
-            }
-        }
     }
 
     //    Commented out while testing - FIXME
