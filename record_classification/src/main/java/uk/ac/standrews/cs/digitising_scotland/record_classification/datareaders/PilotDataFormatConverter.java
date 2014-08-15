@@ -105,7 +105,7 @@ public final class PilotDataFormatConverter {
     * @param endPosition the last index to concatenate
     * @return the concatenated string, comma separated
     */
-    protected String formDescription(final String[] stringArray, final int startPosition, final int endPosition) {
+    private String formDescription(final String[] stringArray, final int startPosition, final int endPosition) {
 
         String description = "";
 
@@ -130,7 +130,7 @@ public final class PilotDataFormatConverter {
      * @param lineSplit the line split
      * @return the int
      */
-    protected int convertAgeGroup(final String lineSplit) {
+    private int convertAgeGroup(final String lineSplit) {
 
         //     * TODO make sure this is the correct format
 
@@ -147,7 +147,7 @@ public final class PilotDataFormatConverter {
      * @param sexIndicator the string to convert to binary, 1 (male) or 0 (female)
      * @return the int associated with the sex
      */
-    protected int convertSex(final String sexIndicator) {
+    private int convertSex(final String sexIndicator) {
 
         if (sexIndicator.equals("M")) { return 1; }
         return 0;
@@ -159,7 +159,7 @@ public final class PilotDataFormatConverter {
      * @param string the string to remove quotes from
      * @return the string with quotes removed
      */
-    protected String removeQuotes(final String string) {
+    private String removeQuotes(final String string) {
 
         String noQuotes = string.replaceAll("\"", "").trim();
 
