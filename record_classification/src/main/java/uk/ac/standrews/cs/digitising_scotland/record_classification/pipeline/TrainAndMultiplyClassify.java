@@ -15,7 +15,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.OLR.OLRClassifier;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.lookup.ExactMatchClassifier;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datareaders.LongFormatConverter;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datareaders.PilotDataFormatConverter;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.PilotDataFormatConverter;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.analysis_metrics.AbstractConfusionMatrix;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.analysis_metrics.CodeMetrics;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.analysis_metrics.InvertedSoftConfusionMatrix;
@@ -69,9 +69,6 @@ import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearnin
 public final class TrainAndMultiplyClassify {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TrainAndMultiplyClassify.class);
-
-    //  private static LongFormatConverter trainingFormatConverter = new LongFormatConverter();
-    private static PilotDataFormatConverter classificationFormatConverter = new PilotDataFormatConverter();
 
     private static Bucket trainingRecords;
     private static Bucket classificationRecords;
@@ -298,7 +295,7 @@ public final class TrainAndMultiplyClassify {
 
         Bucket toClassify = null;
         try {
-            toClassify = new Bucket(classificationFormatConverter.convert(prediction));
+            toClassify = new Bucket(PilotDataFormatConverter.convert(prediction));
         }
         catch (IOException e) {
             e.printStackTrace();
