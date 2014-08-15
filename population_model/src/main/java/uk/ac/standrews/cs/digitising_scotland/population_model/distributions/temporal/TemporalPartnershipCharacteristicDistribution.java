@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2014 Digitising Scotland project:
  * <http://digitisingscotland.cs.st-andrews.ac.uk/>
  *
@@ -58,4 +58,9 @@ public class TemporalPartnershipCharacteristicDistribution extends TemporalDistr
 	public FamilyType getSample() {
 		return getSample(0);
 	}
+
+    @Override
+    public FamilyType getSample(int date, int earliestValue, int latestValue) {
+        return getSample(date);
+    }
 }

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2014 Digitising Scotland project:
  * <http://digitisingscotland.cs.st-andrews.ac.uk/>
  *
@@ -23,7 +23,7 @@ import java.util.Random;
  * 
  * @author Graham Kirby (graham.kirby@st-andrews.ac.uk)
  */
-public class WeightedDistribution implements Distribution<Double> {
+public class WeightedDistribution extends RestrictedDistribution<Double> {
 
     private final Random random;
     private final double[] cumulative_probabilities;
@@ -42,10 +42,11 @@ public class WeightedDistribution implements Distribution<Double> {
      * @throws NegativeWeightException if any of the weights are negative
      */
     public WeightedDistribution(final int[] weights, final Random random) throws NegativeWeightException {
-
         this.random = random;
         bucket_size = 1.0 / weights.length;
         cumulative_probabilities = generateCumulativeProbabilities(weights);
+        minimumReturnValue = getMinimumReturnValue();
+        maximumReturnValue = getMaximumReturnValue();
     }
 
     /*
@@ -68,8 +69,57 @@ public class WeightedDistribution implements Distribution<Double> {
         final double position_within_selected_bucket = random.nextDouble();
         return (bucket_index + position_within_selected_bucket) * bucket_size;
     }
+    
+    @Override
+    public Double getSample(double earliestReturnValue, double latestReturnValue) throws NoPermissableValueException {
+        
+        if (earliestReturnValue >= maximumReturnValue || latestReturnValue <= minimumReturnValue) {
+            throw new NoPermissableValueException();
+        } else {
+            if (unusedSampleValues.size() != 0) {
+                int j = 0;
+                for (double d : unusedSampleValues) {
+                    if (inRange(d, earliestReturnValue, latestReturnValue)) {
+                        unusedSampleValues.remove(j);
+                        return d;
+                    }
+                    j++;
+                }
+            }
+        }
+        double v = getSample();
+        while (!inRange(v, earliestReturnValue, latestReturnValue)) {
+            unusedSampleValues.add(v);
+            v = getSample();
+        }
+        return v;
+    }
 
     // -------------------------------------------------------------------------------------------------------
+    
+    private double getMinimumReturnValue() {
+        int count = 0;
+        for (double d : cumulative_probabilities) {
+            if (d == 0) {
+                count++;
+            } else {
+                break;
+            }
+        }
+        return count * bucket_size;
+    }
+    
+    private double getMaximumReturnValue() {
+        int count = 0;
+        for (int i = cumulative_probabilities.length - 1; i >= 0; i--) {
+            if (cumulative_probabilities[i] == 0) {
+                count++;
+            } else {
+                break;
+            }
+        }
+        return 1 - count * bucket_size;
+    }
 
     private double[] generateCumulativeProbabilities(final int[] weights) throws NegativeWeightException {
 
@@ -104,4 +154,5 @@ public class WeightedDistribution implements Distribution<Double> {
         }
         return total;
     }
+
 }

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2014 Digitising Scotland project:
  * <http://digitisingscotland.cs.st-andrews.ac.uk/>
  *
@@ -18,6 +18,8 @@ package uk.ac.standrews.cs.digitising_scotland.population_model.distributions.te
 
 import java.util.Random;
 
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.general.NoPermissableValueException;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.general.NotSetUpAtClassInitilisationException;
 import uk.ac.standrews.cs.digitising_scotland.population_model.organic.OrganicPopulation;
 
 public class TemporalIntegerDistribution extends TemporalDistribution<Integer> {
@@ -35,5 +37,10 @@ public class TemporalIntegerDistribution extends TemporalDistribution<Integer> {
 	public Integer getSample() {
 		return getSample(0);
 	}
+
+    @Override
+    public Integer getSample(int date, int earliestValue, int latestValue) throws NoPermissableValueException, NotSetUpAtClassInitilisationException {
+        return getIntSample(date, earliestValue, latestValue);
+    }
 
 }

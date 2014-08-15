@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures;
+package uk.ac.standrews.cs.digitising_scotland.record_classification.datareaders;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -12,6 +12,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.CODOrignalData;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeFactory;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeTriple;
@@ -25,9 +26,9 @@ import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
  * to a list of Record objects.
  * @author jkc25
  */
-public final class FormatConverter {
+public final class LongFormatConverter {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(FormatConverter.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(LongFormatConverter.class);
 
     private static final String CHARSET_NAME = "UTF8";
 
@@ -51,13 +52,6 @@ public final class FormatConverter {
 
     /** The Constant yearPosition. */
     private static final int YEAR_POSITION = 37;
-
-    /**
-     * Instantiates a new format converter.
-     */
-    private FormatConverter() {
-
-    }
 
     /**
      * Converts the data in the inputFile (one record per line, comma separated) into {@link Record}s.
@@ -148,16 +142,28 @@ public final class FormatConverter {
         for (int currentPosition = startPosition; currentPosition <= endPosition; currentPosition++) {
             if (stringArray[currentPosition].length() != 0) {
                 if (currentPosition != startPosition) {
-                    description = description + ", " + stringArray[currentPosition];
+                    description = description + ", " + stringArray[currentPosition].toLowerCase();
                 }
                 else {
-                    description = stringArray[currentPosition];
+                    description = stringArray[currentPosition].toLowerCase();
                 }
             }
         }
 
         return description;
 
+    }
+
+    /**
+     * Check line length, for modern cod data it should be 38.
+     *
+     * @param lineSplit the line split
+     */
+    private static void checkLineLength(final String[] lineSplit) {
+
+        if (lineSplit.length != CODLINELENGTH) {
+            System.err.println("Line is wrong length, should be" + CODLINELENGTH + ", is " + lineSplit.length);
+        }
     }
 
     /**
@@ -200,18 +206,6 @@ public final class FormatConverter {
         String noQuotes = string.replaceAll("\"", "").trim();
 
         return noQuotes;
-    }
-
-    /**
-     * Check line length, for modern cod data it should be 38.
-     *
-     * @param lineSplit the line split
-     */
-    private static void checkLineLength(final String[] lineSplit) {
-
-        if (lineSplit.length != CODLINELENGTH) {
-            System.err.println("Line is wrong length, should be 38, is " + lineSplit.length);
-        }
     }
 
 }

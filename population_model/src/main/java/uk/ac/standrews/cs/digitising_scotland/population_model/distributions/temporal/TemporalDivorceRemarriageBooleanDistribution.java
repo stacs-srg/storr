@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2014 Digitising Scotland project:
  * <http://digitisingscotland.cs.st-andrews.ac.uk/>
  *
@@ -52,4 +52,9 @@ public class TemporalDivorceRemarriageBooleanDistribution extends TemporalDistri
 	public Boolean getSample() {
 		return getSample(0);
 	}
+
+    @Override
+    public Boolean getSample(int date, int earliestValue, int latestValue) {
+        return getSample(date);
+    }
 }

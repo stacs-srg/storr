@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2014 Digitising Scotland project:
  * <http://digitisingscotland.cs.st-andrews.ac.uk/>
  *
@@ -29,9 +29,9 @@ public class GeneralOrganicPopulationTest extends GeneralPopulationStructureTest
     	super(new OrganicPopulation("Test Pop"), true);
     	OrganicPopulation op = new OrganicPopulation("Test Population");
         OrganicPartnership.setupTemporalDistributionsInOrganicPartnershipClass(op);
-        op.makeSeed(1000);
+        op.makeSeed(500);
         op.setCurrentDay(op.getEarliestDate() - 1);
-        op.eventIteration(false, 1);
+        op.newEventIteration(false);
         super.population = op;
     }
 }

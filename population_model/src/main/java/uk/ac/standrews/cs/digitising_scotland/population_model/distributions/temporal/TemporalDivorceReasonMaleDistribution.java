@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2014 Digitising Scotland project:
  * <http://digitisingscotland.cs.st-andrews.ac.uk/>
  *
@@ -19,7 +19,6 @@ package uk.ac.standrews.cs.digitising_scotland.population_model.distributions.te
 import java.util.Random;
 
 import uk.ac.standrews.cs.digitising_scotland.population_model.organic.DivorceReason;
-import uk.ac.standrews.cs.digitising_scotland.population_model.organic.OrganicPartnership;
 import uk.ac.standrews.cs.digitising_scotland.population_model.organic.OrganicPopulation;
 
 /**
@@ -64,6 +63,13 @@ public class TemporalDivorceReasonMaleDistribution extends TemporalDistribution<
 	public DivorceReason getSample() {
 		return getSample(0);
 	}
+
+
+
+    @Override
+    public DivorceReason getSample(int date, int earliestValue, int latestValue) {
+        return getSample(date);
+    }
 
 
 }

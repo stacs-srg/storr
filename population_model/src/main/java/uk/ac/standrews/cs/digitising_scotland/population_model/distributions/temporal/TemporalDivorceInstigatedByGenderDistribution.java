@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2014 Digitising Scotland project:
  * <http://digitisingscotland.cs.st-andrews.ac.uk/>
  *
@@ -55,6 +55,11 @@ public class TemporalDivorceInstigatedByGenderDistribution extends TemporalDistr
 	public DivorceInstigation getSample() {
 		return getSample(0);
 	}
+
+    @Override
+    public DivorceInstigation getSample(int date, int earliestValue, int latestValue) {
+        return getSample(date);
+    }
 
 
 }
