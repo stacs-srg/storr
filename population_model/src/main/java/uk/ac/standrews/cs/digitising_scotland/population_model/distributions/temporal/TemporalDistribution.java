@@ -17,7 +17,9 @@
 package uk.ac.standrews.cs.digitising_scotland.population_model.distributions.temporal;
 
 import uk.ac.standrews.cs.digitising_scotland.population_model.config.PopulationProperties;
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.general.Distribution;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.general.NoPermissableValueException;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.general.NotSetUpAtClassInitilisationException;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.general.RestrictedDistribution;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.general.NegativeDeviationException;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.general.NegativeWeightException;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.general.NormalDistribution;
@@ -43,7 +45,7 @@ import java.util.Set;
  */
 public abstract class TemporalDistribution<Value> implements ITemporalDistribution<Value> {
 
-	private HashMap<Integer, Distribution<?>> map = new HashMap<Integer, Distribution<?>>();
+	private HashMap<Integer, RestrictedDistribution<?>> map = new HashMap<Integer, RestrictedDistribution<?>>();
 	private String line;
 	private boolean firstLine = true;
 	private int minimum, maximum;
@@ -84,7 +86,7 @@ public abstract class TemporalDistribution<Value> implements ITemporalDistributi
 
 						String[] lineComponents = line.split(TAB);
 						int year = Integer.parseInt(lineComponents[0]);
-						Distribution<?> currentDistribution;
+						RestrictedDistribution<?> currentDistribution;
 						if (normal) {
 							currentDistribution = new NormalDistribution(Double.valueOf(lineComponents[1]), Double.valueOf(lineComponents[2]), random);
 						} else {
@@ -121,26 +123,51 @@ public abstract class TemporalDistribution<Value> implements ITemporalDistributi
 	}
 
 	protected Integer getIntSample(int date) {
-		int key = keyArray[keyArray.length - 1];
-		Integer returnValue;
-		if (keyArray[0] > date) {
-			key = keyArray[0];
-		}
-		for (int i = 0; i < keyArray.length - 1; i++) {
-			if (keyArray[i] < date && date < keyArray[i + 1]) {
-				key = keyArray[i];
-			}
-		}
+        int key = keyArray[keyArray.length - 1];
+        Integer returnValue;
+        if (keyArray[0] > date) {
+            key = keyArray[0];
+        }
+        for (int i = 0; i < keyArray.length - 1; i++) {
+            if (keyArray[i] < date && date < keyArray[i + 1]) {
+                key = keyArray[i];
+            }
+        }
 
-		do {
-			returnValue = Double.valueOf(map.get(key).getSample().toString()).intValue();
-		} while (returnValue > maximum || returnValue < minimum);
+        do {
+            returnValue = Double.valueOf(map.get(key).getSample().toString()).intValue();
+        } while (returnValue > maximum || returnValue < minimum);
 
-		return returnValue;
-	}
+        return returnValue;
+    }
+	
+	protected Integer getIntSample(int date, int earliestValue, int latestValue) throws NoPermissableValueException, NotSetUpAtClassInitilisationException {
+        int key = keyArray[keyArray.length - 1];
+        Integer returnValue;
+        if (keyArray[0] > date) {
+            key = keyArray[0];
+        }
+        for (int i = 0; i < keyArray.length - 1; i++) {
+            if (keyArray[i] < date && date < keyArray[i + 1]) {
+                key = keyArray[i];
+            }
+        }
+        
+        // Do we (I mean you Tom) need this check do loop?
+        do {
+            returnValue = Double.valueOf(map.get(key).getSample(earliestValue, latestValue).toString()).intValue();
+        } while (returnValue > maximum || returnValue < minimum);
+        
+        return returnValue;
+    }
+	
+	
 
 	@Override
 	public abstract Value getSample();
 
 	public abstract Value getSample(int date);
+	
+	public abstract Value getSample(int date, int earliestValue, int latestValue) throws NoPermissableValueException, NotSetUpAtClassInitilisationException;
+	
 }

@@ -185,8 +185,11 @@ public class OrganicPopulation implements IPopulation {
 				handleBirthEvent(event.getPartnership());
 				break;
 			case DIVORCE:
-				handleDivorceEvent(event.getPartnership());
+				handleDivorceEvent(event.getPartnership(), event.getMale(), event.getFemale());
 				break;
+//			case END_OF_COHABITATION:
+//				handleEndOfCohabitation(event.getPartnership(), event.getMale(), event.getFemale());
+//				break;
 			case PARTNERSHIP_ENDED_BY_DEATH:
 				handlePartnershipEndedByDeathEvent(event.getPartnership());
 				break;
@@ -198,7 +201,7 @@ public class OrganicPopulation implements IPopulation {
 			case BORN:
 				OrganicPopulationLogger.incPopulation();
 				OrganicPopulationLogger.incBirths();
-				event.getPerson().populateTimeline();
+				event.getPerson().populateTimeline(false);
 				break;
 			case COMING_OF_AGE:
 				handleComingOfAgeEvent(event.getPerson());
@@ -229,11 +232,13 @@ public class OrganicPopulation implements IPopulation {
 		OrganicPopulationLogger.addNumberOfChildren(partnership.getChildIds().size());
 	}
 
-	private void handleDivorceEvent(final OrganicPartnership partnership) {
-		OrganicPerson husband = findOrganicPerson(partnership.getMalePartnerId());
-		OrganicPerson wife = findOrganicPerson(partnership.getFemalePartnerId());
+	private void handleDivorceEvent(final OrganicPartnership partnership, final OrganicPerson husband, final OrganicPerson wife) {
 		partnership.divorce(husband, wife);
 		OrganicPopulationLogger.addNumberOfChildren(partnership.getChildIds().size());
+	}
+	
+	private void handleEndOfCohabitation(final OrganicPartnership partnership, final OrganicPerson husband, final OrganicPerson wife) {
+		
 	}
 
 	private void handleBirthEvent(final OrganicPartnership partnership) {

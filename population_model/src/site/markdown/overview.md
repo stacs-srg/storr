@@ -24,7 +24,7 @@ An age at which the person will become eligible to begin the specified partnersh
 
 | Family Type | Event Type | Associated File |
 | :---: | :---: | :--- |
-| SINGLE | COMING\_OF\_AGE | _COMING\_OF\_AGE_AGE (15)_ |
+| SINGLE | COMING\_OF\_AGE | _COMING\_OF\_AGE\_AGE (15)_ |
 | COHABITATION | ELIGABLE\_TO\_COHABIT | cohabitation\_age\_for\_{gender}\_distributions\_data.tsv |
 | COHABITATION\_THEN\_MARRIAGE | ELIGABLE\_TO\_COHABIT\_THEN\_MARRIAGE | cohabitation\_age\_for\_{gender}\_distributions\_data.tsv |
 |  |  | cohabitation_to_marriage_time_distributions_data.tsv |
@@ -262,5 +262,14 @@ The probability distributions work in a different way to the afore mentioned dis
 > able seaman in rn	1.5631105900742477E-5
 
 > able seaman merchant navy	1.5631105900742477E-5
+
+Probability distributions must be used for the following distributions:
+
+address\_probabilities.tsv
+cause\_of\_death\_probabilities.tsv
+female\_first\_name\_probabilities.tsv
+male\_first\_name\_probabilities.tsv
+occupation\_probabilities.tsv
+surname\_probabilities.tsv
 
 ---

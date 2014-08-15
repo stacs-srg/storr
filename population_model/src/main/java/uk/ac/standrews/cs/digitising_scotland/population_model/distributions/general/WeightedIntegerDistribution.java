@@ -23,7 +23,7 @@ import java.util.Random;
  * 
  * @author Graham Kirby (graham.kirby@st-andrews.ac.uk)
  */
-public class WeightedIntegerDistribution implements Distribution<Integer> {
+public class WeightedIntegerDistribution extends RestrictedDistribution<Integer> {
 
     private final int minimum;
     private final int range;
@@ -49,5 +49,10 @@ public class WeightedIntegerDistribution implements Distribution<Integer> {
     public Integer getSample() {
 
         return minimum + (int) (range * weighted_distribution.getSample());
+    }
+
+    @Override
+    public Integer getSample(double earliestValue, double latestValue) throws NoPermissableValueException {
+        return minimum + (int) (range * weighted_distribution.getSample(earliestValue, latestValue));
     }
 }

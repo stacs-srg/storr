@@ -56,5 +56,10 @@ public class TemporalDivorceInstigatedByGenderDistribution extends TemporalDistr
 		return getSample(0);
 	}
 
+    @Override
+    public DivorceInstigation getSample(int date, int earliestValue, int latestValue) {
+        return getSample(date);
+    }
+
 
 }

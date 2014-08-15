@@ -54,4 +54,9 @@ public class AffairWithMarriedOrSingleDistribution extends TemporalDistribution<
 	public FamilyType getSample() {
 		return getSample(0);
 	}
+
+    @Override
+    public FamilyType getSample(int date, int earliestValue, int latestValue) {
+        return getSample(date);
+    }
 }
