@@ -41,7 +41,10 @@ public class OriginalData implements java.io.Serializable {
      */
     public OriginalData(final String description, final int year, final int imageQuality, final String fileName) throws InputFormatException {
 
-        if (imageQuality < 0 || imageQuality > 1) { throw new NumberFormatException("image quality must be 0 or 1, currently: " + imageQuality + "\ndescription: " + description); }
+        if (imageQuality < 0 || imageQuality > 1) {
+            //FIXME  - check if this is correct, pilot study has 2s and nulls in the data!  throw new NumberFormatException("image quality must be 0 or 1, currently: " + imageQuality + "\ndescription: " + description);
+            System.err.println("image quality must be 0 or 1, currently: " + imageQuality + "\ndescription: " + description);
+        }
         this.description = description;
         this.year = year;
         this.imageQuality = imageQuality;
