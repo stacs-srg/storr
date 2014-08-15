@@ -100,7 +100,8 @@ public class OLR {
      * Gets the number of records that have been used for training across all models so far.
      * @return int number of training records used
      */
-    public long getNumTrained(){
+    public long getNumTrained() {
+
         return numTrained.get();
     }
 
@@ -260,6 +261,7 @@ public class OLR {
      * @param instance feature vector
      */
     public void train(final NamedVector instance) {
+
         numTrained.getAndIncrement();
         updateModelParameters(instance);
         updateCountsAndSteps(instance);

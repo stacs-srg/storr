@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2014 Digitising Scotland project:
  * <http://digitisingscotland.cs.st-andrews.ac.uk/>
  *
@@ -17,7 +17,8 @@
 package uk.ac.standrews.cs.digitising_scotland.population_model.model.in_memory;
 
 import org.junit.Test;
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.InconsistentWeightException;
+
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.general.InconsistentWeightException;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IDFactory;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPartnership;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPerson;

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2014 Digitising Scotland project:
  * <http://digitisingscotland.cs.st-andrews.ac.uk/>
  *
@@ -16,32 +16,31 @@
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.organic;
 
-import java.util.Arrays;
 
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.NumberOfChildrenDistribuition;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.old.NumberOfChildrenDistribuition;
 
 /**
  * @author Victor Andrei (va9@st-andrews.ac.uk)
  * @author Tom Dalton (tsd4@st-andrews.ac.uk)
  */
 public class OrganicPopulationLogger {
-	
-	private static int[] populationAtYearEnds;
-	private static int startYear;
-	
-	public static void initPopulationAtYearEndsArray(final int startYear, final int endYear) {
-		populationAtYearEnds = new int[endYear - startYear];
-		OrganicPopulationLogger.startYear = startYear;
-	}
-	
-	public static void addPopulationForYear(int year, int population) {
-		populationAtYearEnds[year - startYear] = population;
-	}
-	
-	public static void printPopulationGraph() {
-		System.out.println("POPULATION GRAPH");
-		printGraph(populationAtYearEnds, new Integer(startYear).toString(), new Integer(startYear + populationAtYearEnds.length).toString(), true, 30);
-	}
+
+    private static int[] populationAtYearEnds;
+    private static int startYear;
+
+    public static void initPopulationAtYearEndsArray(final int startYear, final int endYear) {
+        populationAtYearEnds = new int[endYear - startYear + 1];
+        OrganicPopulationLogger.startYear = startYear;
+    }
+
+    public static void addPopulationForYear(int year, int population) {
+        populationAtYearEnds[year - startYear] = population;
+    }
+
+    public static void printPopulationGraph() {
+        System.out.println("POPULATION GRAPH");
+        printGraph(populationAtYearEnds, Integer.toString(startYear), Integer.toString(startYear + populationAtYearEnds.length), true, 30);
+    }
 
     private static int population = 0;
     private static int marriages = 0;
@@ -50,41 +49,41 @@ public class OrganicPopulationLogger {
     private static int remarriages = 0;
     private static final int MAX_AGE = 100;
     private static int[] maleAgeAtMarriage = new int[MAX_AGE];
-    
+
     public static void printMaleAgeAtMarriageGraph() {
-    	System.out.println("MALE AGE AT MARRIAGE GRAPH");
-    	printGraph(maleAgeAtMarriage, "0", new Integer(MAX_AGE).toString(), false, 10);
+        System.out.println("MALE AGE AT MARRIAGE GRAPH");
+        printGraph(maleAgeAtMarriage, "0", Integer.toString(MAX_AGE), false, 10);
     }
-    
+
     private static int[] femaleAgeAtMarriage = new int[MAX_AGE];
-    
+
     public static void printFemaleAgeAtMarriageGraph() {
-    	System.out.println("FEMALE AGE AT MARRIAGE GRAPH");
-    	printGraph(femaleAgeAtMarriage, "0", new Integer(MAX_AGE).toString(), false, 10);
+        System.out.println("FEMALE AGE AT MARRIAGE GRAPH");
+        printGraph(femaleAgeAtMarriage, "0", Integer.toString(MAX_AGE), false, 10);
     }
-    
+
     private static final int AGE_DIFFERENCE_AT_MARRIAGE_DISPLAY_UPTO = 101;
     private static int[] ageDifferenceAtMarriage = new int[AGE_DIFFERENCE_AT_MARRIAGE_DISPLAY_UPTO];
-    
+
     public static void printAgeDifferenceAtMarriageGraph() {
-    	System.out.println("AGE DIFFERENCE AT MARRIAGE GRAPH");
-    	printGraph(ageDifferenceAtMarriage, "0", new Integer(AGE_DIFFERENCE_AT_MARRIAGE_DISPLAY_UPTO).toString(), false, 10);
+        System.out.println("AGE DIFFERENCE AT MARRIAGE GRAPH");
+        printGraph(ageDifferenceAtMarriage, "0", Integer.toString(AGE_DIFFERENCE_AT_MARRIAGE_DISPLAY_UPTO), false, 10);
     }
-    
+
     private static final int NUMBER_OF_CHILDREN_DISPLAY_UPTO = 15;
     private static int[] numberOfChildrenPerPartnership = new int[NUMBER_OF_CHILDREN_DISPLAY_UPTO];
-    
+
     public static void printNumberOfChildrenInMarriageGraph() {
-    	System.out.println("NUMBER OF CHILDREN IN MARRIAGE GRAPH");
-    	printGraph(numberOfChildrenPerPartnership, "0", new Integer(NUMBER_OF_CHILDREN_DISPLAY_UPTO).toString(), false, 10);
+        System.out.println("NUMBER OF CHILDREN IN MARRIAGE GRAPH");
+        printGraph(numberOfChildrenPerPartnership, "0", Integer.toString(NUMBER_OF_CHILDREN_DISPLAY_UPTO), false, 10);
     }
-    
+
     private static int neverMarried = 0;
 
     private static int leftOverChildren = 0;
     private static int stopedHavingEarlyDeaths = 0;
 
-	/**
+    /**
      * Increments the size of the population.
      */
     public static void incPopulation() {
@@ -177,22 +176,22 @@ public class OrganicPopulationLogger {
     public static void addNumberOfChildren(final int number) {
         numberOfChildrenPerPartnership[number]++;
     }
-    
+
     /**
      * Returns the number of children stoped early by death of parents.
      * @return The number of children stoped early by death of parents.
      */
     public static int getStopedHavingEarlyDeaths() {
-		return stopedHavingEarlyDeaths;
-	}
+        return stopedHavingEarlyDeaths;
+    }
 
     /**
      * Increments the number of children stoped early by death of parents.
      * @param number The number to increment by.
      */
-	public static void incStopedHavingEarlyDeaths(int number) {
-		OrganicPopulationLogger.stopedHavingEarlyDeaths += stopedHavingEarlyDeaths;
-	}
+    public static void incStopedHavingEarlyDeaths(int number) {
+        OrganicPopulationLogger.stopedHavingEarlyDeaths += stopedHavingEarlyDeaths;
+    }
 
     private static void addMaleAgeAtMarriage(final int days) {
         int years = (int) ((float) days / OrganicPopulation.getDaysPerYear());
@@ -229,69 +228,67 @@ public class OrganicPopulationLogger {
     public static void logDivorce() {
         incDivorces();
     }
-    
+
     public static void printGraph(int[] values, String xStartValue, String xEndValue, boolean line, int lineDepth) {
-		int sum = 0;
-		int max = 0;
-		for (int i = 0; i < values.length; i++) {
-			sum += values[i];
-			if (values[i] > max) {
-				max = values[i];
-			}
-		}
-		int oneMarkerValue = max / lineDepth;
-		if (oneMarkerValue == 0) {
-			oneMarkerValue = 1;
-		}
-		boolean[][] graph = new boolean[values.length][lineDepth];
-		for (int i = 0; i < values.length; i++) {
-			for (int j = 0; j < values[i] / oneMarkerValue; j++) {
-				if (j >= lineDepth) {
-					break;
-				}
-				graph[i][j] = true;
-				if (line) {
-					if (j != 0) {
-						graph[i][j-1] = false;
-					}	
-				}
-			}
-		}
-		System.out.print(max + "|");
-		for (int j = lineDepth - 1; j >= 0; j--) {
-			if (j != lineDepth - 1) {
-				int n = 0;
-				if (j == 0) {
-					n++;
-				}
-				for (int i = n; i < new Integer(max).toString().length(); i++) {
-					System.out.print(" ");
-				}
-				if (j == 0) {
-					System.out.print("0");;
-				}
-				System.out.print("|");
-			}
-			for (int i = 0; i < values.length; i++) {
-				if (!graph[i][j]) {
-					System.out.print(" ");
-				} else if (graph[i][j]) {
-					System.out.print("@");
-				}
-			}
-			System.out.println();
-		}
-		for (int i = 0; i < new Integer(max).toString().length(); i++) {
-			System.out.print(" ");
-		}
-		System.out.print(xStartValue);
-		int i = xStartValue.length();
-		for (i = 0; i < values.length - xEndValue.length(); i++) {
-			System.out.print("‾");
-		}
-		System.out.println(xEndValue);
-		System.out.println();
-	}
+        int sum = 0;
+        int max = 0;
+        for (int i = 0; i < values.length; i++) {
+            sum += values[i];
+            if (values[i] > max) {
+                max = values[i];
+            }
+        }
+        int oneMarkerValue = max / lineDepth;
+        if (oneMarkerValue == 0) {
+            oneMarkerValue = 1;
+        }
+        boolean[][] graph = new boolean[values.length][lineDepth];
+        for (int i = 0; i < values.length; i++) {
+            for (int j = 0; j < values[i] / oneMarkerValue; j++) {
+                if (j >= lineDepth) {
+                    break;
+                }
+                graph[i][j] = true;
+                if (line && j != 0) {
+                    graph[i][j-1] = false;
+                }
+            }
+        }
+        System.out.print(max + "|");
+        for (int j = lineDepth - 1; j >= 0; j--) {
+            if (j != lineDepth - 1) {
+                int n = 0;
+                if (j == 0) {
+                    n++;
+                }
+                for (int i = n; i < Integer.toString(max).length(); i++) {
+                    System.out.print(" ");
+                }
+                if (j == 0) {
+                    System.out.print("0");
+                }
+                System.out.print("|");
+            }
+            for (int i = 0; i < values.length; i++) {
+                if (!graph[i][j]) {
+                    System.out.print(" ");
+                } else if (graph[i][j]) {
+                    System.out.print("@");
+                }
+            }
+            System.out.println();
+        }
+        for (int i = 0; i < Integer.toString(max).length(); i++) {
+            System.out.print(" ");
+        }
+        System.out.print(xStartValue);
+        int i = xStartValue.length();
+        for (i = 0; i < values.length - xEndValue.length(); i++) {
+            System.out.print("‾");
+        }
+        System.out.println(xEndValue);
+        System.out.println();
+    }
 
     /**
      * Prints out the data that has been logged from the simulation.
@@ -300,7 +297,7 @@ public class OrganicPopulationLogger {
         System.out.println();
         System.out.println("-------Population Logger-------");
         System.out.println();
-        
+
         printMaleAgeAtMarriageGraph();
         printFemaleAgeAtMarriageGraph();
         printAgeDifferenceAtMarriageGraph();
@@ -325,26 +322,26 @@ public class OrganicPopulationLogger {
         System.out.println();
         System.out.println("Left over children: " + getNumberOfLeftOverChildren());
         System.out.println("Kids killed by early stop: " + getStopedHavingEarlyDeaths());
-        
-    }
-    
-    private static void printAdjustedNumberOfChildrenEndSizesGraph() {
-    	System.out.println("ADJUSTED NUMBER OF CHILDREN END FAMILY SIZES GRAPH");
-    	int[] temp = new int[OrganicPartnership.getAdjustedNumberOfChildren().length];
-    	for (int i = 0; i < temp.length; i++) {
-    		temp[i] = OrganicPartnership.getAdjustedNumberOfChildren()[i].size();
-    	}
-    	printGraph(temp, "0", new Integer(NumberOfChildrenDistribuition.MAXIMUM_NUMBER_OF_CHILDREN + 1).toString(), false, 10);
+
     }
 
-	private static int getNumberOfLeftOverChildren() {
-		int count = 0;
+    private static void printAdjustedNumberOfChildrenEndSizesGraph() {
+        System.out.println("ADJUSTED NUMBER OF CHILDREN END FAMILY SIZES GRAPH");
+        int[] temp = new int[OrganicPartnership.getAdjustedNumberOfChildren().length];
+        for (int i = 0; i < temp.length; i++) {
+            temp[i] = OrganicPartnership.getAdjustedNumberOfChildren()[i].size();
+        }
+        printGraph(temp, "0", Integer.toString(NumberOfChildrenDistribuition.MAXIMUM_NUMBER_OF_CHILDREN + 1), false, 10);
+    }
+
+    private static int getNumberOfLeftOverChildren() {
+        int count = 0;
         for (int i = 0; i < OrganicPartnership.getAdjustedNumberOfChildren().length; i++) {
             for (int j = 0; j < OrganicPartnership.getAdjustedNumberOfChildren()[i].size(); j++) {
                 count += OrganicPartnership.getAdjustedNumberOfChildren()[i].get(j) - i;
             }
         }
-		return count;
-	}
+        return count;
+    }
 
 }

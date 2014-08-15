@@ -27,7 +27,7 @@ public class AbstractDataCleanerTest {
 
     private final String incorrectFilePath = this.getClass().getResource("/AbstractDataCleaningTestIncorrectFile.txt").getPath();
     private final String correctFilePath = this.getClass().getResource("/AbstractDataCleaningCorrectFile.txt").getPath();
-    private final String outputFilePath = "AbstractDataCleaningTestOutputFile.txt";
+    private static final String outputFilePath = "AbstractDataCleaningTestOutputFile.txt";
     private static final String TOKENLIMIT = "10000";
     private Map<String, String> correctionMap;
 

@@ -51,7 +51,7 @@ public class AnalysisTools {
     /** The classification map. */
     private HashMap<String, AccuracyMetrics> classificationMap;
 
-    private static final int multiplier1000 = 1000;
+    private static final int MULTIPLIER1000 = 1000;
 
     /**
      * Constructs a hashmap contains the classification name as the key and the
@@ -581,7 +581,7 @@ public class AnalysisTools {
 
             public int compare(final AccuracyMetrics o1, final AccuracyMetrics o2) {
 
-                return (int) ((int) (o1.getRecall() * multiplier1000) - (int) (o2.getRecall() * multiplier1000));
+                return (int) ((int) (o1.getRecall() * MULTIPLIER1000) - (int) (o2.getRecall() * MULTIPLIER1000));
             }
         });
 
@@ -607,7 +607,7 @@ public class AnalysisTools {
 
             public int compare(final AccuracyMetrics o1, final AccuracyMetrics o2) {
 
-                return (int) ((int) (o1.getPrecision() * multiplier1000) - (int) (o2.getPrecision() * multiplier1000));
+                return (int) ((int) (o1.getPrecision() * MULTIPLIER1000) - (int) (o2.getPrecision() * MULTIPLIER1000));
             }
         });
 
@@ -633,7 +633,7 @@ public class AnalysisTools {
 
             public int compare(final AccuracyMetrics o1, final AccuracyMetrics o2) {
 
-                return (int) ((int) (o1.getAccuracy() * multiplier1000) - (int) (o2.getAccuracy() * multiplier1000));
+                return (int) ((int) (o1.getAccuracy() * MULTIPLIER1000) - (int) (o2.getAccuracy() * MULTIPLIER1000));
             }
         });
 

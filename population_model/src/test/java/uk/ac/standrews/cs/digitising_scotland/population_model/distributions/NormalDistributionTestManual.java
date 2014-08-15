@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2014 Digitising Scotland project:
  * <http://digitisingscotland.cs.st-andrews.ac.uk/>
  *
@@ -15,6 +15,8 @@
  * <http://www.gnu.org/licenses/>.
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.distributions;
+
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.general.NegativeDeviationException;
 
 public class NormalDistributionTestManual {
 

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2014 Digitising Scotland project:
  * <http://digitisingscotland.cs.st-andrews.ac.uk/>
  *
@@ -19,6 +19,11 @@ package uk.ac.standrews.cs.digitising_scotland.population_model.distributions;
 import java.util.Random;
 
 import org.junit.Test;
+
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.general.NegativeDeviationException;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.general.NegativeWeightException;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.general.NormalDistribution;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.general.WeightedDistribution;
 
 /**
  * Tests of distribution exceptions.

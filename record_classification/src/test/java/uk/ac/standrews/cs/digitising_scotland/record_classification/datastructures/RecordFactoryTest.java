@@ -14,6 +14,8 @@ import java.util.Set;
 import org.junit.Assert;
 import org.junit.Test;
 
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datareaders.AbstractFormatConverter;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datareaders.LongFormatConverter;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeFactory;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeTriple;
@@ -28,6 +30,8 @@ import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
  */
 public class RecordFactoryTest {
 
+    private AbstractFormatConverter formatConverter = new LongFormatConverter();
+
     @Test
     public void makeMultipleCodedTrainingRecords() throws IOException, InputFormatException {
 
@@ -37,11 +41,11 @@ public class RecordFactoryTest {
         String file = getClass().getResource("/multipleCauseRecordsTest.csv").getFile();
         File inputFile = new File(file);
 
-        List<Record> records = FormatConverter.convert(inputFile);
+        List<Record> records = formatConverter.convert(inputFile);
 
         Bucket b = new Bucket(records);
         generateActualCodeMappings(b);
-        records = FormatConverter.convert(inputFile);
+        records = formatConverter.convert(inputFile);
 
         for (int i = 0; i < records.size(); i++) {
             if (i == 0) {

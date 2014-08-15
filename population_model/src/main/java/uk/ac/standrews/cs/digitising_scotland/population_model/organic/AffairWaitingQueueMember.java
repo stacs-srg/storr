@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2014 Digitising Scotland project:
  * <http://digitisingscotland.cs.st-andrews.ac.uk/>
  *
@@ -18,8 +18,7 @@ package uk.ac.standrews.cs.digitising_scotland.population_model.organic;
 
 import java.util.Random;
 
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.AffairWithMarriedOrSingleDistribution;
-import uk.ac.standrews.cs.digitising_scotland.population_model.model.RandomFactory;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.temporal.AffairWithMarriedOrSingleDistribution;
 
 public class AffairWaitingQueueMember implements Comparable<AffairWaitingQueueMember>{
 
@@ -27,19 +26,24 @@ public class AffairWaitingQueueMember implements Comparable<AffairWaitingQueueMe
 	int affairDay;
 	boolean interMarital;
 	
-	private static Random random = RandomFactory.getRandom();
-    private static AffairWithMarriedOrSingleDistribution affairWithMarriedOrSingleDistribution = new AffairWithMarriedOrSingleDistribution(random); 
+    private static AffairWithMarriedOrSingleDistribution affairWithMarriedOrSingleDistribution;
 
+	public static void initialiseAffairWithMarrieadOrSingleDistribution(OrganicPopulation population, String distributionKey, Random random) {
+		affairWithMarriedOrSingleDistribution = new AffairWithMarriedOrSingleDistribution(population, distributionKey, random);
+	}
 	
+    
 	public AffairWaitingQueueMember(OrganicPerson person, int affairDay) {
 		this.person = person;
 		this.affairDay = affairDay;
-		switch (affairWithMarriedOrSingleDistribution.getSample()) {
+		switch (affairWithMarriedOrSingleDistribution.getSample(affairDay)) {
 		    case SINGLE_AFFAIR:
 		    	this.interMarital = false;
 			    break;
 		    case INTER_MARITAL_AFFAIR:
 		    	this.interMarital = true;
+		    	break;
+		    default:
 		    	break;
 		}	
 	}
