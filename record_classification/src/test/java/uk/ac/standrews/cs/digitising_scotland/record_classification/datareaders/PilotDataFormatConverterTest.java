@@ -17,7 +17,7 @@ public class PilotDataFormatConverterTest {
 
         File inputFile = new File(getClass().getResource("/pilotStudyTestCase.tsv").getFile());
 
-        AbstractFormatConverter converter = new PilotDataFormatConverter();
+        PilotDataFormatConverter converter = new PilotDataFormatConverter();
 
         Bucket bucket = new Bucket(converter.convert(inputFile));
 

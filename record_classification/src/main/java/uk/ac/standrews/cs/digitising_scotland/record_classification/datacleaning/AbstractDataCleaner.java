@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datareaders.AbstractFormatConverter;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datareaders.LongFormatConverter;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeTriple;
@@ -34,7 +33,7 @@ import com.google.common.collect.Multiset;
  */
 public abstract class AbstractDataCleaner {
 
-    private AbstractFormatConverter formatConverter = new LongFormatConverter();
+    private LongFormatConverter formatConverter = new LongFormatConverter();
 
     /**
      * The Constant TOKENLIMIT. The default is 4 but this can be changed by calling setTokenLimit.

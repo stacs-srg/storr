@@ -14,7 +14,6 @@ import org.slf4j.LoggerFactory;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.AbstractClassifier;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.OLR.OLRClassifier;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.lookup.ExactMatchClassifier;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datareaders.AbstractFormatConverter;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datareaders.LongFormatConverter;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datareaders.PilotDataFormatConverter;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.analysis_metrics.AbstractConfusionMatrix;
@@ -71,8 +70,11 @@ public final class TrainAndMultiplyClassify {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TrainAndMultiplyClassify.class);
 
-    private static AbstractFormatConverter trainingFormatConverter = new LongFormatConverter();
-    private static AbstractFormatConverter classificationFormatConverter = new PilotDataFormatConverter();
+    private static LongFormatConverter trainingFormatConverter = new LongFormatConverter();
+    private static PilotDataFormatConverter classificationFormatConverter = new PilotDataFormatConverter();
+
+    private static Bucket trainingRecords;
+    private static Bucket classificationRecords;
 
     private static VectorFactory vectorFactory;
     private static String experimentalFolderName;
@@ -102,8 +104,8 @@ public final class TrainAndMultiplyClassify {
         File prediction = new File(args[1]);
 
         LOGGER.info("********** Generating Training Bucket **********");
-        Bucket trainingRecords = createBucketTrainingRecords(training);
-        Bucket classificationRecords = createPredictionBucket(prediction);
+
+        trainingRecords = createBucketTrainingRecords(training);
 
         generateActualCodeMappings(trainingRecords);
 
@@ -119,7 +121,7 @@ public final class TrainAndMultiplyClassify {
         LOGGER.info("********** Creating Lookup Tables **********");
         ExactMatchClassifier exactMatchClassifier = trainExactMatchClassifier(trainingRecords);
 
-        // Bucket predicitionBucket = createPredictionBucket(prediction);
+        classificationRecords = createPredictionBucket(prediction);
 
         LOGGER.info("********** Classifying Bucket **********");
         ExactMatchPipeline exactMatchPipeline = new ExactMatchPipeline(exactMatchClassifier);

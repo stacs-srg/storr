@@ -14,7 +14,6 @@ import java.util.Set;
 import org.junit.Assert;
 import org.junit.Test;
 
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datareaders.AbstractFormatConverter;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datareaders.LongFormatConverter;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeFactory;
@@ -30,7 +29,7 @@ import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
  */
 public class RecordFactoryTest {
 
-    private AbstractFormatConverter formatConverter = new LongFormatConverter();
+    private LongFormatConverter formatConverter = new LongFormatConverter();
 
     @Test
     public void makeMultipleCodedTrainingRecords() throws IOException, InputFormatException {
