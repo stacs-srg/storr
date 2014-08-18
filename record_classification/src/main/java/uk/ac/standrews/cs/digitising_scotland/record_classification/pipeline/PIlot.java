@@ -96,6 +96,8 @@ public final class PIlot {
         // TODO split this up!
         Timer timer = initAndStartTimer();
 
+        setupExperimentalFolders("Experiments");
+
         trainingRatio = 1;
 
         File training = new File(args[0]);
@@ -268,7 +270,7 @@ public final class PIlot {
 
     private static void setupExperimentalFolders(final String baseFolder) {
 
-        experimentalFolderName = getExperimentalFolderName(baseFolder);
+        experimentalFolderName = Utils.getExperimentalFolderName(baseFolder, "Experiment");
 
         if (!(new File(experimentalFolderName).mkdirs() && new File(experimentalFolderName + "/Reports").mkdirs() && new File(experimentalFolderName + "/Data").mkdirs() && new File(experimentalFolderName + "/Models").mkdirs())) { throw new FolderCreationException(
                         "couldn't create experimental folder"); }
@@ -357,28 +359,4 @@ public final class PIlot {
         return false;
     }
 
-    protected static String getExperimentalFolderName(final String baseFolder) {
-
-        // all experimental data stored in folder called experimentX, where X is
-        // an integer.
-        int highestFolderCount = 0;
-        File base = new File(baseFolder);
-
-        if (!base.exists() && !base.mkdirs()) {
-            LOGGER.error("Could not create all folders in path " + base + ".\n" + base.getAbsolutePath() + " may already exsists");
-        }
-
-        File[] allFiles = base.listFiles();
-        for (File file : allFiles) {
-            if (file.isDirectory() && file.getName().contains("Experiment")) {
-
-                int currentFolder = Integer.parseInt(file.getName().subSequence(10, file.getName().length()).toString());
-                if (currentFolder > highestFolderCount) {
-                    highestFolderCount = currentFolder;
-                }
-            }
-        }
-        highestFolderCount++;
-        return baseFolder + "/Experiment" + highestFolderCount;
-    }
 }
