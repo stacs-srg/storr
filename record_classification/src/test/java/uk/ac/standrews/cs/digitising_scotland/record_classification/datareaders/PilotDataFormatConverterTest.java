@@ -6,6 +6,7 @@ import java.io.IOException;
 import org.junit.Assert;
 import org.junit.Test;
 
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.PilotDataFormatConverter;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.exceptions.InputFormatException;
@@ -17,7 +18,7 @@ public class PilotDataFormatConverterTest {
 
         File inputFile = new File(getClass().getResource("/pilotStudyTestCase.tsv").getFile());
 
-        AbstractFormatConverter converter = new PilotDataFormatConverter();
+        PilotDataFormatConverter converter = new PilotDataFormatConverter();
 
         Bucket bucket = new Bucket(converter.convert(inputFile));
 

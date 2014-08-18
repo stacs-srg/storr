@@ -18,6 +18,8 @@ import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.output.FileWriterWithEncoding;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
@@ -36,6 +38,8 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
  * @author jkc25
  */
 public final class Utils {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(Utils.class);
 
     private Utils() {
 
@@ -94,6 +98,31 @@ public final class Utils {
         int highest = calculateHighestFolderNumber(baseDirectory, prefix);
         String newName = prefix + highest;
         return new File(newName);
+    }
+
+    public static String getExperimentalFolderName(final String baseFolder, final String folderName) {
+
+        // all experimental data stored in folder called experimentX, where X is
+        // an integer.
+        int highestFolderCount = 0;
+        File base = new File(baseFolder);
+
+        if (!base.exists() && !base.mkdirs()) {
+            LOGGER.error("Could not create all folders in path " + base + ".\n" + base.getAbsolutePath() + " may already exsists");
+        }
+
+        File[] allFiles = base.listFiles();
+        for (File file : allFiles) {
+            if (file.isDirectory() && file.getName().contains(folderName)) {
+
+                int currentFolder = Integer.parseInt(file.getName().subSequence(10, file.getName().length()).toString());
+                if (currentFolder > highestFolderCount) {
+                    highestFolderCount = currentFolder;
+                }
+            }
+        }
+        highestFolderCount++;
+        return baseFolder + "/" + folderName + highestFolderCount;
     }
 
     /**

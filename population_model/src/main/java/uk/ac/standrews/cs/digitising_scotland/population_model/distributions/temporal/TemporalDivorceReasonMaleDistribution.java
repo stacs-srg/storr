@@ -65,4 +65,11 @@ public class TemporalDivorceReasonMaleDistribution extends TemporalDistribution<
 	}
 
 
+
+    @Override
+    public DivorceReason getSample(int date, int earliestValue, int latestValue) {
+        return getSample(date);
+    }
+
+
 }

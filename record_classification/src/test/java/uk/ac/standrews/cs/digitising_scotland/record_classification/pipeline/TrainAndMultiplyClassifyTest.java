@@ -5,6 +5,8 @@ import java.io.File;
 import org.junit.Assert;
 import org.junit.Test;
 
+import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
+
 public class TrainAndMultiplyClassifyTest {
 
     @Test
@@ -19,7 +21,7 @@ public class TrainAndMultiplyClassifyTest {
         if (!experiment1.mkdirs()) {
             System.err.println("Could not create experiment1 Folder");
         }
-        final String experimentalFolderName = TrainAndMultiplyClassify.getExperimentalFolderName("target");
+        final String experimentalFolderName = Utils.getExperimentalFolderName("target", "Experiment");
         Assert.assertEquals("target/Experiment2", experimentalFolderName);
         experiment0.delete();
         experiment1.delete();

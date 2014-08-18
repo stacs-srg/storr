@@ -26,9 +26,9 @@ import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
  * to a list of Record objects.
  * @author jkc25
  */
-public final class LongFormatConverter extends AbstractFormatConverter {
+public final class FormatConverter {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(LongFormatConverter.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(FormatConverter.class);
 
     private static final String CHARSET_NAME = "UTF8";
 
@@ -61,7 +61,7 @@ public final class LongFormatConverter extends AbstractFormatConverter {
      * @throws IOException Signals that an I/O exception has occurred.
      * @throws InputFormatException the input format exception
      */
-    public List<Record> convert(final File inputFile) throws IOException, InputFormatException {
+    public static List<Record> convert(final File inputFile) throws IOException, InputFormatException {
 
         BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(inputFile), CHARSET_NAME));
 
@@ -105,7 +105,7 @@ public final class LongFormatConverter extends AbstractFormatConverter {
      * @param lineSplit the line split
      * @param goldStandard the gold standard
      */
-    private void populateGoldStandardSet(final String[] lineSplit, final HashSet<CodeTriple> goldStandard) {
+    private static void populateGoldStandardSet(final String[] lineSplit, final HashSet<CodeTriple> goldStandard) {
 
         final int start_pos = 6;
         final int end_pos = 31;
@@ -135,7 +135,7 @@ public final class LongFormatConverter extends AbstractFormatConverter {
      * @param endPosition the last index to concatenate
      * @return the concatenated string, comma separated
      */
-    protected String formDescription(final String[] stringArray, final int startPosition, final int endPosition) {
+    private static String formDescription(final String[] stringArray, final int startPosition, final int endPosition) {
 
         String description = "";
 
@@ -164,6 +164,48 @@ public final class LongFormatConverter extends AbstractFormatConverter {
         if (lineSplit.length != CODLINELENGTH) {
             System.err.println("Line is wrong length, should be" + CODLINELENGTH + ", is " + lineSplit.length);
         }
+    }
+
+    /**
+     * Converts a string representation of an age group to the format needed by NRS.
+     *
+     * @param lineSplit the line split
+     * @return the int
+     */
+    private static int convertAgeGroup(final String lineSplit) {
+
+        //     * TODO make sure this is the correct format
+
+        int group = Integer.parseInt(lineSplit);
+        final int max_age_group = 5;
+        if (group > max_age_group) { return max_age_group; }
+
+        return group;
+    }
+
+    /**
+     * Converts sex from M or F characters to 1 or 0. 1 is male, 0 is female.
+     *
+     * @param sexIndicator the string to convert to binary, 1 (male) or 0 (female)
+     * @return the int associated with the sex
+     */
+    private static int convertSex(final String sexIndicator) {
+
+        if (sexIndicator.equals("M")) { return 1; }
+        return 0;
+    }
+
+    /**
+     * Removes quotes from a string.
+     *
+     * @param string the string to remove quotes from
+     * @return the string with quotes removed
+     */
+    private static String removeQuotes(final String string) {
+
+        String noQuotes = string.replaceAll("\"", "").trim();
+
+        return noQuotes;
     }
 
 }

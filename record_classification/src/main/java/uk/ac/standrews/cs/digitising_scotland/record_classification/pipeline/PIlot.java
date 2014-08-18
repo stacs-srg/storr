@@ -58,17 +58,18 @@ import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearnin
  * 
  * @author jkc25, frjd2
  */
-public final class TrainAndMultiplyClassify {
+public final class PIlot {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(TrainAndMultiplyClassify.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(PIlot.class);
 
-    private static Bucket trainingRecords;
-    private static Bucket classificationRecords;
+    private static double trainingRatio = 0.8;
 
     private static VectorFactory vectorFactory;
+    private static Bucket trainingBucket;
+    private static Bucket predictionBucket;
     private static String experimentalFolderName;
 
-    private TrainAndMultiplyClassify() {
+    private PIlot() {
 
         // no public constructor
     }
@@ -89,35 +90,37 @@ public final class TrainAndMultiplyClassify {
 
         setupExperimentalFolders("Experiments");
 
+        trainingRatio = 1;
+
         File training = new File(args[0]);
         File prediction = new File(args[1]);
 
         LOGGER.info("********** Generating Training Bucket **********");
+        Bucket allRecords = createBucketOfRecords(training);
 
-        trainingRecords = createBucketTrainingRecords(training);
+        PipelineUtils.generateActualCodeMappings(allRecords);
 
-        PipelineUtils.generateActualCodeMappings(trainingRecords);
+        Bucket bucket = createBucketOfRecords(training);
+        randomlyAssignToTrainingAndPrediction(bucket);
 
-        //randomlyAssignToTrainingAndPrediction(bucket);
-
-        vectorFactory = new VectorFactory(trainingRecords);
+        vectorFactory = new VectorFactory(trainingBucket);
 
         printStatusUpdate();
 
         LOGGER.info("********** Training OLR Classifiers **********");
-        AbstractClassifier classifier = trainOLRClassifier(trainingRecords, vectorFactory);
+        AbstractClassifier classifier = trainOLRClassifier(trainingBucket, vectorFactory);
 
         LOGGER.info("********** Creating Lookup Tables **********");
-        ExactMatchClassifier exactMatchClassifier = trainExactMatchClassifier(trainingRecords);
+        ExactMatchClassifier exactMatchClassifier = trainExactMatchClassifier();
 
-        classificationRecords = createPredictionBucket(prediction);
+        predictionBucket = createPredictionBucket(prediction);
 
         LOGGER.info("********** Classifying Bucket **********");
         ExactMatchPipeline exactMatchPipeline = new ExactMatchPipeline(exactMatchClassifier);
-        MachineLearningClassificationPipeline machineLearningClassifier = new MachineLearningClassificationPipeline(classifier, classificationRecords);
+        MachineLearningClassificationPipeline machineLearningClassifier = new MachineLearningClassificationPipeline(classifier, trainingBucket);
 
-        Bucket exactMatched = exactMatchPipeline.classify(classificationRecords);
-        Bucket notExactMatched = BucketUtils.getComplement(classificationRecords, exactMatched);
+        Bucket exactMatched = exactMatchPipeline.classify(predictionBucket);
+        Bucket notExactMatched = BucketUtils.getComplement(predictionBucket, exactMatched);
         Bucket machineLearned = machineLearningClassifier.classify(notExactMatched);
         Bucket allClassified = BucketUtils.getUnion(machineLearned, exactMatched);
 
@@ -160,11 +163,11 @@ public final class TrainAndMultiplyClassify {
         LOGGER.info("Codes that were null and weren't adter chopping: " + CodeFactory.getInstance().getCodeMapNullCounter());
     }
 
-    private static ExactMatchClassifier trainExactMatchClassifier(Bucket trainingRecords) throws Exception {
+    private static ExactMatchClassifier trainExactMatchClassifier() throws Exception {
 
         ExactMatchClassifier exactMatchClassifier = new ExactMatchClassifier();
         exactMatchClassifier.setModelFileName(experimentalFolderName + "/Models/lookupTable");
-        exactMatchClassifier.train(trainingRecords);
+        exactMatchClassifier.train(trainingBucket);
         return exactMatchClassifier;
     }
 
@@ -193,6 +196,20 @@ public final class TrainAndMultiplyClassify {
         comparisonWriter.close();
     }
 
+    private static void randomlyAssignToTrainingAndPrediction(final Bucket bucket) {
+
+        trainingBucket = new Bucket();
+        predictionBucket = new Bucket();
+        for (Record record : bucket) {
+            if (Math.random() < trainingRatio) {
+                trainingBucket.addRecordToBucket(record);
+            }
+            else {
+                predictionBucket.addRecordToBucket(record);
+            }
+        }
+    }
+
     //    Commented out while testing - FIXME
     private static Bucket createPredictionBucket(final File prediction) {
 
@@ -212,14 +229,13 @@ public final class TrainAndMultiplyClassify {
 
     private static AbstractClassifier trainOLRClassifier(final Bucket bucket, final VectorFactory vectorFactory) throws Exception {
 
-        LOGGER.info("Training bucket has " + bucket.size() + " records");
         AbstractClassifier olrClassifier = new OLRClassifier(vectorFactory);
         OLRClassifier.setModelPath(experimentalFolderName + "/Models/olrModel");
         olrClassifier.train(bucket);
         return olrClassifier;
     }
 
-    private static Bucket createBucketTrainingRecords(final File training) throws IOException, InputFormatException {
+    private static Bucket createBucketOfRecords(final File training) throws IOException, InputFormatException {
 
         Bucket bucket = new Bucket();
         Iterable<Record> records;
