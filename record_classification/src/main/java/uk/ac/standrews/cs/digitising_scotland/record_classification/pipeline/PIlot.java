@@ -15,6 +15,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.OLR.OLRClassifier;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.lookup.ExactMatchClassifier;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datareaders.FormatConverter;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.PilotDataFormatConverter;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.analysis_metrics.AbstractConfusionMatrix;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.analysis_metrics.CodeMetrics;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.analysis_metrics.InvertedSoftConfusionMatrix;
@@ -118,7 +119,7 @@ public final class PIlot {
         LOGGER.info("********** Creating Lookup Tables **********");
         ExactMatchClassifier exactMatchClassifier = trainExactMatchClassifier();
 
-        // Bucket predicitionBucket = createPredictionBucket(prediction);
+        predictionBucket = createPredictionBucket(prediction);
 
         LOGGER.info("********** Classifying Bucket **********");
         ExactMatchPipeline exactMatchPipeline = new ExactMatchPipeline(exactMatchClassifier);
@@ -305,21 +306,21 @@ public final class PIlot {
     }
 
     //    Commented out while testing - FIXME
-    //    private static Bucket createPredictionBucket(final File prediction) {
-    //
-    //        Bucket toClassify = null;
-    //        try {
-    //            toClassify = new Bucket(RecordFactory.makeCodedRecordsFromFile(prediction));
-    //        }
-    //        catch (IOException e) {
-    //            e.printStackTrace();
-    //        }
-    //        catch (InputFormatException e) {
-    //            e.printStackTrace();
-    //        }
-    //
-    //        return toClassify;
-    //    }
+    private static Bucket createPredictionBucket(final File prediction) {
+
+        Bucket toClassify = null;
+        try {
+            toClassify = new Bucket(PilotDataFormatConverter.convert(prediction));
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+        catch (InputFormatException e) {
+            e.printStackTrace();
+        }
+
+        return toClassify;
+    }
 
     private static AbstractClassifier trainOLRClassifier(final Bucket bucket, final VectorFactory vectorFactory) throws Exception {
 
