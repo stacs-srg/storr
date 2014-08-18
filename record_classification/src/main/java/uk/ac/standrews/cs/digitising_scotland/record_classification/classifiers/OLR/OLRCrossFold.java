@@ -136,9 +136,9 @@ public class OLRCrossFold {
         for (OLRPool model : models) {
             executorService.submit(model);
         }
-        executorService.shutdown();
         final int timeout = 365;
         executorService.awaitTermination(timeout, TimeUnit.DAYS);
+        executorService.shutdown();
         stopListener.terminateProcess();
         stopService.shutdown();
         prepareClassifier();
