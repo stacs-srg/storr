@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2014 Digitising Scotland project:
  * <http://digitisingscotland.cs.st-andrews.ac.uk/>
  *
@@ -21,6 +21,8 @@ import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
 import java.util.Date;
 
 /**
+ * Defines various methods to do with population structure and constraints.
+ *
  * @author Graham Kirby (graham.kirby@st-andrews.ac.uk)
  * @author Tom Dalton (tsd4@st-andrews.ac.uk)
  */

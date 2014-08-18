@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2014 Digitising Scotland project:
  * <http://digitisingscotland.cs.st-andrews.ac.uk/>
  *
@@ -112,6 +112,7 @@ public abstract class AbstractPerson implements IPerson {
         return id;
     }
 
+    @Override
     public String toString() {
         return string_rep;
     }

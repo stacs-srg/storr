@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2014 Digitising Scotland project:
  * <http://digitisingscotland.cs.st-andrews.ac.uk/>
  *
@@ -19,7 +19,6 @@ package uk.ac.standrews.cs.digitising_scotland.population_model.organic;
 import java.util.Random;
 
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.temporal.AffairWithMarriedOrSingleDistribution;
-import uk.ac.standrews.cs.digitising_scotland.population_model.model.RandomFactory;
 
 public class AffairWaitingQueueMember implements Comparable<AffairWaitingQueueMember>{
 
@@ -29,7 +28,7 @@ public class AffairWaitingQueueMember implements Comparable<AffairWaitingQueueMe
 	
     private static AffairWithMarriedOrSingleDistribution affairWithMarriedOrSingleDistribution;
 
-	public static void initialiseAffairWithMarrieadOrDingleDistribution(OrganicPopulation population, String distributionKey, Random random) {
+	public static void initialiseAffairWithMarrieadOrSingleDistribution(OrganicPopulation population, String distributionKey, Random random) {
 		affairWithMarriedOrSingleDistribution = new AffairWithMarriedOrSingleDistribution(population, distributionKey, random);
 	}
 	

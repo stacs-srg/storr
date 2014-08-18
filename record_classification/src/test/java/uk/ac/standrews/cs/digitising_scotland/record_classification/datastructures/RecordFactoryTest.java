@@ -14,6 +14,7 @@ import java.util.Set;
 import org.junit.Assert;
 import org.junit.Test;
 
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datareaders.FormatConverter;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeFactory;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeTriple;
@@ -28,6 +29,8 @@ import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
  */
 public class RecordFactoryTest {
 
+    private FormatConverter formatConverter = new FormatConverter();
+
     @Test
     public void makeMultipleCodedTrainingRecords() throws IOException, InputFormatException {
 
@@ -37,70 +40,70 @@ public class RecordFactoryTest {
         String file = getClass().getResource("/multipleCauseRecordsTest.csv").getFile();
         File inputFile = new File(file);
 
-        List<Record> records = FormatConverter.convert(inputFile);
+        List<Record> records = formatConverter.convert(inputFile);
 
         Bucket b = new Bucket(records);
         generateActualCodeMappings(b);
-        records = FormatConverter.convert(inputFile);
+        records = formatConverter.convert(inputFile);
 
         for (int i = 0; i < records.size(); i++) {
             if (i == 0) {
                 CODOrignalData originalData = (CODOrignalData) records.get(i).getOriginalData();
-                Assert.assertEquals(originalData.getDescription(), "Pulmonary Embolism, Old Age");
+                Assert.assertEquals(originalData.getDescription(), "pulmonary embolism, old age");
                 Assert.assertEquals(originalData.getYear(), 2014);
                 Assert.assertEquals(originalData.getSex(), 1);
                 Assert.assertEquals(originalData.getAgeGroup(), 5);
 
                 Collection<CodeTriple> knownCorrect = new HashSet<>();
-                knownCorrect.add(new CodeTriple(CodeFactory.getInstance().getCode("I269"), new TokenSet("Pulmonary Embolism"), 1.0));
-                knownCorrect.add(new CodeTriple(CodeFactory.getInstance().getCode("R54"), new TokenSet("Old Age"), 1.0));
+                knownCorrect.add(new CodeTriple(CodeFactory.getInstance().getCode("I269"), new TokenSet("pulmonary embolism"), 1.0));
+                knownCorrect.add(new CodeTriple(CodeFactory.getInstance().getCode("R54"), new TokenSet("old age"), 1.0));
 
                 originalData.getGoldStandardCodeTriples().containsAll(knownCorrect);
             }
 
             if (i == 1) {
                 CODOrignalData originalData = (CODOrignalData) records.get(i).getOriginalData();
-                Assert.assertEquals(originalData.getDescription(), "Chest Infection");
+                Assert.assertEquals(originalData.getDescription(), "chest infection");
                 Assert.assertEquals(originalData.getYear(), 2000);
                 Assert.assertEquals(originalData.getSex(), 0);
                 Assert.assertEquals(originalData.getAgeGroup(), 5);
 
                 Collection<CodeTriple> knownCorrect = new HashSet<>();
-                knownCorrect.add(new CodeTriple(CodeFactory.getInstance().getCode("J988"), new TokenSet("Chest Infection"), 1.0));
+                knownCorrect.add(new CodeTriple(CodeFactory.getInstance().getCode("J988"), new TokenSet("chest infection"), 1.0));
 
                 originalData.getGoldStandardCodeTriples().containsAll(knownCorrect);
             }
 
             if (i == 2) {
                 CODOrignalData originalData = (CODOrignalData) records.get(i).getOriginalData();
-                Assert.assertEquals(originalData.getDescription(), "Old Age");
+                Assert.assertEquals(originalData.getDescription(), "old age");
                 Assert.assertEquals(originalData.getYear(), 2011);
                 Assert.assertEquals(originalData.getSex(), 1);
                 Assert.assertEquals(originalData.getAgeGroup(), 5);
 
                 Collection<CodeTriple> knownCorrect = new HashSet<>();
-                knownCorrect.add(new CodeTriple(CodeFactory.getInstance().getCode("R54"), new TokenSet("Old Age"), 1.0));
+                knownCorrect.add(new CodeTriple(CodeFactory.getInstance().getCode("R54"), new TokenSet("old age"), 1.0));
 
                 originalData.getGoldStandardCodeTriples().containsAll(knownCorrect);
             }
 
             if (i == 3) {
                 CODOrignalData originalData = (CODOrignalData) records.get(i).getOriginalData();
-                Assert.assertEquals(originalData.getDescription(), "Coronary Artery Disease, Myelodysplasia Syndrome");
+                Assert.assertEquals(originalData.getDescription(), "coronary artery disease, myelodysplasia syndrome");
                 Assert.assertEquals(originalData.getYear(), 2000);
                 Assert.assertEquals(originalData.getSex(), 0);
                 Assert.assertEquals(originalData.getAgeGroup(), 5);
 
                 Collection<CodeTriple> knownCorrect = new HashSet<>();
-                knownCorrect.add(new CodeTriple(CodeFactory.getInstance().getCode("I251"), new TokenSet("Coronary Artery Disease"), 1.0));
-                knownCorrect.add(new CodeTriple(CodeFactory.getInstance().getCode("D469"), new TokenSet("Myelodysplasia Syndrome"), 1.0));
+                knownCorrect.add(new CodeTriple(CodeFactory.getInstance().getCode("I251"), new TokenSet("coronary artery disease"), 1.0));
+                knownCorrect.add(new CodeTriple(CodeFactory.getInstance().getCode("D469"), new TokenSet("myelodysplasia syndrome"), 1.0));
 
                 originalData.getGoldStandardCodeTriples().containsAll(knownCorrect);
             }
 
             if (i == 4) {
                 CODOrignalData originalData = (CODOrignalData) records.get(i).getOriginalData();
-                Assert.assertEquals(originalData.getDescription(), "Low Platelet and Anaemia");
+                Assert.assertEquals(originalData.getDescription(), "low platelet and anaemia");
                 Assert.assertEquals(originalData.getYear(), 1999);
                 Assert.assertEquals(originalData.getSex(), 0);
                 Assert.assertEquals(originalData.getAgeGroup(), 2);

@@ -1,4 +1,5 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -52,7 +53,7 @@ public final class PilotDataFormatConverter {
      * @throws IOException Signals that an I/O exception has occurred.
      * @throws InputFormatException the input format exception
      */
-    public List<Record> convert(final File inputFile) throws IOException, InputFormatException {
+    public static List<Record> convert(final File inputFile) throws IOException, InputFormatException {
 
         BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(inputFile), CHARSET_NAME));
 
@@ -85,7 +86,7 @@ public final class PilotDataFormatConverter {
         return recordList;
     }
 
-    private int parseImageQuality(String[] lineSplit) {
+    private static int parseImageQuality(String[] lineSplit) {
 
         if (lineSplit[IMAGE_QUALITY_POS].equalsIgnoreCase("null")) {
             return 0;
@@ -103,7 +104,7 @@ public final class PilotDataFormatConverter {
     * @param endPosition the last index to concatenate
     * @return the concatenated string, comma separated
     */
-    private String formDescription(final String[] stringArray, final int startPosition, final int endPosition) {
+    private static String formDescription(final String[] stringArray, final int startPosition, final int endPosition) {
 
         String description = "";
 
@@ -128,7 +129,7 @@ public final class PilotDataFormatConverter {
      * @param lineSplit the line split
      * @return the int
      */
-    private int convertAgeGroup(final String lineSplit) {
+    private static int convertAgeGroup(final String lineSplit) {
 
         //     * TODO make sure this is the correct format
 
@@ -145,7 +146,7 @@ public final class PilotDataFormatConverter {
      * @param sexIndicator the string to convert to binary, 1 (male) or 0 (female)
      * @return the int associated with the sex
      */
-    private int convertSex(final String sexIndicator) {
+    private static int convertSex(final String sexIndicator) {
 
         if (sexIndicator.equals("M")) { return 1; }
         return 0;
@@ -157,7 +158,7 @@ public final class PilotDataFormatConverter {
      * @param string the string to remove quotes from
      * @return the string with quotes removed
      */
-    private String removeQuotes(final String string) {
+    private static String removeQuotes(final String string) {
 
         String noQuotes = string.replaceAll("\"", "").trim();
 
