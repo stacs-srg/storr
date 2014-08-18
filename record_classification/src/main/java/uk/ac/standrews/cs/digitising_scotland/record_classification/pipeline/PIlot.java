@@ -95,14 +95,7 @@ public final class PIlot {
         // TODO split this up!
         Timer timer = initAndStartTimer();
 
-        if (args.length > 1 && args[1] != null) {
-            double userRatio = Double.valueOf(args[1]);
-            if (userRatio > 0 && userRatio < 1) {
-                trainingRatio = userRatio;
-            }
-        }
-
-        setupExperimentalFolders("Experiments");
+        trainingRatio = 1;
 
         File training = new File(args[0]);
         File prediction = new File(args[1]);
@@ -113,7 +106,7 @@ public final class PIlot {
         generateActualCodeMappings(allRecords);
 
         Bucket bucket = createBucketOfRecords(training);
-        //   randomlyAssignToTrainingAndPrediction(bucket);
+        randomlyAssignToTrainingAndPrediction(bucket);
 
         vectorFactory = new VectorFactory(trainingBucket);
 
