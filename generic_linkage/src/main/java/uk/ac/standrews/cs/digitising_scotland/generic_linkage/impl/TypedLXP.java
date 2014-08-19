@@ -85,7 +85,7 @@ public class TypedLXP extends LXP implements ITypedLXP {
         try {
             Class c = Class.forName(class_name);  // get the class associated with the type - by convention TYPE field contains class name of ILabels meta information
             Object o = c.newInstance();
-            Type field_type = ((ILabels) o).getType(key); // expect the class to implement the ILabels interface
+            Type field_type = ((ILabels) o).getFieldType(key); // expect the class to implement the ILabels interface
             if (field_type.equals(expected_type)) {
                 return true;
             } else {

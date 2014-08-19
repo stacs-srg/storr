@@ -13,12 +13,12 @@ import uk.ac.standrews.cs.digitising_scotland.linkage.labels.DeathLabels;
 import uk.ac.standrews.cs.nds.util.ErrorHandling;
 
 /**
- * This class blocks based on persons' first name, last name and first name of parents over streams of BDM Marriage records.
+ * This class blocks based on persons' first name, last name and first name of parents over streams of Birth records
  * Created by al on 02/05/2014. x
  */
-public class FNLFFMFOverBDM extends Blocker {
+public class FNLFFMFOverBirths extends Blocker {
 
-    public FNLFFMFOverBDM(final IBucket birthsBucket, final IBucket deathsBucket, final IRepository output_repo) throws RepositoryException {
+    public FNLFFMFOverBirths(final IBucket birthsBucket, final IBucket deathsBucket, final IRepository output_repo) throws RepositoryException {
 
         super(new TailToTailMergedStream(new ILXPInputStream[]{birthsBucket.getInputStream(), deathsBucket.getInputStream()}), output_repo);
     }
@@ -34,10 +34,10 @@ public class FNLFFMFOverBDM extends Blocker {
 
                 StringBuilder builder = new StringBuilder();
 
-                builder.append(record.get(CommonLabels.FORENAME));
-                builder.append(record.get(CommonLabels.SURNAME));
-                builder.append(record.get(CommonLabels.FATHERS_FORENAME));
-                builder.append(record.get(CommonLabels.MOTHERS_FORENAME));
+                builder.append(record.get(BirthLabels.FORENAME));
+                builder.append(record.get(BirthLabels.SURNAME));
+                builder.append(record.get(BirthLabels.FATHERS_FORENAME));
+                builder.append(record.get(BirthLabels.MOTHERS_FORENAME));
 
                 return new String[]{removeNasties(builder.toString())};
             } else {

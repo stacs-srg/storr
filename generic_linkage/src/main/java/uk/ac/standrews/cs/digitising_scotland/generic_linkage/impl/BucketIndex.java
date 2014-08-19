@@ -101,7 +101,7 @@ public class BucketIndex implements IBucketIndex {
             files.add(new File(indexed_bucket.filePath(i)));
         }
 
-        return new BucketBackedInputStream(indexed_bucket, files.iterator());
+        return new IndexedBucketInputStream(indexed_bucket, files.iterator());
     }
 
     @Override

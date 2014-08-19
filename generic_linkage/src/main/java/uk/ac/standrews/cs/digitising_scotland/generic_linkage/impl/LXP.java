@@ -58,7 +58,7 @@ public class LXP extends HashMap<String, String> implements ILXP {
 
     @Override
     public String get(String key) {
-        return super.get(key);
+        return super.get(key);       // TOD) throw key not found exception
     }
 
     @Override

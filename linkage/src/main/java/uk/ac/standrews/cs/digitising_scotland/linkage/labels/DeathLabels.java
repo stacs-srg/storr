@@ -28,9 +28,20 @@ public class DeathLabels extends CommonLabels {
     public static final String COD_C = "cod_c";
     public static final String CERTIFYING_DOCTOR = "certifying_doctor";
 
+    public static final String FATHERS_FORENAME = "fathers_forename";   // TODO check these - there are too many in here - these are not all common!
+    public static final String FATHERS_SURNAME = "fathers_surname";
+    public static final String FATHERS_OCCUPATION = "fathers_occupation";
+    public static final String MOTHERS_FORENAME = "mothers_forename";
+    public static final String MOTHERS_SURNAME = "mothers_surname";
+
+    public static final String MOTHERS_MAIDEN_SURNAME = "mothers_maiden_surname";
+    public static final String CHANGED_SURNAME = "changed_surname";
+    public static final String CHANGED_FORENAME = "changed_forename";
+    public static final String CHANGED_MOTHERS_MAIDEN_SURNAME = "changed_mothers_maiden_surname";
+
     public static final List<String> DEATH_FIELD_NAMES = Arrays.asList(ID, SURNAME, FORENAME, SEX, YEAR_OF_REGISTRATION, REGISTRATION_DISTRICT_NUMBER,
             REGISTRATION_DISTRICT_SUFFIX, ENTRY, DEATH_YEAR, AGE_AT_DEATH, MOTHERS_MAIDEN_SURNAME, CHANGED_SURNAME, CHANGED_FORENAME, CHANGED_DEATH_AGE,
-            DATE_OF_BIRTH, OCCUPATION, MARITAL_STATUS, SPOUSES_NAMES, SPOUSES_OCCUPATIONS,   // TODO check fieldname spouses_occupations - wrong in exporter - population project
+            DATE_OF_BIRTH, OCCUPATION, MARITAL_STATUS, SPOUSES_NAMES, SPOUSES_OCCUPATIONS,
             DEATH_MONTH, DEATH_DAY,
             PLACE_OF_DEATH, FATHERS_FORENAME, FATHERS_SURNAME, FATHERS_OCCUPATION, FATHER_DECEASED, MOTHERS_FORENAME,
             MOTHERS_SURNAME, CHANGED_MOTHERS_MAIDEN_SURNAME,
