@@ -113,7 +113,6 @@ public class OLRCrossFold {
      */
     public void stop() {
 
-        LOGGER.info("STOP HAS BEEN CALLED");
         for (OLRPool model : models) {
             model.stop();
         }
@@ -132,19 +131,40 @@ public class OLRCrossFold {
      * Train all models.
      *
      * @throws InterruptedException the interrupted exception
-     * @throws ExecutionException 
+     * @throws ExecutionException
      */
     private void trainAllModels() throws InterruptedException, ExecutionException {
 
+        //FIXME refactor this and mae sure we can get back an errors that are thrown
         StopListener stopListener = new StopListener();
         ExecutorService stopService = Executors.newFixedThreadPool(1);
         ExecutorService executorService = Executors.newFixedThreadPool(folds);
         Collection<Future<?>> futures = new LinkedList<Future<?>>();
-
         stopService.submit(stopListener);
+
         for (OLRPool model : models) {
             futures.add(executorService.submit(model));
         }
+
+        runAllFutures(futures);
+
+        //        final Long millisToShutDown = (long) (48 * 60 * 60 * 1000);
+        //        Thread.sleep(millisToShutDown);
+        executorService.shutdown();
+        final int timeout = 365;
+        try {
+            executorService.awaitTermination(timeout, TimeUnit.DAYS);
+        }
+        catch (InterruptedException e) {
+            System.err.println(e.toString());
+        }
+        stopListener.terminateProcess();
+        stopService.shutdown();
+        prepareClassifier();
+    }
+
+    private void runAllFutures(final Collection<Future<?>> futures) {
+
         for (Future<?> future : futures) {
             Throwable t = null;
             try {
@@ -163,20 +183,6 @@ public class OLRCrossFold {
                 System.err.println(t);
             }
         }
-
-        final Long millisToShutDown = (long) (48 * 60 * 60 * 1000);
-        Thread.sleep(millisToShutDown);
-        executorService.shutdown();
-        final int timeout = 365;
-        try {
-            executorService.awaitTermination(timeout, TimeUnit.DAYS);
-        }
-        catch (InterruptedException e) {
-            System.err.println(e.toString());
-        }
-        // stopListener.terminateProcess();
-        //  stopService.shutdown();
-        prepareClassifier();
     }
 
     /**
@@ -455,7 +461,6 @@ public class OLRCrossFold {
          */
         private String stopCalled() {
 
-            LOGGER.info("Stoplistener: stopCalled");
             stop();
             return STOP_MESSAGE;
         }

@@ -127,13 +127,11 @@ public class OLRClassifier extends AbstractClassifier {
         }
 
         List<NamedVector> vectorList = vectorFactory.generateVectorsFromRecord(record);
-        Integer classificationID;
-        Code code;
         Set<CodeTriple> codeTripleSet = new HashSet<>();
-        for (NamedVector vector : vectorList) {
-            classificationID = model.classifyFull(vector).maxValueIndex();
 
-            code = CodeFactory.getInstance().getCode(classificationID);
+        for (NamedVector vector : vectorList) {
+            Integer classificationID = model.classifyFull(vector).maxValueIndex();
+            Code code = CodeFactory.getInstance().getCode(classificationID);
             double confidence = Math.exp(model.logLikelihood(classificationID, vector)); //TODO test
             codeTripleSet.add(new CodeTriple(code, new TokenSet(record.getDescription()), confidence));
         }

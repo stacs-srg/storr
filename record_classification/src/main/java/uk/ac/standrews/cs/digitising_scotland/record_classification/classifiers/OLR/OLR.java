@@ -196,23 +196,15 @@ public class OLR {
     private void updateLogLikelihoodSum(final int actual, final Vector classification) {
 
         double thisloglik;
-        System.out.println("actual: " + actual);
-        System.out.println("classification length " + classification.size());
+
         if (actual > 0) {
             final double classificationGet = classification.get(actual - 1);
-            System.out.println("done get");
             final double mathLog = Math.log(classificationGet);
-            System.out.println("done Math");
-
             thisloglik = Math.max(LOGLIK_MINIMUM, mathLog);
-            System.out.println("actual > 0 done");
         }
         else {
             thisloglik = Math.max(LOGLIK_MINIMUM, Math.log1p(-classification.zSum()));
-            System.out.println("else done");
-
         }
-        System.out.println("end first if block");
 
         if (numLogLikelihoodSumUpdates.get() != 0) {
             runningLogLikelihood += (thisloglik - runningLogLikelihood) / numLogLikelihoodSumUpdates.get();
@@ -220,10 +212,8 @@ public class OLR {
         else {
             runningLogLikelihood = thisloglik;
         }
-        System.out.println("end second if block");
 
         numLogLikelihoodSumUpdates.getAndIncrement();
-        System.out.println("after getandincrement");
     }
 
     /**
@@ -275,7 +265,7 @@ public class OLR {
      */
     public void train(final NamedVector instance) {
 
-        //   numTrained.getAndIncrement();
+        numTrained.getAndIncrement();
         updateModelParameters(instance);
         updateCountsAndSteps(instance);
         nextStep();
@@ -301,31 +291,21 @@ public class OLR {
         for (int category = 0; category < numCategories - 1; category++) {
             updateBetaCategory(instance, gradient, category);
         }
-        System.out.println("update model params");
     }
 
     private Vector calcGradient(final NamedVector instance) {
 
-        System.out.println("calculating gradient");
         int actual = Integer.parseInt(instance.getName());
-        System.out.println("finsished parsing int");
 
         // what does the current model say?
         Vector v = classify(instance);
-        System.out.println("finsished classifying instance");
-
         updateLogLikelihoodSum(actual, v);
-        System.out.println("finsished updating loflikelighoodsum");
-
         Vector r = v.like();
-        System.out.println("finsished v.like");
 
         if (actual != 0) {
             r.setQuick(actual - 1, 1);
         }
-        System.out.println("finished r.setquick");
         r.assign(v, Functions.MINUS);
-        System.out.println("finished calculating gradient");
 
         return r;
     }
@@ -506,7 +486,6 @@ public class OLR {
         for (Element feature : instanceFeatures) {
             updateCountsAndStepsAtIndex(feature.index());
         }
-        System.out.println("updateCountsAndSteps");
     }
 
     /**

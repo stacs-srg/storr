@@ -86,7 +86,7 @@ public class OLRPool implements Runnable {
         modelTrainable = true;
     }
 
-    private ArrayList<NamedVector> copyVectorList(ArrayList<NamedVector> internalTrainingVectorList) {
+    private ArrayList<NamedVector> copyVectorList(final ArrayList<NamedVector> internalTrainingVectorList) {
 
         ArrayList<NamedVector> newList = new ArrayList<>();
         for (NamedVector namedVector : internalTrainingVectorList) {
@@ -127,7 +127,6 @@ public class OLRPool implements Runnable {
     public void run() {
 
         trainIfPossible();
-        //  getSurvivors();
     }
 
     /**
@@ -147,7 +146,6 @@ public class OLRPool implements Runnable {
      */
     public List<OLRShuffled> getSurvivors() {
 
-        LOGGER.info("Getting survivors...");
         LOGGER.info("Calling testAndPackageModels");
         ArrayList<ModelDoublePair> modelPairs = testAndPackageModels();
         LOGGER.info("Calling getSurvivors");
@@ -164,7 +162,6 @@ public class OLRPool implements Runnable {
         catch (InterruptedException e) {
             e.printStackTrace();
         }
-        System.err.println("finished training");
     }
 
     private void checkTrainable() {
