@@ -2,4 +2,4 @@
 2200 	2200 Civil Engineers
 3000 	3000 Surveyors
 4215 	4215 Ship's Master (Sea)
-6700 	6700 Pharmacists
+2100	2100 Architects and Town Planners

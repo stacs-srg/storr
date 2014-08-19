@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.PilotDataFormatConverter;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datareaders.FormatConverter;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeTriple;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
@@ -66,7 +66,7 @@ public abstract class AbstractDataCleaner {
         File file = new File(args[0]);
         File correctedFile = new File(args[1]);
         setTokenLimit(args);
-        List<Record> records = PilotDataFormatConverter.convert(file);
+        List<Record> records = FormatConverter.convert(file);
         Bucket bucket = new Bucket(records);
         buildTokenOccurrenceMap(bucket);
         buildCorrectionMap(bucket);

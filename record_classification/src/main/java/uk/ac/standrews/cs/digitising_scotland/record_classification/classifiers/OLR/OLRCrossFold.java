@@ -146,12 +146,10 @@ public class OLRCrossFold {
         }
 
         //  runAllFutures(futures);
-
         //        final Long millisToShutDown = (long) (48 * 60 * 60 * 1000);
         //        Thread.sleep(millisToShutDown);
         executorService.shutdown();
         final int timeout = 365;
-
         executorService.awaitTermination(timeout, TimeUnit.DAYS);
 
         stopListener.terminateProcess();

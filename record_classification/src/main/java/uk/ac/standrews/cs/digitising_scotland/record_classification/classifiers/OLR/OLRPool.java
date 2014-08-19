@@ -212,8 +212,8 @@ public class OLRPool implements Runnable {
         for (OLRShuffled model : models) {
             executorService.submit(model);
         }
-        executorService.awaitTermination(365, TimeUnit.DAYS);
         executorService.shutdown();
+        executorService.awaitTermination(365, TimeUnit.DAYS);
     }
 
     private double getProportionTestingVectorsCorrectlyClassified(final OLRShuffled model) {
