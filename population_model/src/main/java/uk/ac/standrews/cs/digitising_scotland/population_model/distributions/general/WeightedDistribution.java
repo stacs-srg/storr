@@ -85,7 +85,6 @@ public class WeightedDistribution extends RestrictedDistribution<Double> {
         		if (unusedSampleValues.size() != 0 && (i = unusedSampleValues.indexOf(0)) != -1) {
         			unusedSampleValues.remove(i);
         		} else {
-        			System.out.println("Ya called?");
         			zeroCount ++;
         		}
         	}
@@ -140,10 +139,10 @@ public class WeightedDistribution extends RestrictedDistribution<Double> {
     private double getMaximumReturnValue() {
         int count = 0;
         for (int i = cumulative_probabilities.length - 1; i >= 0; i--) {
-            if (cumulative_probabilities[i] == 0) {
+            if (cumulative_probabilities[i] == 1) {
                 count++;
             } else {
-                break;
+            	break;
             }
         }
         return 1 - count * bucket_size;

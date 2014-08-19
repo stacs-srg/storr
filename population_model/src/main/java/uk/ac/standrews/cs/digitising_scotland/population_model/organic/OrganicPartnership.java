@@ -62,7 +62,6 @@ public final class OrganicPartnership implements IPartnership {
     private static TemporalIntegerDistribution temporalCohabitaitonToMarriageTimeDistribution;
 
     private static final int STANDARD_DEVIATION_FACTOR = 4;
-    private static final int DEATH_BED_MARRIAGE_CUTOFF = 500;
     private static final int MINUMUM_DIVORCE_WINDOW = 25;
 
     // Partnership instance required variables
@@ -300,57 +299,46 @@ public final class OrganicPartnership implements IPartnership {
             actualMarriageDay = cohabThenMarriageMarriageDay;
         }
         if (PopulationLogic.dateBeforeDeath(actualMarriageDay + MINUMUM_DIVORCE_WINDOW, husband.getDeathDay()) && 
-                PopulationLogic.dateBeforeDeath(actualMarriageDay + MINUMUM_DIVORCE_WINDOW, wife.getDeathDay()))
-            switch (temporalDivorceInstigatedByGenderDistribution.getSample(population.getCurrentDay())) {
+                PopulationLogic.dateBeforeDeath(actualMarriageDay + MINUMUM_DIVORCE_WINDOW, wife.getDeathDay())) {
+			int divorceAgeInDays;
+			try {
+				switch (temporalDivorceInstigatedByGenderDistribution.getSample(population.getCurrentDay())) {
                 case MALE:
-                    // get male age at divorce
-                    int maleDivorceAgeInDays;
-                    do {
-                        maleDivorceAgeInDays = temporalDivorceAgeForMaleDistribution.getSample(population.getCurrentDay()) + husband.getBirthDay();
-                    }
-                    while (!PopulationLogic.divorceAfterMarriage(maleDivorceAgeInDays, actualMarriageDay) ||
-                            !PopulationLogic.dateBeforeDeath(maleDivorceAgeInDays, husband.getDeathDay()) ||
-                            !PopulationLogic.dateBeforeDeath(maleDivorceAgeInDays, wife.getDeathDay()));
-
-
-                    timeline.addEvent(maleDivorceAgeInDays, new OrganicEvent(EventType.DIVORCE, this, husband, wife, maleDivorceAgeInDays));
-                    timeline.setEndDate(maleDivorceAgeInDays);
-                    // TODO handles only the adultery special case - could be used to enforce geographical movement to support seperation.
-                    divorceReason = temporalDivorceReasonMaleDistribution.getSample(population.getCurrentDay());
+					divorceAgeInDays = husband.getBirthDay() + temporalDivorceAgeForMaleDistribution.getSample(population.getCurrentDay(), actualMarriageDay - husband.getBirthDay(), dateOfFirstPartnersDeath(husband.getDeathDay(), wife.getDeathDay()) - husband.getBirthDay());
+					timeline.addEvent(divorceAgeInDays, new OrganicEvent(EventType.DIVORCE, this, husband, wife, divorceAgeInDays));
+                    timeline.setEndDate(divorceAgeInDays);
+					divorceReason = temporalDivorceReasonMaleDistribution.getSample(population.getCurrentDay());
                     if (divorceReason == DivorceReason.ADULTERY) {
                         setupAffair(wife, husband);
                     }
-                    break;
+					break;
                 case FEMALE:
-                    // get female age at divorce
-                    int femaleDivorceAgeInDays;
-                    do {
-                        femaleDivorceAgeInDays = temporalDivorceAgeForFemaleDistribution.getSample(population.getCurrentDay()) + wife.getBirthDay();
-                    }
-                    while (!PopulationLogic.divorceAfterMarriage(femaleDivorceAgeInDays, actualMarriageDay) ||
-                            !PopulationLogic.dateBeforeDeath(femaleDivorceAgeInDays, wife.getDeathDay()) ||
-                            !PopulationLogic.dateBeforeDeath(femaleDivorceAgeInDays, husband.getDeathDay()));
-
-
-                    // TODO handles only the adultery special case - could be used to enforce geographical movement to support seperation.
-                    divorceReason = temporalDivorceReasonFemaleDistribution.getSample(population.getCurrentDay());
-                    timeline.addEvent(femaleDivorceAgeInDays, new OrganicEvent(EventType.DIVORCE, this, husband, wife, femaleDivorceAgeInDays));
-                    timeline.setEndDate(femaleDivorceAgeInDays);
+                	divorceAgeInDays = wife.getBirthDay() + temporalDivorceAgeForFemaleDistribution.getSample(population.getCurrentDay(), actualMarriageDay - wife.getBirthDay(), dateOfFirstPartnersDeath(husband.getDeathDay(), wife.getDeathDay()) - wife.getBirthDay());
+                	timeline.addEvent(divorceAgeInDays, new OrganicEvent(EventType.DIVORCE, this, husband, wife, divorceAgeInDays));
+                    timeline.setEndDate(divorceAgeInDays);
+					divorceReason = temporalDivorceReasonMaleDistribution.getSample(population.getCurrentDay());
                     if (divorceReason == DivorceReason.ADULTERY) {
                         setupAffair(husband, wife);
                     }
-
-
-                    break;
+                	break;
                 case NO_DIVORCE:
                     // If not then added earliest death date
                     int firstPartnersDeathDate = dateOfFirstPartnersDeath(husband.getDeathDay(), wife.getDeathDay());
                     timeline.addEvent(firstPartnersDeathDate, new OrganicEvent(EventType.PARTNERSHIP_ENDED_BY_DEATH, this, husband, wife, firstPartnersDeathDate));
                     timeline.setEndDate(firstPartnersDeathDate);
                     break;
-                default:
-                    break;
-            }
+					
+				
+				}                  
+			} catch (NoPermissableValueException e) {
+				int firstPartnersDeathDate = dateOfFirstPartnersDeath(husband.getDeathDay(), wife.getDeathDay());
+                timeline.addEvent(firstPartnersDeathDate, new OrganicEvent(EventType.PARTNERSHIP_ENDED_BY_DEATH, this, husband, wife, firstPartnersDeathDate));
+                timeline.setEndDate(firstPartnersDeathDate);
+			} catch (NotSetUpAtClassInitilisationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+    	}
     }
 
     private void setupAffair(OrganicPerson marriedPerson, OrganicPerson cheatedPerson) {
@@ -433,18 +421,15 @@ public final class OrganicPartnership implements IPartnership {
         OrganicPopulationLogger.logDivorce();
 
         turnOff();
-        husband.addRemarriageEventIfApplicable(population.getCurrentDay() + 1);
-        wife.addRemarriageEventIfApplicable(population.getCurrentDay() + 1);
         
-//        husband.populateTimeline(true);
-//        wife.populateTimeline(true);
+        husband.populateTimeline(true);
+        wife.populateTimeline(true);
     }
 
     public void endCohabitation(final OrganicPerson husband, final OrganicPerson wife) {
 
 
         turnOff();
-
         husband.populateTimeline(false);
         wife.populateTimeline(false);
     }
