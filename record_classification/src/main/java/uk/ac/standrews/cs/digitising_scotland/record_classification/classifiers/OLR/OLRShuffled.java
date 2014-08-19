@@ -194,7 +194,6 @@ public class OLRShuffled implements Runnable {
      */
     private boolean stopped() {
 
-        System.err.println(stopped);
         return stopped;
     }
 

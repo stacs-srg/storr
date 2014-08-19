@@ -80,7 +80,7 @@ public class OLRPool implements Runnable {
         getConfigOptions();
 
         for (int i = 0; i < poolSize; i++) {
-            OLRShuffled model = new OLRShuffled(properties, copyVectorList(internalTrainingVectorList));
+            OLRShuffled model = new OLRShuffled(properties, new ArrayList((ArrayList<NamedVector>) internalTrainingVectorList.clone()));
             models.add(model);
         }
         modelTrainable = true;
@@ -134,7 +134,6 @@ public class OLRPool implements Runnable {
      */
     public void stop() {
 
-        System.err.println("stop in OLR pool called");
         for (OLRShuffled model : models) {
             model.stop();
         }

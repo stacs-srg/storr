@@ -277,7 +277,6 @@ public class OLR {
     private void nextStep() {
 
         step++;
-        System.out.println("nextStep");
     }
 
     /**

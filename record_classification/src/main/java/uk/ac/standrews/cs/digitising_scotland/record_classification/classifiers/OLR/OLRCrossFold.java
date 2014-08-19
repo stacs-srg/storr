@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 import java.util.Stack;
@@ -139,25 +138,22 @@ public class OLRCrossFold {
         StopListener stopListener = new StopListener();
         ExecutorService stopService = Executors.newFixedThreadPool(1);
         ExecutorService executorService = Executors.newFixedThreadPool(folds);
-        Collection<Future<?>> futures = new LinkedList<Future<?>>();
+        //Collection<Future<?>> futures = new LinkedList<Future<?>>();
         stopService.submit(stopListener);
 
         for (OLRPool model : models) {
-            futures.add(executorService.submit(model));
+            executorService.submit(model);
         }
 
-        runAllFutures(futures);
+        //  runAllFutures(futures);
 
         //        final Long millisToShutDown = (long) (48 * 60 * 60 * 1000);
         //        Thread.sleep(millisToShutDown);
         executorService.shutdown();
         final int timeout = 365;
-        try {
-            executorService.awaitTermination(timeout, TimeUnit.DAYS);
-        }
-        catch (InterruptedException e) {
-            System.err.println(e.toString());
-        }
+
+        executorService.awaitTermination(timeout, TimeUnit.DAYS);
+
         stopListener.terminateProcess();
         stopService.shutdown();
         prepareClassifier();
@@ -393,7 +389,6 @@ public class OLRCrossFold {
          */
         public void terminateProcess() {
 
-            LOGGER.info("terminateProcess called");
             stop();
             processTerminated = true;
         }
