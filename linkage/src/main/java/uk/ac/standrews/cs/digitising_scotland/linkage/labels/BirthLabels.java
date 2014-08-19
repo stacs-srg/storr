@@ -15,6 +15,17 @@ public class BirthLabels extends CommonLabels {
     public static final String BIRTH_MONTH = "birth_month";
     public static final String BIRTH_ADDRESS = "birth_address";
 
+    public static final String FATHERS_FORENAME = "fathers_forename";   // TODO check these - there are too many in here - these are not all common!
+    public static final String FATHERS_SURNAME = "fathers_surname";
+    public static final String FATHERS_OCCUPATION = "fathers_occupation";
+    public static final String MOTHERS_FORENAME = "mothers_forename";
+    public static final String MOTHERS_SURNAME = "mothers_surname";
+
+    public static final String MOTHERS_MAIDEN_SURNAME = "mothers_maiden_surname";
+    public static final String CHANGED_SURNAME = "changed_surname";
+    public static final String CHANGED_FORENAME = "changed_forename";
+    public static final String CHANGED_MOTHERS_MAIDEN_SURNAME = "changed_mothers_maiden_surname";
+
     public static final String PARENTS_DAY_OF_MARRIAGE = "parents_day_of_marriage";
     public static final String PARENTS_MONTH_OF_MARRIAGE = "parents_month_of_marriage";
     public static final String PARENTS_YEAR_OF_MARRIAGE = "parents_year_of_marriage";

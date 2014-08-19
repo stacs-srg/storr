@@ -16,5 +16,5 @@ public interface ILabels {
      */
     List<String> getLabels();
 
-    public Type getType(String label);
+    public Type getFieldType(String label);
 }

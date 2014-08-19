@@ -8,7 +8,7 @@ import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.stream_operat
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.*;
 import uk.ac.standrews.cs.digitising_scotland.linkage.EventImporter;
 import uk.ac.standrews.cs.digitising_scotland.linkage.RecordFormatException;
-import uk.ac.standrews.cs.digitising_scotland.linkage.blocking.FNLFFMFOverBDM;
+import uk.ac.standrews.cs.digitising_scotland.linkage.blocking.FNLFFMFOverBirths;
 import uk.ac.standrews.cs.digitising_scotland.linkage.event_records.DeathRecord;
 import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
 import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
@@ -84,9 +84,8 @@ public class BirthDeathResolver {
         EventImporter importer = new EventImporter();
 
         importer.importBirths(births, births_source_path);
-        importer.importDeaths(deaths, deaths_source_path);
 
-        FNLFFMFOverBDM blocker = new FNLFFMFOverBDM(births, deaths, blocked_repo);
+        FNLFFMFOverBirths blocker = new FNLFFMFOverBirths(births, deaths, blocked_repo);
 
         blocker.apply();
     }

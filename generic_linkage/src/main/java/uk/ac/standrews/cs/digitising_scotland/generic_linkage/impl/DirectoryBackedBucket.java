@@ -6,7 +6,6 @@ import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.*;
 import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
 import uk.ac.standrews.cs.nds.persistence.PersistentObjectException;
 import uk.ac.standrews.cs.nds.rpc.stream.JSONReader;
-import uk.ac.standrews.cs.nds.util.ErrorHandling;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -15,7 +14,6 @@ import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Iterator;
 
 public class DirectoryBackedBucket implements IBucket {
 
@@ -99,16 +97,17 @@ public class DirectoryBackedBucket implements IBucket {
         return BucketKind.DIRECTORYBACKED;
     }
 
-    protected Iterator<File> getFileIterator() {
-        return FileIteratorFactory.createFileIterator(directory, true, false);
-    }
-
     // Stream operations
 
     @Override
     public ILXPInputStream getInputStream() {
 
-        return new BucketBackedInputStream();
+        try {
+            return new BucketBackedInputStream(this,directory);
+        } catch (IOException e) {
+            e.printStackTrace(); // todo decide how to handle
+            return null;
+        }
     }
 
     @Override
@@ -116,41 +115,5 @@ public class DirectoryBackedBucket implements IBucket {
         return new BucketBackedOutputStream(this);
     }
 
-    private class BucketBackedInputStream implements ILXPInputStream {
 
-        private Iterator<File> file_iterator;
-
-        public BucketBackedInputStream() {
-            file_iterator = getFileIterator();
-        }
-
-        public Iterator<ILXP> iterator() {
-            return new ILXPIterator();
-        }
-
-        private class ILXPIterator implements Iterator<ILXP> {
-
-            public boolean hasNext() {
-                return file_iterator.hasNext();
-            }
-
-            @Override
-            public ILXP next() {
-
-                try {
-                    return get(Integer.parseInt(file_iterator.next().getName()));
-
-                } catch (PersistentObjectException | IOException e) {
-                    ErrorHandling.exceptionError(e, "Exception in iterator");
-                    return null;
-                }
-            }
-
-            @Override
-            public void remove() {
-                ErrorHandling.error("remove called on stream - unsupported");
-                throw new UnsupportedOperationException("remove called on stream - unsupported");
-            }
-        }
-    }
 }

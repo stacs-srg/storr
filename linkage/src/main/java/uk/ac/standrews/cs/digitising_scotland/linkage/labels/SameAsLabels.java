@@ -26,7 +26,7 @@ public class SameAsLabels implements ILabels {
     }
 
     @Override
-    public Type getType(String label) {
+    public Type getFieldType(String label) {
         if( label.equals(first)) return Type.REFERENCE;
         if( label.equals(second)) return Type.REFERENCE;
         if( label.equals(resolver)) return Type.STRING;

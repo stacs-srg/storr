@@ -127,7 +127,7 @@ public class EventImporter {
     }
 
     /**
-     * Creates a LXP marriage record from a file of marriage records.
+     * Creates a LXP record from a file of records.
      */
     private ILXP importRecord(final BufferedReader reader, final String record_type, final Iterable<String> field_names) throws IOException, RecordFormatException {
 
