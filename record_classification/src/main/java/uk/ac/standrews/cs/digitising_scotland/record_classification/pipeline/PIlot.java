@@ -79,7 +79,7 @@ public final class PIlot {
 
         TrainingBucketGenerator trainingGenerator = new TrainingBucketGenerator();
         Bucket trainingBucket = trainingGenerator.generate(training);
-        trainingGenerator.generate(training);
+        trainingBucket = trainingGenerator.generate(training);
 
         PredictionBucketGenerator predictionBucketGenerator = new PredictionBucketGenerator();
         Bucket predictionBucket = predictionBucketGenerator.createPredictionBucket(prediction);
