@@ -22,7 +22,6 @@ import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.gen
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.general.NegativeDeviationException;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.general.NegativeWeightException;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.general.UniformIntegerDistribution;
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.old.DeathAgeDistribution;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IDFactory;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.PopulationLogic;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.RandomFactory;

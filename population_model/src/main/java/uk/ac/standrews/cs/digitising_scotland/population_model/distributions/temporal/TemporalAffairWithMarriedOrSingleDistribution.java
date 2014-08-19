@@ -21,24 +21,32 @@ import java.util.Random;
 import uk.ac.standrews.cs.digitising_scotland.population_model.organic.FamilyType;
 import uk.ac.standrews.cs.digitising_scotland.population_model.organic.OrganicPopulation;
 
-public class AffairWithMarriedOrSingleDistribution extends TemporalDistribution<FamilyType> {
+/**
+ * Provides distributions over time representing the occurrence of affairs based on the marital status of the third party.
+ * 
+ * @author Tom Dalton (tsd4@st-andrews.ac.uk)
+ */
+public class TemporalAffairWithMarriedOrSingleDistribution extends TemporalDistribution<FamilyType> {
 
     /**
      * Creates a divorce reason by gender distribution.
-     *
-     * @param random the random number generator to be used
+     * 
+     * @param population The OrganicPopulation instance.
+     * @param distributionKey The key corresponding to the file path in the config file.
+     * @param random The random number generator to be used.
      */
-    public AffairWithMarriedOrSingleDistribution(OrganicPopulation population, String distributionKey, Random random) {
-		super(population, distributionKey, random, false);
+    public TemporalAffairWithMarriedOrSingleDistribution(final OrganicPopulation population, final String distributionKey, final Random random) {
+        super(population, distributionKey, random, false);
     }
 
     /**
      * Returns the reason for divorce.
-     *
+     * 
+     * @param date The year (in days since 1/1/1600) of the distribution which should be sampled.
      * @return Indicates the gender of the instigator or no divorce
      */
     @Override
-    public FamilyType getSample(int date) {
+    public FamilyType getSample(final int date) {
 
         switch (getIntSample(date)) {
             case 0:
@@ -50,13 +58,13 @@ public class AffairWithMarriedOrSingleDistribution extends TemporalDistribution<
         }
     }
 
-	@Override
-	public FamilyType getSample() {
-		return getSample(0);
-	}
+    @Override
+    public FamilyType getSample() {
+        return getSample(0);
+    }
 
     @Override
-    public FamilyType getSample(int date, int earliestValue, int latestValue) {
+    public FamilyType getSample(final int date, final int earliestValue, final int latestValue) {
         return getSample(date);
     }
 }

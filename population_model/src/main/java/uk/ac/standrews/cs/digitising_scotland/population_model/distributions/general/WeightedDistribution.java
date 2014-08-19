@@ -22,6 +22,7 @@ import java.util.Random;
  * A general distribution of numbers between zero and one, the shape of which is controlled by a list of weights.
  * 
  * @author Graham Kirby (graham.kirby@st-andrews.ac.uk)
+ * @author Tom Dalton (tsd4@st-andrews.ac.uk)
  */
 public class WeightedDistribution extends RestrictedDistribution<Double> {
 
@@ -48,13 +49,24 @@ public class WeightedDistribution extends RestrictedDistribution<Double> {
         minimumReturnValue = getMinimumReturnValue();
         maximumReturnValue = getMaximumReturnValue();
     }
-    
-    public WeightedDistribution(final int[] weights, final Random random, boolean handleNoPermissablevalueAsZero) throws NegativeWeightException {
-		this(weights, random);
-		if (handleNoPermissablevalueAsZero) {
-			zeroCount = 0;
-		}
-	}
+
+    /**
+     * This distribution provides samples from the range 0.0-1.0, selected from a number of equally sized buckets with various weightings.
+     * The ranges of the buckets are inferred from the number of weights supplied. When a sample is required, one of the buckets is randomly
+     * selected according to the weights. On each call, the bucket is selected by generating a random number between 0.0 and 1.0, and picking
+     * the first bucket whose cumulative probability exceeds that number.
+     * 
+     * @param weights the weights for the buckets
+     * @param random the random number generator to be used
+     * @param handleNoPermissableValueAsZero If set as true then the distribution will view that when it throws a NoPermissableValueException that it is akin to returning a value of 0 to the balance of the distribution - however a NoPermissableValueException will still be thrown.
+     * @throws NegativeWeightException if any of the weights are negative
+     */
+    public WeightedDistribution(final int[] weights, final Random random, final boolean handleNoPermissableValueAsZero) throws NegativeWeightException {
+        this(weights, random);
+        if (handleNoPermissableValueAsZero) {
+            zeroCount = 0;
+        }
+    }
 
     /*
      The table below shows an example where the weights 1, 4 and 1 are supplied to the constructor. This gives 3 buckets of equal size.
@@ -76,27 +88,27 @@ public class WeightedDistribution extends RestrictedDistribution<Double> {
         final double position_within_selected_bucket = random.nextDouble();
         return (bucket_index + position_within_selected_bucket) * bucket_size;
     }
-    
+
     @Override
-    public Double getSample(double earliestReturnValue, double latestReturnValue) throws NoPermissableValueException {
+    public Double getSample(final double earliestReturnValue, final double latestReturnValue) throws NoPermissableValueException {
         int i;
         if (earliestReturnValue >= maximumReturnValue || latestReturnValue <= minimumReturnValue) {
-        	if (zeroCount != -1) {
-        		if (unusedSampleValues.size() != 0 && (i = unusedSampleValues.indexOf(0)) != -1) {
-        			unusedSampleValues.remove(i);
-        		} else {
-        			zeroCount ++;
-        		}
-        	}
+            if (zeroCount != -1) {
+                if (unusedSampleValues.size() != 0 && (i = unusedSampleValues.indexOf(0)) != -1) {
+                    unusedSampleValues.remove(i);
+                } else {
+                    zeroCount++;
+                }
+            }
             throw new NoPermissableValueException();
         } else {
             if (unusedSampleValues.size() != 0) {
                 int j = 0;
                 for (double d : unusedSampleValues) {
-                	if (zeroCount > 0 && d == 0) {
-                		unusedSampleValues.remove(j);
-                		zeroCount--;
-                	}
+                    if (zeroCount > 0 && d == 0) {
+                        unusedSampleValues.remove(j);
+                        zeroCount--;
+                    }
                     if (inRange(d, earliestReturnValue, latestReturnValue)) {
                         unusedSampleValues.remove(j);
                         return d;
@@ -107,23 +119,23 @@ public class WeightedDistribution extends RestrictedDistribution<Double> {
         }
         double v = getSample();
         if (zeroCount > 0 && v == 0) {
-    		zeroCount--;
-    		v = getSample();
-    	}
+            zeroCount--;
+            v = getSample();
+        }
         while (!inRange(v, earliestReturnValue, latestReturnValue)) {
-        	if (zeroCount > 0 && v == 0) {
-        		zeroCount--;
-        		v = getSample();
-        	} else {
-        		unusedSampleValues.add(v);
-        	}
+            if (zeroCount > 0 && v == 0) {
+                zeroCount--;
+                v = getSample();
+            } else {
+                unusedSampleValues.add(v);
+            }
             v = getSample();
         }
         return v;
     }
 
     // -------------------------------------------------------------------------------------------------------
-    
+
     private double getMinimumReturnValue() {
         int count = 0;
         for (double d : cumulative_probabilities) {
@@ -135,14 +147,14 @@ public class WeightedDistribution extends RestrictedDistribution<Double> {
         }
         return count * bucket_size;
     }
-    
+
     private double getMaximumReturnValue() {
         int count = 0;
         for (int i = cumulative_probabilities.length - 1; i >= 0; i--) {
             if (cumulative_probabilities[i] == 1) {
                 count++;
             } else {
-            	break;
+                break;
             }
         }
         return 1 - count * bucket_size;
@@ -157,7 +169,9 @@ public class WeightedDistribution extends RestrictedDistribution<Double> {
         final double[] cumulative_probabilities = new double[weights.length];
         for (int i = 0; i < cumulative_probabilities.length; i++) {
             final int weight = weights[i];
-            if (weight < 0) { throw new NegativeWeightException("negative weight: " + weight); }
+            if (weight < 0) {
+                throw new NegativeWeightException("negative weight: " + weight);
+            }
             cumulative_weight += weights[i];
             cumulative_probabilities[i] = cumulative_weight * inverse_total_weight;
         }
@@ -168,7 +182,9 @@ public class WeightedDistribution extends RestrictedDistribution<Double> {
     private int firstBucketExceeding(final double bucket_selector) {
 
         for (int i = 0; i < cumulative_probabilities.length; i++) {
-            if (cumulative_probabilities[i] > bucket_selector) { return i; }
+            if (cumulative_probabilities[i] > bucket_selector) {
+                return i;
+            }
         }
         return cumulative_probabilities.length - 1;
     }

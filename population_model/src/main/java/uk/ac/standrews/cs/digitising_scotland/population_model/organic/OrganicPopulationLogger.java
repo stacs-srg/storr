@@ -17,7 +17,6 @@
 package uk.ac.standrews.cs.digitising_scotland.population_model.organic;
 
 
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.old.NumberOfChildrenDistribuition;
 
 /**
  * @author Victor Andrei (va9@st-andrews.ac.uk)
@@ -335,7 +334,7 @@ public class OrganicPopulationLogger {
         for (int i = 0; i < temp.length; i++) {
             temp[i] = OrganicPartnership.getAdjustedNumberOfChildren()[i].size();
         }
-        printGraph(temp, "0", Integer.toString(NumberOfChildrenDistribuition.MAXIMUM_NUMBER_OF_CHILDREN + 1), false, 10);
+        printGraph(temp, "0", Integer.toString(OrganicPopulation.getMaximumNumberOfChildrenInFamily() + 1), false, 10);
     }
 
     private static int getNumberOfLeftOverChildren() {

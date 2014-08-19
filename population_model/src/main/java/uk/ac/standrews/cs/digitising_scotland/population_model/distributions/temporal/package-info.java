@@ -16,7 +16,9 @@
  */
 
 /**
- * Config classes.
+ * Temporal distributions classes.
+ * 
+ * @author Tom Dalton (tsd4@st-andrews.ac.uk)
  */
-package uk.ac.standrews.cs.digitising_scotland.population_model.config;
+package uk.ac.standrews.cs.digitising_scotland.population_model.distributions.temporal;
 

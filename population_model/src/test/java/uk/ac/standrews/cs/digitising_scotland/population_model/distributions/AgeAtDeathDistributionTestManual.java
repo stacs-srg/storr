@@ -17,7 +17,6 @@
 package uk.ac.standrews.cs.digitising_scotland.population_model.distributions;
 
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.general.NegativeWeightException;
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.old.DeathAgeDistribution;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.PopulationLogic;
 
 import java.util.Random;

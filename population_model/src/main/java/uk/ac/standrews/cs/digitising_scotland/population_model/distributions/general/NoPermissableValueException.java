@@ -16,6 +16,11 @@
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.distributions.general;
 
+/**
+ * Thrown by a restricted distribution when no possible return value lies between the specified maximum and minimum values.
+ * 
+ * @author Tom Dalton (tsd4@st-andrews.ac.uk)
+ */
 public class NoPermissableValueException extends Exception {
 
 }
