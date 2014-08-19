@@ -78,8 +78,7 @@ public final class PIlot {
         parseInput(args);
 
         TrainingBucketGenerator trainingGenerator = new TrainingBucketGenerator();
-        Bucket trainingBucket = trainingGenerator.generate(training); //FIXME not a redundant initialisation due to desirable side effects! FIX!
-        trainingBucket = trainingGenerator.generate(training);
+        Bucket trainingBucket = trainingGenerator.generate(training);
 
         PredictionBucketGenerator predictionBucketGenerator = new PredictionBucketGenerator();
         Bucket predictionBucket = predictionBucketGenerator.createPredictionBucket(prediction);

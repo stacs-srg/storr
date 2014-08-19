@@ -20,11 +20,11 @@ public class TrainingBucketGenerator {
 
         LOGGER.info("********** Generating Training Bucket **********");
 
-        Bucket trainingBucket = createBucketOfRecords(trainingFile);
+        Bucket tempBucketForCodeMapCreation = createBucketOfRecords(trainingFile);
 
-        PipelineUtils.generateActualCodeMappings(trainingBucket);
+        PipelineUtils.generateActualCodeMappings(tempBucketForCodeMapCreation);
 
-        return trainingBucket;
+        return createBucketOfRecords(trainingFile);
 
     }
 
