@@ -12,8 +12,9 @@ import org.slf4j.LoggerFactory;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.AbstractClassifier;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.OLR.OLRClassifier;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.lookup.ExactMatchClassifier;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datareaders.FormatConverter;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.PilotDataFormatConverter;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datareaders.AbstractFormatConverter;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datareaders.LongFormatConverter;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datareaders.PilotDataFormatConverter;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.BucketFilter;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.BucketUtils;
@@ -67,6 +68,9 @@ public final class TrainAndMultiplyClassify {
 
     private static VectorFactory vectorFactory;
     private static String experimentalFolderName;
+
+    private static AbstractFormatConverter longFormatConverter = new LongFormatConverter();
+    private static AbstractFormatConverter pilotDataFormatConverter = new PilotDataFormatConverter();
 
     private TrainAndMultiplyClassify() {
 
@@ -193,12 +197,11 @@ public final class TrainAndMultiplyClassify {
         comparisonWriter.close();
     }
 
-    //    Commented out while testing - FIXME
     private static Bucket createPredictionBucket(final File prediction) {
 
         Bucket toClassify = null;
         try {
-            toClassify = new Bucket(PilotDataFormatConverter.convert(prediction));
+            toClassify = new Bucket(pilotDataFormatConverter.convert(prediction));
         }
         catch (IOException e) {
             e.printStackTrace();
@@ -226,7 +229,7 @@ public final class TrainAndMultiplyClassify {
         boolean longFormat = checkFileType(training);
 
         if (longFormat) {
-            records = FormatConverter.convert(training);
+            records = longFormatConverter.convert(training);
         }
         else {
             records = RecordFactory.makeCodedRecordsFromFile(training);

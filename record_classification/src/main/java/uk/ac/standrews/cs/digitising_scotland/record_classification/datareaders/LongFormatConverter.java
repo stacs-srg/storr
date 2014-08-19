@@ -26,9 +26,9 @@ import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
  * to a list of Record objects.
  * @author jkc25
  */
-public final class FormatConverter {
+public final class LongFormatConverter extends AbstractFormatConverter {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(FormatConverter.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(LongFormatConverter.class);
 
     private static final String CHARSET_NAME = "UTF8";
 
@@ -61,7 +61,7 @@ public final class FormatConverter {
      * @throws IOException Signals that an I/O exception has occurred.
      * @throws InputFormatException the input format exception
      */
-    public static List<Record> convert(final File inputFile) throws IOException, InputFormatException {
+    public List<Record> convert(final File inputFile) throws IOException, InputFormatException {
 
         BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(inputFile), CHARSET_NAME));
 

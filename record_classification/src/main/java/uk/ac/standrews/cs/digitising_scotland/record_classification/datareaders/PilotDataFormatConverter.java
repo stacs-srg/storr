@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures;
+package uk.ac.standrews.cs.digitising_scotland.record_classification.datareaders;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.CODOrignalData;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeTriple;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.exceptions.InputFormatException;
@@ -18,7 +19,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.exceptions.I
  * to a list of Record objects.
  * @author jkc25
  */
-public final class PilotDataFormatConverter {
+public final class PilotDataFormatConverter extends AbstractFormatConverter {
 
     private static final String CHARSET_NAME = "UTF8";
 
@@ -53,7 +54,7 @@ public final class PilotDataFormatConverter {
      * @throws IOException Signals that an I/O exception has occurred.
      * @throws InputFormatException the input format exception
      */
-    public static List<Record> convert(final File inputFile) throws IOException, InputFormatException {
+    public List<Record> convert(final File inputFile) throws IOException, InputFormatException {
 
         BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(inputFile), CHARSET_NAME));
 
