@@ -34,7 +34,11 @@ public class OrganicPopulationLogger {
     }
 
     public static void addPopulationForYear(int year, int population) {
-        populationAtYearEnds[year - startYear] = population;
+    	try {
+    		populationAtYearEnds[year - startYear] = population;
+    	} catch (ArrayIndexOutOfBoundsException e) {
+    		
+    	}
     }
 
     public static void printPopulationGraph() {
@@ -230,7 +234,7 @@ public class OrganicPopulationLogger {
     }
 
     public static void printGraph(int[] values, String xStartValue, String xEndValue, boolean line, int lineDepth) {
-        int sum = 0;
+    	int sum = 0;
         int max = 0;
         for (int i = 0; i < values.length; i++) {
             sum += values[i];

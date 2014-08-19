@@ -34,7 +34,7 @@ public class TemporalDivorceInstigatedByGenderDistribution extends TemporalDistr
 	 * @param random the random number generator to be used
 	 */
 	public TemporalDivorceInstigatedByGenderDistribution(OrganicPopulation population, String distributionKey, final Random random) {
-		super(population, distributionKey, random);
+		super(population, distributionKey, random, false);
 	}
 
 	@Override

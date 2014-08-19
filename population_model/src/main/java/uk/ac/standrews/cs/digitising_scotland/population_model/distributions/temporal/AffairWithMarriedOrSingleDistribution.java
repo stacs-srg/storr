@@ -29,7 +29,7 @@ public class AffairWithMarriedOrSingleDistribution extends TemporalDistribution<
      * @param random the random number generator to be used
      */
     public AffairWithMarriedOrSingleDistribution(OrganicPopulation population, String distributionKey, Random random) {
-		super(population, distributionKey, random);
+		super(population, distributionKey, random, false);
     }
 
     /**

@@ -44,6 +44,13 @@ public class WeightedIntegerDistribution extends RestrictedDistribution<Integer>
         range = maximum - minimum + 1;
         weighted_distribution = new WeightedDistribution(weights, random);
     }
+    
+    public WeightedIntegerDistribution(final int minimum, final int maximum, final int[] weights, final Random random, boolean handleNoPermissableValueAsZero) throws NegativeWeightException {
+
+        this.minimum = minimum;
+        range = maximum - minimum + 1;
+        weighted_distribution = new WeightedDistribution(weights, random, handleNoPermissableValueAsZero);
+    }
 
     @Override
     public Integer getSample() {
@@ -53,6 +60,6 @@ public class WeightedIntegerDistribution extends RestrictedDistribution<Integer>
 
     @Override
     public Integer getSample(double earliestValue, double latestValue) throws NoPermissableValueException {
-        return minimum + (int) (range * weighted_distribution.getSample(earliestValue, latestValue));
+        return minimum + (int) (range * weighted_distribution.getSample((earliestValue - minimum) / range, (latestValue - minimum) / range));
     }
 }

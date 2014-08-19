@@ -33,7 +33,7 @@ public class TemporalDivorceRemarriageBooleanDistribution extends TemporalDistri
      * @param random Takes in random for use in creation of distribution.
      */
     public TemporalDivorceRemarriageBooleanDistribution(OrganicPopulation population, String distributionKey, final Random random) {
-    	super(population, distributionKey, random);
+    	super(population, distributionKey, random, false);
     }
 
     @Override

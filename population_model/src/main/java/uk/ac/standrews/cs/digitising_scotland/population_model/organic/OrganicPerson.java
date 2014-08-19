@@ -23,6 +23,8 @@ import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.Occ
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.SurnameDistribution;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.UniformSexDistribution;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.general.InconsistentWeightException;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.general.NoPermissableValueException;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.general.NotSetUpAtClassInitilisationException;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.temporal.TemporalDivorceRemarriageBooleanDistribution;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.temporal.TemporalIntegerDistribution;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.temporal.TemporalPartnershipCharacteristicDistribution;
@@ -92,53 +94,22 @@ public class OrganicPerson implements IPerson {
      */
     public static void initializeDistributions(OrganicPopulation population) {
         try {
-            maleFirstNamesDistribution = new FirstNameForMalesDistribution(
-                    random);
-            femaleFirstNamesDistribution = new FirstNameForFemalesDistribution(
-                    random);
+            maleFirstNamesDistribution = new FirstNameForMalesDistribution(random);
+            femaleFirstNamesDistribution = new FirstNameForFemalesDistribution(random);
             surnamesDistribution = new SurnameDistribution(random);
             occupationDistribution = new OccupationDistribution(random);
             deathCauseOfDistribution = new CauseOfDeathDistribution(random);
-            temporalDivorceRemarriageBooleanDeistribution = new TemporalDivorceRemarriageBooleanDistribution(
-                    population,
-                    "divorce_remarriage_boolean_distributions_data_filename",
-                    random);
-            seedAgeForMalesDistribution = new TemporalIntegerDistribution(
-                    population,
-                    "seed_age_for_males_distribution_data_filename", random);
-            seedAgeForFemalesDistribution = new TemporalIntegerDistribution(
-                    population,
-                    "seed_age_for_females_distribution_data_filename", random);
-            deathAgeAtDistribution = new TemporalIntegerDistribution(
-                    population, "death_age_at_distributions_data_filename",
-                    random);
-            temporalMarriageAgeForMalesDistribution = new TemporalIntegerDistribution(
-                    population,
-                    "marriage_age_for_males_distributions_data_filename",
-                    random);
-            temporalMarriageAgeForFemalesDistribution = new TemporalIntegerDistribution(
-                    population,
-                    "marriage_age_for_females_distributions_data_filename",
-                    random);
-            temporalPartnershipCharacteristicDistribution = new TemporalPartnershipCharacteristicDistribution(
-                    population,
-                    "partnership_characteristic_distributions_data_filename",
-                    random);
-            temporalRemarriagePartnershipCharacteristicDistribution = new TemporalPartnershipCharacteristicDistribution(
-                    population,
-                    "partnership_remarriage_characteristic_distributions_data_filename",
-                    random);
-            temporalCohabitationAgeForMalesDistribution = new TemporalIntegerDistribution(
-                    population,
-                    "cohabitation_age_for_males_distributions_data_filename",
-                    random);
-            temporalCohabitationAgeForFemalesDistribution = new TemporalIntegerDistribution(
-                    population,
-                    "cohabitation_age_for_females_distributions_data_filename",
-                    random);
-            temporalRemarriageTimeToDistribution = new TemporalIntegerDistribution(
-                    population,
-                    "remarraige_time_to_distributions_data_filename", random);
+            temporalDivorceRemarriageBooleanDeistribution = new TemporalDivorceRemarriageBooleanDistribution(population, "divorce_remarriage_boolean_distributions_data_filename", random);
+            seedAgeForMalesDistribution = new TemporalIntegerDistribution(population, "seed_age_for_males_distribution_data_filename", random, false);
+            seedAgeForFemalesDistribution = new TemporalIntegerDistribution(population, "seed_age_for_females_distribution_data_filename", random, false);
+            deathAgeAtDistribution = new TemporalIntegerDistribution(population, "death_age_at_distributions_data_filename", random, false);
+            temporalMarriageAgeForMalesDistribution = new TemporalIntegerDistribution(population, "marriage_age_for_males_distributions_data_filename", random, false);
+            temporalMarriageAgeForFemalesDistribution = new TemporalIntegerDistribution(population, "marriage_age_for_females_distributions_data_filename", random, false);
+            temporalPartnershipCharacteristicDistribution = new TemporalPartnershipCharacteristicDistribution(population, "partnership_characteristic_distributions_data_filename", random);
+            temporalRemarriagePartnershipCharacteristicDistribution = new TemporalPartnershipCharacteristicDistribution(population, "partnership_remarriage_characteristic_distributions_data_filename", random);
+            temporalCohabitationAgeForMalesDistribution = new TemporalIntegerDistribution(population, "cohabitation_age_for_males_distributions_data_filename", random, false);
+            temporalCohabitationAgeForFemalesDistribution = new TemporalIntegerDistribution(population, "cohabitation_age_for_females_distributions_data_filename", random, false);
+            temporalRemarriageTimeToDistribution = new TemporalIntegerDistribution(population, "remarraige_time_to_distributions_data_filename", random, false);
         } catch (InconsistentWeightException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -210,21 +181,14 @@ public class OrganicPerson implements IPerson {
     private void setPersonsBirthAndDeathDates(final int birthDay,
             final boolean seedGeneration, final OrganicPopulation population) {
         // Find an age for person
-        int ageOfDeathInDays = deathAgeAtDistribution.getSample(population
-                .getCurrentDay());
+        int ageOfDeathInDays = deathAgeAtDistribution.getSample(population.getCurrentDay());
         int dayOfBirth = birthDay;
 
         if (seedGeneration) {
             if (sex == 'M') {
-                dayOfBirth = DateManipulation.dateToDays(
-                        OrganicPopulation.getStartYear(), 0, 0)
-                        + seedAgeForMalesDistribution.getSample(population
-                                .getCurrentDay()) - ageOfDeathInDays;
+                dayOfBirth = DateManipulation.dateToDays(OrganicPopulation.getStartYear(), 0, 0) + seedAgeForMalesDistribution.getSample(population.getCurrentDay()) - ageOfDeathInDays;
             } else {
-                dayOfBirth = DateManipulation.dateToDays(
-                        OrganicPopulation.getStartYear(), 0, 0)
-                        + seedAgeForFemalesDistribution.getSample(population
-                                .getCurrentDay()) - ageOfDeathInDays;
+                dayOfBirth = DateManipulation.dateToDays(OrganicPopulation.getStartYear(), 0, 0) + seedAgeForFemalesDistribution.getSample(population.getCurrentDay()) - ageOfDeathInDays;
             }
 
             if (dayOfBirth < population.getEarliestDate()) {
@@ -237,10 +201,8 @@ public class OrganicPerson implements IPerson {
 
         // Create timeline
         timeline = new OrganicTimeline(dayOfBirth, dayOfDeath);
-        timeline.addEvent(dayOfBirth, new OrganicEvent(EventType.BORN, this,
-                dayOfBirth));
-        timeline.addEvent(dayOfDeath, new OrganicEvent(EventType.DEATH, this,
-                dayOfDeath));
+        timeline.addEvent(dayOfBirth, new OrganicEvent(EventType.BORN, this, dayOfBirth));
+        timeline.addEvent(dayOfDeath, new OrganicEvent(EventType.DEATH, this, dayOfDeath));
     }
 
     /**
@@ -307,10 +269,6 @@ public class OrganicPerson implements IPerson {
         if (!previousMarriage) {
             return true;
         } else {
-            if (OrganicPopulation.DEBUG) {
-                System.out.println(day);
-                System.out.println(population.getCurrentDay());
-            }
             if (day <= population.getCurrentDay()) {
                 return false;
             } else {
@@ -328,81 +286,54 @@ public class OrganicPerson implements IPerson {
     }
 
     private void addEligibleToCohabitEvent(boolean previousMarriage) {
-        // Add ELIGIBLE_TO_COHABIT event
-        int date;
-        if (sex == 'M') {
-            // time in days to birth from 1/1/1600 + marriage age in days
-            do {
-                date = getBirthDay() + temporalCohabitationAgeForMalesDistribution.getSample(population.getCurrentDay());
-            } while ((date >= getDeathDay() && getDeathAgeInDays() > MIN_DEATH_AGE_FOR_NO_PARTNERSHIP_EVENT * OrganicPopulation.getDaysPerYear()) || !checkDayNotInPastForPreviousMarriagePersons(previousMarriage, date));
-
-            timeline.addEvent(date, new OrganicEvent(EventType.ELIGIBLE_TO_COHABIT, this, date));
-
-        } else {
-            // time in days to birth from 1/1/1600 + marriage age in days
-            do {
-                date = getBirthDay() + temporalCohabitationAgeForFemalesDistribution.getSample(population.getCurrentDay());
-            } while ((date >= getDeathDay() && getDeathAgeInDays() > MIN_DEATH_AGE_FOR_NO_PARTNERSHIP_EVENT * OrganicPopulation.getDaysPerYear()) || !checkDayNotInPastForPreviousMarriagePersons(previousMarriage, date));
-
-            timeline.addEvent(date, new OrganicEvent(EventType.ELIGIBLE_TO_COHABIT, this, date));
-
-        }
+        // Add ELIGIBLE_TO_COHABIT event 
+        try {
+        	int date;
+        	if (sex == 'M') {
+        		date = temporalCohabitationAgeForMalesDistribution.getSample(population.getCurrentDay(), population.getCurrentDay() - getBirthDay(), getDeathDay() - getBirthDay()) + getBirthDay();
+        	} else {
+        		date = temporalCohabitationAgeForFemalesDistribution.getSample(population.getCurrentDay(), population.getCurrentDay() - getBirthDay(), getDeathDay() - getBirthDay()) + getBirthDay();
+        	}
+			timeline.addEvent(date, new OrganicEvent(EventType.ELIGIBLE_TO_COHABIT, this, date));
+		} catch (NoPermissableValueException e) {
+			addSingleComingOfAgeEvent(previousMarriage);
+		} catch (NotSetUpAtClassInitilisationException e) {
+			System.err.println("Non restrited distribution called with restricted values");
+		}
     }
 
     private void addEligableToCohabitThenMarryEvent(boolean previousMarriage) {
         // Add ELIGIBLE_TO_COHABIT_THEN_MARRY event
-        int date;
-        if (sex == 'M') {
-            // time in days to birth from 1/1/1600 + marriage age in days
-            do {
-                date = getBirthDay()
-                        + temporalCohabitationAgeForMalesDistribution
-                                .getSample(population.getCurrentDay());
-            } while ((date >= getDeathDay() && getDeathAgeInDays() > MIN_DEATH_AGE_FOR_NO_PARTNERSHIP_EVENT * OrganicPopulation.getDaysPerYear()) || !checkDayNotInPastForPreviousMarriagePersons(previousMarriage, date));
-
-            timeline.addEvent(date, new OrganicEvent(
-                    EventType.ELIGIBLE_TO_COHABIT_THEN_MARRY, this, date));
-
-        } else {
-            // time in days to birth from 1/1/1600 + marriage age in days
-            do {
-                date = getBirthDay()
-                        + temporalCohabitationAgeForFemalesDistribution
-                                .getSample(population.getCurrentDay());
-            } while ((date >= getDeathDay() && getDeathAgeInDays() > MIN_DEATH_AGE_FOR_NO_PARTNERSHIP_EVENT * OrganicPopulation.getDaysPerYear()) || !checkDayNotInPastForPreviousMarriagePersons(previousMarriage, date));
-
-            timeline.addEvent(date, new OrganicEvent(
-                    EventType.ELIGIBLE_TO_COHABIT_THEN_MARRY, this, date));
-
-        }
+    	try {
+    		int date;
+    		if (sex == 'M') {
+    			date = temporalCohabitationAgeForMalesDistribution.getSample(population.getCurrentDay(), population.getCurrentDay() - getBirthDay(), getDeathDay() - getBirthDay()) + getBirthDay();
+    		} else {
+    			date = temporalCohabitationAgeForFemalesDistribution.getSample(population.getCurrentDay(), population.getCurrentDay() - getBirthDay(), getDeathDay() - getBirthDay()) + getBirthDay();
+    		}
+    		timeline.addEvent(date, new OrganicEvent(EventType.ELIGIBLE_TO_COHABIT_THEN_MARRY, this, date));
+    	} catch (NoPermissableValueException e) {
+			addSingleComingOfAgeEvent(previousMarriage);
+		} catch (NotSetUpAtClassInitilisationException e) {
+			System.err.println("Non restrited distribution called with restricted values");
+		}    	
     }
 
     private void addEligibleToMarryEvent(boolean previousMarriage) {
         // Add ELIGIBLE_TO_MARRY event
-        int date;
-        if (sex == 'M') {
-            // time in days to birth from 1/1/1600 + marriage age in days
-            do {
-                date = getBirthDay()
-                        + temporalMarriageAgeForMalesDistribution
-                                .getSample(population.getCurrentDay());
-            } while ((date >= getDeathDay() && getDeathAgeInDays() > MIN_DEATH_AGE_FOR_NO_PARTNERSHIP_EVENT * OrganicPopulation.getDaysPerYear()) || !checkDayNotInPastForPreviousMarriagePersons(previousMarriage, date));
-
-            timeline.addEvent(date, new OrganicEvent(
-                    EventType.ELIGIBLE_TO_MARRY, this, date));
-
-        } else {
-            // time in days to birth from 1/1/1600 + marriage age in days
-            do {
-                date = getBirthDay()
-                        + temporalMarriageAgeForFemalesDistribution
-                                .getSample(population.getCurrentDay());
-            } while ((date >= getDeathDay() && getDeathAgeInDays() > MIN_DEATH_AGE_FOR_NO_PARTNERSHIP_EVENT * OrganicPopulation.getDaysPerYear()) || !checkDayNotInPastForPreviousMarriagePersons(previousMarriage, date));
-
-            timeline.addEvent(date, new OrganicEvent(
-                    EventType.ELIGIBLE_TO_MARRY, this, date));
-
-        }
+    	try {
+    		int date;
+    		if (sex == 'M') {
+    			date = temporalMarriageAgeForMalesDistribution.getSample(population.getCurrentDay(), population.getCurrentDay() - getBirthDay(), getDeathDay() - getBirthDay()) + getBirthDay();
+    		} else {
+    			date = temporalMarriageAgeForFemalesDistribution.getSample(population.getCurrentDay(), population.getCurrentDay() - getBirthDay(), getDeathDay() - getBirthDay()) + getBirthDay();
+    		}
+    		timeline.addEvent(date, new OrganicEvent(EventType.ELIGIBLE_TO_MARRY, this, date));
+    	} catch (NoPermissableValueException e) {
+			addSingleComingOfAgeEvent(previousMarriage);
+		} catch (NotSetUpAtClassInitilisationException e) {
+			System.err.println("Non restrited distribution called with restricted values");
+		}
     }
 
     /**
@@ -413,14 +344,14 @@ public class OrganicPerson implements IPerson {
      */
     private void addEligibleToReMarryEvent(final int minimumDate) {
         // Add ELIGIBLE_TO_MARRY event
-        int date;
-        do {
-            date = temporalRemarriageTimeToDistribution.getSample(population
-                    .getCurrentDay()) + minimumDate;
-        } while (!PopulationLogic.dateBeforeDeath(date, getDeathDay()));
-
-        timeline.addEvent(date, new OrganicEvent(EventType.ELIGIBLE_TO_MARRY,
-                this, date));
+    	try {
+    		int date = temporalRemarriageTimeToDistribution.getSample(population.getCurrentDay(), 0, getDeathDay() - getBirthDay()) + minimumDate;
+    		timeline.addEvent(date, new OrganicEvent(EventType.ELIGIBLE_TO_MARRY, this, date));
+    	} catch (NoPermissableValueException e) {
+			addSingleComingOfAgeEvent(true);
+		} catch (NotSetUpAtClassInitilisationException e) {
+			System.err.println("Non restrited distribution called with restricted values");
+		}
         OrganicPopulationLogger.incRemarriages();
     }
 

@@ -24,8 +24,8 @@ import uk.ac.standrews.cs.digitising_scotland.population_model.organic.OrganicPo
 
 public class TemporalIntegerDistribution extends TemporalDistribution<Integer> {
 
-	public TemporalIntegerDistribution(OrganicPopulation population, String distributionKey, Random random) {
-		super(population, distributionKey, random);
+	public TemporalIntegerDistribution(OrganicPopulation population, String distributionKey, Random random, boolean handleNoPermissableValueAsZero) {
+		super(population, distributionKey, random, handleNoPermissableValueAsZero);
 	}
 
 	@Override

@@ -26,15 +26,23 @@ public abstract class RestrictedDistribution<Value> implements Distribution<Valu
     protected Double maximumReturnValue = (Double) null;
     
     protected ArrayList<Double> unusedSampleValues = new ArrayList<Double>();
+    protected int zeroCount = -1;
     
     public abstract Value getSample(double earliestReturnValue, double latestReturnValue) throws NoPermissableValueException, NotSetUpAtClassInitilisationException;
     
-    protected boolean inRange(final double d, final double earliestReturnValue, final double latestReturnValue) {
-        if (earliestReturnValue < d && d < latestReturnValue) {
+    protected static boolean inRange(final double d, final double earliestReturnValue, final double latestReturnValue) {
+        if (earliestReturnValue <= d && d <= latestReturnValue) {
             return true;
         } else {
             return false;
         }
     }
-    
+ 
+    public static void main(String[] args) {
+    	System.out.println(inRange(1,2,4)); // False
+    	System.out.println(inRange(2,2,4)); // True
+    	System.out.println(inRange(3,2,4)); // True
+    	System.out.println(inRange(4,2,4)); // True
+    	System.out.println(inRange(5,2,4)); // False
+    }
 }

@@ -48,6 +48,13 @@ public class WeightedDistribution extends RestrictedDistribution<Double> {
         minimumReturnValue = getMinimumReturnValue();
         maximumReturnValue = getMaximumReturnValue();
     }
+    
+    public WeightedDistribution(final int[] weights, final Random random, boolean handleNoPermissablevalueAsZero) throws NegativeWeightException {
+		this(weights, random);
+		if (handleNoPermissablevalueAsZero) {
+			zeroCount = 0;
+		}
+	}
 
     /*
      The table below shows an example where the weights 1, 4 and 1 are supplied to the constructor. This gives 3 buckets of equal size.
@@ -72,13 +79,25 @@ public class WeightedDistribution extends RestrictedDistribution<Double> {
     
     @Override
     public Double getSample(double earliestReturnValue, double latestReturnValue) throws NoPermissableValueException {
-        
+        int i;
         if (earliestReturnValue >= maximumReturnValue || latestReturnValue <= minimumReturnValue) {
+        	if (zeroCount != -1) {
+        		if (unusedSampleValues.size() != 0 && (i = unusedSampleValues.indexOf(0)) != -1) {
+        			unusedSampleValues.remove(i);
+        		} else {
+        			System.out.println("Ya called?");
+        			zeroCount ++;
+        		}
+        	}
             throw new NoPermissableValueException();
         } else {
             if (unusedSampleValues.size() != 0) {
                 int j = 0;
                 for (double d : unusedSampleValues) {
+                	if (zeroCount > 0 && d == 0) {
+                		unusedSampleValues.remove(j);
+                		zeroCount--;
+                	}
                     if (inRange(d, earliestReturnValue, latestReturnValue)) {
                         unusedSampleValues.remove(j);
                         return d;
@@ -88,8 +107,17 @@ public class WeightedDistribution extends RestrictedDistribution<Double> {
             }
         }
         double v = getSample();
+        if (zeroCount > 0 && v == 0) {
+    		zeroCount--;
+    		v = getSample();
+    	}
         while (!inRange(v, earliestReturnValue, latestReturnValue)) {
-            unusedSampleValues.add(v);
+        	if (zeroCount > 0 && v == 0) {
+        		zeroCount--;
+        		v = getSample();
+        	} else {
+        		unusedSampleValues.add(v);
+        	}
             v = getSample();
         }
         return v;
