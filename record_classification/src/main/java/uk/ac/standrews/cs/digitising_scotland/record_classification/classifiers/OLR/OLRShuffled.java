@@ -109,11 +109,12 @@ public class OLRShuffled implements Runnable {
 
         for (int rep = 0; rep < reps; rep++) {
             if (stopped()) {
+                System.err.println("stop called in olr shuffled train()");
                 break;
             }
-            //  logger.info("Performing rep " + rep);
             shuffleAndTrainOnAllVectors();
         }
+        System.err.println("olr shuffled finished training I think");
     }
 
     /**
@@ -157,6 +158,7 @@ public class OLRShuffled implements Runnable {
 
         checkTrainable();
         this.train();
+        System.err.println("olr shuffled finished training");
     }
 
     /**
@@ -172,12 +174,33 @@ public class OLRShuffled implements Runnable {
      */
     private void shuffleAndTrainOnAllVectors() {
 
-        Collections.shuffle(trainingVectorList);
-        for (NamedVector vector : trainingVectorList) {
-            if (stopped()) {
-                break;
+        try {
+            Collections.shuffle(trainingVectorList);
+            System.out.println("size of training vector list: " + trainingVectorList.size());
+            NamedVector[] array = trainingVectorList.toArray(new NamedVector[trainingVectorList.size()]);
+
+            for (int i = 0; i < array.length; i++) {
+                System.out.println("size of training vector list: " + trainingVectorList.size());
+                NamedVector vector = array[i];
+                if (stopped()) {
+                    System.out.println("olr shuffled train method - stop called");
+                    break;
+                }
+                System.out.println("count " + i);
+                model.train(vector);
             }
-            this.model.train(vector);
+        }
+        finally {
+            //        for (NamedVector vector : trainingVectorList) {
+            //            if (stopped()) {
+            //                System.out.println("olr shuffled train method - stop called");
+            //                break;
+            //            }
+            //            count++;
+            //            this.model.train(vector);
+            //            System.out.println("count " + count);
+            //        }
+            System.out.println("finished training on all vectors");
         }
     }
 
@@ -186,6 +209,7 @@ public class OLRShuffled implements Runnable {
      */
     public void stop() {
 
+        System.err.println("stopped flag in olr shuffled set to true");
         stopped = true;
     }
 
@@ -195,6 +219,8 @@ public class OLRShuffled implements Runnable {
      * @return true, if stopped
      */
     private boolean stopped() {
+
+        System.err.println(stopped);
 
         return stopped;
     }
