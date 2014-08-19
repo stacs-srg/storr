@@ -6,11 +6,16 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 import java.util.Stack;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.mahout.math.Matrix;
@@ -108,6 +113,7 @@ public class OLRCrossFold {
      */
     public void stop() {
 
+        LOGGER.info("STOP HAS BEEN CALLED");
         for (OLRPool model : models) {
             model.stop();
         }
@@ -126,21 +132,50 @@ public class OLRCrossFold {
      * Train all models.
      *
      * @throws InterruptedException the interrupted exception
+     * @throws ExecutionException 
      */
-    private void trainAllModels() throws InterruptedException {
+    private void trainAllModels() throws InterruptedException, ExecutionException {
 
         StopListener stopListener = new StopListener();
         ExecutorService stopService = Executors.newFixedThreadPool(1);
         ExecutorService executorService = Executors.newFixedThreadPool(folds);
+        Collection<Future<?>> futures = new LinkedList<Future<?>>();
+
         stopService.submit(stopListener);
         for (OLRPool model : models) {
-            executorService.submit(model);
+            futures.add(executorService.submit(model));
         }
+        for (Future<?> future : futures) {
+            Throwable t = null;
+            try {
+                future.get();
+            }
+            catch (CancellationException ce) {
+                t = ce;
+            }
+            catch (ExecutionException ee) {
+                t = ee.getCause();
+            }
+            catch (InterruptedException ie) {
+                Thread.currentThread().interrupt(); // ignore/reset
+            }
+            if (t != null) {
+                System.err.println(t);
+            }
+        }
+
+        final Long millisToShutDown = (long) (48 * 60 * 60 * 1000);
+        Thread.sleep(millisToShutDown);
         executorService.shutdown();
         final int timeout = 365;
-        executorService.awaitTermination(timeout, TimeUnit.DAYS);
-        stopListener.terminateProcess();
-        stopService.shutdown();
+        try {
+            executorService.awaitTermination(timeout, TimeUnit.DAYS);
+        }
+        catch (InterruptedException e) {
+            System.err.println(e.toString());
+        }
+        // stopListener.terminateProcess();
+        //  stopService.shutdown();
         prepareClassifier();
     }
 
@@ -199,6 +234,10 @@ public class OLRCrossFold {
             this.trainAllModels();
         }
         catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        catch (ExecutionException e) {
+            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
@@ -348,6 +387,7 @@ public class OLRCrossFold {
          */
         public void terminateProcess() {
 
+            LOGGER.info("terminateProcess called");
             stop();
             processTerminated = true;
         }
@@ -415,6 +455,7 @@ public class OLRCrossFold {
          */
         private String stopCalled() {
 
+            LOGGER.info("Stoplistener: stopCalled");
             stop();
             return STOP_MESSAGE;
         }
