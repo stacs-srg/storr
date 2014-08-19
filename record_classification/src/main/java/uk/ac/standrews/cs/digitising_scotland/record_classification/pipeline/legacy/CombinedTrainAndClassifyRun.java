@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline;
+package uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.legacy;
 
 import java.io.File;
 import java.util.Iterator;

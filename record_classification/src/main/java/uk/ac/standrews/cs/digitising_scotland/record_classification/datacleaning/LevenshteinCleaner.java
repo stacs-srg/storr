@@ -19,7 +19,6 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.exceptions.I
 
 import com.google.common.collect.Multiset;
 
-// TODO: Auto-generated Javadoc
 /**
  * Reads a {@link Bucket} and performs data cleaning such as spelling correction and feature selection on the descriptions in each {@link Record}.
  * OriginalData.description is not changed, instead the cleanedDescripion field is populated.

@@ -1,30 +1,18 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.AbstractClassifier;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.OLR.OLRClassifier;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.lookup.ExactMatchClassifier;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datareaders.FormatConverter;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.PilotDataFormatConverter;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.BucketFilter;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.BucketUtils;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeFactory;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.RecordFactory;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.vectors.VectorFactory;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.exceptions.FolderCreationException;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.exceptions.InputFormatException;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.writers.DataClerkingWriter;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.writers.FileComparisonWriter;
 import uk.ac.standrews.cs.digitising_scotland.tools.Timer;
 import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
 import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearningConfiguration;
@@ -62,12 +50,9 @@ public final class PIlot {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PIlot.class);
 
-    private static double trainingRatio = 0.8;
-
-    private static VectorFactory vectorFactory;
-    private static Bucket trainingBucket;
-    private static Bucket predictionBucket;
     private static String experimentalFolderName;
+    private static File training;
+    private static File prediction;
 
     private PIlot() {
 
@@ -90,62 +75,71 @@ public final class PIlot {
 
         setupExperimentalFolders("Experiments");
 
-        trainingRatio = 1;
+        parseInput(args);
 
-        File training = new File(args[0]);
-        File prediction = new File(args[1]);
+        TrainingBucketGenerator trainingGenerator = new TrainingBucketGenerator();
+        Bucket trainingBucket = trainingGenerator.generate(training); //FIXME not a redundant initialisation due to desirable side effects! FIX!
+        trainingBucket = trainingGenerator.generate(training);
 
-        LOGGER.info("********** Generating Training Bucket **********");
-        Bucket allRecords = createBucketOfRecords(training);
-
-        PipelineUtils.generateActualCodeMappings(allRecords);
-
-        Bucket bucket = createBucketOfRecords(training);
-        randomlyAssignToTrainingAndPrediction(bucket);
-
-        vectorFactory = new VectorFactory(trainingBucket);
+        PredictionBucketGenerator predictionBucketGenerator = new PredictionBucketGenerator();
+        Bucket predictionBucket = predictionBucketGenerator.createPredictionBucket(prediction);
 
         printStatusUpdate();
 
-        LOGGER.info("********** Training OLR Classifiers **********");
-        AbstractClassifier classifier = trainOLRClassifier(trainingBucket, vectorFactory);
+        ClassifierTrainer trainer = train(trainingBucket);
 
-        LOGGER.info("********** Creating Lookup Tables **********");
-        ExactMatchClassifier exactMatchClassifier = trainExactMatchClassifier();
+        ClassificationHolder classifier = classify(trainingBucket, predictionBucket, trainer);
 
-        predictionBucket = createPredictionBucket(prediction);
+        LOGGER.info("Exact Matched Bucket Size: " + classifier.getExactMatched().size());
+        LOGGER.info("Machine Learned Bucket Size: " + classifier.getMachineLearned().size());
 
-        LOGGER.info("********** Classifying Bucket **********");
-        ExactMatchPipeline exactMatchPipeline = new ExactMatchPipeline(exactMatchClassifier);
-        MachineLearningClassificationPipeline machineLearningClassifier = new MachineLearningClassificationPipeline(classifier, trainingBucket);
+        PipelineUtils.writeRecords(classifier.getAllClassified(), experimentalFolderName);
 
-        Bucket exactMatched = exactMatchPipeline.classify(predictionBucket);
-        Bucket notExactMatched = BucketUtils.getComplement(predictionBucket, exactMatched);
-        Bucket machineLearned = machineLearningClassifier.classify(notExactMatched);
-        Bucket allClassified = BucketUtils.getUnion(machineLearned, exactMatched);
-
-        LOGGER.info("Exact Matched Bucket Size: " + exactMatched.size());
-        LOGGER.info("Machine Learned Bucket Size: " + machineLearned.size());
-
-        //  Bucket classifiedBucket = bucketClassifier.classify(predictionBucket);
-
-        writeRecords(allClassified);
-
-        LOGGER.info("********** Output Stats **********");
-
-        LOGGER.info("All Records");
-        PipelineUtils.generateAndPrintStats(allClassified, "All Records", experimentalFolderName);
-
-        LOGGER.info("\nUnique Records");
-        final Bucket uniqueRecordsOnly = BucketFilter.uniqueRecordsOnly(allClassified);
-        PipelineUtils.generateAndPrintStats(uniqueRecordsOnly, "Unique Only", experimentalFolderName);
-
-        LOGGER.info("Codes that were null and weren't adter chopping: " + CodeFactory.getInstance().getCodeMapNullCounter());
+        generateAndPrintStatistics(classifier);
 
         timer.stop();
 
-        LOGGER.info("Elapsed Time: " + timer.elapsedTime());
+    }
 
+    private static void parseInput(final String[] args) {
+
+        if (args.length != 2) {
+            System.err.println("You must supply 2 arguments");
+            System.err.println("usage: $" + PIlot.class.getSimpleName() + "    <trainingFile>    <predictionFile>");
+        }
+        else {
+            training = new File(args[0]);
+            prediction = new File(args[1]);
+        }
+    }
+
+    private static ClassifierTrainer train(final Bucket trainingBucket) throws Exception {
+
+        ClassifierTrainer trainer = new ClassifierTrainer(trainingBucket, experimentalFolderName);
+        trainer.trainExactMatchClassifier();
+        trainer.trainOLRClassifier();
+        return trainer;
+    }
+
+    private static ClassificationHolder classify(final Bucket trainingBucket, final Bucket predictionBucket, final ClassifierTrainer trainer) throws IOException {
+
+        ExactMatchPipeline exactMatchPipeline = new ExactMatchPipeline(trainer.getExactMatchClassifier());
+        MachineLearningClassificationPipeline machineLearningClassifier = new MachineLearningClassificationPipeline(trainer.getOlrClassifier(), trainingBucket);
+
+        ClassificationHolder classifier = new ClassificationHolder(exactMatchPipeline, machineLearningClassifier);
+        classifier.classify(predictionBucket);
+        return classifier;
+    }
+
+    private static void generateAndPrintStatistics(final ClassificationHolder classifier) throws IOException {
+
+        LOGGER.info("********** Output Stats **********");
+
+        final Bucket uniqueRecordsOnly = BucketFilter.uniqueRecordsOnly(classifier.getAllClassified());
+
+        PipelineUtils.generateAndPrintStats(classifier.getAllClassified(), "All Records", experimentalFolderName);
+
+        PipelineUtils.generateAndPrintStats(uniqueRecordsOnly, "Unique Only", experimentalFolderName);
     }
 
     private static Timer initAndStartTimer() {
@@ -163,103 +157,12 @@ public final class PIlot {
         LOGGER.info("Codes that were null and weren't adter chopping: " + CodeFactory.getInstance().getCodeMapNullCounter());
     }
 
-    private static ExactMatchClassifier trainExactMatchClassifier() throws Exception {
-
-        ExactMatchClassifier exactMatchClassifier = new ExactMatchClassifier();
-        exactMatchClassifier.setModelFileName(experimentalFolderName + "/Models/lookupTable");
-        exactMatchClassifier.train(trainingBucket);
-        return exactMatchClassifier;
-    }
-
     private static void setupExperimentalFolders(final String baseFolder) {
 
         experimentalFolderName = Utils.getExperimentalFolderName(baseFolder, "Experiment");
 
         if (!(new File(experimentalFolderName).mkdirs() && new File(experimentalFolderName + "/Reports").mkdirs() && new File(experimentalFolderName + "/Data").mkdirs() && new File(experimentalFolderName + "/Models").mkdirs())) { throw new FolderCreationException(
                         "couldn't create experimental folder"); }
-    }
-
-    private static void writeRecords(final Bucket classifiedBucket) throws IOException {
-
-        final String nrsReportPath = "/Data/NRSData.txt";
-        final DataClerkingWriter writer = new DataClerkingWriter(new File(experimentalFolderName + nrsReportPath));
-        for (final Record record : classifiedBucket) {
-            writer.write(record);
-        }
-        writer.close();
-
-        final String comparisonReportPath = "/Data/comaprison.txt";
-        final FileComparisonWriter comparisonWriter = new FileComparisonWriter(new File(experimentalFolderName + comparisonReportPath), "\t");
-        for (final Record record : classifiedBucket) {
-            comparisonWriter.write(record);
-        }
-        comparisonWriter.close();
-    }
-
-    private static void randomlyAssignToTrainingAndPrediction(final Bucket bucket) {
-
-        trainingBucket = new Bucket();
-        predictionBucket = new Bucket();
-        for (Record record : bucket) {
-            if (Math.random() < trainingRatio) {
-                trainingBucket.addRecordToBucket(record);
-            }
-            else {
-                predictionBucket.addRecordToBucket(record);
-            }
-        }
-    }
-
-    //    Commented out while testing - FIXME
-    private static Bucket createPredictionBucket(final File prediction) {
-
-        Bucket toClassify = null;
-        try {
-            toClassify = new Bucket(PilotDataFormatConverter.convert(prediction));
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
-        catch (InputFormatException e) {
-            e.printStackTrace();
-        }
-
-        return toClassify;
-    }
-
-    private static AbstractClassifier trainOLRClassifier(final Bucket bucket, final VectorFactory vectorFactory) throws Exception {
-
-        AbstractClassifier olrClassifier = new OLRClassifier(vectorFactory);
-        OLRClassifier.setModelPath(experimentalFolderName + "/Models/olrModel");
-        olrClassifier.train(bucket);
-        return olrClassifier;
-    }
-
-    private static Bucket createBucketOfRecords(final File training) throws IOException, InputFormatException {
-
-        Bucket bucket = new Bucket();
-        Iterable<Record> records;
-        boolean longFormat = checkFileType(training);
-
-        if (longFormat) {
-            records = FormatConverter.convert(training);
-        }
-        else {
-            records = RecordFactory.makeCodedRecordsFromFile(training);
-        }
-        bucket.addCollectionOfRecords(records);
-
-        return bucket;
-    }
-
-    private static boolean checkFileType(final File inputFile) throws IOException {
-
-        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(inputFile), "UTF8"));
-        String line = br.readLine();
-        br.close();
-        final int expectedLineLength = 38;
-        if (line != null && line.split(Utils.getCSVComma()).length == expectedLineLength) { return true; }
-        return false;
     }
 
 }

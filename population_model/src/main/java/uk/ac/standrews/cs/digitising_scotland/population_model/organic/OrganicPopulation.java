@@ -16,6 +16,7 @@
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.organic;
 
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.general.RestrictedDistribution;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IDFactory;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPartnership;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPerson;
@@ -26,6 +27,7 @@ import uk.ac.standrews.cs.digitising_scotland.util.ArrayManipulation;
 import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -142,7 +144,6 @@ public class OrganicPopulation implements IPopulation {
 				if (print) {
 					System.out.println(EPOCH_YEAR + 1 + (int) (getCurrentDay() / getDaysPerYear()));
 					System.out.println("Population: " + OrganicPopulationLogger.getPopulation());
-//					System.out.println((int) (2 + (getCurrentDay() / DAYS_PER_YEAR) / 100));
 				}
 				setCurrentDay(DateManipulation.dateToDays((int) (getCurrentDay() / DAYS_PER_YEAR) + 1 + EPOCH_YEAR, 0, (int) (2 + (getCurrentDay() / DAYS_PER_YEAR) / 100)));
 			}
@@ -406,8 +407,6 @@ public class OrganicPopulation implements IPopulation {
 		//    	if (DEBUG) {
 		//    		System.out.println("PARTNERING UP QUEUE - " + type.toString());
 		//    	}
-		if (OrganicPopulation.DEBUG)
-			System.out.println("P - " + type.toString());
 		LinkedList<OrganicPerson> maleQueue = (LinkedList<OrganicPerson>) getMaleQueueOf(type);
 		LinkedList<OrganicPerson> femaleQueue = (LinkedList<OrganicPerson>) getFemaleQueueOf(type);
 
@@ -453,8 +452,6 @@ public class OrganicPopulation implements IPopulation {
 					try {
 						partner(type, maleQueue.getFirst(), femaleQueue.getFirst(), getCurrentDay());
 
-						if (OrganicPopulation.DEBUG)
-							System.out.println("P8");
 					} catch (NoSuchEventException e) {
 						break;
 					}
@@ -463,8 +460,6 @@ public class OrganicPopulation implements IPopulation {
 					femaleQueue.add(femaleQueue.removeFirst());
 					break;
 				}
-				if (OrganicPopulation.DEBUG)
-					System.out.println("P9");    
 				removeFromQueue(maleQueue, firstMaleId);
 				removeFromQueue(femaleQueue, firstFemaleId);
 				firstMaleId = (Integer) null;
@@ -728,11 +723,18 @@ public class OrganicPopulation implements IPopulation {
 		System.out.println(op.getDescription());
 		op.makeSeed();
 		op.setCurrentDay(op.getEarliestDate() - 1);
-		op.eventIteration(true, DEFAULT_STEP_SIZE);
-//		op.newEventIteration(true);
+//		op.eventIteration(true, DEFAULT_STEP_SIZE);
+		op.newEventIteration(true);
 
 		OrganicPopulationLogger.printLogData();
 
+		
+//		HashMap<Integer, RestrictedDistribution<?>> map = OrganicPartnership.temporalChildrenNumberOfInMarriageOrCohabDistribution.map;
+//		@SuppressWarnings("unchecked")
+//		RestrictedDistribution<Integer> rd = (RestrictedDistribution<Integer>) map.get(map.keySet().toArray()[0]);
+//		System.out.println(rd.unusedSampleValues.size());
+		
+		
 		System.out.println();
 		long timeTaken = System.nanoTime() - startTime;
 		System.out.println("Run time " + timeTaken / 1000000 + "ms");

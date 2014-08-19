@@ -45,7 +45,7 @@ import java.util.Set;
  */
 public abstract class TemporalDistribution<Value> implements ITemporalDistribution<Value> {
 
-	private HashMap<Integer, RestrictedDistribution<?>> map = new HashMap<Integer, RestrictedDistribution<?>>();
+	public HashMap<Integer, RestrictedDistribution<?>> map = new HashMap<Integer, RestrictedDistribution<?>>();
 	private String line;
 	private boolean firstLine = true;
 	private int minimum, maximum;
@@ -61,7 +61,7 @@ public abstract class TemporalDistribution<Value> implements ITemporalDistributi
 	 *
 	 * @param filename
 	 */
-	public TemporalDistribution(OrganicPopulation population, String distributionKey, Random random) {
+	public TemporalDistribution(OrganicPopulation population, String distributionKey, Random random, boolean handleNoPermissableValueAsZero) {
 
 		try (BufferedReader reader = new BufferedReader(new InputStreamReader(getClass().getClassLoader().getResourceAsStream(PopulationProperties.getProperties().getProperty(distributionKey)), FileManipulation.FILE_CHARSET))) {
 
@@ -88,20 +88,18 @@ public abstract class TemporalDistribution<Value> implements ITemporalDistributi
 						int year = Integer.parseInt(lineComponents[0]);
 						RestrictedDistribution<?> currentDistribution;
 						if (normal) {
-							currentDistribution = new NormalDistribution(Double.valueOf(lineComponents[1]), Double.valueOf(lineComponents[2]), random);
+							currentDistribution = new NormalDistribution(Double.valueOf(lineComponents[1]), Double.valueOf(lineComponents[2]), random, minimum, maximum);
 						} else {
 							int[] weights = new int[lineComponents.length - 1];
 
 							for (int i = 1; i < lineComponents.length; i++) {
 								weights[i - 1] = Integer.parseInt(lineComponents[i]);
 							}
-							currentDistribution = new WeightedIntegerDistribution(minimum, maximum, weights, random);
+							currentDistribution = new WeightedIntegerDistribution(minimum, maximum, weights, random, handleNoPermissableValueAsZero);
 						}
 						map.put((int) ((year - OrganicPopulation.getEpochYear()) * OrganicPopulation.getDaysPerYear()) , currentDistribution);
-					
 				}
 			}
-
 
 		} catch (NumberFormatException e) {
 			ErrorHandling.exceptionError(e, "Could not process line:" + line);
@@ -150,13 +148,15 @@ public abstract class TemporalDistribution<Value> implements ITemporalDistributi
         for (int i = 0; i < keyArray.length - 1; i++) {
             if (keyArray[i] < date && date < keyArray[i + 1]) {
                 key = keyArray[i];
+                break;
             }
         }
         
         // Do we (I mean you Tom) need this check do loop?
-        do {
-            returnValue = Double.valueOf(map.get(key).getSample(earliestValue, latestValue).toString()).intValue();
-        } while (returnValue > maximum || returnValue < minimum);
+//        do {
+        String s = map.get(key).getSample(earliestValue, latestValue).toString();
+        returnValue = Double.valueOf(s).intValue();
+//        } while (returnValue > maximum || returnValue < minimum);
         
         return returnValue;
     }

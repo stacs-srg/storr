@@ -16,13 +16,13 @@
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.distributions.general;
 
-import java.util.ArrayList;
 import java.util.Random;
 
 /**
  * An approximately normal distribution of numbers.
  * 
  * @author Graham Kirby (graham.kirby@st-andrews.ac.uk)
+ * @author Tom Dalton (tsd4@st-andrews.ac.uk)
  */
 public class NormalDistribution extends RestrictedDistribution<Double> {
 

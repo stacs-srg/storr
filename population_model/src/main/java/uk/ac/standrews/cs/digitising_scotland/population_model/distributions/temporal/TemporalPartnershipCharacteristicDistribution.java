@@ -29,7 +29,7 @@ public class TemporalPartnershipCharacteristicDistribution extends TemporalDistr
      * @param random the random number generator to be used
      */
     public TemporalPartnershipCharacteristicDistribution(OrganicPopulation population, String distributionKey, final Random random) {
-        super(population, distributionKey, random);
+        super(population, distributionKey, random, false);
     }
 
     /**

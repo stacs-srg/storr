@@ -21,7 +21,6 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Properties;
 
 import org.apache.mahout.math.Matrix;
@@ -111,7 +110,6 @@ public class OLRShuffled implements Runnable {
             if (stopped()) {
                 break;
             }
-            //  logger.info("Performing rep " + rep);
             shuffleAndTrainOnAllVectors();
         }
     }
@@ -172,13 +170,13 @@ public class OLRShuffled implements Runnable {
      */
     private void shuffleAndTrainOnAllVectors() {
 
-        Collections.shuffle(trainingVectorList);
         for (NamedVector vector : trainingVectorList) {
             if (stopped()) {
                 break;
             }
             this.model.train(vector);
         }
+
     }
 
     /**
@@ -196,6 +194,7 @@ public class OLRShuffled implements Runnable {
      */
     private boolean stopped() {
 
+        System.err.println(stopped);
         return stopped;
     }
 

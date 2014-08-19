@@ -1,7 +1,10 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Set;
 
@@ -17,6 +20,8 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeFactory;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeTriple;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.writers.DataClerkingWriter;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.writers.FileComparisonWriter;
 import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
 
 public class PipelineUtils {
@@ -46,6 +51,7 @@ public class PipelineUtils {
 
     protected static void generateAndPrintStats(final Bucket classifiedBucket, final String header, final String experimentalFolderName) throws IOException {
 
+        LOGGER.info(header);
         ListAccuracyMetrics accuracyMetrics = new ListAccuracyMetrics(classifiedBucket);
         accuracyMetrics.prettyPrint(header);
         generateStats(classifiedBucket, accuracyMetrics, experimentalFolderName);
@@ -110,6 +116,33 @@ public class PipelineUtils {
             return false;
         }
         return true;
+    }
+
+    protected static boolean checkFileType(final File inputFile) throws IOException {
+
+        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(inputFile), "UTF8"));
+        String line = br.readLine();
+        br.close();
+        final int expectedLineLength = 38;
+        if (line != null && line.split(Utils.getCSVComma()).length == expectedLineLength) { return true; }
+        return false;
+    }
+
+    protected static void writeRecords(final Bucket classifiedBucket, final String experimentalFolderName) throws IOException {
+
+        final String nrsReportPath = "/Data/NRSData.txt";
+        final DataClerkingWriter writer = new DataClerkingWriter(new File(experimentalFolderName + nrsReportPath));
+        for (final Record record : classifiedBucket) {
+            writer.write(record);
+        }
+        writer.close();
+
+        final String comparisonReportPath = "/Data/comaprison.txt";
+        final FileComparisonWriter comparisonWriter = new FileComparisonWriter(new File(experimentalFolderName + comparisonReportPath), "\t");
+        for (final Record record : classifiedBucket) {
+            comparisonWriter.write(record);
+        }
+        comparisonWriter.close();
     }
 
 }

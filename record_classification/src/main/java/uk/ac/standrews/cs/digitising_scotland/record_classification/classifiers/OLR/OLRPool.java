@@ -80,10 +80,20 @@ public class OLRPool implements Runnable {
         getConfigOptions();
 
         for (int i = 0; i < poolSize; i++) {
-            OLRShuffled model = new OLRShuffled(properties, internalTrainingVectorList);
+            OLRShuffled model = new OLRShuffled(properties, copyVectorList(internalTrainingVectorList));
             models.add(model);
         }
         modelTrainable = true;
+    }
+
+    private ArrayList<NamedVector> copyVectorList(final ArrayList<NamedVector> internalTrainingVectorList) {
+
+        ArrayList<NamedVector> newList = new ArrayList<>();
+        for (NamedVector namedVector : internalTrainingVectorList) {
+            newList.add(namedVector.clone());
+        }
+
+        return newList;
     }
 
     /**
@@ -117,7 +127,6 @@ public class OLRPool implements Runnable {
     public void run() {
 
         trainIfPossible();
-        //  getSurvivors();
     }
 
     /**
@@ -125,6 +134,7 @@ public class OLRPool implements Runnable {
      */
     public void stop() {
 
+        System.err.println("stop in OLR pool called");
         for (OLRShuffled model : models) {
             model.stop();
         }
@@ -136,7 +146,6 @@ public class OLRPool implements Runnable {
      */
     public List<OLRShuffled> getSurvivors() {
 
-        LOGGER.info("Getting survivors...");
         LOGGER.info("Calling testAndPackageModels");
         ArrayList<ModelDoublePair> modelPairs = testAndPackageModels();
         LOGGER.info("Calling getSurvivors");

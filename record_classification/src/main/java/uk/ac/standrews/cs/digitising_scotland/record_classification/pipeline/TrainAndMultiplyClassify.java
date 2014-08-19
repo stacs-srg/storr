@@ -246,4 +246,17 @@ public final class TrainAndMultiplyClassify {
         return false;
     }
 
+    //    private static void randomlyAssignToTrainingAndPrediction(final Bucket bucket) {
+    //
+    //        trainingBucket = new Bucket();
+    //        predictionBucket = new Bucket();
+    //        for (Record record : bucket) {
+    //            if (Math.random() < trainingRatio) {
+    //                trainingBucket.addRecordToBucket(record);
+    //            }
+    //            else {
+    //                predictionBucket.addRecordToBucket(record);
+    //            }
+    //        }
+    //    }
 }

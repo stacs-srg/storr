@@ -25,7 +25,7 @@ public class FatherOfLabels implements ILabels {
     }
 
     @Override
-    public Type getType(String label) {
+    public Type getFieldType(String label) {
         if( label.equals(birth_record_id)) return Type.REFERENCE;
         if( label.equals(father_id)) return Type.REFERENCE;
         if( label.equals(child_id)) return Type.REFERENCE;

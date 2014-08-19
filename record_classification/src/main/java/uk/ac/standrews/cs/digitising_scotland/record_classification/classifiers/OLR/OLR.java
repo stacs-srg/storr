@@ -196,8 +196,11 @@ public class OLR {
     private void updateLogLikelihoodSum(final int actual, final Vector classification) {
 
         double thisloglik;
+
         if (actual > 0) {
-            thisloglik = Math.max(LOGLIK_MINIMUM, Math.log(classification.get(actual - 1)));
+            final double classificationGet = classification.get(actual - 1);
+            final double mathLog = Math.log(classificationGet);
+            thisloglik = Math.max(LOGLIK_MINIMUM, mathLog);
         }
         else {
             thisloglik = Math.max(LOGLIK_MINIMUM, Math.log1p(-classification.zSum()));
@@ -274,6 +277,7 @@ public class OLR {
     private void nextStep() {
 
         step++;
+        System.out.println("nextStep");
     }
 
     /**
@@ -292,14 +296,17 @@ public class OLR {
     private Vector calcGradient(final NamedVector instance) {
 
         int actual = Integer.parseInt(instance.getName());
+
         // what does the current model say?
         Vector v = classify(instance);
         updateLogLikelihoodSum(actual, v);
         Vector r = v.like();
+
         if (actual != 0) {
             r.setQuick(actual - 1, 1);
         }
         r.assign(v, Functions.MINUS);
+
         return r;
     }
 
@@ -479,7 +486,6 @@ public class OLR {
         for (Element feature : instanceFeatures) {
             updateCountsAndStepsAtIndex(feature.index());
         }
-
     }
 
     /**

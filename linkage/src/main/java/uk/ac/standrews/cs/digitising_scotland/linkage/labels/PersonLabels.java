@@ -42,7 +42,7 @@ public class PersonLabels implements ILabels {
     }
 
     @Override
-    public Type getType(String label) {
+    public Type getFieldType(String label) {
         if(getLabels().contains(label)) {
             return Type.STRING;
         } else {
