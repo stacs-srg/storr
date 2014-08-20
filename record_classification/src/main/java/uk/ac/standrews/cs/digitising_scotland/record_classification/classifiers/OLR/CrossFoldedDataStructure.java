@@ -2,6 +2,7 @@ package uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers
 
 import java.util.ArrayList;
 
+import org.apache.commons.math3.exception.NumberIsTooSmallException;
 import org.apache.mahout.math.NamedVector;
 
 /**
@@ -24,7 +25,7 @@ public abstract class CrossFoldedDataStructure {
         int size = trainingVectorList.size();
         int[] splitPoints = calculateSplitPoints(folds, size);
 
-        for (int i = 0; i < folds; i++) {
+        for (int i = 0; i < folds + 1; i++) {
             for (int j = 0; j < size; j++) {
                 if (j >= splitPoints[i] && j <= splitPoints[i + 1]) {
                     crossFoldedData[i][1].add(new NamedVector(trainingVectorList.get(j).clone()));
@@ -37,11 +38,13 @@ public abstract class CrossFoldedDataStructure {
         return crossFoldedData;
     }
 
-    private static ArrayList<NamedVector>[][] initialize(final int folds) {
+    protected static ArrayList<NamedVector>[][] initialize(final int folds) {
 
-        ArrayList<NamedVector>[][] crossFoldedData = new ArrayList[folds][2];
+        if (folds < 1) { throw new NumberIsTooSmallException(folds, 1, true); }
 
-        for (int i = 0; i < folds; i++) {
+        ArrayList<NamedVector>[][] crossFoldedData = new ArrayList[folds + 1][2];
+
+        for (int i = 0; i < folds + 1; i++) {
             for (int j = 0; j < 2; j++) {
                 crossFoldedData[i][j] = new ArrayList<NamedVector>();
             }
@@ -49,12 +52,17 @@ public abstract class CrossFoldedDataStructure {
         return crossFoldedData;
     }
 
-    private static int[] calculateSplitPoints(final int folds, final int size) {
+    protected static int[] calculateSplitPoints(final int folds, final int size) {
 
-        int[] splitPoints = new int[folds + 1];
-        for (int i = 0; i <= folds; i++) {
+        if (folds < 1) { throw new NumberIsTooSmallException(folds, 1, true); }
+
+        if (size < folds + 1) { throw new NumberIsTooSmallException(size, folds + 1, true); }
+
+        int[] splitPoints = new int[folds + 2];
+        for (int i = 0; i < folds + 2; i++) {
             splitPoints[i] = (size * i) / (folds + 1);
         }
+
         return splitPoints;
     }
 

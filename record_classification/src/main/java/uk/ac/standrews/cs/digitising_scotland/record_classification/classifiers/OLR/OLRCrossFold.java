@@ -53,6 +53,24 @@ public class OLRCrossFold {
     private OLR classifier;
 
     /**
+     * Constructor.
+     *
+     * @param trainingVectorList training vectors
+     * @param properties         properties
+     */
+    public OLRCrossFold(final ArrayList<NamedVector> trainingVectorList, final Properties properties) {
+
+        this.properties = properties;
+        getConfigOptions();
+        ArrayList<NamedVector>[][] trainingVectors = CrossFoldedDataStructure.make(trainingVectorList, folds);
+        for (int i = 0; i < this.folds + 1; i++) {
+            OLRPool model = new OLRPool(properties, trainingVectors[i][0], trainingVectors[i][1]);
+            models.add(model);
+        }
+        modelTrainable = true;
+    }
+
+    /**
      * Gets the average running log likelihood.
      *
      * @return the average running log likelihood
@@ -91,24 +109,6 @@ public class OLRCrossFold {
     }
 
     /**
-     * Constructor.
-     *
-     * @param trainingVectorList training vectors
-     * @param properties         properties
-     */
-    public OLRCrossFold(final ArrayList<NamedVector> trainingVectorList, final Properties properties) {
-
-        this.properties = properties;
-        getConfigOptions();
-        ArrayList<NamedVector>[][] trainingVectors = CrossFoldedDataStructure.make(trainingVectorList, folds);
-        for (int i = 0; i < this.folds; i++) {
-            OLRPool model = new OLRPool(properties, trainingVectors[i][0], trainingVectors[i][1]);
-            models.add(model);
-        }
-        modelTrainable = true;
-    }
-
-    /**
      * Stops training on all models in the {@link OLRPool}.
      */
     public void stop() {
@@ -135,7 +135,6 @@ public class OLRCrossFold {
      */
     private void trainAllModels() throws InterruptedException, ExecutionException {
 
-        //FIXME refactor this and mae sure we can get back an errors that are thrown
         StopListener stopListener = new StopListener();
         ExecutorService stopService = Executors.newFixedThreadPool(1);
         ExecutorService executorService = Executors.newFixedThreadPool(folds);
@@ -146,7 +145,7 @@ public class OLRCrossFold {
             futures.add(executorService.submit(model));
         }
 
-        Utils.handleErrors(futures);
+        Utils.handlePotentialErrors(futures);
         executorService.shutdown();
         final int timeout = 365;
         executorService.awaitTermination(timeout, TimeUnit.DAYS);
@@ -213,7 +212,6 @@ public class OLRCrossFold {
             e.printStackTrace();
         }
         catch (ExecutionException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }

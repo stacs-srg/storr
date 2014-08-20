@@ -220,7 +220,7 @@ public class OLRPool implements Runnable {
             futures.add(executorService.submit(model));
         }
 
-        Utils.handleErrors(futures);
+        Utils.handlePotentialErrors(futures);
         executorService.shutdown();
         executorService.awaitTermination(365, TimeUnit.DAYS);
     }

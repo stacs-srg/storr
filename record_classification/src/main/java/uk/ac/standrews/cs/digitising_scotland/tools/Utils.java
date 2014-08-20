@@ -53,13 +53,13 @@ public final class Utils {
     /**
      * Handles and exceptions or throwables thrown from threads that are handles by a {@link Future} or {@link ExecutorService}.
      * @param futures Collection of executing futures to handle possible exceptions from.
-     * @throws InterruptedException
+     * @throws InterruptedException if thread is interrupted
      */
-    public static void handleErrors(final Collection<Future<?>> futures) throws InterruptedException {
+    public static void handlePotentialErrors(final Collection<Future<?>> futures) throws InterruptedException {
 
-        for (Future<?> future2 : futures) {
+        for (Future<?> future : futures) {
             try {
-                future2.get();
+                future.get();
             }
             catch (ExecutionException e) {
                 Throwable rootException = e.getCause();
