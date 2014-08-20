@@ -13,24 +13,26 @@ import java.util.Iterator;
 public class BucketBackedInputStream implements ILXPInputStream {
 
     private final IBucket bucket;
-    private Iterator<File> file_iterator;
-
-    public BucketBackedInputStream(final IBucket bucket, final Iterator<File> file_iterator) throws IOException {
-
-        this.bucket = bucket;
-        this.file_iterator = file_iterator;
-    }
+    private File directory;
 
     public BucketBackedInputStream(final IBucket bucket, final File directory) throws IOException {
 
-        this(bucket, FileIteratorFactory.createFileIterator(directory, true, false));
+        this.bucket = bucket;
+        this.directory = directory;
+
     }
 
     public Iterator<ILXP> iterator() {
-        return new ILXPIterator();
+        return new ILXPIterator(directory);
     }
 
     private class ILXPIterator implements Iterator<ILXP> {
+
+        private Iterator<File> file_iterator;
+
+        public ILXPIterator(File directory) {
+            file_iterator = FileIteratorFactory.createFileIterator(directory, true, false);
+        }
 
         public boolean hasNext() {
             return file_iterator.hasNext();

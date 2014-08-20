@@ -45,82 +45,81 @@ import java.util.Set;
  */
 public abstract class TemporalDistribution<Value> implements ITemporalDistribution<Value> {
 
-	public HashMap<Integer, RestrictedDistribution<?>> map = new HashMap<Integer, RestrictedDistribution<?>>();
-	private String line;
-	private boolean firstLine = true;
-	private int minimum, maximum;
-	private boolean normal;
+    public HashMap<Integer, RestrictedDistribution<?>> map = new HashMap<Integer, RestrictedDistribution<?>>();
+    private String line;
+    private boolean firstLine = true;
+    private int minimum, maximum;
+    private boolean normal;
 
-	private final static String TAB = "\t";
-	private final static String COMMENT_INDICATOR = "%";
+    private final static String TAB = "\t";
+    private final static String COMMENT_INDICATOR = "%";
 
-	private Integer[] keyArray;
+    private Integer[] keyArray;
 
-	/**
-	 * Constructor that takes in a file name with the weights information.
-	 *
-	 * @param filename
-	 */
-	public TemporalDistribution(OrganicPopulation population, String distributionKey, Random random, boolean handleNoPermissableValueAsZero) {
+    /**
+     * Constructor that takes in a file name with the weights information.
+     *
+     * @param filename
+     */
+    public TemporalDistribution(OrganicPopulation population, String distributionKey, Random random, boolean handleNoPermissableValueAsZero) {
 
-		try (BufferedReader reader = new BufferedReader(new InputStreamReader(getClass().getClassLoader().getResourceAsStream(PopulationProperties.getProperties().getProperty(distributionKey)), FileManipulation.FILE_CHARSET))) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(getClass().getClassLoader().getResourceAsStream(PopulationProperties.getProperties().getProperty(distributionKey)), FileManipulation.FILE_CHARSET))) {
 
-			while ((line = reader.readLine()) != null) {
+            while ((line = reader.readLine()) != null) {
 
-				if (line.startsWith(COMMENT_INDICATOR)) {
-					continue;
-				}
+                if (line.startsWith(COMMENT_INDICATOR)) {
+                    continue;
+                }
 
-				if (firstLine) {
-					minimum = Integer.parseInt(line.split(TAB)[0]);
-					maximum = Integer.parseInt(line.split(TAB)[1]);
-					if (distributionKey.equals("children_number_of_in_marriage_or_cohab_distributions_filename")) {
-						population.setMaximumNumberOfChildrenInFamily(maximum);
-					}
-					if (line.split(TAB).length > 2 && line.split(TAB)[2].equalsIgnoreCase("NORMAL")) {
-						normal = true;
-					}
-					firstLine = false;
-				} else {
+                if (firstLine) {
+                    minimum = Integer.parseInt(line.split(TAB)[0]);
+                    maximum = Integer.parseInt(line.split(TAB)[1]);
+                    if (distributionKey.equals("children_number_of_in_marriage_or_cohab_distributions_filename")) {
+                        population.setMaximumNumberOfChildrenInFamily(maximum);
+                    }
+                    if (line.split(TAB).length > 2 && line.split(TAB)[2].equalsIgnoreCase("NORMAL")) {
+                        normal = true;
+                    }
+                    firstLine = false;
+                } else {
 
+                    String[] lineComponents = line.split(TAB);
+                    int year = Integer.parseInt(lineComponents[0]);
+                    RestrictedDistribution<?> currentDistribution;
+                    if (normal) {
+                        currentDistribution = new NormalDistribution(Double.valueOf(lineComponents[1]), Double.valueOf(lineComponents[2]), random, minimum, maximum);
+                    } else {
+                        int[] weights = new int[lineComponents.length - 1];
 
-						String[] lineComponents = line.split(TAB);
-						int year = Integer.parseInt(lineComponents[0]);
-						RestrictedDistribution<?> currentDistribution;
-						if (normal) {
-							currentDistribution = new NormalDistribution(Double.valueOf(lineComponents[1]), Double.valueOf(lineComponents[2]), random, minimum, maximum);
-						} else {
-							int[] weights = new int[lineComponents.length - 1];
+                        for (int i = 1; i < lineComponents.length; i++) {
+                            weights[i - 1] = Integer.parseInt(lineComponents[i]);
+                        }
+                        currentDistribution = new WeightedIntegerDistribution(minimum, maximum, weights, random, handleNoPermissableValueAsZero);
+                    }
+                    map.put((int) ((year - OrganicPopulation.getEpochYear()) * OrganicPopulation.getDaysPerYear()), currentDistribution);
+                }
+            }
 
-							for (int i = 1; i < lineComponents.length; i++) {
-								weights[i - 1] = Integer.parseInt(lineComponents[i]);
-							}
-							currentDistribution = new WeightedIntegerDistribution(minimum, maximum, weights, random, handleNoPermissableValueAsZero);
-						}
-						map.put((int) ((year - OrganicPopulation.getEpochYear()) * OrganicPopulation.getDaysPerYear()) , currentDistribution);
-				}
-			}
+        } catch (NumberFormatException e) {
+            ErrorHandling.exceptionError(e, "Could not process line:" + line);
+            e.printStackTrace();
+        } catch (IOException e) {
+            ErrorHandling.exceptionError(e, "IO Exception");
+            e.printStackTrace();
+        } catch (NegativeWeightException e) {
+            ErrorHandling.exceptionError(e, "NegativeWeightException");
+            e.printStackTrace();
+        } catch (NegativeDeviationException e) {
+            ErrorHandling.exceptionError(e, "NegativeDeviationException");
+            e.printStackTrace();
+        }
+        Set<Integer> keys = map.keySet();
+        ArrayList<Integer> keyList = new ArrayList<>(keys);
+        keyArray = keyList.toArray(new Integer[keyList.size()]);
+        Arrays.sort(keyArray);
+    }
 
-		} catch (NumberFormatException e) {
-			ErrorHandling.exceptionError(e, "Could not process line:" + line);
-			e.printStackTrace();
-		} catch (IOException e) {
-			ErrorHandling.exceptionError(e, "IO Exception");
-			e.printStackTrace();
-		} catch (NegativeWeightException e) {
-			ErrorHandling.exceptionError(e, "NegativeWeightException");
-			e.printStackTrace();
-		} catch (NegativeDeviationException e) {
-			ErrorHandling.exceptionError(e, "NegativeDeviationException");
-			e.printStackTrace();
-		}
-		Set<Integer> keys = map.keySet();
-		ArrayList<Integer> keyList = new ArrayList<>(keys);
-		keyArray = keyList.toArray(new Integer[keyList.size()]);
-		Arrays.sort(keyArray);
-	}
-
-	protected Integer getIntSample(int date) {
+    protected Integer getIntSample(int date) {
         int key = keyArray[keyArray.length - 1];
         Integer returnValue;
         if (keyArray[0] > date) {
@@ -138,8 +137,8 @@ public abstract class TemporalDistribution<Value> implements ITemporalDistributi
 
         return returnValue;
     }
-	
-	protected Integer getIntSample(int date, int earliestValue, int latestValue) throws NoPermissableValueException, NotSetUpAtClassInitilisationException {
+
+    protected Integer getIntSample(int date, int earliestValue, int latestValue) throws NoPermissableValueException, NotSetUpAtClassInitilisationException {
         int key = keyArray[keyArray.length - 1];
         Integer returnValue;
         if (keyArray[0] > date) {
@@ -151,23 +150,18 @@ public abstract class TemporalDistribution<Value> implements ITemporalDistributi
                 break;
             }
         }
-        
-        // Do we (I mean you Tom) need this check do loop?
-//        do {
+
         String s = map.get(key).getSample(earliestValue, latestValue).toString();
         returnValue = Double.valueOf(s).intValue();
-//        } while (returnValue > maximum || returnValue < minimum);
-        
+
         return returnValue;
     }
-	
-	
 
-	@Override
-	public abstract Value getSample();
+    @Override
+    public abstract Value getSample();
 
-	public abstract Value getSample(int date);
-	
-	public abstract Value getSample(int date, int earliestValue, int latestValue) throws NoPermissableValueException, NotSetUpAtClassInitilisationException;
-	
+    public abstract Value getSample(int date);
+
+    public abstract Value getSample(int date, int earliestValue, int latestValue) throws NoPermissableValueException, NotSetUpAtClassInitilisationException;
+
 }

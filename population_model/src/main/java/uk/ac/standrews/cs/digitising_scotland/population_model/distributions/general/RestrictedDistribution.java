@@ -17,32 +17,39 @@
 package uk.ac.standrews.cs.digitising_scotland.population_model.distributions.general;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public abstract class RestrictedDistribution<Value> implements Distribution<Value>{
+/**
+ * The restricted distribution class provided the ability for the return value of the distribution when sampled to be set to fall with a given range.
+ * 
+ * @author Tom Dalton (tsd4@st-andrews.ac.uk)
+ *
+ * @param <Value> Allows for the distribution to be set up using any specified Value
+ */
+public abstract class RestrictedDistribution<Value> implements Distribution<Value> {
 
+    // TODO doesn't make sense for these to be Doubles given that distribution is generic.
 
     // Restricted Distribution Helper Values
-    protected Double minimumReturnValue = (Double) null;
-    protected Double maximumReturnValue = (Double) null;
-    
-    protected ArrayList<Double> unusedSampleValues = new ArrayList<Double>();
+    protected Double minimumReturnValue = null;
+    protected Double maximumReturnValue = null;
+
+    protected List<Double> unusedSampleValues = new ArrayList<>();
     protected int zeroCount = -1;
-    
+
+    // TODO what is the difference between earliestReturnValue and minimumReturnValue? Shouldn't use 'earliest' here since this is a generic distribution not restricted to dates.
+
     public abstract Value getSample(double earliestReturnValue, double latestReturnValue) throws NoPermissableValueException, NotSetUpAtClassInitilisationException;
-    
+
+    /**
+     * Check if the given double d falls between the two given values.
+     * 
+     * @param d The double to be considered.
+     * @param earliestReturnValue The smaller value.
+     * @param latestReturnValue The larger value.
+     * @return Boolean value of true if d falls inbetween the two given values else false.
+     */
     protected static boolean inRange(final double d, final double earliestReturnValue, final double latestReturnValue) {
-        if (earliestReturnValue <= d && d <= latestReturnValue) {
-            return true;
-        } else {
-            return false;
-        }
-    }
- 
-    public static void main(String[] args) {
-    	System.out.println(inRange(1,2,4)); // False
-    	System.out.println(inRange(2,2,4)); // True
-    	System.out.println(inRange(3,2,4)); // True
-    	System.out.println(inRange(4,2,4)); // True
-    	System.out.println(inRange(5,2,4)); // False
+        return earliestReturnValue <= d && d <= latestReturnValue;
     }
 }

@@ -29,8 +29,6 @@ public class NormalDistribution extends RestrictedDistribution<Double> {
     private final Random random;
     private final double mean;
     private final double standard_deviation;
-    
-    
 
     /**
      * Creates a normal distribution with specified characteristics.
@@ -41,20 +39,31 @@ public class NormalDistribution extends RestrictedDistribution<Double> {
      */
     public NormalDistribution(final double mean, final double standard_deviation, final Random random) throws NegativeDeviationException {
 
-        if (standard_deviation < 0.0) { throw new NegativeDeviationException("negative standard deviation: " + standard_deviation); }
+        if (standard_deviation < 0.0) {
+            throw new NegativeDeviationException("negative standard deviation: " + standard_deviation);
+        }
 
         this.mean = mean;
         this.standard_deviation = standard_deviation;
         this.random = random;
     }
-    
-    public NormalDistribution(final double mean, final double standard_deviation, final Random random, double minimumReturnValue, double maximumReturnValue) throws NegativeDeviationException {
+
+    /**
+     * Creates a normal distribution with specified characteristics.
+     * Also sets up the distribution to allow it to be called with restricted values. 
+     * 
+     * @param mean
+     * @param standard_deviation
+     * @param random
+     * @param minimumReturnValue
+     * @param maximumReturnValue
+     * @throws NegativeDeviationException
+     */
+    public NormalDistribution(final double mean, final double standard_deviation, final Random random, final double minimumReturnValue, final double maximumReturnValue) throws NegativeDeviationException {
         this(mean, standard_deviation, random);
         this.minimumReturnValue = minimumReturnValue;
         this.maximumReturnValue = maximumReturnValue;
     }
-    
-    
 
     @Override
     public Double getSample() {
@@ -63,11 +72,11 @@ public class NormalDistribution extends RestrictedDistribution<Double> {
     }
 
     @Override
-    public Double getSample(double earliestReturnValue, double latestReturnValue) throws NoPermissableValueException, NotSetUpAtClassInitilisationException {
+    public Double getSample(final double earliestReturnValue, final double latestReturnValue) throws NoPermissableValueException, NotSetUpAtClassInitilisationException {
         if (minimumReturnValue == (Double) null || maximumReturnValue == (Double) null) {
             throw new NotSetUpAtClassInitilisationException();
         }
-        
+
         if (earliestReturnValue >= maximumReturnValue || latestReturnValue <= minimumReturnValue) {
             throw new NoPermissableValueException();
         } else {

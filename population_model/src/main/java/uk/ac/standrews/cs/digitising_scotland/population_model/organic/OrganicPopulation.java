@@ -84,7 +84,7 @@ public class OrganicPopulation implements IPopulation {
     private PriorityQueue<AffairWaitingQueueMember> maleAffairsWaitingQueue = new PriorityQueue<AffairWaitingQueueMember>();
     private PriorityQueue<AffairWaitingQueueMember> femaleAffairsWaitingQueue = new PriorityQueue<AffairWaitingQueueMember>();
 
-    private int maximumNumberOfChildrenInFamily;
+    private static int maximumNumberOfChildrenInFamily;
 
     /*
      * Constructors
@@ -764,7 +764,7 @@ public class OrganicPopulation implements IPopulation {
     /**
      * @return the maximumNumberOfChildrenInFamily
      */
-    public int getMaximumNumberOfChildrenInFamily() {
+    public static int getMaximumNumberOfChildrenInFamily() {
         return maximumNumberOfChildrenInFamily;
     }
 
@@ -772,6 +772,6 @@ public class OrganicPopulation implements IPopulation {
      * @param maximumNumberOfChildrenInFamily The maximumNumberOfChildrenInFamily to set
      */
     public void setMaximumNumberOfChildrenInFamily(int maximumNumberOfChildrenInFamily) {
-        this.maximumNumberOfChildrenInFamily = maximumNumberOfChildrenInFamily;
+        OrganicPopulation.maximumNumberOfChildrenInFamily = maximumNumberOfChildrenInFamily;
     }
 }
