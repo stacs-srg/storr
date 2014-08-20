@@ -145,9 +145,6 @@ public class OLRCrossFold {
             executorService.submit(model);
         }
 
-        //  runAllFutures(futures);
-        //        final Long millisToShutDown = (long) (48 * 60 * 60 * 1000);
-        //        Thread.sleep(millisToShutDown);
         executorService.shutdown();
         final int timeout = 365;
         executorService.awaitTermination(timeout, TimeUnit.DAYS);
@@ -155,28 +152,6 @@ public class OLRCrossFold {
         stopListener.terminateProcess();
         stopService.shutdown();
         prepareClassifier();
-    }
-
-    private void runAllFutures(final Collection<Future<?>> futures) {
-
-        for (Future<?> future : futures) {
-            Throwable t = null;
-            try {
-                future.get();
-            }
-            catch (CancellationException ce) {
-                t = ce;
-            }
-            catch (ExecutionException ee) {
-                t = ee.getCause();
-            }
-            catch (InterruptedException ie) {
-                Thread.currentThread().interrupt(); // ignore/reset
-            }
-            if (t != null) {
-                System.err.println(t);
-            }
-        }
     }
 
     /**

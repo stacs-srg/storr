@@ -87,7 +87,7 @@ public final class PilotDataFormatConverter extends AbstractFormatConverter {
         return recordList;
     }
 
-    private static int parseImageQuality(String[] lineSplit) {
+    private static int parseImageQuality(final String[] lineSplit) {
 
         if (lineSplit[IMAGE_QUALITY_POS].equalsIgnoreCase("null")) {
             return 0;

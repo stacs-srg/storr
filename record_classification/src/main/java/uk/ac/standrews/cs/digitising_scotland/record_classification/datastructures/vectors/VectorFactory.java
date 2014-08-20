@@ -148,13 +148,13 @@ public class VectorFactory {
     /**
      * Write.
      *
-     * @param out the out
+     * @param outputStream the out
      * @throws java.io.IOException Signals that an I/O exception has occurred.
      */
-    public void write(final DataOutputStream out) throws IOException {
+    public void write(final DataOutputStream outputStream) throws IOException {
 
-        out.writeInt(numFeatures);
-        vectorEncoder.write(out);
+        outputStream.writeInt(numFeatures);
+        vectorEncoder.write(outputStream);
     }
 
     /**

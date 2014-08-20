@@ -39,7 +39,7 @@ public abstract class AbstractDataCleaner {
      */
     private static int tokenLimit = 4;
 
-    AbstractFormatConverter formatConverter = new LongFormatConverter();
+    private AbstractFormatConverter formatConverter = new LongFormatConverter();
 
     /**
      * The word multiset.

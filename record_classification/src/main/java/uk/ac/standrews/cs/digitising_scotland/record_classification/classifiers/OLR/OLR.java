@@ -633,44 +633,44 @@ public class OLR {
     /**
      * Write.
      *
-     * @param out the out
+     * @param outputStream the out
      * @throws IOException Signals that an I/O exception has occurred.
      */
-    protected void write(final DataOutputStream out) throws IOException {
+    protected void write(final DataOutputStream outputStream) throws IOException {
 
-        out.writeDouble(mu0);
-        out.writeDouble(decayFactor);
-        out.writeDouble(perTermAnnealingRate);
-        out.writeBoolean(weArePerTermAnnealing);
-        out.writeBoolean(weAreRegularizing);
-        MatrixWritable.writeMatrix(out, beta);
-        out.writeInt(numCategories);
-        out.writeInt(numFeatures);
-        out.writeInt(step);
-        VectorWritable.writeVector(out, updateSteps);
-        VectorWritable.writeVector(out, updateCounts);
+        outputStream.writeDouble(mu0);
+        outputStream.writeDouble(decayFactor);
+        outputStream.writeDouble(perTermAnnealingRate);
+        outputStream.writeBoolean(weArePerTermAnnealing);
+        outputStream.writeBoolean(weAreRegularizing);
+        MatrixWritable.writeMatrix(outputStream, beta);
+        outputStream.writeInt(numCategories);
+        outputStream.writeInt(numFeatures);
+        outputStream.writeInt(step);
+        VectorWritable.writeVector(outputStream, updateSteps);
+        VectorWritable.writeVector(outputStream, updateCounts);
 
     }
 
     /**
      * Read fields.
      *
-     * @param in the in
+     * @param inputStream the in
      * @throws IOException Signals that an I/O exception has occurred.
      */
-    protected void readFields(final DataInputStream in) throws IOException {
+    protected void readFields(final DataInputStream inputStream) throws IOException {
 
-        mu0 = in.readDouble();
-        decayFactor = in.readDouble();
-        perTermAnnealingRate = in.readDouble();
-        weArePerTermAnnealing = in.readBoolean();
-        weAreRegularizing = in.readBoolean();
-        beta = MatrixWritable.readMatrix(in);
-        numCategories = in.readInt();
-        numFeatures = in.readInt();
-        step = in.readInt();
-        updateSteps = VectorWritable.readVector(in);
-        updateCounts = VectorWritable.readVector(in);
+        mu0 = inputStream.readDouble();
+        decayFactor = inputStream.readDouble();
+        perTermAnnealingRate = inputStream.readDouble();
+        weArePerTermAnnealing = inputStream.readBoolean();
+        weAreRegularizing = inputStream.readBoolean();
+        beta = MatrixWritable.readMatrix(inputStream);
+        numCategories = inputStream.readInt();
+        numFeatures = inputStream.readInt();
+        step = inputStream.readInt();
+        updateSteps = VectorWritable.readVector(inputStream);
+        updateCounts = VectorWritable.readVector(inputStream);
         this.prior = new L1();
     }
 }
