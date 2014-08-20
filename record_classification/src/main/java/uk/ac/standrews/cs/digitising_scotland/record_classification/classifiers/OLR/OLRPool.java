@@ -4,11 +4,14 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.mahout.math.DenseVector;
@@ -18,6 +21,8 @@ import org.apache.mahout.math.function.DoubleDoubleFunction;
 import org.apache.mahout.math.function.Functions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
 
 import com.google.common.collect.Lists;
 
@@ -209,9 +214,13 @@ public class OLRPool implements Runnable {
     private void trainAllModels() throws InterruptedException {
 
         ExecutorService executorService = Executors.newFixedThreadPool(poolSize);
+        Collection<Future<?>> futures = new LinkedList<Future<?>>();
+
         for (OLRShuffled model : models) {
-            executorService.submit(model);
+            futures.add(executorService.submit(model));
         }
+
+        Utils.handleErrors(futures);
         executorService.shutdown();
         executorService.awaitTermination(365, TimeUnit.DAYS);
     }

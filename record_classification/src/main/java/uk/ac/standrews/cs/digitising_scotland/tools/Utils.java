@@ -8,6 +8,7 @@ import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
@@ -15,6 +16,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.output.FileWriterWithEncoding;
@@ -44,6 +48,27 @@ public final class Utils {
     private Utils() {
 
         // private constructor for utility class.
+    }
+
+    /**
+     * Handles and exceptions or throwables thrown from threads that are handles by a {@link Future} or {@link ExecutorService}.
+     * @param futures Collection of executing futures to handle possible exceptions from.
+     * @throws InterruptedException
+     */
+    public static void handleErrors(final Collection<Future<?>> futures) throws InterruptedException {
+
+        for (Future<?> future2 : futures) {
+            try {
+                future2.get();
+            }
+            catch (ExecutionException e) {
+                Throwable rootException = e.getCause();
+                if (rootException != null) {
+                    LOGGER.error(rootException.toString());
+                }
+
+            }
+        }
     }
 
     /**

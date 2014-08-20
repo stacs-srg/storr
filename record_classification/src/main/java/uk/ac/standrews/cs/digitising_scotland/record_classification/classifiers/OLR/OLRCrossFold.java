@@ -7,10 +7,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 import java.util.Stack;
-import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -23,6 +23,7 @@ import org.apache.mahout.math.Vector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
 import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
 
 /**
@@ -138,17 +139,17 @@ public class OLRCrossFold {
         StopListener stopListener = new StopListener();
         ExecutorService stopService = Executors.newFixedThreadPool(1);
         ExecutorService executorService = Executors.newFixedThreadPool(folds);
-        //Collection<Future<?>> futures = new LinkedList<Future<?>>();
+        Collection<Future<?>> futures = new LinkedList<Future<?>>();
         stopService.submit(stopListener);
 
         for (OLRPool model : models) {
-            executorService.submit(model);
+            futures.add(executorService.submit(model));
         }
 
+        Utils.handleErrors(futures);
         executorService.shutdown();
         final int timeout = 365;
         executorService.awaitTermination(timeout, TimeUnit.DAYS);
-
         stopListener.terminateProcess();
         stopService.shutdown();
         prepareClassifier();
