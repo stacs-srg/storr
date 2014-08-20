@@ -1,21 +1,29 @@
 package uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl;
 
+import org.json.JSONException;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IBucket;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXP;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXPOutputStream;
+import uk.ac.standrews.cs.nds.util.ErrorHandling;
 
-public class BucketBackedOutputStream implements ILXPOutputStream {
+import java.io.IOException;
 
-    public BucketBackedOutputStream(IBucket b2) {
+/**
+ * Created by al on 28/04/2014.
+ */
+public class BucketBackedOutputStream extends BucketBackedAbstractStream implements ILXPOutputStream {
 
-        // TODO Auto-generated constructor stub
+    public BucketBackedOutputStream(final IBucket bucket) {
+        super(bucket);
     }
 
     @Override
-    public void add(ILXP record) {
+    public void add(final ILXP record) {
+        try {
+            bucket.put(record);
 
-        // TODO Auto-generated method stub
-
+        } catch (IOException | JSONException e) {
+            ErrorHandling.error("Cannot save record with id: " + record.getId() + " to bucket: " + bucket.getName() + "exception: " + e.getMessage());
+        }
     }
-
 }
