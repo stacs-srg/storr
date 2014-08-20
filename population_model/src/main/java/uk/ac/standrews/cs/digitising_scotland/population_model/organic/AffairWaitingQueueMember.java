@@ -66,7 +66,7 @@ public class AffairWaitingQueueMember implements Comparable<AffairWaitingQueueMe
     }
 
     @Override
-    public int compareTo(final AffairWaitingQueueMember o) {
+    public int compareTo(final AffairWaitingQueueMember o) {      
         if (affairDay < o.affairDay) {
             return -1;
         } else if (affairDay == o.affairDay) {
@@ -76,27 +76,57 @@ public class AffairWaitingQueueMember implements Comparable<AffairWaitingQueueMe
         }
     }
 
+    /**
+     * Returns the OrganicPerson.
+     * 
+     * @return The OrganicPerson.
+     */
     public OrganicPerson getPerson() {
         return person;
     }
 
-    public void setPerson(OrganicPerson person) {
+    /**
+     * Sets the OrganicPerson to the given person.
+     * 
+     * @param person The given person.
+     */
+    public void setPerson(final OrganicPerson person) {
         this.person = person;
     }
 
+    /**
+     * Checks if the affair is to be inter marital.
+     * 
+     * @return Boolean value indicating if the affair is to be inter marital.
+     */
     public boolean isInterMarital() {
         return interMarital;
     }
 
-    public void setInterMarital(boolean interMarital) {
+    /**
+     * Sets the boolean to the given value.
+     * 
+     * @param interMarital The given value.
+     */
+    public void setInterMarital(final boolean interMarital) {
         this.interMarital = interMarital;
     }
 
+    /**
+     * Returns the day on which the affair will occur.
+     * 
+     * @return The day on which the affair will occur.
+     */
     public int getAffairDay() {
         return affairDay;
     }
 
-    public void setAffairDay(int affairDay) {
+    /**
+     * Sets the affair day to the given day.
+     * 
+     * @param affairDay The given day.
+     */
+    public void setAffairDay(final int affairDay) {
         this.affairDay = affairDay;
     }
 

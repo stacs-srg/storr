@@ -17,6 +17,8 @@
 package uk.ac.standrews.cs.digitising_scotland.population_model.organic;
 
 /**
+ * The OrganicEvent class represents the possible events that can occur within the population.
+ * 
  * @author Victor Andrei (va9@st-andrews.ac.uk)
  * @author Tom Dalton (tsd4@st-andrews.ac.uk)
  */

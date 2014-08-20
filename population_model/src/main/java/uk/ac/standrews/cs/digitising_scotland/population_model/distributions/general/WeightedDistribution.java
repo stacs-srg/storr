@@ -166,7 +166,7 @@ public class WeightedDistribution extends RestrictedDistribution<Double> {
 
     // -------------------------------------------------------------------------------------------------------
 
-    private int getIndexOfFirstZero(List<Double> list) {
+    private int getIndexOfFirstZero(final List<Double> list) {
         int i = 0;
         for (Double d : list) {
             if (d.compareTo(zeroCap) <= 0) {

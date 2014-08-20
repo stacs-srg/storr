@@ -34,7 +34,7 @@ public class OrganicPopulationLogger {
         try {
             populationAtYearEnds[year - startYear] = population;
         } catch (ArrayIndexOutOfBoundsException e) {
-
+            System.err.println("Array out of bounds - population end of year");
         }
     }
 

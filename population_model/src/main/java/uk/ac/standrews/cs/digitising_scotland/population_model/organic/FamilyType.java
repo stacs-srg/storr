@@ -53,19 +53,19 @@ public enum FamilyType {
     INTER_MARITAL_AFFAIR,
 
     /**
-     * Used to indicate the combinations of internal affairs queues - in this case identifies the MaleSingleAffairsQueue and the FemaleSinglesQueue. 
+     * Used to indicate the combinations of internal affairs queues - in this case identifies the MaleSingleAffairsQueue and the FemaleSinglesQueue.
      */
     MALE_SINGLE_AFFAIR,
     /**
-     * Used to indicate the combinations of internal affairs queues - in this case identifies the MaleMaritalAffairsQueue and the FemaleMaritalAffairsQueue. 
+     * Used to indicate the combinations of internal affairs queues - in this case identifies the MaleMaritalAffairsQueue and the FemaleMaritalAffairsQueue.
      */
     MALE_MARITAL_AFFAIR,
     /**
-     * Used to indicate the combinations of internal affairs queues - in this case identifies the FemaleSingleAffairsQueue and the maleSinglesQueue. 
+     * Used to indicate the combinations of internal affairs queues - in this case identifies the FemaleSingleAffairsQueue and the maleSinglesQueue.
      */
     FEMALE_SINGLE_AFFAIR,
     /**
-     * Used to indicate the combinations of internal affairs queues - in this case identifies the MaleMaritalAffairsQueue and the FemaleMaritalAffairsQueue. 
+     * Used to indicate the combinations of internal affairs queues - in this case identifies the MaleMaritalAffairsQueue and the FemaleMaritalAffairsQueue.
      */
     FEMALE_MARITAL_AFFAIR,
 

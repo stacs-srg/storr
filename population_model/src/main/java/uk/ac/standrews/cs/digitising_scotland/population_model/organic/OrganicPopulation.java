@@ -144,10 +144,10 @@ public class OrganicPopulation implements IPopulation {
             while ((int) (getCurrentDay() / getDaysPerYear()) != (int) (event.getDay() / getDaysPerYear())) {
                 OrganicPopulationLogger.addPopulationForYear((int) (getCurrentDay() / DAYS_PER_YEAR) + 1 + EPOCH_YEAR, OrganicPopulationLogger.getPopulation());
                 if ((int) (getCurrentDay() / getDaysPerYear()) == START_DEBUG_YEAR - EPOCH_YEAR) {
-                    debug = true;
+                    setDebug(true);
                 }
                 if ((int) (getCurrentDay() / getDaysPerYear()) == END_DEBUG_YEAR - EPOCH_YEAR) {
-                    debug = false;
+                    setDebug(false);
                 }
                 if (print) {
                     System.out.println(EPOCH_YEAR + 1 + (int) (getCurrentDay() / getDaysPerYear()));
@@ -805,8 +805,8 @@ public class OrganicPopulation implements IPopulation {
      * 
      * @param maximumNumberOfChildrenInFamily The maximumNumberOfChildrenInFamily to set
      */
-    public void setMaximumNumberOfChildrenInFamily(final int maximumNumberOfChildrenInFamily) {
-        OrganicPopulation.maximumNumberOfChildrenInFamily = maximumNumberOfChildrenInFamily;
+    public void setMaximumNumberOfChildrenInFamily(final int maxNumberOfChildrenInFamily) {
+        maximumNumberOfChildrenInFamily = maxNumberOfChildrenInFamily;
     }
 
     /**
@@ -823,7 +823,7 @@ public class OrganicPopulation implements IPopulation {
      * 
      * @param debug The boolean value to set the debug flag to.
      */
-    public static void setDebug(boolean debug) {
+    public static void setDebug(final boolean debug) {
         OrganicPopulation.debug = debug;
     }
 }

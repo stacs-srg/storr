@@ -29,7 +29,6 @@ import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.tem
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.temporal.TemporalIntegerDistribution;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.temporal.TemporalPartnershipCharacteristicDistribution;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPerson;
-import uk.ac.standrews.cs.digitising_scotland.population_model.model.PopulationLogic;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.RandomFactory;
 import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
 
@@ -60,7 +59,6 @@ public class OrganicPerson implements IPerson {
     private static OccupationDistribution occupationDistribution;
     private static CauseOfDeathDistribution deathCauseOfDistribution;
 
-    private static TemporalDivorceRemarriageBooleanDistribution temporalDivorceRemarriageBooleanDeistribution;
     private static TemporalPartnershipCharacteristicDistribution temporalPartnershipCharacteristicDistribution;
     private static TemporalPartnershipCharacteristicDistribution temporalRemarriagePartnershipCharacteristicDistribution;
 
@@ -93,14 +91,13 @@ public class OrganicPerson implements IPerson {
      * 
      * @param population The population to which the distributions pertain to.
      */
-    public static void initializeDistributions(OrganicPopulation population) {
+    public static void initializeDistributions(final OrganicPopulation population) {
         try {
             maleFirstNamesDistribution = new FirstNameForMalesDistribution(random);
             femaleFirstNamesDistribution = new FirstNameForFemalesDistribution(random);
             surnamesDistribution = new SurnameDistribution(random);
             occupationDistribution = new OccupationDistribution(random);
             deathCauseOfDistribution = new CauseOfDeathDistribution(random);
-            temporalDivorceRemarriageBooleanDeistribution = new TemporalDivorceRemarriageBooleanDistribution(population, "divorce_remarriage_boolean_distributions_data_filename", random);
             seedAgeForMalesDistribution = new TemporalIntegerDistribution(population, "seed_age_for_males_distribution_data_filename", random, false);
             seedAgeForFemalesDistribution = new TemporalIntegerDistribution(population, "seed_age_for_females_distribution_data_filename", random, false);
             deathAgeAtDistribution = new TemporalIntegerDistribution(population, "death_age_at_distributions_data_filename", random, false);
@@ -148,7 +145,7 @@ public class OrganicPerson implements IPerson {
             if (lastName == null) {
                 lastName = surnamesDistribution.getSample();
             }
-                
+
             setOccupation(occupationDistribution.getSample());
             setCauseOfDeath(deathCauseOfDistribution.getSample());
         } catch (NullPointerException e) {
@@ -303,25 +300,6 @@ public class OrganicPerson implements IPerson {
         }
     }
 
-    /**
-     * To be called in the case of remarriage after ended partnership.
-     *
-     * @param minimumDate
-     *            the new marriage event will be placed AFTER this date
-     */
-    private void addEligibleToReMarryEvent(final int minimumDate) {
-        // Add ELIGIBLE_TO_MARRY event
-        try {
-            int date = temporalRemarriageTimeToDistribution.getSample(population.getCurrentDay(), 0, getDeathDay() - getBirthDay()) + minimumDate;
-            timeline.addEvent(date, new OrganicEvent(EventType.ELIGIBLE_TO_MARRY, this, date));
-        } catch (NoPermissableValueException e) {
-            addSingleComingOfAgeEvent();
-        } catch (NotSetUpAtClassInitilisationException e) {
-            System.err.println("Non restrited distribution called with restricted values");
-        }
-        OrganicPopulationLogger.incRemarriages();
-    }
-
     /*
      * Date helper methods
      */
@@ -335,11 +313,6 @@ public class OrganicPerson implements IPerson {
     public int getDayOfLife(final Date date) {
         int day = DateManipulation.dateToDays(date) - DateManipulation.dateToDays(getBirthDate());
         return day;
-    }
-
-    private int getDeathAgeInDays() {
-        int lengthInDays = timeline.getEndDate() - timeline.getStartDay();
-        return lengthInDays;
     }
 
     /*

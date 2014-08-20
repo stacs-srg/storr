@@ -22,8 +22,7 @@ import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.gen
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.general.NormalDistribution;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.general.NotSetUpAtClassInitilisationException;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.temporal.TemporalDivorceInstigatedByGenderDistribution;
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.temporal.TemporalDivorceReasonFemaleDistribution;
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.temporal.TemporalDivorceReasonMaleDistribution;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.temporal.TemporalDivorceReasonDistribution;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.temporal.TemporalIntegerDistribution;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IDFactory;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPartnership;
@@ -58,8 +57,8 @@ public final class OrganicPartnership implements IPartnership {
     private static TemporalIntegerDistribution temporalAffairNumberOfDistribution;
     private static TemporalIntegerDistribution temporalAffairNumberOfChildrenDistribution;
 
-    private static TemporalDivorceReasonMaleDistribution temporalDivorceReasonMaleDistribution;
-    private static TemporalDivorceReasonFemaleDistribution temporalDivorceReasonFemaleDistribution;
+    private static TemporalDivorceReasonDistribution temporalDivorceReasonMaleDistribution;
+    private static TemporalDivorceReasonDistribution temporalDivorceReasonFemaleDistribution;
 
     private static TemporalIntegerDistribution temporalCohabitaitonToMarriageTimeDistribution;
 
@@ -105,15 +104,15 @@ public final class OrganicPartnership implements IPartnership {
         temporalDivorceAgeForFemaleDistribution = new TemporalIntegerDistribution(population, "divorce_age_for_female_distributions_data_filename", random, false);
         temporalChildrenNumberOfInMaternityDistribution = new TemporalIntegerDistribution(population, "children_number_of_in_maternity_distributions_data_filename", random, false);
         temporalCohabitationLengthDistribution = new TemporalIntegerDistribution(population, "cohabitation_length_distributions_data_filename", random, false);
-        temporalDivorceReasonMaleDistribution = new TemporalDivorceReasonMaleDistribution(population, "divorce_reason_male_distributions_data_filename", random);
-        temporalDivorceReasonFemaleDistribution = new TemporalDivorceReasonFemaleDistribution(population, "divorce_reason_female_distributions_data_filename", random);
+        temporalDivorceReasonMaleDistribution = new TemporalDivorceReasonDistribution(population, "divorce_reason_male_distributions_data_filename", random);
+        temporalDivorceReasonFemaleDistribution = new TemporalDivorceReasonDistribution(population, "divorce_reason_female_distributions_data_filename", random);
         temporalAffairNumberOfDistribution = new TemporalIntegerDistribution(population, "affair_number_of_distributions_data_filename", random, false);
         temporalAffairNumberOfChildrenDistribution = new TemporalIntegerDistribution(population, "affair_number_of_children_distributions_data_filename", random, true);
         temporalCohabitaitonToMarriageTimeDistribution = new TemporalIntegerDistribution(population, "cohabitation_to_marriage_time_distributions_data_filename", random, false);
     }
 
     /**
-     *  * Constructs partnership objects and returns both the partnership in the first field of the array and the partnerships first child in the second.
+     * Constructs partnership objects and returns both the partnership in the first field of the array and the partnerships first child in the second.
      *
      * @param id          Specifies the ID of the OrganicPartnership.
      * @param husband     The OrganicPerson object representing the husband.
@@ -148,7 +147,7 @@ public final class OrganicPartnership implements IPartnership {
         this.partnershipDay = partnershipDay;
         this.population = population;
         // TODO inheritance of male name - need consideration of naming if not coming from a marriage
-        //		if (familyType == FamilyType.MARRIAGE) {
+        // if (familyType == FamilyType.MARRIAGE) {
         familyName = husband.getSurname();
         //		}
         if (familyType == FamilyType.COHABITATION_THEN_MARRIAGE) {

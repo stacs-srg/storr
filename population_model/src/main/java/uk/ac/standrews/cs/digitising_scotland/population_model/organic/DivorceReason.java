@@ -17,7 +17,7 @@
 package uk.ac.standrews.cs.digitising_scotland.population_model.organic;
 
 /**
- * Represents the five permissible reasons for divorce as laid out in UK law
+ * Represents the five permissible reasons for divorce as laid out in UK law.
  * 
  * @author Tom Dalton
  */
