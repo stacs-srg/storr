@@ -16,6 +16,7 @@
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.distributions.general;
 
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -65,6 +66,7 @@ public class WeightedDistribution extends RestrictedDistribution<Double> {
         this(weights, random);
         if (handleNoPermissableValueAsZero) {
             zeroCount = 0;
+            zeroCap = 1 / (maximumReturnValue - minimumReturnValue);
         }
     }
 
@@ -90,28 +92,42 @@ public class WeightedDistribution extends RestrictedDistribution<Double> {
     }
 
     @Override
-    public Double getSample(final double earliestReturnValue, final double latestReturnValue) throws NoPermissableValueException {
-        int i;
+    public Double getSample(final double smallestPermissableReturnValue, final double largestPermissableReturnValue) throws NoPermissableValueException {
 
         // TODO document this! Hard to tell what's going on. Findbugs reports high priority bug in unusedSampleValues.indexOf(0)
-        if (earliestReturnValue >= maximumReturnValue || latestReturnValue <= minimumReturnValue) {
+
+        // Checks if the distribution can provide a value that falls in the permissible return range, if not throws a NoPermissablevalueException
+        if (smallestPermissableReturnValue >= maximumReturnValue || largestPermissableReturnValue <= minimumReturnValue) {
+            // If at initialisation it has been detailed that the distribution should treat returning a non permissible value as if it has returned zero.
             if (zeroCount != -1) {
-                if (unusedSampleValues.size() != 0 && (i = unusedSampleValues.indexOf(0)) != -1) {
+                int i;
+                //  then it should remove the first 0 from the unusedSamplesValues list t0 simulate a returned zero value.
+                if (unusedSampleValues.size() != 0 && (i = getIndexOfFirstZero(unusedSampleValues)) != -1) {
                     unusedSampleValues.remove(i);
-                } else {
+                }
+                // Else if no zero value is found then increment zero count to allow for the next zero return value to be prevented. 
+                else {
                     zeroCount++;
                 }
             }
             throw new NoPermissableValueException();
-        } else {
+        }
+        // Else if distribution can return a value in the permissible range
+        else {
+            // If unused sample values exist
             if (unusedSampleValues.size() != 0) {
+                // then for each unused sample value
                 int j = 0;
-                for (double d : unusedSampleValues) {
-                    if (zeroCount > 0 && d == 0) {
+                for (Double d : unusedSampleValues) {
+                    // If treatment of NoPermissableValues as zero and the zero count is non zero and the considered unused value is of a zero value. 
+                    if (zeroCount > 0 && d.compareTo(zeroCap) <= 0) {
+                        // then remove unused value and decrement zero count.
                         unusedSampleValues.remove(j);
                         zeroCount--;
                     }
-                    if (inRange(d, earliestReturnValue, latestReturnValue)) {
+                    // Else if the given d is in range
+                    else if (inRange(d, smallestPermissableReturnValue, largestPermissableReturnValue)) {
+                        // then remove from unused values list and return as sample value.
                         unusedSampleValues.remove(j);
                         return d;
                     }
@@ -119,24 +135,51 @@ public class WeightedDistribution extends RestrictedDistribution<Double> {
                 }
             }
         }
-        double v = getSample();
-        if (zeroCount > 0 && v == 0) {
+        // On reaching here all unused values have been deemed unsuitable.
+        // Samples for new value.
+        Double v = getSample();
+
+        // If value is a zero value where there is a positive zeroCount and NoPermissableValues are treated as zero.
+        if (zeroCount > 0 && v.compareTo(zeroCap) <= 0) {
+            // Then decrement zero count and take a new sample.
             zeroCount--;
             v = getSample();
         }
-        while (!inRange(v, earliestReturnValue, latestReturnValue)) {
-            if (zeroCount > 0 && v == 0) {
+        // Tests if value is in range.
+        while (!inRange(v, smallestPermissableReturnValue, largestPermissableReturnValue)) {
+            // If value is a zero value where there is a positive zeroCount and NoPermissableValues are treated as zero.  
+            if (zeroCount > 0 && v.compareTo(zeroCap) <= 0) {
+                // Then decrement zero count and take a new sample.
                 zeroCount--;
                 v = getSample();
             } else {
+                // If not in range then adds to unused sample values list.
                 unusedSampleValues.add(v);
             }
+            // Takes a new sample.
             v = getSample();
         }
+        // When a suitable value has been reached exits from while loop and returns value.
+
         return v;
     }
 
     // -------------------------------------------------------------------------------------------------------
+
+    private int getIndexOfFirstZero(List<Double> list) {
+        int i = 0;
+        for (Double d : list) {
+            if (d.compareTo(zeroCap) <= 0) {
+                return i;
+            }
+            i++;
+        }
+        return -1;
+    }
+
+    private static boolean inRange(final double d, final double earliestReturnValue, final double latestReturnValue) {
+        return earliestReturnValue <= d && d <= latestReturnValue;
+    }
 
     private double getMinimumReturnValue() {
         int count = 0;

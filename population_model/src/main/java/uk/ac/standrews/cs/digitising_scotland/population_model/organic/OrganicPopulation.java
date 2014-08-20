@@ -33,12 +33,14 @@ import java.util.PriorityQueue;
 import java.util.Random;
 
 /**
+ * The OrganicPopulation class models and handles the population as a whole.
+ * 
  * @author Victor Andrei (va9@st-andrews.ac.uk)
  * @author Tom Dalton (tsd4@st-andrews.ac.uk)
  */
 public class OrganicPopulation implements IPopulation {
 
-    public static boolean DEBUG = false;
+    private static boolean debug = false;
     private static final int START_DEBUG_YEAR = 2999;
     private static final int END_DEBUG_YEAR = 3000;
 
@@ -128,7 +130,12 @@ public class OrganicPopulation implements IPopulation {
         OrganicPopulationLogger.initPopulationAtYearEndsArray((int) (getEarliestDate() / DAYS_PER_YEAR) + EPOCH_YEAR, END_YEAR);
     }
 
-    public void newEventIteration(boolean print) {
+    /**
+     * Called to begin the event iteration which commences the simulation.
+     * 
+     * @param print Specifies whether to print year end information to console.
+     */
+    public void newEventIteration(final boolean print) {
         while (getCurrentDay() < DateManipulation.dateToDays(getEndYear(), 0, 0)) {
             OrganicEvent event = globalEventsQueue.poll();
             if (event == null) {
@@ -136,20 +143,21 @@ public class OrganicPopulation implements IPopulation {
             }
             while ((int) (getCurrentDay() / getDaysPerYear()) != (int) (event.getDay() / getDaysPerYear())) {
                 OrganicPopulationLogger.addPopulationForYear((int) (getCurrentDay() / DAYS_PER_YEAR) + 1 + EPOCH_YEAR, OrganicPopulationLogger.getPopulation());
-                if ((int) (getCurrentDay() / getDaysPerYear()) == START_DEBUG_YEAR - 1600) {
-                    DEBUG = true;
+                if ((int) (getCurrentDay() / getDaysPerYear()) == START_DEBUG_YEAR - EPOCH_YEAR) {
+                    debug = true;
                 }
-                if ((int) (getCurrentDay() / getDaysPerYear()) == END_DEBUG_YEAR - 1600) {
-                    DEBUG = false;
+                if ((int) (getCurrentDay() / getDaysPerYear()) == END_DEBUG_YEAR - EPOCH_YEAR) {
+                    debug = false;
                 }
                 if (print) {
                     System.out.println(EPOCH_YEAR + 1 + (int) (getCurrentDay() / getDaysPerYear()));
                     System.out.println("Population: " + OrganicPopulationLogger.getPopulation());
                 }
+                // FIXME The fudge near the end of the line.
                 setCurrentDay(DateManipulation.dateToDays((int) (getCurrentDay() / DAYS_PER_YEAR) + 1 + EPOCH_YEAR, 0, (int) (2 + (getCurrentDay() / DAYS_PER_YEAR) / 100)));
             }
             setCurrentDay(event.getDay());
-            if (DEBUG) {
+            if (debug) {
                 System.out.println("TO HANDLE EVENT - " + event.getEventType().toString() + " - On day: " + getCurrentDay());
             }
             handleEvent(event);
@@ -158,6 +166,7 @@ public class OrganicPopulation implements IPopulation {
         }
     }
 
+    @Deprecated
     public void eventIteration(final boolean print, final int timeStepSizeInDays) {
         while (getCurrentDay() < DateManipulation.dateToDays(getEndYear(), 0, 0)) {
             if (print) {
@@ -165,13 +174,13 @@ public class OrganicPopulation implements IPopulation {
             }
 
             while (globalEventsQueue.peek() != null && globalEventsQueue.peek().getDay() == getCurrentDay()) {
-                if (DEBUG) {
+                if (debug) {
                     System.out.println("TO HANDLE EVENT - " + globalEventsQueue.peek().getEventType().toString() + " - On day: " + getCurrentDay());
                 }
                 handleEvent(globalEventsQueue.remove());
             }
 
-            if (DEBUG && globalEventsQueue.peek().getDay() < currentDay) {
+            if (debug && globalEventsQueue.peek().getDay() < currentDay) {
                 System.out.println("Current Day: " + getCurrentDay());
                 System.out.println("Event Day: " + globalEventsQueue.peek().getDay());
                 System.out.println("Event Type: " + globalEventsQueue.peek().getEventType().toString());
@@ -182,7 +191,7 @@ public class OrganicPopulation implements IPopulation {
         }
     }
 
-    private void handleEvent(OrganicEvent event) {
+    private void handleEvent(final OrganicEvent event) {
         if (event.getPartnership() != null) {
             switch (event.getEventType()) {
                 case BIRTH:
@@ -294,7 +303,13 @@ public class OrganicPopulation implements IPopulation {
      * Queue methods
      */
 
-    public void addPersonToAffairsWaitingQueue(OrganicPerson person, int affairDay) {
+    /**
+     * Adds the given person to the AffairsWaitingQueue with the specified date.
+     * 
+     * @param person The person waiting to have an affair.
+     * @param affairDay The day on which the affair begins in days since 1/1/1600.
+     */
+    public void addPersonToAffairsWaitingQueue(final OrganicPerson person, final int affairDay) {
         if (person.getSex() == 'M') {
             maleAffairsWaitingQueue.add(new AffairWaitingQueueMember(person, affairDay));
         } else {
@@ -302,7 +317,12 @@ public class OrganicPopulation implements IPopulation {
         }
     }
 
-    public void addEventToGlobalQueue(OrganicEvent event) {
+    /**
+     * Adds event to global events queue.
+     * 
+     * @param event The event to be added to the global events queue.
+     */
+    public void addEventToGlobalQueue(final OrganicEvent event) {
         globalEventsQueue.add(event);
     }
 
@@ -310,13 +330,13 @@ public class OrganicPopulation implements IPopulation {
      * Helper methods
      */
 
-    private void handleYearEndData(boolean print) {
+    private void handleYearEndData(final boolean print) {
         if ((int) (getCurrentDay() % getDaysPerYear()) == 0) {
-            if ((int) (getCurrentDay() / getDaysPerYear()) == START_DEBUG_YEAR - 1600) {
-                DEBUG = true;
+            if ((int) (getCurrentDay() / getDaysPerYear()) == START_DEBUG_YEAR - EPOCH_YEAR) {
+                debug = true;
             }
-            if ((int) (getCurrentDay() / getDaysPerYear()) == END_DEBUG_YEAR - 1600) {
-                DEBUG = false;
+            if ((int) (getCurrentDay() / getDaysPerYear()) == END_DEBUG_YEAR - EPOCH_YEAR) {
+                debug = false;
             }
 
             OrganicPopulationLogger.addPopulationForYear((int) (getCurrentDay() / DAYS_PER_YEAR) + EPOCH_YEAR, OrganicPopulationLogger.getPopulation());
@@ -327,7 +347,7 @@ public class OrganicPopulation implements IPopulation {
         }
     }
 
-    private List<OrganicPerson> getMaleQueueOf(FamilyType type) {
+    private List<OrganicPerson> getMaleQueueOf(final FamilyType type) {
         switch (type) {
             case SINGLE:
             case FEMALE_SINGLE_AFFAIR:
@@ -348,7 +368,7 @@ public class OrganicPopulation implements IPopulation {
         }
     }
 
-    private List<OrganicPerson> getFemaleQueueOf(FamilyType type) {
+    private List<OrganicPerson> getFemaleQueueOf(final FamilyType type) {
         switch (type) {
             case SINGLE:
             case MALE_SINGLE_AFFAIR:
@@ -372,22 +392,22 @@ public class OrganicPopulation implements IPopulation {
     private void partnerUpMembersOfAffairsQueue() {
         // check the waiting queue for people ready to have affair
         while (maleAffairsWaitingQueue.peek() != null) {
-            if (maleAffairsWaitingQueue.peek().affairDay <= currentDay) {
-                if (maleAffairsWaitingQueue.peek().interMarital) {
-                    maleMaritalAffairsQueue.add(maleAffairsWaitingQueue.poll().person);
+            if (maleAffairsWaitingQueue.peek().getAffairDay() <= currentDay) {
+                if (maleAffairsWaitingQueue.peek().isInterMarital()) {
+                    maleMaritalAffairsQueue.add(maleAffairsWaitingQueue.poll().getPerson());
                 } else {
-                    maleSingleAffairsQueue.add(maleAffairsWaitingQueue.poll().person);
+                    maleSingleAffairsQueue.add(maleAffairsWaitingQueue.poll().getPerson());
                 }
             } else {
                 break;
             }
         }
         while (femaleAffairsWaitingQueue.peek() != null) {
-            if (femaleAffairsWaitingQueue.peek().affairDay <= currentDay) {
-                if (femaleAffairsWaitingQueue.peek().interMarital) {
-                    femaleMaritalAffairsQueue.add(femaleAffairsWaitingQueue.poll().person);
+            if (femaleAffairsWaitingQueue.peek().getAffairDay() <= currentDay) {
+                if (femaleAffairsWaitingQueue.peek().isInterMarital()) {
+                    femaleMaritalAffairsQueue.add(femaleAffairsWaitingQueue.poll().getPerson());
                 } else {
-                    femaleSingleAffairsQueue.add(femaleAffairsWaitingQueue.poll().person);
+                    femaleSingleAffairsQueue.add(femaleAffairsWaitingQueue.poll().getPerson());
                 }
             } else {
                 break;
@@ -407,7 +427,7 @@ public class OrganicPopulation implements IPopulation {
         partnerUpMembersOfAffairsQueue();
     }
 
-    private void partnerTogetherPeopleInPartnershipQueue(FamilyType type) {
+    private void partnerTogetherPeopleInPartnershipQueue(final FamilyType type) {
         // if (DEBUG) {
         // System.out.println("PARTNERING UP QUEUE - " + type.toString());
         // }
@@ -475,13 +495,11 @@ public class OrganicPopulation implements IPopulation {
                 firstMaleId = (Integer) null;
                 firstFemaleId = (Integer) null;
                 break;
-
             }
-
         }
     }
 
-    private void removeFromQueue(LinkedList<OrganicPerson> queue, Integer firstId) {
+    private void removeFromQueue(final LinkedList<OrganicPerson> queue, final Integer firstId) {
         int maleId = queue.getFirst().getId();
         queue.removeFirst();
         if (maleId != firstId) {
@@ -528,6 +546,11 @@ public class OrganicPopulation implements IPopulation {
      * Getters and setters
      */
 
+    /**
+     * Returns the epoch year.
+     * 
+     * @return The epoch year.
+     */
     public static int getEpochYear() {
         return EPOCH_YEAR;
     }
@@ -680,6 +703,12 @@ public class OrganicPopulation implements IPopulation {
         return null;
     }
 
+    /**
+     * Returns partnership with given id. Works by calling findPartnership but then casts to an OrganicPartenrship.
+     * 
+     * @param id The id of the partnership.
+     * @return The partnership.
+     */
     public OrganicPartnership findOrganicPartnership(final int id) {
         return (OrganicPartnership) findPartnership(id);
     }
@@ -724,6 +753,7 @@ public class OrganicPopulation implements IPopulation {
      * @param args
      *            String Arguments.
      */
+    @SuppressWarnings("magic numbers")
     public static void main(final String[] args) {
         long startTime = System.nanoTime();
         System.out.println("--------MAIN HERE---------");
@@ -762,6 +792,8 @@ public class OrganicPopulation implements IPopulation {
     }
 
     /**
+     * returns the maximum number of children in a family.
+     * 
      * @return the maximumNumberOfChildrenInFamily
      */
     public static int getMaximumNumberOfChildrenInFamily() {
@@ -769,9 +801,29 @@ public class OrganicPopulation implements IPopulation {
     }
 
     /**
+     * Sets the maximum number of children in a family.
+     * 
      * @param maximumNumberOfChildrenInFamily The maximumNumberOfChildrenInFamily to set
      */
-    public void setMaximumNumberOfChildrenInFamily(int maximumNumberOfChildrenInFamily) {
+    public void setMaximumNumberOfChildrenInFamily(final int maximumNumberOfChildrenInFamily) {
         OrganicPopulation.maximumNumberOfChildrenInFamily = maximumNumberOfChildrenInFamily;
+    }
+
+    /**
+     * Returns the state of the debug flag.
+     * 
+     * @return The boolean value of the debug flag.
+     */
+    public static boolean isDebug() {
+        return debug;
+    }
+
+    /**
+     * Sets the debug flag as specified.
+     * 
+     * @param debug The boolean value to set the debug flag to.
+     */
+    public static void setDebug(boolean debug) {
+        OrganicPopulation.debug = debug;
     }
 }

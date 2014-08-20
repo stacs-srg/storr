@@ -16,10 +16,30 @@
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.organic;
 
+/**
+ * Represents the five permissible reasons for divorce as laid out in UK law
+ * 
+ * @author Tom Dalton
+ */
 public enum DivorceReason {
+    /**
+     * Divorce reason cited as adultery by the non instigating party.
+     */
     ADULTERY,
+    /**
+     * Divorce reason cited as the behaviour of the non instigating party.
+     */
     BEHAVIOUR,
+    /**
+     * Divorce reason cited as desertion by the non instigating party.
+     */
     DESERTION,
+    /**
+     * Divorce reason cited as the separation (of at least two years) with consent of the non instigating party.
+     */
     SEPARATION_WITH_CONSENT,
+    /**
+     * Divorce reason cited as the separation (of at least five years) with no consent of the non instigating party.
+     */
     SEPARATION
 }

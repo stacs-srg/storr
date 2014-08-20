@@ -20,43 +20,84 @@ import java.util.Random;
 
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.temporal.TemporalAffairWithMarriedOrSingleDistribution;
 
-public class AffairWaitingQueueMember implements Comparable<AffairWaitingQueueMember>{
+/**
+ * Provides an orderable queue element to be used in the affair waiting queue.
+ * 
+ * @author Tom Dalton (tsd4@st-andrews.ac.uk)
+ */
+public class AffairWaitingQueueMember implements Comparable<AffairWaitingQueueMember> {
 
-	OrganicPerson person;
-	int affairDay;
-	boolean interMarital;
-	
+    private OrganicPerson person;
+    private int affairDay;
+    private boolean interMarital;
+
     private static TemporalAffairWithMarriedOrSingleDistribution affairWithMarriedOrSingleDistribution;
 
-	public static void initialiseAffairWithMarrieadOrSingleDistribution(OrganicPopulation population, String distributionKey, Random random) {
-		affairWithMarriedOrSingleDistribution = new TemporalAffairWithMarriedOrSingleDistribution(population, distributionKey, random);
-	}
-	
-    
-	public AffairWaitingQueueMember(OrganicPerson person, int affairDay) {
-		this.person = person;
-		this.affairDay = affairDay;
-		switch (affairWithMarriedOrSingleDistribution.getSample(affairDay)) {
-		    case SINGLE_AFFAIR:
-		    	this.interMarital = false;
-			    break;
-		    case INTER_MARITAL_AFFAIR:
-		    	this.interMarital = true;
-		    	break;
-		    default:
-		    	break;
-		}	
-	}
+    /**
+     * Initialises the distribution used to discern if the affair is to be with a single third party of a married third party.
+     * 
+     * @param population The OrganicPopulation instance.
+     * @param distributionKey The key corresponding to the file path in the config file.
+     * @param random The random number generator to be used.
+     */
+    public static void initialiseAffairWithMarrieadOrSingleDistribution(final OrganicPopulation population, final String distributionKey, final Random random) {
+        affairWithMarriedOrSingleDistribution = new TemporalAffairWithMarriedOrSingleDistribution(population, distributionKey, random);
+    }
 
-	@Override
-	public int compareTo(AffairWaitingQueueMember o) {
-		if (affairDay < o.affairDay) {
-			return -1;
-		} else if (affairDay == o.affairDay) {
-			return 0;
-		} else {
-			return 1;
-		}
-	}
-	
+    /**
+     * Constructs an AffairWaitingQueueMember which can then then be placed into the affairs waiting queue.
+     * 
+     * @param person The instance of the relevant OrganicPerson.
+     * @param affairDay The day on which the affair is to occur.
+     */
+    public AffairWaitingQueueMember(final OrganicPerson person, final int affairDay) {
+        this.person = person;
+        this.affairDay = affairDay;
+        switch (affairWithMarriedOrSingleDistribution.getSample(affairDay)) {
+            case SINGLE_AFFAIR:
+                this.interMarital = false;
+                break;
+            case INTER_MARITAL_AFFAIR:
+                this.interMarital = true;
+                break;
+            default:
+                break;
+        }
+    }
+
+    @Override
+    public int compareTo(final AffairWaitingQueueMember o) {
+        if (affairDay < o.affairDay) {
+            return -1;
+        } else if (affairDay == o.affairDay) {
+            return 0;
+        } else {
+            return 1;
+        }
+    }
+
+    public OrganicPerson getPerson() {
+        return person;
+    }
+
+    public void setPerson(OrganicPerson person) {
+        this.person = person;
+    }
+
+    public boolean isInterMarital() {
+        return interMarital;
+    }
+
+    public void setInterMarital(boolean interMarital) {
+        this.interMarital = interMarital;
+    }
+
+    public int getAffairDay() {
+        return affairDay;
+    }
+
+    public void setAffairDay(int affairDay) {
+        this.affairDay = affairDay;
+    }
+
 }

@@ -21,46 +21,53 @@ import java.util.Random;
 import uk.ac.standrews.cs.digitising_scotland.population_model.organic.FamilyType;
 import uk.ac.standrews.cs.digitising_scotland.population_model.organic.OrganicPopulation;
 
+/**
+ * Provides a temporal distribution for partnership characteristic.
+ * 
+ * @author Tom Dalton (tsd4@st-andrews.ac.uk)
+ */
 public class TemporalPartnershipCharacteristicDistribution extends TemporalDistribution<FamilyType> {
 
     /**
-     * Creates a divorce instigated by gender distribution.
+     * Creates a partnership characteristic distribution.
      *
-     * @param random the random number generator to be used
+     * @param population The instance of the population which the distribution pertains to.
+     * @param distributionKey The key specified in the config file as the location of the relevant file.
+     * @param random the random number generator to be used.
      */
-    public TemporalPartnershipCharacteristicDistribution(OrganicPopulation population, String distributionKey, final Random random) {
+    public TemporalPartnershipCharacteristicDistribution(final OrganicPopulation population, final String distributionKey, final Random random) {
         super(population, distributionKey, random, false);
     }
 
     /**
-     * Returns either a gender or no divorce for which party in the marriage will instigate the divorce.
+     * Samples the correct distribution for the given year and returns the sampled partnership characteristic.
      *
+     * @param date The date in days since the 1/1/1600 to be used to identity the distribution for the given year which should be sampled.
      * @return Indicates the gender of the instigator or no divorce
      */
     @Override
-    public FamilyType getSample(int date) {
-    	
+    public FamilyType getSample(final int date) {
         switch (getIntSample(date)) {
             case 0:
                 return FamilyType.SINGLE;
             case 1:
-            	return FamilyType.COHABITATION;
+                return FamilyType.COHABITATION;
             case 2:
-            	return FamilyType.COHABITATION_THEN_MARRIAGE;
+                return FamilyType.COHABITATION_THEN_MARRIAGE;
             case 3:
-            	return FamilyType.MARRIAGE;
+                return FamilyType.MARRIAGE;
             default:
                 throw new RuntimeException("unexpected sample value");
         }
     }
 
-	@Override
-	public FamilyType getSample() {
-		return getSample(0);
-	}
+    @Override
+    public FamilyType getSample() {
+        return getSample(0);
+    }
 
     @Override
-    public FamilyType getSample(int date, int earliestValue, int latestValue) {
+    public FamilyType getSample(final int date, final int earliestValue, final int latestValue) {
         return getSample(date);
     }
 }
