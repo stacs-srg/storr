@@ -28,12 +28,16 @@ import java.util.List;
  */
 public abstract class RestrictedDistribution<Value> implements Distribution<Value> {
 
+    // TODO doesn't make sense for these to be Doubles given that distribution is generic.
+
     // Restricted Distribution Helper Values
     protected Double minimumReturnValue = null;
     protected Double maximumReturnValue = null;
 
     protected List<Double> unusedSampleValues = new ArrayList<>();
     protected int zeroCount = -1;
+
+    // TODO what is the difference between earliestReturnValue and minimumReturnValue? Shouldn't use 'earliest' here since this is a generic distribution not restricted to dates.
 
     public abstract Value getSample(double earliestReturnValue, double latestReturnValue) throws NoPermissableValueException, NotSetUpAtClassInitilisationException;
 
