@@ -92,6 +92,8 @@ public class WeightedDistribution extends RestrictedDistribution<Double> {
     @Override
     public Double getSample(final double earliestReturnValue, final double latestReturnValue) throws NoPermissableValueException {
         int i;
+
+        // TODO document this! Hard to tell what's going on. Findbugs reports high priority bug in unusedSampleValues.indexOf(0)
         if (earliestReturnValue >= maximumReturnValue || latestReturnValue <= minimumReturnValue) {
             if (zeroCount != -1) {
                 if (unusedSampleValues.size() != 0 && (i = unusedSampleValues.indexOf(0)) != -1) {

@@ -17,6 +17,7 @@
 package uk.ac.standrews.cs.digitising_scotland.population_model.distributions.general;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The restricted distribution class provided the ability for the return value of the distribution when sampled to be set to fall with a given range.
@@ -28,10 +29,10 @@ import java.util.ArrayList;
 public abstract class RestrictedDistribution<Value> implements Distribution<Value> {
 
     // Restricted Distribution Helper Values
-    protected Double minimumReturnValue = (Double) null;
-    protected Double maximumReturnValue = (Double) null;
+    protected Double minimumReturnValue = null;
+    protected Double maximumReturnValue = null;
 
-    protected ArrayList<Double> unusedSampleValues = new ArrayList<Double>();
+    protected List<Double> unusedSampleValues = new ArrayList<>();
     protected int zeroCount = -1;
 
     public abstract Value getSample(double earliestReturnValue, double latestReturnValue) throws NoPermissableValueException, NotSetUpAtClassInitilisationException;
@@ -45,10 +46,6 @@ public abstract class RestrictedDistribution<Value> implements Distribution<Valu
      * @return Boolean value of true if d falls inbetween the two given values else false.
      */
     protected static boolean inRange(final double d, final double earliestReturnValue, final double latestReturnValue) {
-        if (earliestReturnValue <= d && d <= latestReturnValue) {
-            return true;
-        } else {
-            return false;
-        }
+        return earliestReturnValue <= d && d <= latestReturnValue;
     }
 }
