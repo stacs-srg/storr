@@ -138,7 +138,6 @@ public class MachineLearningClassificationPipeline {
         System.out.println("Resolver matrix complexity before chop: " + resolverMatrix.complexity());
 
         List<Set<CodeTriple>> triples = resolverMatrix.getValidCodeTriples(cleanedTokenSet);
-        System.out.println("Resolver matrix complexity after chop: " + resolverMatrix.complexity());
         Set<CodeTriple> best;
         if (triples.size() > 0) {
             best = ResolverUtils.getBest(triples);

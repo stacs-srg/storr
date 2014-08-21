@@ -49,26 +49,26 @@ public class PipelineUtils {
         CodeFactory.getInstance().loadDictionary(codeFile);
     }
 
-    protected static void generateAndPrintStats(final Bucket classifiedBucket, final String header, final String experimentalFolderName) throws IOException {
+    protected static void generateAndPrintStats(final Bucket classifiedBucket, final String header, final String bucketIdentifier, final String experimentalFolderName) throws IOException {
 
         LOGGER.info(header);
         ListAccuracyMetrics accuracyMetrics = new ListAccuracyMetrics(classifiedBucket);
         accuracyMetrics.prettyPrint(header);
-        generateStats(classifiedBucket, accuracyMetrics, experimentalFolderName);
+        generateStats(classifiedBucket, accuracyMetrics, experimentalFolderName, bucketIdentifier);
     }
 
-    protected static void generateStats(final Bucket bucket, final ListAccuracyMetrics accuracyMetrics, final String experimentalFolderName) throws IOException {
+    protected static void generateStats(final Bucket bucket, final ListAccuracyMetrics accuracyMetrics, final String experimentalFolderName, String bucketIdentifier) throws IOException {
 
         final String matrixDataPath = experimentalFolderName + "/Data/classificationCountMatrix.csv";
         final String matrixImagePath = "classificationMatrix";
         final String reportspath = experimentalFolderName + "/Reports/";
 
-        final String strictCodeStatsPath = experimentalFolderName + "/Data/strictCodeStats.csv";
-        final String strictCodePath = "strictCodeStats";
+        final String strictCodeStatsPath = experimentalFolderName + "/Data/strictCodeStats" + bucketIdentifier + ".csv";
+        final String strictCodePath = "strictCodeStats" + bucketIdentifier;
         printCodeMetrics(bucket, accuracyMetrics, strictCodeStatsPath, strictCodePath, experimentalFolderName);
 
-        final String softCodeStatsPath = experimentalFolderName + "/Data/softCodeStats.csv";
-        final String softCodePath = "softCodeStats";
+        final String softCodeStatsPath = experimentalFolderName + "/Data/softCodeStats" + bucketIdentifier + ".csv";
+        final String softCodePath = "softCodeStats" + bucketIdentifier;
         printCodeMetrics(bucket, accuracyMetrics, softCodeStatsPath, softCodePath, experimentalFolderName);
 
         AbstractConfusionMatrix invertedConfusionMatrix = new InvertedSoftConfusionMatrix(bucket);

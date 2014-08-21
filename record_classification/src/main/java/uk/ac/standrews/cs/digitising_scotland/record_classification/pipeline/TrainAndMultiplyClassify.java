@@ -135,11 +135,11 @@ public final class TrainAndMultiplyClassify {
         LOGGER.info("********** Output Stats **********");
 
         LOGGER.info("All Records");
-        PipelineUtils.generateAndPrintStats(allClassified, "All Records", experimentalFolderName);
+        PipelineUtils.generateAndPrintStats(allClassified, "All Records", "AllRecords", experimentalFolderName);
 
         LOGGER.info("\nUnique Records");
         final Bucket uniqueRecordsOnly = BucketFilter.uniqueRecordsOnly(allClassified);
-        PipelineUtils.generateAndPrintStats(uniqueRecordsOnly, "Unique Only", experimentalFolderName);
+        PipelineUtils.generateAndPrintStats(uniqueRecordsOnly, "Unique Only", "UniqueOnly", experimentalFolderName);
 
         LOGGER.info("Codes that were null and weren't adter chopping: " + CodeFactory.getInstance().getCodeMapNullCounter());
 

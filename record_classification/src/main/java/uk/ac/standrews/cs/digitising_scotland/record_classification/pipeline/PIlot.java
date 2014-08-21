@@ -136,9 +136,9 @@ public final class PIlot {
 
         final Bucket uniqueRecordsOnly = BucketFilter.uniqueRecordsOnly(classifier.getAllClassified());
 
-        PipelineUtils.generateAndPrintStats(classifier.getAllClassified(), "All Records", experimentalFolderName);
+        PipelineUtils.generateAndPrintStats(classifier.getAllClassified(), "All Records", "AllRecords", experimentalFolderName);
 
-        PipelineUtils.generateAndPrintStats(uniqueRecordsOnly, "Unique Only", experimentalFolderName);
+        PipelineUtils.generateAndPrintStats(uniqueRecordsOnly, "Unique Only", "UniqueOnly", experimentalFolderName);
     }
 
     private static Timer initAndStartTimer() {
