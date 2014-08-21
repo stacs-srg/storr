@@ -512,12 +512,38 @@ public class OrganicPopulation implements IPopulation {
     private boolean eligableToPartner(final OrganicPerson male, final OrganicPerson female) {
         boolean resonableAgeDifference = PopulationLogic.partnerAgeDifferenceIsReasonable(DateManipulation.dateToDays(male.getBirthDate()), DateManipulation.dateToDays(female.getBirthDate()));
         boolean notSiblings;
+        boolean resonableChildGap = timeForXChildren(1, male, female);
+        
         if (male.getParentsPartnership() == female.getParentsPartnership() && male.getParentsPartnership() != -1) {
             notSiblings = false;
         } else {
             notSiblings = true;
         }
-        return resonableAgeDifference && notSiblings;
+        return resonableAgeDifference && notSiblings && resonableChildGap;
+    }
+    
+    private boolean timeForXChildren(final int x, final OrganicPerson male, final OrganicPerson female) {
+        int days = getLastPossibleBirthDate(male, female) - getCurrentDay();
+        if (days / x < PopulationLogic.getInterChildInterval() * DAYS_PER_YEAR) {
+            return false;
+        }
+        return true;
+    }
+
+    private int getLastPossibleBirthDate(final OrganicPerson husband, final OrganicPerson wife) {
+        int lastEndDate = wife.getBirthDay() + (int) (PopulationLogic.getMaximumMotherAgeAtChildBirth() * OrganicPopulation.getDaysPerYear());
+
+        if (lastEndDate > husband.getBirthDay() + PopulationLogic.getMaximumFathersAgeAtChildBirth() * OrganicPopulation.getDaysPerYear()) {
+            lastEndDate = husband.getBirthDay() + (int) (PopulationLogic.getMaximumFathersAgeAtChildBirth() * OrganicPopulation.getDaysPerYear());
+        }
+        if (lastEndDate > husband.getDeathDay()) {
+            lastEndDate = husband.getDeathDay();
+        }
+        if (lastEndDate > wife.getDeathDay()) {
+            lastEndDate = wife.getDeathDay();
+        }
+        
+        return lastEndDate;
     }
 
     /**

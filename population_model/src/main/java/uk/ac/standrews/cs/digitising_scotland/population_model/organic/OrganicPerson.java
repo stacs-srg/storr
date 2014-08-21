@@ -25,7 +25,6 @@ import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.Uni
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.general.InconsistentWeightException;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.general.NoPermissableValueException;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.general.NotSetUpAtClassInitilisationException;
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.temporal.TemporalDivorceRemarriageBooleanDistribution;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.temporal.TemporalIntegerDistribution;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.temporal.TemporalPartnershipCharacteristicDistribution;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPerson;
@@ -69,7 +68,6 @@ public class OrganicPerson implements IPerson {
     private static TemporalIntegerDistribution temporalMarriageAgeForFemalesDistribution;
     private static TemporalIntegerDistribution temporalCohabitationAgeForMalesDistribution;
     private static TemporalIntegerDistribution temporalCohabitationAgeForFemalesDistribution;
-    private static TemporalIntegerDistribution temporalRemarriageTimeToDistribution;
 
     // Person instance required variables
     private int id;
@@ -107,7 +105,6 @@ public class OrganicPerson implements IPerson {
             temporalRemarriagePartnershipCharacteristicDistribution = new TemporalPartnershipCharacteristicDistribution(population, "partnership_remarriage_characteristic_distributions_data_filename", random);
             temporalCohabitationAgeForMalesDistribution = new TemporalIntegerDistribution(population, "cohabitation_age_for_males_distributions_data_filename", random, false);
             temporalCohabitationAgeForFemalesDistribution = new TemporalIntegerDistribution(population, "cohabitation_age_for_females_distributions_data_filename", random, false);
-            temporalRemarriageTimeToDistribution = new TemporalIntegerDistribution(population, "remarraige_time_to_distributions_data_filename", random, false);
         } catch (InconsistentWeightException e) {
             e.printStackTrace();
         } catch (IOException e) {

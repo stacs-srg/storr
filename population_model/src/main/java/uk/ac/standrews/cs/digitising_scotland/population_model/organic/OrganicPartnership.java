@@ -389,7 +389,7 @@ public final class OrganicPartnership implements IPartnership {
             int dayOfBirth;
             do {
                 dayOfBirth = timeBetweenMaternitiesDistrobution.getSample().intValue();
-            } while (dayOfBirth <= 0);
+            } while (dayOfBirth <= 0 && !viableBirthDate(wife, dayOfBirth));
             if (husband != null && wife != null && PopulationLogic.parentsHaveSensibleAgesAtChildBirth(husband.getBirthDay(), husband.getDeathDay(), wife.getBirthDay(), wife.getDeathDay(), dayOfBirth + currentDay)) {
                 timeline.addEvent(currentDay + dayOfBirth, new OrganicEvent(EventType.BIRTH, this, husband, wife, currentDay + dayOfBirth));
                 for (int i = 0; i < numberOfChildrenInPregnacy; i++) {
@@ -408,6 +408,17 @@ public final class OrganicPartnership implements IPartnership {
                 return new OrganicPerson[0];
             }
         }
+    }
+
+    private boolean viableBirthDate(OrganicPerson wife, int day) {
+        Integer[] births = wife.getTimeline().getAllDaysOfEventType(EventType.BIRTH);
+        int interval = (int) (PopulationLogic.getInterChildInterval() * OrganicPopulation.getDaysPerYear());
+        for (int i : births) {
+            if (i - interval < day && day < i + interval) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
