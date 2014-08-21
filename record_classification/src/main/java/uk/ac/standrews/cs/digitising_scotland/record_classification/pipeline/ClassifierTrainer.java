@@ -9,17 +9,36 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.vectors.VectorFactory;
 
+/**
+ * The Class ClassifierTrainer contains methods for training both {@link OLRClassifier} and {@link ExactMatchClassifier} objects.
+ * 
+ */
 public class ClassifierTrainer {
 
+    /** The Constant LOGGER. */
     private static final Logger LOGGER = LoggerFactory.getLogger(ClassifierTrainer.class);
 
+    /** The vector factory. */
     private VectorFactory vectorFactory;
+
+    /** The olr classifier. */
     private AbstractClassifier olrClassifier;
+
+    /** The exact match classifier. */
     private ExactMatchClassifier exactMatchClassifier;
+
+    /** The training bucket. */
     private Bucket trainingBucket;
 
+    /** The experimental folder name. */
     private String experimentalFolderName;
 
+    /**
+     * Instantiates a new classifier trainer with a bucket containing training data and the folder where models should be written to.
+     *
+     * @param trainingBucket the training bucket
+     * @param experimentalFolderName the experimental folder name
+     */
     public ClassifierTrainer(final Bucket trainingBucket, final String experimentalFolderName) {
 
         vectorFactory = new VectorFactory(trainingBucket);
@@ -28,6 +47,13 @@ public class ClassifierTrainer {
 
     }
 
+    /**
+     * Trains an exact match classifier with data from the training bucket. The model is written to the experimental folder name
+     * /Models/lookupTable.
+     *
+     * @return the exact match classifier with a build lookup table/model
+     * @throws Exception the exception
+     */
     public ExactMatchClassifier trainExactMatchClassifier() throws Exception {
 
         LOGGER.info("********** Creating Lookup Tables **********");
@@ -38,6 +64,13 @@ public class ClassifierTrainer {
         return exactMatchClassifier;
     }
 
+    /**
+     * Trains an online logistic regression (OLR) classifier. The model is written to the experimental folder
+     * + "/Models/olrModel".
+     *
+     * @return the olrClassifier classifier after training
+     * @throws Exception the exception
+     */
     public AbstractClassifier trainOLRClassifier() throws Exception {
 
         LOGGER.info("********** Training OLR Classifiers **********");
@@ -47,16 +80,31 @@ public class ClassifierTrainer {
         return olrClassifier;
     }
 
+    /**
+     * Gets the vector factory that was used in vector creation.
+     *
+     * @return the vector factory
+     */
     public VectorFactory getVectorFactory() {
 
         return vectorFactory;
     }
 
+    /**
+     * Gets the olr classifier.
+     *
+     * @return the olr classifier
+     */
     public AbstractClassifier getOlrClassifier() {
 
         return olrClassifier;
     }
 
+    /**
+     * Gets the exact match classifier.
+     *
+     * @return the exact match classifier
+     */
     public ExactMatchClassifier getExactMatchClassifier() {
 
         return exactMatchClassifier;

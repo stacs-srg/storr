@@ -102,20 +102,7 @@ public class BestConfidenceClassifierTest {
         List<Record> listOfRecordsTraining = RecordFactory.makeUnCodedRecordsFromFile(inputFileTraining);
         bucketB = new Bucket(listOfRecordsTraining);
         bucketB = helper.giveBucketTestingOccCodes(bucketB);
-        addVectorsToBucket(bucketB);
         return bucketB;
-    }
-
-    /**
-     * Tests the adding of vectors to records in a bucket.
-     *
-     * @param bucket the bucket
-     * @throws Exception if something goes wrong....
-     */
-    public void addVectorsToBucket(final Bucket bucket) throws Exception {
-
-        System.out.println(bucket.toString());
-
     }
 
     /**

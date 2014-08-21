@@ -112,7 +112,6 @@ public class DistributionTest {
         testTotalValues();
         Distribution d = new Distribution(base);
         assertEquals(d.getValueForName("NOTHERE"), -1);
-        System.out.println(d.toString());
     }
 
     /**

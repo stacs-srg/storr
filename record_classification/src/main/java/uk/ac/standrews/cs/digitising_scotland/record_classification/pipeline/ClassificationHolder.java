@@ -84,7 +84,7 @@ public class ClassificationHolder {
     }
 
     /**
-     * Gets all the  classified records
+     * Gets all the  classified records.
      *
      * @return the all classified
      */

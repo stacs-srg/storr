@@ -106,22 +106,7 @@ public class NaiveBayesClassifierTest {
         List<Record> listOfRecordsTraining = RecordFactory.makeUnCodedRecordsFromFile(inputFileTraining);
         bucketB = new Bucket(listOfRecordsTraining);
         //FIXME   bucketB = helper.giveBucketTestingOccCodes(bucketB);
-        addVectorsToBucket(bucketB);
         return bucketB;
-    }
-
-    /**
-     * Tests the adding of vectors to records in a bucket.
-     *
-     * @param bucket the bucket
-     * @throws Exception if something goes wrong....
-     */
-    public void addVectorsToBucket(final Bucket bucket) throws Exception {
-
-        //        LevenShteinCleaner.cleanData(bucket);
-
-        System.out.println(bucket.toString());
-
     }
 
     /**
@@ -142,9 +127,7 @@ public class NaiveBayesClassifierTest {
 
         //        LevenShteinCleaner.cleanData(bucketA);
 
-        System.out.println(bucketA.toString());
         nbc.classify(bucketA);
-        System.out.println(bucketA);
     }
 
     /**
@@ -165,14 +148,11 @@ public class NaiveBayesClassifierTest {
 
         //        LevenShteinCleaner.cleanData(bucketA);
 
-        System.out.println(bucketA.toString());
         for (Record r : bucketA) {
             TokenSet tokenSet = new TokenSet(r.getOriginalData().getDescription());
             Pair<Code, Double> result = nbc.classify(new TokenSet(r.getOriginalData().getDescription()));
             r.addCodeTriples(new CodeTriple(result.getLeft(), tokenSet, result.getRight()));
         }
-
-        System.out.println(bucketA);
 
     }
 }
