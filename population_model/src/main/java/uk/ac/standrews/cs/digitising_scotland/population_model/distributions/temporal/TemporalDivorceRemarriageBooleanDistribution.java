@@ -21,7 +21,6 @@ import java.util.Random;
 import uk.ac.standrews.cs.digitising_scotland.population_model.organic.OrganicPopulation;
 
 /**
-
  * Created by victor on 22/07/2014.
  * @author Tom Dalton (tsd4@st-andrews.ac.uk)
  */
@@ -30,31 +29,33 @@ public class TemporalDivorceRemarriageBooleanDistribution extends TemporalDistri
     /**
      * Creates a Remarriage distribution.
      *
+     * @param population The instance of the population which the distribution pertains to.
+     * @param distributionKey The key specified in the config file as the location of the relevant file.
      * @param random Takes in random for use in creation of distribution.
      */
-    public TemporalDivorceRemarriageBooleanDistribution(OrganicPopulation population, String distributionKey, final Random random) {
-    	super(population, distributionKey, random, false);
+    public TemporalDivorceRemarriageBooleanDistribution(final OrganicPopulation population, final String distributionKey, final Random random) {
+        super(population, distributionKey, random, false);
     }
 
     @Override
-    public Boolean getSample(int date) {
-    	switch (getIntSample(date)) {
-    	case 0:
-    		return true;
-    	case 1:
-    		return false;
-    	default:
-    		throw new RuntimeException("unexpected sample value");
-    	}
+    public Boolean getSample(final int date) {
+        switch (getIntSample(date)) {
+            case 0:
+                return true;
+            case 1:
+                return false;
+            default:
+                throw new RuntimeException("unexpected sample value");
+        }
     }
 
-	@Override
-	public Boolean getSample() {
-		return getSample(0);
-	}
+    @Override
+    public Boolean getSample() {
+        return getSample(0);
+    }
 
     @Override
-    public Boolean getSample(int date, int earliestValue, int latestValue) {
+    public Boolean getSample(final int date, final int earliestValue, final int latestValue) {
         return getSample(date);
     }
 }

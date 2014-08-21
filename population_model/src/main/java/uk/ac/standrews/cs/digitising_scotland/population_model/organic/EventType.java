@@ -22,27 +22,26 @@ package uk.ac.standrews.cs.digitising_scotland.population_model.organic;
  * @author Tom Dalton (tsd4@st-andrews.ac.uk)
  */
 public enum EventType {
-	
-	/*
-	 * Partnership events
-	 */
-	/**
-	 * Indicates the point in time where and individual who will not cohabit or marry can become part of informal child bearing relationships and thus should be added to the singles list.
-	 */
-	COMING_OF_AGE,
-	/**
-	 * Indicates the point in time where an individual should be added to a cohabit queue.
-	 */
-	ELIGIBLE_TO_COHABIT,
-	/**
-	 * Indicates the point in time where an individual should be added to a cohabit then marry queue.
-	 */
-	ELIGIBLE_TO_COHABIT_THEN_MARRY,
+
+    /*
+     * Partnership events
+     */
+    /**
+     * Indicates the point in time where and individual who will not cohabit or marry can become part of informal child bearing relationships and thus should be added to the singles list.
+     */
+    COMING_OF_AGE,
+    /**
+     * Indicates the point in time where an individual should be added to a cohabit queue.
+     */
+    ELIGIBLE_TO_COHABIT,
+    /**
+     * Indicates the point in time where an individual should be added to a cohabit then marry queue.
+     */
+    ELIGIBLE_TO_COHABIT_THEN_MARRY,
     /**
      * Indicates the point in time where an individual should be added to a marriage queue.
      */
-    ELIGIBLE_TO_MARRY,
-    BORN,
+    ELIGIBLE_TO_MARRY, 
     /**
      * Indicates the point in time on the partnership timeline where the birth will occur.
      */
@@ -56,17 +55,13 @@ public enum EventType {
      */
     PARTNERSHIP_ENDED_BY_DEATH,
     /**
-     * Indicatees the point of the end of a cohabitation on relationship timline.
+     * Indicates the point of the end of a cohabitation on relationship timeline.
      */
     END_OF_COHABITATION,
-    AFFAIR,
-    MALE_BEGINS_AFFAIR,
-    MALE_ENDS_AFFAIR,
-    FEMALE_BEGINS_AFFAIR,
-    FEMALE_ENDS_AFFAIR,
-    END_OF_AFFAIR,
-    
-     
+
+    // TODO look into the actual use and the consistency of use of these throughout the program.
+    AFFAIR, MALE_BEGINS_AFFAIR, MALE_ENDS_AFFAIR, FEMALE_BEGINS_AFFAIR, FEMALE_ENDS_AFFAIR, END_OF_AFFAIR,
+
     /*
      * Geographical Events
      */
@@ -78,12 +73,16 @@ public enum EventType {
      * Indicates the point in time where an individual will leave the population.
      */
     EMIGRATE,
-    
+
     /*
      * Life events
      */
     /**
-     * Indicates th epoint in time where an individual dies.
+     * Indicates the point in time where the individual is born.
+     */
+    BORN,
+    /**
+     * Indicates the point in time where an individual dies.
      */
     DEATH
 }

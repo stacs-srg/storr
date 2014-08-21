@@ -42,26 +42,31 @@ import java.util.Set;
  *
  * @author Victor Andrei (va9@st-andrews.ac.uk)
  * @author Tom Dalton (tsd4@st-andrews.ac.uk)
+ *
+ * @param <Value> The Value type to be used by the distribution.
  */
 public abstract class TemporalDistribution<Value> implements ITemporalDistribution<Value> {
 
-    public HashMap<Integer, RestrictedDistribution<?>> map = new HashMap<Integer, RestrictedDistribution<?>>();
+    private HashMap<Integer, RestrictedDistribution<?>> map = new HashMap<Integer, RestrictedDistribution<?>>();
     private String line;
     private boolean firstLine = true;
     private int minimum, maximum;
     private boolean normal;
 
-    private final static String TAB = "\t";
-    private final static String COMMENT_INDICATOR = "%";
+    private static final String TAB = "\t";
+    private static final String COMMENT_INDICATOR = "%";
 
     private Integer[] keyArray;
 
     /**
-     * Constructor that takes in a file name with the weights information.
-     *
-     * @param filename
+     * Constructor for TemporalDistribution. Reads in distributions data for all years from the location specified and creates a mapping of years to distributions.
+     * 
+     * @param population The instance of the population which the distribution pertains to.
+     * @param distributionKey The key specified in the config file as the location of the relevant file.
+     * @param random The random to be used.
+     * @param handleNoPermissibleValueAsZero Indicates if the distribution is to treat the returning of NoPermissibleValueExceptions as returning a zero value.
      */
-    public TemporalDistribution(OrganicPopulation population, String distributionKey, Random random, boolean handleNoPermissableValueAsZero) {
+    public TemporalDistribution(final OrganicPopulation population, final String distributionKey, final Random random, final boolean handleNoPermissibleValueAsZero) {
 
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(getClass().getClassLoader().getResourceAsStream(PopulationProperties.getProperties().getProperty(distributionKey)), FileManipulation.FILE_CHARSET))) {
 
@@ -94,7 +99,7 @@ public abstract class TemporalDistribution<Value> implements ITemporalDistributi
                         for (int i = 1; i < lineComponents.length; i++) {
                             weights[i - 1] = Integer.parseInt(lineComponents[i]);
                         }
-                        currentDistribution = new WeightedIntegerDistribution(minimum, maximum, weights, random, handleNoPermissableValueAsZero);
+                        currentDistribution = new WeightedIntegerDistribution(minimum, maximum, weights, random, handleNoPermissibleValueAsZero);
                     }
                     map.put((int) ((year - OrganicPopulation.getEpochYear()) * OrganicPopulation.getDaysPerYear()), currentDistribution);
                 }
@@ -119,7 +124,7 @@ public abstract class TemporalDistribution<Value> implements ITemporalDistributi
         Arrays.sort(keyArray);
     }
 
-    protected Integer getIntSample(int date) {
+    protected Integer getIntSample(final int date) {
         int key = keyArray[keyArray.length - 1];
         Integer returnValue;
         if (keyArray[0] > date) {
@@ -138,7 +143,7 @@ public abstract class TemporalDistribution<Value> implements ITemporalDistributi
         return returnValue;
     }
 
-    protected Integer getIntSample(int date, int earliestValue, int latestValue) throws NoPermissableValueException, NotSetUpAtClassInitilisationException {
+    protected Integer getIntSample(final int date, final int earliestValue, final int latestValue) throws NoPermissableValueException, NotSetUpAtClassInitilisationException {
         int key = keyArray[keyArray.length - 1];
         Integer returnValue;
         if (keyArray[0] > date) {
@@ -160,8 +165,16 @@ public abstract class TemporalDistribution<Value> implements ITemporalDistributi
     @Override
     public abstract Value getSample();
 
-    public abstract Value getSample(int date);
-
-    public abstract Value getSample(int date, int earliestValue, int latestValue) throws NoPermissableValueException, NotSetUpAtClassInitilisationException;
+    /**
+     * Method returns a sample value from the distribution for the specified year which falls within the permissible values range.
+     * 
+     * @param date The date in days since 1/1/1600 which will be used to select the correct distribution to be used for the given year.
+     * @param smallestPermissibleReturnValue The smallest value that the user wishes to be returned from the distribution.
+     * @param largestPermissibleReturnValue The largest value that the user wishes to be returned from the distribution.
+     * @return The Value that has been sampled from the distribution.
+     * @throws NoPermissableValueException Thrown if the distribution does not contain a value within the permissible range.
+     * @throws NotSetUpAtClassInitilisationException Thrown if the distribution has not been initlised in the correct way to allow restricted sampling.
+     */
+    public abstract Value getSample(int date, int smallestPermissibleReturnValue, int largestPermissibleReturnValue) throws NoPermissableValueException, NotSetUpAtClassInitilisationException;
 
 }

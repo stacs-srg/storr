@@ -52,12 +52,12 @@ public class NormalDistribution extends RestrictedDistribution<Double> {
      * Creates a normal distribution with specified characteristics.
      * Also sets up the distribution to allow it to be called with restricted values. 
      * 
-     * @param mean
-     * @param standard_deviation
-     * @param random
-     * @param minimumReturnValue
-     * @param maximumReturnValue
-     * @throws NegativeDeviationException
+     * @param mean the mean of the distribution
+     * @param standard_deviation the standard deviation of the distribution
+     * @param random the random number generator to be used
+     * @param minimumReturnValue The smallest value that the distribution is able to return
+     * @param maximumReturnValue The largest value that the distribution is able to return
+     * @throws NegativeDeviationException if the standard deviation is negative
      */
     public NormalDistribution(final double mean, final double standard_deviation, final Random random, final double minimumReturnValue, final double maximumReturnValue) throws NegativeDeviationException {
         this(mean, standard_deviation, random);
@@ -97,5 +97,17 @@ public class NormalDistribution extends RestrictedDistribution<Double> {
             v = getSample();
         }
         return v;
+    }
+
+    /**
+     * Check if the given double d falls between the two given values.
+     * 
+     * @param d The double to be considered.
+     * @param earliestReturnValue The smaller value.
+     * @param latestReturnValue The larger value.
+     * @return Boolean value of true if d falls inbetween the two given values else false.
+     */
+    protected static boolean inRange(final double d, final double earliestReturnValue, final double latestReturnValue) {
+        return earliestReturnValue <= d && d <= latestReturnValue;
     }
 }

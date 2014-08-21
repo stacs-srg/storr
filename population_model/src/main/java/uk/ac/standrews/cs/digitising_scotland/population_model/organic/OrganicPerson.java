@@ -29,7 +29,6 @@ import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.tem
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.temporal.TemporalIntegerDistribution;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.temporal.TemporalPartnershipCharacteristicDistribution;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPerson;
-import uk.ac.standrews.cs.digitising_scotland.population_model.model.PopulationLogic;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.RandomFactory;
 import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
 
@@ -40,6 +39,7 @@ import java.util.List;
 import java.util.Random;
 
 /**
+ * The OrganicPerson class models the variables pertaining to people in the model.
  *
  * @author Victor Andrei (va9@st-andrews.ac.uk)
  * @author Tom Dalton (tsd4@st-andrews.ac.uk)
@@ -59,7 +59,6 @@ public class OrganicPerson implements IPerson {
     private static OccupationDistribution occupationDistribution;
     private static CauseOfDeathDistribution deathCauseOfDistribution;
 
-    private static TemporalDivorceRemarriageBooleanDistribution temporalDivorceRemarriageBooleanDeistribution;
     private static TemporalPartnershipCharacteristicDistribution temporalPartnershipCharacteristicDistribution;
     private static TemporalPartnershipCharacteristicDistribution temporalRemarriagePartnershipCharacteristicDistribution;
 
@@ -88,16 +87,17 @@ public class OrganicPerson implements IPerson {
     private boolean seedPerson;
 
     /**
-     * Distribution initialisation
+     * Initialises the distributions at runtime which pertain to the OrganicPerson class.
+     * 
+     * @param population The population to which the distributions pertain to.
      */
-    public static void initializeDistributions(OrganicPopulation population) {
+    public static void initializeDistributions(final OrganicPopulation population) {
         try {
             maleFirstNamesDistribution = new FirstNameForMalesDistribution(random);
             femaleFirstNamesDistribution = new FirstNameForFemalesDistribution(random);
             surnamesDistribution = new SurnameDistribution(random);
             occupationDistribution = new OccupationDistribution(random);
             deathCauseOfDistribution = new CauseOfDeathDistribution(random);
-            temporalDivorceRemarriageBooleanDeistribution = new TemporalDivorceRemarriageBooleanDistribution(population, "divorce_remarriage_boolean_distributions_data_filename", random);
             seedAgeForMalesDistribution = new TemporalIntegerDistribution(population, "seed_age_for_males_distribution_data_filename", random, false);
             seedAgeForFemalesDistribution = new TemporalIntegerDistribution(population, "seed_age_for_females_distribution_data_filename", random, false);
             deathAgeAtDistribution = new TemporalIntegerDistribution(population, "death_age_at_distributions_data_filename", random, false);
@@ -127,6 +127,7 @@ public class OrganicPerson implements IPerson {
      * @param parentPartnershipId The id of the parents partnership.
      * @param population The population which the person is a part of.
      * @param seedGeneration Flag indicating is the simulation is still creating the seed population.
+     * @param spawningPartership The instance of the person's parent's partnership.
      */
     public OrganicPerson(final int id, final int birthDay, final int parentPartnershipId, final OrganicPopulation population, final boolean seedGeneration, final OrganicPartnership spawningPartership) {
         this.id = id;
@@ -141,8 +142,9 @@ public class OrganicPerson implements IPerson {
             }
 
             // in case no name was found or it's the seed
-            if (lastName == null)
+            if (lastName == null) {
                 lastName = surnamesDistribution.getSample();
+            }
 
             setOccupation(occupationDistribution.getSample());
             setCauseOfDeath(deathCauseOfDistribution.getSample());
@@ -193,8 +195,10 @@ public class OrganicPerson implements IPerson {
 
     /**
      * Populates timeline with events.
+     * 
+     * @param previousMarriage Boolean value indicates if the individual has previously been married.
      */
-    public void populateTimeline(boolean previousMarriage) {
+    public void populateTimeline(final boolean previousMarriage) {
         // Decide family type
         FamilyType partnershipCharacteristic = decideFuturePartnershipCharacteristics(previousMarriage);
         switch (partnershipCharacteristic) {
@@ -229,29 +233,11 @@ public class OrganicPerson implements IPerson {
      * Timeline event handling methods
      */
 
-    public void addRemarriageEventIfApplicable(int earlistRemarriageDay) {
-        if (temporalDivorceRemarriageBooleanDeistribution.getSample(population.getCurrentDay())) {
-            addEligibleToReMarryEvent(earlistRemarriageDay);
-        }
-    }
-
-    private FamilyType decideFuturePartnershipCharacteristics(boolean previousMarriage) {
+    private FamilyType decideFuturePartnershipCharacteristics(final boolean previousMarriage) {
         if (previousMarriage) {
             return temporalRemarriagePartnershipCharacteristicDistribution.getSample(population.getCurrentDay());
         } else {
             return temporalPartnershipCharacteristicDistribution.getSample(population.getCurrentDay());
-        }
-    }
-
-    private boolean checkDayNotInPastForPreviousMarriagePersons(boolean previousMarriage, int day) {
-        if (!previousMarriage) {
-            return true;
-        } else {
-            if (day <= population.getCurrentDay()) {
-                return false;
-            } else {
-                return true;
-            }
         }
     }
 
@@ -314,25 +300,6 @@ public class OrganicPerson implements IPerson {
         }
     }
 
-    /**
-     * To be called in the case of remarriage after ended partnership.
-     *
-     * @param minimumDate
-     *            the new marriage event will be placed AFTER this date
-     */
-    private void addEligibleToReMarryEvent(final int minimumDate) {
-        // Add ELIGIBLE_TO_MARRY event
-        try {
-            int date = temporalRemarriageTimeToDistribution.getSample(population.getCurrentDay(), 0, getDeathDay() - getBirthDay()) + minimumDate;
-            timeline.addEvent(date, new OrganicEvent(EventType.ELIGIBLE_TO_MARRY, this, date));
-        } catch (NoPermissableValueException e) {
-            addSingleComingOfAgeEvent();
-        } catch (NotSetUpAtClassInitilisationException e) {
-            System.err.println("Non restrited distribution called with restricted values");
-        }
-        OrganicPopulationLogger.incRemarriages();
-    }
-
     /*
      * Date helper methods
      */
@@ -348,15 +315,15 @@ public class OrganicPerson implements IPerson {
         return day;
     }
 
-    private int getDeathAgeInDays() {
-        int lengthInDays = timeline.getEndDate() - timeline.getStartDay();
-        return lengthInDays;
-    }
-
     /*
      * Getters and setters
      */
 
+    /**
+     * Returns a list of all affair start dates for the given person.
+     * 
+     * @return A list of affair start dates.
+     */
     public Integer[] getListOfAffairStartDays() {
         return timeline.getAllDaysOfEventType(EventType.AFFAIR);
     }
@@ -500,15 +467,30 @@ public class OrganicPerson implements IPerson {
         return parentPartnershipId;
     }
 
-    public void setOccupation(String occupation) {
+    /**
+     * Sets the persons occupation to the given occupation.
+     * 
+     * @param occupation The persons occupation.
+     */
+    public void setOccupation(final String occupation) {
         this.occupation = occupation;
     }
 
+    /**
+     * Returns the cause of death.
+     * 
+     * @return The cause of death.
+     */
     public String getCauseOfDeath() {
         return causeOfDeath;
     }
 
-    public void setCauseOfDeath(String causeOfDeath) {
+    /**
+     * Sets the persons cause of death to the given reason.
+     * 
+     * @param causeOfDeath The persons cause of death.
+     */
+    public void setCauseOfDeath(final String causeOfDeath) {
         this.causeOfDeath = causeOfDeath;
     }
 

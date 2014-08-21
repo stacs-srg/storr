@@ -16,20 +16,65 @@
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.organic;
 
+/**
+ * Used to represent differing family types.
+ * 
+ * @author Tom Dalton (tsd4@st-andrews.ac.uk)
+ */
 public enum FamilyType {
+    /**
+     * Indicates the individual will not partake in a cohabitation or marriage based partnership, but may be involved in an affair partnership.
+     */
     SINGLE,
-    AFFAIR,
-    MALE_AFFAIR,
-    FEMALE_AFFAIR,
-    SINGLE_AFFAIR,
-    MALE_SINGLE_AFFAIR,
-    MALE_MARITAL_AFFAIR,
-    FEMALE_SINGLE_AFFAIR,
-    FEMALE_MARITAL_AFFAIR,
-    INTER_MARITAL_AFFAIR,
-    LONE_MOTHER,
-    LONE_FATHER,
+    /**
+     * Indicates the individuals first partnership will be a cohabitation.
+     */
     COHABITATION,
+    /**
+     * Indicates the individuals first partnership will be a cohabitation leading to marriage.
+     */
     COHABITATION_THEN_MARRIAGE,
-    MARRIAGE
+    /**
+     * Indicates the individuals first partnership will be marriage.
+     */
+    MARRIAGE,
+
+    //    AFFAIR,
+    //    MALE_AFFAIR,
+    //    FEMALE_AFFAIR,
+
+    /**
+     * Used as returns from affairWithMarriedOrSingleDistribution - Indicates the affair will occur with a single third party.
+     */
+    SINGLE_AFFAIR,
+    /**
+     * Used as returns from affairWithMarriedOrSingleDistribution - Indicates the affair will occur with a married third party.
+     */
+    INTER_MARITAL_AFFAIR,
+
+    /**
+     * Used to indicate the combinations of internal affairs queues - in this case identifies the MaleSingleAffairsQueue and the FemaleSinglesQueue.
+     */
+    MALE_SINGLE_AFFAIR,
+    /**
+     * Used to indicate the combinations of internal affairs queues - in this case identifies the MaleMaritalAffairsQueue and the FemaleMaritalAffairsQueue.
+     */
+    MALE_MARITAL_AFFAIR,
+    /**
+     * Used to indicate the combinations of internal affairs queues - in this case identifies the FemaleSingleAffairsQueue and the maleSinglesQueue.
+     */
+    FEMALE_SINGLE_AFFAIR,
+    /**
+     * Used to indicate the combinations of internal affairs queues - in this case identifies the MaleMaritalAffairsQueue and the FemaleMaritalAffairsQueue.
+     */
+    FEMALE_MARITAL_AFFAIR,
+
+    /**
+     * NOT CURRENTLY FULLY USED
+     */
+    LONE_MOTHER,
+    /**
+     * NOT CURRENTLY FULLY USED
+     */
+    LONE_FATHER
 }

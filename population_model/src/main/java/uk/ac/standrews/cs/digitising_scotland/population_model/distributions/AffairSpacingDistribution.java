@@ -29,8 +29,8 @@ import uk.ac.standrews.cs.digitising_scotland.population_model.organic.OrganicPa
  * @author Tom Dalton (tsd4@st-andrews.ac.uk)
  */
 public final class AffairSpacingDistribution extends NormalDistribution {
-    
-    private static final int STANDARD_DEVIATION_FACTOR = 4;
+
+    private static final double STANDARD_DEVIATION_FACTOR = 4;
 
     /**
      * Sets up an affair spacing distribution for the given partnership. 

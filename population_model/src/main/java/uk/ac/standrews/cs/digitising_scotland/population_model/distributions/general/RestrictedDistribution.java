@@ -28,28 +28,22 @@ import java.util.List;
  */
 public abstract class RestrictedDistribution<Value> implements Distribution<Value> {
 
-    // TODO doesn't make sense for these to be Doubles given that distribution is generic.
-
     // Restricted Distribution Helper Values
-    protected Double minimumReturnValue = null;
-    protected Double maximumReturnValue = null;
+    protected Value minimumReturnValue = null;
+    protected Value maximumReturnValue = null;
 
     protected List<Double> unusedSampleValues = new ArrayList<>();
     protected int zeroCount = -1;
-
-    // TODO what is the difference between earliestReturnValue and minimumReturnValue? Shouldn't use 'earliest' here since this is a generic distribution not restricted to dates.
-
-    public abstract Value getSample(double earliestReturnValue, double latestReturnValue) throws NoPermissableValueException, NotSetUpAtClassInitilisationException;
+    protected double zeroCap;
 
     /**
-     * Check if the given double d falls between the two given values.
+     * Samples distribution and returns a value that falls between the two given values.
      * 
-     * @param d The double to be considered.
-     * @param earliestReturnValue The smaller value.
-     * @param latestReturnValue The larger value.
-     * @return Boolean value of true if d falls inbetween the two given values else false.
+     * @param smallestPermissableReturnValue The smallest value that the caller wishes for the distribution to return on this sample.
+     * @param largestPermissableReturnValue The largest value that the caller wishes for the distribution to return on this sample.
+     * @return The Value sampled from the distribution.
+     * @throws NoPermissableValueException Thrown when no value in the distribution can satisfy the given range.
+     * @throws NotSetUpAtClassInitilisationException Thrown if the distribution wasn't correctly set up at initialisation.
      */
-    protected static boolean inRange(final double d, final double earliestReturnValue, final double latestReturnValue) {
-        return earliestReturnValue <= d && d <= latestReturnValue;
-    }
+    public abstract Value getSample(double smallestPermissableReturnValue, double largestPermissableReturnValue) throws NoPermissableValueException, NotSetUpAtClassInitilisationException;
 }

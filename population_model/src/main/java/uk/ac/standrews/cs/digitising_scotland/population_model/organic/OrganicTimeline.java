@@ -24,6 +24,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 /**
+ * The OrganicTimeline class provides a map based timeline of the events that occur within the course of a partnership or in the lifetime of a person.
+ * 
  * @author Victor Andrei (va9@st-andrews.ac.uk)
  * @author Tom Dalton (tsd4@st-andrews.ac.uk)
  */
@@ -33,7 +35,6 @@ public class OrganicTimeline {
     private int startDay;
     private int endDay;
     private HashMap<Integer, OrganicEvent> events = new HashMap<Integer, OrganicEvent>();
-
 
     /*
      * Constructors
@@ -125,19 +126,25 @@ public class OrganicTimeline {
     /*
      * Getters and setters
      */
-    
-    public Integer[] getAllDaysOfEventType(EventType event) {
-    	ArrayList<Integer> temp = new ArrayList<Integer>();
-    	Iterator<Integer> iter = events.keySet().iterator();
-    	while (iter.hasNext()) {
-    		int i = iter.next();
-    		OrganicEvent e = events.get(i);
-    		if (e.getEventType() == event) {
-    			temp.add(i);
-    		}
-    	}
-    	
-    	return temp.toArray(new Integer[temp.size()]);
+
+    /**
+     * Returns all the days on which a given event type occurs.
+     * 
+     * @param event The given event.
+     * @return The array containing the days on which the event has occured.
+     */
+    public Integer[] getAllDaysOfEventType(final EventType event) {
+        ArrayList<Integer> temp = new ArrayList<Integer>();
+        Iterator<Integer> iter = events.keySet().iterator();
+        while (iter.hasNext()) {
+            int i = iter.next();
+            OrganicEvent e = events.get(i);
+            if (e.getEventType() == event) {
+                temp.add(i);
+            }
+        }
+
+        return temp.toArray(new Integer[temp.size()]);
     }
 
     /**
@@ -204,7 +211,7 @@ public class OrganicTimeline {
      * @return The date on which the event occurs in days since 1/1/1600.
      * @throws NoSuchEventException Thown where the specified event is not found.
      */
-    public int getDay(EventType event) throws NoSuchEventException {
+    public int getDay(final EventType event) throws NoSuchEventException {
         for (int i : events.keySet()) {
             if (events.get(i).getEventType() == event) {
                 return i;
