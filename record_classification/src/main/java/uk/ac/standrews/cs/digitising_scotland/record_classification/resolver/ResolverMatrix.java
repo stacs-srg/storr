@@ -88,19 +88,15 @@ public class ResolverMatrix {
 
         chopUntilComplexityWithinBound(COMPLEXITY_UPPERLIMIT);
 
-        LOGGER.info("Resolving Hierachies");
         resolveHierarchies();
         List<Set<CodeTriple>> merged = new ArrayList<>();
         merged.add(null);
-        LOGGER.info("Merging");
-        LOGGER.info("matrix keySet size " + matrix.keySet().size());
 
         if (matrix.keySet().size() > KEYSET_SIZE_LIMIT) {
             LOGGER.info("codeList too big - skipping"); //TODO quick hack to test theory
         }
         else {
             for (Code code : matrix.keySet()) {
-                LOGGER.info(code.toString() + " codeList is of size " + matrix.get(code).size());
                 merge(merged, matrix.get(code), code, originalSet);
             }
         }
