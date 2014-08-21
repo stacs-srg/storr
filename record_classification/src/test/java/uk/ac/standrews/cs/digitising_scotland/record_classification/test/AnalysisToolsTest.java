@@ -333,6 +333,7 @@ public class AnalysisToolsTest {
             System.out.println(classes[i].toString() + " Precision " + precision + "  Recall " + recall + " f ratio " + f1 + " accuracy " + accuracy);
 
         }
+
         double macroRecall = atreal.getMacroAverageRecall();
         double macroPrecision = atreal.getMacroAveragePrecision();
         double microRecall = atreal.getMicroAverageRecall();

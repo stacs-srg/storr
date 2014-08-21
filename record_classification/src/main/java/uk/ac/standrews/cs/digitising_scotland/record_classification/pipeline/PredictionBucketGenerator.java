@@ -16,8 +16,8 @@ public class PredictionBucketGenerator {
      * Creates the prediction bucket from the given text file. This method currently expects the data to be in the form of the
      * pilot data. The source code should be updated if this changes.
      *
-     * @param prediction the prediction
-     * @return the bucket
+     * @param prediction file containing the records to be classified, one per line.
+     * @return the bucket containing records to be classified
      */
     public Bucket createPredictionBucket(final File prediction) {
 

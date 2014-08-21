@@ -94,8 +94,6 @@ public class PipelineUtils {
 
     protected static void runRscript(final String pathToRScript, final String dataPath, final String reportsPath, final String imageName) throws IOException {
 
-        // TODO this doesn't look too portable!
-
         if (!isRinstalled()) { return; }
 
         String imageOutputPath = reportsPath + imageName + ".png";

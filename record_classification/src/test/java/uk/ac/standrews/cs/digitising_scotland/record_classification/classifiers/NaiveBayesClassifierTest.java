@@ -146,8 +146,6 @@ public class NaiveBayesClassifierTest {
         listOfRecords = RecordFactory.makeUnCodedRecordsFromFile(inputFile);
         bucketA.addCollectionOfRecords(listOfRecords);
 
-        //        LevenShteinCleaner.cleanData(bucketA);
-
         for (Record r : bucketA) {
             TokenSet tokenSet = new TokenSet(r.getOriginalData().getDescription());
             Pair<Code, Double> result = nbc.classify(new TokenSet(r.getOriginalData().getDescription()));
