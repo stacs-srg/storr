@@ -19,8 +19,6 @@ public abstract class CrossFoldedDataStructure {
      */
     public static ArrayList<NamedVector>[][] make(final ArrayList<NamedVector> trainingVectorList, final int folds) {
 
-        //TODO refactor
-        //TODO FIXME add case to throw error if folds is equal to 1
         ArrayList<NamedVector>[][] crossFoldedData = initialize(folds);
         int size = trainingVectorList.size();
         int[] splitPoints = calculateSplitPoints(folds, size);

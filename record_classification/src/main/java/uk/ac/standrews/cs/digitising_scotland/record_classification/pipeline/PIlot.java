@@ -77,7 +77,7 @@ public final class PIlot {
 
         parseInput(args);
 
-        TrainingBucketGenerator trainingGenerator = new TrainingBucketGenerator();
+        GoldStandardBucketGenerator trainingGenerator = new GoldStandardBucketGenerator();
         Bucket trainingBucket = trainingGenerator.generate(training);
 
         PredictionBucketGenerator predictionBucketGenerator = new PredictionBucketGenerator();

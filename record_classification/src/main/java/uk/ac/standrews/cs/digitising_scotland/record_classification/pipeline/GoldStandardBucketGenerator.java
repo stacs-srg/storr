@@ -16,10 +16,10 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.exceptions.I
 /**
  * The Class TrainingBucketGenerator.
  */
-public class TrainingBucketGenerator {
+public class GoldStandardBucketGenerator {
 
     /** The Constant LOGGER. */
-    private static final Logger LOGGER = LoggerFactory.getLogger(TrainingBucketGenerator.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(GoldStandardBucketGenerator.class);
 
     /** The Abstract Format converter. This is set to be an instance of {@link LongFormatConverter} by default.
      *  This can be changed as and when is necessary in the future.
