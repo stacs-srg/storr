@@ -34,7 +34,7 @@ public class OrganicTimeline {
     // Timeline instance variables
     private int startDay;
     private int endDay;
-    private HashMap<Integer, OrganicEvent> events = new HashMap<Integer, OrganicEvent>();
+//    private HashMap<Integer, OrganicEvent> events = new HashMap<Integer, OrganicEvent>();
 
     /*
      * Constructors
@@ -70,37 +70,37 @@ public class OrganicTimeline {
      * @param day   Day of event in days since 1/1/1600.
      * @param event The given event.
      */
-    public void addEvent(final int day, final OrganicEvent event) {
-        events.put(day, event);
-    }
+//    public void addEvent(final int day, final OrganicEvent event) {
+//        events.put(day, event);
+//    }
 
     /**
      * Removes event occurring on the given day.
      *
      * @param day The day to clear of events.
      */
-    public void removeEvent(final int day) {
-        events.remove(day);
-    }
+//    public void removeEvent(final int day) {
+//        events.remove(day);
+//    }
 
     /**
      * Removes event from timeline.
      *
      * @param event The event to be removed.
      */
-    public void removeEvent(final OrganicEvent event) {
-        int removalKey = -1;
-        for (int key : events.keySet()) {
-            if (events.get(key).equals(event)) {
-                removalKey = key;
-                break;
-            }
-        }
-
-        if (removalKey != -1) {
-            events.remove(removalKey);
-        }
-    }
+//    public void removeEvent(final OrganicEvent event) {
+//        int removalKey = -1;
+//        for (int key : events.keySet()) {
+//            if (events.get(key).equals(event)) {
+//                removalKey = key;
+//                break;
+//            }
+//        }
+//
+//        if (removalKey != -1) {
+//            events.remove(removalKey);
+//        }
+//    }
 
     /**
      * Checks if a given date is free in the timeline (that no events exist on the given day).
@@ -108,10 +108,10 @@ public class OrganicTimeline {
      * @param date The given date.
      * @return Boolean indicating day availability.
      */
-    public boolean isDateAvailable(final Date date) {
-        int day = DateManipulation.dateToDays(date) - startDay;
-        return events.containsKey(day);
-    }
+//    public boolean isDateAvailable(final Date date) {
+//        int day = DateManipulation.dateToDays(date) - startDay;
+//        return events.containsKey(day);
+//    }
 
     /**
      * Checks if a given day is free in the timeline (that no events exist on the given day).
@@ -119,9 +119,9 @@ public class OrganicTimeline {
      * @param days The given day in days since the 1/1/1600.
      * @return Boolean indicating day availability.
      */
-    public boolean isDateAvailable(final int days) {
-        return events.containsKey(days);
-    }
+//    public boolean isDateAvailable(final int days) {
+//        return events.containsKey(days);
+//    }
 
     /*
      * Getters and setters
@@ -133,28 +133,28 @@ public class OrganicTimeline {
      * @param event The given event.
      * @return The array containing the days on which the event has occured.
      */
-    public Integer[] getAllDaysOfEventType(final EventType event) {
-        ArrayList<Integer> temp = new ArrayList<Integer>();
-        Iterator<Integer> iter = events.keySet().iterator();
-        while (iter.hasNext()) {
-            int i = iter.next();
-            OrganicEvent e = events.get(i);
-            if (e.getEventType() == event) {
-                temp.add(i);
-            }
-        }
-
-        return temp.toArray(new Integer[temp.size()]);
-    }
+//    public Integer[] getAllDaysOfEventType(final EventType event) {
+//        ArrayList<Integer> temp = new ArrayList<Integer>();
+//        Iterator<Integer> iter = events.keySet().iterator();
+//        while (iter.hasNext()) {
+//            int i = iter.next();
+//            OrganicEvent e = events.get(i);
+//            if (e.getEventType() == event) {
+//                temp.add(i);
+//            }
+//        }
+//
+//        return temp.toArray(new Integer[temp.size()]);
+//    }
 
     /**
      * Sets the start date.
      *
      * @param startDay The start date in days since the 1/1/1600.
      */
-    public void setStartDay(final int startDay) {
-        this.startDay = startDay;
-    }
+//    public void setStartDay(final int startDay) {
+//        this.startDay = startDay;
+//    }
 
     /**
      * Returns the timelines start date.
@@ -189,10 +189,10 @@ public class OrganicTimeline {
      * @param date The date to be checked.
      * @return The event occurring on the given date.
      */
-    public OrganicEvent getEvent(final Date date) {
-        int day = DateManipulation.dateToDays(date) - startDay;
-        return events.get(day);
-    }
+//    public OrganicEvent getEvent(final Date date) {
+//        int day = DateManipulation.dateToDays(date) - startDay;
+//        return events.get(day);
+//    }
 
     /**
      * Returns the event occurring on the specified day.
@@ -200,9 +200,9 @@ public class OrganicTimeline {
      * @param days The day in days since the 1/1/1600 to be checked.
      * @return The event occurring on the given day.
      */
-    public OrganicEvent getEvent(final int days) {
-        return events.get(days);
-    }
+//    public OrganicEvent getEvent(final int days) {
+//        return events.get(days);
+//    }
 
     /**
      * Returns the day of the specified event.
@@ -211,14 +211,14 @@ public class OrganicTimeline {
      * @return The date on which the event occurs in days since 1/1/1600.
      * @throws NoSuchEventException Thown where the specified event is not found.
      */
-    public int getDay(final EventType event) throws NoSuchEventException {
-        for (int i : events.keySet()) {
-            if (events.get(i).getEventType() == event) {
-                return i;
-            }
-        }
-        throw new NoSuchEventException();
-    }
+//    public int getDay(final EventType event) throws NoSuchEventException {
+//        for (int i : events.keySet()) {
+//            if (events.get(i).getEventType() == event) {
+//                return i;
+//            }
+//        }
+//        throw new NoSuchEventException();
+//    }
 
     /*
      * Print methods
@@ -227,15 +227,15 @@ public class OrganicTimeline {
     /**
      * Prints out a detailed human-readable summary of the timeline events.
      */
-    public void printTimeline() {
-        System.out.println("TIMELINE EVENTS:");
-        System.out.println("    Start day: " + startDay);
-        for (int i : events.keySet()) {
-
-            System.out.print("    Day : " + i);
-            System.out.println(" " + events.get(i).getEventType());
-        }
-        System.out.println("    End day: " + endDay);
-    }
+//    public void printTimeline() {
+//        System.out.println("TIMELINE EVENTS:");
+//        System.out.println("    Start day: " + startDay);
+//        for (int i : events.keySet()) {
+//
+//            System.out.print("    Day : " + i);
+//            System.out.println(" " + events.get(i).getEventType());
+//        }
+//        System.out.println("    End day: " + endDay);
+//    }
 
 }

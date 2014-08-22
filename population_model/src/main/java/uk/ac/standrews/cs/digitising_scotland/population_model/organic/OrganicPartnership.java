@@ -280,7 +280,8 @@ public final class OrganicPartnership implements IPartnership {
     }
 
     private void setUpAffairEndEvent(final int currentDay, final OrganicPerson male, final OrganicPerson female) {
-        timeline.addEvent(currentDay + 1, new OrganicEvent(EventType.END_OF_AFFAIR, this, male, female, currentDay + 1));
+        new OrganicEvent(EventType.END_OF_AFFAIR, this, male, female, currentDay + 1);
+//        timeline.addEvent(currentDay + 1, new OrganicEvent(EventType.END_OF_AFFAIR, this, male, female, currentDay + 1));
     }
 
     private void setUpCohabitationEndEvent(final OrganicPerson male, final OrganicPerson female, final int currentDay) {
@@ -288,14 +289,17 @@ public final class OrganicPartnership implements IPartnership {
         int endDayOfCohab = currentDay + lengthOfCohab;
         if (PopulationLogic.dateBeforeDeath(endDayOfCohab, male.getDeathDay())) {
             if (PopulationLogic.dateBeforeDeath(endDayOfCohab, female.getDeathDay())) {
-                timeline.addEvent(endDayOfCohab, new OrganicEvent(EventType.END_OF_COHABITATION, this, male, female, endDayOfCohab));
+                new OrganicEvent(EventType.END_OF_COHABITATION, this, male, female, endDayOfCohab);
+//                timeline.addEvent(endDayOfCohab, new OrganicEvent(EventType.END_OF_COHABITATION, this, male, female, endDayOfCohab));
                 timeline.setEndDate(endDayOfCohab);
             } else {
-                timeline.addEvent(female.getDeathDay(), new OrganicEvent(EventType.PARTNERSHIP_ENDED_BY_DEATH, this, male, female, female.getDeathDay()));
+                new OrganicEvent(EventType.PARTNERSHIP_ENDED_BY_DEATH, this, male, female, female.getDeathDay());
+//                timeline.addEvent(female.getDeathDay(), new OrganicEvent(EventType.PARTNERSHIP_ENDED_BY_DEATH, this, male, female, female.getDeathDay()));
                 timeline.setEndDate(female.getDeathDay());
             }
         } else {
-            timeline.addEvent(male.getDeathDay(), new OrganicEvent(EventType.PARTNERSHIP_ENDED_BY_DEATH, this, male, female, male.getDeathDay()));
+            new OrganicEvent(EventType.PARTNERSHIP_ENDED_BY_DEATH, this, male, female, male.getDeathDay());
+//            timeline.addEvent(male.getDeathDay(), new OrganicEvent(EventType.PARTNERSHIP_ENDED_BY_DEATH, this, male, female, male.getDeathDay()));
             timeline.setEndDate(male.getDeathDay());
         }
 
@@ -312,7 +316,8 @@ public final class OrganicPartnership implements IPartnership {
                 switch (temporalDivorceInstigatedByGenderDistribution.getSample(population.getCurrentDay())) {
                     case MALE:
                         divorceAgeInDays = husband.getBirthDay() + temporalDivorceAgeForMaleDistribution.getSample(population.getCurrentDay(), actualMarriageDay - husband.getBirthDay(), dateOfFirstPartnersDeath(husband.getDeathDay(), wife.getDeathDay()) - husband.getBirthDay());
-                        timeline.addEvent(divorceAgeInDays, new OrganicEvent(EventType.DIVORCE, this, husband, wife, divorceAgeInDays));
+                        new OrganicEvent(EventType.DIVORCE, this, husband, wife, divorceAgeInDays);
+                        //                        timeline.addEvent(divorceAgeInDays, new OrganicEvent(EventType.DIVORCE, this, husband, wife, divorceAgeInDays));
                         timeline.setEndDate(divorceAgeInDays);
                         divorceReason = temporalDivorceReasonMaleDistribution.getSample(population.getCurrentDay());
                         if (divorceReason == DivorceReason.ADULTERY) {
@@ -321,7 +326,8 @@ public final class OrganicPartnership implements IPartnership {
                         break;
                     case FEMALE:
                         divorceAgeInDays = wife.getBirthDay() + temporalDivorceAgeForFemaleDistribution.getSample(population.getCurrentDay(), actualMarriageDay - wife.getBirthDay(), dateOfFirstPartnersDeath(husband.getDeathDay(), wife.getDeathDay()) - wife.getBirthDay());
-                        timeline.addEvent(divorceAgeInDays, new OrganicEvent(EventType.DIVORCE, this, husband, wife, divorceAgeInDays));
+                        new OrganicEvent(EventType.DIVORCE, this, husband, wife, divorceAgeInDays);
+                        //                        timeline.addEvent(divorceAgeInDays, new OrganicEvent(EventType.DIVORCE, this, husband, wife, divorceAgeInDays));
                         timeline.setEndDate(divorceAgeInDays);
                         divorceReason = temporalDivorceReasonFemaleDistribution.getSample(population.getCurrentDay());
                         if (divorceReason == DivorceReason.ADULTERY) {
@@ -331,7 +337,8 @@ public final class OrganicPartnership implements IPartnership {
                     case NO_DIVORCE:
                         // If not then added earliest death date
                         int firstPartnersDeathDate = dateOfFirstPartnersDeath(husband.getDeathDay(), wife.getDeathDay());
-                        timeline.addEvent(firstPartnersDeathDate, new OrganicEvent(EventType.PARTNERSHIP_ENDED_BY_DEATH, this, husband, wife, firstPartnersDeathDate));
+                        new OrganicEvent(EventType.PARTNERSHIP_ENDED_BY_DEATH, this, husband, wife, firstPartnersDeathDate);
+//                        timeline.addEvent(firstPartnersDeathDate, new OrganicEvent(EventType.PARTNERSHIP_ENDED_BY_DEATH, this, husband, wife, firstPartnersDeathDate));
                         timeline.setEndDate(firstPartnersDeathDate);
                         break;
                     default:
@@ -340,7 +347,8 @@ public final class OrganicPartnership implements IPartnership {
                 }
             } catch (NoPermissableValueException e) {
                 int firstPartnersDeathDate = dateOfFirstPartnersDeath(husband.getDeathDay(), wife.getDeathDay());
-                timeline.addEvent(firstPartnersDeathDate, new OrganicEvent(EventType.PARTNERSHIP_ENDED_BY_DEATH, this, husband, wife, firstPartnersDeathDate));
+                new OrganicEvent(EventType.PARTNERSHIP_ENDED_BY_DEATH, this, husband, wife, firstPartnersDeathDate);
+//                timeline.addEvent(firstPartnersDeathDate, new OrganicEvent(EventType.PARTNERSHIP_ENDED_BY_DEATH, this, husband, wife, firstPartnersDeathDate));
                 timeline.setEndDate(firstPartnersDeathDate);
             } catch (NotSetUpAtClassInitilisationException e) {
                 // TODO Auto-generated catch block
@@ -355,11 +363,14 @@ public final class OrganicPartnership implements IPartnership {
         for (int i = 0; i < numberOfAffairs; i++) {
             int day = affairDistribution.getIntSample();
             marriedPerson.getPopulation().addPersonToAffairsWaitingQueue(marriedPerson, day);
-            marriedPerson.getTimeline().addEvent(day, new OrganicEvent(EventType.AFFAIR, marriedPerson, day));
+            new OrganicEvent(EventType.AFFAIR, marriedPerson, day);
+//            marriedPerson.getTimeline().addEvent(day, new OrganicEvent(EventType.AFFAIR, marriedPerson, day));
             if (marriedPerson.getSex() == 'M') {
-                timeline.addEvent(day, new OrganicEvent(EventType.MALE_BEGINS_AFFAIR, this, marriedPerson, cheatedPerson, day));
+                new OrganicEvent(EventType.MALE_BEGINS_AFFAIR, this, marriedPerson, cheatedPerson, day);
+//                timeline.addEvent(day, new OrganicEvent(EventType.MALE_BEGINS_AFFAIR, this, marriedPerson, cheatedPerson, day));
             } else {
-                timeline.addEvent(day, new OrganicEvent(EventType.FEMALE_BEGINS_AFFAIR, this, marriedPerson, cheatedPerson, day));
+                new OrganicEvent(EventType.FEMALE_BEGINS_AFFAIR, this, marriedPerson, cheatedPerson, day);
+//                timeline.addEvent(day, new OrganicEvent(EventType.FEMALE_BEGINS_AFFAIR, this, marriedPerson, cheatedPerson, day));
             }
 
         }
@@ -389,9 +400,11 @@ public final class OrganicPartnership implements IPartnership {
             int dayOfBirth;
             do {
                 dayOfBirth = timeBetweenMaternitiesDistrobution.getSample().intValue();
-            } while (dayOfBirth <= 0 && !viableBirthDate(wife, dayOfBirth));
+            } while (dayOfBirth <= 0);
             if (husband != null && wife != null && PopulationLogic.parentsHaveSensibleAgesAtChildBirth(husband.getBirthDay(), husband.getDeathDay(), wife.getBirthDay(), wife.getDeathDay(), dayOfBirth + currentDay)) {
-                timeline.addEvent(currentDay + dayOfBirth, new OrganicEvent(EventType.BIRTH, this, husband, wife, currentDay + dayOfBirth));
+                new OrganicEvent(EventType.BIRTH, this, husband, wife, currentDay + dayOfBirth);
+//                wife.addDateToBirthsArray(currentDay + dayOfBirth);
+                //                timeline.addEvent(currentDay + dayOfBirth, new OrganicEvent(EventType.BIRTH, this, husband, wife, currentDay + dayOfBirth));
                 for (int i = 0; i < numberOfChildrenInPregnacy; i++) {
                     children[i] = new OrganicPerson(IDFactory.getNextID(), currentDay + dayOfBirth, id, wife.getPopulation(), false, this);
                     childrenIds.add(children[i].getId());
@@ -410,16 +423,16 @@ public final class OrganicPartnership implements IPartnership {
         }
     }
 
-    private boolean viableBirthDate(OrganicPerson wife, int day) {
-        Integer[] births = wife.getTimeline().getAllDaysOfEventType(EventType.BIRTH);
-        int interval = (int) (PopulationLogic.getInterChildInterval() * OrganicPopulation.getDaysPerYear());
-        for (int i : births) {
-            if (i - interval < day && day < i + interval) {
-                return false;
-            }
-        }
-        return true;
-    }
+//    private boolean viableBirthDate(OrganicPerson wife, int day) {
+//        Integer[] births = wife.getTimeline().getAllDaysOfEventType(EventType.BIRTH);
+//        int interval = (int) (PopulationLogic.getInterChildInterval() * OrganicPopulation.getDaysPerYear());
+//        for (int i : births) {
+//            if (i - interval < day && day < i + interval) {
+//                return false;
+//            }
+//        }
+//        return true;
+//    }
 
     /**
      * Checks if the last child to be born in the partnership has been.

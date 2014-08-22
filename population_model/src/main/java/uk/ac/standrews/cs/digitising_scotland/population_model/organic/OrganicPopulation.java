@@ -154,7 +154,8 @@ public class OrganicPopulation implements IPopulation {
                     System.out.println("Population: " + OrganicPopulationLogger.getPopulation());
                 }
                 // FIXME The fudge near the end of the line.
-                setCurrentDay(DateManipulation.dateToDays((int) (getCurrentDay() / DAYS_PER_YEAR) + 1 + EPOCH_YEAR, 0, (int) (2 + (getCurrentDay() / DAYS_PER_YEAR) / 100)));
+                double r = getCurrentDay() % DAYS_PER_YEAR;
+                setCurrentDay((int) (getCurrentDay() + r)); 
             }
             setCurrentDay(event.getDay());
             if (debug) {
