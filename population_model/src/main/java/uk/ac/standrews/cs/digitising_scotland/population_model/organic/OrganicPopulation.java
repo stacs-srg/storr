@@ -25,6 +25,9 @@ import uk.ac.standrews.cs.digitising_scotland.population_model.model.RandomFacto
 import uk.ac.standrews.cs.digitising_scotland.util.ArrayManipulation;
 import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
 
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -40,6 +43,8 @@ import java.util.Random;
  */
 public class OrganicPopulation implements IPopulation {
 
+    public static PrintWriter writer = null;
+    
     private static boolean debug = false;
     private static final int START_DEBUG_YEAR = 2999;
     private static final int END_DEBUG_YEAR = 3000;
@@ -150,15 +155,15 @@ public class OrganicPopulation implements IPopulation {
                     setDebug(false);
                 }
                 if (print) {
-                    System.out.println(EPOCH_YEAR + 1 + (int) (getCurrentDay() / getDaysPerYear()));
-                    System.out.println("Population: " + OrganicPopulationLogger.getPopulation());
+                    writer.println(EPOCH_YEAR + 1 + (int) (getCurrentDay() / getDaysPerYear()));
+                    writer.println("Population: " + OrganicPopulationLogger.getPopulation());
                 }
                 double r = getCurrentDay() % DAYS_PER_YEAR;
                 setCurrentDay((int) (getCurrentDay() + Math.round(r))); 
             }
             setCurrentDay(event.getDay());
             if (debug) {
-                System.out.println("TO HANDLE EVENT - " + event.getEventType().toString() + " - On day: " + getCurrentDay());
+                writer.println("TO HANDLE EVENT - " + event.getEventType().toString() + " - On day: " + getCurrentDay());
             }
             handleEvent(event);
 
@@ -316,8 +321,8 @@ public class OrganicPopulation implements IPopulation {
 
             OrganicPopulationLogger.addPopulationForYear((int) (getCurrentDay() / DAYS_PER_YEAR) + EPOCH_YEAR, OrganicPopulationLogger.getPopulation());
             if (print) {
-                System.out.println(EPOCH_YEAR + (int) (getCurrentDay() / getDaysPerYear()));
-                System.out.println("Population: " + OrganicPopulationLogger.getPopulation());
+                writer.println(EPOCH_YEAR + (int) (getCurrentDay() / getDaysPerYear()));
+                writer.println("Population: " + OrganicPopulationLogger.getPopulation());
             }
         }
     }
@@ -404,7 +409,7 @@ public class OrganicPopulation implements IPopulation {
 
     private void partnerTogetherPeopleInPartnershipQueue(final FamilyType type) {
         // if (DEBUG) {
-        // System.out.println("PARTNERING UP QUEUE - " + type.toString());
+        // writer.println("PARTNERING UP QUEUE - " + type.toString());
         // }
         LinkedList<OrganicPerson> maleQueue = (LinkedList<OrganicPerson>) getMaleQueueOf(type);
         LinkedList<OrganicPerson> femaleQueue = (LinkedList<OrganicPerson>) getFemaleQueueOf(type);
@@ -748,6 +753,39 @@ public class OrganicPopulation implements IPopulation {
     public void setConsistentAcrossIterations(final boolean consistent_across_iterations) {
 
     }
+    
+    public static OrganicPopulation runPopulationModel(boolean print, int seedSize) {
+        
+        
+        long startTime = System.nanoTime();
+        OrganicPopulation op = new OrganicPopulation("Test Population");
+        OrganicPartnership.setupTemporalDistributionsInOrganicPartnershipClass(op);
+        op.makeSeed(seedSize);
+        op.setCurrentDay(op.getEarliestDate() - 1);
+        
+        if (print) {
+            try {
+                writer = new PrintWriter("src/main/resources/output/output_" + System.nanoTime() + ".txt", "UTF-8");
+            } catch (FileNotFoundException | UnsupportedEncodingException e) {
+                System.err.println("Output file could not be created. Model will now terminate.");
+                System.exit(1);
+            }
+            
+            writer.println(op.getDescription());
+        }
+        
+        op.newEventIteration(print);
+
+        if (print) {
+            OrganicPopulationLogger.printLogData();
+            writer.println();
+            long timeTaken = System.nanoTime() - startTime;
+            writer.println("Run time " + timeTaken / 1000000 + "ms"); 
+            writer.close();
+        }
+        
+        return op;
+    }
 
     /**
      * Temporary testing main method.
@@ -755,22 +793,9 @@ public class OrganicPopulation implements IPopulation {
      * @param args
      *            String Arguments.
      */
-    @SuppressWarnings("magic numbers")
     public static void main(final String[] args) {
-        long startTime = System.nanoTime();
         System.out.println("--------MAIN HERE---------");
-        OrganicPopulation op = new OrganicPopulation("Test Population");
-        OrganicPartnership.setupTemporalDistributionsInOrganicPartnershipClass(op);
-        System.out.println(op.getDescription());
-        op.makeSeed();
-        op.setCurrentDay(op.getEarliestDate() - 1);
-        op.newEventIteration(true);
-
-        OrganicPopulationLogger.printLogData();
-
-        System.out.println();
-        long timeTaken = System.nanoTime() - startTime;
-        System.out.println("Run time " + timeTaken / 1000000 + "ms");
+        runPopulationModel(true, 1000000);
 
     }
 

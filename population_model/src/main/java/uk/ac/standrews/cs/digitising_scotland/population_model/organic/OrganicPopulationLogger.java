@@ -39,7 +39,7 @@ public class OrganicPopulationLogger {
     }
 
     public static void printPopulationGraph() {
-        System.out.println("POPULATION GRAPH");
+        OrganicPopulation.writer.println("POPULATION GRAPH");
         printGraph(populationAtYearEnds, Integer.toString(startYear), Integer.toString(startYear + populationAtYearEnds.length), true, 30);
     }
 
@@ -52,14 +52,14 @@ public class OrganicPopulationLogger {
     private static int[] maleAgeAtMarriage = new int[MAX_AGE];
 
     public static void printMaleAgeAtMarriageGraph() {
-        System.out.println("MALE AGE AT MARRIAGE GRAPH");
+        OrganicPopulation.writer.println("MALE AGE AT MARRIAGE GRAPH");
         printGraph(maleAgeAtMarriage, "0", Integer.toString(MAX_AGE), false, 10);
     }
 
     private static int[] femaleAgeAtMarriage = new int[MAX_AGE];
 
     public static void printFemaleAgeAtMarriageGraph() {
-        System.out.println("FEMALE AGE AT MARRIAGE GRAPH");
+        OrganicPopulation.writer.println("FEMALE AGE AT MARRIAGE GRAPH");
         printGraph(femaleAgeAtMarriage, "0", Integer.toString(MAX_AGE), false, 10);
     }
 
@@ -67,7 +67,7 @@ public class OrganicPopulationLogger {
     private static int[] ageDifferenceAtMarriage = new int[AGE_DIFFERENCE_AT_MARRIAGE_DISPLAY_UPTO];
 
     public static void printAgeDifferenceAtMarriageGraph() {
-        System.out.println("AGE DIFFERENCE AT MARRIAGE GRAPH");
+        OrganicPopulation.writer.println("AGE DIFFERENCE AT MARRIAGE GRAPH");
         printGraph(ageDifferenceAtMarriage, "0", Integer.toString(AGE_DIFFERENCE_AT_MARRIAGE_DISPLAY_UPTO), false, 10);
     }
 
@@ -75,7 +75,7 @@ public class OrganicPopulationLogger {
     private static int[] numberOfChildrenPerPartnership = new int[NUMBER_OF_CHILDREN_DISPLAY_UPTO];
 
     public static void printNumberOfChildrenInMarriageGraph() {
-        System.out.println("NUMBER OF CHILDREN IN MARRIAGE GRAPH");
+        OrganicPopulation.writer.println("NUMBER OF CHILDREN IN MARRIAGE GRAPH");
         printGraph(numberOfChildrenPerPartnership, "0", Integer.toString(NUMBER_OF_CHILDREN_DISPLAY_UPTO), false, 10);
     }
 
@@ -255,7 +255,7 @@ public class OrganicPopulationLogger {
                 }
             }
         }
-        System.out.print(max + "|");
+        OrganicPopulation.writer.print(max + "|");
         for (int j = lineDepth - 1; j >= 0; j--) {
             if (j != lineDepth - 1) {
                 int n = 0;
@@ -263,41 +263,41 @@ public class OrganicPopulationLogger {
                     n++;
                 }
                 for (int i = n; i < Integer.toString(max).length(); i++) {
-                    System.out.print(" ");
+                    OrganicPopulation.writer.print(" ");
                 }
                 if (j == 0) {
-                    System.out.print("0");
+                    OrganicPopulation.writer.print("0");
                 }
-                System.out.print("|");
+                OrganicPopulation.writer.print("|");
             }
             for (int i = 0; i < values.length; i++) {
                 if (!graph[i][j]) {
-                    System.out.print(" ");
+                    OrganicPopulation.writer.print(" ");
                 } else if (graph[i][j]) {
-                    System.out.print("@");
+                    OrganicPopulation.writer.print("@");
                 }
             }
-            System.out.println();
+            OrganicPopulation.writer.println();
         }
         for (int i = 0; i < Integer.toString(max).length(); i++) {
-            System.out.print(" ");
+            OrganicPopulation.writer.print(" ");
         }
-        System.out.print(xStartValue);
+        OrganicPopulation.writer.print(xStartValue);
         int i = xStartValue.length();
         for (i = 0; i < values.length - xEndValue.length(); i++) {
-            System.out.print("‾");
+            OrganicPopulation.writer.print("‾");
         }
-        System.out.println(xEndValue);
-        System.out.println();
+        OrganicPopulation.writer.println(xEndValue);
+        OrganicPopulation.writer.println();
     }
 
     /**
      * Prints out the data that has been logged from the simulation.
      */
     public static void printLogData() {
-        System.out.println();
-        System.out.println("-------Population Logger-------");
-        System.out.println();
+        OrganicPopulation.writer.println();
+        OrganicPopulation.writer.println("-------Population Logger-------");
+        OrganicPopulation.writer.println();
 
         printMaleAgeAtMarriageGraph();
         printFemaleAgeAtMarriageGraph();
@@ -306,28 +306,28 @@ public class OrganicPopulationLogger {
         printPopulationGraph();
 //        printAdjustedNumberOfChildrenEndSizesGraph();
         float childrenPerFamily = (float) (births - OrganicPopulation.getDefaultSeedSize()) / (float) marriages;
-        System.out.println();
-        System.out.println("Population: " + population);
-        System.out.println();
-        System.out.println("Marriages: " + marriages);
-        System.out.println("Divorces: " + divorces);
-        System.out.println("Remarriages: " + remarriages);
-        System.out.print("Never Married: " + neverMarried + " - ");
-        System.out.format("%.2f", ((float) neverMarried / (float) births) * 100);
-        System.out.println("%");
-        System.out.println();
-        System.out.println("Births: " + births);
-        System.out.print("Children Per Family: ");
-        System.out.format("%.2f", childrenPerFamily);
-        System.out.println();
-        System.out.println();
-//        System.out.println("Left over children: " + getNumberOfLeftOverChildren());
-        System.out.println("Kids killed by early stop: " + getStopedHavingEarlyDeaths());
+        OrganicPopulation.writer.println();
+        OrganicPopulation.writer.println("Population: " + population);
+        OrganicPopulation.writer.println();
+        OrganicPopulation.writer.println("Marriages: " + marriages);
+        OrganicPopulation.writer.println("Divorces: " + divorces);
+        OrganicPopulation.writer.println("Remarriages: " + remarriages);
+        OrganicPopulation.writer.print("Never Married: " + neverMarried + " - ");
+        OrganicPopulation.writer.format("%.2f", ((float) neverMarried / (float) births) * 100);
+        OrganicPopulation.writer.println("%");
+        OrganicPopulation.writer.println();
+        OrganicPopulation.writer.println("Births: " + births);
+        OrganicPopulation.writer.print("Children Per Family: ");
+        OrganicPopulation.writer.format("%.2f", childrenPerFamily);
+        OrganicPopulation.writer.println();
+        OrganicPopulation.writer.println();
+//        OrganicPopulation.writer.println("Left over children: " + getNumberOfLeftOverChildren());
+        OrganicPopulation.writer.println("Kids killed by early stop: " + getStopedHavingEarlyDeaths());
 
     }
 
 //    private static void printAdjustedNumberOfChildrenEndSizesGraph() {
-//        System.out.println("ADJUSTED NUMBER OF CHILDREN END FAMILY SIZES GRAPH");
+//        OrganicPopulation.writer.println("ADJUSTED NUMBER OF CHILDREN END FAMILY SIZES GRAPH");
 //        int[] temp = new int[OrganicPartnership.getAdjustedNumberOfChildren().length];
 //        for (int i = 0; i < temp.length; i++) {
 //            temp[i] = OrganicPartnership.getAdjustedNumberOfChildren()[i].size();
