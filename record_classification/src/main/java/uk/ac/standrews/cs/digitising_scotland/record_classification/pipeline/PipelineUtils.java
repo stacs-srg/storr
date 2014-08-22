@@ -22,7 +22,9 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.writers.DataClerkingWriter;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.writers.FileComparisonWriter;
+import uk.ac.standrews.cs.digitising_scotland.tools.Timer;
 import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
+import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearningConfiguration;
 
 public class PipelineUtils {
 
@@ -57,7 +59,7 @@ public class PipelineUtils {
         generateStats(classifiedBucket, accuracyMetrics, experimentalFolderName, bucketIdentifier);
     }
 
-    protected static void generateStats(final Bucket bucket, final ListAccuracyMetrics accuracyMetrics, final String experimentalFolderName, String bucketIdentifier) throws IOException {
+    protected static void generateStats(final Bucket bucket, final ListAccuracyMetrics accuracyMetrics, final String experimentalFolderName, final String bucketIdentifier) throws IOException {
 
         final String matrixDataPath = experimentalFolderName + "/Data/classificationCountMatrix.csv";
         final String matrixImagePath = "classificationMatrix";
@@ -114,6 +116,39 @@ public class PipelineUtils {
             return false;
         }
         return true;
+    }
+
+    protected static Timer initAndStartTimer() {
+
+        Timer timer = new Timer();
+        timer.start();
+        return timer;
+    }
+
+    protected static ClassifierTrainer train(final Bucket trainingBucket, final String experimentalFolderName) throws Exception {
+
+        ClassifierTrainer trainer = new ClassifierTrainer(trainingBucket, experimentalFolderName);
+        trainer.trainExactMatchClassifier();
+        trainer.trainOLRClassifier();
+        return trainer;
+    }
+
+    protected static ClassificationHolder classify(final Bucket trainingBucket, final Bucket predictionBucket, final ClassifierTrainer trainer) throws IOException {
+
+        ExactMatchPipeline exactMatchPipeline = new ExactMatchPipeline(trainer.getExactMatchClassifier());
+        MachineLearningClassificationPipeline machineLearningClassifier = new MachineLearningClassificationPipeline(trainer.getOlrClassifier(), trainingBucket);
+
+        ClassificationHolder classifier = new ClassificationHolder(exactMatchPipeline, machineLearningClassifier);
+        classifier.classify(predictionBucket);
+        return classifier;
+    }
+
+    protected static void printStatusUpdate() {
+
+        LOGGER.info("********** Training Classifiers **********");
+        LOGGER.info("Training with a dictionary size of: " + MachineLearningConfiguration.getDefaultProperties().getProperty("numFeatures"));
+        LOGGER.info("Training with this number of output classes: " + MachineLearningConfiguration.getDefaultProperties().getProperty("numCategories"));
+        LOGGER.info("Codes that were null and weren't adter chopping: " + CodeFactory.getInstance().getCodeMapNullCounter());
     }
 
     protected static boolean checkFileType(final File inputFile) throws IOException {

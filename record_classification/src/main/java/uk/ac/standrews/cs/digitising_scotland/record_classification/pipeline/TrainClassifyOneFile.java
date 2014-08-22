@@ -9,13 +9,11 @@ import org.slf4j.LoggerFactory;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.AbstractClassifier;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.BucketFilter;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeFactory;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.vectors.VectorFactory;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.exceptions.FolderCreationException;
 import uk.ac.standrews.cs.digitising_scotland.tools.Timer;
 import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
-import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearningConfiguration;
 
 /**
  * This class integrates the training of machine learning models and the
@@ -73,7 +71,7 @@ public final class TrainClassifyOneFile {
      */
     public static void main(final String[] args) throws Exception {
 
-        Timer timer = initAndStartTimer();
+        Timer timer = PipelineUtils.initAndStartTimer();
 
         setupExperimentalFolders("Experiments");
 
@@ -84,11 +82,11 @@ public final class TrainClassifyOneFile {
 
         randomlyAssignToTrainingAndPrediction(allRecords);
 
-        printStatusUpdate();
+        PipelineUtils.printStatusUpdate();
 
-        ClassifierTrainer trainer = train(trainingBucket);
+        ClassifierTrainer trainer = PipelineUtils.train(trainingBucket, experimentalFolderName);
 
-        ClassificationHolder classifier = classify(allRecords, predictionBucket, trainer);
+        ClassificationHolder classifier = PipelineUtils.classify(allRecords, predictionBucket, trainer);
 
         LOGGER.info("Exact Matched Bucket Size: " + classifier.getExactMatched().size());
         LOGGER.info("Machine Learned Bucket Size: " + classifier.getMachineLearned().size());
@@ -118,24 +116,6 @@ public final class TrainClassifyOneFile {
         }
     }
 
-    private static ClassifierTrainer train(final Bucket trainingBucket) throws Exception {
-
-        ClassifierTrainer trainer = new ClassifierTrainer(trainingBucket, experimentalFolderName);
-        trainer.trainExactMatchClassifier();
-        trainer.trainOLRClassifier();
-        return trainer;
-    }
-
-    private static ClassificationHolder classify(final Bucket trainingBucket, final Bucket predictionBucket, final ClassifierTrainer trainer) throws IOException {
-
-        ExactMatchPipeline exactMatchPipeline = new ExactMatchPipeline(trainer.getExactMatchClassifier());
-        MachineLearningClassificationPipeline machineLearningClassifier = new MachineLearningClassificationPipeline(trainer.getOlrClassifier(), trainingBucket);
-
-        ClassificationHolder classifier = new ClassificationHolder(exactMatchPipeline, machineLearningClassifier);
-        classifier.classify(predictionBucket);
-        return classifier;
-    }
-
     private static void generateAndPrintStatistics(final ClassificationHolder classifier) throws IOException {
 
         LOGGER.info("********** Output Stats **********");
@@ -159,21 +139,6 @@ public final class TrainClassifyOneFile {
                 predictionBucket.addRecordToBucket(record);
             }
         }
-    }
-
-    private static Timer initAndStartTimer() {
-
-        Timer timer = new Timer();
-        timer.start();
-        return timer;
-    }
-
-    private static void printStatusUpdate() {
-
-        LOGGER.info("********** Training Classifiers **********");
-        LOGGER.info("Training with a dictionary size of: " + MachineLearningConfiguration.getDefaultProperties().getProperty("numFeatures"));
-        LOGGER.info("Training with this number of output classes: " + MachineLearningConfiguration.getDefaultProperties().getProperty("numCategories"));
-        LOGGER.info("Codes that were null and weren't adter chopping: " + CodeFactory.getInstance().getCodeMapNullCounter());
     }
 
     private static void setupExperimentalFolders(final String baseFolder) {
