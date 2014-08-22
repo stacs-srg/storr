@@ -23,7 +23,7 @@ import uk.ac.standrews.cs.digitising_scotland.population_model.organic.OrganicPo
  * @author Victor Andrei (va9@st-andrews.ac.uk)
  * @author Tom Dalton (tsd4@st-andrews.ac.uk)
  */
-public class GeneralOrganicPopulationTest extends GeneralPopulationStructureTests{
+public class GeneralOrganicPopulationTest extends GeneralPopulationStructureTests {
 
     public GeneralOrganicPopulationTest() {
     	super(new OrganicPopulation("Test Pop"), true);
