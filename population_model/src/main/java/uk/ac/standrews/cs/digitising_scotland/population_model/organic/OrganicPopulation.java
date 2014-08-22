@@ -153,7 +153,6 @@ public class OrganicPopulation implements IPopulation {
                     System.out.println(EPOCH_YEAR + 1 + (int) (getCurrentDay() / getDaysPerYear()));
                     System.out.println("Population: " + OrganicPopulationLogger.getPopulation());
                 }
-                // FIXME The fudge near the end of the line.
                 double r = getCurrentDay() % DAYS_PER_YEAR;
                 setCurrentDay((int) (getCurrentDay() + Math.round(r))); 
             }
@@ -163,31 +162,6 @@ public class OrganicPopulation implements IPopulation {
             }
             handleEvent(event);
 
-            partnerTogetherPeopleInRegularPartnershipQueues();
-        }
-    }
-
-    @Deprecated
-    public void eventIteration(final boolean print, final int timeStepSizeInDays) {
-        while (getCurrentDay() < DateManipulation.dateToDays(getEndYear(), 0, 0)) {
-            if (print) {
-                handleYearEndData(print);
-            }
-
-            while (globalEventsQueue.peek() != null && globalEventsQueue.peek().getDay() == getCurrentDay()) {
-                if (debug) {
-                    System.out.println("TO HANDLE EVENT - " + globalEventsQueue.peek().getEventType().toString() + " - On day: " + getCurrentDay());
-                }
-                handleEvent(globalEventsQueue.remove());
-            }
-
-            if (debug && globalEventsQueue.peek().getDay() < currentDay) {
-                System.out.println("Current Day: " + getCurrentDay());
-                System.out.println("Event Day: " + globalEventsQueue.peek().getDay());
-                System.out.println("Event Type: " + globalEventsQueue.peek().getEventType().toString());
-            }
-
-            setCurrentDay(getCurrentDay() + timeStepSizeInDays);
             partnerTogetherPeopleInRegularPartnershipQueues();
         }
     }
@@ -435,6 +409,7 @@ public class OrganicPopulation implements IPopulation {
         LinkedList<OrganicPerson> maleQueue = (LinkedList<OrganicPerson>) getMaleQueueOf(type);
         LinkedList<OrganicPerson> femaleQueue = (LinkedList<OrganicPerson>) getFemaleQueueOf(type);
 
+        
         // Sets the IDs for the first individuals in each marriage list to null
         Integer firstMaleId = (Integer) null;
         Integer firstFemaleId = (Integer) null;
@@ -789,7 +764,6 @@ public class OrganicPopulation implements IPopulation {
         System.out.println(op.getDescription());
         op.makeSeed();
         op.setCurrentDay(op.getEarliestDate() - 1);
-        // op.eventIteration(true, DEFAULT_STEP_SIZE);
         op.newEventIteration(true);
 
         OrganicPopulationLogger.printLogData();

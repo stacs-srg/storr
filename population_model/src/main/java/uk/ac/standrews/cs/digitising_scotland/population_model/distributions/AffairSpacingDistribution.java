@@ -41,8 +41,8 @@ public final class AffairSpacingDistribution extends NormalDistribution {
      * @return The constructed instance of AffairSpacingDistribution.
      */
     public static AffairSpacingDistribution affairDistributionFactory(final OrganicPartnership partnership, final Random random) {
-        int midPoint = (partnership.getTimeline().getEndDate() - partnership.getTimeline().getStartDay()) / 2;
-        int mean = partnership.getTimeline().getStartDay() + midPoint;
+        int midPoint = (partnership.getEndDate() - partnership.getParntershipDay()) / 2;
+        int mean = partnership.getParntershipDay() + midPoint;
         try {
             return new AffairSpacingDistribution(mean, midPoint / STANDARD_DEVIATION_FACTOR, random);
         } catch (NegativeDeviationException e) {

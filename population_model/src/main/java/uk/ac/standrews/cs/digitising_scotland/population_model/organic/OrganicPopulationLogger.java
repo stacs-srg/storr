@@ -304,7 +304,7 @@ public class OrganicPopulationLogger {
         printAgeDifferenceAtMarriageGraph();
         printNumberOfChildrenInMarriageGraph();
         printPopulationGraph();
-        printAdjustedNumberOfChildrenEndSizesGraph();
+//        printAdjustedNumberOfChildrenEndSizesGraph();
         float childrenPerFamily = (float) (births - OrganicPopulation.getDefaultSeedSize()) / (float) marriages;
         System.out.println();
         System.out.println("Population: " + population);
@@ -321,27 +321,27 @@ public class OrganicPopulationLogger {
         System.out.format("%.2f", childrenPerFamily);
         System.out.println();
         System.out.println();
-        System.out.println("Left over children: " + getNumberOfLeftOverChildren());
+//        System.out.println("Left over children: " + getNumberOfLeftOverChildren());
         System.out.println("Kids killed by early stop: " + getStopedHavingEarlyDeaths());
 
     }
 
-    private static void printAdjustedNumberOfChildrenEndSizesGraph() {
-        System.out.println("ADJUSTED NUMBER OF CHILDREN END FAMILY SIZES GRAPH");
-        int[] temp = new int[OrganicPartnership.getAdjustedNumberOfChildren().length];
-        for (int i = 0; i < temp.length; i++) {
-            temp[i] = OrganicPartnership.getAdjustedNumberOfChildren()[i].size();
-        }
-        printGraph(temp, "0", Integer.toString(OrganicPopulation.getMaximumNumberOfChildrenInFamily() + 1), false, 10);
-    }
+//    private static void printAdjustedNumberOfChildrenEndSizesGraph() {
+//        System.out.println("ADJUSTED NUMBER OF CHILDREN END FAMILY SIZES GRAPH");
+//        int[] temp = new int[OrganicPartnership.getAdjustedNumberOfChildren().length];
+//        for (int i = 0; i < temp.length; i++) {
+//            temp[i] = OrganicPartnership.getAdjustedNumberOfChildren()[i].size();
+//        }
+//        printGraph(temp, "0", Integer.toString(OrganicPopulation.getMaximumNumberOfChildrenInFamily() + 1), false, 10);
+//    }
 
-    private static int getNumberOfLeftOverChildren() {
-        int count = 0;
-        for (int i = 0; i < OrganicPartnership.getAdjustedNumberOfChildren().length; i++) {
-            for (int j = 0; j < OrganicPartnership.getAdjustedNumberOfChildren()[i].size(); j++) {
-                count += OrganicPartnership.getAdjustedNumberOfChildren()[i].get(j) - i;
-            }
-        }
-        return count;
-    }
+//    private static int getNumberOfLeftOverChildren() {
+//        int count = 0;
+//        for (int i = 0; i < OrganicPartnership.getAdjustedNumberOfChildren().length; i++) {
+//            for (int j = 0; j < OrganicPartnership.getAdjustedNumberOfChildren()[i].size(); j++) {
+//                count += OrganicPartnership.getAdjustedNumberOfChildren()[i].get(j) - i;
+//            }
+//        }
+//        return count;
+//    }
 }
