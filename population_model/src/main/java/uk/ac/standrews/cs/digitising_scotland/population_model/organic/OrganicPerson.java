@@ -28,6 +28,7 @@ import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.gen
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.temporal.TemporalIntegerDistribution;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.temporal.TemporalPartnershipCharacteristicDistribution;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPerson;
+import uk.ac.standrews.cs.digitising_scotland.population_model.model.PopulationLogic;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.RandomFactory;
 import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
 
@@ -78,12 +79,14 @@ public class OrganicPerson implements IPerson {
     private char sex;
     private ArrayList<Integer> partnerships = new ArrayList<Integer>();
     private int parentPartnershipId;
+    private int startDay;
+    private int endDay;
 
     // Person instance helper variables
-    private OrganicTimeline timeline = null;
+//    private OrganicTimeline timeline = null;
     private OrganicPopulation population;
     private boolean seedPerson;
-    private int[] plannedBirthDays = new int[2];
+    private int[] plannedBirthDays = {-1, -1};
 
     /**
      * Initialises the distributions at runtime which pertain to the OrganicPerson class.
@@ -185,12 +188,10 @@ public class OrganicPerson implements IPerson {
         // Calculate and set death date
         int dayOfDeath = dayOfBirth + ageOfDeathInDays;
 
-        // Create timeline
-        timeline = new OrganicTimeline(dayOfBirth, dayOfDeath);
+        startDay = dayOfBirth;
+        endDay = dayOfDeath;
         new OrganicEvent(EventType.BORN, this, dayOfBirth);
-//        timeline.addEvent(dayOfBirth, new OrganicEvent(EventType.BORN, this, dayOfBirth));
         new OrganicEvent(EventType.DEATH, this, dayOfDeath);
-//        timeline.addEvent(dayOfDeath, new OrganicEvent(EventType.DEATH, this, dayOfDeath));
     }
 
     /**
@@ -247,7 +248,6 @@ public class OrganicPerson implements IPerson {
             setAge = population.getCurrentDay() - getBirthDay() + 1;
         }
         new OrganicEvent(EventType.COMING_OF_AGE, this, getBirthDay() + setAge);
-//        timeline.addEvent(getBirthDay() + setAge, new OrganicEvent(EventType.COMING_OF_AGE, this, getBirthDay() + setAge));
     }
 
     private void addEligibleToCohabitEvent() {
@@ -260,7 +260,6 @@ public class OrganicPerson implements IPerson {
                 date = temporalCohabitationAgeForFemalesDistribution.getSample(population.getCurrentDay(), population.getCurrentDay() - getBirthDay(), getDeathDay() - getBirthDay()) + getBirthDay();
             }
             new OrganicEvent(EventType.ELIGIBLE_TO_COHABIT, this, date);
-//            timeline.addEvent(date, new OrganicEvent(EventType.ELIGIBLE_TO_COHABIT, this, date));
         } catch (NoPermissableValueException e) {
             addSingleComingOfAgeEvent();
         } catch (NotSetUpAtClassInitilisationException e) {
@@ -278,7 +277,6 @@ public class OrganicPerson implements IPerson {
                 date = temporalCohabitationAgeForFemalesDistribution.getSample(population.getCurrentDay(), population.getCurrentDay() - getBirthDay(), getDeathDay() - getBirthDay()) + getBirthDay();
             }
             new OrganicEvent(EventType.ELIGIBLE_TO_COHABIT_THEN_MARRY, this, date);
-//            timeline.addEvent(date, new OrganicEvent(EventType.ELIGIBLE_TO_COHABIT_THEN_MARRY, this, date));
         } catch (NoPermissableValueException e) {
             addSingleComingOfAgeEvent();
         } catch (NotSetUpAtClassInitilisationException e) {
@@ -296,7 +294,6 @@ public class OrganicPerson implements IPerson {
                 date = temporalMarriageAgeForFemalesDistribution.getSample(population.getCurrentDay(), population.getCurrentDay() - getBirthDay(), getDeathDay() - getBirthDay()) + getBirthDay();
             }
             new OrganicEvent(EventType.ELIGIBLE_TO_MARRY, this, date);
-//            timeline.addEvent(date, new OrganicEvent(EventType.ELIGIBLE_TO_MARRY, this, date));
         } catch (NoPermissableValueException e) {
             addSingleComingOfAgeEvent();
         } catch (NotSetUpAtClassInitilisationException e) {
@@ -323,14 +320,6 @@ public class OrganicPerson implements IPerson {
      * Getters and setters
      */
 
-    /**
-     * Returns a list of all affair start dates for the given person.
-     * 
-     * @return A list of affair start dates.
-     */
-//    public Integer[] getListOfAffairStartDays() {
-//        return timeline.getAllDaysOfEventType(EventType.AFFAIR);
-//    }
 
     /**
      * Returns the population the person is a member of.
@@ -342,41 +331,12 @@ public class OrganicPerson implements IPerson {
     }
 
     /**
-     * Sets timeline to specified timeline.
-     *
-     * @param timeline The new timeline.
-     */
-    public void setTimeline(final OrganicTimeline timeline) {
-        this.timeline = timeline;
-    }
-
-    /**
-     * Returns the timeline of the person.
-     *
-     * @return The persons timeline.
-     */
-    public OrganicTimeline getTimeline() {
-        return timeline;
-    }
-
-    /**
-     * Returns the day in days since 1/1/1600 of the specified event.
-     * 
-     * @param event The event to be searched for.
-     * @return The day in days since 1/1/1600 of the specified event. If event does not exist returns null.
-     * @throws NoSuchEventException Thown when the specified event is not found in the timeline.
-     */
-//    public int getEvent(final EventType event) throws NoSuchEventException {
-//        return timeline.getDay(event);
-//    }
-
-    /**
      * Returns the persons birth day in days since 1/1/1600.
      *
      * @return The persons birth day in days since 1/1/1600.
      */
     public int getBirthDay() {
-        return timeline.getStartDay();
+        return startDay;
     }
 
     /**
@@ -385,7 +345,7 @@ public class OrganicPerson implements IPerson {
      * @return The persons death day in days since 1/1/1600.
      */
     public int getDeathDay() {
-        return timeline.getEndDate();
+        return endDay;
     }
 
     /**
@@ -405,6 +365,30 @@ public class OrganicPerson implements IPerson {
      */
     private void setSeedPerson(final boolean seedPerson) {
         this.seedPerson = seedPerson;
+    }
+    
+    public void addDayToRecordOfBirths(int day) {
+        if (plannedBirthDays[0] == -1) {
+            plannedBirthDays[0] = day;
+        } else if (plannedBirthDays[1] == -1) {
+            plannedBirthDays[1] = day;
+        } else {
+            plannedBirthDays[0] = plannedBirthDays[1];
+            plannedBirthDays[1] = day;
+        }
+    }
+    
+    public boolean permissibleBirthDay(int day) {
+        
+        int interval = (int) (PopulationLogic.getInterChildInterval() * OrganicPopulation.getDaysPerYear());
+        for (int i : plannedBirthDays) {
+            if (i == -1) {
+                return true;
+            } else if (i - interval < day && day < i + interval) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /*
@@ -433,7 +417,7 @@ public class OrganicPerson implements IPerson {
 
     @Override
     public Date getBirthDate() {
-        return DateManipulation.daysToDate(this.getTimeline().getStartDay());
+        return DateManipulation.daysToDate(getBirthDay());
     }
 
     @Override
@@ -443,7 +427,7 @@ public class OrganicPerson implements IPerson {
 
     @Override
     public Date getDeathDate() {
-        return DateManipulation.daysToDate(this.getTimeline().getEndDate());
+        return DateManipulation.daysToDate(getDeathDay());
     }
 
     @Override

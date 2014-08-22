@@ -94,14 +94,12 @@ public class WeightedDistribution extends RestrictedDistribution<Double> {
     @Override
     public Double getSample(final double smallestPermissableReturnValue, final double largestPermissableReturnValue) throws NoPermissableValueException {
 
-        // TODO document this! Hard to tell what's going on. Findbugs reports high priority bug in unusedSampleValues.indexOf(0)
-
         // Checks if the distribution can provide a value that falls in the permissible return range, if not throws a NoPermissablevalueException
         if (smallestPermissableReturnValue >= maximumReturnValue || largestPermissableReturnValue <= minimumReturnValue) {
             // If at initialisation it has been detailed that the distribution should treat returning a non permissible value as if it has returned zero.
             if (zeroCount != -1) {
                 int i;
-                //  then it should remove the first 0 from the unusedSamplesValues list t0 simulate a returned zero value.
+                //  then it should remove the first 0 from the unusedSamplesValues list to simulate a returned zero value.
                 if (unusedSampleValues.size() != 0 && (i = getIndexOfFirstZero(unusedSampleValues)) != -1) {
                     unusedSampleValues.remove(i);
                 }

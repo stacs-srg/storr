@@ -423,22 +423,16 @@ public abstract class GeneralPopulationStructureTests {
         final Date death_date = person.getDeathDate();
 
         if (death_date != null) {
-            System.out.println("H1");
             final List<Integer> partnership_ids = person.getPartnerships();
             if (partnership_ids != null) {
 
-                System.out.println("H2");
                 for (final int partnership_id : partnership_ids) {
 
-
-                    System.out.println("H3");
                     final IPartnership partnership = population.findPartnership(partnership_id);
                     final Date marriage_date = partnership.getMarriageDate();
 
                     assertTrue(DateManipulation.differenceInDays(marriage_date, death_date) >= 0);
                 }
-
-                System.out.println("H4");
             }
         }
     }
