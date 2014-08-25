@@ -555,11 +555,13 @@ public final class OrganicPartnership implements IPartnership {
 
     @Override
     public Date getMarriageDate() {
-        if (cohabThenMarriageMarriageDay == -1) {
-            return DateManipulation.daysToDate(partnershipDay);
-        } else {
-            return DateManipulation.daysToDate(cohabThenMarriageMarriageDay);
-        }
+        return DateManipulation.daysToDate(partnershipDay);
+        
+//        if (cohabThenMarriageMarriageDay == -1) {
+//            return DateManipulation.daysToDate(partnershipDay);
+//        } else {
+//            return DateManipulation.daysToDate(cohabThenMarriageMarriageDay);
+//        }
     }
     
     public int getParntershipDay() {

@@ -439,7 +439,7 @@ public class OrganicPopulation implements IPopulation {
         // While males exist to be married
         while (!maleQueue.isEmpty()) {
             // This is an optimisation
-            if (maleQueue.getFirst().getDeathDay() < currentDay) {
+            if (maleQueue.getFirst().getDeathDay() <= currentDay) {
                 maleQueue.removeFirst();
                 OrganicPopulationLogger.incNeverMarried();
                 break;
@@ -455,7 +455,7 @@ public class OrganicPopulation implements IPopulation {
             }
             // While there are female in the marriage queue
             while (!femaleQueue.isEmpty()) {
-                if (femaleQueue.getFirst().getDeathDay() < currentDay) {
+                if (femaleQueue.getFirst().getDeathDay() <= currentDay) {
                     femaleQueue.removeFirst();
                     OrganicPopulationLogger.incNeverMarried();
                     break;
