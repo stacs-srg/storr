@@ -41,9 +41,18 @@ public class ClassifierTrainer {
      */
     public ClassifierTrainer(final Bucket trainingBucket, final String experimentalFolderName) {
 
-        vectorFactory = new VectorFactory(trainingBucket);
         this.trainingBucket = trainingBucket;
         this.experimentalFolderName = experimentalFolderName;
+        vectorFactory = new VectorFactory(trainingBucket);
+
+    }
+
+    public void getExistingsModels() {
+
+        exactMatchClassifier = new ExactMatchClassifier();
+        exactMatchClassifier.getModelFromDefaultLocation();
+        olrClassifier = new OLRClassifier(vectorFactory);
+        olrClassifier.getModelFromDefaultLocation();
 
     }
 

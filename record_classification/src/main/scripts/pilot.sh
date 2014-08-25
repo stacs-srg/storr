@@ -3,7 +3,9 @@
 # This script will install the record_classification software using 'mvn clean compile' then perform a training/classification run
 # using the PIlot main class. This assumes modern training data and classification file in the pilot study format.
 
-# Setup variables
+# Setup script and environmental variables 
+set -o pipefail
+set -o errexit
 HEAP="8g"
 USAGE="Usage: $0 <trainingFile>	<classificationFile>	<heap size - optional>"
 

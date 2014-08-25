@@ -3,12 +3,13 @@
 # This script will install the record_classification software using 'mvn clean compile' then perform a training/classification run
 # using the TrainClassifyOneFile main class. This assumes modern training data that is used for both training and classifying.
 
-# Setup variables
+# Setup environmental and local variables
+set -o pipefail
+set -o errexit
 HEAP="8g"
 USAGE="Usage: $0 <goldStandard File>	<trainingRatio>	<heap size - optional>"
 
 # Check that there is at least 1 argument
-
 [[ $# -le 0 ]] && { 
 	>&2 echo "Invalid number of arguments. Expected between 1 and 3, got $#"; 
 	>&2 echo "$USAGE"; 

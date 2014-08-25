@@ -133,6 +133,14 @@ public class PipelineUtils {
         return trainer;
     }
 
+    protected static ClassifierTrainer getExistingModels(final String string, final Bucket trainingBucket, final String experimentalFolderName) {
+
+        ClassifierTrainer trainer = new ClassifierTrainer(trainingBucket, experimentalFolderName);
+        trainer.getExistingsModels();
+
+        return trainer;
+    }
+
     protected static ClassificationHolder classify(final Bucket trainingBucket, final Bucket predictionBucket, final ClassifierTrainer trainer) throws IOException {
 
         ExactMatchPipeline exactMatchPipeline = new ExactMatchPipeline(trainer.getExactMatchClassifier());
