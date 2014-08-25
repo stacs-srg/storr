@@ -28,6 +28,7 @@ import uk.ac.standrews.cs.digitising_scotland.population_model.model.IDFactory;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPartnership;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.PopulationLogic;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.RandomFactory;
+import uk.ac.standrews.cs.digitising_scotland.population_model.organic.logger.OrganicPopulationLogger;
 import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
 
 import java.util.ArrayList;
@@ -604,5 +605,65 @@ public final class OrganicPartnership implements IPartnership {
         } else {
             return 1;
         }
+    }
+    
+    /**
+     * RETURNS MARRIAGE FOR BOTH MARRIAGE AND MARRIAGE THEN COHABITATATION.
+     * 
+     * @return The family type.
+     */
+    public FamilyType getFamilyType() {
+        if (!cohabiting && !married) {
+            return FamilyType.AFFAIR;
+        } else if (cohabiting && !married) {
+            return FamilyType.COHABITATION;
+        } else {
+            return FamilyType.MARRIAGE;
+        }
+        
+    }
+
+    public static TemporalDivorceInstigatedByGenderDistribution getTemporalDivorceInstigatedByGenderDistribution() {
+        return temporalDivorceInstigatedByGenderDistribution;
+    }
+
+    public static TemporalIntegerDistribution getTemporalDivorceAgeForMaleDistribution() {
+        return temporalDivorceAgeForMaleDistribution;
+    }
+
+    public static TemporalIntegerDistribution getTemporalDivorceAgeForFemaleDistribution() {
+        return temporalDivorceAgeForFemaleDistribution;
+    }
+
+    public static TemporalIntegerDistribution getTemporalChildrenNumberOfInMarriageOrCohabDistribution() {
+        return temporalChildrenNumberOfInMarriageOrCohabDistribution;
+    }
+
+    public static TemporalIntegerDistribution getTemporalChildrenNumberOfInMaternityDistribution() {
+        return temporalChildrenNumberOfInMaternityDistribution;
+    }
+
+    public static TemporalIntegerDistribution getTemporalCohabitationLengthDistribution() {
+        return temporalCohabitationLengthDistribution;
+    }
+
+    public static TemporalIntegerDistribution getTemporalAffairNumberOfDistribution() {
+        return temporalAffairNumberOfDistribution;
+    }
+
+    public static TemporalIntegerDistribution getTemporalAffairNumberOfChildrenDistribution() {
+        return temporalAffairNumberOfChildrenDistribution;
+    }
+
+    public static TemporalDivorceReasonDistribution getTemporalDivorceReasonMaleDistribution() {
+        return temporalDivorceReasonMaleDistribution;
+    }
+
+    public static TemporalDivorceReasonDistribution getTemporalDivorceReasonFemaleDistribution() {
+        return temporalDivorceReasonFemaleDistribution;
+    }
+
+    public static TemporalIntegerDistribution getTemporalCohabitaitonToMarriageTimeDistribution() {
+        return temporalCohabitaitonToMarriageTimeDistribution;
     }
 }

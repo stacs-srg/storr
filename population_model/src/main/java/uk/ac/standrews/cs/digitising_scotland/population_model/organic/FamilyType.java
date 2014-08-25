@@ -39,7 +39,7 @@ public enum FamilyType {
      */
     MARRIAGE,
 
-    //    AFFAIR,
+    AFFAIR,
     //    MALE_AFFAIR,
     //    FEMALE_AFFAIR,
 

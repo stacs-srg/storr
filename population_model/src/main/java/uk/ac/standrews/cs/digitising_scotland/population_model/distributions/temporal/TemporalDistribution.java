@@ -47,7 +47,7 @@ import java.util.Set;
  */
 public abstract class TemporalDistribution<Value> implements ITemporalDistribution<Value> {
 
-    private HashMap<Integer, RestrictedDistribution<?>> map = new HashMap<Integer, RestrictedDistribution<?>>();
+    private HashMap<Integer, RestrictedDistribution<Value>> map = new HashMap<Integer, RestrictedDistribution<Value>>();
     private String line;
     private boolean firstLine = true;
     private int minimum, maximum;
@@ -101,7 +101,7 @@ public abstract class TemporalDistribution<Value> implements ITemporalDistributi
                         }
                         currentDistribution = new WeightedIntegerDistribution(minimum, maximum, weights, random, handleNoPermissibleValueAsZero);
                     }
-                    map.put((int) ((year - OrganicPopulation.getEpochYear()) * OrganicPopulation.getDaysPerYear()), currentDistribution);
+                    map.put((int) ((year - OrganicPopulation.getEpochYear()) * OrganicPopulation.getDaysPerYear()), (RestrictedDistribution<Value>) currentDistribution);
                 }
             }
 
@@ -133,6 +133,7 @@ public abstract class TemporalDistribution<Value> implements ITemporalDistributi
         for (int i = 0; i < keyArray.length - 1; i++) {
             if (keyArray[i] < date && date < keyArray[i + 1]) {
                 key = keyArray[i];
+                break;
             }
         }
 
@@ -176,5 +177,14 @@ public abstract class TemporalDistribution<Value> implements ITemporalDistributi
      * @throws NotSetUpAtClassInitilisationException Thrown if the distribution has not been initlised in the correct way to allow restricted sampling.
      */
     public abstract Value getSample(int date, int smallestPermissibleReturnValue, int largestPermissibleReturnValue) throws NoPermissableValueException, NotSetUpAtClassInitilisationException;
+
+    public Integer[] getMapKeys() {
+        return map.keySet().toArray(new Integer[map.keySet().size()]);
+    }
+    
+    public RestrictedDistribution<Value> getDistributionForYear(int year) {
+        return (RestrictedDistribution<Value>) map.get(year);
+    }
+    
 
 }

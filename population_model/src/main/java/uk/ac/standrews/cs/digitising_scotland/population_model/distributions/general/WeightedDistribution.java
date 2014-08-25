@@ -47,8 +47,8 @@ public class WeightedDistribution extends RestrictedDistribution<Double> {
         this.random = random;
         bucket_size = 1.0 / weights.length;
         cumulative_probabilities = generateCumulativeProbabilities(weights);
-        minimumReturnValue = getMinimumReturnValue();
-        maximumReturnValue = getMaximumReturnValue();
+        minimumReturnValue = calculateMinimumReturnValue();
+        maximumReturnValue = calculateMaximumReturnValue();
     }
 
     /**
@@ -179,7 +179,7 @@ public class WeightedDistribution extends RestrictedDistribution<Double> {
         return earliestReturnValue <= d && d <= latestReturnValue;
     }
 
-    private double getMinimumReturnValue() {
+    private double calculateMinimumReturnValue() {
         int count = 0;
         for (double d : cumulative_probabilities) {
             if (d == 0) {
@@ -191,7 +191,7 @@ public class WeightedDistribution extends RestrictedDistribution<Double> {
         return count * bucket_size;
     }
 
-    private double getMaximumReturnValue() {
+    private double calculateMaximumReturnValue() {
         int count = 0;
         for (int i = cumulative_probabilities.length - 1; i >= 0; i--) {
             if (cumulative_probabilities[i] == 1) {
