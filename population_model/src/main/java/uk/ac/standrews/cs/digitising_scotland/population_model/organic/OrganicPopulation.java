@@ -22,6 +22,10 @@ import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPerson;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPopulation;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.PopulationLogic;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.RandomFactory;
+import uk.ac.standrews.cs.digitising_scotland.population_model.organic.logger.DistributionIntergerLogger;
+import uk.ac.standrews.cs.digitising_scotland.population_model.organic.logger.LoggingControl;
+import uk.ac.standrews.cs.digitising_scotland.population_model.organic.logger.OrganicPopulationLogger;
+import uk.ac.standrews.cs.digitising_scotland.population_model.organic.logger.TemporalIntegerLogger;
 import uk.ac.standrews.cs.digitising_scotland.util.ArrayManipulation;
 import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
 
@@ -42,6 +46,20 @@ import java.util.Random;
  * @author Tom Dalton (tsd4@st-andrews.ac.uk)
  */
 public class OrganicPopulation implements IPopulation {
+    
+    /**
+     * Temporary testing main method.
+     * 
+     * @param args
+     *            String Arguments.
+     */
+    public static void main(final String[] args) {
+        System.out.println("--------MAIN HERE---------");
+        runPopulationModel(true, 1000);
+
+    }
+    
+    public static LoggingControl log = new LoggingControl();
 
     public static PrintWriter writer = null;
     
@@ -421,7 +439,7 @@ public class OrganicPopulation implements IPopulation {
         // While males exist to be married
         while (!maleQueue.isEmpty()) {
             // This is an optimisation
-            if (maleQueue.getFirst().getDeathDay() < currentDay) {
+            if (maleQueue.getFirst().getDeathDay() <= currentDay) {
                 maleQueue.removeFirst();
                 OrganicPopulationLogger.incNeverMarried();
                 break;
@@ -437,7 +455,7 @@ public class OrganicPopulation implements IPopulation {
             }
             // While there are female in the marriage queue
             while (!femaleQueue.isEmpty()) {
-                if (femaleQueue.getFirst().getDeathDay() < currentDay) {
+                if (femaleQueue.getFirst().getDeathDay() <= currentDay) {
                     femaleQueue.removeFirst();
                     OrganicPopulationLogger.incNeverMarried();
                     break;
@@ -493,14 +511,14 @@ public class OrganicPopulation implements IPopulation {
     private boolean eligableToPartner(final OrganicPerson male, final OrganicPerson female) {
         boolean resonableAgeDifference = PopulationLogic.partnerAgeDifferenceIsReasonable(DateManipulation.dateToDays(male.getBirthDate()), DateManipulation.dateToDays(female.getBirthDate()));
         boolean notSiblings;
-        boolean resonableChildGap = timeForXChildren(1, male, female);
+//        boolean resonableChildGap = timeForXChildren(1, male, female);
         
         if (male.getParentsPartnership() == female.getParentsPartnership() && male.getParentsPartnership() != -1) {
             notSiblings = false;
         } else {
             notSiblings = true;
         }
-        return resonableAgeDifference && notSiblings && resonableChildGap;
+        return resonableAgeDifference && notSiblings; // && resonableChildGap;
     }
     
     private boolean timeForXChildren(final int x, final OrganicPerson male, final OrganicPerson female) {
@@ -760,11 +778,13 @@ public class OrganicPopulation implements IPopulation {
         long startTime = System.nanoTime();
         OrganicPopulation op = new OrganicPopulation("Test Population");
         OrganicPartnership.setupTemporalDistributionsInOrganicPartnershipClass(op);
+//        initialiseLoggingControl();
         op.makeSeed(seedSize);
         op.setCurrentDay(op.getEarliestDate() - 1);
         
         if (print) {
             try {
+//                writer = new PrintWriter(System.out);
                 writer = new PrintWriter("src/main/resources/output/output_" + System.nanoTime() + ".txt", "UTF-8");
             } catch (FileNotFoundException | UnsupportedEncodingException e) {
                 System.err.println("Output file could not be created. Model will now terminate.");
@@ -785,18 +805,6 @@ public class OrganicPopulation implements IPopulation {
         }
         
         return op;
-    }
-
-    /**
-     * Temporary testing main method.
-     * 
-     * @param args
-     *            String Arguments.
-     */
-    public static void main(final String[] args) {
-        System.out.println("--------MAIN HERE---------");
-        runPopulationModel(true, 1000000);
-
     }
 
     /**
@@ -852,4 +860,9 @@ public class OrganicPopulation implements IPopulation {
     public static void setDebug(final boolean debug) {
         OrganicPopulation.debug = debug;
     }
+    
+//    private static void initialiseLoggingControl() {
+//        LoggingControl.numberOfChildrenFromSingleAffairsDistributionLogger = new TemporalIntegerLogger(OrganicPartnership.getTemporalAffairNumberOfChildrenDistribution());
+//        LoggingControl.numberOfChildrenFromMarriagesDistributionLogger = new TemporalIntegerLogger(OrganicPartnership.getTemporalChildrenNumberOfInMarriageOrCohabDistribution());
+//    }
 }

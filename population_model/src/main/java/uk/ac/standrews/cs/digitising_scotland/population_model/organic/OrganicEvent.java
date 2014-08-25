@@ -47,6 +47,7 @@ public class OrganicEvent implements Comparable<OrganicEvent> {
         if (OrganicPopulation.isDebug()) {
             System.out.println("Adding Person Event - " + eventType.toString() + " - On day: " + day);
         }
+        logEvent(eventType);
         person.getPopulation().addEventToGlobalQueue(this);
     }
 
@@ -68,9 +69,25 @@ public class OrganicEvent implements Comparable<OrganicEvent> {
         if (OrganicPopulation.isDebug()) {
             System.out.println("Adding Partnership Event - " + eventType.toString() + " - On day: " + day);
         }
+        logEvent(eventType);
         partnership.getPopulation().addEventToGlobalQueue(this);
     }
 
+    private void logEvent(final EventType eventType) {
+        if (person == null) {
+            // Log relationship events
+            switch (eventType) {
+                case BIRTH:
+                    
+                    break;
+                default:
+                    break;
+            }
+        } else if (partnership == null) {
+            // Log person events
+        }
+    }
+    
     /**
      * Returns the event type.
      *

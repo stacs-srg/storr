@@ -46,4 +46,22 @@ public abstract class RestrictedDistribution<Value> implements Distribution<Valu
      * @throws NotSetUpAtClassInitilisationException Thrown if the distribution wasn't correctly set up at initialisation.
      */
     public abstract Value getSample(double smallestPermissableReturnValue, double largestPermissableReturnValue) throws NoPermissableValueException, NotSetUpAtClassInitilisationException;
+
+    /**
+     * Returns the minimum possible return value from the distribution as defined by the values in the user provided data.
+     * 
+     * @return The minimum possible return value of the distribution.
+     */
+    public Value getMinimumReturnValue() {
+        return minimumReturnValue;
+    }
+
+    /**
+     * Returns the maximum possible return value from the distribution as defined by the values in the user provided data.
+     * 
+     * @return The maximum possible return value of the distribution.
+     */
+    public Value getMaximumReturnValue() {
+        return maximumReturnValue;
+    }
 }
