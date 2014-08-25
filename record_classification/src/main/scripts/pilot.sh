@@ -5,18 +5,19 @@
 
 # Setup variables
 HEAP="8g"
+USAGE="Usage: $0 <trainingFile>	<classificationFile>	<heap size - optional>"
 
-# Check that are at least 2 arguments
-[ $# -le 1 ] && { 
-	echo "Invalid number of arguments. Expected 2 or 3, got $#"; 
-	echo "Usage: $0 <trainingFile>	<classificationFile>	<heap size - optional>"; 
+# Check that are at least 2 arguments, echos to stderr
+[[ $# -le 1 ]] && { 
+	>&2 echo "Invalid number of arguments. Expected 2 or 3, got $#"; 
+	>&2 echo "$USAGE"; 
 	exit 1; 
 }
 
-# Check that are no more than 3 arguments
-[ $# -ge 4 ] && { 
-	echo "Invalid number of arguments. Expected 2 or 3, got $#"; 
-	echo "Usage: $0 <trainingFile>	<classificationFile>	<heap size - optional>"; 
+# Check that are no more than 3 arguments, echoes to stderr
+[[ $# -ge 4 ]] && { 
+	>&2 echo "Invalid number of arguments. Expected 2 or 3, got $#"; 
+	>&2 echo "$USAGE"; 
 	exit 1;  
 }
 
@@ -24,7 +25,7 @@ HEAP="8g"
 echo "Training file $1"
 echo "Classification file $2" 
 
-if [ -n "$3" ];
+if [[ -n "$3" ]];
 then
 	echo "Heap size $3g" 
 	HEAP="$3g"
