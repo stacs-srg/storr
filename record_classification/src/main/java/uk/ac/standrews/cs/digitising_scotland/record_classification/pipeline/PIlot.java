@@ -106,6 +106,8 @@ public final class PIlot {
         else {
             training = new File(args[0]);
             prediction = new File(args[1]);
+            PipelineUtils.exitIfDoesNotExist(training);
+            PipelineUtils.exitIfDoesNotExist(prediction);
         }
     }
 

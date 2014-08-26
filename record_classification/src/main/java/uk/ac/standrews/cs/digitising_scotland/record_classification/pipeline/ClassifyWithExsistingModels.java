@@ -102,6 +102,8 @@ public final class ClassifyWithExsistingModels {
         else {
             goldStandard = new File(args[0]);
             modelLocation = args[1];
+            PipelineUtils.exitIfDoesNotExist(goldStandard);
+            PipelineUtils.exitIfDoesNotExist(new File(modelLocation));
 
         }
     }

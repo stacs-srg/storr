@@ -186,4 +186,13 @@ public class PipelineUtils {
         comparisonWriter.close();
     }
 
+    protected static void exitIfDoesNotExist(final File file) {
+
+        if (!file.exists()) {
+            System.err.println(file.getAbsolutePath() + " does not exsist. Exiting");
+            System.exit(1);
+        }
+
+    }
+
 }

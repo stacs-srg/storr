@@ -106,10 +106,16 @@ public final class TrainClassifyOneFile {
         }
         else {
             goldStandard = new File(args[0]);
+            PipelineUtils.exitIfDoesNotExist(goldStandard);
             if (args.length > 1) {
                 double userRatio = Double.valueOf(args[1]);
                 if (userRatio > 0 && userRatio < 1) {
                     trainingRatio = userRatio;
+                }
+                else {
+                    System.err.println("trainingRatio must be between 0 and 1. Exiting.");
+                    System.exit(1);
+
                 }
             }
 

@@ -27,10 +27,14 @@ USAGE="Usage: $0 <trainingFile>	<classificationFile>	<heap size - optional>"
 echo "Training file $1"
 echo "Classification file $2" 
 
-if [[ -n "$3" ]];
+if [ -n "$3" ] &&  [ "$3" -ne 0 -o "$3" -eq 0 2>/dev/null ];
 then
 	echo "Heap size $3g" 
 	HEAP="$3g"
+else
+	>&2 echo "Heap size must be an integer" ; 
+	>&2 echo "$USAGE"; 
+	exit 1; 
 fi
 
 # Build and run model

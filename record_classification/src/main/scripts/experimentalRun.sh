@@ -31,10 +31,14 @@ then
 	echo "Training ratio size $2"
 fi
 
-if [[ -n "$3" ]];
+if [ -n "$3" ] &&  [ "$3" -ne 0 -o "$3" -eq 0 2>/dev/null ];
 then
 	echo "Heap size $3g"  
 	HEAP="$3g" 
+else 
+	>&2 echo "Heap size must be an integer" ; 
+	>&2 echo "$USAGE"; 
+	exit 1; 
 fi
 
 
