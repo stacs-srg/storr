@@ -1,19 +1,15 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline;
 
 import java.io.File;
-import java.io.IOException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.AbstractClassifier;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.BucketFilter;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.vectors.VectorFactory;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.exceptions.FolderCreationException;
 import uk.ac.standrews.cs.digitising_scotland.tools.Timer;
-import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
 
 /**
  * This class integrates the training of machine learning models and the
@@ -70,7 +66,7 @@ public final class PIlot {
 
         Timer timer = PipelineUtils.initAndStartTimer();
 
-        setupExperimentalFolders("Experiments");
+        experimentalFolderName = PipelineUtils.setupExperimentalFolders("Experiments");
 
         parseInput(args);
 
@@ -91,7 +87,7 @@ public final class PIlot {
 
         PipelineUtils.writeRecords(classifier.getAllClassified(), experimentalFolderName);
 
-        generateAndPrintStatistics(classifier, experimentalFolderName);
+        PipelineUtils.generateAndPrintStatistics(classifier, experimentalFolderName);
 
         timer.stop();
 
@@ -109,25 +105,6 @@ public final class PIlot {
             PipelineUtils.exitIfDoesNotExist(training);
             PipelineUtils.exitIfDoesNotExist(prediction);
         }
-    }
-
-    private static void generateAndPrintStatistics(final ClassificationHolder classifier, final String experimentalFolderName) throws IOException {
-
-        LOGGER.info("********** Output Stats **********");
-
-        final Bucket uniqueRecordsOnly = BucketFilter.uniqueRecordsOnly(classifier.getAllClassified());
-
-        PipelineUtils.generateAndPrintStats(classifier.getAllClassified(), "All Records", "AllRecords", experimentalFolderName);
-
-        PipelineUtils.generateAndPrintStats(uniqueRecordsOnly, "Unique Only", "UniqueOnly", experimentalFolderName);
-    }
-
-    private static void setupExperimentalFolders(final String baseFolder) {
-
-        experimentalFolderName = Utils.getExperimentalFolderName(baseFolder, "Experiment");
-
-        if (!(new File(experimentalFolderName).mkdirs() && new File(experimentalFolderName + "/Reports").mkdirs() && new File(experimentalFolderName + "/Data").mkdirs() && new File(experimentalFolderName + "/Models").mkdirs())) { throw new FolderCreationException(
-                        "couldn't create experimental folder"); }
     }
 
 }

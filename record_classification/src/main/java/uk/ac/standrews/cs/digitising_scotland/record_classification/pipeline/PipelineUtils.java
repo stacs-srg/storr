@@ -17,9 +17,11 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.analysis_metrics.ListAccuracyMetrics;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.analysis_metrics.StrictConfusionMatrix;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.BucketFilter;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeFactory;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeTriple;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.exceptions.FolderCreationException;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.writers.DataClerkingWriter;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.writers.FileComparisonWriter;
 import uk.ac.standrews.cs.digitising_scotland.tools.Timer;
@@ -184,6 +186,27 @@ public class PipelineUtils {
             comparisonWriter.write(record);
         }
         comparisonWriter.close();
+    }
+
+    protected static void generateAndPrintStatistics(final ClassificationHolder classifier, final String experimentalFolderName) throws IOException {
+
+        LOGGER.info("********** Output Stats **********");
+
+        final Bucket uniqueRecordsOnly = BucketFilter.uniqueRecordsOnly(classifier.getAllClassified());
+
+        PipelineUtils.generateAndPrintStats(classifier.getAllClassified(), "All Records", "AllRecords", experimentalFolderName);
+
+        PipelineUtils.generateAndPrintStats(uniqueRecordsOnly, "Unique Only", "UniqueOnly", experimentalFolderName);
+    }
+
+    protected static String setupExperimentalFolders(final String baseFolder) {
+
+        final String experimentalFolderName = Utils.getExperimentalFolderName(baseFolder, "Experiment");
+
+        if (!(new File(experimentalFolderName).mkdirs() && new File(experimentalFolderName + "/Reports").mkdirs() && new File(experimentalFolderName + "/Data").mkdirs() && new File(experimentalFolderName + "/Models").mkdirs())) { throw new FolderCreationException(
+                        "couldn't create experimental folder"); }
+
+        return experimentalFolderName;
     }
 
     protected static void exitIfDoesNotExist(final File file) {

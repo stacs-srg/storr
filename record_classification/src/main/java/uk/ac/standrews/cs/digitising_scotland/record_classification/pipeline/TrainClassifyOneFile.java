@@ -11,9 +11,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.BucketFilter;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.vectors.VectorFactory;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.exceptions.FolderCreationException;
 import uk.ac.standrews.cs.digitising_scotland.tools.Timer;
-import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
 
 /**
  * This class integrates the training of machine learning models and the
@@ -73,7 +71,7 @@ public final class TrainClassifyOneFile {
 
         Timer timer = PipelineUtils.initAndStartTimer();
 
-        setupExperimentalFolders("Experiments");
+        experimentalFolderName = PipelineUtils.setupExperimentalFolders("Experiments");
 
         parseInput(args);
 
@@ -145,14 +143,6 @@ public final class TrainClassifyOneFile {
                 predictionBucket.addRecordToBucket(record);
             }
         }
-    }
-
-    private static void setupExperimentalFolders(final String baseFolder) {
-
-        experimentalFolderName = Utils.getExperimentalFolderName(baseFolder, "Experiment");
-
-        if (!(new File(experimentalFolderName).mkdirs() && new File(experimentalFolderName + "/Reports").mkdirs() && new File(experimentalFolderName + "/Data").mkdirs() && new File(experimentalFolderName + "/Models").mkdirs())) { throw new FolderCreationException(
-                        "couldn't create experimental folder"); }
     }
 
 }
