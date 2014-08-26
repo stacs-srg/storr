@@ -29,13 +29,15 @@ import java.util.List;
 public abstract class RestrictedDistribution<Value> implements Distribution<Value> {
 
     // Restricted Distribution Helper Values
-    protected Value minimumReturnValue = null;
-    protected Value maximumReturnValue = null;
+    protected Value minimumSpecifiedValue = null;
+    protected Value maximumSpecifiedValue = null;
 
     protected List<Double> unusedSampleValues = new ArrayList<>();
     protected int zeroCount = -1;
     protected double zeroCap;
 
+    public abstract int[] getWeights();
+    
     /**
      * Samples distribution and returns a value that falls between the two given values.
      * 
@@ -53,7 +55,7 @@ public abstract class RestrictedDistribution<Value> implements Distribution<Valu
      * @return The minimum possible return value of the distribution.
      */
     public Value getMinimumReturnValue() {
-        return minimumReturnValue;
+        return minimumSpecifiedValue;
     }
 
     /**
@@ -62,6 +64,6 @@ public abstract class RestrictedDistribution<Value> implements Distribution<Valu
      * @return The maximum possible return value of the distribution.
      */
     public Value getMaximumReturnValue() {
-        return maximumReturnValue;
+        return maximumSpecifiedValue;
     }
 }

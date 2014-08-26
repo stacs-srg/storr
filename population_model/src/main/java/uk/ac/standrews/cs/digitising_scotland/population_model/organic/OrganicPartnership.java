@@ -28,6 +28,7 @@ import uk.ac.standrews.cs.digitising_scotland.population_model.model.IDFactory;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPartnership;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.PopulationLogic;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.RandomFactory;
+import uk.ac.standrews.cs.digitising_scotland.population_model.organic.logger.LoggingControl;
 import uk.ac.standrews.cs.digitising_scotland.population_model.organic.logger.OrganicPopulationLogger;
 import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
 
@@ -200,6 +201,7 @@ public final class OrganicPartnership implements IPartnership {
             } else if (cohabiting && married) {
                 // cohab then marriage / marriage
                 numberOfChildrenToBeHadByCouple = temporalChildrenNumberOfInMarriageOrCohabDistribution.getSample(population.getCurrentDay(), 0, maxPossibleChildren);
+                LoggingControl.numberOfChildrenFromMarriagesDistributionLogger.log(population.getCurrentDay(), numberOfChildrenToBeHadByCouple);
             }
         } catch (NoPermissableValueException e) {
             numberOfChildrenToBeHadByCouple = 0;

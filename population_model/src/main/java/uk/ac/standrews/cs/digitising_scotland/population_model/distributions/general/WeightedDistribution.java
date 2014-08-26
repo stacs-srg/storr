@@ -30,6 +30,7 @@ public class WeightedDistribution extends RestrictedDistribution<Double> {
     private final Random random;
     private final double[] cumulative_probabilities;
     private final double bucket_size;
+    private final int[] weights;
 
     /**
      * This distribution provides samples from the range 0.0-1.0, selected from a number of equally sized buckets with various weightings.
@@ -45,10 +46,11 @@ public class WeightedDistribution extends RestrictedDistribution<Double> {
      */
     public WeightedDistribution(final int[] weights, final Random random) throws NegativeWeightException {
         this.random = random;
+        this.weights = weights;
         bucket_size = 1.0 / weights.length;
         cumulative_probabilities = generateCumulativeProbabilities(weights);
-        minimumReturnValue = calculateMinimumReturnValue();
-        maximumReturnValue = calculateMaximumReturnValue();
+        minimumSpecifiedValue = calculateMinimumReturnValue();
+        maximumSpecifiedValue = calculateMaximumReturnValue();
     }
 
     /**
@@ -66,7 +68,7 @@ public class WeightedDistribution extends RestrictedDistribution<Double> {
         this(weights, random);
         if (handleNoPermissableValueAsZero) {
             zeroCount = 0;
-            zeroCap = 1 / (maximumReturnValue - minimumReturnValue);
+            zeroCap = 1 / (maximumSpecifiedValue - minimumSpecifiedValue);
         }
     }
 
@@ -95,7 +97,7 @@ public class WeightedDistribution extends RestrictedDistribution<Double> {
     public Double getSample(final double smallestPermissableReturnValue, final double largestPermissableReturnValue) throws NoPermissableValueException {
 
         // Checks if the distribution can provide a value that falls in the permissible return range, if not throws a NoPermissablevalueException
-        if (smallestPermissableReturnValue >= maximumReturnValue || largestPermissableReturnValue <= minimumReturnValue) {
+        if (smallestPermissableReturnValue >= maximumSpecifiedValue || largestPermissableReturnValue <= minimumSpecifiedValue) {
             // If at initialisation it has been detailed that the distribution should treat returning a non permissible value as if it has returned zero.
             if (zeroCount != -1) {
                 int i;
@@ -164,6 +166,10 @@ public class WeightedDistribution extends RestrictedDistribution<Double> {
 
     // -------------------------------------------------------------------------------------------------------
 
+    public int[] getWeights() {
+        return weights;
+    }
+    
     private int getIndexOfFirstZero(final List<Double> list) {
         int i = 0;
         for (Double d : list) {

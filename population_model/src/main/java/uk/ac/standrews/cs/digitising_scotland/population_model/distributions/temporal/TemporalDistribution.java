@@ -186,5 +186,13 @@ public abstract class TemporalDistribution<Value> implements ITemporalDistributi
         return (RestrictedDistribution<Value>) map.get(year);
     }
     
+    public int getMinimumStatedValue() {
+        return minimum;
+    }
+    
+    public int getMaximumStatedValue() {
+        return maximum;
+    }
+    
 
 }

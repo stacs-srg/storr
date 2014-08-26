@@ -16,11 +16,11 @@
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.organic.logger;
 
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.general.Distribution;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.general.RestrictedDistribution;
 
 public abstract class DistributionLogger<Value> extends Logger<Value> {
 
-    protected Distribution<Value> relatedDistribution;
+    protected RestrictedDistribution<Value> relatedDistribution;
     
     protected int[] counts;
     

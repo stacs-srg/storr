@@ -61,8 +61,8 @@ public class NormalDistribution extends RestrictedDistribution<Double> {
      */
     public NormalDistribution(final double mean, final double standard_deviation, final Random random, final double minimumReturnValue, final double maximumReturnValue) throws NegativeDeviationException {
         this(mean, standard_deviation, random);
-        this.minimumReturnValue = minimumReturnValue;
-        this.maximumReturnValue = maximumReturnValue;
+        this.minimumSpecifiedValue = minimumReturnValue;
+        this.maximumSpecifiedValue = maximumReturnValue;
     }
 
     @Override
@@ -73,11 +73,11 @@ public class NormalDistribution extends RestrictedDistribution<Double> {
 
     @Override
     public Double getSample(final double earliestReturnValue, final double latestReturnValue) throws NoPermissableValueException, NotSetUpAtClassInitilisationException {
-        if (minimumReturnValue == (Double) null || maximumReturnValue == (Double) null) {
+        if (minimumSpecifiedValue == (Double) null || maximumSpecifiedValue == (Double) null) {
             throw new NotSetUpAtClassInitilisationException();
         }
 
-        if (earliestReturnValue >= maximumReturnValue || latestReturnValue <= minimumReturnValue) {
+        if (earliestReturnValue >= maximumSpecifiedValue || latestReturnValue <= minimumSpecifiedValue) {
             throw new NoPermissableValueException();
         } else {
             if (unusedSampleValues.size() != 0) {
@@ -109,5 +109,11 @@ public class NormalDistribution extends RestrictedDistribution<Double> {
      */
     protected static boolean inRange(final double d, final double earliestReturnValue, final double latestReturnValue) {
         return earliestReturnValue <= d && d <= latestReturnValue;
+    }
+
+    @Override
+    public int[] getWeights() {
+        // TODO Auto-generated method stub
+        return null;
     }
 }

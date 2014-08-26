@@ -28,7 +28,7 @@ public class TemporalIntegerLogger extends TemporalLogger<Integer> {
     public TemporalIntegerLogger(TemporalIntegerDistribution relatedTemporalDistribution) {
         map = new HashMap<Integer, DistributionIntergerLogger>();
         for (Integer i : relatedTemporalDistribution.getMapKeys()) {
-            map.put(i, new DistributionIntergerLogger(relatedTemporalDistribution.getDistributionForYear(i)));
+            map.put(i, new DistributionIntergerLogger(relatedTemporalDistribution.getDistributionForYear(i), relatedTemporalDistribution.getMinimumStatedValue(), relatedTemporalDistribution.getMaximumStatedValue()));
         }
         Set<Integer> keys = map.keySet();
         ArrayList<Integer> keyList = new ArrayList<>(keys);

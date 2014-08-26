@@ -25,6 +25,8 @@ public abstract class TemporalLogger<Value> {
     protected TemporalDistribution<?> relatedTemporalDistribution;
     protected HashMap<Integer, DistributionIntergerLogger> map;
     protected Integer[] keyArray;
+    protected int minValue;
+    protected int maxValue;
     
     protected int getKey(final int date) {
         int key = keyArray[keyArray.length - 1];
@@ -40,4 +42,15 @@ public abstract class TemporalLogger<Value> {
         return key;
     }
     
+    public void printGraph() {
+        for(Integer i : map.keySet()) {
+            map.get(i).printGraph();
+        }
+    }
+    
+    public void outputToGnuPlotFormat() {
+        for(Integer i : map.keySet()) {
+            map.get(i).outputToGnuPlotFormat(i);
+        }
+    }
 }

@@ -16,14 +16,18 @@
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.organic.logger;
 
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
+
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.general.RestrictedDistribution;
 import uk.ac.standrews.cs.digitising_scotland.population_model.organic.OrganicPopulation;
 
 public class DistributionIntergerLogger extends DistributionLogger<Integer> {
 
-    public DistributionIntergerLogger(RestrictedDistribution<Integer> relatedDistribution) {
-        this.maxXValue = relatedDistribution.getMinimumReturnValue();
-        this.maxXValue = relatedDistribution.getMaximumReturnValue();
+    public DistributionIntergerLogger(RestrictedDistribution<Integer> relatedDistribution, int minStatedValue, int maxStatedValue) {
+        this.minXValue = minStatedValue;
+        this.maxXValue = maxStatedValue;
         this.relatedDistribution = relatedDistribution;
         counts = new int[maxXValue - minXValue + 1];
     }
@@ -41,6 +45,41 @@ public class DistributionIntergerLogger extends DistributionLogger<Integer> {
     public void printGraph() {
         printGraph(counts, minXValue, minXValue, false, 10);
 
+    }
+    
+    public void outputToGnuPlotFormat(int year) {
+        PrintWriter writer;
+        int[] distWeights = relatedDistribution.getWeights();
+        
+        int sumOfDistWeights = 0;
+        for (int i : distWeights) {
+            sumOfDistWeights += i;
+        }
+        
+        int sumOfCounts = 0;
+        for (int i : counts) {
+            sumOfCounts += i;
+        }
+        if (sumOfCounts == 0) {
+            sumOfCounts = sumOfDistWeights;
+        }
+        
+        double scaleFactor = sumOfCounts / (double) sumOfDistWeights;
+        
+        try {
+            writer = new PrintWriter("src/main/resources/output/gnu/" + this.getClass().getCanonicalName() + "_" + year + ".dat", "UTF-8");
+            writer.println("# This file is called " + this.getClass().getCanonicalName() + ".dat");
+            writer.println("# Value    Actual    Distribution");
+            double rangeStep = (relatedDistribution.getMaximumReturnValue() - relatedDistribution.getMinimumReturnValue() + 1) / (double) counts.length;
+            for (int i = 0; i < counts.length; i++) {
+                writer.printf("%.2f", rangeStep * i + relatedDistribution.getMinimumReturnValue());
+                writer.print("    ");
+                writer.printf("%.2f", counts[i] / scaleFactor);
+                writer.println("    " + distWeights[i]);
+            }
+            writer.close();
+        } catch (FileNotFoundException | UnsupportedEncodingException e) {}
+        
     }
     
     protected void printGraph(int[] values, Integer xStartValue, Integer xEndValue, boolean line, int lineDepth) {

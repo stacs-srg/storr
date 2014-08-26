@@ -50,13 +50,16 @@ public class OrganicPopulation implements IPopulation {
     /**
      * Temporary testing main method.
      * 
-     * @param args
-     *            String Arguments.
+     * @param args String Arguments.
      */
     public static void main(final String[] args) {
         System.out.println("--------MAIN HERE---------");
-        runPopulationModel(true, 1000);
-
+        
+        if (args.length == 0) {
+            runPopulationModel(true, DEFAULT_SEED_SIZE);
+        } else {
+            runPopulationModel(true, new Integer(args[0]));
+        }
     }
     
     public static LoggingControl log = new LoggingControl();
@@ -778,14 +781,14 @@ public class OrganicPopulation implements IPopulation {
         long startTime = System.nanoTime();
         OrganicPopulation op = new OrganicPopulation("Test Population");
         OrganicPartnership.setupTemporalDistributionsInOrganicPartnershipClass(op);
-//        initialiseLoggingControl();
+        initialiseLoggingControl();
         op.makeSeed(seedSize);
         op.setCurrentDay(op.getEarliestDate() - 1);
         
         if (print) {
             try {
-//                writer = new PrintWriter(System.out);
                 writer = new PrintWriter("src/main/resources/output/output_" + System.nanoTime() + ".txt", "UTF-8");
+                writer = new PrintWriter(System.out);
             } catch (FileNotFoundException | UnsupportedEncodingException e) {
                 System.err.println("Output file could not be created. Model will now terminate.");
                 System.exit(1);
@@ -800,7 +803,9 @@ public class OrganicPopulation implements IPopulation {
             OrganicPopulationLogger.printLogData();
             writer.println();
             long timeTaken = System.nanoTime() - startTime;
-            writer.println("Run time " + timeTaken / 1000000 + "ms"); 
+            writer.println("Run time " + timeTaken / 1000000 + "ms");
+            writer.println();
+            LoggingControl.numberOfChildrenFromMarriagesDistributionLogger.outputToGnuPlotFormat();
             writer.close();
         }
         
@@ -861,8 +866,8 @@ public class OrganicPopulation implements IPopulation {
         OrganicPopulation.debug = debug;
     }
     
-//    private static void initialiseLoggingControl() {
-//        LoggingControl.numberOfChildrenFromSingleAffairsDistributionLogger = new TemporalIntegerLogger(OrganicPartnership.getTemporalAffairNumberOfChildrenDistribution());
-//        LoggingControl.numberOfChildrenFromMarriagesDistributionLogger = new TemporalIntegerLogger(OrganicPartnership.getTemporalChildrenNumberOfInMarriageOrCohabDistribution());
-//    }
+    private static void initialiseLoggingControl() {
+        LoggingControl.numberOfChildrenFromSingleAffairsDistributionLogger = new TemporalIntegerLogger(OrganicPartnership.getTemporalAffairNumberOfChildrenDistribution());
+        LoggingControl.numberOfChildrenFromMarriagesDistributionLogger = new TemporalIntegerLogger(OrganicPartnership.getTemporalChildrenNumberOfInMarriageOrCohabDistribution());
+    }
 }

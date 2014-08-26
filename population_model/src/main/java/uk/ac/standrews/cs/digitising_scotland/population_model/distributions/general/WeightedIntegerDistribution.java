@@ -26,7 +26,6 @@ import java.util.Random;
  */
 public class WeightedIntegerDistribution extends RestrictedDistribution<Integer> {
 
-    private final int minimum;
     private final int range;
     private final WeightedDistribution weighted_distribution;
 
@@ -42,7 +41,8 @@ public class WeightedIntegerDistribution extends RestrictedDistribution<Integer>
      */
     public WeightedIntegerDistribution(final int minimum, final int maximum, final int[] weights, final Random random) throws NegativeWeightException {
 
-        this.minimum = minimum;
+        minimumSpecifiedValue = minimum;
+        maximumSpecifiedValue = maximum;
         range = maximum - minimum + 1;
         weighted_distribution = new WeightedDistribution(weights, random);
     }
@@ -59,7 +59,8 @@ public class WeightedIntegerDistribution extends RestrictedDistribution<Integer>
      */
     public WeightedIntegerDistribution(final int minimum, final int maximum, final int[] weights, final Random random, final boolean handleNoPermissableValueAsZero) throws NegativeWeightException {
 
-        this.minimum = minimum;
+        minimumSpecifiedValue = minimum;
+        maximumSpecifiedValue = maximum;
         range = maximum - minimum + 1;
         weighted_distribution = new WeightedDistribution(weights, random, handleNoPermissableValueAsZero);
     }
@@ -67,11 +68,16 @@ public class WeightedIntegerDistribution extends RestrictedDistribution<Integer>
     @Override
     public Integer getSample() {
 
-        return minimum + (int) (range * weighted_distribution.getSample());
+        return minimumSpecifiedValue + (int) (range * weighted_distribution.getSample());
     }
 
     @Override
     public Integer getSample(final double earliestValue, final double latestValue) throws NoPermissableValueException {
-        return minimum + (int) (range * weighted_distribution.getSample((earliestValue - minimum) / range, (latestValue - minimum) / range));
+        return minimumSpecifiedValue + (int) (range * weighted_distribution.getSample((earliestValue - minimumSpecifiedValue) / range, (latestValue - minimumSpecifiedValue) / range));
+    }
+
+    @Override
+    public int[] getWeights() {
+        return weighted_distribution.getWeights();
     }
 }
