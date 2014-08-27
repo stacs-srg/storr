@@ -154,7 +154,9 @@ public class WeightedDistribution extends RestrictedDistribution<Double> {
                 v = getSample();
             } else {
                 // If not in range then adds to unused sample values list.
-                unusedSampleValues.add(v);
+                if (unusedSampleValues.size() < 10000000) {
+                    unusedSampleValues.add(v);
+                }
             }
             // Takes a new sample.
             v = getSample();

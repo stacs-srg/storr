@@ -25,7 +25,10 @@ import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.tem
 
 public class TemporalIntegerLogger extends TemporalLogger<Integer> {
 
-    public TemporalIntegerLogger(TemporalIntegerDistribution relatedTemporalDistribution) {
+    public TemporalIntegerLogger(TemporalIntegerDistribution relatedTemporalDistribution, String fileName, String graphTitle, String xLabel) {
+        this.title = graphTitle;
+        this.fileName = fileName;
+        this.xLabel = xLabel;
         map = new HashMap<Integer, DistributionIntergerLogger>();
         for (Integer i : relatedTemporalDistribution.getMapKeys()) {
             map.put(i, new DistributionIntergerLogger(relatedTemporalDistribution.getDistributionForYear(i), relatedTemporalDistribution.getMinimumStatedValue(), relatedTemporalDistribution.getMaximumStatedValue()));

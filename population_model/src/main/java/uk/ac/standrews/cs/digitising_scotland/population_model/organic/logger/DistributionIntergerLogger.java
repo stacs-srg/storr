@@ -16,6 +16,7 @@
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.organic.logger;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
@@ -25,6 +26,8 @@ import uk.ac.standrews.cs.digitising_scotland.population_model.organic.OrganicPo
 
 public class DistributionIntergerLogger extends DistributionLogger<Integer> {
 
+    private final static String FWD_SLASH = "/";
+    private final static String BCK_SLASH = "\\";
     public DistributionIntergerLogger(RestrictedDistribution<Integer> relatedDistribution, int minStatedValue, int maxStatedValue) {
         this.minXValue = minStatedValue;
         this.maxXValue = maxStatedValue;
@@ -47,7 +50,12 @@ public class DistributionIntergerLogger extends DistributionLogger<Integer> {
 
     }
     
-    public void outputToGnuPlotFormat(int year) {
+    @Override
+    public String generateGnuPlotPlottingScript() {
+        return "plot \"" + filePath.replace(BCK_SLASH, FWD_SLASH) + "\" using 1:2 title 'Actual' with line, \"" + filePath.replace(BCK_SLASH, FWD_SLASH) + "\" using 1:3 title 'Dist' with line";
+    }
+    
+    public void outputToGnuPlotFormat(int year, String fileName) {
         PrintWriter writer;
         int[] distWeights = relatedDistribution.getWeights();
         
@@ -67,18 +75,23 @@ public class DistributionIntergerLogger extends DistributionLogger<Integer> {
         double scaleFactor = sumOfCounts / (double) sumOfDistWeights;
         
         try {
-            writer = new PrintWriter("src/main/resources/output/gnu/" + this.getClass().getCanonicalName() + "_" + year + ".dat", "UTF-8");
-            writer.println("# This file is called " + this.getClass().getCanonicalName() + ".dat");
+            filePath = "src/main/resources/output/gnu/" + fileName + "_" + ((int) (year / OrganicPopulation.getDaysPerYear()) + OrganicPopulation.getEpochYear()) + ".dat";
+            writer = new PrintWriter(filePath, "UTF-8");
+            filePath = new File("").getAbsolutePath() + "/" + filePath;
+            writer.println("# This file is called " + fileName + ".dat");
             writer.println("# Value    Actual    Distribution");
             double rangeStep = (relatedDistribution.getMaximumReturnValue() - relatedDistribution.getMinimumReturnValue() + 1) / (double) counts.length;
             for (int i = 0; i < counts.length; i++) {
                 writer.printf("%.2f", rangeStep * i + relatedDistribution.getMinimumReturnValue());
-                writer.print("    ");
-                writer.printf("%.2f", counts[i] / scaleFactor);
-                writer.println("    " + distWeights[i]);
+                writer.print("    " + counts[i] + "    ");
+                writer.printf("%.2f", distWeights[i] * scaleFactor);
+                writer.println();
             }
             writer.close();
-        } catch (FileNotFoundException | UnsupportedEncodingException e) {}
+        } catch (FileNotFoundException | UnsupportedEncodingException e) {
+            System.out.println("_________CAUGHT__________");
+            System.out.println(e.getMessage());
+        }
         
     }
     
@@ -142,6 +155,8 @@ public class DistributionIntergerLogger extends DistributionLogger<Integer> {
         OrganicPopulation.writer.println(xEndValue);
         OrganicPopulation.writer.println();
     }
+
+
 
 
 }

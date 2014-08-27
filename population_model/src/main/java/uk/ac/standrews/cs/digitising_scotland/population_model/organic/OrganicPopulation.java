@@ -26,6 +26,7 @@ import uk.ac.standrews.cs.digitising_scotland.population_model.organic.logger.Di
 import uk.ac.standrews.cs.digitising_scotland.population_model.organic.logger.LoggingControl;
 import uk.ac.standrews.cs.digitising_scotland.population_model.organic.logger.OrganicPopulationLogger;
 import uk.ac.standrews.cs.digitising_scotland.population_model.organic.logger.TemporalIntegerLogger;
+import uk.ac.standrews.cs.digitising_scotland.population_model.tools.MemoryMonitor;
 import uk.ac.standrews.cs.digitising_scotland.util.ArrayManipulation;
 import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
 
@@ -56,12 +57,14 @@ public class OrganicPopulation implements IPopulation {
         System.out.println("--------MAIN HERE---------");
         
         if (args.length == 0) {
-            runPopulationModel(true, DEFAULT_SEED_SIZE);
+            runPopulationModel(true, DEFAULT_SEED_SIZE, true);
         } else {
-            runPopulationModel(true, new Integer(args[0]));
+            runPopulationModel(true, new Integer(args[0]), true);
         }
+        
     }
     
+    public static MemoryMonitor mm;
     public static LoggingControl log = new LoggingControl();
 
     public static PrintWriter writer = null;
@@ -71,7 +74,7 @@ public class OrganicPopulation implements IPopulation {
     private static final int END_DEBUG_YEAR = 3000;
 
     // Universal population variables
-    private static final int DEFAULT_SEED_SIZE = 1000;
+    private static final int DEFAULT_SEED_SIZE = 100000;
     private static final float DAYS_PER_YEAR = 365.25f;
     private static final int START_YEAR = 1780;
     private static final int END_YEAR = 2013;
@@ -161,7 +164,7 @@ public class OrganicPopulation implements IPopulation {
      * 
      * @param print Specifies whether to print year end information to console.
      */
-    public void newEventIteration(final boolean print) {
+    public void newEventIteration(final boolean print, final boolean memoryMonitor) {
         while (getCurrentDay() < DateManipulation.dateToDays(getEndYear(), 0, 0)) {
             OrganicEvent event = globalEventsQueue.poll();
             if (event == null) {
@@ -178,6 +181,9 @@ public class OrganicPopulation implements IPopulation {
                 if (print) {
                     writer.println(EPOCH_YEAR + 1 + (int) (getCurrentDay() / getDaysPerYear()));
                     writer.println("Population: " + OrganicPopulationLogger.getPopulation());
+                }
+                if (memoryMonitor) {
+                    mm.log(currentDay, OrganicPopulationLogger.getPopulation());
                 }
                 double r = getCurrentDay() % DAYS_PER_YEAR;
                 setCurrentDay((int) (getCurrentDay() + Math.round(r))); 
@@ -775,20 +781,22 @@ public class OrganicPopulation implements IPopulation {
 
     }
     
-    public static OrganicPopulation runPopulationModel(boolean print, int seedSize) {
-        
+    public static OrganicPopulation runPopulationModel(boolean print, int seedSize, final boolean memoryMonitor) {
+        if (memoryMonitor) {
+            mm = new MemoryMonitor();
+        }
         
         long startTime = System.nanoTime();
         OrganicPopulation op = new OrganicPopulation("Test Population");
         OrganicPartnership.setupTemporalDistributionsInOrganicPartnershipClass(op);
-        initialiseLoggingControl();
+        LoggingControl.setUpLogger();
         op.makeSeed(seedSize);
         op.setCurrentDay(op.getEarliestDate() - 1);
         
         if (print) {
             try {
                 writer = new PrintWriter("src/main/resources/output/output_" + System.nanoTime() + ".txt", "UTF-8");
-                writer = new PrintWriter(System.out);
+//                writer = new PrintWriter(System.out);
             } catch (FileNotFoundException | UnsupportedEncodingException e) {
                 System.err.println("Output file could not be created. Model will now terminate.");
                 System.exit(1);
@@ -797,7 +805,7 @@ public class OrganicPopulation implements IPopulation {
             writer.println(op.getDescription());
         }
         
-        op.newEventIteration(print);
+        op.newEventIteration(print, memoryMonitor);
 
         if (print) {
             OrganicPopulationLogger.printLogData();
@@ -805,10 +813,12 @@ public class OrganicPopulation implements IPopulation {
             long timeTaken = System.nanoTime() - startTime;
             writer.println("Run time " + timeTaken / 1000000 + "ms");
             writer.println();
-            LoggingControl.numberOfChildrenFromMarriagesDistributionLogger.outputToGnuPlotFormat();
+            LoggingControl.createGnuPlotOutputFilesAndScript();
             writer.close();
         }
-        
+        if (memoryMonitor) {
+            mm.close();
+        }
         return op;
     }
 
@@ -866,8 +876,4 @@ public class OrganicPopulation implements IPopulation {
         OrganicPopulation.debug = debug;
     }
     
-    private static void initialiseLoggingControl() {
-        LoggingControl.numberOfChildrenFromSingleAffairsDistributionLogger = new TemporalIntegerLogger(OrganicPartnership.getTemporalAffairNumberOfChildrenDistribution());
-        LoggingControl.numberOfChildrenFromMarriagesDistributionLogger = new TemporalIntegerLogger(OrganicPartnership.getTemporalChildrenNumberOfInMarriageOrCohabDistribution());
-    }
 }
