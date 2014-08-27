@@ -32,3 +32,9 @@ The Maven repository is here:
 ## Tutorial
 
 A <a href="tutorial.html">brief tutorial</a> on how to use the record classification software is available.
+
+## Scripts
+
+A selection of shell scripts are provided to help the user run the software. <a href="scripts-information.html">These can be found here.</a> 
+
+
