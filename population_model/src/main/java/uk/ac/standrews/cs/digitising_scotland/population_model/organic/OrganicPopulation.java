@@ -56,23 +56,12 @@ public class OrganicPopulation implements IPopulation {
     public static void main(final String[] args) {
         System.out.println("--------MAIN HERE---------");
         
-        
-        mm = new MemoryMonitor();
-//        Thread t = new Thread(mm);
-        
-//        System.out.println("H0");
-//        t.run();
-//        System.out.println("H1");
-//        mm.run();
-//        System.out.println("H2");
-        
         if (args.length == 0) {
-            runPopulationModel(true, DEFAULT_SEED_SIZE);
+            runPopulationModel(true, DEFAULT_SEED_SIZE, true);
         } else {
-            runPopulationModel(true, new Integer(args[0]));
+            runPopulationModel(true, new Integer(args[0]), true);
         }
         
-        mm.close();
     }
     
     public static MemoryMonitor mm;
@@ -175,7 +164,7 @@ public class OrganicPopulation implements IPopulation {
      * 
      * @param print Specifies whether to print year end information to console.
      */
-    public void newEventIteration(final boolean print) {
+    public void newEventIteration(final boolean print, final boolean memoryMonitor) {
         while (getCurrentDay() < DateManipulation.dateToDays(getEndYear(), 0, 0)) {
             OrganicEvent event = globalEventsQueue.poll();
             if (event == null) {
@@ -193,7 +182,9 @@ public class OrganicPopulation implements IPopulation {
                     writer.println(EPOCH_YEAR + 1 + (int) (getCurrentDay() / getDaysPerYear()));
                     writer.println("Population: " + OrganicPopulationLogger.getPopulation());
                 }
-                mm.log(currentDay, OrganicPopulationLogger.getPopulation());
+                if (memoryMonitor) {
+                    mm.log(currentDay, OrganicPopulationLogger.getPopulation());
+                }
                 double r = getCurrentDay() % DAYS_PER_YEAR;
                 setCurrentDay((int) (getCurrentDay() + Math.round(r))); 
             }
@@ -790,8 +781,10 @@ public class OrganicPopulation implements IPopulation {
 
     }
     
-    public static OrganicPopulation runPopulationModel(boolean print, int seedSize) {
-        
+    public static OrganicPopulation runPopulationModel(boolean print, int seedSize, final boolean memoryMonitor) {
+        if (memoryMonitor) {
+            mm = new MemoryMonitor();
+        }
         
         long startTime = System.nanoTime();
         OrganicPopulation op = new OrganicPopulation("Test Population");
@@ -812,7 +805,7 @@ public class OrganicPopulation implements IPopulation {
             writer.println(op.getDescription());
         }
         
-        op.newEventIteration(print);
+        op.newEventIteration(print, memoryMonitor);
 
         if (print) {
             OrganicPopulationLogger.printLogData();
@@ -823,7 +816,9 @@ public class OrganicPopulation implements IPopulation {
             LoggingControl.createGnuPlotOutputFilesAndScript();
             writer.close();
         }
-        
+        if (memoryMonitor) {
+            mm.close();
+        }
         return op;
     }
 
