@@ -22,6 +22,8 @@ public abstract class DistributionLogger<Value> extends Logger<Value> {
 
     protected RestrictedDistribution<Value> relatedDistribution;
     
+    protected String filePath;
+    
     protected int[] counts;
     
     protected Value[] xLabels;
@@ -29,5 +31,7 @@ public abstract class DistributionLogger<Value> extends Logger<Value> {
     public abstract void incCountFor(Value xLabel);
     
     public abstract void printGraph();
+    
+    public abstract String generateGnuPlotPlottingScript();
     
 }

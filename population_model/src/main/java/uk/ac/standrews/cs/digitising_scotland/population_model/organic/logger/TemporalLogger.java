@@ -16,9 +16,13 @@
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.organic.logger;
 
+import java.io.File;
+import java.io.PrintWriter;
 import java.util.HashMap;
 
+import edu.umd.cs.findbugs.bcel.OpcodeStackDetector.WithCustomJumpInfo;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.temporal.TemporalDistribution;
+import uk.ac.standrews.cs.digitising_scotland.population_model.organic.OrganicPopulation;
 
 public abstract class TemporalLogger<Value> {
 
@@ -27,6 +31,9 @@ public abstract class TemporalLogger<Value> {
     protected Integer[] keyArray;
     protected int minValue;
     protected int maxValue;
+    protected String fileName;
+    protected String title;
+    protected String xLabel;
     
     protected int getKey(final int date) {
         int key = keyArray[keyArray.length - 1];
@@ -49,8 +56,27 @@ public abstract class TemporalLogger<Value> {
     }
     
     public void outputToGnuPlotFormat() {
-        for(Integer i : map.keySet()) {
-            map.get(i).outputToGnuPlotFormat(i);
+        for(Integer i : keyArray) {
+            map.get(i).outputToGnuPlotFormat(i, fileName);
+        }
+    }
+    
+    public void generateGnuPlotScriptLines(PrintWriter writer) {
+        int c = 0;
+        for(Integer i : keyArray) {
+            int nextYear = 0;
+            if (c < keyArray.length - 1) {
+                nextYear = keyArray[++c];
+            }
+            writer.print("set title \"" + title + " - " + ((int) (i / OrganicPopulation.getDaysPerYear()) + OrganicPopulation.getEpochYear()) + " - ");
+            if (nextYear == 0) {
+                writer.println("end\"");
+            } else {
+                writer.println(((int) (nextYear / OrganicPopulation.getDaysPerYear()) + OrganicPopulation.getEpochYear()) + "\"");
+            }
+            writer.println("set ylabel \"Frequency\"");
+            writer.println("set xlabel \"" + xLabel + "\"");
+            writer.println(map.get(i).generateGnuPlotPlottingScript());
         }
     }
 }

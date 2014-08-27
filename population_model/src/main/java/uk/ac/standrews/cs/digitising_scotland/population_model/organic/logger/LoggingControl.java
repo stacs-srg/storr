@@ -16,16 +16,53 @@
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.organic.logger;
 
-public class LoggingControl {
-    
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 
-    public static TemporalIntegerLogger numberOfChildrenFromSingleAffairsDistributionLogger;
-    public static TemporalIntegerLogger numberOfChildrenFromMaritalAffairsDistributionLogger;
+import uk.ac.standrews.cs.digitising_scotland.population_model.organic.OrganicPartnership;
+
+public class LoggingControl {
+
+    public static TemporalIntegerLogger numberOfChildrenFromAffairsDistributionLogger;
     public static TemporalIntegerLogger numberOfChildrenFromCohabitationDistributionLogger;
-    public static TemporalIntegerLogger numberOfChildrenFromCohabTheMarriageDistributionLogger;
+    public static TemporalIntegerLogger numberOfChildrenFromCohabThenMarriageDistributionLogger;
     public static TemporalIntegerLogger numberOfChildrenFromMarriagesDistributionLogger;
-    
+
     public static void setUpLogger() {
-        
+        LoggingControl.numberOfChildrenFromAffairsDistributionLogger = new TemporalIntegerLogger(OrganicPartnership.getTemporalAffairNumberOfChildrenDistribution(), "ChildrenNumberOfAffairs", "Number of Children Distribution - Affairs", "Number of Children");
+        LoggingControl.numberOfChildrenFromCohabitationDistributionLogger = new TemporalIntegerLogger(OrganicPartnership.getTemporalChildrenNumberOfInCohabDistribution(), "ChildrenNumberOfCohab", "Number of Children Distribution - Cohabitation", "Number of Children");
+        LoggingControl.numberOfChildrenFromCohabThenMarriageDistributionLogger = new TemporalIntegerLogger(OrganicPartnership.getTemporalChildrenNumberOfInCohabThenMarriageDistribution(), "ChildrenNumberOfCohabTheMarriage", "Number of Children Distribution - Cohabitation Then Marriage", "Number of Children");
+        LoggingControl.numberOfChildrenFromMarriagesDistributionLogger = new TemporalIntegerLogger(OrganicPartnership.getTemporalChildrenNumberOfInMarriageDistribution(), "ChildrenNumberOfMarriage", "Number of Children Distribution - Marriage", "Number of Children");
     }
+
+    private static void output() {
+        
+        LoggingControl.numberOfChildrenFromMarriagesDistributionLogger.outputToGnuPlotFormat();
+        LoggingControl.numberOfChildrenFromCohabitationDistributionLogger.outputToGnuPlotFormat();
+        LoggingControl.numberOfChildrenFromCohabThenMarriageDistributionLogger.outputToGnuPlotFormat();
+        LoggingControl.numberOfChildrenFromAffairsDistributionLogger.outputToGnuPlotFormat();
+    }
+
+    public static void createGnuPlotOutputFilesAndScript() {
+        output();
+        PrintWriter writer;
+        try {
+            String filePath = "src/main/resources/output/gnu/log_output_script.p";
+            writer = new PrintWriter(filePath, "UTF-8");
+            writer.println("# This file is called log_output_script.p");
+            
+            writer.println("set terminal pdf");
+            writer.println("set output 'output.pdf'");
+            numberOfChildrenFromAffairsDistributionLogger.generateGnuPlotScriptLines(writer);
+            numberOfChildrenFromCohabitationDistributionLogger.generateGnuPlotScriptLines(writer);
+            numberOfChildrenFromCohabThenMarriageDistributionLogger.generateGnuPlotScriptLines(writer);
+            numberOfChildrenFromMarriagesDistributionLogger.generateGnuPlotScriptLines(writer);
+            writer.println("set terminal png");
+            
+            writer.close();
+        } catch (FileNotFoundException | UnsupportedEncodingException e) {
+        }
+    }
+
 }
