@@ -41,8 +41,8 @@ public class WeightedIntegerDistribution extends RestrictedDistribution<Integer>
      */
     public WeightedIntegerDistribution(final int minimum, final int maximum, final int[] weights, final Random random) throws NegativeWeightException {
 
-        minimumSpecifiedValue = minimum;
-        maximumSpecifiedValue = maximum;
+        minimumSpecifiedValue = Double.valueOf(minimum);
+        maximumSpecifiedValue = Double.valueOf(maximum);
         range = maximum - minimum + 1;
         weighted_distribution = new WeightedDistribution(weights, random);
     }
@@ -59,8 +59,8 @@ public class WeightedIntegerDistribution extends RestrictedDistribution<Integer>
      */
     public WeightedIntegerDistribution(final int minimum, final int maximum, final int[] weights, final Random random, final boolean handleNoPermissableValueAsZero) throws NegativeWeightException {
 
-        minimumSpecifiedValue = minimum;
-        maximumSpecifiedValue = maximum;
+        minimumSpecifiedValue = Double.valueOf(minimum);
+        maximumSpecifiedValue = Double.valueOf(maximum);
         range = maximum - minimum + 1;
         weighted_distribution = new WeightedDistribution(weights, random, handleNoPermissableValueAsZero);
     }
@@ -68,12 +68,12 @@ public class WeightedIntegerDistribution extends RestrictedDistribution<Integer>
     @Override
     public Integer getSample() {
 
-        return minimumSpecifiedValue + (int) (range * weighted_distribution.getSample());
+        return (int) (minimumSpecifiedValue + (int) (range * weighted_distribution.getSample()));
     }
 
     @Override
     public Integer getSample(final double earliestValue, final double latestValue) throws NoPermissableValueException {
-        return minimumSpecifiedValue + (int) (range * weighted_distribution.getSample((earliestValue - minimumSpecifiedValue) / range, (latestValue - minimumSpecifiedValue) / range));
+        return (int) (minimumSpecifiedValue + (int) (range * weighted_distribution.getSample((earliestValue - minimumSpecifiedValue) / range, (latestValue - minimumSpecifiedValue) / range)));
     }
 
     @Override

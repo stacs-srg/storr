@@ -74,7 +74,7 @@ public class OrganicPopulation implements IPopulation {
     private static final int END_DEBUG_YEAR = 3000;
 
     // Universal population variables
-    private static final int DEFAULT_SEED_SIZE = 2000;
+    private static final int DEFAULT_SEED_SIZE = 1000;
     private static final float DAYS_PER_YEAR = 365.25f;
     private static final int START_YEAR = 1780;
     private static final int END_YEAR = 2013;
@@ -148,7 +148,7 @@ public class OrganicPopulation implements IPopulation {
      */
     public void makeSeed(final int size) {
 
-        OrganicPerson.initializeDistributions(this);
+        
         AffairWaitingQueueMember.initialiseAffairWithMarrieadOrSingleDistribution(this, "affair_with_single_or_married_distributions_data_filename", random);
 
         for (int i = 0; i < size; i++) {
@@ -574,6 +574,7 @@ public class OrganicPopulation implements IPopulation {
      * @param days The day of the marriage in days since the 1/1/1600.
      */
     private void partner(final FamilyType familyType, final OrganicPerson husband, final OrganicPerson wife, final int days) throws NoSuchEventException {
+        
         // Create partnership
         Object[] partnershipObjects = OrganicPartnership.createOrganicPartnership(IDFactory.getNextID(), husband, wife, days, getCurrentDay(), familyType, this);
         partnerships.add((OrganicPartnership) partnershipObjects[0]);
@@ -583,6 +584,7 @@ public class OrganicPopulation implements IPopulation {
             }
         }
         // TODO adapt logging methods
+        LoggingControl.familyCharacteristicDistributionLogger.log(currentDay, familyType);
         OrganicPopulationLogger.logMarriage(DateManipulation.differenceInDays(husband.getBirthDay(), days), DateManipulation.differenceInDays(wife.getBirthDay(), days));
         husband.addPartnership(((OrganicPartnership) partnershipObjects[0]).getId());
         wife.addPartnership(((OrganicPartnership) partnershipObjects[0]).getId());
@@ -801,6 +803,7 @@ public class OrganicPopulation implements IPopulation {
         long startTime = System.nanoTime();
         OrganicPopulation op = new OrganicPopulation("Test Population");
         OrganicPartnership.setupTemporalDistributionsInOrganicPartnershipClass(op);
+        OrganicPerson.initializeDistributions(op);
         LoggingControl.setUpLogger();
         op.makeSeed(seedSize);
         op.setCurrentDay(op.getEarliestDate() - 1);
@@ -808,7 +811,7 @@ public class OrganicPopulation implements IPopulation {
         if (print) {
             try {
                 writer = new PrintWriter("src/main/resources/output/output_" + System.nanoTime() + ".txt", "UTF-8");
-//                writer = new PrintWriter(System.out);
+                writer = new PrintWriter(System.out);
             } catch (FileNotFoundException | UnsupportedEncodingException e) {
                 System.err.println("Output file could not be created. Model will now terminate.");
                 System.exit(1);

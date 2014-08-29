@@ -22,17 +22,17 @@ import java.util.HashMap;
 import java.util.Set;
 
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.general.NotSetUpAtClassInitilisationException;
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.temporal.TemporalIntegerDistribution;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.temporal.TemporalEnumDistribution;
 
-public class TemporalIntegerLogger extends TemporalLogger<Integer> {
+public class TemporalEnumLogger<Value> extends TemporalLogger<Integer> {
 
-    public TemporalIntegerLogger(TemporalIntegerDistribution relatedTemporalDistribution, String fileName, String graphTitle, String xLabel) {
+    public TemporalEnumLogger(TemporalEnumDistribution<Value> relatedTemporalDistribution, String fileName, String graphTitle, String xLabel) {
         this.title = graphTitle;
         this.fileName = fileName;
         this.xLabel = xLabel;
         map = new HashMap<Integer, DistributionLogger<Integer>>();
         for (Integer i : relatedTemporalDistribution.getMapKeys()) {
-            map.put(i, new DistributionIntergerLogger(relatedTemporalDistribution.getDistributionForYear(i), relatedTemporalDistribution.getMinimumStatedValue(), relatedTemporalDistribution.getMaximumStatedValue()));
+            map.put(i, new DistributionEnumLogger(relatedTemporalDistribution.getDistributionForYear(i), relatedTemporalDistribution.getEnums()));
         }
         Set<Integer> keys = map.keySet();
         ArrayList<Integer> keyList = new ArrayList<>(keys);
@@ -40,8 +40,12 @@ public class TemporalIntegerLogger extends TemporalLogger<Integer> {
         Arrays.sort(keyArray);
     }
     
-    public void log(int currentDay, int xLabel) throws NotSetUpAtClassInitilisationException {
-        map.get(getKey(currentDay)).incCountFor(xLabel);
+    public void log(int currentDay, Enum<?> xLabel) {
+        try {
+            map.get(getKey(currentDay)).incCountFor(xLabel);
+        } catch (NotSetUpAtClassInitilisationException e) {
+            e.printStackTrace();
+        }
     }
     
 }

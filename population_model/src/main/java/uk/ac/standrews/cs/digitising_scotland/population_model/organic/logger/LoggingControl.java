@@ -20,7 +20,9 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 
+import uk.ac.standrews.cs.digitising_scotland.population_model.organic.FamilyType;
 import uk.ac.standrews.cs.digitising_scotland.population_model.organic.OrganicPartnership;
+import uk.ac.standrews.cs.digitising_scotland.population_model.organic.OrganicPerson;
 import uk.ac.standrews.cs.digitising_scotland.population_model.organic.OrganicPopulation;
 
 public class LoggingControl {
@@ -30,12 +32,17 @@ public class LoggingControl {
     public static TemporalIntegerLogger numberOfChildrenFromCohabitationDistributionLogger;
     public static TemporalIntegerLogger numberOfChildrenFromCohabThenMarriageDistributionLogger;
     public static TemporalIntegerLogger numberOfChildrenFromMarriagesDistributionLogger;
+    
+    public static TemporalEnumLogger<FamilyType> familyCharacteristicDistributionLogger;
 
     public static void setUpLogger() {
         LoggingControl.numberOfChildrenFromAffairsDistributionLogger = new TemporalIntegerLogger(OrganicPartnership.getTemporalAffairNumberOfChildrenDistribution(), "ChildrenNumberOfAffairs", "Number of Children Distribution - Affairs", "Number of Children");
         LoggingControl.numberOfChildrenFromCohabitationDistributionLogger = new TemporalIntegerLogger(OrganicPartnership.getTemporalChildrenNumberOfInCohabDistribution(), "ChildrenNumberOfCohab", "Number of Children Distribution - Cohabitation", "Number of Children");
         LoggingControl.numberOfChildrenFromCohabThenMarriageDistributionLogger = new TemporalIntegerLogger(OrganicPartnership.getTemporalChildrenNumberOfInCohabThenMarriageDistribution(), "ChildrenNumberOfCohabTheMarriage", "Number of Children Distribution - Cohabitation Then Marriage", "Number of Children");
         LoggingControl.numberOfChildrenFromMarriagesDistributionLogger = new TemporalIntegerLogger(OrganicPartnership.getTemporalChildrenNumberOfInMarriageDistribution(), "ChildrenNumberOfMarriage", "Number of Children Distribution - Marriage", "Number of Children");
+        
+        LoggingControl.familyCharacteristicDistributionLogger = new TemporalEnumLogger<FamilyType>(OrganicPerson.getTemporalPartnershipCharacteristicDistribution(), "PartnershipCharacteristic", "Partnership Characteristic", "Partnership Characteristic");
+        
         LoggingControl.populationLogger = new PopulationLogger(OrganicPopulation.getStartYear(), OrganicPopulation.getEndYear(), "Population", "Population Change Over Time", "Population");
     }
 
@@ -45,6 +52,7 @@ public class LoggingControl {
         LoggingControl.numberOfChildrenFromCohabitationDistributionLogger.outputToGnuPlotFormat();
         LoggingControl.numberOfChildrenFromCohabThenMarriageDistributionLogger.outputToGnuPlotFormat();
         LoggingControl.numberOfChildrenFromAffairsDistributionLogger.outputToGnuPlotFormat();
+        LoggingControl.familyCharacteristicDistributionLogger.outputToGnuPlotFormat();
         LoggingControl.populationLogger.outputToGnuPlotFormat();
     }
 

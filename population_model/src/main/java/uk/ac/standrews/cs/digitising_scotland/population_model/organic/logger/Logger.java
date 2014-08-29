@@ -30,8 +30,6 @@ public abstract class Logger<Value> {
     
     
     public abstract String generateGnuPlotPlottingScript();
-    
-    
     protected String filePath;
 
     

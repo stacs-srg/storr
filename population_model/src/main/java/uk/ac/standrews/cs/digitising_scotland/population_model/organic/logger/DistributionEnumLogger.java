@@ -21,34 +21,43 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.general.NotSetUpAtClassInitilisationException;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.general.RestrictedDistribution;
 import uk.ac.standrews.cs.digitising_scotland.population_model.organic.OrganicPopulation;
 
-public class DistributionIntergerLogger extends DistributionLogger<Integer> {
-
+public class DistributionEnumLogger<Value> extends DistributionLogger<Value> {
     
+    Enum<?>[] enums;
     
-    public DistributionIntergerLogger(RestrictedDistribution<Integer> relatedDistribution, int minStatedValue, int maxStatedValue) {
-        this.minXValue = minStatedValue;
-        this.maxXValue = maxStatedValue;
+    public DistributionEnumLogger(RestrictedDistribution<Value> relatedDistribution, Enum<?>[] enums) {
+        this.minXValue = 0;
+        this.maxXValue = enums.length - 1;
+        
         this.relatedDistribution = relatedDistribution;
-        counts = new int[maxXValue - minXValue + 1];
+        this.enums = enums;
+        counts = new int[(int) (relatedDistribution.getMaximumReturnValue() - relatedDistribution.getMinimumReturnValue() + 1)];
     }
-    
-    public void incCountFor(Integer xLabel) {
-        if (xLabel > maxXValue) {
-            System.err.println("Array Index Out Of Bounds");
-            return;
+
+    public void incCountFor(Enum<?> xLabel) {
+        int c = 0;
+        for (Enum<?> e : enums) {
+//            System.out.println(e.toString());
+//            System.out.println(xLabel.toString());
+            if (e.toString().equals(xLabel.toString())) {
+                break;
+            }
+            c++;
         }
-        counts[xLabel]++;
+        incCountFor(c);
+        
     }
-    
+
     @Override
     public String generateGnuPlotPlottingScript() {
-        return "plot \"" + filePath.replace(BCK_SLASH, FWD_SLASH) + "\" using 1:2 title 'Actual' with line, \"" + filePath.replace(BCK_SLASH, FWD_SLASH) + "\" using 1:3 title 'Dist' with line";
+        // TODO Auto-generated method stub
+        return null;
     }
-    
+
+    @Override
     public void outputToGnuPlotFormat(int year, String fileName) {
         PrintWriter writer;
         int[] distWeights = relatedDistribution.getWeights();
@@ -74,9 +83,8 @@ public class DistributionIntergerLogger extends DistributionLogger<Integer> {
             filePath = new File("").getAbsolutePath() + "/" + filePath;
             writer.println("# This file is called " + fileName + ".dat");
             writer.println("# Value    Actual    Distribution");
-            double rangeStep = (relatedDistribution.getMaximumReturnValue() - relatedDistribution.getMinimumReturnValue() + 1) / (double) counts.length;
             for (int i = 0; i < counts.length; i++) {
-                writer.printf("%.2f", rangeStep * i + relatedDistribution.getMinimumReturnValue());
+                writer.print(i + "    " + enums[i]);
                 writer.print("    " + counts[i] + "    ");
                 writer.printf("%.2f", distWeights[i] * scaleFactor);
                 writer.println();
@@ -86,12 +94,16 @@ public class DistributionIntergerLogger extends DistributionLogger<Integer> {
             System.out.println("_________CAUGHT__________");
             System.out.println(e.getMessage());
         }
-        
     }
 
     @Override
-    public void incCountFor(Enum<?> xLabel) throws NotSetUpAtClassInitilisationException {
-        throw new NotSetUpAtClassInitilisationException();
+    public void incCountFor(Integer xLabel) {
+        if (xLabel > maxXValue) {
+            System.err.println("Array Index Out Of Bounds");
+            return;
+        }
+        counts[xLabel]++;
     }
+
     
 }

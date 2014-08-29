@@ -16,18 +16,16 @@
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.organic.logger;
 
-import java.io.File;
 import java.io.PrintWriter;
 import java.util.HashMap;
 
-import edu.umd.cs.findbugs.bcel.OpcodeStackDetector.WithCustomJumpInfo;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.temporal.TemporalDistribution;
 import uk.ac.standrews.cs.digitising_scotland.population_model.organic.OrganicPopulation;
 
 public abstract class TemporalLogger<Value> {
 
     protected TemporalDistribution<?> relatedTemporalDistribution;
-    protected HashMap<Integer, DistributionIntergerLogger> map;
+    protected HashMap<Integer, DistributionLogger<Value>> map;
     protected Integer[] keyArray;
     protected int minValue;
     protected int maxValue;
@@ -47,12 +45,6 @@ public abstract class TemporalLogger<Value> {
             }
         }
         return key;
-    }
-    
-    public void printGraph() {
-        for(Integer i : map.keySet()) {
-            map.get(i).printGraph();
-        }
     }
     
     public void outputToGnuPlotFormat() {

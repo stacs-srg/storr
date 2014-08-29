@@ -53,6 +53,8 @@ public abstract class TemporalDistribution<Value> implements ITemporalDistributi
     private int minimum, maximum;
     private boolean normal;
 
+    protected Enum<?>[] enums;
+
     private static final String TAB = "\t";
     private static final String COMMENT_INDICATOR = "%";
 
@@ -181,17 +183,21 @@ public abstract class TemporalDistribution<Value> implements ITemporalDistributi
     public Integer[] getMapKeys() {
         return map.keySet().toArray(new Integer[map.keySet().size()]);
     }
-    
+
     public RestrictedDistribution<Value> getDistributionForYear(int year) {
         return (RestrictedDistribution<Value>) map.get(year);
     }
-    
+
     public int getMinimumStatedValue() {
         return minimum;
     }
-    
+
     public int getMaximumStatedValue() {
         return maximum;
+    }
+    
+    public Enum<?>[] getEnums() {
+        return enums;
     }
     
 

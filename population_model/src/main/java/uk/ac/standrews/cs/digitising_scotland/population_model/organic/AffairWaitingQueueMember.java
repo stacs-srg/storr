@@ -18,7 +18,7 @@ package uk.ac.standrews.cs.digitising_scotland.population_model.organic;
 
 import java.util.Random;
 
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.temporal.TemporalAffairWithMarriedOrSingleDistribution;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.temporal.TemporalEnumDistribution;
 
 /**
  * Provides an orderable queue element to be used in the affair waiting queue.
@@ -31,7 +31,8 @@ public class AffairWaitingQueueMember implements Comparable<AffairWaitingQueueMe
     private int affairDay;
     private boolean interMarital;
 
-    private static TemporalAffairWithMarriedOrSingleDistribution affairWithMarriedOrSingleDistribution;
+    private static final Enum<?>[] AFFAIR_WITH_MARRIED_OR_SINGLE_FAMILY_TYPE_ARRAY = {FamilyType.SINGLE_AFFAIR, FamilyType.INTER_MARITAL_AFFAIR};
+    private static TemporalEnumDistribution<FamilyType> affairWithMarriedOrSingleDistribution;
 
     /**
      * Initialises the distribution used to discern if the affair is to be with a single third party of a married third party.
@@ -41,7 +42,7 @@ public class AffairWaitingQueueMember implements Comparable<AffairWaitingQueueMe
      * @param random The random number generator to be used.
      */
     public static void initialiseAffairWithMarrieadOrSingleDistribution(final OrganicPopulation population, final String distributionKey, final Random random) {
-        affairWithMarriedOrSingleDistribution = new TemporalAffairWithMarriedOrSingleDistribution(population, distributionKey, random);
+        affairWithMarriedOrSingleDistribution = new TemporalEnumDistribution<FamilyType>(population, distributionKey, random, AFFAIR_WITH_MARRIED_OR_SINGLE_FAMILY_TYPE_ARRAY);
     }
 
     /**

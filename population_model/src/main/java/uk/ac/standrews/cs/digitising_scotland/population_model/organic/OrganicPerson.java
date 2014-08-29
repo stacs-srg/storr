@@ -25,8 +25,8 @@ import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.Uni
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.general.InconsistentWeightException;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.general.NoPermissableValueException;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.general.NotSetUpAtClassInitilisationException;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.temporal.TemporalEnumDistribution;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.temporal.TemporalIntegerDistribution;
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.temporal.TemporalPartnershipCharacteristicDistribution;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPerson;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.PopulationLogic;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.RandomFactory;
@@ -59,8 +59,8 @@ public class OrganicPerson implements IPerson {
     private static OccupationDistribution occupationDistribution;
     private static CauseOfDeathDistribution deathCauseOfDistribution;
 
-    private static TemporalPartnershipCharacteristicDistribution temporalPartnershipCharacteristicDistribution;
-    private static TemporalPartnershipCharacteristicDistribution temporalRemarriagePartnershipCharacteristicDistribution;
+    private static TemporalEnumDistribution<FamilyType> temporalPartnershipCharacteristicDistribution;
+    private static TemporalEnumDistribution<FamilyType> temporalRemarriagePartnershipCharacteristicDistribution;
 
     private static TemporalIntegerDistribution seedAgeForMalesDistribution;
     private static TemporalIntegerDistribution seedAgeForFemalesDistribution;
@@ -105,8 +105,11 @@ public class OrganicPerson implements IPerson {
             deathAgeAtDistribution = new TemporalIntegerDistribution(population, "death_age_at_distributions_data_filename", random, false);
             temporalMarriageAgeForMalesDistribution = new TemporalIntegerDistribution(population, "marriage_age_for_males_distributions_data_filename", random, false);
             temporalMarriageAgeForFemalesDistribution = new TemporalIntegerDistribution(population, "marriage_age_for_females_distributions_data_filename", random, false);
-            temporalPartnershipCharacteristicDistribution = new TemporalPartnershipCharacteristicDistribution(population, "partnership_characteristic_distributions_data_filename", random);
-            temporalRemarriagePartnershipCharacteristicDistribution = new TemporalPartnershipCharacteristicDistribution(population, "partnership_remarriage_characteristic_distributions_data_filename", random);
+            
+            Enum<?>[] partnershipCharacteristicsArray = {FamilyType.SINGLE, FamilyType.COHABITATION, FamilyType.COHABITATION_THEN_MARRIAGE, FamilyType.MARRIAGE};
+            temporalPartnershipCharacteristicDistribution = new TemporalEnumDistribution<FamilyType>(population, "partnership_characteristic_distributions_data_filename", random, partnershipCharacteristicsArray);
+            temporalRemarriagePartnershipCharacteristicDistribution = new TemporalEnumDistribution<FamilyType>(population, "partnership_remarriage_characteristic_distributions_data_filename", random, partnershipCharacteristicsArray);
+            
             temporalCohabitationAgeForMalesDistribution = new TemporalIntegerDistribution(population, "cohabitation_age_for_males_distributions_data_filename", random, false);
             temporalCohabitationAgeForFemalesDistribution = new TemporalIntegerDistribution(population, "cohabitation_age_for_females_distributions_data_filename", random, false);
         } catch (InconsistentWeightException e) {
@@ -480,6 +483,66 @@ public class OrganicPerson implements IPerson {
      */
     public void setCauseOfDeath(final String causeOfDeath) {
         this.causeOfDeath = causeOfDeath;
+    }
+
+    public static UniformSexDistribution getSexDistribution() {
+        return sexDistribution;
+    }
+
+    public static FirstNameForMalesDistribution getMaleFirstNamesDistribution() {
+        return maleFirstNamesDistribution;
+    }
+
+    public static FirstNameForFemalesDistribution getFemaleFirstNamesDistribution() {
+        return femaleFirstNamesDistribution;
+    }
+
+    public static SurnameDistribution getSurnamesDistribution() {
+        return surnamesDistribution;
+    }
+
+    public static OccupationDistribution getOccupationDistribution() {
+        return occupationDistribution;
+    }
+
+    public static CauseOfDeathDistribution getDeathCauseOfDistribution() {
+        return deathCauseOfDistribution;
+    }
+
+    public static TemporalEnumDistribution<FamilyType> getTemporalPartnershipCharacteristicDistribution() {
+        return temporalPartnershipCharacteristicDistribution;
+    }
+
+    public static TemporalEnumDistribution<FamilyType> getTemporalRemarriagePartnershipCharacteristicDistribution() {
+        return temporalRemarriagePartnershipCharacteristicDistribution;
+    }
+
+    public static TemporalIntegerDistribution getSeedAgeForMalesDistribution() {
+        return seedAgeForMalesDistribution;
+    }
+
+    public static TemporalIntegerDistribution getSeedAgeForFemalesDistribution() {
+        return seedAgeForFemalesDistribution;
+    }
+
+    public static TemporalIntegerDistribution getDeathAgeAtDistribution() {
+        return deathAgeAtDistribution;
+    }
+
+    public static TemporalIntegerDistribution getTemporalMarriageAgeForMalesDistribution() {
+        return temporalMarriageAgeForMalesDistribution;
+    }
+
+    public static TemporalIntegerDistribution getTemporalMarriageAgeForFemalesDistribution() {
+        return temporalMarriageAgeForFemalesDistribution;
+    }
+
+    public static TemporalIntegerDistribution getTemporalCohabitationAgeForMalesDistribution() {
+        return temporalCohabitationAgeForMalesDistribution;
+    }
+
+    public static TemporalIntegerDistribution getTemporalCohabitationAgeForFemalesDistribution() {
+        return temporalCohabitationAgeForFemalesDistribution;
     }
 
 }

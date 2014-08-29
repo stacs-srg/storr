@@ -21,8 +21,7 @@ import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.gen
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.general.NoPermissableValueException;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.general.NormalDistribution;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.general.NotSetUpAtClassInitilisationException;
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.temporal.TemporalDivorceInstigatedByGenderDistribution;
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.temporal.TemporalDivorceReasonDistribution;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.temporal.TemporalEnumDistribution;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.temporal.TemporalIntegerDistribution;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IDFactory;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPartnership;
@@ -48,7 +47,9 @@ public final class OrganicPartnership implements IPartnership {
 
     // Universal partnership distributions
     private static Random random = RandomFactory.getRandom();
-    private static TemporalDivorceInstigatedByGenderDistribution temporalDivorceInstigatedByGenderDistribution;
+    
+    private static final Enum<?>[] DIVORCE_INSTIGATED_BY_ARRAY = {DivorceInstigation.MALE, DivorceInstigation.FEMALE, DivorceInstigation.NO_DIVORCE};
+    private static TemporalEnumDistribution<DivorceInstigation> temporalDivorceInstigatedByGenderDistribution;
     private static TemporalIntegerDistribution temporalDivorceAgeForMaleDistribution;
     private static TemporalIntegerDistribution temporalDivorceAgeForFemaleDistribution;
     private static TemporalIntegerDistribution temporalChildrenNumberOfInCohabDistribution;
@@ -59,8 +60,9 @@ public final class OrganicPartnership implements IPartnership {
     private static TemporalIntegerDistribution temporalAffairNumberOfDistribution;
     private static TemporalIntegerDistribution temporalAffairNumberOfChildrenDistribution;
 
-    private static TemporalDivorceReasonDistribution temporalDivorceReasonMaleDistribution;
-    private static TemporalDivorceReasonDistribution temporalDivorceReasonFemaleDistribution;
+    private static final Enum<?>[] DIVORCE_REASON_ARRAY = {DivorceReason.ADULTERY, DivorceReason.BEHAVIOUR, DivorceReason.DESERTION, DivorceReason.SEPARATION_WITH_CONSENT, DivorceReason.SEPARATION};
+    private static TemporalEnumDistribution<DivorceReason> temporalDivorceReasonMaleDistribution;
+    private static TemporalEnumDistribution<DivorceReason> temporalDivorceReasonFemaleDistribution;
 
     private static TemporalIntegerDistribution temporalCohabitaitonToMarriageTimeDistribution;
 
@@ -103,13 +105,13 @@ public final class OrganicPartnership implements IPartnership {
         temporalChildrenNumberOfInCohabDistribution = new TemporalIntegerDistribution(population, "children_number_of_in_cohab_distributions_filename", random, true);
         temporalChildrenNumberOfInCohabThenMarriageDistribution = new TemporalIntegerDistribution(population, "children_number_of_in_cohab_then_marriage_distributions_filename", random, true);
         temporalChildrenNumberOfInMarriageDistribution = new TemporalIntegerDistribution(population, "children_number_of_in_marriage_distributions_filename", random, true);
-        temporalDivorceInstigatedByGenderDistribution = new TemporalDivorceInstigatedByGenderDistribution(population, "divorce_instigated_by_gender_distributions_filename", random);
+        temporalDivorceInstigatedByGenderDistribution = new TemporalEnumDistribution<DivorceInstigation>(population, "divorce_instigated_by_gender_distributions_filename", random, DIVORCE_INSTIGATED_BY_ARRAY);
         temporalDivorceAgeForMaleDistribution = new TemporalIntegerDistribution(population, "divorce_age_for_male_distributions_data_filename", random, false);
         temporalDivorceAgeForFemaleDistribution = new TemporalIntegerDistribution(population, "divorce_age_for_female_distributions_data_filename", random, false);
         temporalChildrenNumberOfInMaternityDistribution = new TemporalIntegerDistribution(population, "children_number_of_in_maternity_distributions_data_filename", random, false);
         temporalCohabitationLengthDistribution = new TemporalIntegerDistribution(population, "cohabitation_length_distributions_data_filename", random, false);
-        temporalDivorceReasonMaleDistribution = new TemporalDivorceReasonDistribution(population, "divorce_reason_male_distributions_data_filename", random);
-        temporalDivorceReasonFemaleDistribution = new TemporalDivorceReasonDistribution(population, "divorce_reason_female_distributions_data_filename", random);
+        temporalDivorceReasonMaleDistribution = new TemporalEnumDistribution<DivorceReason>(population, "divorce_reason_male_distributions_data_filename", random,DIVORCE_REASON_ARRAY);
+        temporalDivorceReasonFemaleDistribution = new TemporalEnumDistribution<DivorceReason>(population, "divorce_reason_female_distributions_data_filename", random, DIVORCE_REASON_ARRAY);
         temporalAffairNumberOfDistribution = new TemporalIntegerDistribution(population, "affair_number_of_distributions_data_filename", random, false);
         temporalAffairNumberOfChildrenDistribution = new TemporalIntegerDistribution(population, "affair_number_of_children_distributions_data_filename", random, true);
         temporalCohabitaitonToMarriageTimeDistribution = new TemporalIntegerDistribution(population, "cohabitation_to_marriage_time_distributions_data_filename", random, false);
@@ -640,7 +642,7 @@ public final class OrganicPartnership implements IPartnership {
         
     }
 
-    public static TemporalDivorceInstigatedByGenderDistribution getTemporalDivorceInstigatedByGenderDistribution() {
+    public static TemporalEnumDistribution<DivorceInstigation> getTemporalDivorceInstigatedByGenderDistribution() {
         return temporalDivorceInstigatedByGenderDistribution;
     }
 
@@ -680,11 +682,11 @@ public final class OrganicPartnership implements IPartnership {
         return temporalAffairNumberOfChildrenDistribution;
     }
 
-    public static TemporalDivorceReasonDistribution getTemporalDivorceReasonMaleDistribution() {
+    public static TemporalEnumDistribution<DivorceReason> getTemporalDivorceReasonMaleDistribution() {
         return temporalDivorceReasonMaleDistribution;
     }
 
-    public static TemporalDivorceReasonDistribution getTemporalDivorceReasonFemaleDistribution() {
+    public static TemporalEnumDistribution<DivorceReason> getTemporalDivorceReasonFemaleDistribution() {
         return temporalDivorceReasonFemaleDistribution;
     }
 
