@@ -27,7 +27,7 @@ import uk.ac.standrews.cs.digitising_scotland.population_model.organic.OrganicPo
 public class GeneralOrganicPopulationTest extends GeneralPopulationStructureTests {
 
     public GeneralOrganicPopulationTest() {
-    	super(OrganicPopulation.runPopulationModel(false, 500, false), false);
+    	super(OrganicPopulation.runPopulationModel(false, 2000, false), false);
     	
     }
     

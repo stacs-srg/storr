@@ -74,7 +74,7 @@ public class OrganicPopulation implements IPopulation {
     private static final int END_DEBUG_YEAR = 3000;
 
     // Universal population variables
-    private static final int DEFAULT_SEED_SIZE = 50000;
+    private static final int DEFAULT_SEED_SIZE = 2000;
     private static final float DAYS_PER_YEAR = 365.25f;
     private static final int START_YEAR = 1780;
     private static final int END_YEAR = 2013;
@@ -488,6 +488,9 @@ public class OrganicPopulation implements IPopulation {
                 }
                 if (eligableToPartner(maleQueue.getFirst(), femaleQueue.getFirst())) {
                     try {
+                        if (maleQueue.getFirst().getParentsPartnership() == femaleQueue.getFirst().getParentsPartnership() && maleQueue.getFirst().getParentsPartnership() != -1) {
+                            System.out.println("INCEST"); 
+                        }
                         partner(type, maleQueue.getFirst(), femaleQueue.getFirst(), getCurrentDay());
 
                     } catch (NoSuchEventException e) {
@@ -525,6 +528,14 @@ public class OrganicPopulation implements IPopulation {
         
         if (male.getParentsPartnership() == female.getParentsPartnership() && male.getParentsPartnership() != -1) {
             notSiblings = false;
+        } else if (male.getParentsPartnership() != -1 && female.getParentsPartnership() != -1){
+            OrganicPartnership maleParentsPartnership = this.findOrganicPartnership(male.getParentsPartnership()); 
+            OrganicPartnership femaleParentsPartnership = this.findOrganicPartnership(female.getParentsPartnership());
+            if (maleParentsPartnership.getMalePartnerId() == femaleParentsPartnership.getMalePartnerId() || maleParentsPartnership.getFemalePartnerId() == femaleParentsPartnership.getFemalePartnerId()) {
+                notSiblings = false;
+            } else {
+                notSiblings = true;
+            }
         } else {
             notSiblings = true;
         }
