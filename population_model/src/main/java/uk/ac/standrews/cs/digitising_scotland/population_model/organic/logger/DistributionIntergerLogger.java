@@ -26,8 +26,8 @@ import uk.ac.standrews.cs.digitising_scotland.population_model.organic.OrganicPo
 
 public class DistributionIntergerLogger extends DistributionLogger<Integer> {
 
-    private final static String FWD_SLASH = "/";
-    private final static String BCK_SLASH = "\\";
+    
+    
     public DistributionIntergerLogger(RestrictedDistribution<Integer> relatedDistribution, int minStatedValue, int maxStatedValue) {
         this.minXValue = minStatedValue;
         this.maxXValue = maxStatedValue;
@@ -44,7 +44,6 @@ public class DistributionIntergerLogger extends DistributionLogger<Integer> {
         counts[xLabel]++;
     }
 
-    @Override
     public void printGraph() {
         printGraph(counts, minXValue, minXValue, false, 10);
 

@@ -16,23 +16,24 @@
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.organic.logger;
 
-import java.io.PrintWriter;
+import uk.ac.standrews.cs.digitising_scotland.population_model.organic.OrganicPopulation;
 
+public class PopulationLogger extends GraphLogger {
 
-public abstract class Logger<Value> {
+    public PopulationLogger(int minXValue, int maxXValue, String fileName, String graphTitle, String yLabel) {
+        super(minXValue, maxXValue, fileName, graphTitle, yLabel);
+    }
     
-    protected Value minXValue;
-    protected Value maxXValue;
-    
-    protected final static String FWD_SLASH = "/";
-    protected final static String BCK_SLASH = "\\";
+    public void log(int xValue, int yValue) {
+        int x = Math.round(xValue / OrganicPopulation.getDaysPerYear()) - (minXValue - 1600);
+        if (x >= 0 && x < values.length) {
+            values[x] = yValue;
+        }
+    }
 
-    
-    
-    public abstract String generateGnuPlotPlottingScript();
-    
-    
-    protected String filePath;
+    @Override
+    public String generateGnuPlotPlottingScript() {
+        return "plot \"" + filePath.replace(BCK_SLASH, FWD_SLASH) + "\" using 1:2 title '" + graphTitle + "' with line";
+    }
 
-    
 }

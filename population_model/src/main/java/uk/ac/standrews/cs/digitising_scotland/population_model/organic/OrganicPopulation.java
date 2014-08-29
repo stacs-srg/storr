@@ -74,7 +74,7 @@ public class OrganicPopulation implements IPopulation {
     private static final int END_DEBUG_YEAR = 3000;
 
     // Universal population variables
-    private static final int DEFAULT_SEED_SIZE = 100000;
+    private static final int DEFAULT_SEED_SIZE = 50000;
     private static final float DAYS_PER_YEAR = 365.25f;
     private static final int START_YEAR = 1780;
     private static final int END_YEAR = 2013;
@@ -172,6 +172,7 @@ public class OrganicPopulation implements IPopulation {
             }
             while ((int) (getCurrentDay() / getDaysPerYear()) != (int) (event.getDay() / getDaysPerYear())) {
                 OrganicPopulationLogger.addPopulationForYear((int) (getCurrentDay() / DAYS_PER_YEAR) + 1 + EPOCH_YEAR, OrganicPopulationLogger.getPopulation());
+                LoggingControl.populationLogger.log(getCurrentDay(), OrganicPopulationLogger.getPopulation());
                 if ((int) (getCurrentDay() / getDaysPerYear()) == START_DEBUG_YEAR - EPOCH_YEAR) {
                     setDebug(true);
                 }
@@ -183,7 +184,7 @@ public class OrganicPopulation implements IPopulation {
                     writer.println("Population: " + OrganicPopulationLogger.getPopulation());
                 }
                 if (memoryMonitor) {
-                    mm.log(currentDay, OrganicPopulationLogger.getPopulation());
+                    mm.log(currentDay, OrganicPopulationLogger.getPopulation(), livingPeople.size() + deadPeople.size());
                 }
                 double r = getCurrentDay() % DAYS_PER_YEAR;
                 setCurrentDay((int) (getCurrentDay() + Math.round(r))); 
@@ -806,11 +807,14 @@ public class OrganicPopulation implements IPopulation {
         }
         
         op.newEventIteration(print, memoryMonitor);
-
+        long timeTaken = System.nanoTime() - startTime;
+        System.out.print((op.livingPeople.size() + op.deadPeople.size()) + "    ");
+        System.out.println(timeTaken / 1000000);
+        
         if (print) {
             OrganicPopulationLogger.printLogData();
             writer.println();
-            long timeTaken = System.nanoTime() - startTime;
+            
             writer.println("Run time " + timeTaken / 1000000 + "ms");
             writer.println();
             LoggingControl.createGnuPlotOutputFilesAndScript();

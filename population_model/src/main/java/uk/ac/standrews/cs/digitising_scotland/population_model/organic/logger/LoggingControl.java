@@ -21,9 +21,11 @@ import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 
 import uk.ac.standrews.cs.digitising_scotland.population_model.organic.OrganicPartnership;
+import uk.ac.standrews.cs.digitising_scotland.population_model.organic.OrganicPopulation;
 
 public class LoggingControl {
 
+    public static PopulationLogger populationLogger;
     public static TemporalIntegerLogger numberOfChildrenFromAffairsDistributionLogger;
     public static TemporalIntegerLogger numberOfChildrenFromCohabitationDistributionLogger;
     public static TemporalIntegerLogger numberOfChildrenFromCohabThenMarriageDistributionLogger;
@@ -34,14 +36,16 @@ public class LoggingControl {
         LoggingControl.numberOfChildrenFromCohabitationDistributionLogger = new TemporalIntegerLogger(OrganicPartnership.getTemporalChildrenNumberOfInCohabDistribution(), "ChildrenNumberOfCohab", "Number of Children Distribution - Cohabitation", "Number of Children");
         LoggingControl.numberOfChildrenFromCohabThenMarriageDistributionLogger = new TemporalIntegerLogger(OrganicPartnership.getTemporalChildrenNumberOfInCohabThenMarriageDistribution(), "ChildrenNumberOfCohabTheMarriage", "Number of Children Distribution - Cohabitation Then Marriage", "Number of Children");
         LoggingControl.numberOfChildrenFromMarriagesDistributionLogger = new TemporalIntegerLogger(OrganicPartnership.getTemporalChildrenNumberOfInMarriageDistribution(), "ChildrenNumberOfMarriage", "Number of Children Distribution - Marriage", "Number of Children");
+        LoggingControl.populationLogger = new PopulationLogger(OrganicPopulation.getStartYear(), OrganicPopulation.getEndYear(), "Population", "Population Change Over Time", "Population");
     }
 
     private static void output() {
-        
+
         LoggingControl.numberOfChildrenFromMarriagesDistributionLogger.outputToGnuPlotFormat();
         LoggingControl.numberOfChildrenFromCohabitationDistributionLogger.outputToGnuPlotFormat();
         LoggingControl.numberOfChildrenFromCohabThenMarriageDistributionLogger.outputToGnuPlotFormat();
         LoggingControl.numberOfChildrenFromAffairsDistributionLogger.outputToGnuPlotFormat();
+        LoggingControl.populationLogger.outputToGnuPlotFormat();
     }
 
     public static void createGnuPlotOutputFilesAndScript() {
@@ -51,15 +55,26 @@ public class LoggingControl {
             String filePath = "src/main/resources/output/gnu/log_output_script.p";
             writer = new PrintWriter(filePath, "UTF-8");
             writer.println("# This file is called log_output_script.p");
-            
+            writer.println("reset");
+
+            writer.println("set style line 11 lc rgb '#808080' lt 1");
+            writer.println("set border 3 back ls 11");
+            writer.println("set tics nomirror");
+            writer.println("set style line 12 lc rgb '#808080' lt 0 lw 1");
+            writer.println("set grid back ls 12");
+            writer.println("set style line 1 lc rgb '#8b1a0e' pt 1 ps 1 lt 1 lw 20 # --- red");
+            writer.println("set style line 2 lc rgb '#5e9c36' pt 6 ps 1 lt 1 lw 20 # --- green");
+
             writer.println("set terminal pdf");
             writer.println("set output 'output.pdf'");
             numberOfChildrenFromAffairsDistributionLogger.generateGnuPlotScriptLines(writer);
             numberOfChildrenFromCohabitationDistributionLogger.generateGnuPlotScriptLines(writer);
             numberOfChildrenFromCohabThenMarriageDistributionLogger.generateGnuPlotScriptLines(writer);
             numberOfChildrenFromMarriagesDistributionLogger.generateGnuPlotScriptLines(writer);
+            populationLogger.generateGnuPlotScriptLines(writer);
             writer.println("set terminal png");
-            
+            writer.println("reset");
+
             writer.close();
         } catch (FileNotFoundException | UnsupportedEncodingException e) {
         }

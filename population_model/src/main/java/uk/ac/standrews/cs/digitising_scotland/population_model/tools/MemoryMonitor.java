@@ -9,6 +9,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+import uk.ac.standrews.cs.digitising_scotland.population_model.organic.OrganicPopulation;
+
 
 
 /**
@@ -60,11 +62,11 @@ public class MemoryMonitor implements Runnable {
 
     }
     
-    public void log(int currentday, int population) {
+    public void log(int currentday, int population, int totalPersonListSize) {
         if (mxbean == null) {
             mxbean = ManagementFactory.getMemoryMXBean();
         }
-        writer.println(currentday + "\t" + population + "\t" + mxbean.getHeapMemoryUsage().getUsed() / 1024);
+        writer.println((1600 + Math.round(currentday/OrganicPopulation.getDaysPerYear())) + "\t" + population + "\t" + totalPersonListSize + "\t" + mxbean.getHeapMemoryUsage().getUsed() / 1024);
         writer.flush();
         
     }
@@ -79,14 +81,14 @@ public class MemoryMonitor implements Runnable {
     public MemoryMonitor() {
 
         try {
-            writer = new PrintWriter("src/main/resources/output/memory_usage" + ".dat", "UTF-8");
+            writer = new PrintWriter("src/main/resources/output/memory_usage" + System.nanoTime() + ".dat", "UTF-8");
         } catch (FileNotFoundException | UnsupportedEncodingException e) {
             System.err.println("Memory usage file not held");
         }
         //MemoryMXBean
 
         mxbean = ManagementFactory.getMemoryMXBean();
-        System.out.println(dateFormat.format(cal.getTime()));
+//        System.out.println(dateFormat.format(cal.getTime()));
     }
 
     /**
