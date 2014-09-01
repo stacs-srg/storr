@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.lookup;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Assert;
@@ -10,7 +11,6 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datacleaning.LevenshteinCleaner;
 
 /**
  * Tests the NGramSubstring class that grams are being produced correctly.
@@ -39,11 +39,14 @@ public class NGramSubstringsTest {
         nGramSubstrings = new NGramSubstrings("A test String");
         nGramSubstrings2 = new NGramSubstrings("A test String");
         int id = (int) Math.rint(Math.random() * 1000);
-        OriginalData originalData = new OriginalData("A test Description", 2014, 1, "testFileName");
+        ArrayList<String> descList = new ArrayList<>();
+        final String desc = "A test Description";
+        descList.add(desc);
+        OriginalData originalData = new OriginalData(descList, 2014, 1, "testFileName");
         Record record = new Record(id, originalData);
         Bucket bucketToClean = new Bucket();
         bucketToClean.addRecordToBucket(record);
-        nGramSubstringsRecord = new NGramSubstrings(record);
+        nGramSubstringsRecord = new NGramSubstrings(record.getDescription().get(0));
     }
 
     /**

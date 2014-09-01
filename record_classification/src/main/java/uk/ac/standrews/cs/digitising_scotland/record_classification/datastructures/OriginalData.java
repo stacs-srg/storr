@@ -119,9 +119,6 @@ public class OriginalData implements java.io.Serializable {
         return "OriginalData [description=" + description + ", year=" + year + ", imageQuality=" + imageQuality + ", fileName=" + fileName + "]";
     }
 
-    /* (non-Javadoc)
-     * @see java.lang.Object#hashCode()
-     */
     @Override
     public int hashCode() {
 
@@ -135,30 +132,27 @@ public class OriginalData implements java.io.Serializable {
         return result;
     }
 
-    /* (non-Javadoc)
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
     @Override
-    public boolean equals(final Object obj) {
+    public boolean equals(Object obj) {
 
-        if (this == obj) { return true; }
-        if (obj == null) { return false; }
-        if (getClass() != obj.getClass()) { return false; }
+        if (this == obj) return true;
+        if (obj == null) return false;
+        if (getClass() != obj.getClass()) return false;
         OriginalData other = (OriginalData) obj;
         if (description == null) {
-            if (other.description != null) { return false; }
+            if (other.description != null) return false;
         }
-        else if (!description.equals(other.description)) { return false; }
+        else if (!description.equals(other.description)) return false;
         if (fileName == null) {
-            if (other.fileName != null) { return false; }
+            if (other.fileName != null) return false;
         }
-        else if (!fileName.equals(other.fileName)) { return false; }
+        else if (!fileName.equals(other.fileName)) return false;
         if (goldStandardClassification == null) {
-            if (other.goldStandardClassification != null) { return false; }
+            if (other.goldStandardClassification != null) return false;
         }
-        else if (!goldStandardClassification.equals(other.goldStandardClassification)) { return false; }
-        if (imageQuality != other.imageQuality) { return false; }
-        if (year != other.year) { return false; }
+        else if (!goldStandardClassification.equals(other.goldStandardClassification)) return false;
+        if (imageQuality != other.imageQuality) return false;
+        if (year != other.year) return false;
         return true;
     }
 

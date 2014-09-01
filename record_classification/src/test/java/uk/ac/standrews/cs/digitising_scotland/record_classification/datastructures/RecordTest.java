@@ -2,6 +2,7 @@ package uk.ac.standrews.cs.digitising_scotland.record_classification.datastructu
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -37,9 +38,13 @@ public class RecordTest {
     @Before
     public void setUp() throws Exception {
 
+        ArrayList<String> descList = new ArrayList();
+        final String desc = "A test Description";
+        descList.add(desc);
+
         int id = (int) Math.rint(Math.random() * 1000);
 
-        originalData = new OriginalData("original data test data", 2014, 1, "testFileName");
+        originalData = new OriginalData(descList, 2014, 1, "testFileName");
         record = new Record(id, originalData);
     }
 
@@ -89,11 +94,14 @@ public class RecordTest {
     @Test
     public void testIsCodMethod() throws InputFormatException {
 
+        ArrayList<String> descList = new ArrayList();
+        final String desc = "A test Description";
+        descList.add(desc);
         int id = (int) Math.rint(Math.random() * 1000);
 
         Record c = new Record(id, originalData);
         Assert.assertFalse(c.isCoDRecord());
-        OriginalData codOriginalData = new CODOrignalData("original data test data", 2014, 1, 0, 0, "testFileName");
+        OriginalData codOriginalData = new CODOrignalData(descList, 2014, 1, 0, 0, "testFileName");
         c = new Record(id, codOriginalData);
 
         Assert.assertTrue(c.isCoDRecord());
