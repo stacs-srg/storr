@@ -64,10 +64,23 @@ public class GraphLogger extends Logger<Integer>{
 
 
     public void generateGnuPlotScriptLines(PrintWriter writer) {
+        writer.println("set style line 11 lc rgb '#808080' lt 1");
+        writer.println("set border 3 back ls 11");
+        writer.println("set tics nomirror");
+        writer.println("set style line 12 lc rgb '#808080' lt 0 lw 1");
+        writer.println("set grid back ls 12");
+        writer.println("set style line 1 lc rgb '#8b1a0e' pt 1 ps 1 lt 1 lw 20 # --- red");
+        writer.println("unset key");
         writer.println("set title \"" + graphTitle + "\"");
         writer.println("set xlabel \"Year\"");
         writer.println("set ylabel \"" + yLabel + "\"");
         writer.println(generateGnuPlotPlottingScript());
+        writer.println("unset style");
+        writer.println("unset border");
+        writer.println("unset tics");
+        writer.println("unset grid");
+        writer.println("set key");
+        
     }
 
     @Override

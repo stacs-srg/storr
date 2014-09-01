@@ -30,6 +30,7 @@ import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.tem
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPerson;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.PopulationLogic;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.RandomFactory;
+import uk.ac.standrews.cs.digitising_scotland.population_model.organic.logger.LoggingControl;
 import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
 
 import java.io.IOException;
@@ -249,6 +250,8 @@ public class OrganicPerson implements IPerson {
         int setAge = (int) (COMING_OF_AGE_AGE * population.getDaysPerYear());
         if (population.getCurrentDay() - getBirthDay() > setAge) {
             setAge = population.getCurrentDay() - getBirthDay() + 1;
+        } else {
+            LoggingControl.familyCharacteristicDistributionLogger.log(population.getCurrentDay(), FamilyType.SINGLE);
         }
         new OrganicEvent(EventType.COMING_OF_AGE, this, getBirthDay() + setAge);
     }

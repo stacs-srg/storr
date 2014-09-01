@@ -40,8 +40,6 @@ public class DistributionEnumLogger<Value> extends DistributionLogger<Value> {
     public void incCountFor(Enum<?> xLabel) {
         int c = 0;
         for (Enum<?> e : enums) {
-//            System.out.println(e.toString());
-//            System.out.println(xLabel.toString());
             if (e.toString().equals(xLabel.toString())) {
                 break;
             }
@@ -53,12 +51,11 @@ public class DistributionEnumLogger<Value> extends DistributionLogger<Value> {
 
     @Override
     public String generateGnuPlotPlottingScript() {
-        // TODO Auto-generated method stub
-        return null;
+        return "plot \"" + filePath.replace(BCK_SLASH, FWD_SLASH) + "\" using 3:xtic(2) ti col fc rgb '#8b1a0e', \"" + filePath.replace(BCK_SLASH, FWD_SLASH) + "\" u 4 ti col fc rgb '#5e9c36'";
     }
 
     @Override
-    public void outputToGnuPlotFormat(int year, String fileName) {
+    public void outputToGnuPlotFormat(int year, String fileName, boolean convertDaysToYears) {
         PrintWriter writer;
         int[] distWeights = relatedDistribution.getWeights();
         
@@ -82,7 +79,7 @@ public class DistributionEnumLogger<Value> extends DistributionLogger<Value> {
             writer = new PrintWriter(filePath, "UTF-8");
             filePath = new File("").getAbsolutePath() + "/" + filePath;
             writer.println("# This file is called " + fileName + ".dat");
-            writer.println("# Value    Actual    Distribution");
+            writer.println("Count    Value    Actual    Distribution");
             for (int i = 0; i < counts.length; i++) {
                 writer.print(i + "    " + enums[i]);
                 writer.print("    " + counts[i] + "    ");

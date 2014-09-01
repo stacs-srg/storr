@@ -304,6 +304,7 @@ public class OrganicPopulation implements IPopulation {
 
     private void handleDeathEvent(final OrganicPerson person) {
         deadPeople.add(livingPeople.remove(livingPeople.indexOf(person)));
+        LoggingControl.ageAtDeathDistributionLogger.log(currentDay, person.getDeathDay() - person.getBirthDay());
         OrganicPopulationLogger.decPopulation();
     }
 

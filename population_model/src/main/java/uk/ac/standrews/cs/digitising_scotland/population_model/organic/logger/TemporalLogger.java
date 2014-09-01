@@ -32,6 +32,7 @@ public abstract class TemporalLogger<Value> {
     protected String fileName;
     protected String title;
     protected String xLabel;
+    protected boolean convertDaysToYearsOnOutput;
     
     protected int getKey(final int date) {
         int key = keyArray[keyArray.length - 1];
@@ -49,12 +50,19 @@ public abstract class TemporalLogger<Value> {
     
     public void outputToGnuPlotFormat() {
         for(Integer i : keyArray) {
-            map.get(i).outputToGnuPlotFormat(i, fileName);
+            map.get(i).outputToGnuPlotFormat(i, fileName, convertDaysToYearsOnOutput);
         }
     }
     
     public void generateGnuPlotScriptLines(PrintWriter writer) {
         int c = 0;
+        writer.println("set style line 11 lc rgb '#808080' lt 1");
+        writer.println("set border 3 back ls 11");
+        writer.println("set tics nomirror");
+        writer.println("set style line 12 lc rgb '#808080' lt 0 lw 1");
+        writer.println("set grid back ls 12");
+        writer.println("set style line 1 lc rgb '#8b1a0e' pt 1 ps 1 lt 1 lw 20 # --- red");
+        writer.println("set style line 2 lc rgb '#5e9c36' pt 6 ps 1 lt 1 lw 20 # --- green");
         for(Integer i : keyArray) {
             int nextYear = 0;
             if (c < keyArray.length - 1) {
@@ -70,5 +78,9 @@ public abstract class TemporalLogger<Value> {
             writer.println("set xlabel \"" + xLabel + "\"");
             writer.println(map.get(i).generateGnuPlotPlottingScript());
         }
+        writer.println("unset style");
+        writer.println("unset border");
+        writer.println("unset tics");
+        writer.println("unset grid");
     }
 }

@@ -20,6 +20,8 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 
+import uk.ac.standrews.cs.digitising_scotland.population_model.organic.DivorceInstigation;
+import uk.ac.standrews.cs.digitising_scotland.population_model.organic.DivorceReason;
 import uk.ac.standrews.cs.digitising_scotland.population_model.organic.FamilyType;
 import uk.ac.standrews.cs.digitising_scotland.population_model.organic.OrganicPartnership;
 import uk.ac.standrews.cs.digitising_scotland.population_model.organic.OrganicPerson;
@@ -28,32 +30,95 @@ import uk.ac.standrews.cs.digitising_scotland.population_model.organic.OrganicPo
 public class LoggingControl {
 
     public static PopulationLogger populationLogger;
+    
     public static TemporalIntegerLogger numberOfChildrenFromAffairsDistributionLogger;
     public static TemporalIntegerLogger numberOfChildrenFromCohabitationDistributionLogger;
     public static TemporalIntegerLogger numberOfChildrenFromCohabThenMarriageDistributionLogger;
     public static TemporalIntegerLogger numberOfChildrenFromMarriagesDistributionLogger;
     
+    public static TemporalIntegerLogger numberOfChildrenInMaterityDistributionLogger;
+    
+    public static TemporalIntegerLogger numberOfAffairsDistributionLogger;
+    
+    public static TemporalIntegerLogger timeFromCohabToMarriageDistributionLogger;
+    public static TemporalIntegerLogger cohabitationLengthDistributionLogger;
+    
+    public static TemporalIntegerLogger ageAtDivorceMaleDistributionLogger;
+    public static TemporalIntegerLogger ageAtDivorceFemaleDistributionLogger;
+    public static TemporalIntegerLogger ageAtDeathDistributionLogger;
+    public static TemporalIntegerLogger ageAtCohabitationFemaleDistributionLogger;
+    public static TemporalIntegerLogger ageAtCohabitationMaleDistributionLogger;
+    public static TemporalIntegerLogger ageAtMarriageFemaleDistributionLogger;
+    public static TemporalIntegerLogger ageAtMarriageMaleDistributionLogger;
+
+    public static TemporalEnumLogger<DivorceInstigation> divorceInstiagetionByGenderDistributionLogger;
+    public static TemporalEnumLogger<DivorceReason> divorceReasonFemaleDistributionLogger;
+    public static TemporalEnumLogger<DivorceReason> divorceReasonMaleDistributionLogger;
+    public static TemporalEnumLogger<FamilyType> remarriageFamilyCharacteristicDistributionLogger;
     public static TemporalEnumLogger<FamilyType> familyCharacteristicDistributionLogger;
 
     public static void setUpLogger() {
-        LoggingControl.numberOfChildrenFromAffairsDistributionLogger = new TemporalIntegerLogger(OrganicPartnership.getTemporalAffairNumberOfChildrenDistribution(), "ChildrenNumberOfAffairs", "Number of Children Distribution - Affairs", "Number of Children");
-        LoggingControl.numberOfChildrenFromCohabitationDistributionLogger = new TemporalIntegerLogger(OrganicPartnership.getTemporalChildrenNumberOfInCohabDistribution(), "ChildrenNumberOfCohab", "Number of Children Distribution - Cohabitation", "Number of Children");
-        LoggingControl.numberOfChildrenFromCohabThenMarriageDistributionLogger = new TemporalIntegerLogger(OrganicPartnership.getTemporalChildrenNumberOfInCohabThenMarriageDistribution(), "ChildrenNumberOfCohabTheMarriage", "Number of Children Distribution - Cohabitation Then Marriage", "Number of Children");
-        LoggingControl.numberOfChildrenFromMarriagesDistributionLogger = new TemporalIntegerLogger(OrganicPartnership.getTemporalChildrenNumberOfInMarriageDistribution(), "ChildrenNumberOfMarriage", "Number of Children Distribution - Marriage", "Number of Children");
+        LoggingControl.populationLogger = new PopulationLogger(OrganicPopulation.getStartYear(), OrganicPopulation.getEndYear(), "Population", "Population Change Over Time", "Population");
         
+        LoggingControl.numberOfChildrenFromAffairsDistributionLogger = new TemporalIntegerLogger(OrganicPartnership.getTemporalAffairNumberOfChildrenDistribution(), "ChildrenNumberOfAffairs", "Number of Children Distribution - Affairs", "Number of Children", false);
+        LoggingControl.numberOfChildrenFromCohabitationDistributionLogger = new TemporalIntegerLogger(OrganicPartnership.getTemporalChildrenNumberOfInCohabDistribution(), "ChildrenNumberOfCohab", "Number of Children Distribution - Cohabitation", "Number of Children", false);
+        LoggingControl.numberOfChildrenFromCohabThenMarriageDistributionLogger = new TemporalIntegerLogger(OrganicPartnership.getTemporalChildrenNumberOfInCohabThenMarriageDistribution(), "ChildrenNumberOfCohabTheMarriage", "Number of Children Distribution - Cohabitation Then Marriage", "Number of Children", false);
+        LoggingControl.numberOfChildrenFromMarriagesDistributionLogger = new TemporalIntegerLogger(OrganicPartnership.getTemporalChildrenNumberOfInMarriageDistribution(), "ChildrenNumberOfMarriage", "Number of Children Distribution - Marriage", "Number of Children", false);
+        
+        LoggingControl.numberOfChildrenInMaterityDistributionLogger = new TemporalIntegerLogger(OrganicPartnership.getTemporalChildrenNumberOfInMaternityDistribution(), "ChildrenInMaternity", "Number of Children In Maternity Distribution", "Number of Children in Maternity", false);
+        
+        LoggingControl.numberOfAffairsDistributionLogger = new TemporalIntegerLogger(OrganicPartnership.getTemporalAffairNumberOfDistribution(), "NumberOfAffairs", "Number Of Affairs in a Marriage Distribution", "Number of Affairs in Marriage", false);
+        
+        LoggingControl.timeFromCohabToMarriageDistributionLogger = new TemporalIntegerLogger(OrganicPartnership.getTemporalCohabitaitonToMarriageTimeDistribution(), "TimeFromCohabToMarriage", "Time from Cohabitation to Marriage Distribution", "Time from Cohabiation to Marriage Distribution", true);
+        LoggingControl.cohabitationLengthDistributionLogger = new TemporalIntegerLogger(OrganicPartnership.getTemporalCohabitationLengthDistribution(), "CohabitationLength", "Length of Cohabitation Distribution", "Length OF Cohabitation", true);
+        
+        LoggingControl.ageAtDivorceMaleDistributionLogger = new TemporalIntegerLogger(OrganicPartnership.getTemporalDivorceAgeForMaleDistribution(), "AgeAtDivorceMale", "Age at Divorce for Males", "Age at Divorce", true);
+        LoggingControl.ageAtDivorceFemaleDistributionLogger = new TemporalIntegerLogger(OrganicPartnership.getTemporalDivorceAgeForFemaleDistribution(), "AgeAtDivorceFemale", "Age at Divorce for Females", "Age at Divorce", true);
+        LoggingControl.ageAtDeathDistributionLogger = new TemporalIntegerLogger(OrganicPerson.getDeathAgeAtDistribution(), "AgeAtDeath", "Age at Death Distribution", "Age at Death", true);
+        LoggingControl.ageAtCohabitationFemaleDistributionLogger = new TemporalIntegerLogger(OrganicPerson.getTemporalCohabitationAgeForFemalesDistribution(), "CohabitationAgeFemales", "Age at Cohabitation for Females", "Age at Cohabitation", true);
+        LoggingControl.ageAtCohabitationMaleDistributionLogger = new TemporalIntegerLogger(OrganicPerson.getTemporalCohabitationAgeForMalesDistribution(), "CohabitationAgeMales", "Age at Cohabitation for Males", "Age at Cohabitation", true);
+        LoggingControl.ageAtMarriageFemaleDistributionLogger = new TemporalIntegerLogger(OrganicPerson.getTemporalMarriageAgeForFemalesDistribution(), "MarriageAgeFemales", "Age at Marriage for Females", "Age at Marriage", true);
+        LoggingControl.ageAtMarriageMaleDistributionLogger = new TemporalIntegerLogger(OrganicPerson.getTemporalMarriageAgeForMalesDistribution(), "MarriageAgeMales", "Age at Marriage for Males", "Age At Marriage", true);
+        
+        LoggingControl.divorceInstiagetionByGenderDistributionLogger = new TemporalEnumLogger<>(OrganicPartnership.getTemporalDivorceInstigatedByGenderDistribution(), "DivorceInstigationByGender", "Divorce Instigation By Gender", "Divorce Instigation By");
+        LoggingControl.divorceReasonFemaleDistributionLogger = new TemporalEnumLogger<>(OrganicPartnership.getTemporalDivorceReasonFemaleDistribution(), "DivorceReasonFemale", "Divorce Reason For Females", "Divorce Reason");
+        LoggingControl.divorceReasonMaleDistributionLogger = new TemporalEnumLogger<>(OrganicPartnership.getTemporalDivorceReasonMaleDistribution(), "DivorceReasonMale", "Divorce Reason For Males", "Divorce Reason");
+        LoggingControl.remarriageFamilyCharacteristicDistributionLogger = new TemporalEnumLogger<>(OrganicPerson.getTemporalRemarriagePartnershipCharacteristicDistribution(), "RemarriagePartnershipCharacteristic", "Remarriage Partnership Characteristic", "Partnership Characteristic");
         LoggingControl.familyCharacteristicDistributionLogger = new TemporalEnumLogger<FamilyType>(OrganicPerson.getTemporalPartnershipCharacteristicDistribution(), "PartnershipCharacteristic", "Partnership Characteristic", "Partnership Characteristic");
         
-        LoggingControl.populationLogger = new PopulationLogger(OrganicPopulation.getStartYear(), OrganicPopulation.getEndYear(), "Population", "Population Change Over Time", "Population");
+        
+    
     }
 
     private static void output() {
-
-        LoggingControl.numberOfChildrenFromMarriagesDistributionLogger.outputToGnuPlotFormat();
+        LoggingControl.populationLogger.outputToGnuPlotFormat();
+        
+        LoggingControl.numberOfChildrenFromAffairsDistributionLogger.outputToGnuPlotFormat();
         LoggingControl.numberOfChildrenFromCohabitationDistributionLogger.outputToGnuPlotFormat();
         LoggingControl.numberOfChildrenFromCohabThenMarriageDistributionLogger.outputToGnuPlotFormat();
-        LoggingControl.numberOfChildrenFromAffairsDistributionLogger.outputToGnuPlotFormat();
+        LoggingControl.numberOfChildrenFromMarriagesDistributionLogger.outputToGnuPlotFormat();
+        
+        LoggingControl.numberOfChildrenInMaterityDistributionLogger.outputToGnuPlotFormat();
+        
+        LoggingControl.numberOfAffairsDistributionLogger.outputToGnuPlotFormat();
+        
+        LoggingControl.timeFromCohabToMarriageDistributionLogger.outputToGnuPlotFormat();
+        LoggingControl.cohabitationLengthDistributionLogger.outputToGnuPlotFormat();
+        
+        LoggingControl.ageAtDivorceMaleDistributionLogger.outputToGnuPlotFormat();
+        LoggingControl.ageAtDivorceFemaleDistributionLogger.outputToGnuPlotFormat();
+        LoggingControl.ageAtDeathDistributionLogger.outputToGnuPlotFormat();
+        LoggingControl.ageAtCohabitationFemaleDistributionLogger.outputToGnuPlotFormat();
+        LoggingControl.ageAtCohabitationMaleDistributionLogger.outputToGnuPlotFormat();
+        LoggingControl.ageAtMarriageFemaleDistributionLogger.outputToGnuPlotFormat();
+        LoggingControl.ageAtMarriageMaleDistributionLogger.outputToGnuPlotFormat();
+        
+        LoggingControl.divorceInstiagetionByGenderDistributionLogger.outputToGnuPlotFormat();
+        LoggingControl.divorceReasonFemaleDistributionLogger.outputToGnuPlotFormat();
+        LoggingControl.divorceReasonMaleDistributionLogger.outputToGnuPlotFormat();
+        LoggingControl.remarriageFamilyCharacteristicDistributionLogger.outputToGnuPlotFormat();
         LoggingControl.familyCharacteristicDistributionLogger.outputToGnuPlotFormat();
-        LoggingControl.populationLogger.outputToGnuPlotFormat();
+        
     }
 
     public static void createGnuPlotOutputFilesAndScript() {
@@ -65,21 +130,37 @@ public class LoggingControl {
             writer.println("# This file is called log_output_script.p");
             writer.println("reset");
 
-            writer.println("set style line 11 lc rgb '#808080' lt 1");
-            writer.println("set border 3 back ls 11");
-            writer.println("set tics nomirror");
-            writer.println("set style line 12 lc rgb '#808080' lt 0 lw 1");
-            writer.println("set grid back ls 12");
-            writer.println("set style line 1 lc rgb '#8b1a0e' pt 1 ps 1 lt 1 lw 20 # --- red");
-            writer.println("set style line 2 lc rgb '#5e9c36' pt 6 ps 1 lt 1 lw 20 # --- green");
-
             writer.println("set terminal pdf");
             writer.println("set output 'output.pdf'");
-            numberOfChildrenFromAffairsDistributionLogger.generateGnuPlotScriptLines(writer);
-            numberOfChildrenFromCohabitationDistributionLogger.generateGnuPlotScriptLines(writer);
-            numberOfChildrenFromCohabThenMarriageDistributionLogger.generateGnuPlotScriptLines(writer);
-            numberOfChildrenFromMarriagesDistributionLogger.generateGnuPlotScriptLines(writer);
-            populationLogger.generateGnuPlotScriptLines(writer);
+            
+            LoggingControl.populationLogger.generateGnuPlotScriptLines(writer);
+
+            LoggingControl.numberOfChildrenFromAffairsDistributionLogger.generateGnuPlotScriptLines(writer);
+            LoggingControl.numberOfChildrenFromCohabitationDistributionLogger.generateGnuPlotScriptLines(writer);
+            LoggingControl.numberOfChildrenFromCohabThenMarriageDistributionLogger.generateGnuPlotScriptLines(writer);
+            LoggingControl.numberOfChildrenFromMarriagesDistributionLogger.generateGnuPlotScriptLines(writer);
+
+            LoggingControl.numberOfChildrenInMaterityDistributionLogger.generateGnuPlotScriptLines(writer);
+
+            LoggingControl.numberOfAffairsDistributionLogger.generateGnuPlotScriptLines(writer);
+
+            LoggingControl.timeFromCohabToMarriageDistributionLogger.generateGnuPlotScriptLines(writer);
+            LoggingControl.cohabitationLengthDistributionLogger.generateGnuPlotScriptLines(writer);
+
+            LoggingControl.ageAtDivorceMaleDistributionLogger.generateGnuPlotScriptLines(writer);
+            LoggingControl.ageAtDivorceFemaleDistributionLogger.generateGnuPlotScriptLines(writer);
+            LoggingControl.ageAtDeathDistributionLogger.generateGnuPlotScriptLines(writer);
+            LoggingControl.ageAtCohabitationFemaleDistributionLogger.generateGnuPlotScriptLines(writer);
+            LoggingControl.ageAtCohabitationMaleDistributionLogger.generateGnuPlotScriptLines(writer);
+            LoggingControl.ageAtMarriageFemaleDistributionLogger.generateGnuPlotScriptLines(writer);
+            LoggingControl.ageAtMarriageMaleDistributionLogger.generateGnuPlotScriptLines(writer);
+
+            LoggingControl.divorceInstiagetionByGenderDistributionLogger.generateGnuPlotScriptLines(writer);
+            LoggingControl.divorceReasonFemaleDistributionLogger.generateGnuPlotScriptLines(writer);
+            LoggingControl.divorceReasonMaleDistributionLogger.generateGnuPlotScriptLines(writer);
+            LoggingControl.remarriageFamilyCharacteristicDistributionLogger.generateGnuPlotScriptLines(writer);
+            LoggingControl.familyCharacteristicDistributionLogger.generateGnuPlotScriptLines(writer);
+            
             writer.println("set terminal png");
             writer.println("reset");
 

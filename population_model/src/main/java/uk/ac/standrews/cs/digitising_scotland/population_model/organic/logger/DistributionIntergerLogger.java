@@ -49,9 +49,18 @@ public class DistributionIntergerLogger extends DistributionLogger<Integer> {
         return "plot \"" + filePath.replace(BCK_SLASH, FWD_SLASH) + "\" using 1:2 title 'Actual' with line, \"" + filePath.replace(BCK_SLASH, FWD_SLASH) + "\" using 1:3 title 'Dist' with line";
     }
     
-    public void outputToGnuPlotFormat(int year, String fileName) {
+    public void outputToGnuPlotFormat(int year, String fileName, boolean convertDaysToYears) {
         PrintWriter writer;
         int[] distWeights = relatedDistribution.getWeights();
+        int[] storedCounts = counts;
+        if (distWeights.length < counts.length) {
+            int c = 0;
+            int[] temp = new int[distWeights.length];
+            for (int i : counts) {
+                temp[(int) ((c++ / (double) counts.length) * distWeights.length)] += i;
+            }
+            counts = temp;
+        }
         
         int sumOfDistWeights = 0;
         for (int i : distWeights) {
@@ -76,7 +85,11 @@ public class DistributionIntergerLogger extends DistributionLogger<Integer> {
             writer.println("# Value    Actual    Distribution");
             double rangeStep = (relatedDistribution.getMaximumReturnValue() - relatedDistribution.getMinimumReturnValue() + 1) / (double) counts.length;
             for (int i = 0; i < counts.length; i++) {
-                writer.printf("%.2f", rangeStep * i + relatedDistribution.getMinimumReturnValue());
+                if (convertDaysToYears) {
+                    writer.printf("%.2f", (rangeStep * i + relatedDistribution.getMinimumReturnValue()) / OrganicPopulation.getDaysPerYear());
+                } else {
+                    writer.printf("%.2f", rangeStep * i + relatedDistribution.getMinimumReturnValue());
+                }
                 writer.print("    " + counts[i] + "    ");
                 writer.printf("%.2f", distWeights[i] * scaleFactor);
                 writer.println();
@@ -86,6 +99,7 @@ public class DistributionIntergerLogger extends DistributionLogger<Integer> {
             System.out.println("_________CAUGHT__________");
             System.out.println(e.getMessage());
         }
+        counts = storedCounts;
         
     }
 

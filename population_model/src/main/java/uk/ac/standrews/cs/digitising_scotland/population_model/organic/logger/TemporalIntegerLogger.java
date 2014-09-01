@@ -26,10 +26,11 @@ import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.tem
 
 public class TemporalIntegerLogger extends TemporalLogger<Integer> {
 
-    public TemporalIntegerLogger(TemporalIntegerDistribution relatedTemporalDistribution, String fileName, String graphTitle, String xLabel) {
+    public TemporalIntegerLogger(TemporalIntegerDistribution relatedTemporalDistribution, String fileName, String graphTitle, String xLabel, boolean convertDaysToYearsOnOutput) {
         this.title = graphTitle;
         this.fileName = fileName;
         this.xLabel = xLabel;
+        this.convertDaysToYearsOnOutput = convertDaysToYearsOnOutput;
         map = new HashMap<Integer, DistributionLogger<Integer>>();
         for (Integer i : relatedTemporalDistribution.getMapKeys()) {
             map.put(i, new DistributionIntergerLogger(relatedTemporalDistribution.getDistributionForYear(i), relatedTemporalDistribution.getMinimumStatedValue(), relatedTemporalDistribution.getMaximumStatedValue()));
@@ -40,7 +41,7 @@ public class TemporalIntegerLogger extends TemporalLogger<Integer> {
         Arrays.sort(keyArray);
     }
     
-    public void log(int currentDay, int xLabel) throws NotSetUpAtClassInitilisationException {
+    public void log(int currentDay, int xLabel) {
         map.get(getKey(currentDay)).incCountFor(xLabel);
     }
     

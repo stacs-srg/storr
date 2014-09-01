@@ -32,7 +32,7 @@ public abstract class DistributionLogger<Value> extends Logger<Value> {
     protected RestrictedDistribution<Value> relatedDistribution;
     
 
-    public abstract void outputToGnuPlotFormat(int year, String fileName);
+    public abstract void outputToGnuPlotFormat(int year, String fileName, boolean convertDaysToYears);
     
     
     protected int[] counts;
