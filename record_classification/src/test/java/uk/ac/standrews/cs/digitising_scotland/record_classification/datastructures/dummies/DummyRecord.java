@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.dummies;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Set;
 
@@ -26,7 +27,7 @@ public class DummyRecord extends Record {
     }
 
     @Override
-    public String getDescription() {
+    public ArrayList<String> getDescription() {
 
         return null;
     }

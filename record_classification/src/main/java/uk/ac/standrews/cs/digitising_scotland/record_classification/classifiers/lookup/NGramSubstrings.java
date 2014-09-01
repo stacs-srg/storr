@@ -12,7 +12,6 @@ import org.apache.lucene.analysis.standard.StandardTokenizer;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.util.Version;
 
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
 
 import com.google.common.collect.HashMultiset;
@@ -56,21 +55,6 @@ public class NGramSubstrings implements Iterable<TokenSet> {
     public NGramSubstrings(final TokenSet inputTokenSet) throws IOException {
 
         this.grams = splitIntoNGrams(inputTokenSet.toString());
-    }
-
-    /**
-     * Initalises and {@link NGramSubstrings} object with the original data of
-     * the record split into grams.
-     *
-     * @param record
-     *            the input record to create Ngrams from.
-     * @throws IOException
-     *             IO error
-     */
-    public NGramSubstrings(final Record record) throws IOException {
-
-        String string = record.getDescription();
-        this.grams = splitIntoNGrams(string);
     }
 
     /**

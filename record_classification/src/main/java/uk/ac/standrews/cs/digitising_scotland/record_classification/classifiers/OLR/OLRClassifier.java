@@ -188,7 +188,7 @@ public class OLRClassifier extends AbstractClassifier {
 
     private void readFields(final DataInputStream inputStream) throws IOException {
 
-        //  vectorFactory.readFields(in);
+        vectorFactory.readFields(inputStream);
         model.readFields(inputStream);
     }
 
@@ -200,13 +200,14 @@ public class OLRClassifier extends AbstractClassifier {
      * only be used for classification
      * @throws IOException Signals that an I/O exception has occurred.
      */
-    public static OLRClassifier deSerializeModel(final String filename) throws IOException {
+    public OLRClassifier deSerializeModel(final String filename) throws IOException {
 
         DataInputStream in = OLR.getDataInputStream(filename);
         VectorFactory vectorFactory = new VectorFactory();
-        vectorFactory.readFields(in);
+        //  vectorFactory.readFields(in);
         OLRClassifier olrClassifier = new OLRClassifier(vectorFactory);
         olrClassifier.readFields(in);
+
         return olrClassifier;
     }
 
@@ -214,15 +215,17 @@ public class OLRClassifier extends AbstractClassifier {
      * @see uk.ac.standrews.cs.digitising_scotland.parser.classifiers.AbstractClassifier#getModelFromDefaultLocation()
      */
     @Override
-    public void getModelFromDefaultLocation() {
+    public OLRClassifier getModelFromDefaultLocation() {
 
+        OLRClassifier olr = null;
         try {
-            model = deSerializeModel(modelPath).model;
+            olr = deSerializeModel(modelPath);
+            model = olr.model;
         }
         catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+        return olr;
     }
-
 }

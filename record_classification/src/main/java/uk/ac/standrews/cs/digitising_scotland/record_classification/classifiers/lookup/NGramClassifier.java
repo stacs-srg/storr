@@ -9,6 +9,7 @@ import java.io.ObjectInput;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.lucene.analysis.TokenStream;
@@ -93,8 +94,15 @@ public class NGramClassifier extends AbstractClassifier implements Serializable 
      */
     private Set<CodeTriple> classifyGrams(final Record record) throws IOException {
 
-        NGramSubstrings grams = new NGramSubstrings(record.getDescription());
-        return lookupTableClassifier.classify(grams, record);
+        Set<CodeTriple> results = new HashSet<CodeTriple>();
+
+        for (String desc : record.getDescription()) {
+            NGramSubstrings grams = new NGramSubstrings(desc);
+            Set<CodeTriple> codes = lookupTableClassifier.classify(grams, record);
+            results.addAll(codes);
+        }
+
+        return results;
     }
 
     /**
@@ -139,7 +147,7 @@ public class NGramClassifier extends AbstractClassifier implements Serializable 
     }
 
     @Override
-    public void getModelFromDefaultLocation() {
+    public AbstractClassifier getModelFromDefaultLocation() {
 
         try {
             readModel(defaultModelLocation);
@@ -147,6 +155,7 @@ public class NGramClassifier extends AbstractClassifier implements Serializable 
         catch (ClassNotFoundException | IOException e) {
             e.printStackTrace();
         }
+        return this;
     }
 
     @Override

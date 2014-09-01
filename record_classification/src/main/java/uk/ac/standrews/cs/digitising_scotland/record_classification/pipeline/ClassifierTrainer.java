@@ -22,7 +22,7 @@ public class ClassifierTrainer {
     private VectorFactory vectorFactory;
 
     /** The olr classifier. */
-    private AbstractClassifier olrClassifier;
+    private OLRClassifier olrClassifier;
 
     /** The exact match classifier. */
     private ExactMatchClassifier exactMatchClassifier;
@@ -47,12 +47,14 @@ public class ClassifierTrainer {
 
     }
 
-    public void getExistingsModels() {
+    public void getExistingsModels(String modelLocations) {
 
         exactMatchClassifier = new ExactMatchClassifier();
+        exactMatchClassifier.setModelFileName(modelLocations + "/lookupTable");
         exactMatchClassifier.getModelFromDefaultLocation();
-        olrClassifier = new OLRClassifier(vectorFactory);
-        olrClassifier.getModelFromDefaultLocation();
+        olrClassifier = new OLRClassifier(new VectorFactory());
+        OLRClassifier.setModelPath(modelLocations + "/olrModel");
+        olrClassifier = olrClassifier.getModelFromDefaultLocation();
 
     }
 
@@ -80,7 +82,7 @@ public class ClassifierTrainer {
      * @return the olrClassifier classifier after training
      * @throws Exception the exception
      */
-    public AbstractClassifier trainOLRClassifier() throws Exception {
+    public OLRClassifier trainOLRClassifier() throws Exception {
 
         LOGGER.info("********** Training OLR Classifiers **********");
         olrClassifier = new OLRClassifier(vectorFactory);

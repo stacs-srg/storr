@@ -93,8 +93,8 @@ public class OLRClassifierTest {
 
         olrClassifier1.train(bucketA);
         olrClassifier1.serializeModel("target/olrClassifierWriteTest");
-
-        OLRClassifier olrClassifier2 = OLRClassifier.deSerializeModel("target/olrClassifierWriteTest");
+        OLRClassifier olrClassifier2 = new OLRClassifier(new VectorFactory());
+        olrClassifier2 = olrClassifier2.deSerializeModel("target/olrClassifierWriteTest");
 
         for (Record record : bucketA) {
             Assert.assertEquals(olrClassifier1.classify(record), olrClassifier2.classify(record));

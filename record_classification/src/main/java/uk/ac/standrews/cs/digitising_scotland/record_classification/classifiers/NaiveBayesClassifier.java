@@ -353,7 +353,7 @@ public class NaiveBayesClassifier extends AbstractClassifier {
      * @see uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.AbstractClassifier#getModelFromDefaultLocation()
      */
     @Override
-    public void getModelFromDefaultLocation() {
+    public AbstractClassifier getModelFromDefaultLocation() {
 
         try {
             model = getModel();
@@ -361,6 +361,7 @@ public class NaiveBayesClassifier extends AbstractClassifier {
         catch (IOException e) {
             e.printStackTrace();
         }
+        return this;
     }
 
     /* (non-Javadoc)

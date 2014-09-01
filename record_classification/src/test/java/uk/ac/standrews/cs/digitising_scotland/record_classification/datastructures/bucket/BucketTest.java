@@ -1,6 +1,7 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -77,7 +78,9 @@ public class BucketTest {
 
         bucketA = new Bucket();
         int id = (int) Math.rint(Math.random() * 1000);
-        OriginalData originalData = new OriginalData("description", 1995, 1, "testFileName");
+        ArrayList<String> desc = new ArrayList<>();
+        desc.add("description");
+        OriginalData originalData = new OriginalData(desc, 1995, 1, "testFileName");
         Record recordToInsert = new Record(id, originalData);
 
         Assert.assertEquals(0, bucketA.size());

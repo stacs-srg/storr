@@ -183,8 +183,9 @@ public class ResolverMkIITest {
          * @see uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.AbstractClassifier#getModelFromDefaultLocation()
          */
         @Override
-        public void getModelFromDefaultLocation() {
+        public AbstractClassifier getModelFromDefaultLocation() {
 
+            return this;
         }
     }
 }

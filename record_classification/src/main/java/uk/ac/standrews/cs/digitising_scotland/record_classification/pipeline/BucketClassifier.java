@@ -44,8 +44,11 @@ public class BucketClassifier {
         int total = bucket.size();
         for (Record record : bucket) {
             LOGGER.info("classifying record " + count + " of " + total);
-            Set<CodeTriple> result = recordClassifier.classify(record);
-            record.addAllCodeTriples(result);
+            for (String desc : record.getDescription()) {
+                Set<CodeTriple> result = recordClassifier.classify(desc);
+                record.addAllCodeTriples(result);
+            }
+
             count++;
         }
 

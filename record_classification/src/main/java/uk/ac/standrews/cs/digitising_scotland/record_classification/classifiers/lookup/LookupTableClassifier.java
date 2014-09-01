@@ -59,10 +59,17 @@ public class LookupTableClassifier extends AbstractClassifier implements Seriali
     @Override
     public Record classify(final Record record) throws IOException {
 
-        NGramSubstrings nGrams = new NGramSubstrings(record.getDescription());
+        for (String description : record.getDescription()) {
+            classifyString(description, record);
+        }
+        return record;
+    }
+
+    private void classifyString(final String description, final Record record) throws IOException {
+
+        NGramSubstrings nGrams = new NGramSubstrings(description);
         Set<CodeTriple> classifiedGramsSet = classify(nGrams, record);
         record.addAllCodeTriples(classifiedGramsSet);
-        return record;
     }
 
     /**
@@ -135,8 +142,9 @@ public class LookupTableClassifier extends AbstractClassifier implements Seriali
     }
 
     @Override
-    public void getModelFromDefaultLocation() {
+    public AbstractClassifier getModelFromDefaultLocation() {
 
+        return this;
     }
 
     @Override
@@ -164,6 +172,7 @@ public class LookupTableClassifier extends AbstractClassifier implements Seriali
 
     @Override
     public Pair<Code, Double> classify(final TokenSet tokenSet) throws IOException {
+
         throw new UnsupportedOperationException();
     }
 

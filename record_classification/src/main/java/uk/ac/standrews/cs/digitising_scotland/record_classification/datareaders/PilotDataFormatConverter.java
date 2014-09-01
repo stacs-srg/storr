@@ -70,7 +70,7 @@ public final class PilotDataFormatConverter extends AbstractFormatConverter {
             int imageQuality = parseImageQuality(lineSplit);
             int ageGroup = convertAgeGroup(removeQuotes(lineSplit[AGE_POSITION]));
             int sex = convertSex(removeQuotes(lineSplit[SEX_POSITION]));
-            String description = formDescription(lineSplit, DESC_START, DESC_END);
+            ArrayList<String> description = formDescription(lineSplit, DESC_START, DESC_END);
             int year = Integer.parseInt(removeQuotes(lineSplit[YEAR_POSITION]));
 
             CODOrignalData originalData = new CODOrignalData(description, year, ageGroup, sex, imageQuality, inputFile.getName());
@@ -105,23 +105,18 @@ public final class PilotDataFormatConverter extends AbstractFormatConverter {
     * @param endPosition the last index to concatenate
     * @return the concatenated string, comma separated
     */
-    private static String formDescription(final String[] stringArray, final int startPosition, final int endPosition) {
+    private static ArrayList<String> formDescription(final String[] stringArray, final int startPosition, final int endPosition) {
 
-        String description = "";
+        ArrayList<String> descriptionList = new ArrayList<>();
 
         for (int currentPosition = startPosition; currentPosition <= endPosition; currentPosition++) {
             if (stringArray[currentPosition].length() != 0 && !stringArray[currentPosition].equalsIgnoreCase("null")) {
-                if (currentPosition != startPosition) {
-                    description = description + ", " + stringArray[currentPosition].toLowerCase();
-                }
-                else {
-                    description = stringArray[currentPosition].toLowerCase();
-                }
+                descriptionList.add(stringArray[currentPosition].toLowerCase());
+
             }
         }
 
-        return description;
+        return descriptionList;
 
     }
-
 }

@@ -97,7 +97,7 @@ public class ICDCodeConverter {
             return newLine;
 
         }
-        return null;
+        return str;
 
     }
 

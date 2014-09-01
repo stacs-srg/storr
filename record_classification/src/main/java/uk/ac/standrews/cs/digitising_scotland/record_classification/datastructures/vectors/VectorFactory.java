@@ -5,6 +5,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -47,7 +48,9 @@ public class VectorFactory {
 
         vectorEncoder = new SimpleVectorEncoder();
         for (Record record : bucket) {
-            updateDictionary(record.getDescription());
+            for (String descriptionTerm : record.getDescription()) {
+                updateDictionary(descriptionTerm);
+            }
         }
         setNumFeatures();
     }
@@ -75,9 +78,22 @@ public class VectorFactory {
             vectors.addAll(createNamedVectorsWithGoldStandardCodes(record));
         }
         else {
-            vectors.add(createNamedVectorFromString(record.getDescription(), "noGoldStandard"));
+            vectors.addAll(createUnNamedVectorsFromDescriptopn(record.getDescription()));
         }
         return vectors;
+    }
+
+    private Collection<? extends NamedVector> createUnNamedVectorsFromDescriptopn(ArrayList<String> description) {
+
+        ArrayList<NamedVector> vectorList = new ArrayList<>();
+
+        for (String string : description) {
+            Vector v = createVectorFromString(string);
+
+            vectorList.add(new NamedVector(v, "noGoldStandard"));
+        }
+
+        return vectorList;
     }
 
     private List<NamedVector> createNamedVectorsWithGoldStandardCodes(final Record record) {

@@ -65,7 +65,8 @@ public abstract class RecordFactory {
     public static Record createOccRecord(final File inputFile, final String line) throws InputFormatException {
 
         String[] lineSplit = line.split("\\|");
-        String description = lineSplit[0];
+        ArrayList<String> description = new ArrayList<>();
+        description.add(lineSplit[0]);
         int year = Integer.parseInt(lineSplit[1]);
         int imageQuality = Integer.parseInt(lineSplit[2]);
         OriginalData originalData = new OriginalData(description, year, imageQuality, inputFile.getPath());
@@ -93,7 +94,8 @@ public abstract class RecordFactory {
         final int sexPos = 3;
         final int imageQualityPos = 2;
 
-        String description = lineSplit[descriptionPos];
+        ArrayList<String> description = new ArrayList<>();
+        description.add(lineSplit[descriptionPos]);
         int id = Integer.parseInt(lineSplit[idPos]);
         int year = Integer.parseInt(lineSplit[yearPos]);
         int ageGroup = Integer.parseInt(lineSplit[ageGroupPos]);
@@ -134,7 +136,8 @@ public abstract class RecordFactory {
             int imageQuality = Integer.parseInt(lineSplit[imageQualityPos]);
             int ageGroup = Integer.parseInt(lineSplit[ageGroupPos]);
             int sex = Integer.parseInt(lineSplit[sexPos]);
-            String description = lineSplit[descriptionPos];
+            ArrayList<String> description = new ArrayList<>();
+            description.add(lineSplit[descriptionPos]);
             OriginalData originalData = new CODOrignalData(description, year, ageGroup, sex, imageQuality, inputFile.getPath());
 
             for (int i = 6; i < lineSplit.length; i++) {

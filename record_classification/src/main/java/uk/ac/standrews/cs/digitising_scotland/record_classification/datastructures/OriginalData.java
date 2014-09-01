@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -17,7 +18,7 @@ public class OriginalData implements java.io.Serializable {
     private static final long serialVersionUID = -1453338613207961366L;
 
     /** The description. */
-    private String description;
+    private ArrayList<String> description;
 
     /** The year. */
     private int year;
@@ -39,11 +40,11 @@ public class OriginalData implements java.io.Serializable {
      * @param fileName name of file containing original data in record
      * @throws InputFormatException If one or more of the inputs are null.
      */
-    public OriginalData(final String description, final int year, final int imageQuality, final String fileName) throws InputFormatException {
+    public OriginalData(final ArrayList<String> description, final int year, final int imageQuality, final String fileName) throws InputFormatException {
 
         if (imageQuality < 0 || imageQuality > 1) {
             //FIXME  - check if this is correct, pilot study has 2s and nulls in the data!  throw new NumberFormatException("image quality must be 0 or 1, currently: " + imageQuality + "\ndescription: " + description);
-            System.err.println("image quality must be 0 or 1, currently: " + imageQuality + "\ndescription: " + description);
+            System.err.println("image quality must be 0 or 1, currently: " + imageQuality + "\ndescription: " + description.toString());
         }
         this.description = description;
         this.year = year;
@@ -51,7 +52,10 @@ public class OriginalData implements java.io.Serializable {
         this.fileName = fileName;
         goldStandardClassification = new HashSet<CodeTriple>();
         checkNotNull();
-        this.description = description.intern();
+        for (String string : description) {
+            string.intern();
+
+        }
 
     }
 
@@ -60,7 +64,7 @@ public class OriginalData implements java.io.Serializable {
      *
      * @return the description
      */
-    public String getDescription() {
+    public ArrayList<String> getDescription() {
 
         return description;
     }

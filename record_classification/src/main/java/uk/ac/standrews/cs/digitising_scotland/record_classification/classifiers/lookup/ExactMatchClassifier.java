@@ -139,22 +139,23 @@ public class ExactMatchClassifier extends AbstractClassifier {
         write(oos);
     }
 
-    protected void readModel(final String fileName) throws ClassNotFoundException, IOException {
+    protected AbstractClassifier readModel(final String fileName) throws ClassNotFoundException, IOException {
 
         //deserialize the .ser file
         InputStream file = new FileInputStream(fileName + ".ser");
         InputStream buffer = new BufferedInputStream(file);
         ObjectInput input = new ObjectInputStream(buffer);
-
         try {
 
             Map<TokenSet, Set<CodeTriple>> recoveredMap = (Map<TokenSet, Set<CodeTriple>>) input.readObject();
             lookupTable = recoveredMap;
+
         }
         finally {
             closeStreams(file, input);
 
         }
+        return this;
     }
 
     private void closeStreams(final InputStream file, final ObjectInput input) throws IOException {
@@ -172,10 +173,11 @@ public class ExactMatchClassifier extends AbstractClassifier {
     }
 
     @Override
-    public void getModelFromDefaultLocation() {
+    public AbstractClassifier getModelFromDefaultLocation() {
 
+        AbstractClassifier classifier = null;
         try {
-            readModel(modelFileName);
+            classifier = readModel(modelFileName);
         }
         catch (ClassNotFoundException e) {
             e.printStackTrace();
@@ -183,6 +185,7 @@ public class ExactMatchClassifier extends AbstractClassifier {
         catch (IOException e) {
             e.printStackTrace();
         }
+        return classifier;
     }
 
     @Override

@@ -71,5 +71,4 @@ public class DataClerkingWriter extends OutputDataFormatter implements Closeable
 
         return description + year + imageQuality + sex + ageGroup + codes + "\n";
     }
-
 }

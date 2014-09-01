@@ -135,10 +135,10 @@ public class PipelineUtils {
         return trainer;
     }
 
-    protected static ClassifierTrainer getExistingModels(final String string, final Bucket trainingBucket, final String experimentalFolderName) {
+    protected static ClassifierTrainer getExistingModels(final String modelLocations, final Bucket trainingBucket, final String experimentalFolderName) {
 
         ClassifierTrainer trainer = new ClassifierTrainer(trainingBucket, experimentalFolderName);
-        trainer.getExistingsModels();
+        trainer.getExistingsModels(modelLocations);
 
         return trainer;
     }

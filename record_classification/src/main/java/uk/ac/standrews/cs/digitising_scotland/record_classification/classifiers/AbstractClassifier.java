@@ -115,6 +115,6 @@ public abstract class AbstractClassifier {
      * Reads a trained model from the default storage location for a classifier.
      *
      */
-    public abstract void getModelFromDefaultLocation();
+    public abstract AbstractClassifier getModelFromDefaultLocation();
 
 }

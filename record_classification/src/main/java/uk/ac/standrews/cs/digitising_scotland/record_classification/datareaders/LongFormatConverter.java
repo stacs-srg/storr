@@ -1,10 +1,5 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.datareaders;
 
-import static uk.ac.standrews.cs.digitising_scotland.record_classification.datareaders.AbstractFormatConverter.checkLineLength;
-import static uk.ac.standrews.cs.digitising_scotland.record_classification.datareaders.AbstractFormatConverter.convertAgeGroup;
-import static uk.ac.standrews.cs.digitising_scotland.record_classification.datareaders.AbstractFormatConverter.convertSex;
-import static uk.ac.standrews.cs.digitising_scotland.record_classification.datareaders.AbstractFormatConverter.removeQuotes;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -82,7 +77,7 @@ public final class LongFormatConverter extends AbstractFormatConverter {
             int imageQuality = 1;
             int ageGroup = convertAgeGroup(removeQuotes(lineSplit[AGE_POSITION]));
             int sex = convertSex(removeQuotes(lineSplit[SEX_POSITION]));
-            String description = formDescription(lineSplit, DESC_START, DESC_END);
+            ArrayList<String> description = formDescription(lineSplit, DESC_START, DESC_END);
             int year = Integer.parseInt(removeQuotes(lineSplit[YEAR_POSITION]));
 
             CODOrignalData originalData = new CODOrignalData(description, year, ageGroup, sex, imageQuality, inputFile.getName());
@@ -140,17 +135,17 @@ public final class LongFormatConverter extends AbstractFormatConverter {
      * @param endPosition the last index to concatenate
      * @return the concatenated string, comma separated
      */
-    private static String formDescription(final String[] stringArray, final int startPosition, final int endPosition) {
+    private static ArrayList<String> formDescription(final String[] stringArray, final int startPosition, final int endPosition) {
 
-        String description = "";
+        ArrayList<String> description = new ArrayList<>();
 
         for (int currentPosition = startPosition; currentPosition <= endPosition; currentPosition++) {
             if (stringArray[currentPosition].length() != 0) {
                 if (currentPosition != startPosition) {
-                    description = description + ", " + stringArray[currentPosition].toLowerCase();
+                    description.add(stringArray[currentPosition].toLowerCase());
                 }
                 else {
-                    description = stringArray[currentPosition].toLowerCase();
+                    description.add(stringArray[currentPosition].toLowerCase());
                 }
             }
         }

@@ -1,16 +1,19 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline;
 
-import org.junit.Ignore;
+import java.io.File;
+
 import org.junit.Test;
+
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeFactory;
 
 public class ClassifyWithExsistingModelsTest {
 
-    @Ignore("Implement this test")
     @Test
     public void test() throws Exception {
 
-        String[] args = {"icd500cleaned", "target"};
-        ClassifyWithExsistingModels.main(args);
+        CodeFactory.getInstance().loadDictionary(new File("icdCodes.txt"));
+        String[] args0 = {"icd500.csv", "/Users/jkc25/workspace/digitising_scotland/record_classification/Experiments/Experiment206/Models"};
+        ClassifyWithExsistingModels.main(args0);
 
     }
 }

@@ -63,10 +63,10 @@ public class MockClassifier extends AbstractClassifier {
      * @see uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.AbstractClassifier#getModelFromDefaultLocation()
      */
     @Override
-    public void getModelFromDefaultLocation() {
+    public AbstractClassifier getModelFromDefaultLocation() {
 
         // TODO Auto-generated method stub
-
+        return this;
     }
 
 }

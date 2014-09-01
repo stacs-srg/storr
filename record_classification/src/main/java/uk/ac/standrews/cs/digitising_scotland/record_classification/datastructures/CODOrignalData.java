@@ -1,5 +1,7 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures;
 
+import java.util.ArrayList;
+
 import uk.ac.standrews.cs.digitising_scotland.record_classification.exceptions.InputFormatException;
 
 /**
@@ -28,7 +30,7 @@ public class CODOrignalData extends OriginalData {
      * @param fileName name of file containing this original data
      * @throws InputFormatException if one or more of the inputs are null
      */
-    public CODOrignalData(final String description, final int year, final int ageGroup, final int sex, final int imageQuality, final String fileName) throws InputFormatException {
+    public CODOrignalData(final ArrayList<String> description, final int year, final int ageGroup, final int sex, final int imageQuality, final String fileName) throws InputFormatException {
 
         super(description, year, imageQuality, fileName);
         if (ageGroup < 0 || ageGroup > 5) { throw new NumberFormatException("age group must be between 0 and 5"); }
