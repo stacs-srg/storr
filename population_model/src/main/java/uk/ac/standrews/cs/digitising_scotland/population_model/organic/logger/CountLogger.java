@@ -18,10 +18,16 @@ package uk.ac.standrews.cs.digitising_scotland.population_model.organic.logger;
 
 import uk.ac.standrews.cs.digitising_scotland.population_model.organic.OrganicPopulation;
 
-public class PopulationLogger extends GraphLogger {
+public class CountLogger extends GraphLogger {
+    
+    private int count = 0;
 
-    public PopulationLogger(int minXValue, int maxXValue, String fileName, String graphTitle, String yLabel) {
+    public CountLogger(int minXValue, int maxXValue, String fileName, String graphTitle, String yLabel) {
         super(minXValue, maxXValue, fileName, graphTitle, yLabel);
+    }
+    
+    public void log(int currentDay) {
+        log(currentDay, count);
     }
     
     public void log(int xValue, int yValue) {
@@ -35,5 +41,18 @@ public class PopulationLogger extends GraphLogger {
     public String generateGnuPlotPlottingScript() {
         return "plot \"" + filePath.replace(BCK_SLASH, FWD_SLASH) + "\" using 1:2 title '" + graphTitle + "' with line";
     }
+    
+    public void incCount() {
+        count ++;
+    }
+    
+    public void decCount() {
+        count --;
+    }
+
+    public int getCount() {
+        return count;
+    }
+    
 
 }

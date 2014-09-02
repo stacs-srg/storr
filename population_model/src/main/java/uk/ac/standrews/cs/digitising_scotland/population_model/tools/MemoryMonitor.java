@@ -27,8 +27,6 @@ import java.util.Calendar;
 
 import uk.ac.standrews.cs.digitising_scotland.population_model.organic.OrganicPopulation;
 
-
-
 /**
  * The Class MemoryMonitor uses {@link MemoryMXBean} to log system memory usage.
  * Memory usage is then written out to a file called "memoryUsage_" + a unique time.

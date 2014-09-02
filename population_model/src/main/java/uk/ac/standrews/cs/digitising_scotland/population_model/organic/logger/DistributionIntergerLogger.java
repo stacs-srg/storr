@@ -27,8 +27,6 @@ import uk.ac.standrews.cs.digitising_scotland.population_model.organic.OrganicPo
 
 public class DistributionIntergerLogger extends DistributionLogger<Integer> {
 
-    
-    
     public DistributionIntergerLogger(RestrictedDistribution<Integer> relatedDistribution, int minStatedValue, int maxStatedValue) {
         this.minXValue = minStatedValue;
         this.maxXValue = maxStatedValue;
@@ -37,16 +35,38 @@ public class DistributionIntergerLogger extends DistributionLogger<Integer> {
     }
     
     public void incCountFor(Integer xLabel) {
-        if (xLabel > maxXValue) {
-            System.err.println("Array Index Out Of Bounds");
+        if (xLabel > maxXValue - minXValue) {
+//            System.err.println("Array Index Out Of Bounds");
+//            System.err.println("xLabel: " + xLabel);
             return;
         }
-        counts[xLabel]++;
+        counts[xLabel - minXValue]++;
     }
     
     @Override
     public String generateGnuPlotPlottingScript() {
         return "plot \"" + filePath.replace(BCK_SLASH, FWD_SLASH) + "\" using 1:2 title 'Actual' with line, \"" + filePath.replace(BCK_SLASH, FWD_SLASH) + "\" using 1:3 title 'Dist' with line";
+    }
+    
+    public void generateGnuPlotScriptLines(PrintWriter writer, String title, String xLabel) {
+        int c = 0;
+        writer.println("set style line 11 lc rgb '#808080' lt 1");
+        writer.println("set border 3 back ls 11");
+        writer.println("set tics nomirror");
+        writer.println("set style line 12 lc rgb '#808080' lt 0 lw 1");
+        writer.println("set grid back ls 12");
+        writer.println("set style line 1 lc rgb '#8b1a0e' pt 1 ps 1 lt 1 lw 20 # --- red");
+        
+        writer.print("set title \"" + title);
+        writer.println("set ylabel \"Frequency\"");
+        writer.println("set xlabel \"" + xLabel + "\"");
+        
+        writer.println(generateGnuPlotPlottingScript());
+
+        writer.println("unset style");
+        writer.println("unset border");
+        writer.println("unset tics");
+        writer.println("unset grid");
     }
     
     public void outputToGnuPlotFormat(int year, String fileName, boolean convertDaysToYears) {

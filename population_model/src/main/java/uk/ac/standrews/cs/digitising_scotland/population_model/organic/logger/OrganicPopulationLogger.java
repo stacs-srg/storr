@@ -24,47 +24,12 @@ import uk.ac.standrews.cs.digitising_scotland.population_model.organic.OrganicPo
  */
 public class OrganicPopulationLogger {
 
-    private static int[] populationAtYearEnds;
-    private static int startYear;
-
-    public static void initPopulationAtYearEndsArray(final int startYear, final int endYear) {
-        populationAtYearEnds = new int[endYear - startYear + 1];
-        OrganicPopulationLogger.startYear = startYear;
-    }
-
-    public static void addPopulationForYear(int year, int population) {
-        try {
-            populationAtYearEnds[year - startYear] = population;
-        } catch (ArrayIndexOutOfBoundsException e) {
-            System.err.println("Array out of bounds - population end of year");
-        }
-    }
-
-    public static void printPopulationGraph() {
-        OrganicPopulation.writer.println("POPULATION GRAPH");
-        printGraph(populationAtYearEnds, Integer.toString(startYear), Integer.toString(startYear + populationAtYearEnds.length), true, 30);
-    }
 
     private static int population = 0;
     private static int marriages = 0;
     private static int births = 0;
     private static int divorces = 0;
     private static int remarriages = 0;
-    private static final int MAX_AGE = 100;
-    private static int[] maleAgeAtMarriage = new int[MAX_AGE];
-
-    public static void printMaleAgeAtMarriageGraph() {
-        OrganicPopulation.writer.println("MALE AGE AT MARRIAGE GRAPH");
-        printGraph(maleAgeAtMarriage, "0", Integer.toString(MAX_AGE), false, 10);
-    }
-
-    private static int[] femaleAgeAtMarriage = new int[MAX_AGE];
-
-    public static void printFemaleAgeAtMarriageGraph() {
-        OrganicPopulation.writer.println("FEMALE AGE AT MARRIAGE GRAPH");
-        printGraph(femaleAgeAtMarriage, "0", Integer.toString(MAX_AGE), false, 10);
-    }
-
     private static final int AGE_DIFFERENCE_AT_MARRIAGE_DISPLAY_UPTO = 101;
     private static int[] ageDifferenceAtMarriage = new int[AGE_DIFFERENCE_AT_MARRIAGE_DISPLAY_UPTO];
 
@@ -196,15 +161,7 @@ public class OrganicPopulationLogger {
         OrganicPopulationLogger.stopedHavingEarlyDeaths += stopedHavingEarlyDeaths;
     }
 
-    private static void addMaleAgeAtMarriage(final int days) {
-        int years = (int) ((float) days / OrganicPopulation.getDaysPerYear());
-        maleAgeAtMarriage[years]++;
-    }
 
-    private static void addFemaleAgeAtMarriage(final int days) {
-        int years = (int) ((float) days / OrganicPopulation.getDaysPerYear());
-        femaleAgeAtMarriage[years]++;
-    }
 
     private static void addAgeDifferenceAtMarriage(final int maleDays, final int femaleDays) {
         int difference = Math.abs(maleDays - femaleDays);
@@ -212,18 +169,6 @@ public class OrganicPopulationLogger {
         ageDifferenceAtMarriage[years]++;
     }
 
-    /**
-     * Logs all needed information pertaining to the marriage.
-     *
-     * @param maleDays   Males age in days at the point of marriage.
-     * @param femaleDays Females age in days at the point of marriage.
-     */
-    public static void logMarriage(final int maleDays, final int femaleDays) {
-        incMarriages();
-        addMaleAgeAtMarriage(maleDays);
-        addFemaleAgeAtMarriage(femaleDays);
-        addAgeDifferenceAtMarriage(maleDays, femaleDays);
-    }
 
     /**
      * Logs and increments divorce.
@@ -301,11 +246,8 @@ public class OrganicPopulationLogger {
         OrganicPopulation.writer.println("-------Population Logger-------");
         OrganicPopulation.writer.println();
 
-        printMaleAgeAtMarriageGraph();
-        printFemaleAgeAtMarriageGraph();
         printAgeDifferenceAtMarriageGraph();
         printNumberOfChildrenInMarriageGraph();
-        printPopulationGraph();
 //        printAdjustedNumberOfChildrenEndSizesGraph();
         float childrenPerFamily = (float) (births - OrganicPopulation.getDefaultSeedSize()) / (float) marriages;
         OrganicPopulation.writer.println();

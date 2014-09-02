@@ -96,7 +96,7 @@ public class DistributionEnumLogger<Value> extends DistributionLogger<Value> {
     @Override
     public void incCountFor(Integer xLabel) {
         if (xLabel > maxXValue) {
-            System.err.println("Array Index Out Of Bounds");
+//            System.err.println("Array Index Out Of Bounds");
             return;
         }
         counts[xLabel]++;

@@ -74,7 +74,7 @@ public class OrganicPopulation implements IPopulation {
     private static final int END_DEBUG_YEAR = 3000;
 
     // Universal population variables
-    private static final int DEFAULT_SEED_SIZE = 1000;
+    private static final int DEFAULT_SEED_SIZE = 2000;
     private static final float DAYS_PER_YEAR = 365.25f;
     private static final int START_YEAR = 1780;
     private static final int END_YEAR = 2013;
@@ -156,7 +156,6 @@ public class OrganicPopulation implements IPopulation {
             livingPeople.add(person);
         }
         seedGeneration = false;
-        OrganicPopulationLogger.initPopulationAtYearEndsArray((int) (getEarliestDate() / DAYS_PER_YEAR) + EPOCH_YEAR, END_YEAR);
     }
 
     /**
@@ -171,8 +170,7 @@ public class OrganicPopulation implements IPopulation {
                 break;
             }
             while ((int) (getCurrentDay() / getDaysPerYear()) != (int) (event.getDay() / getDaysPerYear())) {
-                OrganicPopulationLogger.addPopulationForYear((int) (getCurrentDay() / DAYS_PER_YEAR) + 1 + EPOCH_YEAR, OrganicPopulationLogger.getPopulation());
-                LoggingControl.populationLogger.log(getCurrentDay(), OrganicPopulationLogger.getPopulation());
+                LoggingControl.populationLogger.log(getCurrentDay());
                 if ((int) (getCurrentDay() / getDaysPerYear()) == START_DEBUG_YEAR - EPOCH_YEAR) {
                     setDebug(true);
                 }
@@ -181,13 +179,14 @@ public class OrganicPopulation implements IPopulation {
                 }
                 if (print) {
                     writer.println(EPOCH_YEAR + 1 + (int) (getCurrentDay() / getDaysPerYear()));
-                    writer.println("Population: " + OrganicPopulationLogger.getPopulation());
+                    writer.println("Population: " + LoggingControl.populationLogger.getCount());
+                    writer.flush();
                 }
                 if (memoryMonitor) {
                     mm.log(currentDay, OrganicPopulationLogger.getPopulation(), livingPeople.size() + deadPeople.size());
                 }
                 double r = getCurrentDay() % DAYS_PER_YEAR;
-                setCurrentDay((int) (getCurrentDay() + Math.round(r))); 
+                setCurrentDay((int) (getCurrentDay() + Math.round(r)));
             }
             setCurrentDay(event.getDay());
             if (debug) {
@@ -220,7 +219,7 @@ public class OrganicPopulation implements IPopulation {
         } else if (event.getPerson() != null) {
             switch (event.getEventType()) {
                 case BORN:
-                    OrganicPopulationLogger.incPopulation();
+                    LoggingControl.populationLogger.incCount();
                     OrganicPopulationLogger.incBirths();
                     event.getPerson().populateTimeline(false);
                     break;
@@ -305,7 +304,7 @@ public class OrganicPopulation implements IPopulation {
     private void handleDeathEvent(final OrganicPerson person) {
         deadPeople.add(livingPeople.remove(livingPeople.indexOf(person)));
         LoggingControl.ageAtDeathDistributionLogger.log(currentDay, person.getDeathDay() - person.getBirthDay());
-        OrganicPopulationLogger.decPopulation();
+        LoggingControl.populationLogger.decCount();
     }
 
     /*
@@ -348,7 +347,7 @@ public class OrganicPopulation implements IPopulation {
                 debug = false;
             }
 
-            OrganicPopulationLogger.addPopulationForYear((int) (getCurrentDay() / DAYS_PER_YEAR) + EPOCH_YEAR, OrganicPopulationLogger.getPopulation());
+            LoggingControl.populationLogger.log(currentDay);
             if (print) {
                 writer.println(EPOCH_YEAR + (int) (getCurrentDay() / getDaysPerYear()));
                 writer.println("Population: " + OrganicPopulationLogger.getPopulation());
@@ -586,7 +585,8 @@ public class OrganicPopulation implements IPopulation {
         }
         // TODO adapt logging methods
         LoggingControl.familyCharacteristicDistributionLogger.log(currentDay, familyType);
-        OrganicPopulationLogger.logMarriage(DateManipulation.differenceInDays(husband.getBirthDay(), days), DateManipulation.differenceInDays(wife.getBirthDay(), days));
+        LoggingControl.logPartnership(familyType, currentDay, DateManipulation.differenceInDays(husband.getBirthDay(), days), DateManipulation.differenceInDays(wife.getBirthDay(), days));
+       
         husband.addPartnership(((OrganicPartnership) partnershipObjects[0]).getId());
         wife.addPartnership(((OrganicPartnership) partnershipObjects[0]).getId());
     }
