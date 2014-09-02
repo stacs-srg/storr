@@ -16,7 +16,6 @@
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.organic;
 
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.AgeAtDeathDistributionTestManual;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.CauseOfDeathDistribution;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.FirstNameForFemalesDistribution;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.FirstNameForMalesDistribution;
