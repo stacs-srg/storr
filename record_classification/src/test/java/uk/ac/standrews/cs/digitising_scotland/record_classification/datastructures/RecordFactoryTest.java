@@ -49,7 +49,9 @@ public class RecordFactoryTest {
         for (int i = 0; i < records.size(); i++) {
             if (i == 0) {
                 CODOrignalData originalData = (CODOrignalData) records.get(i).getOriginalData();
-                Assert.assertEquals(originalData.getDescription(), "pulmonary embolism, old age");
+                Assert.assertEquals(originalData.getDescription().get(0), "pulmonary embolism");
+                Assert.assertEquals(originalData.getDescription().get(1), "old age");
+
                 Assert.assertEquals(originalData.getYear(), 2014);
                 Assert.assertEquals(originalData.getSex(), 1);
                 Assert.assertEquals(originalData.getAgeGroup(), 5);
@@ -63,7 +65,7 @@ public class RecordFactoryTest {
 
             if (i == 1) {
                 CODOrignalData originalData = (CODOrignalData) records.get(i).getOriginalData();
-                Assert.assertEquals(originalData.getDescription(), "chest infection");
+                Assert.assertEquals(originalData.getDescription().get(0), "chest infection");
                 Assert.assertEquals(originalData.getYear(), 2000);
                 Assert.assertEquals(originalData.getSex(), 0);
                 Assert.assertEquals(originalData.getAgeGroup(), 5);
@@ -76,7 +78,7 @@ public class RecordFactoryTest {
 
             if (i == 2) {
                 CODOrignalData originalData = (CODOrignalData) records.get(i).getOriginalData();
-                Assert.assertEquals(originalData.getDescription(), "old age");
+                Assert.assertEquals(originalData.getDescription().get(0), "old age");
                 Assert.assertEquals(originalData.getYear(), 2011);
                 Assert.assertEquals(originalData.getSex(), 1);
                 Assert.assertEquals(originalData.getAgeGroup(), 5);
@@ -89,7 +91,9 @@ public class RecordFactoryTest {
 
             if (i == 3) {
                 CODOrignalData originalData = (CODOrignalData) records.get(i).getOriginalData();
-                Assert.assertEquals(originalData.getDescription(), "coronary artery disease, myelodysplasia syndrome");
+                Assert.assertEquals(originalData.getDescription().get(0), "coronary artery disease");
+                Assert.assertEquals(originalData.getDescription().get(1), "myelodysplasia syndrome");
+
                 Assert.assertEquals(originalData.getYear(), 2000);
                 Assert.assertEquals(originalData.getSex(), 0);
                 Assert.assertEquals(originalData.getAgeGroup(), 5);
@@ -103,7 +107,7 @@ public class RecordFactoryTest {
 
             if (i == 4) {
                 CODOrignalData originalData = (CODOrignalData) records.get(i).getOriginalData();
-                Assert.assertEquals(originalData.getDescription(), "low platelet and anaemia");
+                Assert.assertEquals(originalData.getDescription().get(0), "low platelet and anaemia");
                 Assert.assertEquals(originalData.getYear(), 1999);
                 Assert.assertEquals(originalData.getSex(), 0);
                 Assert.assertEquals(originalData.getAgeGroup(), 2);
@@ -182,7 +186,7 @@ public class RecordFactoryTest {
         int year = Integer.parseInt(lineSplit[1]);
         int imageQuality = Integer.parseInt(lineSplit[2]);
 
-        Assert.assertEquals(description, record.getOriginalData().getDescription());
+        Assert.assertEquals(description, record.getOriginalData().getDescription().get(0));
         Assert.assertEquals(year, record.getOriginalData().getYear());
         Assert.assertEquals(imageQuality, record.getOriginalData().getImageQuality());
 
@@ -201,7 +205,7 @@ public class RecordFactoryTest {
         int ageGroup = Integer.parseInt(lineSplit[3]);
         int imageQuality = Integer.parseInt(lineSplit[2]);
 
-        Assert.assertEquals(description, record.getOriginalData().getDescription());
+        Assert.assertEquals(description, record.getOriginalData().getDescription().get(0));
         Assert.assertEquals(year, record.getOriginalData().getYear());
         Assert.assertEquals(ageGroup, ((CODOrignalData) record.getOriginalData()).getAgeGroup());
         Assert.assertEquals(imageQuality, record.getOriginalData().getImageQuality());

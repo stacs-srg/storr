@@ -56,7 +56,7 @@ public class RecordTest {
     @Test
     public void testConstructor() throws InputFormatException {
 
-        Assert.assertEquals("original data test data", record.getOriginalData().getDescription());
+        Assert.assertEquals("A test Description", record.getOriginalData().getDescription().get(0));
     }
 
     /**

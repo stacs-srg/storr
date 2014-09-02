@@ -62,13 +62,14 @@ public class DataClerkingWriter extends OutputDataFormatter implements Closeable
      */
     private String formatRecord(final Record record) {
 
-        String description = getDescription(record);
-        String year = getYear(record);
-        String imageQuality = getImageQuality(record);
-        String sex = getSex(record);
-        String ageGroup = getAgeGroup(record);
-        String codes = getCodes(record);
+        String line = "";
+        for (String description : record.getDescription()) {
+            int id = record.getid();
+            String year = getYear(record);
+            String codes = getCodes(record);
+            line += year + "|" + id + "|" + description + codes + "\n";
+        }
 
-        return description + year + imageQuality + sex + ageGroup + codes + "\n";
+        return line;
     }
 }

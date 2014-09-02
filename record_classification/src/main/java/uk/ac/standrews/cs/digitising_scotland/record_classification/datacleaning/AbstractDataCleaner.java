@@ -85,8 +85,11 @@ public abstract class AbstractDataCleaner {
 
         correctionMap = new HashMap<>();
         for (Record record : bucket) {
-            TokenSet tokenSet = new TokenSet(record.getOriginalData().getDescription());
-            addToCorrectionMap(tokenSet);
+            for (String description : record.getDescription()) {
+                TokenSet tokenSet = new TokenSet(description);
+                addToCorrectionMap(tokenSet);
+            }
+
         }
     }
 

@@ -25,9 +25,9 @@ public class PilotDataFormatConverterTest {
         Record record2 = bucket.getRecord(2);
         Record record3 = bucket.getRecord(3);
 
-        Assert.assertEquals("cardio vascular degeneration", record1.getDescription());
-        Assert.assertEquals("rheumatoid arthritis pneumonia cardiac failure", record2.getDescription());
-        Assert.assertEquals("senility; chronic bronchitis; myocarditis", record3.getDescription());
+        Assert.assertEquals("cardio vascular degeneration", record1.getDescription().get(0));
+        Assert.assertEquals("rheumatoid arthritis pneumonia cardiac failure", record2.getDescription().get(0));
+        Assert.assertEquals("senility; chronic bronchitis; myocarditis", record3.getDescription().get(0));
 
     }
 }
