@@ -42,8 +42,6 @@ public class LoggingControl {
 
     public static TemporalIntegerLogger numberOfChildrenInMaterityDistributionLogger;
 
-    public static TemporalIntegerLogger numberOfAffairsDistributionLogger;
-
     public static TemporalIntegerLogger timeFromCohabToMarriageDistributionLogger;
     public static TemporalIntegerLogger cohabitationLengthDistributionLogger;
 
@@ -82,8 +80,6 @@ public class LoggingControl {
         LoggingControl.numberOfChildrenFromMarriagesDistributionLogger = new TemporalIntegerLogger(OrganicPartnership.getTemporalChildrenNumberOfInMarriageDistribution(), "ChildrenNumberOfMarriage", "Number of Children Distribution - Marriage", "Number of Children", false);
 
         LoggingControl.numberOfChildrenInMaterityDistributionLogger = new TemporalIntegerLogger(OrganicPartnership.getTemporalChildrenNumberOfInMaternityDistribution(), "ChildrenInMaternity", "Number of Children In Maternity Distribution", "Number of Children in Maternity", false);
-
-        LoggingControl.numberOfAffairsDistributionLogger = new TemporalIntegerLogger(OrganicPartnership.getTemporalAffairNumberOfDistribution(), "NumberOfAffairs", "Number Of Affairs in a Marriage Distribution", "Number of Affairs in Marriage", false);
 
         LoggingControl.timeFromCohabToMarriageDistributionLogger = new TemporalIntegerLogger(OrganicPartnership.getTemporalCohabitaitonToMarriageTimeDistribution(), "TimeFromCohabToMarriage", "Time from Cohabitation to Marriage Distribution", "Time from Cohabiation to Marriage Distribution", true);
         LoggingControl.cohabitationLengthDistributionLogger = new TemporalIntegerLogger(OrganicPartnership.getTemporalCohabitationLengthDistribution(), "CohabitationLength", "Length of Cohabitation Distribution", "Length OF Cohabitation", true);
@@ -124,8 +120,6 @@ public class LoggingControl {
         LoggingControl.numberOfChildrenFromMarriagesDistributionLogger.outputToGnuPlotFormat();
 
         LoggingControl.numberOfChildrenInMaterityDistributionLogger.outputToGnuPlotFormat();
-
-        LoggingControl.numberOfAffairsDistributionLogger.outputToGnuPlotFormat();
 
         LoggingControl.timeFromCohabToMarriageDistributionLogger.outputToGnuPlotFormat();
         LoggingControl.cohabitationLengthDistributionLogger.outputToGnuPlotFormat();
@@ -178,8 +172,6 @@ public class LoggingControl {
 
             LoggingControl.numberOfChildrenInMaterityDistributionLogger.generateGnuPlotScriptLines(writer);
 
-            LoggingControl.numberOfAffairsDistributionLogger.generateGnuPlotScriptLines(writer);
-
             LoggingControl.timeFromCohabToMarriageDistributionLogger.generateGnuPlotScriptLines(writer);
             LoggingControl.cohabitationLengthDistributionLogger.generateGnuPlotScriptLines(writer);
 
@@ -210,6 +202,48 @@ public class LoggingControl {
 
             writer.close();
         } catch (FileNotFoundException | UnsupportedEncodingException e) {
+        }
+    }
+    
+    public static void logPartnershipEndByDeath(final OrganicPartnership partnership, final int currentDay) {
+        switch (partnership.getFamilyType()) {
+            case AFFAIR:
+                LoggingControl.affairCountLogger.decCount();
+                break;
+            case COHABITATION:
+                LoggingControl.cohabitationLengthDistributionLogger.log(currentDay, currentDay - partnership.getParntershipDay());
+                LoggingControl.cohabCountLogger.decCount();
+                break;
+            case COHABITATION_THEN_MARRIAGE:
+                LoggingControl.cohabThenMarriageCountLogger.decCount();
+                break;
+            case MARRIAGE:
+                LoggingControl.marriageCountLogger.decCount();
+            default:
+                break;
+        }
+    }
+    
+    public static void logPartnershipEnd(final OrganicPartnership partnership, final int currentDay, final OrganicPerson male, final OrganicPerson female) {
+        switch (partnership.getFamilyType()) {
+            case AFFAIR:
+                LoggingControl.affairCountLogger.decCount();
+                break;
+            case COHABITATION:
+                LoggingControl.cohabitationLengthDistributionLogger.log(currentDay, currentDay - partnership.getParntershipDay());
+                LoggingControl.cohabCountLogger.decCount();
+                break;
+            case COHABITATION_THEN_MARRIAGE:
+                LoggingControl.ageAtDivorceMaleDistributionLogger.log(currentDay, male.getLifeLengthInDays());
+                LoggingControl.ageAtDivorceFemaleDistributionLogger.log(currentDay, female.getLifeLengthInDays());
+                LoggingControl.cohabThenMarriageCountLogger.decCount();
+                break;
+            case MARRIAGE:
+                LoggingControl.ageAtDivorceMaleDistributionLogger.log(currentDay, male.getLifeLengthInDays());
+                LoggingControl.ageAtDivorceFemaleDistributionLogger.log(currentDay, female.getLifeLengthInDays());
+                LoggingControl.marriageCountLogger.decCount();
+            default:
+                break;
         }
     }
     
@@ -256,6 +290,14 @@ public class LoggingControl {
         LoggingControl.ageAtMarriageMaleDistributionLogger.log(currentDay, maleDays);
         LoggingControl.ageAtMarriageFemaleDistributionLogger.log(currentDay, femaleDays);
         LoggingControl.ageDifferenceAtMarriage.incCountFor(Math.abs(maleDays - femaleDays));
+    }
+
+    public static void yearEndLog(int currentDay) {
+        LoggingControl.populationLogger.log(currentDay);
+        LoggingControl.affairCountLogger.log(currentDay);
+        LoggingControl.cohabCountLogger.log(currentDay);
+        LoggingControl.cohabThenMarriageCountLogger.log(currentDay);
+        LoggingControl.marriageCountLogger.log(currentDay);
     }
 
 }

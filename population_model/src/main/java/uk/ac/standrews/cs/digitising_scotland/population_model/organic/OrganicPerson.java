@@ -16,6 +16,7 @@
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.organic;
 
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.AgeAtDeathDistributionTestManual;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.CauseOfDeathDistribution;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.FirstNameForFemalesDistribution;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.FirstNameForMalesDistribution;
@@ -206,6 +207,7 @@ public class OrganicPerson implements IPerson {
     public void populateTimeline(final boolean previousMarriage) {
         // Decide family type
         FamilyType partnershipCharacteristic = decideFuturePartnershipCharacteristics(previousMarriage);
+        LoggingControl.remarriageFamilyCharacteristicDistributionLogger.log(population.getCurrentDay(), partnershipCharacteristic);
         switch (partnershipCharacteristic) {
             case SINGLE:
                 addSingleComingOfAgeEvent();
@@ -486,6 +488,10 @@ public class OrganicPerson implements IPerson {
      */
     public void setCauseOfDeath(final String causeOfDeath) {
         this.causeOfDeath = causeOfDeath;
+    }
+    
+    public int getLifeLengthInDays() {
+        return endDay - startDay;
     }
 
     public static UniformSexDistribution getSexDistribution() {

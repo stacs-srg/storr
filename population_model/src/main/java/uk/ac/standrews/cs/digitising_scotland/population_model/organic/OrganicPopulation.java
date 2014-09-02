@@ -22,10 +22,7 @@ import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPerson;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPopulation;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.PopulationLogic;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.RandomFactory;
-import uk.ac.standrews.cs.digitising_scotland.population_model.organic.logger.DistributionIntergerLogger;
 import uk.ac.standrews.cs.digitising_scotland.population_model.organic.logger.LoggingControl;
-import uk.ac.standrews.cs.digitising_scotland.population_model.organic.logger.OrganicPopulationLogger;
-import uk.ac.standrews.cs.digitising_scotland.population_model.organic.logger.TemporalIntegerLogger;
 import uk.ac.standrews.cs.digitising_scotland.population_model.tools.MemoryMonitor;
 import uk.ac.standrews.cs.digitising_scotland.util.ArrayManipulation;
 import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
@@ -74,7 +71,7 @@ public class OrganicPopulation implements IPopulation {
     private static final int END_DEBUG_YEAR = 3000;
 
     // Universal population variables
-    private static final int DEFAULT_SEED_SIZE = 2000;
+    private static final int DEFAULT_SEED_SIZE = 10000;
     private static final float DAYS_PER_YEAR = 365.25f;
     private static final int START_YEAR = 1780;
     private static final int END_YEAR = 2013;
@@ -170,7 +167,8 @@ public class OrganicPopulation implements IPopulation {
                 break;
             }
             while ((int) (getCurrentDay() / getDaysPerYear()) != (int) (event.getDay() / getDaysPerYear())) {
-                LoggingControl.populationLogger.log(getCurrentDay());
+                LoggingControl.yearEndLog(currentDay);
+                
                 if ((int) (getCurrentDay() / getDaysPerYear()) == START_DEBUG_YEAR - EPOCH_YEAR) {
                     setDebug(true);
                 }
@@ -183,7 +181,7 @@ public class OrganicPopulation implements IPopulation {
                     writer.flush();
                 }
                 if (memoryMonitor) {
-                    mm.log(currentDay, OrganicPopulationLogger.getPopulation(), livingPeople.size() + deadPeople.size());
+                    mm.log(currentDay, LoggingControl.populationLogger.getCount(), livingPeople.size() + deadPeople.size());
                 }
                 double r = getCurrentDay() % DAYS_PER_YEAR;
                 setCurrentDay((int) (getCurrentDay() + Math.round(r)));
@@ -220,7 +218,6 @@ public class OrganicPopulation implements IPopulation {
             switch (event.getEventType()) {
                 case BORN:
                     LoggingControl.populationLogger.incCount();
-                    OrganicPopulationLogger.incBirths();
                     event.getPerson().populateTimeline(false);
                     break;
                 case COMING_OF_AGE:
@@ -249,17 +246,17 @@ public class OrganicPopulation implements IPopulation {
      */
 
     private void handlePartnershipEndedByDeathEvent(final OrganicPartnership partnership) {
-        OrganicPopulationLogger.addNumberOfChildren(partnership.getChildIds().size());
+        LoggingControl.logPartnershipEndByDeath(partnership, currentDay);
     }
 
     private void handleDivorceEvent(final OrganicPartnership partnership, final OrganicPerson husband, final OrganicPerson wife) {
         partnership.divorce(husband, wife);
-        OrganicPopulationLogger.addNumberOfChildren(partnership.getChildIds().size());
+        LoggingControl.logPartnershipEnd(partnership, currentDay, husband, wife);
     }
 
     private void handleEndOfCohabitation(final OrganicPartnership partnership, final OrganicPerson husband, final OrganicPerson wife) {
         partnership.endCohabitation(husband, wife);
-        OrganicPopulationLogger.addNumberOfChildren(partnership.getChildIds().size());
+        LoggingControl.logPartnershipEnd(partnership, currentDay, husband, wife);
     }
 
     private void handleBirthEvent(final OrganicPartnership partnership) {
@@ -350,7 +347,7 @@ public class OrganicPopulation implements IPopulation {
             LoggingControl.populationLogger.log(currentDay);
             if (print) {
                 writer.println(EPOCH_YEAR + (int) (getCurrentDay() / getDaysPerYear()));
-                writer.println("Population: " + OrganicPopulationLogger.getPopulation());
+                writer.println("Population: " + LoggingControl.populationLogger.getCount());
             }
         }
     }
@@ -451,7 +448,6 @@ public class OrganicPopulation implements IPopulation {
             // This is an optimisation
             if (maleQueue.getFirst().getDeathDay() <= currentDay) {
                 maleQueue.removeFirst();
-                OrganicPopulationLogger.incNeverMarried();
                 break;
             }
             // Sets first male ID value to that of the first male
@@ -467,7 +463,6 @@ public class OrganicPopulation implements IPopulation {
             while (!femaleQueue.isEmpty()) {
                 if (femaleQueue.getFirst().getDeathDay() <= currentDay) {
                     femaleQueue.removeFirst();
-                    OrganicPopulationLogger.incNeverMarried();
                     break;
                 }
                 // Sets first female ID value to that the first female
@@ -827,7 +822,6 @@ public class OrganicPopulation implements IPopulation {
         System.out.println(timeTaken / 1000000);
         
         if (print) {
-            OrganicPopulationLogger.printLogData();
             writer.println();
             
             writer.println("Run time " + timeTaken / 1000000 + "ms");
