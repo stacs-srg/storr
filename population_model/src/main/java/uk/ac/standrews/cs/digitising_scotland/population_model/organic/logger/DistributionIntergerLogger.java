@@ -35,7 +35,7 @@ public class DistributionIntergerLogger extends DistributionLogger<Integer> {
     }
     
     public void incCountFor(Integer xLabel) {
-        if (xLabel > maxXValue - minXValue) {
+        if (xLabel > maxXValue - minXValue || xLabel - minXValue < 0) {
 //            System.err.println("Array Index Out Of Bounds");
 //            System.err.println("xLabel: " + xLabel);
             return;

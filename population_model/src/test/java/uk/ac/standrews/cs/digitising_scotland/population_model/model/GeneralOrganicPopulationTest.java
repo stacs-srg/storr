@@ -27,12 +27,12 @@ import uk.ac.standrews.cs.digitising_scotland.population_model.organic.OrganicPo
 public class GeneralOrganicPopulationTest extends GeneralPopulationStructureTests {
 
     public GeneralOrganicPopulationTest() {
-    	super(OrganicPopulation.runPopulationModel(false, 2000, false), true);
+    	super(OrganicPopulation.runPopulationModel(false, 500, false, true), false);
     	
     }
     
 //    @Test
 //    public void largeRunTest() {
-//        OrganicPopulation.runPopulationModel(true, 10000);
+//        OrganicPopulation.runPopulationModel(true, 10000, false);
 //    }
 }
