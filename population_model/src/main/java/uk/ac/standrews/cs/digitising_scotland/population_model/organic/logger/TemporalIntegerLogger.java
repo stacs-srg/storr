@@ -21,15 +21,17 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Set;
 
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.general.NotSetUpAtClassInitilisationException;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.temporal.TemporalIntegerDistribution;
 
 public class TemporalIntegerLogger extends TemporalLogger<Integer> {
 
-    public TemporalIntegerLogger(TemporalIntegerDistribution relatedTemporalDistribution, String fileName, String graphTitle, String xLabel) {
+    public TemporalIntegerLogger(TemporalIntegerDistribution relatedTemporalDistribution, String fileName, String graphTitle, String xLabel, boolean convertDaysToYearsOnOutput) {
         this.title = graphTitle;
         this.fileName = fileName;
         this.xLabel = xLabel;
-        map = new HashMap<Integer, DistributionIntergerLogger>();
+        this.convertDaysToYearsOnOutput = convertDaysToYearsOnOutput;
+        map = new HashMap<Integer, DistributionLogger<Integer>>();
         for (Integer i : relatedTemporalDistribution.getMapKeys()) {
             map.put(i, new DistributionIntergerLogger(relatedTemporalDistribution.getDistributionForYear(i), relatedTemporalDistribution.getMinimumStatedValue(), relatedTemporalDistribution.getMaximumStatedValue()));
         }

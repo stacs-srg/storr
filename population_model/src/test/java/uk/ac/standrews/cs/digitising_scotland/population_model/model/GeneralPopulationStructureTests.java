@@ -16,7 +16,9 @@
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.model;
 
+import org.junit.Ignore;
 import org.junit.Test;
+
 import uk.ac.standrews.cs.digitising_scotland.population_model.organic.OrganicPerson;
 import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
 

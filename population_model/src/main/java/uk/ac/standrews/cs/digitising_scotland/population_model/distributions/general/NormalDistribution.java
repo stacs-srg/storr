@@ -93,7 +93,9 @@ public class NormalDistribution extends RestrictedDistribution<Double> {
         }
         double v = getSample();
         while (!inRange(v, earliestReturnValue, latestReturnValue)) {
-            unusedSampleValues.add(v);
+            if (unusedSampleValues.size() < 10000000) {
+                unusedSampleValues.add(v);
+            }
             v = getSample();
         }
         return v;
@@ -113,7 +115,7 @@ public class NormalDistribution extends RestrictedDistribution<Double> {
 
     @Override
     public int[] getWeights() {
-        // TODO Auto-generated method stub
-        return null;
+        int[] ret = {1, 21, 136, 341, 341, 136, 21, 1};
+        return ret;
     }
 }

@@ -16,22 +16,29 @@
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.organic.logger;
 
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.general.NotSetUpAtClassInitilisationException;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.general.RestrictedDistribution;
 
 public abstract class DistributionLogger<Value> extends Logger<Value> {
 
+    
+    protected int minXValue;
+    protected int maxXValue;
+    
+    protected final static String FWD_SLASH = "/";
+    protected final static String BCK_SLASH = "\\";
+    protected String filePath;
+    
     protected RestrictedDistribution<Value> relatedDistribution;
     
-    protected String filePath;
+
+    public abstract void outputToGnuPlotFormat(int year, String fileName, boolean convertDaysToYears);
+    
     
     protected int[] counts;
     
-    protected Value[] xLabels;
+    protected Value[] xLabels;    
     
-    public abstract void incCountFor(Value xLabel);
-    
-    public abstract void printGraph();
-    
-    public abstract String generateGnuPlotPlottingScript();
-    
+    public abstract void incCountFor(Enum<?> xLabel) throws NotSetUpAtClassInitilisationException;
+    public abstract void incCountFor(Integer xLabel);
 }

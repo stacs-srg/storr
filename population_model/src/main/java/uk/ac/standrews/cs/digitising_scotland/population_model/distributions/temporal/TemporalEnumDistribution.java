@@ -18,49 +18,46 @@ package uk.ac.standrews.cs.digitising_scotland.population_model.distributions.te
 
 import java.util.Random;
 
-import uk.ac.standrews.cs.digitising_scotland.population_model.organic.DivorceInstigation;
 import uk.ac.standrews.cs.digitising_scotland.population_model.organic.OrganicPopulation;
 
 /**
- * Distribution modelling instigation of divorce by gender.
- *
+ * Provides a temporal distribution for partnership characteristic.
+ * 
  * @author Tom Dalton (tsd4@st-andrews.ac.uk)
  */
-public class TemporalDivorceInstigatedByGenderDistribution extends TemporalDistribution<DivorceInstigation> {
+public class TemporalEnumDistribution<Value> extends TemporalDistribution<Value> {
 
     /**
-     * Creates a divorce instigated by gender distribution.
+     * Creates a partnership characteristic distribution.
      *
      * @param population The instance of the population which the distribution pertains to.
      * @param distributionKey The key specified in the config file as the location of the relevant file.
-     * @param random the random number generator to be used
+     * @param random the random number generator to be used.
      */
-    public TemporalDivorceInstigatedByGenderDistribution(final OrganicPopulation population, final String distributionKey, final Random random) {
+    public TemporalEnumDistribution(final OrganicPopulation population, final String distributionKey, final Random random, final Enum[] enums) {
         super(population, distributionKey, random, false);
+        this.enums = enums;
+    }
+
+    /**
+     * Samples the correct distribution for the given year and returns the sampled partnership characteristic.
+     *
+     * @param date The date in days since the 1/1/1600 to be used to identity the distribution for the given year which should be sampled.
+     * @return Indicates the gender of the instigator or no divorce
+     */
+    @SuppressWarnings("unchecked")
+    @Override
+    public Value getSample(final int date) {
+        return (Value) enums[getIntSample(date)];
     }
 
     @Override
-    public DivorceInstigation getSample(final int date) {
-        switch (getIntSample(date)) {
-            case 0:
-                return DivorceInstigation.MALE;
-            case 1:
-                return DivorceInstigation.FEMALE;
-            case 2:
-                return DivorceInstigation.NO_DIVORCE;
-            default:
-                throw new RuntimeException("unexpected sample value");
-        }
-    }
-
-    @Override
-    public DivorceInstigation getSample() {
+    public Value getSample() {
         return getSample(0);
     }
 
     @Override
-    public DivorceInstigation getSample(final int date, final int earliestValue, final int latestValue) {
+    public Value getSample(final int date, final int earliestValue, final int latestValue) {
         return getSample(date);
     }
-
 }

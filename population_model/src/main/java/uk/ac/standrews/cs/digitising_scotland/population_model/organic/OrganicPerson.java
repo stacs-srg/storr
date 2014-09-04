@@ -25,11 +25,12 @@ import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.Uni
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.general.InconsistentWeightException;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.general.NoPermissableValueException;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.general.NotSetUpAtClassInitilisationException;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.temporal.TemporalEnumDistribution;
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.temporal.TemporalIntegerDistribution;
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.temporal.TemporalPartnershipCharacteristicDistribution;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPerson;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.PopulationLogic;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.RandomFactory;
+import uk.ac.standrews.cs.digitising_scotland.population_model.organic.logger.LoggingControl;
 import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
 
 import java.io.IOException;
@@ -59,8 +60,8 @@ public class OrganicPerson implements IPerson {
     private static OccupationDistribution occupationDistribution;
     private static CauseOfDeathDistribution deathCauseOfDistribution;
 
-    private static TemporalPartnershipCharacteristicDistribution temporalPartnershipCharacteristicDistribution;
-    private static TemporalPartnershipCharacteristicDistribution temporalRemarriagePartnershipCharacteristicDistribution;
+    private static TemporalEnumDistribution<FamilyType> temporalPartnershipCharacteristicDistribution;
+    private static TemporalEnumDistribution<FamilyType> temporalRemarriagePartnershipCharacteristicDistribution;
 
     private static TemporalIntegerDistribution seedAgeForMalesDistribution;
     private static TemporalIntegerDistribution seedAgeForFemalesDistribution;
@@ -83,10 +84,9 @@ public class OrganicPerson implements IPerson {
     private int endDay;
 
     // Person instance helper variables
-//    private OrganicTimeline timeline = null;
     private OrganicPopulation population;
     private boolean seedPerson;
-    private int[] plannedBirthDays = {-1, -1};
+    private int[] plannedBirthDays = { -1, -1 };
 
     /**
      * Initialises the distributions at runtime which pertain to the OrganicPerson class.
@@ -105,8 +105,11 @@ public class OrganicPerson implements IPerson {
             deathAgeAtDistribution = new TemporalIntegerDistribution(population, "death_age_at_distributions_data_filename", random, false);
             temporalMarriageAgeForMalesDistribution = new TemporalIntegerDistribution(population, "marriage_age_for_males_distributions_data_filename", random, false);
             temporalMarriageAgeForFemalesDistribution = new TemporalIntegerDistribution(population, "marriage_age_for_females_distributions_data_filename", random, false);
-            temporalPartnershipCharacteristicDistribution = new TemporalPartnershipCharacteristicDistribution(population, "partnership_characteristic_distributions_data_filename", random);
-            temporalRemarriagePartnershipCharacteristicDistribution = new TemporalPartnershipCharacteristicDistribution(population, "partnership_remarriage_characteristic_distributions_data_filename", random);
+
+            Enum<?>[] partnershipCharacteristicsArray = { FamilyType.SINGLE, FamilyType.COHABITATION, FamilyType.COHABITATION_THEN_MARRIAGE, FamilyType.MARRIAGE };
+            temporalPartnershipCharacteristicDistribution = new TemporalEnumDistribution<FamilyType>(population, "partnership_characteristic_distributions_data_filename", random, partnershipCharacteristicsArray);
+            temporalRemarriagePartnershipCharacteristicDistribution = new TemporalEnumDistribution<FamilyType>(population, "partnership_remarriage_characteristic_distributions_data_filename", random, partnershipCharacteristicsArray);
+
             temporalCohabitationAgeForMalesDistribution = new TemporalIntegerDistribution(population, "cohabitation_age_for_males_distributions_data_filename", random, false);
             temporalCohabitationAgeForFemalesDistribution = new TemporalIntegerDistribution(population, "cohabitation_age_for_females_distributions_data_filename", random, false);
         } catch (InconsistentWeightException e) {
@@ -202,6 +205,9 @@ public class OrganicPerson implements IPerson {
     public void populateTimeline(final boolean previousMarriage) {
         // Decide family type
         FamilyType partnershipCharacteristic = decideFuturePartnershipCharacteristics(previousMarriage);
+        if (OrganicPopulation.logging) {
+            LoggingControl.remarriageFamilyCharacteristicDistributionLogger.log(population.getCurrentDay(), partnershipCharacteristic);
+        }
         switch (partnershipCharacteristic) {
             case SINGLE:
                 addSingleComingOfAgeEvent();
@@ -246,6 +252,10 @@ public class OrganicPerson implements IPerson {
         int setAge = (int) (COMING_OF_AGE_AGE * population.getDaysPerYear());
         if (population.getCurrentDay() - getBirthDay() > setAge) {
             setAge = population.getCurrentDay() - getBirthDay() + 1;
+        } else {
+            if (OrganicPopulation.logging) {
+                LoggingControl.familyCharacteristicDistributionLogger.log(population.getCurrentDay(), FamilyType.SINGLE);
+            }
         }
         new OrganicEvent(EventType.COMING_OF_AGE, this, getBirthDay() + setAge);
     }
@@ -320,7 +330,6 @@ public class OrganicPerson implements IPerson {
      * Getters and setters
      */
 
-
     /**
      * Returns the population the person is a member of.
      * 
@@ -366,7 +375,7 @@ public class OrganicPerson implements IPerson {
     private void setSeedPerson(final boolean seedPerson) {
         this.seedPerson = seedPerson;
     }
-    
+
     public void addDayToRecordOfBirths(int day) {
         if (plannedBirthDays[0] == -1) {
             plannedBirthDays[0] = day;
@@ -377,9 +386,9 @@ public class OrganicPerson implements IPerson {
             plannedBirthDays[1] = day;
         }
     }
-    
+
     public boolean permissibleBirthDay(int day) {
-        
+
         int interval = (int) (PopulationLogic.getInterChildInterval() * OrganicPopulation.getDaysPerYear());
         for (int i : plannedBirthDays) {
             if (i == -1) {
@@ -480,6 +489,70 @@ public class OrganicPerson implements IPerson {
      */
     public void setCauseOfDeath(final String causeOfDeath) {
         this.causeOfDeath = causeOfDeath;
+    }
+
+    public int getLifeLengthInDays() {
+        return endDay - startDay;
+    }
+
+    public static UniformSexDistribution getSexDistribution() {
+        return sexDistribution;
+    }
+
+    public static FirstNameForMalesDistribution getMaleFirstNamesDistribution() {
+        return maleFirstNamesDistribution;
+    }
+
+    public static FirstNameForFemalesDistribution getFemaleFirstNamesDistribution() {
+        return femaleFirstNamesDistribution;
+    }
+
+    public static SurnameDistribution getSurnamesDistribution() {
+        return surnamesDistribution;
+    }
+
+    public static OccupationDistribution getOccupationDistribution() {
+        return occupationDistribution;
+    }
+
+    public static CauseOfDeathDistribution getDeathCauseOfDistribution() {
+        return deathCauseOfDistribution;
+    }
+
+    public static TemporalEnumDistribution<FamilyType> getTemporalPartnershipCharacteristicDistribution() {
+        return temporalPartnershipCharacteristicDistribution;
+    }
+
+    public static TemporalEnumDistribution<FamilyType> getTemporalRemarriagePartnershipCharacteristicDistribution() {
+        return temporalRemarriagePartnershipCharacteristicDistribution;
+    }
+
+    public static TemporalIntegerDistribution getSeedAgeForMalesDistribution() {
+        return seedAgeForMalesDistribution;
+    }
+
+    public static TemporalIntegerDistribution getSeedAgeForFemalesDistribution() {
+        return seedAgeForFemalesDistribution;
+    }
+
+    public static TemporalIntegerDistribution getDeathAgeAtDistribution() {
+        return deathAgeAtDistribution;
+    }
+
+    public static TemporalIntegerDistribution getTemporalMarriageAgeForMalesDistribution() {
+        return temporalMarriageAgeForMalesDistribution;
+    }
+
+    public static TemporalIntegerDistribution getTemporalMarriageAgeForFemalesDistribution() {
+        return temporalMarriageAgeForFemalesDistribution;
+    }
+
+    public static TemporalIntegerDistribution getTemporalCohabitationAgeForMalesDistribution() {
+        return temporalCohabitationAgeForMalesDistribution;
+    }
+
+    public static TemporalIntegerDistribution getTemporalCohabitationAgeForFemalesDistribution() {
+        return temporalCohabitationAgeForFemalesDistribution;
     }
 
 }

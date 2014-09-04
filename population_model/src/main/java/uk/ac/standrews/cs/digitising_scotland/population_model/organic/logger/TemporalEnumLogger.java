@@ -17,43 +17,39 @@
 package uk.ac.standrews.cs.digitising_scotland.population_model.organic.logger;
 
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Set;
 
-import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.temporal.TemporalDistribution;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.general.NotSetUpAtClassInitilisationException;
+import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.temporal.TemporalEnumDistribution;
 import uk.ac.standrews.cs.digitising_scotland.population_model.organic.OrganicPopulation;
 
-public abstract class TemporalLogger<Value> {
+public class TemporalEnumLogger<Value> extends TemporalLogger<Integer> {
 
-    protected TemporalDistribution<?> relatedTemporalDistribution;
-    protected HashMap<Integer, DistributionLogger<Value>> map;
-    protected Integer[] keyArray;
-    protected int minValue;
-    protected int maxValue;
-    protected String fileName;
-    protected String title;
-    protected String xLabel;
-    protected boolean convertDaysToYearsOnOutput;
-    
-    protected int getKey(final int date) {
-        int key = keyArray[keyArray.length - 1];
-        if (keyArray[0] > date) {
-            key = keyArray[0];
+    public TemporalEnumLogger(TemporalEnumDistribution<Value> relatedTemporalDistribution, String fileName, String graphTitle, String xLabel) {
+        this.title = graphTitle;
+        this.fileName = fileName;
+        this.xLabel = xLabel;
+        map = new HashMap<Integer, DistributionLogger<Integer>>();
+        for (Integer i : relatedTemporalDistribution.getMapKeys()) {
+            map.put(i, new DistributionEnumLogger(relatedTemporalDistribution.getDistributionForYear(i), relatedTemporalDistribution.getEnums()));
         }
-        for (int i = 0; i < keyArray.length - 1; i++) {
-            if (keyArray[i] < date && date < keyArray[i + 1]) {
-                key = keyArray[i];
-                break;
-            }
-        }
-        return key;
+        Set<Integer> keys = map.keySet();
+        ArrayList<Integer> keyList = new ArrayList<>(keys);
+        keyArray = keyList.toArray(new Integer[keyList.size()]);
+        Arrays.sort(keyArray);
     }
-    
-    public void outputToGnuPlotFormat() {
-        for(Integer i : keyArray) {
-            map.get(i).outputToGnuPlotFormat(i, fileName, convertDaysToYearsOnOutput);
+
+    public void log(int currentDay, Enum<?> xLabel) {
+        try {
+            map.get(getKey(currentDay)).incCountFor(xLabel);
+        } catch (NotSetUpAtClassInitilisationException e) {
+            e.printStackTrace();
         }
     }
-    
+
     public void generateGnuPlotScriptLines(PrintWriter writer) {
         int c = 0;
         writer.println("set style line 11 lc rgb '#808080' lt 1");
@@ -61,9 +57,15 @@ public abstract class TemporalLogger<Value> {
         writer.println("set tics nomirror");
         writer.println("set style line 12 lc rgb '#808080' lt 0 lw 1");
         writer.println("set grid back ls 12");
-        writer.println("set style line 1 lc rgb '#8b1a0e' pt 1 ps 1 lt 1 lw 20 # --- red");
-        writer.println("set style line 2 lc rgb '#5e9c36' pt 6 ps 1 lt 1 lw 20 # --- green");
-        for(Integer i : keyArray) {
+        writer.println("set ylabel \"Frequency\"");
+        writer.println("set xlabel \"" + xLabel + "\"");
+        writer.println("set style data histogram");
+        writer.println("set style histogram cluster gap 1");
+        writer.println("set style fill solid border -1");
+        writer.println("set boxwidth 0.95");
+        writer.println("set xtic scale 0");
+        writer.println("set xtic rotate by 45 right");
+        for (Integer i : keyArray) {
             int nextYear = 0;
             if (c < keyArray.length - 1) {
                 nextYear = keyArray[++c];
@@ -74,13 +76,14 @@ public abstract class TemporalLogger<Value> {
             } else {
                 writer.println(((int) (nextYear / OrganicPopulation.getDaysPerYear()) + OrganicPopulation.getEpochYear()) + "\"");
             }
-            writer.println("set ylabel \"Frequency\"");
-            writer.println("set xlabel \"" + xLabel + "\"");
             writer.println(map.get(i).generateGnuPlotPlottingScript());
+            
         }
+        writer.println("unset ylabel");
+        writer.println("unset xlabel");
         writer.println("unset style");
-        writer.println("unset border");
-        writer.println("unset tics");
-        writer.println("unset grid");
+        writer.println("unset boxwidth");
+        writer.println("unset xtic");
     }
+
 }

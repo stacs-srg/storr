@@ -29,8 +29,8 @@ import java.util.List;
 public abstract class RestrictedDistribution<Value> implements Distribution<Value> {
 
     // Restricted Distribution Helper Values
-    protected Value minimumSpecifiedValue = null;
-    protected Value maximumSpecifiedValue = null;
+    protected Double minimumSpecifiedValue = null;
+    protected Double maximumSpecifiedValue = null;
 
     protected List<Double> unusedSampleValues = new ArrayList<>();
     protected int zeroCount = -1;
@@ -54,7 +54,7 @@ public abstract class RestrictedDistribution<Value> implements Distribution<Valu
      * 
      * @return The minimum possible return value of the distribution.
      */
-    public Value getMinimumReturnValue() {
+    public Double getMinimumReturnValue() {
         return minimumSpecifiedValue;
     }
 
@@ -63,7 +63,7 @@ public abstract class RestrictedDistribution<Value> implements Distribution<Valu
      * 
      * @return The maximum possible return value of the distribution.
      */
-    public Value getMaximumReturnValue() {
+    public Double getMaximumReturnValue() {
         return maximumSpecifiedValue;
     }
 }
