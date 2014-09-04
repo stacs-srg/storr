@@ -109,12 +109,12 @@ public abstract class RecordFactory {
         return newRecord;
     }
 
-    private static ArrayList<String> getDescriptionFromFile(String[] lineSplit, final int descriptionPos) {
+    private static ArrayList<String> getDescriptionFromFile(final String[] lineSplit, final int descriptionPos) {
 
         ArrayList<String> description = new ArrayList<>();
 
         for (int i = descriptionPos; i < lineSplit.length; i++) {
-            description.add(lineSplit[i]);
+            description.add(lineSplit[i].intern());
 
         }
         return description;
