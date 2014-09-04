@@ -69,8 +69,7 @@ public class ICDCodeConverter {
 
         String[] splitString = str.split("\t");
         String[] splitStringNew = splitString.clone();
-        String newLine = "";
-
+        StringBuilder sb = new StringBuilder();
         if (splitString.length > 5) {
 
             for (int i = 5; i < splitStringNew.length; i = i + 3) {
@@ -91,10 +90,12 @@ public class ICDCodeConverter {
                 }
 
             }
+
             for (String string : splitStringNew) {
-                newLine += string + "\t";
+                sb.append(string + "\t");
             }
-            return newLine;
+
+            return sb.toString();
 
         }
         return str;

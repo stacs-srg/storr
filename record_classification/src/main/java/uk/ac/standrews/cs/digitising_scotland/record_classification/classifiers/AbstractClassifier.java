@@ -65,7 +65,7 @@ public abstract class AbstractClassifier {
      *             including using invalid training data, codes or malformed
      *             data
      */
-    public Record classify(Record record) throws IOException {
+    public Record classify(final Record record) throws IOException {
 
         for (CodeTriple codeTriple : record.getOriginalData().getGoldStandardCodeTriples()) {
             TokenSet tokenSet = codeTriple.getTokenSet();
