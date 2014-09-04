@@ -141,12 +141,8 @@ public final class LongFormatConverter extends AbstractFormatConverter {
 
         for (int currentPosition = startPosition; currentPosition <= endPosition; currentPosition++) {
             if (stringArray[currentPosition].length() != 0) {
-                if (currentPosition != startPosition) {
-                    description.add(stringArray[currentPosition].toLowerCase());
-                }
-                else {
-                    description.add(stringArray[currentPosition].toLowerCase());
-                }
+                description.add(stringArray[currentPosition].toLowerCase());
+
             }
         }
 

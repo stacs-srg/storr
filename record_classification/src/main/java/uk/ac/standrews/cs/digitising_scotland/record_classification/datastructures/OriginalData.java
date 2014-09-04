@@ -52,10 +52,6 @@ public class OriginalData implements java.io.Serializable {
         this.fileName = fileName;
         goldStandardClassification = new HashSet<CodeTriple>();
         checkNotNull();
-        for (String string : description) {
-            string.intern();
-
-        }
 
     }
 
