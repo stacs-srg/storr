@@ -294,26 +294,26 @@ public class OrganicEvent implements Comparable<OrganicEvent>, Runnable {
         }
     }
 
-    private volatile static List<OrganicPerson> maleMarriageQueue = new LinkedList<OrganicPerson>();
-    private volatile static List<OrganicPerson> femaleMarriageQueue = new LinkedList<OrganicPerson>();
+    private static List<OrganicPerson> maleMarriageQueue = new LinkedList<OrganicPerson>();
+    private static List<OrganicPerson> femaleMarriageQueue = new LinkedList<OrganicPerson>();
 
-    private volatile static List<OrganicPerson> maleSingleQueue = new LinkedList<OrganicPerson>();
-    private volatile static List<OrganicPerson> femaleSingleQueue = new LinkedList<OrganicPerson>();
+    private static List<OrganicPerson> maleSingleQueue = new LinkedList<OrganicPerson>();
+    private static List<OrganicPerson> femaleSingleQueue = new LinkedList<OrganicPerson>();
 
-    private volatile static List<OrganicPerson> maleCohabitationQueue = new LinkedList<OrganicPerson>();
-    private volatile static List<OrganicPerson> femaleCohabitationQueue = new LinkedList<OrganicPerson>();
+    private static List<OrganicPerson> maleCohabitationQueue = new LinkedList<OrganicPerson>();
+    private static List<OrganicPerson> femaleCohabitationQueue = new LinkedList<OrganicPerson>();
 
-    private volatile static List<OrganicPerson> maleCohabitationThenMarriageQueue = new LinkedList<OrganicPerson>();
-    private volatile static List<OrganicPerson> femaleCohabitationThenMarriageQueue = new LinkedList<OrganicPerson>();
+    private static List<OrganicPerson> maleCohabitationThenMarriageQueue = new LinkedList<OrganicPerson>();
+    private static List<OrganicPerson> femaleCohabitationThenMarriageQueue = new LinkedList<OrganicPerson>();
 
-    private volatile static List<OrganicPerson> maleSingleAffairsQueue = new LinkedList<OrganicPerson>();
-    private volatile static List<OrganicPerson> femaleSingleAffairsQueue = new LinkedList<OrganicPerson>();
+    private static List<OrganicPerson> maleSingleAffairsQueue = new LinkedList<OrganicPerson>();
+    private static List<OrganicPerson> femaleSingleAffairsQueue = new LinkedList<OrganicPerson>();
 
-    private volatile static List<OrganicPerson> maleMaritalAffairsQueue = new LinkedList<OrganicPerson>();
-    private volatile static List<OrganicPerson> femaleMaritalAffairsQueue = new LinkedList<OrganicPerson>();
+    private static List<OrganicPerson> maleMaritalAffairsQueue = new LinkedList<OrganicPerson>();
+    private static List<OrganicPerson> femaleMaritalAffairsQueue = new LinkedList<OrganicPerson>();
 
-    private volatile static PriorityQueue<AffairWaitingQueueMember> maleAffairsWaitingQueue = new PriorityQueue<AffairWaitingQueueMember>();
-    private volatile static PriorityQueue<AffairWaitingQueueMember> femaleAffairsWaitingQueue = new PriorityQueue<AffairWaitingQueueMember>();
+    private static PriorityQueue<AffairWaitingQueueMember> maleAffairsWaitingQueue = new PriorityQueue<AffairWaitingQueueMember>();
+    private static PriorityQueue<AffairWaitingQueueMember> femaleAffairsWaitingQueue = new PriorityQueue<AffairWaitingQueueMember>();
 
     private List<OrganicPerson> getMaleQueueOf(final FamilyType type) {
         switch (type) {
@@ -357,7 +357,7 @@ public class OrganicEvent implements Comparable<OrganicEvent>, Runnable {
         }
     }
 
-    private void partnerUpMembersOfAffairsQueue() {
+    public void partnerUpMembersOfAffairsQueue() {
         // check the waiting queue for people ready to have affair
         while (maleAffairsWaitingQueue.peek() != null) {
             if (maleAffairsWaitingQueue.peek().getAffairDay() <= day) {
@@ -382,20 +382,55 @@ public class OrganicEvent implements Comparable<OrganicEvent>, Runnable {
             }
         }
         // Decide if affair between married people or with single person
-        partnerTogetherPeopleInPartnershipQueue(FamilyType.MALE_SINGLE_AFFAIR);
-        partnerTogetherPeopleInPartnershipQueue(FamilyType.MALE_MARITAL_AFFAIR);
-        partnerTogetherPeopleInPartnershipQueue(FamilyType.FEMALE_SINGLE_AFFAIR);
-        partnerTogetherPeopleInPartnershipQueue(FamilyType.FEMALE_MARITAL_AFFAIR);
+        
+//        partnerTogetherPeopleInMaritalAffairPartnershipQueue();
+//        partnerTogetherPeopleInMaleSingleAffairPartnershipQueue();
+//        partnerTogetherPeopleInFemaleSingleAffairPartnershipQueue();
+        
+//        partnerTogetherPeopleInPartnershipQueue(FamilyType.MALE_SINGLE_AFFAIR);
+//        partnerTogetherPeopleInPartnershipQueue(FamilyType.MALE_MARITAL_AFFAIR);
+//        partnerTogetherPeopleInPartnershipQueue(FamilyType.FEMALE_SINGLE_AFFAIR);
+//        partnerTogetherPeopleInPartnershipQueue(FamilyType.FEMALE_MARITAL_AFFAIR);
     }
 
     public void partnerTogetherPeopleInRegularPartnershipQueues() {
-        partnerTogetherPeopleInPartnershipQueue(FamilyType.COHABITATION);
-        partnerTogetherPeopleInPartnershipQueue(FamilyType.COHABITATION_THEN_MARRIAGE);
-        partnerTogetherPeopleInPartnershipQueue(FamilyType.MARRIAGE);
+        
+        partnerTogetherPeopleInCohabPartnershipQueue();
+        partnerTogetherPeopleInCohabThenMarriagePartnershipQueue();
+        partnerTogetherPeopleInMarriagePartnershipQueue();
+//        partnerTogetherPeopleInPartnershipQueue(FamilyType.COHABITATION);
+//        partnerTogetherPeopleInPartnershipQueue(FamilyType.COHABITATION_THEN_MARRIAGE);
+//        partnerTogetherPeopleInPartnershipQueue(FamilyType.MARRIAGE);
         partnerUpMembersOfAffairsQueue();
     }
+    
+    public void partnerTogetherPeopleInMaritalAffairPartnershipQueue() {
+        partnerTogetherPeopleInPartnershipQueue(FamilyType.MALE_MARITAL_AFFAIR);
+    }
+    
+    public void partnerTogetherPeopleInMaleSingleAffairPartnershipQueue() {
+        partnerTogetherPeopleInPartnershipQueue(FamilyType.MALE_SINGLE_AFFAIR);
+    }
+    
+    public void partnerTogetherPeopleInFemaleSingleAffairPartnershipQueue() {
+        partnerTogetherPeopleInPartnershipQueue(FamilyType.FEMALE_SINGLE_AFFAIR);
+    }
+    
+    public void partnerTogetherPeopleInCohabPartnershipQueue() {
+        partnerTogetherPeopleInPartnershipQueue(FamilyType.COHABITATION);
+    }
+    
+    public void partnerTogetherPeopleInCohabThenMarriagePartnershipQueue() {
+        partnerTogetherPeopleInPartnershipQueue(FamilyType.COHABITATION_THEN_MARRIAGE);
+    }
+    
+    public void partnerTogetherPeopleInMarriagePartnershipQueue() {
+        partnerTogetherPeopleInPartnershipQueue(FamilyType.MARRIAGE);
+    }
+    
+    
 
-    private synchronized void partnerTogetherPeopleInPartnershipQueue(final FamilyType type) {
+    private void partnerTogetherPeopleInPartnershipQueue(final FamilyType type) {
         // if (DEBUG) {
         // writer.println("PARTNERING UP QUEUE - " + type.toString());
         // }
