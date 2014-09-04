@@ -1,1 +1,3 @@
-4111|1855|1|0|0|acute bronchitis|4159|1855|1|1|1|acute bron|4160|1855|1|1|2|acute bron|4157|1855|1|1|3|"acute bron, heart disease"|4158|1855|1|1|4|"acute bron, heart disease"|4112|1855|1|1|5|"acute hydrocephalus, fever"|
+4157|1855|1|1|3|"acute bron"|"heart disease"|
+4112|1855|1|1|5|"acute hydrocephalus"|"fever"|
+4111|1855|1|0|0|acute bronchitis|4159|1855|1|1|1|acute bron|4160|1855|1|1|2|acute bron|4158|1855|1|1|4|"acute bron, heart disease"|

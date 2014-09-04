@@ -69,7 +69,8 @@ public class OutputDataFormatter {
             String codeAsString = code.getCodeAsString();
             String description = getDesciption(record, code);
             String explanation = getExplanation(codeAsString);
-            sb.append(codeAsString + delimiter + description + delimiter + explanation + delimiter);
+            String tokenSet = codeTriple.getTokenSet().toString();
+            sb.append(tokenSet + delimiter + codeAsString + delimiter);
 
         }
 
