@@ -38,11 +38,10 @@ public enum FamilyType {
      * Indicates the individuals first partnership will be marriage.
      */
     MARRIAGE,
-
+    /**
+     * Indicates an the start point of an affair for an individual.
+     */
     AFFAIR,
-    //    MALE_AFFAIR,
-    //    FEMALE_AFFAIR,
-
     /**
      * Used as returns from affairWithMarriedOrSingleDistribution - Indicates the affair will occur with a single third party.
      */
@@ -51,7 +50,6 @@ public enum FamilyType {
      * Used as returns from affairWithMarriedOrSingleDistribution - Indicates the affair will occur with a married third party.
      */
     INTER_MARITAL_AFFAIR,
-
     /**
      * Used to indicate the combinations of internal affairs queues - in this case identifies the MaleSingleAffairsQueue and the FemaleSinglesQueue.
      */
@@ -67,14 +65,5 @@ public enum FamilyType {
     /**
      * Used to indicate the combinations of internal affairs queues - in this case identifies the MaleMaritalAffairsQueue and the FemaleMaritalAffairsQueue.
      */
-    FEMALE_MARITAL_AFFAIR,
-
-    /**
-     * NOT CURRENTLY FULLY USED
-     */
-    LONE_MOTHER,
-    /**
-     * NOT CURRENTLY FULLY USED
-     */
-    LONE_FATHER
+    FEMALE_MARITAL_AFFAIR
 }

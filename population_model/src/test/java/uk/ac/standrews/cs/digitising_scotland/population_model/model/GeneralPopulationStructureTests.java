@@ -432,8 +432,9 @@ public abstract class GeneralPopulationStructureTests {
 
                     final IPartnership partnership = population.findPartnership(partnership_id);
                     final Date marriage_date = partnership.getMarriageDate();
-
-                    assertTrue(DateManipulation.differenceInDays(marriage_date, death_date) >= 0);
+                    if (marriage_date != null) {
+                        assertTrue(DateManipulation.differenceInDays(marriage_date, death_date) >= 0);
+                    }
                 }
             }
         }

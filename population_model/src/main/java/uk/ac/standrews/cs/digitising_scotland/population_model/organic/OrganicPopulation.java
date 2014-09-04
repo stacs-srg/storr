@@ -44,13 +44,6 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 public class OrganicPopulation implements IPopulation {
 
-    private static void teardown() {
-        livingPeople.clear();
-        deadPeople.clear();
-        partnerships.clear();
-        seedGeneration = true;
-    }
-
     /**
      * Temporary testing main method.
      * 
@@ -58,9 +51,6 @@ public class OrganicPopulation implements IPopulation {
      */
     public static void main(final String[] args) {
         System.out.println("--------MAIN HERE---------");
-
-        //        numberOfThreads = 8;
-        //        runPopulationModel(false, DEFAULT_SEED_SIZE, true, true);
 
         if (args.length == 0) {
             runPopulationModel(false, DEFAULT_SEED_SIZE, true, true);
@@ -80,20 +70,18 @@ public class OrganicPopulation implements IPopulation {
     public static PrintWriter writer = null;
 
     public static boolean logging = true;
-    private static boolean debug = false;
-    private static final int START_DEBUG_YEAR = 2999;
-    private static final int END_DEBUG_YEAR = 3000;
 
     // Universal population variables
-    private static final int DEFAULT_SEED_SIZE = 25000;
+    private static final int DEFAULT_SEED_SIZE = 10000;
     private static final float DAYS_PER_YEAR = 365.25f;
     private static final int START_YEAR = 1780;
     private static final int END_YEAR = 2013;
     private static final int EPOCH_YEAR = 1600;
     private static Random random = RandomFactory.getRandom();
 
-    private int earliestDate = DateManipulation.dateToDays(getStartYear(), 0, 0);
-    public static int currentDay;
+    // Universal Dates
+    private static int earliestDate = DateManipulation.dateToDays(getStartYear(), 0, 0);
+    private static int currentDay;
 
     private static PriorityQueue<OrganicEvent> globalEventsQueue = new PriorityQueue<OrganicEvent>();
 
@@ -105,27 +93,6 @@ public class OrganicPopulation implements IPopulation {
 
     // Population instance helper variables
     private static boolean seedGeneration = true;
-    //    private List<OrganicPerson> maleMarriageQueue = new LinkedList<OrganicPerson>();
-    //    private List<OrganicPerson> femaleMarriageQueue = new LinkedList<OrganicPerson>();
-    //
-    //    private List<OrganicPerson> maleSingleQueue = new LinkedList<OrganicPerson>();
-    //    private List<OrganicPerson> femaleSingleQueue = new LinkedList<OrganicPerson>();
-    //
-    //    private List<OrganicPerson> maleCohabitationQueue = new LinkedList<OrganicPerson>();
-    //    private List<OrganicPerson> femaleCohabitationQueue = new LinkedList<OrganicPerson>();
-    //
-    //    private List<OrganicPerson> maleCohabitationThenMarriageQueue = new LinkedList<OrganicPerson>();
-    //    private List<OrganicPerson> femaleCohabitationThenMarriageQueue = new LinkedList<OrganicPerson>();
-    //
-    //    private List<OrganicPerson> maleSingleAffairsQueue = new LinkedList<OrganicPerson>();
-    //    private List<OrganicPerson> femaleSingleAffairsQueue = new LinkedList<OrganicPerson>();
-    //
-    //    private List<OrganicPerson> maleMaritalAffairsQueue = new LinkedList<OrganicPerson>();
-    //    private List<OrganicPerson> femaleMaritalAffairsQueue = new LinkedList<OrganicPerson>();
-    //
-    //    private PriorityQueue<AffairWaitingQueueMember> maleAffairsWaitingQueue = new PriorityQueue<AffairWaitingQueueMember>();
-    //    private PriorityQueue<AffairWaitingQueueMember> femaleAffairsWaitingQueue = new PriorityQueue<AffairWaitingQueueMember>();
-
     private static int maximumNumberOfChildrenInFamily;
 
     /*
@@ -161,8 +128,6 @@ public class OrganicPopulation implements IPopulation {
         if (seedGeneration == false) {
             return;
         }
-        AffairWaitingQueueMember.initialiseAffairWithMarrieadOrSingleDistribution(this, "affair_with_single_or_married_distributions_data_filename", random);
-
         for (int i = 0; i < size; i++) {
             OrganicPerson person = new OrganicPerson(IDFactory.getNextID(), 0, -1, this, seedGeneration, null);
             livingPeople.add(person);
@@ -170,15 +135,14 @@ public class OrganicPopulation implements IPopulation {
         seedGeneration = false;
     }
 
-    int threadsIn = 0;
     int[] lastDay = {0, 0, 0, 0, 0, 0, 0};
-    private final ReentrantLock rlock = new ReentrantLock();
-    private final ReentrantLock rlock1 = new ReentrantLock();
-    private final ReentrantLock rlock2 = new ReentrantLock();
-    private final ReentrantLock rlock3 = new ReentrantLock();
-    private final ReentrantLock rlock4 = new ReentrantLock();
-    private final ReentrantLock rlock5 = new ReentrantLock();
-    private final ReentrantLock rlock6 = new ReentrantLock();
+    private ReentrantLock[] locks = new ReentrantLock[7];
+    
+    private void initLocks() {
+        for (int i = 0; i < locks.length; i++) {
+            locks[i] = new ReentrantLock();
+        }
+    }
 
     /**
      * Called to begin the event iteration which commences the simulation.
@@ -200,13 +164,6 @@ public class OrganicPopulation implements IPopulation {
                     if (logging) {
                         LoggingControl.yearEndLog(currentDay);
                     }
-
-                    if ((int) (getCurrentDay() / getDaysPerYear()) == START_DEBUG_YEAR - EPOCH_YEAR) {
-                        setDebug(true);
-                    }
-                    if ((int) (getCurrentDay() / getDaysPerYear()) == END_DEBUG_YEAR - EPOCH_YEAR) {
-                        setDebug(false);
-                    }
                     if (print && logging) {
                         writer.println(EPOCH_YEAR + 1 + (int) (getCurrentDay() / getDaysPerYear()));
                         writer.println("Population: " + LoggingControl.populationLogger.getCount());
@@ -220,68 +177,56 @@ public class OrganicPopulation implements IPopulation {
                 }
 
                 setCurrentDay(event.getDay());
-                if (debug) {
-                    writer.println("TO HANDLE EVENT - " + event.getEventType().toString() + " - On day: " + getCurrentDay());
-                }
-
-//                if (lastDay[0] != currentDay) {
-//                    synchronized (this) {
-//                        if (lastDay[0] != currentDay && currentDay % 10.0f == 0) {
-//                            lastDay[0] = currentDay;
-//                            event.partnerTogetherPeopleInRegularPartnershipQueues();;
-//                        }
-//                    }
-//                }
 
                 if (currentDay % 10.0f == 0) {
-                    if (rlock6.tryLock()) {
+                    if (locks[0].tryLock()) {
                         if (lastDay[6] != currentDay && currentDay % 10.0f == 0) {
                             lastDay[6] = currentDay;
-                            event.partnerUpMembersOfAffairsQueue();
+                            event.movePeopleFromAffarirsWaitingQueueToAppropriateQueue();
                         }
-                        rlock6.unlock();
+                        locks[0].unlock();
                     }
-                    if (rlock.tryLock()) {
+                    if (locks[1].tryLock()) {
                         if (lastDay[0] != currentDay && currentDay % 10.0f == 0) {
                             lastDay[0] = currentDay;
-                            event.partnerTogetherPeopleInMaleSingleAffairPartnershipQueue();
+                            event.partnerTogetherPeopleInPartnershipQueue(FamilyType.MALE_SINGLE_AFFAIR);
                         }
-                        rlock.unlock();
+                        locks[1].unlock();
                     }
-                    if (rlock1.tryLock()) {
+                    if (locks[2].tryLock()) {
                         if (lastDay[1] != currentDay && currentDay % 10.0f == 0) {
                             lastDay[1] = currentDay;
-                            event.partnerTogetherPeopleInFemaleSingleAffairPartnershipQueue();
+                            event.partnerTogetherPeopleInPartnershipQueue(FamilyType.FEMALE_SINGLE_AFFAIR);
                         }
-                        rlock1.unlock();
+                        locks[2].unlock();
                     }
-                    if (rlock2.tryLock()) {
+                    if (locks[3].tryLock()) {
                         if (lastDay[2] != currentDay && currentDay % 10.0f == 0) {
                             lastDay[2] = currentDay;
-                            event.partnerTogetherPeopleInMaritalAffairPartnershipQueue();
+                            event.partnerTogetherPeopleInPartnershipQueue(FamilyType.MALE_MARITAL_AFFAIR);
                         }
-                        rlock2.unlock();
+                        locks[3].unlock();
                     }
-                    if (rlock3.tryLock()) {
+                    if (locks[4].tryLock()) {
                         if (lastDay[3] != currentDay && currentDay % 10.0f == 0) {
                             lastDay[3] = currentDay;
-                            event.partnerTogetherPeopleInCohabPartnershipQueue();
+                            event.partnerTogetherPeopleInPartnershipQueue(FamilyType.COHABITATION);
                         }
-                        rlock3.unlock();
+                        locks[4].unlock();
                     }
-                    if (rlock4.tryLock()) {
+                    if (locks[5].tryLock()) {
                         if (lastDay[4] != currentDay && currentDay % 10.0f == 0) {
                             lastDay[4] = currentDay;
-                            event.partnerTogetherPeopleInCohabThenMarriagePartnershipQueue();
+                            event.partnerTogetherPeopleInPartnershipQueue(FamilyType.COHABITATION_THEN_MARRIAGE);
                         }
-                        rlock4.unlock();
+                        locks[5].unlock();
                     }
-                    if (rlock5.tryLock()) {
+                    if (locks[6].tryLock()) {
                         if (lastDay[5] != currentDay && currentDay % 10.0f == 0) {
                             lastDay[5] = currentDay;
-                            event.partnerTogetherPeopleInMarriagePartnershipQueue();
+                            event.partnerTogetherPeopleInPartnershipQueue(FamilyType.MARRIAGE);
                         }
-                        rlock5.unlock();
+                        locks[6].unlock();
                     }
                     
                 }
@@ -545,9 +490,12 @@ public class OrganicPopulation implements IPopulation {
         OrganicPopulation op = new OrganicPopulation("Test Population");
         OrganicPartnership.setupTemporalDistributionsInOrganicPartnershipClass(op);
         OrganicPerson.initializeDistributions(op);
+        AffairWaitingQueueMember.initialiseAffairWithMarrieadOrSingleDistribution(op, "affair_with_single_or_married_distributions_data_filename", random);
+
         if (logging) {
             LoggingControl.setUpLogger();
         }
+        
         if (livingPeople.size() == 0) {
             op.makeSeed(seedSize);
             op.setCurrentDay(op.getEarliestDate() - 1);
@@ -564,10 +512,10 @@ public class OrganicPopulation implements IPopulation {
 
             writer.println(op.getDescription());
         }
-
+        op.initLocks();
         op.newEventIteration(print, memoryMonitor);
         long timeTaken = System.nanoTime() - startTime;
-        System.out.print((op.livingPeople.size() + op.deadPeople.size()) + "    ");
+        System.out.print((livingPeople.size() + deadPeople.size()) + "    ");
         System.out.println(timeTaken / 1000000);
 
         if (print) {
@@ -591,7 +539,7 @@ public class OrganicPopulation implements IPopulation {
      * 
      * @return the currentDay
      */
-    public int getCurrentDay() {
+    public static int getCurrentDay() {
         return currentDay;
     }
 
@@ -601,7 +549,7 @@ public class OrganicPopulation implements IPopulation {
      * @param currentDay The currentDay to set
      */
     public void setCurrentDay(final int currentDay) {
-        this.currentDay = currentDay;
+        OrganicPopulation.currentDay = currentDay;
     }
 
     /**
@@ -620,24 +568,6 @@ public class OrganicPopulation implements IPopulation {
      */
     public void setMaximumNumberOfChildrenInFamily(final int maxNumberOfChildrenInFamily) {
         maximumNumberOfChildrenInFamily = maxNumberOfChildrenInFamily;
-    }
-
-    /**
-     * Returns the state of the debug flag.
-     * 
-     * @return The boolean value of the debug flag.
-     */
-    public static boolean isDebug() {
-        return debug;
-    }
-
-    /**
-     * Sets the debug flag as specified.
-     * 
-     * @param debug The boolean value to set the debug flag to.
-     */
-    public static void setDebug(final boolean debug) {
-        OrganicPopulation.debug = debug;
     }
 
 }

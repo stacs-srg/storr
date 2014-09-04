@@ -59,8 +59,6 @@ public enum EventType {
      */
     END_OF_COHABITATION,
 
-    // TODO look into the actual use and the consistency of use of these throughout the program.
-    AFFAIR, MALE_BEGINS_AFFAIR, MALE_ENDS_AFFAIR, FEMALE_BEGINS_AFFAIR, FEMALE_ENDS_AFFAIR, END_OF_AFFAIR,
 
     /*
      * Geographical Events
