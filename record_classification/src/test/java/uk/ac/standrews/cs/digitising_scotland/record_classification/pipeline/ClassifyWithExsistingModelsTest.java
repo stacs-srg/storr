@@ -2,10 +2,12 @@ package uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline;
 
 import java.io.File;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeFactory;
 
+@Ignore("dont try and run this test just now, needs appropraite datasets")
 public class ClassifyWithExsistingModelsTest {
 
     @Test
