@@ -34,7 +34,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Random;
-import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * The OrganicPopulation class models and handles the population as a whole.
@@ -53,9 +52,9 @@ public class OrganicPopulation implements IPopulation {
         System.out.println("--------MAIN HERE---------");
 
         if (args.length == 0) {
-            runPopulationModel(true, DEFAULT_SEED_SIZE, true, true);
+            runPopulationModel(DEFAULT_SEED_SIZE, true, true, true);
         } else if (args.length == 1) {
-            runPopulationModel(true, Integer.valueOf(args[0]), true, true);
+            runPopulationModel(Integer.valueOf(args[0]), true, true, true);
         }
     }
 
@@ -71,18 +70,10 @@ public class OrganicPopulation implements IPopulation {
      * -------------------------------- Universal population variables --------------------------------
      */
     
-    public static boolean isLogging() {
-        return logging;
-    }
-
-    public static void setLogging(boolean logging) {
-        OrganicPopulation.logging = logging;
-    }
-
     private static PriorityQueue<OrganicEvent> globalEventsQueue = new PriorityQueue<OrganicEvent>();
     
     private String description;
-    private static final int DEFAULT_SEED_SIZE = 2250000;
+    private static final int DEFAULT_SEED_SIZE = 10000;
     private static final float DAYS_PER_YEAR = 365.25f;
     private static final int START_YEAR = 1780;
     private static final int END_YEAR = 2013 ;
@@ -96,9 +87,25 @@ public class OrganicPopulation implements IPopulation {
     /*
      * -------------------------------- People and partnership lists --------------------------------
      */
-    public static List<OrganicPerson> livingPeople = new ArrayList<OrganicPerson>();
+    private static List<OrganicPerson> livingPeople = new ArrayList<OrganicPerson>();
     
-    public static List<OrganicPartnership> partnerships = new ArrayList<OrganicPartnership>();
+    private static List<OrganicPartnership> partnerships = new ArrayList<OrganicPartnership>();
+    
+    /**
+     * Adds given person to the list of people.
+     * @param person The given person.
+     */
+    public static void addLivingPerson(OrganicPerson person) {
+        livingPeople.add(person);
+    }
+    
+    /**
+     * Adds given partnership to the list of partnerships.
+     * @param person The given partnership.
+     */
+    public static void addPartnership(OrganicPartnership partnership) {
+        partnerships.add(partnership);
+    }
 
     /*
      * Constructors
@@ -143,14 +150,10 @@ public class OrganicPopulation implements IPopulation {
      */
     public void newEventIteration(final boolean print, final boolean memoryMonitor) {
         while (getCurrentDay() <= DateManipulation.dateToDays(getEndYear(), 0, 0)) {
-            OrganicEvent event = null;
-            try {
-                event = globalEventsQueue.poll();
-            } catch (NullPointerException e) {
-                
-            }
+            OrganicEvent event = globalEventsQueue.poll();
+
             if (event == null) {
-                continue;
+                break;
             } else {
                 // While the next event isn't in the same year as the next event.
                 while ((int) (getCurrentDay() / getDaysPerYear()) != (int) (event.getDay() / getDaysPerYear())) {
@@ -411,7 +414,20 @@ public class OrganicPopulation implements IPopulation {
 
     }
 
-    public static OrganicPopulation runPopulationModel(boolean print, int seedSize, final boolean memoryMonitor, final boolean logging) {
+    /**
+     * By calling the run population model method, the simulation is run using the given parameters and output to various files, these being:
+     * Output file: output_{time in ns}.txt in the directory src/main/resources/output/
+     * Memory log file: memory_usage{time in ns}.dat in directory src/main/resources/output/
+     * GnuPlot script file: log_output_script.p in directory src/main/resources/output/gnu/
+     * GnuPlot dat files: in directory src/main/resources/output/gnu/
+     * 
+     * @param seedSize The size of the initial seed population.
+     * @param print If the program should print results to file.
+     * @param memoryMonitor If the program should record memory footprint.
+     * @param logging If the program should log population statistics - note: Must be enabled to use either print or memory monitoring options.
+     * @return The created organic population.
+     */
+    public static OrganicPopulation runPopulationModel(int seedSize, boolean print, final boolean memoryMonitor, final boolean logging) {
         OrganicPopulation.logging = logging;
         if (memoryMonitor) {
             mm = new MemoryMonitor();
@@ -435,7 +451,6 @@ public class OrganicPopulation implements IPopulation {
         if (print) {
             try {
                 writer = new PrintWriter("src/main/resources/output/output_" + System.nanoTime() + ".txt", "UTF-8");
-                writer = new PrintWriter(System.out);
             } catch (FileNotFoundException | UnsupportedEncodingException e) {
                 System.err.println("Output file could not be created. Model will now terminate.");
                 System.exit(1);
@@ -478,7 +493,7 @@ public class OrganicPopulation implements IPopulation {
      * 
      * @param currentDay The currentDay to set
      */
-    public void setCurrentDay(final int currentDay) {
+    public static void setCurrentDay(final int currentDay) {
         OrganicPopulation.currentDay = currentDay;
     }
 
@@ -498,6 +513,22 @@ public class OrganicPopulation implements IPopulation {
      */
     public void setMaximumNumberOfChildrenInFamily(final int maxNumberOfChildrenInFamily) {
         maximumNumberOfChildrenInFamily = maxNumberOfChildrenInFamily;
+    }
+    
+    /**
+     * Checks logging flag.
+     * @return Logging flag value.
+     */
+    public static boolean isLogging() {
+        return logging;
+    }
+
+    /**
+     * Sets logging flag value.
+     * @param logging The boolean value to be set to.
+     */
+    public static void setLogging(boolean logging) {
+        OrganicPopulation.logging = logging;
     }
 
 }

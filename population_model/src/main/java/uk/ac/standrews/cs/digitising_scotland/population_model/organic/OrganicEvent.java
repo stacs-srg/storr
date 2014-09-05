@@ -165,7 +165,7 @@ public class OrganicEvent implements Comparable<OrganicEvent>, Runnable {
     private void handleBirthEvent(final OrganicPartnership partnership, final OrganicPerson male, final OrganicPerson female) {
         OrganicPerson[] children = partnership.setUpBirthEvent(male, female, day);
         for (OrganicPerson child : children) {
-            OrganicPopulation.livingPeople.add(child);
+            OrganicPopulation.addLivingPerson(child);
         }
     }
 
@@ -310,6 +310,7 @@ public class OrganicEvent implements Comparable<OrganicEvent>, Runnable {
                 removeFromQueue(femaleQueue, firstFemaleId);
                 firstMaleId = (Integer) null;
                 firstFemaleId = (Integer) null;
+                // Ignore Jenkins
                 break;
             }
         }
@@ -355,10 +356,10 @@ public class OrganicEvent implements Comparable<OrganicEvent>, Runnable {
 
         // Create partnership
         Object[] partnershipObjects = OrganicPartnership.createOrganicPartnership(IDFactory.getNextID(), husband, wife, days, day, familyType);
-        OrganicPopulation.partnerships.add((OrganicPartnership) partnershipObjects[0]);
+        OrganicPopulation.addPartnership((OrganicPartnership) partnershipObjects[0]);
         if (partnershipObjects.length > 1) {
             for (int i = 1; i < partnershipObjects.length; i++) {
-                OrganicPopulation.livingPeople.add((OrganicPerson) partnershipObjects[i]);
+                OrganicPopulation.addLivingPerson((OrganicPerson) partnershipObjects[i]);
             }
         }
         if (OrganicPopulation.isLogging()) {

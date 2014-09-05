@@ -168,6 +168,9 @@ public class WeightedDistribution extends RestrictedDistribution<Double> {
 
     // -------------------------------------------------------------------------------------------------------
 
+    /**
+     * Returns the weights used by the distribution for graph plotting comparisons.
+     */
     public int[] getWeights() {
         return weights.clone();
     }

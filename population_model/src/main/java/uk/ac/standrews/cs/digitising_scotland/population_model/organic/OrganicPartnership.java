@@ -279,7 +279,7 @@ public final class OrganicPartnership implements IPartnership {
                         endDay = divorceAgeInDays;
                         divorceReason = temporalDivorceReasonMaleDistribution.getSample(OrganicPopulation.getCurrentDay());
                         if (divorceReason == DivorceReason.ADULTERY) {
-                            setupAffair(wife, husband);
+                            setupAffair(wife);
                         }
                         if (OrganicPopulation.isLogging()) {
                             LoggingControl.getDivorceReasonMaleDistributionLogger().log(OrganicPopulation.getCurrentDay(), divorceReason);
@@ -291,7 +291,7 @@ public final class OrganicPartnership implements IPartnership {
                         endDay = divorceAgeInDays;
                         divorceReason = temporalDivorceReasonFemaleDistribution.getSample(OrganicPopulation.getCurrentDay());
                         if (divorceReason == DivorceReason.ADULTERY) {
-                            setupAffair(husband, wife);
+                            setupAffair(husband);
                         }
                         if (OrganicPopulation.isLogging()) {
                             LoggingControl.getDivorceReasonFemaleDistributionLogger().log(OrganicPopulation.getCurrentDay(), divorceReason);
@@ -320,7 +320,7 @@ public final class OrganicPartnership implements IPartnership {
         }
     }
 
-    private void setupAffair(final OrganicPerson marriedPerson, final OrganicPerson cheatedPerson) {
+    private void setupAffair(final OrganicPerson marriedPerson) {
         int numberOfAffairs = temporalAffairNumberOfDistribution.getSample(OrganicPopulation.getCurrentDay());
         AffairSpacingDistribution affairDistribution = AffairSpacingDistribution.affairDistributionFactory(this, random);
         for (int i = 0; i < numberOfAffairs; i++) {
