@@ -8,6 +8,8 @@ import java.util.Set;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.OriginalData;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeTriple;
 
+import com.google.common.collect.HashMultimap;
+
 /**
  * The Class Record. Represents a Record and all associated data, including that which is supplied by NRS.
  */
@@ -22,6 +24,8 @@ public class Record {
     /** The code triples. */
     private Set<CodeTriple> codeTriples;
 
+    private HashMultimap<String, CodeTriple> listOfClassifications;
+
     /**
      * Instantiates a new record.
      * @param id the unique id of this record
@@ -32,6 +36,8 @@ public class Record {
         this.id = id;
         this.originalData = originalData;
         this.codeTriples = new LinkedHashSet<>();
+        listOfClassifications = HashMultimap.create();
+
     }
 
     /**
@@ -95,22 +101,17 @@ public class Record {
         return "Record [id=" + id + ", goldStandardTriples=" + originalData.getGoldStandardCodeTriples() + ", codeTriples=" + codeTriples + "]";
     }
 
-    /* (non-Javadoc)
-     * @see java.lang.Object#hashCode()
-     */
     @Override
     public int hashCode() {
 
         final int prime = 31;
         int result = 1;
         result = prime * result + ((codeTriples == null) ? 0 : codeTriples.hashCode());
+        result = prime * result + id;
         result = prime * result + ((originalData == null) ? 0 : originalData.hashCode());
         return result;
     }
 
-    /* (non-Javadoc)
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
     @Override
     public boolean equals(final Object obj) {
 
@@ -122,6 +123,7 @@ public class Record {
             if (other.codeTriples != null) { return false; }
         }
         else if (!codeTriples.equals(other.codeTriples)) { return false; }
+        if (id != other.id) { return false; }
         if (originalData == null) {
             if (other.originalData != null) { return false; }
         }
@@ -163,5 +165,15 @@ public class Record {
         for (CodeTriple codeTriple : codeTriples) {
             addCodeTriples(codeTriple);
         }
+    }
+
+    public HashMultimap<String, CodeTriple> getListOfClassifications() {
+
+        return listOfClassifications;
+    }
+
+    public void setListOfClassifications(final HashMultimap<String, CodeTriple> listOfClassifications) {
+
+        this.listOfClassifications = listOfClassifications;
     }
 }

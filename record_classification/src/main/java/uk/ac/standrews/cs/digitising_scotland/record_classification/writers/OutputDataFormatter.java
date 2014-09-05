@@ -58,17 +58,15 @@ public class OutputDataFormatter {
      * @param record the record
      * @return the codes
      */
-    public String getCodes(final Record record) {
+    public String getCodes(final Record record, final String description) {
 
         StringBuilder sb = new StringBuilder();
-        Set<CodeTriple> classifications = record.getCodeTriples();
 
-        for (CodeTriple codeTriple : classifications) {
+        Set<CodeTriple> ct = record.getListOfClassifications().get(description);
+        for (CodeTriple codeTriple : ct) {
 
             Code code = codeTriple.getCode();
             String codeAsString = code.getCodeAsString();
-            String description = getDesciption(record, code);
-            String explanation = getExplanation(codeAsString);
             String tokenSet = codeTriple.getTokenSet().toString();
             sb.append(tokenSet + delimiter + codeAsString + delimiter);
 

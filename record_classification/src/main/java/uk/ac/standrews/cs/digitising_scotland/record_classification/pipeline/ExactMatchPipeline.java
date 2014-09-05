@@ -48,15 +48,29 @@ public class ExactMatchPipeline {
         Bucket classified = new Bucket();
         int count = 0;
         int match = 0;
+        boolean allMatch = false;
         for (Record record : bucket) {
             count++;
             LOGGER.info("Exact Matching record " + count + " of " + bucket.size());
-            final Set<CodeTriple> result = classify(record);
-            if (result != null) {
-                match++;
-                record.addAllCodeTriples(result);
-                classified.addRecordToBucket(record);
+
+            for (String description : record.getDescription()) {
+                final Set<CodeTriple> result = classify(description);
+
+                if (result != null) {
+                    allMatch = true;
+                    match++;
+                    record.addAllCodeTriples(result);
+
+                    for (CodeTriple codeTriple : result) {
+                        record.getListOfClassifications().put(description, codeTriple);
+                    }
+                }
+                else {
+                    allMatch = false;
+                }
             }
+            if (allMatch) classified.addRecordToBucket(record);
+
         }
         LOGGER.info("Total exact matched = " + match + "/" + bucket.size());
         return classified;
@@ -77,6 +91,12 @@ public class ExactMatchPipeline {
         TokenSet cleanedTokenSet = new TokenSet(record.getDescription());
 
         return classifier.classifyTokenSetToCodeTripleSet(cleanedTokenSet);
+
+    }
+
+    public Set<CodeTriple> classify(final String description) throws IOException {
+
+        return classifier.classifyTokenSetToCodeTripleSet(new TokenSet(description));
 
     }
 

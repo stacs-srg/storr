@@ -67,7 +67,7 @@ public class DataClerkingWriter extends OutputDataFormatter implements Closeable
         for (String description : record.getDescription()) {
             int id = record.getid();
             String year = getYear(record);
-            String codes = getCodes(record);
+            String codes = getCodes(record, description);
             sb.append(year + id + "|" + fieldID + "|" + description + "|" + codes + "\n");
             fieldID++;
         }

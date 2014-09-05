@@ -256,6 +256,9 @@ public class OLRCrossFold {
     private void getConfigOptions() {
 
         folds = Integer.parseInt(properties.getProperty("OLRFolds"));
+        if (folds > 20) {
+            LOGGER.info("You have selected a large value of OLRfolds. Please check that you meant to do this. It may harm performance");
+        }
     }
 
     /**

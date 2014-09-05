@@ -81,21 +81,30 @@ public class MachineLearningClassificationPipeline {
             count++;
 
             for (String desc : record.getDescription()) {
+                if (!record.getListOfClassifications().containsKey(desc)) {
+                    Set<CodeTriple> result = recordCache.get(desc);
+                    if (result == null) {
+                        result = classify(desc);
+                        if (result != null) {
+                            record.addAllCodeTriples(result);
+                            addCodeTriplesAndDescriptions(record, desc, result);
+                            classified.addRecordToBucket(record);
+                        }
 
-                Set<CodeTriple> result = recordCache.get(desc);
-                if (result == null) {
-                    result = classify(desc);
-                    if (result != null) {
-                        record.addAllCodeTriples(result);
-                        classified.addRecordToBucket(record);
+                        recordCache.put(desc, record.getCodeTriples());
                     }
-
-                    recordCache.put(desc, record.getCodeTriples());
                 }
             }
         }
 
         return classified;
+    }
+
+    private void addCodeTriplesAndDescriptions(Record record, String desc, Set<CodeTriple> result) {
+
+        for (CodeTriple codeTriple : result) {
+            record.getListOfClassifications().put(desc, codeTriple);
+        }
     }
 
     /**
@@ -143,6 +152,7 @@ public class MachineLearningClassificationPipeline {
 
         List<Set<CodeTriple>> triples = resolverMatrix.getValidCodeTriples(cleanedTokenSet);
         Set<CodeTriple> best;
+
         if (triples.size() > 0) {
             best = ResolverUtils.getBest(triples);
         }
