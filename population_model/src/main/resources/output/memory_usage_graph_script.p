@@ -16,6 +16,6 @@ set xtic auto                          # set xtics automatically
 set ytic auto                          # set ytics automatically
 set title "Memory Usage and Population over time"
 set xlabel "Year"
-plot    "E:/wrkspc/digitising_scotland/population_model/src/main/resources/output/memory_usage.dat" using 1:2 title 'Population' with line , \
-      "E:/wrkspc/digitising_scotland/population_model/src/main/resources/output/memory_usage.dat" using 1:3 title 'Total Peopl Generated' with line , \
-      "E:/wrkspc/digitising_scotland/population_model/src/main/resources/output/memory_usage.dat" using 1:4 title 'Memory (KB)' with line
+plot    "E:/wrkspc/digitising_scotland/population_model/src/main/resources/output/memory_usage9783689168010.dat" using 1:2 title 'Population' with line , \
+      "E:/wrkspc/digitising_scotland/population_model/src/main/resources/output/memory_usage9783689168010.dat" using 1:3 title 'Total Peopl Generated' with line , \
+      "E:/wrkspc/digitising_scotland/population_model/src/main/resources/output/memory_usage9783689168010.dat" using 1:4 title 'Memory (KB)' with line

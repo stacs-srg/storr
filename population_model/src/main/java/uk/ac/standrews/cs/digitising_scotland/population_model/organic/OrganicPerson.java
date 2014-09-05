@@ -252,9 +252,9 @@ public class OrganicPerson implements IPerson {
         int setAge = (int) (COMING_OF_AGE_AGE * OrganicPopulation.getDaysPerYear());
         if (OrganicPopulation.getCurrentDay() - getBirthDay() > setAge) {
             setAge = OrganicPopulation.getCurrentDay() - getBirthDay() + 1;
-            if (OrganicPopulation.logging) {
-                LoggingControl.remarriageFamilyCharacteristicDistributionLogger.log(OrganicPopulation.getCurrentDay(), FamilyType.SINGLE);
-            }
+//            if (OrganicPopulation.logging) {
+//                LoggingControl.remarriageFamilyCharacteristicDistributionLogger.log(OrganicPopulation.getCurrentDay(), FamilyType.SINGLE);
+//            }
         } else {
             if (OrganicPopulation.logging) {
                 LoggingControl.familyCharacteristicDistributionLogger.log(OrganicPopulation.getCurrentDay(), FamilyType.SINGLE);

@@ -92,7 +92,7 @@ public final class OrganicPartnership implements IPartnership {
     private DivorceReason divorceReason;
 
     /*
-     * Setup and constructors
+     * -------------------------------- Setup and constructors --------------------------------
      */
 
     /**
@@ -201,12 +201,13 @@ public final class OrganicPartnership implements IPartnership {
                     LoggingControl.numberOfChildrenFromCohabitationDistributionLogger.log(OrganicPopulation.getCurrentDay(), maxPossibleChildren);
                 }
             } else if (cohabiting && married) {
-                // cohab then marriage / marriage
+                // cohab then marriage
                 numberOfChildrenToBeHadByCouple = temporalChildrenNumberOfInCohabThenMarriageDistribution.getSample(OrganicPopulation.getCurrentDay(), 0, maxPossibleChildren);
                 if (OrganicPopulation.logging) {
                     LoggingControl.numberOfChildrenFromCohabThenMarriageDistributionLogger.log(OrganicPopulation.getCurrentDay(), numberOfChildrenToBeHadByCouple);
                 }
             } else if (!cohabiting && married) {
+                // marriage
                 numberOfChildrenToBeHadByCouple = temporalChildrenNumberOfInMarriageDistribution.getSample(OrganicPopulation.getCurrentDay(), 0, maxPossibleChildren);
                 if (OrganicPopulation.logging) {
                     LoggingControl.numberOfChildrenFromMarriagesDistributionLogger.log(OrganicPopulation.getCurrentDay(), numberOfChildrenToBeHadByCouple);
@@ -314,8 +315,7 @@ public final class OrganicPartnership implements IPartnership {
                 new OrganicEvent(EventType.PARTNERSHIP_ENDED_BY_DEATH, this, husband, wife, firstPartnersDeathDate);
                 endDay = firstPartnersDeathDate;
             } catch (NotSetUpAtClassInitilisationException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+                System.err.println("Non restrited distribution called with restricted values");
             }
         }
     }
@@ -368,7 +368,7 @@ public final class OrganicPartnership implements IPartnership {
     }
     
     /*
-     * Break up methods
+     * -------------------------------- Break up methods --------------------------------
      */
 
     /**
@@ -574,54 +574,106 @@ public final class OrganicPartnership implements IPartnership {
      * -------------------------------- Distribution Getters --------------------------------
      */
 
+    /**
+     * Returns the Divorce Instigated by Gender Distribution.
+     * @return The Divorce Instigated by Gender Distribution.
+     */
     public static TemporalEnumDistribution<DivorceInstigation> getTemporalDivorceInstigatedByGenderDistribution() {
         return temporalDivorceInstigatedByGenderDistribution;
     }
 
+    /**
+     * Returns the Divorce Age for Males Distribution.
+     * @return The Divorce Age for Males Distribution.
+     */
     public static TemporalIntegerDistribution getTemporalDivorceAgeForMaleDistribution() {
         return temporalDivorceAgeForMaleDistribution;
     }
 
+    /**
+     * Returns the Divorce Age for Females Distribution.
+     * @return The Divorce Age for Females Distribution.
+     */
     public static TemporalIntegerDistribution getTemporalDivorceAgeForFemaleDistribution() {
         return temporalDivorceAgeForFemaleDistribution;
     }
 
+    /**
+     * Returns the Number of Children in Cohabitation Distribution.
+     * @return The Number of Children in Cohabitation Distribution.
+     */
     public static TemporalIntegerDistribution getTemporalChildrenNumberOfInCohabDistribution() {
         return temporalChildrenNumberOfInCohabDistribution;
     }
 
+    /**
+     * Returns the Number of Children in Cohabitation then Marriage Distribution.
+     * @return The Number of Children in Cohabitation then Marriage Distribution.
+     */
     public static TemporalIntegerDistribution getTemporalChildrenNumberOfInCohabThenMarriageDistribution() {
         return temporalChildrenNumberOfInCohabThenMarriageDistribution;
     }
 
+    /**
+     * Returns the Number of Children in Marriage Distribution.
+     * @return The Number of Children in Marriage Distribution.
+     */
     public static TemporalIntegerDistribution getTemporalChildrenNumberOfInMarriageDistribution() {
         return temporalChildrenNumberOfInMarriageDistribution;
     }
 
+    /**
+     * Returns the Number of Children in Maternity Distribution.
+     * @return The Number of Children in Maternity Distribution.
+     */
     public static TemporalIntegerDistribution getTemporalChildrenNumberOfInMaternityDistribution() {
         return temporalChildrenNumberOfInMaternityDistribution;
     }
 
+    /**
+     * Returns the Length of Cohabitation Distribution.
+     * @return The Length of Cohabitation Distribution.
+     */
     public static TemporalIntegerDistribution getTemporalCohabitationLengthDistribution() {
         return temporalCohabitationLengthDistribution;
     }
 
+    /**
+     * Returns the Number of Affairs Distribution.
+     * @return The Number of Affairs Distribution.
+     */
     public static TemporalIntegerDistribution getTemporalAffairNumberOfDistribution() {
         return temporalAffairNumberOfDistribution;
     }
 
+    /**
+     * Returns the Number of Children in Affairs Distribution.
+     * @return The Number of Children in Affairs Distribution.
+     */
     public static TemporalIntegerDistribution getTemporalAffairNumberOfChildrenDistribution() {
         return temporalAffairNumberOfChildrenDistribution;
     }
 
+    /**
+     * Returns the Divorce Reason for Males Distribution.
+     * @return The Divorce Reason for Males Distribution.
+     */
     public static TemporalEnumDistribution<DivorceReason> getTemporalDivorceReasonMaleDistribution() {
         return temporalDivorceReasonMaleDistribution;
     }
 
+    /**
+     * Returns the Divorce Reason for Females Distribution.
+     * @return The Divorce Reason for Females Distribution.
+     */
     public static TemporalEnumDistribution<DivorceReason> getTemporalDivorceReasonFemaleDistribution() {
         return temporalDivorceReasonFemaleDistribution;
     }
 
+    /**
+     * Returns the Time from Cohabitation to Marriage Distribution.
+     * @return The Time from Cohabitation to Marriage Distribution.
+     */
     public static TemporalIntegerDistribution getTemporalCohabitaitonToMarriageTimeDistribution() {
         return temporalCohabitaitonToMarriageTimeDistribution;
     }

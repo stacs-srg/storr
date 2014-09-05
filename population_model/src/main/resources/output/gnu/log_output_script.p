@@ -379,26 +379,6 @@ set style fill solid border -1
 set boxwidth 0.95
 set xtic scale 0
 set xtic rotate by 45 right
-set title "Remarriage Partnership Characteristic - 2010 - end"
-plot "E:/wrkspc/digitising_scotland/population_model/src/main/resources/output/gnu/RemarriagePartnershipCharacteristic_2010.dat" using 3:xtic(2) ti col fc rgb '#8b1a0e', "E:/wrkspc/digitising_scotland/population_model/src/main/resources/output/gnu/RemarriagePartnershipCharacteristic_2010.dat" u 4 ti col fc rgb '#5e9c36'
-unset ylabel
-unset xlabel
-unset style
-unset boxwidth
-unset xtic
-set style line 11 lc rgb '#808080' lt 1
-set border 3 back ls 11
-set tics nomirror
-set style line 12 lc rgb '#808080' lt 0 lw 1
-set grid back ls 12
-set ylabel "Frequency"
-set xlabel "Partnership Characteristic"
-set style data histogram
-set style histogram cluster gap 1
-set style fill solid border -1
-set boxwidth 0.95
-set xtic scale 0
-set xtic rotate by 45 right
 set title "Partnership Characteristic - 2010 - end"
 plot "E:/wrkspc/digitising_scotland/population_model/src/main/resources/output/gnu/PartnershipCharacteristic_2010.dat" using 3:xtic(2) ti col fc rgb '#8b1a0e', "E:/wrkspc/digitising_scotland/population_model/src/main/resources/output/gnu/PartnershipCharacteristic_2010.dat" u 4 ti col fc rgb '#5e9c36'
 unset ylabel

@@ -56,15 +56,11 @@ public class LoggingControl {
     public static TemporalIntegerLogger ageAtMarriageFemaleDistributionLogger;
     public static TemporalIntegerLogger ageAtMarriageMaleDistributionLogger;
 
-    public static DistributionIntergerLogger ageDifferenceAtAffair;
-    public static DistributionIntergerLogger ageDifferenceAtCohab;
-    public static DistributionIntergerLogger ageDifferenceAtCohabThenMarriage;
-    public static DistributionIntergerLogger ageDifferenceAtMarriage;
-
     public static TemporalEnumLogger<DivorceInstigation> divorceInstiagetionByGenderDistributionLogger;
     public static TemporalEnumLogger<DivorceReason> divorceReasonFemaleDistributionLogger;
     public static TemporalEnumLogger<DivorceReason> divorceReasonMaleDistributionLogger;
-    public static TemporalEnumLogger<FamilyType> remarriageFamilyCharacteristicDistributionLogger;
+    // Hard to log efficiently in current implementation
+//    public static TemporalEnumLogger<FamilyType> remarriageFamilyCharacteristicDistributionLogger;
     public static TemporalEnumLogger<FamilyType> familyCharacteristicDistributionLogger;
 
     public static void setUpLogger() {
@@ -95,15 +91,10 @@ public class LoggingControl {
         LoggingControl.ageAtMarriageFemaleDistributionLogger = new TemporalIntegerLogger(OrganicPerson.getTemporalMarriageAgeForFemalesDistribution(), "MarriageAgeFemales", "Age at Marriage for Females", "Age at Marriage", true);
         LoggingControl.ageAtMarriageMaleDistributionLogger = new TemporalIntegerLogger(OrganicPerson.getTemporalMarriageAgeForMalesDistribution(), "MarriageAgeMales", "Age at Marriage for Males", "Age At Marriage", true);
 
-        LoggingControl.ageDifferenceAtAffair = new DistributionIntergerLogger(null, 0, 101);
-        LoggingControl.ageDifferenceAtCohab = new DistributionIntergerLogger(null, 0, 101);
-        LoggingControl.ageDifferenceAtCohabThenMarriage = new DistributionIntergerLogger(null, 0, 101);
-        LoggingControl.ageDifferenceAtMarriage = new DistributionIntergerLogger(null, 0, 101);
-
         LoggingControl.divorceInstiagetionByGenderDistributionLogger = new TemporalEnumLogger<>(OrganicPartnership.getTemporalDivorceInstigatedByGenderDistribution(), "DivorceInstigationByGender", "Divorce Instigation By Gender", "Divorce Instigation By");
         LoggingControl.divorceReasonFemaleDistributionLogger = new TemporalEnumLogger<>(OrganicPartnership.getTemporalDivorceReasonFemaleDistribution(), "DivorceReasonFemale", "Divorce Reason For Females", "Divorce Reason");
         LoggingControl.divorceReasonMaleDistributionLogger = new TemporalEnumLogger<>(OrganicPartnership.getTemporalDivorceReasonMaleDistribution(), "DivorceReasonMale", "Divorce Reason For Males", "Divorce Reason");
-        LoggingControl.remarriageFamilyCharacteristicDistributionLogger = new TemporalEnumLogger<>(OrganicPerson.getTemporalRemarriagePartnershipCharacteristicDistribution(), "RemarriagePartnershipCharacteristic", "Remarriage Partnership Characteristic", "Partnership Characteristic");
+//        LoggingControl.remarriageFamilyCharacteristicDistributionLogger = new TemporalEnumLogger<>(OrganicPerson.getTemporalRemarriagePartnershipCharacteristicDistribution(), "RemarriagePartnershipCharacteristic", "Remarriage Partnership Characteristic", "Partnership Characteristic");
         LoggingControl.familyCharacteristicDistributionLogger = new TemporalEnumLogger<FamilyType>(OrganicPerson.getTemporalPartnershipCharacteristicDistribution(), "PartnershipCharacteristic", "Partnership Characteristic", "Partnership Characteristic");
 
     }
@@ -134,16 +125,11 @@ public class LoggingControl {
         LoggingControl.ageAtCohabitationThenMarriageMaleDistributionLogger.outputToGnuPlotFormat();
         LoggingControl.ageAtMarriageFemaleDistributionLogger.outputToGnuPlotFormat();
         LoggingControl.ageAtMarriageMaleDistributionLogger.outputToGnuPlotFormat();
-//
-//        LoggingControl.ageDifferenceAtAffair.outputToGnuPlotFormat(1600, "AgeDifferenceAtAffair", true);
-//        LoggingControl.ageDifferenceAtCohab.outputToGnuPlotFormat(1600, "AgeDifferenceAtCohab", true);
-//        LoggingControl.ageDifferenceAtCohabThenMarriage.outputToGnuPlotFormat(1600, "AgeDifferenceAtCohabThenMarriage", true);
-//        LoggingControl.ageDifferenceAtMarriage.outputToGnuPlotFormat(1600, "AgeDifferenceAtMarriage", true);
 
         LoggingControl.divorceInstiagetionByGenderDistributionLogger.outputToGnuPlotFormat();
         LoggingControl.divorceReasonFemaleDistributionLogger.outputToGnuPlotFormat();
         LoggingControl.divorceReasonMaleDistributionLogger.outputToGnuPlotFormat();
-        LoggingControl.remarriageFamilyCharacteristicDistributionLogger.outputToGnuPlotFormat();
+//        LoggingControl.remarriageFamilyCharacteristicDistributionLogger.outputToGnuPlotFormat();
         LoggingControl.familyCharacteristicDistributionLogger.outputToGnuPlotFormat();
 
     }
@@ -186,15 +172,10 @@ public class LoggingControl {
             LoggingControl.ageAtMarriageFemaleDistributionLogger.generateGnuPlotScriptLines(writer);
             LoggingControl.ageAtMarriageMaleDistributionLogger.generateGnuPlotScriptLines(writer);
 
-//            LoggingControl.ageDifferenceAtAffair.generateGnuPlotScriptLines(writer, "Age Difference at Affair", "Age Difference");
-//            LoggingControl.ageDifferenceAtCohab.generateGnuPlotScriptLines(writer, "Age Difference at Cohab", "Age Difference");
-//            LoggingControl.ageDifferenceAtCohabThenMarriage.generateGnuPlotScriptLines(writer, "Age Difference at Cohab Then Marriage", "Age Difference");
-//            LoggingControl.ageDifferenceAtMarriage.generateGnuPlotScriptLines(writer, "Age Difference at Marriage", "Age Difference");
-
             LoggingControl.divorceInstiagetionByGenderDistributionLogger.generateGnuPlotScriptLines(writer);
             LoggingControl.divorceReasonFemaleDistributionLogger.generateGnuPlotScriptLines(writer);
             LoggingControl.divorceReasonMaleDistributionLogger.generateGnuPlotScriptLines(writer);
-            LoggingControl.remarriageFamilyCharacteristicDistributionLogger.generateGnuPlotScriptLines(writer);
+//            LoggingControl.remarriageFamilyCharacteristicDistributionLogger.generateGnuPlotScriptLines(writer);
             LoggingControl.familyCharacteristicDistributionLogger.generateGnuPlotScriptLines(writer);
 
             writer.println("set terminal png");
@@ -268,28 +249,24 @@ public class LoggingControl {
 
     public static void logAffair(final int currentDay, final int maleDays, final int femaleDays) {
         LoggingControl.affairCountLogger.incCount();
-        LoggingControl.ageDifferenceAtAffair.incCountFor(Math.abs(maleDays - femaleDays));
     }
 
     public static void logCohabitation(final int currentDay, final int maleDays, final int femaleDays) {
         LoggingControl.cohabCountLogger.incCount();
         LoggingControl.ageAtCohabitationMaleDistributionLogger.log(currentDay, maleDays);
         LoggingControl.ageAtCohabitationFemaleDistributionLogger.log(currentDay, femaleDays);
-        LoggingControl.ageDifferenceAtCohab.incCountFor(Math.abs(maleDays - femaleDays));
     }
 
     public static void logCohabitationthenMarriage(final int currentDay, final int maleDays, final int femaleDays) {
         LoggingControl.cohabThenMarriageCountLogger.incCount();
         LoggingControl.ageAtCohabitationThenMarriageMaleDistributionLogger.log(currentDay, maleDays);
         LoggingControl.ageAtCohabitationThenMarriageFemaleDistributionLogger.log(currentDay, femaleDays);
-        LoggingControl.ageDifferenceAtCohabThenMarriage.incCountFor(Math.abs(maleDays - femaleDays));
     }
 
     public static void logMarriage(final int currentDay, final int maleDays, final int femaleDays) {
         LoggingControl.marriageCountLogger.incCount();
         LoggingControl.ageAtMarriageMaleDistributionLogger.log(currentDay, maleDays);
         LoggingControl.ageAtMarriageFemaleDistributionLogger.log(currentDay, femaleDays);
-        LoggingControl.ageDifferenceAtMarriage.incCountFor(Math.abs(maleDays - femaleDays));
     }
 
     public static void yearEndLog(int currentDay) {

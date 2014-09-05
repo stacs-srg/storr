@@ -45,15 +45,16 @@ import java.util.concurrent.locks.ReentrantLock;
 public class OrganicPopulation implements IPopulation {
 
     /**
-     * Temporary testing main method.
+     * By running the class the population model is run, the arguments allow for the size of the seed population and the number of threads to be set.
      * 
-     * @param args String Arguments.
+     * @param args The size of the seed population.
+     * @param args The number of threads to be used.
      */
     public static void main(final String[] args) {
         System.out.println("--------MAIN HERE---------");
 
         if (args.length == 0) {
-            runPopulationModel(false, DEFAULT_SEED_SIZE, true, true);
+            runPopulationModel(true, DEFAULT_SEED_SIZE, true, true);
         } else if (args.length == 1) {
             runPopulationModel(true, new Integer(args[0]), true, true);
         } else if (args.length == 2) {
@@ -62,38 +63,52 @@ public class OrganicPopulation implements IPopulation {
         }
     }
 
-    public static ArrayList<Thread> threads = new ArrayList<Thread>();
-    private static int numberOfThreads = 8;
-    public static MemoryMonitor mm;
-    public static LoggingControl log = new LoggingControl();
-
-    public static PrintWriter writer = null;
-
+    /*
+     * -------------------------------- Concurrency and Threads --------------------------------
+     */
+    private static ArrayList<Thread> threads = new ArrayList<Thread>();
+    private static int numberOfThreads = 4;
+    private int[] lastDay = {0, 0, 0, 0, 0, 0, 0};
+    private ReentrantLock[] locks = new ReentrantLock[7];
+    
+    private void initLocks() {
+        for (int i = 0; i < locks.length; i++) {
+            locks[i] = new ReentrantLock();
+        }
+    }
+    
+    /*
+     * -------------------------------- Logging and output --------------------------------
+     */
+    
+    private static MemoryMonitor mm;
+    private static PrintWriter writer = null;
     public static boolean logging = true;
 
-    // Universal population variables
-    private static final int DEFAULT_SEED_SIZE = 10000;
+    /*
+     * -------------------------------- Universal population variables --------------------------------
+     */
+    
+    private static PriorityQueue<OrganicEvent> globalEventsQueue = new PriorityQueue<OrganicEvent>();
+    
+    private String description;
+    private static final int DEFAULT_SEED_SIZE = 25000;
     private static final float DAYS_PER_YEAR = 365.25f;
     private static final int START_YEAR = 1780;
-    private static final int END_YEAR = 2013;
+    private static final int END_YEAR = 2013 ;
     private static final int EPOCH_YEAR = 1600;
     private static Random random = RandomFactory.getRandom();
-
-    // Universal Dates
     private static int earliestDate = DateManipulation.dateToDays(getStartYear(), 0, 0);
     private static int currentDay;
-
-    private static PriorityQueue<OrganicEvent> globalEventsQueue = new PriorityQueue<OrganicEvent>();
-
-    // Population instance required variables
-    private String description;
-    public static List<OrganicPerson> livingPeople = new ArrayList<OrganicPerson>();
-    public static List<OrganicPerson> deadPeople = new ArrayList<OrganicPerson>();
-    public static List<OrganicPartnership> partnerships = new ArrayList<OrganicPartnership>();
-
-    // Population instance helper variables
     private static boolean seedGeneration = true;
     private static int maximumNumberOfChildrenInFamily;
+    
+    /*
+     * -------------------------------- People and partnership lists --------------------------------
+     */
+    public static List<OrganicPerson> livingPeople = new ArrayList<OrganicPerson>();
+    
+    public static List<OrganicPartnership> partnerships = new ArrayList<OrganicPartnership>();
 
     /*
      * Constructors
@@ -121,27 +136,14 @@ public class OrganicPopulation implements IPopulation {
 
     /**
      * Creates a seed population of the specified size.
-     * 
      * @param size The number of individuals to be created in the seed population.
      */
     public void makeSeed(final int size) {
-        if (seedGeneration == false) {
-            return;
-        }
         for (int i = 0; i < size; i++) {
             OrganicPerson person = new OrganicPerson(IDFactory.getNextID(), 0, -1, this, seedGeneration, null);
             livingPeople.add(person);
         }
         seedGeneration = false;
-    }
-
-    int[] lastDay = {0, 0, 0, 0, 0, 0, 0};
-    private ReentrantLock[] locks = new ReentrantLock[7];
-    
-    private void initLocks() {
-        for (int i = 0; i < locks.length; i++) {
-            locks[i] = new ReentrantLock();
-        }
     }
 
     /**
@@ -151,16 +153,13 @@ public class OrganicPopulation implements IPopulation {
      */
     public void newEventIteration(final boolean print, final boolean memoryMonitor) {
         while (getCurrentDay() <= DateManipulation.dateToDays(getEndYear(), 0, 0)) {
-            OrganicEvent event = null;
-            try {
-                event = globalEventsQueue.poll();
-            } catch (NullPointerException e) {
-
-            }
+            OrganicEvent event = globalEventsQueue.poll();
             if (event == null) {
-                continue;
+                break;
             } else {
+                // While the next event isn't in the same year as the next event.
                 while ((int) (getCurrentDay() / getDaysPerYear()) != (int) (event.getDay() / getDaysPerYear())) {
+                    // Log population as if the years end - as we know no more events will occur before the year is out and thus the population is the same now as at the year end
                     if (logging) {
                         LoggingControl.yearEndLog(currentDay);
                     }
@@ -170,14 +169,18 @@ public class OrganicPopulation implements IPopulation {
                         writer.flush();
                     }
                     if (memoryMonitor && logging) {
-                        mm.log(currentDay, LoggingControl.populationLogger.getCount(), livingPeople.size() + deadPeople.size());
+                        mm.log(currentDay, LoggingControl.populationLogger.getCount(), livingPeople.size());
                     }
+                    // Moves date to year end - can't move direct to next event date as there may be another year or more before that and thus that year end needs to be logged also.
                     double r = getCurrentDay() % DAYS_PER_YEAR;
                     setCurrentDay((int) (getCurrentDay() + Math.round(r)));
                 }
 
                 setCurrentDay(event.getDay());
 
+                // The pairing up of individuals in queues is done every ten days but for each pair of queues must only be services by a single thread
+                //  thus locks are used - try locks have been used as if a thread is already in a block then the block dosn't need attending to 
+                //  until the next 10 days and so it can be passed over by any other threads.
                 if (currentDay % 10.0f == 0) {
                     if (locks[0].tryLock()) {
                         if (lastDay[6] != currentDay && currentDay % 10.0f == 0) {
@@ -228,8 +231,8 @@ public class OrganicPopulation implements IPopulation {
                         }
                         locks[6].unlock();
                     }
-                    
                 }
+                // The number of threads is managed by using the main thread to wait on thed correct number of threads to terminate before spawning a new thread.
                 while (threads.size() > numberOfThreads) {
                     Thread temp;
                     for (int i = 0; i < threads.size(); i++) {
@@ -342,11 +345,8 @@ public class OrganicPopulation implements IPopulation {
             @Override
             public Iterator<IPerson> iterator() {
 
-                ArrayList<OrganicPerson> all = new ArrayList<OrganicPerson>();
-                all.addAll(livingPeople);
-                all.addAll(deadPeople);
 
-                final Iterator<OrganicPerson> iterator = all.iterator();
+                final Iterator<OrganicPerson> iterator = livingPeople.iterator();
 
                 return new Iterator<IPerson>() {
 
@@ -398,11 +398,8 @@ public class OrganicPopulation implements IPopulation {
     }
 
     public static OrganicPerson findOrganicPerson(final int id) {
-        ArrayList<OrganicPerson> all = new ArrayList<OrganicPerson>();
-        all.addAll(livingPeople);
-        all.addAll(deadPeople);
 
-        for (OrganicPerson person : all) {
+        for (OrganicPerson person : livingPeople) {
             if (person.getId() == id) {
                 return (OrganicPerson) person;
             }
@@ -413,11 +410,7 @@ public class OrganicPopulation implements IPopulation {
     @Override
     public IPerson findPerson(final int id) {
 
-        ArrayList<OrganicPerson> all = new ArrayList<OrganicPerson>();
-        all.addAll(livingPeople);
-        all.addAll(deadPeople);
-
-        for (OrganicPerson person : all) {
+        for (OrganicPerson person : livingPeople) {
             if (person.getId() == id) {
                 return person;
 
@@ -462,7 +455,7 @@ public class OrganicPopulation implements IPopulation {
 
     @Override
     public int getNumberOfPeople() {
-        return livingPeople.size() + deadPeople.size();
+        return livingPeople.size();
     }
 
     @Override
@@ -515,7 +508,7 @@ public class OrganicPopulation implements IPopulation {
         op.initLocks();
         op.newEventIteration(print, memoryMonitor);
         long timeTaken = System.nanoTime() - startTime;
-        System.out.print((livingPeople.size() + deadPeople.size()) + "    ");
+        System.out.print(livingPeople.size() + "    ");
         System.out.println(timeTaken / 1000000);
 
         if (print) {

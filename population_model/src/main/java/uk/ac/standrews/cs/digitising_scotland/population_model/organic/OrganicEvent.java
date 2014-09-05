@@ -98,7 +98,7 @@ public class OrganicEvent implements Comparable<OrganicEvent>, Runnable {
         if (event.getPartnership() != null) {
             switch (event.getEventType()) {
                 case BIRTH:
-                    handleBirthEvent(event.getPartnership());
+                    handleBirthEvent(event.getPartnership(), event.getMale(), event.getFemale());
                     break;
                 case DIVORCE:
                     handleDivorceEvent(event.getPartnership(), event.getMale(), event.getFemale());
@@ -123,19 +123,15 @@ public class OrganicEvent implements Comparable<OrganicEvent>, Runnable {
                     break;
                 case COMING_OF_AGE:
                     handleComingOfAgeEvent(event.getPerson());
-                    //                    partnerTogetherPeopleInRegularPartnershipQueues();
                     break;
                 case ELIGIBLE_TO_COHABIT:
                     handleEligableToCohabitEvent(event.getPerson());
-                    //                    partnerTogetherPeopleInRegularPartnershipQueues();
                     break;
                 case ELIGIBLE_TO_COHABIT_THEN_MARRY:
                     handleEligableToCohabitThenMarriageEvent(event.getPerson());
-                    //                    partnerTogetherPeopleInRegularPartnershipQueues();
                     break;
                 case ELIGIBLE_TO_MARRY:
                     handleEligibleToMarryEvent(event.getPerson());
-                    //                    partnerTogetherPeopleInRegularPartnershipQueues();
                     break;
                 case DEATH: // Everyone ends up here eventually
                     handleDeathEvent(event.getPerson());
@@ -166,8 +162,8 @@ public class OrganicEvent implements Comparable<OrganicEvent>, Runnable {
         }
     }
 
-    private void handleBirthEvent(final OrganicPartnership partnership) {
-        OrganicPerson[] children = partnership.setUpBirthEvent(OrganicPopulation.findOrganicPerson(partnership.getMalePartnerId()), OrganicPopulation.findOrganicPerson(partnership.getFemalePartnerId()), day);
+    private void handleBirthEvent(final OrganicPartnership partnership, final OrganicPerson male, final OrganicPerson female) {
+        OrganicPerson[] children = partnership.setUpBirthEvent(male, female, day);
         for (OrganicPerson child : children) {
             OrganicPopulation.livingPeople.add(child);
         }
@@ -206,14 +202,10 @@ public class OrganicEvent implements Comparable<OrganicEvent>, Runnable {
     }
 
     private void handleDeathEvent(final OrganicPerson person) {
-//        try {
-            OrganicPopulation.deadPeople.add(OrganicPopulation.livingPeople.remove(OrganicPopulation.livingPeople.indexOf(person)));
-            if (OrganicPopulation.logging) {
-                LoggingControl.ageAtDeathDistributionLogger.log(day, person.getDeathDay() - person.getBirthDay());
-                LoggingControl.populationLogger.decCount();
-            }
-//        } catch (ArrayIndexOutOfBoundsException e) {
-//        }
+        if (OrganicPopulation.logging) {
+            LoggingControl.ageAtDeathDistributionLogger.log(day, person.getDeathDay() - person.getBirthDay());
+            LoggingControl.populationLogger.decCount();
+        }
     }
 
     /*
@@ -333,7 +325,7 @@ public class OrganicEvent implements Comparable<OrganicEvent>, Runnable {
      * @return
      */
     private boolean eligableToPartner(final OrganicPerson male, final OrganicPerson female) {
-        boolean resonableAgeDifference = PopulationLogic.partnerAgeDifferenceIsReasonable(DateManipulation.dateToDays(male.getBirthDate()), DateManipulation.dateToDays(female.getBirthDate()));
+        boolean resonableAgeDifference = PopulationLogic.partnerAgeDifferenceIsReasonable(male.getBirthDay(), female.getBirthDay());
         boolean notSiblings;
 
         if (male.getParentsPartnership() == female.getParentsPartnership() && male.getParentsPartnership() != -1) {
