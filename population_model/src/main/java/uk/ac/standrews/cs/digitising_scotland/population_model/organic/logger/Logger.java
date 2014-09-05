@@ -16,19 +16,14 @@
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.organic.logger;
 
-import java.io.PrintWriter;
-
-
 public abstract class Logger<Value> {
     
-    protected Value minXValue;
-    protected Value maxXValue;
+    protected int minXValue;
+    protected int maxXValue;
+
     
     protected final static String FWD_SLASH = "/";
     protected final static String BCK_SLASH = "\\";
-
-    
-    
     public abstract String generateGnuPlotPlottingScript();
     protected String filePath;
 

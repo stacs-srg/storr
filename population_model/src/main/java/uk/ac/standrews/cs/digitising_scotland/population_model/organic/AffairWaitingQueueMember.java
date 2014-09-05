@@ -31,7 +31,7 @@ public class AffairWaitingQueueMember implements Comparable<AffairWaitingQueueMe
     private int affairDay;
     private boolean interMarital;
 
-    private static final Enum<?>[] AFFAIR_WITH_MARRIED_OR_SINGLE_FAMILY_TYPE_ARRAY = {FamilyType.SINGLE_AFFAIR, FamilyType.INTER_MARITAL_AFFAIR};
+    private static final Enum<?>[] AFFAIR_WITH_MARRIED_OR_SINGLE_FAMILY_TYPE_ARRAY = { FamilyType.SINGLE_AFFAIR, FamilyType.INTER_MARITAL_AFFAIR };
     private static TemporalEnumDistribution<FamilyType> affairWithMarriedOrSingleDistribution;
 
     /**
@@ -67,7 +67,7 @@ public class AffairWaitingQueueMember implements Comparable<AffairWaitingQueueMe
     }
 
     @Override
-    public int compareTo(final AffairWaitingQueueMember o) {      
+    public int compareTo(final AffairWaitingQueueMember o) {
         if (affairDay < o.affairDay) {
             return -1;
         } else if (affairDay == o.affairDay) {

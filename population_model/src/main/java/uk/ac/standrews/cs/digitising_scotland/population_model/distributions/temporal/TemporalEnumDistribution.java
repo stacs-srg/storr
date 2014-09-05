@@ -36,7 +36,7 @@ public class TemporalEnumDistribution<Value> extends TemporalDistribution<Value>
      */
     public TemporalEnumDistribution(final OrganicPopulation population, final String distributionKey, final Random random, final Enum[] enums) {
         super(population, distributionKey, random, false);
-        this.enums = enums;
+        this.enums = enums.clone();
     }
 
     /**

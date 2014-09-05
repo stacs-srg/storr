@@ -33,7 +33,7 @@ public class DistributionEnumLogger<Value> extends DistributionLogger<Value> {
         this.maxXValue = enums.length - 1;
         
         this.relatedDistribution = relatedDistribution;
-        this.enums = enums;
+        this.enums = enums.clone();
         counts = new int[(int) (relatedDistribution.getMaximumReturnValue() - relatedDistribution.getMinimumReturnValue() + 1)];
     }
 

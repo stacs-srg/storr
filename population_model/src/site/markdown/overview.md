@@ -8,6 +8,22 @@ Events are taken from the queue in date order at which point they are handled so
 The way in which the simulation progresses is defined by the types of events which are modeled and the point in time which they occur which is governed by statistical distributions.
 
 ---
+##Running the model
+
+The model can be run by making a call to the method runPopulationModel() in the class OrganicPopulation, the simulation is run using the given parameters and output to various files, these being:
+     * Output file: output_{time in ns}.txt in the directory src/main/resources/output/
+     * Memory log file: memory_usage{time in ns}.dat in directory src/main/resources/output/
+     * GnuPlot script file: log_output_script.p in directory src/main/resources/output/gnu/
+     * GnuPlot dat files: in directory src/main/resources/output/gnu/
+     
+The arguments for the method are:
+     * seedSize: The size of the initial seed population.
+     * print: If the program should print results to file.
+     * memoryMonitor: If the program should record memory footprint.
+     * logging: If the program should log population statistics - note: Must be enabled to use either print or memory monitoring options.
+
+
+---
 
 ## Events
 

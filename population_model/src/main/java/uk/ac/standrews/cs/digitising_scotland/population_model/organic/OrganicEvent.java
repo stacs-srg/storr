@@ -18,7 +18,6 @@ package uk.ac.standrews.cs.digitising_scotland.population_model.organic;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.PriorityQueue;
 
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IDFactory;
@@ -29,8 +28,8 @@ import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
 /**
  * The OrganicEvent class represents the possible events that can occur within the population.
  * 
- * @author Victor Andrei (va9@st-andrews.ac.uk)
  * @author Tom Dalton (tsd4@st-andrews.ac.uk)
+ * @author Victor Andrei (va9@st-andrews.ac.uk)
  */
 public class OrganicEvent implements Comparable<OrganicEvent>, Runnable {
 
@@ -41,12 +40,22 @@ public class OrganicEvent implements Comparable<OrganicEvent>, Runnable {
     private OrganicPerson male = null;
     private OrganicPerson female = null;
 
+    // The day on which this event is to occur.
     private int day;
 
+    
+    /*
+     * -------------------------------- Thread method --------------------------------
+     */
+    
     @Override
     public void run() {
         handleEvent(this);
     }
+    
+    /*
+     * -------------------------------- Constructors --------------------------------
+     */
 
     /**
      * To be used to initialise an OrganicEvent for a person given the eventType which is an Enum of possible events for the given person on the given day.
@@ -59,9 +68,6 @@ public class OrganicEvent implements Comparable<OrganicEvent>, Runnable {
         this.eventType = eventType;
         this.person = person;
         this.day = day;
-        if (OrganicPopulation.isDebug()) {
-            System.out.println("Adding Person Event - " + eventType.toString() + " - On day: " + day);
-        }
         OrganicPopulation.addEventToGlobalQueue(this);
     }
 
@@ -80,82 +86,19 @@ public class OrganicEvent implements Comparable<OrganicEvent>, Runnable {
         this.male = male;
         this.female = female;
         this.day = day;
-        if (OrganicPopulation.isDebug()) {
-            System.out.println("Adding Partnership Event - " + eventType.toString() + " - On day: " + day);
-        }
         OrganicPopulation.addEventToGlobalQueue(this);
     }
 
-    /**
-     * Returns the event type.
-     *
-     * @return The event type
+    /*
+     * -------------------------------- Event handle methods --------------------------------
      */
-    public EventType getEventType() {
-        return eventType;
-    }
-
-    @Override
-    public int compareTo(final OrganicEvent o) {
-        if (day < o.day) {
-            return -1;
-        } else if (day == o.day) {
-            return 0;
-        } else {
-            return 1;
-        }
-    }
-
-    /**
-     * Returns the stored individual person in the case of a person instance.
-     * 
-     * @return the person
-     */
-    public OrganicPerson getPerson() {
-        return person;
-    }
-
-    /**
-     * Returns the stored partnership.
-     * 
-     * @return the partnership
-     */
-    public OrganicPartnership getPartnership() {
-        return partnership;
-    }
-
-    /**
-     * Returns the day of the event.
-     * 
-     * @return The day of the event in days since the 1/1/1600.
-     */
-    public int getDay() {
-        return day;
-    }
-
-    /**
-     * Returns the associated male.
-     * 
-     * @return The stored male.
-     */
-    public OrganicPerson getMale() {
-        return male;
-    }
-
-    /**
-     * Returns the associated female.
-     * 
-     * @return The stored female.
-     */
-    public OrganicPerson getFemale() {
-        return female;
-    }
-
+    
     private void handleEvent(final OrganicEvent event) {
+        // If Person event
         if (event.getPartnership() != null) {
             switch (event.getEventType()) {
                 case BIRTH:
-                    handleBirthEvent(event.getPartnership());
+                    handleBirthEvent(event.getPartnership(), event.getMale(), event.getFemale());
                     break;
                 case DIVORCE:
                     handleDivorceEvent(event.getPartnership(), event.getMale(), event.getFemale());
@@ -169,29 +112,26 @@ public class OrganicEvent implements Comparable<OrganicEvent>, Runnable {
                 default:
                     break;
             }
+        // Else if Partnership event
         } else if (event.getPerson() != null) {
             switch (event.getEventType()) {
                 case BORN:
-                    if (OrganicPopulation.logging) {
-                        LoggingControl.populationLogger.incCount();
+                    if (OrganicPopulation.isLogging()) {
+                        LoggingControl.getPopulationLogger().incCount();
                     }
                     event.getPerson().populateTimeline(false);
                     break;
                 case COMING_OF_AGE:
                     handleComingOfAgeEvent(event.getPerson());
-                    //                    partnerTogetherPeopleInRegularPartnershipQueues();
                     break;
                 case ELIGIBLE_TO_COHABIT:
                     handleEligableToCohabitEvent(event.getPerson());
-                    //                    partnerTogetherPeopleInRegularPartnershipQueues();
                     break;
                 case ELIGIBLE_TO_COHABIT_THEN_MARRY:
                     handleEligableToCohabitThenMarriageEvent(event.getPerson());
-                    //                    partnerTogetherPeopleInRegularPartnershipQueues();
                     break;
                 case ELIGIBLE_TO_MARRY:
                     handleEligibleToMarryEvent(event.getPerson());
-                    //                    partnerTogetherPeopleInRegularPartnershipQueues();
                     break;
                 case DEATH: // Everyone ends up here eventually
                     handleDeathEvent(event.getPerson());
@@ -202,34 +142,30 @@ public class OrganicEvent implements Comparable<OrganicEvent>, Runnable {
         }
     }
 
-    /*
-     * Event handle methods
-     */
-
     private void handlePartnershipEndedByDeathEvent(final OrganicPartnership partnership) {
-        if (OrganicPopulation.logging) {
+        if (OrganicPopulation.isLogging()) {
             LoggingControl.logPartnershipEndByDeath(partnership, day);
         }
     }
 
     private void handleDivorceEvent(final OrganicPartnership partnership, final OrganicPerson husband, final OrganicPerson wife) {
         partnership.divorce(husband, wife);
-        if (OrganicPopulation.logging) {
-        LoggingControl.logPartnershipEnd(partnership, day, husband, wife);
+        if (OrganicPopulation.isLogging()) {
+            LoggingControl.logPartnershipEnd(partnership, day, husband, wife);
         }
     }
 
     private void handleEndOfCohabitation(final OrganicPartnership partnership, final OrganicPerson husband, final OrganicPerson wife) {
         partnership.endCohabitation(husband, wife);
-        if (OrganicPopulation.logging) {
-        LoggingControl.logPartnershipEnd(partnership, day, husband, wife);
+        if (OrganicPopulation.isLogging()) {
+            LoggingControl.logPartnershipEnd(partnership, day, husband, wife);
         }
     }
 
-    private void handleBirthEvent(final OrganicPartnership partnership) {
-        OrganicPerson[] children = partnership.setUpBirthEvent(OrganicPopulation.findOrganicPerson(partnership.getMalePartnerId()), OrganicPopulation.findOrganicPerson(partnership.getFemalePartnerId()), day);
+    private void handleBirthEvent(final OrganicPartnership partnership, final OrganicPerson male, final OrganicPerson female) {
+        OrganicPerson[] children = partnership.setUpBirthEvent(male, female, day);
         for (OrganicPerson child : children) {
-            OrganicPopulation.livingPeople.add(child);
+            OrganicPopulation.addLivingPerson(child);
         }
     }
 
@@ -266,33 +202,19 @@ public class OrganicEvent implements Comparable<OrganicEvent>, Runnable {
     }
 
     private void handleDeathEvent(final OrganicPerson person) {
-        try {
-            OrganicPopulation.deadPeople.add(OrganicPopulation.livingPeople.remove(OrganicPopulation.livingPeople.indexOf(person)));
-            if (OrganicPopulation.logging) {
-            LoggingControl.ageAtDeathDistributionLogger.log(day, person.getDeathDay() - person.getBirthDay());
-            LoggingControl.populationLogger.decCount();
-            }
-        } catch (ArrayIndexOutOfBoundsException e) {
+        if (OrganicPopulation.isLogging()) {
+            LoggingControl.getAgeAtDeathDistributionLogger().log(day, person.getDeathDay() - person.getBirthDay());
+            LoggingControl.getPopulationLogger().decCount();
         }
     }
 
     /*
-     * Queue methods
+     * -------------------------------- Partnership Code --------------------------------
      */
 
-    /**
-     * Adds the given person to the AffairsWaitingQueue with the specified date.
-     * 
-     * @param person The person waiting to have an affair.
-     * @param affairDay The day on which the affair begins in days since 1/1/1600.
+    /*
+     * Partnership queues
      */
-    public static void addPersonToAffairsWaitingQueue(final OrganicPerson person, final int affairDay) {
-        if (person.getSex() == 'M') {
-            maleAffairsWaitingQueue.add(new AffairWaitingQueueMember(person, affairDay));
-        } else {
-            femaleAffairsWaitingQueue.add(new AffairWaitingQueueMember(person, affairDay));
-        }
-    }
 
     private static List<OrganicPerson> maleMarriageQueue = new LinkedList<OrganicPerson>();
     private static List<OrganicPerson> femaleMarriageQueue = new LinkedList<OrganicPerson>();
@@ -315,122 +237,16 @@ public class OrganicEvent implements Comparable<OrganicEvent>, Runnable {
     private static PriorityQueue<AffairWaitingQueueMember> maleAffairsWaitingQueue = new PriorityQueue<AffairWaitingQueueMember>();
     private static PriorityQueue<AffairWaitingQueueMember> femaleAffairsWaitingQueue = new PriorityQueue<AffairWaitingQueueMember>();
 
-    private List<OrganicPerson> getMaleQueueOf(final FamilyType type) {
-        switch (type) {
-            case SINGLE:
-            case FEMALE_SINGLE_AFFAIR:
-                return maleSingleQueue;
-            case COHABITATION:
-                return maleCohabitationQueue;
-            case COHABITATION_THEN_MARRIAGE:
-                return maleCohabitationThenMarriageQueue;
-            case MARRIAGE:
-                return maleMarriageQueue;
-            case MALE_SINGLE_AFFAIR:
-                return maleSingleAffairsQueue;
-            case MALE_MARITAL_AFFAIR:
-            case FEMALE_MARITAL_AFFAIR:
-                return maleMaritalAffairsQueue;
-            default:
-                return null;
-        }
-    }
+    /*
+     * Partnership methods
+     */
 
-    private List<OrganicPerson> getFemaleQueueOf(final FamilyType type) {
-        switch (type) {
-            case SINGLE:
-            case MALE_SINGLE_AFFAIR:
-                return femaleSingleQueue;
-            case COHABITATION:
-                return femaleCohabitationQueue;
-            case COHABITATION_THEN_MARRIAGE:
-                return femaleCohabitationThenMarriageQueue;
-            case MARRIAGE:
-                return femaleMarriageQueue;
-            case FEMALE_SINGLE_AFFAIR:
-                return femaleSingleAffairsQueue;
-            case FEMALE_MARITAL_AFFAIR:
-            case MALE_MARITAL_AFFAIR:
-                return femaleMaritalAffairsQueue;
-            default:
-                return null;
-        }
-    }
-
-    public void partnerUpMembersOfAffairsQueue() {
-        // check the waiting queue for people ready to have affair
-        while (maleAffairsWaitingQueue.peek() != null) {
-            if (maleAffairsWaitingQueue.peek().getAffairDay() <= day) {
-                if (maleAffairsWaitingQueue.peek().isInterMarital()) {
-                    maleMaritalAffairsQueue.add(maleAffairsWaitingQueue.poll().getPerson());
-                } else {
-                    maleSingleAffairsQueue.add(maleAffairsWaitingQueue.poll().getPerson());
-                }
-            } else {
-                break;
-            }
-        }
-        while (femaleAffairsWaitingQueue.peek() != null) {
-            if (femaleAffairsWaitingQueue.peek().getAffairDay() <= day) {
-                if (femaleAffairsWaitingQueue.peek().isInterMarital()) {
-                    femaleMaritalAffairsQueue.add(femaleAffairsWaitingQueue.poll().getPerson());
-                } else {
-                    femaleSingleAffairsQueue.add(femaleAffairsWaitingQueue.poll().getPerson());
-                }
-            } else {
-                break;
-            }
-        }
-        // Decide if affair between married people or with single person
-        
-//        partnerTogetherPeopleInMaritalAffairPartnershipQueue();
-//        partnerTogetherPeopleInMaleSingleAffairPartnershipQueue();
-//        partnerTogetherPeopleInFemaleSingleAffairPartnershipQueue();
-        
-//        partnerTogetherPeopleInPartnershipQueue(FamilyType.MALE_SINGLE_AFFAIR);
-//        partnerTogetherPeopleInPartnershipQueue(FamilyType.MALE_MARITAL_AFFAIR);
-//        partnerTogetherPeopleInPartnershipQueue(FamilyType.FEMALE_SINGLE_AFFAIR);
-//        partnerTogetherPeopleInPartnershipQueue(FamilyType.FEMALE_MARITAL_AFFAIR);
-    }
-
-    public void partnerTogetherPeopleInRegularPartnershipQueues() {
-        
-        partnerTogetherPeopleInCohabPartnershipQueue();
-        partnerTogetherPeopleInCohabThenMarriagePartnershipQueue();
-        partnerTogetherPeopleInMarriagePartnershipQueue();
-//        partnerTogetherPeopleInPartnershipQueue(FamilyType.COHABITATION);
-//        partnerTogetherPeopleInPartnershipQueue(FamilyType.COHABITATION_THEN_MARRIAGE);
-//        partnerTogetherPeopleInPartnershipQueue(FamilyType.MARRIAGE);
-        partnerUpMembersOfAffairsQueue();
-    }
-    
-    public void partnerTogetherPeopleInMaritalAffairPartnershipQueue() {
-        partnerTogetherPeopleInPartnershipQueue(FamilyType.MALE_MARITAL_AFFAIR);
-    }
-    
-    public void partnerTogetherPeopleInMaleSingleAffairPartnershipQueue() {
-        partnerTogetherPeopleInPartnershipQueue(FamilyType.MALE_SINGLE_AFFAIR);
-    }
-    
-    public void partnerTogetherPeopleInFemaleSingleAffairPartnershipQueue() {
-        partnerTogetherPeopleInPartnershipQueue(FamilyType.FEMALE_SINGLE_AFFAIR);
-    }
-    
-    public void partnerTogetherPeopleInCohabPartnershipQueue() {
-        partnerTogetherPeopleInPartnershipQueue(FamilyType.COHABITATION);
-    }
-    
-    public void partnerTogetherPeopleInCohabThenMarriagePartnershipQueue() {
-        partnerTogetherPeopleInPartnershipQueue(FamilyType.COHABITATION_THEN_MARRIAGE);
-    }
-    
-    public void partnerTogetherPeopleInMarriagePartnershipQueue() {
-        partnerTogetherPeopleInPartnershipQueue(FamilyType.MARRIAGE);
-    }
-    
-    
-
-    private void partnerTogetherPeopleInPartnershipQueue(final FamilyType type) {
+    /**
+     * Partners together the people in the specified partnership queue.
+     * 
+     * @param type The family type of the queue to be paired up.
+     */
+    public void partnerTogetherPeopleInPartnershipQueue(final FamilyType type) {
         // if (DEBUG) {
         // writer.println("PARTNERING UP QUEUE - " + type.toString());
         // }
@@ -494,30 +310,23 @@ public class OrganicEvent implements Comparable<OrganicEvent>, Runnable {
                 removeFromQueue(femaleQueue, firstFemaleId);
                 firstMaleId = (Integer) null;
                 firstFemaleId = (Integer) null;
+                // Ignore Jenkins
                 break;
             }
         }
     }
-
-    private void removeFromQueue(final LinkedList<OrganicPerson> queue, final Integer givenId) {
-        OrganicPerson first;
-        try {
-            first = queue.removeFirst();
-        } catch (NoSuchElementException e) {
-            System.err.println("List Empty");
-            return;
-        }
-        //        int id = queue.getFirst().getId();
-
-        if (first.getId() != givenId) {
-            while (queue.getFirst().getId() != givenId) {
-                queue.add(queue.removeFirst());
-            }
-        }
-    }
-
+    
+    /**
+     * Method tests if two people are eligible to marry. Checks age difference and that they are not siblings or half siblings (i.e. that they do not share a parent).
+     * Further conditions could be added within this method (e.g. distance between the two individuals locations).
+     * The tightness of restrictions should be carefully considered as if they are too tight then not enough people will be partnered up and thus reducing the number of children born which can lead to extinction.
+     * 
+     * @param male
+     * @param female
+     * @return
+     */
     private boolean eligableToPartner(final OrganicPerson male, final OrganicPerson female) {
-        boolean resonableAgeDifference = PopulationLogic.partnerAgeDifferenceIsReasonable(DateManipulation.dateToDays(male.getBirthDate()), DateManipulation.dateToDays(female.getBirthDate()));
+        boolean resonableAgeDifference = PopulationLogic.partnerAgeDifferenceIsReasonable(male.getBirthDay(), female.getBirthDay());
         boolean notSiblings;
 
         if (male.getParentsPartnership() == female.getParentsPartnership() && male.getParentsPartnership() != -1) {
@@ -547,18 +356,190 @@ public class OrganicEvent implements Comparable<OrganicEvent>, Runnable {
 
         // Create partnership
         Object[] partnershipObjects = OrganicPartnership.createOrganicPartnership(IDFactory.getNextID(), husband, wife, days, day, familyType);
-        OrganicPopulation.partnerships.add((OrganicPartnership) partnershipObjects[0]);
+        OrganicPopulation.addPartnership((OrganicPartnership) partnershipObjects[0]);
         if (partnershipObjects.length > 1) {
             for (int i = 1; i < partnershipObjects.length; i++) {
-                OrganicPopulation.livingPeople.add((OrganicPerson) partnershipObjects[i]);
+                OrganicPopulation.addLivingPerson((OrganicPerson) partnershipObjects[i]);
             }
         }
-        if (OrganicPopulation.logging) {
-            LoggingControl.familyCharacteristicDistributionLogger.log(day, familyType);
+        if (OrganicPopulation.isLogging()) {
+            LoggingControl.getFamilyCharacteristicDistributionLogger().log(day, familyType);
             LoggingControl.logPartnership(familyType, day, DateManipulation.differenceInDays(husband.getBirthDay(), days), DateManipulation.differenceInDays(wife.getBirthDay(), days));
         }
         husband.addPartnership(((OrganicPartnership) partnershipObjects[0]).getId());
         wife.addPartnership(((OrganicPartnership) partnershipObjects[0]).getId());
+    }
+    
+    /*
+     * Partnership Helper Methods
+     */
+    
+    /**
+     * Adds the given person to the AffairsWaitingQueue with the specified date.
+     * 
+     * @param person The person waiting to have an affair.
+     * @param affairDay The day on which the affair begins in days since 1/1/1600.
+     */
+    public static void addPersonToAffairsWaitingQueue(final OrganicPerson person, final int affairDay) {
+        if (person.getSex() == 'M') {
+            maleAffairsWaitingQueue.add(new AffairWaitingQueueMember(person, affairDay));
+        } else {
+            femaleAffairsWaitingQueue.add(new AffairWaitingQueueMember(person, affairDay));
+        }
+    }
+    
+    /**
+     * Checks the affairs waiting queues and moves individuals whose waiting time has expired to the approproate affair queue.
+     */
+    public void movePeopleFromAffarirsWaitingQueueToAppropriateQueue() {
+        // check the waiting queue for people ready to have affair
+        while (maleAffairsWaitingQueue.peek() != null) {
+            if (maleAffairsWaitingQueue.peek().getAffairDay() <= day) {
+                if (maleAffairsWaitingQueue.peek().isInterMarital()) {
+                    maleMaritalAffairsQueue.add(maleAffairsWaitingQueue.poll().getPerson());
+                } else {
+                    maleSingleAffairsQueue.add(maleAffairsWaitingQueue.poll().getPerson());
+                }
+            } else {
+                break;
+            }
+        }
+        while (femaleAffairsWaitingQueue.peek() != null) {
+            if (femaleAffairsWaitingQueue.peek().getAffairDay() <= day) {
+                if (femaleAffairsWaitingQueue.peek().isInterMarital()) {
+                    femaleMaritalAffairsQueue.add(femaleAffairsWaitingQueue.poll().getPerson());
+                } else {
+                    femaleSingleAffairsQueue.add(femaleAffairsWaitingQueue.poll().getPerson());
+                }
+            } else {
+                break;
+            }
+        }
+    }
+    
+    private List<OrganicPerson> getMaleQueueOf(final FamilyType type) {
+        switch (type) {
+            case SINGLE:
+            case FEMALE_SINGLE_AFFAIR:
+                return maleSingleQueue;
+            case COHABITATION:
+                return maleCohabitationQueue;
+            case COHABITATION_THEN_MARRIAGE:
+                return maleCohabitationThenMarriageQueue;
+            case MARRIAGE:
+                return maleMarriageQueue;
+            case MALE_SINGLE_AFFAIR:
+                return maleSingleAffairsQueue;
+            case MALE_MARITAL_AFFAIR:
+            case FEMALE_MARITAL_AFFAIR:
+                return maleMaritalAffairsQueue;
+            default:
+                return null;
+        }
+    }
+
+    private List<OrganicPerson> getFemaleQueueOf(final FamilyType type) {
+        switch (type) {
+            case SINGLE:
+            case MALE_SINGLE_AFFAIR:
+                return femaleSingleQueue;
+            case COHABITATION:
+                return femaleCohabitationQueue;
+            case COHABITATION_THEN_MARRIAGE:
+                return femaleCohabitationThenMarriageQueue;
+            case MARRIAGE:
+                return femaleMarriageQueue;
+            case FEMALE_SINGLE_AFFAIR:
+                return femaleSingleAffairsQueue;
+            case FEMALE_MARITAL_AFFAIR:
+            case MALE_MARITAL_AFFAIR:
+                return femaleMaritalAffairsQueue;
+            default:
+                return null;
+        }
+    }
+    
+    private void removeFromQueue(final LinkedList<OrganicPerson> queue, final Integer givenId) {
+        int maleId = queue.getFirst().getId();
+        queue.removeFirst();
+        if (maleId != givenId) {
+            while (queue.getFirst().getId() != givenId) {
+                queue.add(queue.removeFirst());
+            }
+        }
+    }
+    
+    /*
+     * -------------------------------- Interface Methods --------------------------------
+     */
+    
+    @Override
+    public int compareTo(final OrganicEvent o) {
+        if (day < o.day) {
+            return -1;
+        } else if (day == o.day) {
+            return 0;
+        } else {
+            return 1;
+        }
+    }
+    
+    /*
+     * -------------------------------- Getter Methods --------------------------------
+     */
+    
+    /**
+     * Returns the event type.
+     *
+     * @return The event type
+     */
+    public EventType getEventType() {
+        return eventType;
+    }
+
+    /**
+     * Returns the stored individual person in the case of a person instance.
+     * 
+     * @return the person
+     */
+    public OrganicPerson getPerson() {
+        return person;
+    }
+
+    /**
+     * Returns the stored partnership.
+     * 
+     * @return the partnership
+     */
+    public OrganicPartnership getPartnership() {
+        return partnership;
+    }
+
+    /**
+     * Returns the day of the event.
+     * 
+     * @return The day of the event in days since the 1/1/1600.
+     */
+    public int getDay() {
+        return day;
+    }
+
+    /**
+     * Returns the associated male.
+     * 
+     * @return The stored male.
+     */
+    public OrganicPerson getMale() {
+        return male;
+    }
+
+    /**
+     * Returns the associated female.
+     * 
+     * @return The stored female.
+     */
+    public OrganicPerson getFemale() {
+        return female;
     }
 
 }

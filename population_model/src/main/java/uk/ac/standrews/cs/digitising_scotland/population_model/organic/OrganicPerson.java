@@ -205,9 +205,9 @@ public class OrganicPerson implements IPerson {
     public void populateTimeline(final boolean previousMarriage) {
         // Decide family type
         FamilyType partnershipCharacteristic = decideFuturePartnershipCharacteristics(previousMarriage);
-        if (OrganicPopulation.logging) {
-            LoggingControl.remarriageFamilyCharacteristicDistributionLogger.log(population.getCurrentDay(), partnershipCharacteristic);
-        }
+//        if (OrganicPopulation.isLogging()) {
+//            LoggingControl.remarriageFamilyCharacteristicDistributionLogger.log(OrganicPopulation.getCurrentDay(), partnershipCharacteristic);
+//        }
         switch (partnershipCharacteristic) {
             case SINGLE:
                 addSingleComingOfAgeEvent();
@@ -249,12 +249,15 @@ public class OrganicPerson implements IPerson {
     }
 
     private void addSingleComingOfAgeEvent() {
-        int setAge = (int) (COMING_OF_AGE_AGE * population.getDaysPerYear());
-        if (population.getCurrentDay() - getBirthDay() > setAge) {
-            setAge = population.getCurrentDay() - getBirthDay() + 1;
+        int setAge = (int) (COMING_OF_AGE_AGE * OrganicPopulation.getDaysPerYear());
+        if (OrganicPopulation.getCurrentDay() - getBirthDay() > setAge) {
+            setAge = OrganicPopulation.getCurrentDay() - getBirthDay() + 1;
+//            if (OrganicPopulation.isLogging()) {
+//                LoggingControl.remarriageFamilyCharacteristicDistributionLogger.log(OrganicPopulation.getCurrentDay(), FamilyType.SINGLE);
+//            }
         } else {
-            if (OrganicPopulation.logging) {
-                LoggingControl.familyCharacteristicDistributionLogger.log(population.getCurrentDay(), FamilyType.SINGLE);
+            if (OrganicPopulation.isLogging()) {
+                LoggingControl.getFamilyCharacteristicDistributionLogger().log(OrganicPopulation.getCurrentDay(), FamilyType.SINGLE);
             }
         }
         new OrganicEvent(EventType.COMING_OF_AGE, this, getBirthDay() + setAge);
