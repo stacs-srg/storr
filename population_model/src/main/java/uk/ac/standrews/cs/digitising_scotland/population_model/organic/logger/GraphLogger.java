@@ -36,7 +36,7 @@ public class GraphLogger extends Logger<Integer>{
         this.yLabel = yLabel;
         this.minXValue = minXValue;
         this.maxXValue = maxXValue;
-        values = new int[maxXValue - minXValue];
+        values = new int[this.maxXValue - minXValue];
     }
     
     public void log(int xValue, int yValue) {

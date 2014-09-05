@@ -116,8 +116,8 @@ public class OrganicEvent implements Comparable<OrganicEvent>, Runnable {
         } else if (event.getPerson() != null) {
             switch (event.getEventType()) {
                 case BORN:
-                    if (OrganicPopulation.logging) {
-                        LoggingControl.populationLogger.incCount();
+                    if (OrganicPopulation.isLogging()) {
+                        LoggingControl.getPopulationLogger().incCount();
                     }
                     event.getPerson().populateTimeline(false);
                     break;
@@ -143,21 +143,21 @@ public class OrganicEvent implements Comparable<OrganicEvent>, Runnable {
     }
 
     private void handlePartnershipEndedByDeathEvent(final OrganicPartnership partnership) {
-        if (OrganicPopulation.logging) {
+        if (OrganicPopulation.isLogging()) {
             LoggingControl.logPartnershipEndByDeath(partnership, day);
         }
     }
 
     private void handleDivorceEvent(final OrganicPartnership partnership, final OrganicPerson husband, final OrganicPerson wife) {
         partnership.divorce(husband, wife);
-        if (OrganicPopulation.logging) {
+        if (OrganicPopulation.isLogging()) {
             LoggingControl.logPartnershipEnd(partnership, day, husband, wife);
         }
     }
 
     private void handleEndOfCohabitation(final OrganicPartnership partnership, final OrganicPerson husband, final OrganicPerson wife) {
         partnership.endCohabitation(husband, wife);
-        if (OrganicPopulation.logging) {
+        if (OrganicPopulation.isLogging()) {
             LoggingControl.logPartnershipEnd(partnership, day, husband, wife);
         }
     }
@@ -202,9 +202,9 @@ public class OrganicEvent implements Comparable<OrganicEvent>, Runnable {
     }
 
     private void handleDeathEvent(final OrganicPerson person) {
-        if (OrganicPopulation.logging) {
-            LoggingControl.ageAtDeathDistributionLogger.log(day, person.getDeathDay() - person.getBirthDay());
-            LoggingControl.populationLogger.decCount();
+        if (OrganicPopulation.isLogging()) {
+            LoggingControl.getAgeAtDeathDistributionLogger().log(day, person.getDeathDay() - person.getBirthDay());
+            LoggingControl.getPopulationLogger().decCount();
         }
     }
 
@@ -361,8 +361,8 @@ public class OrganicEvent implements Comparable<OrganicEvent>, Runnable {
                 OrganicPopulation.livingPeople.add((OrganicPerson) partnershipObjects[i]);
             }
         }
-        if (OrganicPopulation.logging) {
-            LoggingControl.familyCharacteristicDistributionLogger.log(day, familyType);
+        if (OrganicPopulation.isLogging()) {
+            LoggingControl.getFamilyCharacteristicDistributionLogger().log(day, familyType);
             LoggingControl.logPartnership(familyType, day, DateManipulation.differenceInDays(husband.getBirthDay(), days), DateManipulation.differenceInDays(wife.getBirthDay(), days));
         }
         husband.addPartnership(((OrganicPartnership) partnershipObjects[0]).getId());

@@ -205,7 +205,7 @@ public class OrganicPerson implements IPerson {
     public void populateTimeline(final boolean previousMarriage) {
         // Decide family type
         FamilyType partnershipCharacteristic = decideFuturePartnershipCharacteristics(previousMarriage);
-//        if (OrganicPopulation.logging) {
+//        if (OrganicPopulation.isLogging()) {
 //            LoggingControl.remarriageFamilyCharacteristicDistributionLogger.log(OrganicPopulation.getCurrentDay(), partnershipCharacteristic);
 //        }
         switch (partnershipCharacteristic) {
@@ -252,12 +252,12 @@ public class OrganicPerson implements IPerson {
         int setAge = (int) (COMING_OF_AGE_AGE * OrganicPopulation.getDaysPerYear());
         if (OrganicPopulation.getCurrentDay() - getBirthDay() > setAge) {
             setAge = OrganicPopulation.getCurrentDay() - getBirthDay() + 1;
-//            if (OrganicPopulation.logging) {
+//            if (OrganicPopulation.isLogging()) {
 //                LoggingControl.remarriageFamilyCharacteristicDistributionLogger.log(OrganicPopulation.getCurrentDay(), FamilyType.SINGLE);
 //            }
         } else {
-            if (OrganicPopulation.logging) {
-                LoggingControl.familyCharacteristicDistributionLogger.log(OrganicPopulation.getCurrentDay(), FamilyType.SINGLE);
+            if (OrganicPopulation.isLogging()) {
+                LoggingControl.getFamilyCharacteristicDistributionLogger().log(OrganicPopulation.getCurrentDay(), FamilyType.SINGLE);
             }
         }
         new OrganicEvent(EventType.COMING_OF_AGE, this, getBirthDay() + setAge);

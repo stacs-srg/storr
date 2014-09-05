@@ -46,7 +46,7 @@ public class WeightedDistribution extends RestrictedDistribution<Double> {
      */
     public WeightedDistribution(final int[] weights, final Random random) throws NegativeWeightException {
         this.random = random;
-        this.weights = weights;
+        this.weights = weights.clone();
         bucket_size = 1.0 / weights.length;
         cumulative_probabilities = generateCumulativeProbabilities(weights);
         minimumSpecifiedValue = calculateMinimumReturnValue();
@@ -169,7 +169,7 @@ public class WeightedDistribution extends RestrictedDistribution<Double> {
     // -------------------------------------------------------------------------------------------------------
 
     public int[] getWeights() {
-        return weights;
+        return weights.clone();
     }
     
     private int getIndexOfFirstZero(final List<Double> list) {

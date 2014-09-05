@@ -24,11 +24,8 @@ import uk.ac.standrews.cs.digitising_scotland.population_model.organic.OrganicPo
 
 public abstract class TemporalLogger<Value> {
 
-    protected TemporalDistribution<?> relatedTemporalDistribution;
     protected HashMap<Integer, DistributionLogger<Value>> map;
     protected Integer[] keyArray;
-    protected int minValue;
-    protected int maxValue;
     protected String fileName;
     protected String title;
     protected String xLabel;

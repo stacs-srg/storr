@@ -29,39 +29,41 @@ import uk.ac.standrews.cs.digitising_scotland.population_model.organic.OrganicPo
 
 public class LoggingControl {
 
-    public static CountLogger populationLogger;
-    public static CountLogger affairCountLogger;
-    public static CountLogger cohabCountLogger;
-    public static CountLogger cohabThenMarriageCountLogger;
-    public static CountLogger marriageCountLogger;
+    private static CountLogger populationLogger;
+    private static CountLogger affairCountLogger;
+    private static CountLogger cohabCountLogger;
+    private static CountLogger cohabThenMarriageCountLogger;
+    private static CountLogger marriageCountLogger;
 
-    public static TemporalIntegerLogger numberOfChildrenFromAffairsDistributionLogger;
-    public static TemporalIntegerLogger numberOfChildrenFromCohabitationDistributionLogger;
-    public static TemporalIntegerLogger numberOfChildrenFromCohabThenMarriageDistributionLogger;
-    public static TemporalIntegerLogger numberOfChildrenFromMarriagesDistributionLogger;
+    private static TemporalIntegerLogger numberOfChildrenFromAffairsDistributionLogger;
+    private static TemporalIntegerLogger numberOfChildrenFromCohabitationDistributionLogger;
+    private static TemporalIntegerLogger numberOfChildrenFromCohabThenMarriageDistributionLogger;
+    private static TemporalIntegerLogger numberOfChildrenFromMarriagesDistributionLogger;
 
-    public static TemporalIntegerLogger numberOfChildrenInMaterityDistributionLogger;
+    private static TemporalIntegerLogger numberOfChildrenInMaterityDistributionLogger;
 
-    public static TemporalIntegerLogger timeFromCohabToMarriageDistributionLogger;
-    public static TemporalIntegerLogger cohabitationLengthDistributionLogger;
+    private static TemporalIntegerLogger timeFromCohabToMarriageDistributionLogger;
+    private static TemporalIntegerLogger cohabitationLengthDistributionLogger;
 
-    public static TemporalIntegerLogger ageAtDivorceMaleDistributionLogger;
-    public static TemporalIntegerLogger ageAtDivorceFemaleDistributionLogger;
-    public static TemporalIntegerLogger ageAtDeathDistributionLogger;
+    private static TemporalIntegerLogger ageAtDivorceMaleDistributionLogger;
+    private static TemporalIntegerLogger ageAtDivorceFemaleDistributionLogger;
+    private static TemporalIntegerLogger ageAtDeathDistributionLogger;
     
-    public static TemporalIntegerLogger ageAtCohabitationFemaleDistributionLogger;
-    public static TemporalIntegerLogger ageAtCohabitationMaleDistributionLogger;
-    public static TemporalIntegerLogger ageAtCohabitationThenMarriageFemaleDistributionLogger;
-    public static TemporalIntegerLogger ageAtCohabitationThenMarriageMaleDistributionLogger;
-    public static TemporalIntegerLogger ageAtMarriageFemaleDistributionLogger;
-    public static TemporalIntegerLogger ageAtMarriageMaleDistributionLogger;
+    private static TemporalIntegerLogger ageAtCohabitationFemaleDistributionLogger;
+    private static TemporalIntegerLogger ageAtCohabitationMaleDistributionLogger;
+    private static TemporalIntegerLogger ageAtCohabitationThenMarriageFemaleDistributionLogger;
+    private static TemporalIntegerLogger ageAtCohabitationThenMarriageMaleDistributionLogger;
+    private static TemporalIntegerLogger ageAtMarriageFemaleDistributionLogger;
+    private static TemporalIntegerLogger ageAtMarriageMaleDistributionLogger;
 
-    public static TemporalEnumLogger<DivorceInstigation> divorceInstiagetionByGenderDistributionLogger;
-    public static TemporalEnumLogger<DivorceReason> divorceReasonFemaleDistributionLogger;
-    public static TemporalEnumLogger<DivorceReason> divorceReasonMaleDistributionLogger;
+    private static TemporalEnumLogger<DivorceInstigation> divorceInstiagetionByGenderDistributionLogger;
+    private static TemporalEnumLogger<DivorceReason> divorceReasonFemaleDistributionLogger;
+    private static TemporalEnumLogger<DivorceReason> divorceReasonMaleDistributionLogger;
+
+    private static TemporalEnumLogger<FamilyType> familyCharacteristicDistributionLogger;
+    
     // Hard to log efficiently in current implementation
-//    public static TemporalEnumLogger<FamilyType> remarriageFamilyCharacteristicDistributionLogger;
-    public static TemporalEnumLogger<FamilyType> familyCharacteristicDistributionLogger;
+//  public static TemporalEnumLogger<FamilyType> remarriageFamilyCharacteristicDistributionLogger;
 
     public static void setUpLogger() {
         LoggingControl.populationLogger = new CountLogger(OrganicPopulation.getStartYear(), OrganicPopulation.getEndYear(), "Population", "Population Change Over Time", "Population");
@@ -200,6 +202,7 @@ public class LoggingControl {
                 break;
             case MARRIAGE:
                 LoggingControl.marriageCountLogger.decCount();
+                break;
             default:
                 break;
         }
@@ -223,6 +226,7 @@ public class LoggingControl {
                 LoggingControl.ageAtDivorceMaleDistributionLogger.log(currentDay, male.getLifeLengthInDays());
                 LoggingControl.ageAtDivorceFemaleDistributionLogger.log(currentDay, female.getLifeLengthInDays());
                 LoggingControl.marriageCountLogger.decCount();
+                break;
             default:
                 break;
         }
@@ -275,6 +279,181 @@ public class LoggingControl {
         LoggingControl.cohabCountLogger.log(currentDay);
         LoggingControl.cohabThenMarriageCountLogger.log(currentDay);
         LoggingControl.marriageCountLogger.log(currentDay);
+    }
+
+    /**
+     * @return the populationLogger
+     */
+    public static CountLogger getPopulationLogger() {
+        return populationLogger;
+    }
+
+    /**
+     * @return the affairCountLogger
+     */
+    public static CountLogger getAffairCountLogger() {
+        return affairCountLogger;
+    }
+
+    /**
+     * @return the cohabCountLogger
+     */
+    public static CountLogger getCohabCountLogger() {
+        return cohabCountLogger;
+    }
+
+    /**
+     * @return the cohabThenMarriageCountLogger
+     */
+    public static CountLogger getCohabThenMarriageCountLogger() {
+        return cohabThenMarriageCountLogger;
+    }
+
+    /**
+     * @return the marriageCountLogger
+     */
+    public static CountLogger getMarriageCountLogger() {
+        return marriageCountLogger;
+    }
+
+    /**
+     * @return the numberOfChildrenFromAffairsDistributionLogger
+     */
+    public static TemporalIntegerLogger getNumberOfChildrenFromAffairsDistributionLogger() {
+        return numberOfChildrenFromAffairsDistributionLogger;
+    }
+
+    /**
+     * @return the numberOfChildrenFromCohabitationDistributionLogger
+     */
+    public static TemporalIntegerLogger getNumberOfChildrenFromCohabitationDistributionLogger() {
+        return numberOfChildrenFromCohabitationDistributionLogger;
+    }
+
+    /**
+     * @return the numberOfChildrenFromCohabThenMarriageDistributionLogger
+     */
+    public static TemporalIntegerLogger getNumberOfChildrenFromCohabThenMarriageDistributionLogger() {
+        return numberOfChildrenFromCohabThenMarriageDistributionLogger;
+    }
+
+    /**
+     * @return the numberOfChildrenFromMarriagesDistributionLogger
+     */
+    public static TemporalIntegerLogger getNumberOfChildrenFromMarriagesDistributionLogger() {
+        return numberOfChildrenFromMarriagesDistributionLogger;
+    }
+
+    /**
+     * @return the numberOfChildrenInMaterityDistributionLogger
+     */
+    public static TemporalIntegerLogger getNumberOfChildrenInMaterityDistributionLogger() {
+        return numberOfChildrenInMaterityDistributionLogger;
+    }
+
+    /**
+     * @return the timeFromCohabToMarriageDistributionLogger
+     */
+    public static TemporalIntegerLogger getTimeFromCohabToMarriageDistributionLogger() {
+        return timeFromCohabToMarriageDistributionLogger;
+    }
+
+    /**
+     * @return the cohabitationLengthDistributionLogger
+     */
+    public static TemporalIntegerLogger getCohabitationLengthDistributionLogger() {
+        return cohabitationLengthDistributionLogger;
+    }
+
+    /**
+     * @return the ageAtDivorceMaleDistributionLogger
+     */
+    public static TemporalIntegerLogger getAgeAtDivorceMaleDistributionLogger() {
+        return ageAtDivorceMaleDistributionLogger;
+    }
+
+    /**
+     * @return the ageAtDivorceFemaleDistributionLogger
+     */
+    public static TemporalIntegerLogger getAgeAtDivorceFemaleDistributionLogger() {
+        return ageAtDivorceFemaleDistributionLogger;
+    }
+
+    /**
+     * @return the ageAtDeathDistributionLogger
+     */
+    public static TemporalIntegerLogger getAgeAtDeathDistributionLogger() {
+        return ageAtDeathDistributionLogger;
+    }
+
+    /**
+     * @return the ageAtCohabitationFemaleDistributionLogger
+     */
+    public static TemporalIntegerLogger getAgeAtCohabitationFemaleDistributionLogger() {
+        return ageAtCohabitationFemaleDistributionLogger;
+    }
+
+    /**
+     * @return the ageAtCohabitationMaleDistributionLogger
+     */
+    public static TemporalIntegerLogger getAgeAtCohabitationMaleDistributionLogger() {
+        return ageAtCohabitationMaleDistributionLogger;
+    }
+
+    /**
+     * @return the ageAtCohabitationThenMarriageFemaleDistributionLogger
+     */
+    public static TemporalIntegerLogger getAgeAtCohabitationThenMarriageFemaleDistributionLogger() {
+        return ageAtCohabitationThenMarriageFemaleDistributionLogger;
+    }
+
+    /**
+     * @return the ageAtCohabitationThenMarriageMaleDistributionLogger
+     */
+    public static TemporalIntegerLogger getAgeAtCohabitationThenMarriageMaleDistributionLogger() {
+        return ageAtCohabitationThenMarriageMaleDistributionLogger;
+    }
+
+    /**
+     * @return the ageAtMarriageFemaleDistributionLogger
+     */
+    public static TemporalIntegerLogger getAgeAtMarriageFemaleDistributionLogger() {
+        return ageAtMarriageFemaleDistributionLogger;
+    }
+
+    /**
+     * @return the ageAtMarriageMaleDistributionLogger
+     */
+    public static TemporalIntegerLogger getAgeAtMarriageMaleDistributionLogger() {
+        return ageAtMarriageMaleDistributionLogger;
+    }
+
+    /**
+     * @return the divorceInstiagetionByGenderDistributionLogger
+     */
+    public static TemporalEnumLogger<DivorceInstigation> getDivorceInstiagetionByGenderDistributionLogger() {
+        return divorceInstiagetionByGenderDistributionLogger;
+    }
+
+    /**
+     * @return the divorceReasonFemaleDistributionLogger
+     */
+    public static TemporalEnumLogger<DivorceReason> getDivorceReasonFemaleDistributionLogger() {
+        return divorceReasonFemaleDistributionLogger;
+    }
+
+    /**
+     * @return the divorceReasonMaleDistributionLogger
+     */
+    public static TemporalEnumLogger<DivorceReason> getDivorceReasonMaleDistributionLogger() {
+        return divorceReasonMaleDistributionLogger;
+    }
+
+    /**
+     * @return the familyCharacteristicDistributionLogger
+     */
+    public static TemporalEnumLogger<FamilyType> getFamilyCharacteristicDistributionLogger() {
+        return familyCharacteristicDistributionLogger;
     }
 
 }

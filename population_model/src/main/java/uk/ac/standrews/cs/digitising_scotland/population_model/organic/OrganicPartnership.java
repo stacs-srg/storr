@@ -160,8 +160,8 @@ public final class OrganicPartnership implements IPartnership {
             } catch (NotSetUpAtClassInitilisationException e) {
                 System.err.println("Non restrited distribution called with restricted values");
             }
-            if (OrganicPopulation.logging) {
-                LoggingControl.timeFromCohabToMarriageDistributionLogger.log(OrganicPopulation.getCurrentDay(), cohabThenMarriageMarriageDay - partnershipDay);
+            if (OrganicPopulation.isLogging()) {
+                LoggingControl.getTimeFromCohabToMarriageDistributionLogger().log(OrganicPopulation.getCurrentDay(), cohabThenMarriageMarriageDay - partnershipDay);
             }
         }
         setCohabMarriageFlags(familyType);
@@ -191,26 +191,26 @@ public final class OrganicPartnership implements IPartnership {
             if (!cohabiting && !married) {
                 // Single / lone parent family
                 numberOfChildrenToBeHadByCouple = temporalAffairNumberOfChildrenDistribution.getSample(OrganicPopulation.getCurrentDay(), 0, maxPossibleChildren);
-                if (OrganicPopulation.logging) {
-                    LoggingControl.numberOfChildrenFromAffairsDistributionLogger.log(OrganicPopulation.getCurrentDay(), numberOfChildrenToBeHadByCouple);
+                if (OrganicPopulation.isLogging()) {
+                    LoggingControl.getNumberOfChildrenFromAffairsDistributionLogger().log(OrganicPopulation.getCurrentDay(), numberOfChildrenToBeHadByCouple);
                 }
             } else if (cohabiting && !married) {
                 // cohabiting
                 numberOfChildrenToBeHadByCouple = temporalChildrenNumberOfInCohabDistribution.getSample(OrganicPopulation.getCurrentDay(), 0, maxPossibleChildren);
-                if (OrganicPopulation.logging) {
-                    LoggingControl.numberOfChildrenFromCohabitationDistributionLogger.log(OrganicPopulation.getCurrentDay(), maxPossibleChildren);
+                if (OrganicPopulation.isLogging()) {
+                    LoggingControl.getNumberOfChildrenFromCohabitationDistributionLogger().log(OrganicPopulation.getCurrentDay(), maxPossibleChildren);
                 }
             } else if (cohabiting && married) {
                 // cohab then marriage
                 numberOfChildrenToBeHadByCouple = temporalChildrenNumberOfInCohabThenMarriageDistribution.getSample(OrganicPopulation.getCurrentDay(), 0, maxPossibleChildren);
-                if (OrganicPopulation.logging) {
-                    LoggingControl.numberOfChildrenFromCohabThenMarriageDistributionLogger.log(OrganicPopulation.getCurrentDay(), numberOfChildrenToBeHadByCouple);
+                if (OrganicPopulation.isLogging()) {
+                    LoggingControl.getNumberOfChildrenFromCohabThenMarriageDistributionLogger().log(OrganicPopulation.getCurrentDay(), numberOfChildrenToBeHadByCouple);
                 }
             } else if (!cohabiting && married) {
                 // marriage
                 numberOfChildrenToBeHadByCouple = temporalChildrenNumberOfInMarriageDistribution.getSample(OrganicPopulation.getCurrentDay(), 0, maxPossibleChildren);
-                if (OrganicPopulation.logging) {
-                    LoggingControl.numberOfChildrenFromMarriagesDistributionLogger.log(OrganicPopulation.getCurrentDay(), numberOfChildrenToBeHadByCouple);
+                if (OrganicPopulation.isLogging()) {
+                    LoggingControl.getNumberOfChildrenFromMarriagesDistributionLogger().log(OrganicPopulation.getCurrentDay(), numberOfChildrenToBeHadByCouple);
                 }
             }
         } catch (NoPermissableValueException e) {
@@ -281,8 +281,8 @@ public final class OrganicPartnership implements IPartnership {
                         if (divorceReason == DivorceReason.ADULTERY) {
                             setupAffair(wife, husband);
                         }
-                        if (OrganicPopulation.logging) {
-                            LoggingControl.divorceReasonMaleDistributionLogger.log(OrganicPopulation.getCurrentDay(), divorceReason);
+                        if (OrganicPopulation.isLogging()) {
+                            LoggingControl.getDivorceReasonMaleDistributionLogger().log(OrganicPopulation.getCurrentDay(), divorceReason);
                         }
                         break;
                     case FEMALE:
@@ -293,8 +293,8 @@ public final class OrganicPartnership implements IPartnership {
                         if (divorceReason == DivorceReason.ADULTERY) {
                             setupAffair(husband, wife);
                         }
-                        if (OrganicPopulation.logging) {
-                            LoggingControl.divorceReasonFemaleDistributionLogger.log(OrganicPopulation.getCurrentDay(), divorceReason);
+                        if (OrganicPopulation.isLogging()) {
+                            LoggingControl.getDivorceReasonFemaleDistributionLogger().log(OrganicPopulation.getCurrentDay(), divorceReason);
                         }
                         break;
                     case NO_DIVORCE:
@@ -306,8 +306,8 @@ public final class OrganicPartnership implements IPartnership {
                     default:
                         break;
                 }
-                if (OrganicPopulation.logging) {
-                    LoggingControl.divorceInstiagetionByGenderDistributionLogger.log(OrganicPopulation.getCurrentDay(), instigatedBy);
+                if (OrganicPopulation.isLogging()) {
+                    LoggingControl.getDivorceInstiagetionByGenderDistributionLogger().log(OrganicPopulation.getCurrentDay(), instigatedBy);
                 }
 
             } catch (NoPermissableValueException e) {
@@ -357,8 +357,8 @@ public final class OrganicPartnership implements IPartnership {
                     children[i] = new OrganicPerson(IDFactory.getNextID(), currentDay + dayOfBirth, id, wife.getPopulation(), false, this);
                     childrenIds.add(children[i].getId());
                 }
-                if (OrganicPopulation.logging) {
-                    LoggingControl.numberOfChildrenInMaterityDistributionLogger.log(currentDay, numberOfChildrenInPregnacy);
+                if (OrganicPopulation.isLogging()) {
+                    LoggingControl.getNumberOfChildrenInMaterityDistributionLogger().log(currentDay, numberOfChildrenInPregnacy);
                 }
                 return children;
             } else {

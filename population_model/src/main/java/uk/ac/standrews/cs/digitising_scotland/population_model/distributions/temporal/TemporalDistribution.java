@@ -197,7 +197,7 @@ public abstract class TemporalDistribution<Value> implements ITemporalDistributi
     }
     
     public Enum<?>[] getEnums() {
-        return enums;
+        return enums.clone();
     }
     
 
