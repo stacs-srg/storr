@@ -155,6 +155,7 @@ public class MachineLearningClassificationPipeline {
 
         if (triples.size() > 0) {
             best = ResolverUtils.getBest(triples);
+            System.out.println("triples not empty");
         }
         else {
             best = new HashSet<>();

@@ -43,7 +43,7 @@ public class ListAccuracyMetricsTest {
 
         ListAccuracyMetrics lam = new ListAccuracyMetrics(BucketFilter.uniqueRecordsOnly(trainingBucket));
         int uniqueRecords = lam.getTotalRecordsInBucket();
-        Assert.assertEquals(4, uniqueRecords);
+        Assert.assertEquals(6, uniqueRecords);
     }
 
     /**
