@@ -34,7 +34,7 @@ public class AbstractDataCleanerTest {
     @Before
     public void setup() {
 
-        CodeFactory.getInstance().loadDictionary(new File(getClass().getResource("/CodeFactoryCoDFile.txt").getFile()));
+        CodeFactory.getInstance().loadDictionary(new File(getClass().getResource("/testCodeMap.txt").getFile()));
         buildCorrectionMap();
     }
 
