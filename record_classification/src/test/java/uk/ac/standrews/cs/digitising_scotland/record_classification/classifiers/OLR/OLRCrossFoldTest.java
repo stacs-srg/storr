@@ -51,10 +51,15 @@ public class OLRCrossFoldTest {
         CodeFactory.getInstance().loadDictionary(new File("target/test-classes/CodeFactoryTestFile.txt"));
         vectorFactory = new VectorFactory();
         populateDictionary();
-        //        properties.setProperty("numFeatures", "50");
+
         properties.setProperty("numCategories", "8");
         properties.setProperty("OLRPoolSize", "3");
         properties.setProperty("OLRFolds", "3");
+        properties.setProperty("OLRPoolNumSurvivors", "1");
+        properties.setProperty("OLRShuffledReps", "1");
+        properties.setProperty("perTermLearning", "false");
+        properties.setProperty("olrRegularisation", "false");
+        properties.setProperty("numDropped", "1");
 
         trainingVectorList = generateTrainingVectors();
         model = new OLRCrossFold(trainingVectorList, properties);

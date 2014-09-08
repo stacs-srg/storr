@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.List;
+import java.util.Properties;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
@@ -39,6 +40,8 @@ public class OLRClassifierTest {
 
     /** The helper. */
     private ClassifierTestingHelper helper = new ClassifierTestingHelper();
+
+    private Properties properties = MachineLearningConfiguration.getDefaultProperties();
 
     /**
      * Setup.
@@ -109,6 +112,15 @@ public class OLRClassifierTest {
      * @throws Exception the exception
      */
     private Bucket createTrainingBucket() throws Exception {
+
+        properties.setProperty("numCategories", "8");
+        properties.setProperty("OLRPoolSize", "3");
+        properties.setProperty("OLRFolds", "3");
+        properties.setProperty("OLRPoolNumSurvivors", "1");
+        properties.setProperty("OLRShuffledReps", "1");
+        properties.setProperty("perTermLearning", "false");
+        properties.setProperty("olrRegularisation", "false");
+        properties.setProperty("numDropped", "1");
 
         File codeFile = new File(getClass().getResource("/CodeFactoryTestFile.txt").getFile());
         CodeFactory.getInstance().loadDictionary(codeFile);
