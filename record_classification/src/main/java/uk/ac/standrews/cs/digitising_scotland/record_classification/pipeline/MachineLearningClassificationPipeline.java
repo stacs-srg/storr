@@ -52,8 +52,7 @@ public class MachineLearningClassificationPipeline {
      * Constructs a new {@link MachineLearningClassificationPipeline} with the specified
      * {@link AbstractClassifier} used to perform the classification duties.
      *
-     * @param classifier            {@link AbstractClassifier} used for machine learning
-     *            classification.
+     * @param classifier    {@link AbstractClassifier} used for machine learning classification
      * @param trainingBucket the training bucket
      */
     public MachineLearningClassificationPipeline(final AbstractClassifier classifier, final Bucket trainingBucket) {
@@ -100,7 +99,7 @@ public class MachineLearningClassificationPipeline {
         return classified;
     }
 
-    private void addCodeTriplesAndDescriptions(Record record, String desc, Set<CodeTriple> result) {
+    private void addCodeTriplesAndDescriptions(final Record record, final String desc, final Set<CodeTriple> result) {
 
         for (CodeTriple codeTriple : result) {
             record.getListOfClassifications().put(desc, codeTriple);
@@ -194,10 +193,10 @@ public class MachineLearningClassificationPipeline {
     }
 
     /**
-     * Gets the singly coded tripes.
+     * Gets the singly coded triples.
      *
      * @param record the record
-     * @return the singly coded tripes
+     * @return the singly coded triples
      */
     protected List<CodeTriple> getSinglyCodedTriples(final Record record) {
 

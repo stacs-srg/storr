@@ -13,6 +13,7 @@ import uk.ac.standrews.cs.digitising_scotland.tools.analysis.HumanCodingAnalyser
 
 /**
  * The Class HiscoDataFormatter.
+ * @deprecated
  */
 public class HiscoDataFormatter {
 

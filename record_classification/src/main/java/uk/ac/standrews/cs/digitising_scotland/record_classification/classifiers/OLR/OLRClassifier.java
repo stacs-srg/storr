@@ -88,8 +88,11 @@ public class OLRClassifier extends AbstractClassifier {
     public void train(final Bucket bucket) throws InterruptedException {
 
         ArrayList<NamedVector> trainingVectorList = new ArrayList<NamedVector>();
+
         for (Record record : bucket) {
-            trainingVectorList.addAll(vectorFactory.generateVectorsFromRecord(record));
+            final List<NamedVector> listOfVectors = vectorFactory.generateVectorsFromRecord(record);
+            trainingVectorList.addAll(listOfVectors);
+            System.out.println(listOfVectors + "\t" + record.getDescription());
         }
 
         Collections.shuffle(trainingVectorList);
