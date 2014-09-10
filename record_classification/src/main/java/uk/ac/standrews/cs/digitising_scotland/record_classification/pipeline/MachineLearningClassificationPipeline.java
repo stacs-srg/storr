@@ -75,28 +75,40 @@ public class MachineLearningClassificationPipeline {
         Bucket classified = new Bucket();
 
         for (Record record : bucket) {
-
             LOGGER.info("Classifying record " + count + " of " + bucket.size() + " Description: " + record.getDescription());
+            classifyRecordAddToBucket(record, classified);
             count++;
-
-            for (String desc : record.getDescription()) {
-                if (!record.getListOfClassifications().containsKey(desc)) {
-                    Set<CodeTriple> result = recordCache.get(desc);
-                    if (result == null) {
-                        result = classify(desc);
-                        if (result != null) {
-                            record.addAllCodeTriples(result);
-                            addCodeTriplesAndDescriptions(record, desc, result);
-                            classified.addRecordToBucket(record);
-                        }
-
-                        recordCache.put(desc, record.getCodeTriples());
-                    }
-                }
-            }
         }
 
         return classified;
+    }
+
+    private void classifyRecordAddToBucket(final Record record, final Bucket classified) throws IOException {
+
+        for (String description : record.getDescription()) {
+            if (!previouslyClassified(record, description)) {
+                Set<CodeTriple> result = recordCache.get(description);
+                if (result == null) {
+                    result = classify(description);
+                    if (result != null) {
+                        addResultToRecord(record, description, result);
+                        classified.addRecordToBucket(record);
+                    }
+                    recordCache.put(description, record.getCodeTriples());
+                }
+            }
+        }
+    }
+
+    private void addResultToRecord(final Record record, final String description, final Set<CodeTriple> result) {
+
+        record.addAllCodeTriples(result);
+        addCodeTriplesAndDescriptions(record, description, result);
+    }
+
+    private boolean previouslyClassified(final Record record, final String description) {
+
+        return record.getListOfClassifications().containsKey(description);
     }
 
     private void addCodeTriplesAndDescriptions(final Record record, final String desc, final Set<CodeTriple> result) {
