@@ -60,12 +60,12 @@ public class LookupTableClassifier extends AbstractClassifier implements Seriali
     public Record classify(final Record record) throws IOException {
 
         for (String description : record.getDescription()) {
-            classifyString(description, record);
+            classifyStringWithNgrams(description, record);
         }
         return record;
     }
 
-    private void classifyString(final String description, final Record record) throws IOException {
+    private void classifyStringWithNgrams(final String description, final Record record) throws IOException {
 
         NGramSubstrings nGrams = new NGramSubstrings(description);
         Set<CodeTriple> classifiedGramsSet = classify(nGrams, record);
