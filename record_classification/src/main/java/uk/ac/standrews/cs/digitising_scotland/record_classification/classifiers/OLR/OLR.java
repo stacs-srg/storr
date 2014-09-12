@@ -97,6 +97,38 @@ public class OLR {
     private volatile AtomicLong numTrained;
 
     /**
+     * Constructor with default properties.
+     */
+    public OLR() {
+
+        this(MachineLearningConfiguration.getDefaultProperties());
+    }
+
+    /**
+     * Constructor that allows default properties to be overridden.
+     *
+     * @param properties properties
+     */
+    public OLR(final Properties properties) {
+
+        resetRunningLogLikelihood();
+        this.properties = properties;
+        this.prior = new L1();
+        getConfigOptions();
+        initialiseModel();
+    }
+
+    /**
+     * Instantiates a new olr.
+     *
+     * @param beta the beta
+     */
+    public OLR(final Matrix beta) {
+
+        initialiseMode(beta);
+    }
+
+    /**
      * Gets the number of records that have been used for training across all models so far.
      * @return int number of training records used
      */
@@ -224,38 +256,6 @@ public class OLR {
     public int getNumCategories() {
 
         return numCategories;
-    }
-
-    /**
-     * Constructor with default properties.
-     */
-    public OLR() {
-
-        this(MachineLearningConfiguration.getDefaultProperties());
-    }
-
-    /**
-     * Constructor that allows default properties to be overridden.
-     *
-     * @param properties properties
-     */
-    public OLR(final Properties properties) {
-
-        resetRunningLogLikelihood();
-        this.properties = properties;
-        this.prior = new L1();
-        getConfigOptions();
-        initialiseModel();
-    }
-
-    /**
-     * Instantiates a new olr.
-     *
-     * @param beta the beta
-     */
-    public OLR(final Matrix beta) {
-
-        initialiseMode(beta);
     }
 
     /**

@@ -25,6 +25,8 @@ import org.apache.mahout.math.NamedVector;
 import org.apache.mahout.math.Vector;
 import org.apache.mahout.math.VectorWritable;
 import org.apache.mahout.vectorizer.encoders.Dictionary;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Pair;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
@@ -46,6 +48,8 @@ import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearnin
  * 
  */
 public class NaiveBayesClassifier extends AbstractClassifier {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(NaiveBayesClassifier.class);
 
     /** The {@link Configuration}. */
     private Configuration conf;
@@ -76,6 +80,7 @@ public class NaiveBayesClassifier extends AbstractClassifier {
             fs = FileSystem.get(conf);
         }
         catch (IOException e) {
+            LOGGER.error(e.getMessage(), e);
             e.printStackTrace();
         }
     }
@@ -175,8 +180,7 @@ public class NaiveBayesClassifier extends AbstractClassifier {
     private CustomVectorWriter createVectorWriter(final String trainingVectorLocation) throws IOException {
 
         SequenceFile.Writer writer = new SequenceFile.Writer(fs, conf, new Path(trainingVectorLocation), Text.class, VectorWritable.class);
-        CustomVectorWriter c = new CustomVectorWriter(writer);
-        return c;
+        return new CustomVectorWriter(writer);
     }
 
     /* (non-Javadoc)
@@ -237,8 +241,7 @@ public class NaiveBayesClassifier extends AbstractClassifier {
     private ClassifierResult getClassifierResult(final Vector result, final Dictionary dictionary) {
 
         int categoryOfClassification = result.maxValueIndex();
-        ClassifierResult cr = new ClassifierResult(dictionary.values().get(categoryOfClassification));
-        return cr;
+        return new ClassifierResult(dictionary.values().get(categoryOfClassification));
     }
 
     /**
@@ -255,9 +258,8 @@ public class NaiveBayesClassifier extends AbstractClassifier {
             model = getModel();
         }
 
-        AbstractNaiveBayesClassifier classifier = new StandardNaiveBayesClassifier(model);
+        return new StandardNaiveBayesClassifier(model);
 
-        return classifier;
     }
 
     /**
@@ -269,10 +271,9 @@ public class NaiveBayesClassifier extends AbstractClassifier {
      */
     private NaiveBayesModel getModel() throws IOException {
 
-        Configuration conf = new Configuration();
+        Configuration configuration = new Configuration();
         String modelLocation = "target/naiveBayesModelPath";
-        NaiveBayesModel model = NaiveBayesModel.materialize(new Path(modelLocation), conf);
-        return model;
+        return NaiveBayesModel.materialize(new Path(modelLocation), configuration);
     }
 
     /**
@@ -286,9 +287,9 @@ public class NaiveBayesClassifier extends AbstractClassifier {
      */
     private Dictionary buildDictionaryFromLabelMap(final String labelMapPath) {
 
-        Configuration conf = new Configuration();
+        Configuration configuration = new Configuration();
         Dictionary dictionary = new Dictionary();
-        Map<Integer, String> labelMap = BayesUtils.readLabelIndex(conf, new Path(labelMapPath));
+        Map<Integer, String> labelMap = BayesUtils.readLabelIndex(configuration, new Path(labelMapPath));
 
         for (int i = 0; i < labelMap.size(); i++) {
             dictionary.intern(labelMap.get(i).trim());
@@ -359,6 +360,7 @@ public class NaiveBayesClassifier extends AbstractClassifier {
             model = getModel();
         }
         catch (IOException e) {
+            LOGGER.error(e.getMessage(), e);
             e.printStackTrace();
         }
         return this;

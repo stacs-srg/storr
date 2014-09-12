@@ -36,9 +36,6 @@ public class MachineLearningClassificationPipeline {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MachineLearningClassificationPipeline.class);
 
-    /** The Constant WORDLIMIT. */
-    private static final int WORDLIMIT = 1;
-
     /** The Constant CONFIDENCE_CHOP_LEVEL. */
     private static final double CONFIDENCE_CHOP_LEVEL = 0.3;
 
@@ -146,17 +143,10 @@ public class MachineLearningClassificationPipeline {
     private Set<CodeTriple> classifyTokenSet(final TokenSet cleanedTokenSet) throws IOException {
 
         ResolverMatrix resolverMatrix = new ResolverMatrix();
-        if (cleanedTokenSet.size() < WORDLIMIT) {
-            Multiset<TokenSet> powerSet = ResolverUtils.powerSet(cleanedTokenSet);
-            powerSet.remove(new TokenSet("")); // remove empty token set
-            populateMatrix(powerSet, resolverMatrix);
-        }
-        else {
-            NGramSubstrings ngs = new NGramSubstrings(cleanedTokenSet);
-            Multiset<TokenSet> ngramSet = ngs.getGramMultiset();
-            populateMatrix(ngramSet, resolverMatrix);
 
-        }
+        NGramSubstrings ngs = new NGramSubstrings(cleanedTokenSet);
+        Multiset<TokenSet> ngramSet = ngs.getGramMultiset();
+        populateMatrix(ngramSet, resolverMatrix);
 
         resolverMatrix.chopBelowConfidence(CONFIDENCE_CHOP_LEVEL);
         System.out.println("Resolver matrix complexity before chop: " + resolverMatrix.complexity());
@@ -205,9 +195,9 @@ public class MachineLearningClassificationPipeline {
     }
 
     /**
-     * Gets the singly coded triples.
+     * Gets the singly coded triples, that is codeTriples that have only one coding.
      *
-     * @param record the record
+     * @param record the record to get single triples from
      * @return the singly coded triples
      */
     protected List<CodeTriple> getSinglyCodedTriples(final Record record) {

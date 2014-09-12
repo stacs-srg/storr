@@ -41,7 +41,7 @@ public class OLRCrossFold {
     private final boolean modelTrainable;
 
     /** The OLRPool models. */
-    private ArrayList<OLRPool> models = new ArrayList<>();
+    private List<OLRPool> models = new ArrayList<>();
 
     /** The number of cross folds. */
     private int folds;
@@ -58,7 +58,7 @@ public class OLRCrossFold {
      * @param trainingVectorList training vectors
      * @param properties         properties
      */
-    public OLRCrossFold(final ArrayList<NamedVector> trainingVectorList, final Properties properties) {
+    public OLRCrossFold(final List<NamedVector> trainingVectorList, final Properties properties) {
 
         this.properties = properties;
         getConfigOptions();
@@ -209,9 +209,11 @@ public class OLRCrossFold {
             this.trainAllModels();
         }
         catch (InterruptedException e) {
+            LOGGER.error(e.getMessage(), e);
             e.printStackTrace();
         }
         catch (ExecutionException e) {
+            LOGGER.error(e.getMessage(), e);
             e.printStackTrace();
         }
     }
@@ -386,6 +388,7 @@ public class OLRCrossFold {
                 in.close();
             }
             catch (Exception e) {
+                LOGGER.error(e.getMessage(), e);
                 e.printStackTrace();
             }
         }

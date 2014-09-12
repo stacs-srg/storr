@@ -40,35 +40,12 @@ public class OLRPool implements Runnable {
     private Properties properties;
     private int poolSize;
     private int numSurvivors;
-    private ArrayList<NamedVector> testingVectorList = Lists.newArrayList();
-    private ArrayList<OLRShuffled> survivors;
+    private List<NamedVector> testingVectorList = Lists.newArrayList();
+    private List<OLRShuffled> survivors;
 
-    //    public Iterator<Matrix> getBetas() {
-    //        Matrix[] matrices = new Matrix[models.size()];
-    //        for (int i = 0; i < models.size(); i++) {
-    //            matrices[i] = models.get(i).getBeta();
-    //        }
-    //        return new ArrayIterator<>(matrices);
-    //    }
-    //
-    //    public void setBetas(Matrix beta) {
-    //        for(OLRShuffled model : models){
-    //            model.setBeta(beta);
-    //        }
-    //    }
+    protected OLRPool() {
 
-    /**
-     * Gets the number of records used for training so far across all the models in the pool.
-     * @return int the number of training records used so far
-     */
-
-    public long getNumTrained() {
-
-        long numTrained = 0;
-        for (OLRShuffled model : models) {
-            numTrained += model.getNumTrained();
-        }
-        return numTrained;
+        modelTrainable = false;
     }
 
     /**
@@ -85,15 +62,34 @@ public class OLRPool implements Runnable {
         getConfigOptions();
 
         for (int i = 0; i < poolSize; i++) {
-            OLRShuffled model = new OLRShuffled(properties, new ArrayList((ArrayList<NamedVector>) internalTrainingVectorList.clone()));
+            OLRShuffled model = new OLRShuffled(properties, new ArrayList<NamedVector>((ArrayList<NamedVector>) internalTrainingVectorList.clone()));
             models.add(model);
         }
         modelTrainable = true;
     }
 
-    private ArrayList<NamedVector> copyVectorList(final ArrayList<NamedVector> internalTrainingVectorList) {
+    /**
+     * Trains, tests, packages, sorts.
+     */
+    @Override
+    public void run() {
 
-        ArrayList<NamedVector> newList = new ArrayList<>();
+        trainIfPossible();
+    }
+
+    /**
+     * Stops the current pool of models from training.
+     */
+    public void stop() {
+
+        for (OLRShuffled model : models) {
+            model.stop();
+        }
+    }
+
+    private List<NamedVector> copyVectorList(final ArrayList<NamedVector> internalTrainingVectorList) {
+
+        List<NamedVector> newList = new ArrayList<>();
         for (NamedVector namedVector : internalTrainingVectorList) {
             newList.add(namedVector.clone());
         }
@@ -125,23 +121,35 @@ public class OLRPool implements Runnable {
         }
     }
 
-    /**
-     * Trains, tests, packages, sorts.
-     */
-    @Override
-    public void run() {
+    private void trainIfPossible() {
 
-        trainIfPossible();
+        checkTrainable();
+        try {
+            this.trainAllModels();
+        }
+        catch (InterruptedException e) {
+            LOGGER.error(e.getMessage(), e);
+            e.printStackTrace();
+        }
     }
 
-    /**
-     * Stops the current pool of models from training.
-     */
-    public void stop() {
+    private void checkTrainable() {
+
+        if (!modelTrainable) { throw new UnsupportedOperationException("This model has no files to train " + "on and may only be used for classification."); }
+    }
+
+    private void trainAllModels() throws InterruptedException {
+
+        ExecutorService executorService = Executors.newFixedThreadPool(poolSize);
+        Collection<Future<?>> futures = new LinkedList<Future<?>>();
 
         for (OLRShuffled model : models) {
-            model.stop();
+            futures.add(executorService.submit(model));
         }
+
+        Utils.handlePotentialErrors(futures);
+        executorService.shutdown();
+        executorService.awaitTermination(365, TimeUnit.DAYS);
     }
 
     /**
@@ -155,22 +163,6 @@ public class OLRPool implements Runnable {
         LOGGER.info("Calling getSurvivors");
         survivors = getSurvivors(modelPairs);
         return survivors;
-    }
-
-    private void trainIfPossible() {
-
-        checkTrainable();
-        try {
-            this.trainAllModels();
-        }
-        catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void checkTrainable() {
-
-        if (!modelTrainable) { throw new UnsupportedOperationException("This model has no files to train " + "on and may only be used for classification."); }
     }
 
     /**
@@ -211,20 +203,6 @@ public class OLRPool implements Runnable {
 
     }
 
-    private void trainAllModels() throws InterruptedException {
-
-        ExecutorService executorService = Executors.newFixedThreadPool(poolSize);
-        Collection<Future<?>> futures = new LinkedList<Future<?>>();
-
-        for (OLRShuffled model : models) {
-            futures.add(executorService.submit(model));
-        }
-
-        Utils.handlePotentialErrors(futures);
-        executorService.shutdown();
-        executorService.awaitTermination(365, TimeUnit.DAYS);
-    }
-
     private double getProportionTestingVectorsCorrectlyClassified(final OLRShuffled model) {
 
         int countCorrect = 0;
@@ -263,9 +241,17 @@ public class OLRPool implements Runnable {
         return survivors;
     }
 
-    protected OLRPool() {
+    /**
+     * Gets the number of records used for training so far across all the models in the pool.
+     * @return int the number of training records used so far
+     */
+    public long getNumTrained() {
 
-        modelTrainable = false;
+        long numTrained = 0;
+        for (OLRShuffled model : models) {
+            numTrained += model.getNumTrained();
+        }
+        return numTrained;
     }
 
     protected void write(final DataOutputStream outputStream) throws IOException {

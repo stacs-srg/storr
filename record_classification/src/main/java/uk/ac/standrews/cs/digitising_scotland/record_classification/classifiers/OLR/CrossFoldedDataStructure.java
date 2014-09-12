@@ -1,6 +1,7 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.OLR;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.math3.exception.NumberIsTooSmallException;
 import org.apache.mahout.math.NamedVector;
@@ -17,7 +18,7 @@ public abstract class CrossFoldedDataStructure {
      * @param folds number of folds
      * @return ArrayList<NamedVector>[][]
      */
-    public static ArrayList<NamedVector>[][] make(final ArrayList<NamedVector> trainingVectorList, final int folds) {
+    public static ArrayList<NamedVector>[][] make(final List<NamedVector> trainingVectorList, final int folds) {
 
         ArrayList<NamedVector>[][] crossFoldedData = initialize(folds);
         int size = trainingVectorList.size();
