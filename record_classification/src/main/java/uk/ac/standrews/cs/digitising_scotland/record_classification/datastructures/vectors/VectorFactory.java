@@ -83,9 +83,9 @@ public class VectorFactory {
         return vectors;
     }
 
-    private Collection<? extends NamedVector> createUnNamedVectorsFromDescriptopn(ArrayList<String> description) {
+    private Collection<? extends NamedVector> createUnNamedVectorsFromDescriptopn(List<String> description) {
 
-        ArrayList<NamedVector> vectorList = new ArrayList<>();
+        List<NamedVector> vectorList = new ArrayList<>();
 
         for (String string : description) {
             Vector v = createVectorFromString(string);

@@ -65,7 +65,7 @@ public abstract class RecordFactory {
     public static Record createOccRecord(final File inputFile, final String line) throws InputFormatException {
 
         String[] lineSplit = line.split("\\|");
-        ArrayList<String> description = new ArrayList<>();
+        List<String> description = new ArrayList<>();
         description.add(lineSplit[0]);
         int year = Integer.parseInt(lineSplit[1]);
         int imageQuality = Integer.parseInt(lineSplit[2]);
@@ -94,7 +94,7 @@ public abstract class RecordFactory {
         final int sexPos = 3;
         final int imageQualityPos = 2;
 
-        ArrayList<String> description = getDescriptionFromFile(lineSplit, descriptionPos);
+        List<String> description = getDescriptionFromFile(lineSplit, descriptionPos);
         int id = Integer.parseInt(lineSplit[idPos]);
         int year = Integer.parseInt(lineSplit[yearPos]);
         int ageGroup = Integer.parseInt(lineSplit[ageGroupPos]);
@@ -109,9 +109,9 @@ public abstract class RecordFactory {
         return newRecord;
     }
 
-    private static ArrayList<String> getDescriptionFromFile(final String[] lineSplit, final int descriptionPos) {
+    private static List<String> getDescriptionFromFile(final String[] lineSplit, final int descriptionPos) {
 
-        ArrayList<String> description = new ArrayList<>();
+        List<String> description = new ArrayList<>();
 
         for (int i = descriptionPos; i < lineSplit.length; i++) {
             description.add(lineSplit[i].intern());
@@ -146,7 +146,7 @@ public abstract class RecordFactory {
             int imageQuality = Integer.parseInt(lineSplit[imageQualityPos]);
             int ageGroup = Integer.parseInt(lineSplit[ageGroupPos]);
             int sex = Integer.parseInt(lineSplit[sexPos]);
-            ArrayList<String> description = getDescriptionFromFile(lineSplit, descriptionPos);
+            List<String> description = getDescriptionFromFile(lineSplit, descriptionPos);
             OriginalData originalData = new CODOrignalData(description, year, ageGroup, sex, imageQuality, inputFile.getPath());
 
             for (int i = 6; i < lineSplit.length; i++) {

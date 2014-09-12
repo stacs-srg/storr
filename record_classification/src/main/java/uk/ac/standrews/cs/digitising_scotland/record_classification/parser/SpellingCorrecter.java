@@ -18,6 +18,8 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -49,9 +51,9 @@ class SpellingCorrecter {
         in.close();
     }
 
-    private ArrayList<String> edits(final String word) {
+    private List<String> edits(final String word) {
 
-        ArrayList<String> result = new ArrayList<String>();
+        List<String> result = new ArrayList<String>();
         for (int i = 0; i < word.length(); ++i) {
             result.add(word.substring(0, i) + word.substring(i + 1));
         }
@@ -80,8 +82,8 @@ class SpellingCorrecter {
     public String correct(final String word) {
 
         if (dictionary.containsKey(word)) { return word; }
-        ArrayList<String> list = edits(word);
-        HashMap<Integer, String> candidates = new HashMap<Integer, String>();
+        List<String> list = edits(word);
+        Map<Integer, String> candidates = new HashMap<Integer, String>();
         for (String s : list) {
             if (dictionary.containsKey(s)) {
                 candidates.put(dictionary.get(s), s);

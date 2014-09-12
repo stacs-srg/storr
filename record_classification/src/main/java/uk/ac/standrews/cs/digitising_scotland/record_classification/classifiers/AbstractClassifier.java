@@ -113,7 +113,7 @@ public abstract class AbstractClassifier {
 
     /**
      * Reads a trained model from the default storage location for a classifier.
-     *
+     * @return AbstractClassifier deserialized from file
      */
     public abstract AbstractClassifier getModelFromDefaultLocation();
 

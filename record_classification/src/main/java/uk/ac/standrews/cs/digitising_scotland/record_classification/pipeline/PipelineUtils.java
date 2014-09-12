@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 import org.slf4j.Logger;
@@ -34,7 +35,7 @@ public class PipelineUtils {
 
     protected static void generateActualCodeMappings(final Bucket bucket) {
 
-        HashMap<String, Integer> codeMapping = new HashMap<>();
+        Map<String, Integer> codeMapping = new HashMap<>();
         for (Record record : bucket) {
             for (CodeTriple currentCodeTriple : record.getGoldStandardClassificationSet()) {
                 codeMapping.put(currentCodeTriple.getCode().getCodeAsString(), 1);

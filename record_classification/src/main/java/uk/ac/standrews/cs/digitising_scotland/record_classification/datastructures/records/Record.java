@@ -1,8 +1,8 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.OriginalData;
@@ -55,7 +55,7 @@ public class Record {
      *
      * @return the cleaned description
      */
-    public ArrayList<String> getDescription() {
+    public List<String> getDescription() {
 
         return originalData.getDescription();
     }

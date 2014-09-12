@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
 
@@ -43,9 +44,9 @@ public class OutputClassShuffler {
         BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(inputFile), "UTF8"));
 
         String line = "";
-        ArrayList<String> cod = new ArrayList<String>();
-        ArrayList<String> classification = new ArrayList<String>();
-        ArrayList<String> id = new ArrayList<String>();
+        List<String> cod = new ArrayList<String>();
+        List<String> classification = new ArrayList<String>();
+        List<String> id = new ArrayList<String>();
 
         while ((line = br.readLine()) != null) {
             String[] lineSplit = line.split("\t");

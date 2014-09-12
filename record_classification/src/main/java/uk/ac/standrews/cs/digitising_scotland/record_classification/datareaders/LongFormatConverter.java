@@ -77,7 +77,7 @@ public final class LongFormatConverter extends AbstractFormatConverter {
             int imageQuality = 1;
             int ageGroup = convertAgeGroup(removeQuotes(lineSplit[AGE_POSITION]));
             int sex = convertSex(removeQuotes(lineSplit[SEX_POSITION]));
-            ArrayList<String> description = formDescription(lineSplit, DESC_START, DESC_END);
+            List<String> description = formDescription(lineSplit, DESC_START, DESC_END);
             int year = Integer.parseInt(removeQuotes(lineSplit[YEAR_POSITION]));
 
             CODOrignalData originalData = new CODOrignalData(description, year, ageGroup, sex, imageQuality, inputFile.getName());
@@ -135,14 +135,13 @@ public final class LongFormatConverter extends AbstractFormatConverter {
      * @param endPosition the last index to concatenate
      * @return the concatenated string, comma separated
      */
-    private static ArrayList<String> formDescription(final String[] stringArray, final int startPosition, final int endPosition) {
+    private static List<String> formDescription(final String[] stringArray, final int startPosition, final int endPosition) {
 
-        ArrayList<String> description = new ArrayList<>();
+        List<String> description = new ArrayList<>();
 
         for (int currentPosition = startPosition; currentPosition <= endPosition; currentPosition++) {
             if (stringArray[currentPosition].length() != 0) {
                 description.add(stringArray[currentPosition].toLowerCase());
-
             }
         }
 

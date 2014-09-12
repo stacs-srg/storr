@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearningConfiguration;
@@ -23,10 +24,10 @@ public final class CodeFactory {
     private static final CodeFactory INSTANCE = new CodeFactory();
 
     /** The code map. */
-    private HashMap<String, Code> codeMap = new HashMap<String, Code>();
+    private Map<String, Code> codeMap = new HashMap<String, Code>();
 
     /** The id to code map. */
-    private HashMap<Integer, Code> idToCodeMap = new HashMap<Integer, Code>();
+    private Map<Integer, Code> idToCodeMap = new HashMap<Integer, Code>();
 
     /** The do once. */
     private boolean doOnce = true;

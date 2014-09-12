@@ -346,7 +346,7 @@ public class AnalysisTools {
      */
     public int countUniqueWords() {
 
-        HashMap<String, Integer> words = buildMapping();
+        Map<String, Integer> words = buildMapping();
         return words.size();
     }
 
@@ -360,7 +360,7 @@ public class AnalysisTools {
      */
     public int getWordTotal(final String word) {
 
-        HashMap<String, Integer> words = buildMapping();
+        Map<String, Integer> words = buildMapping();
 
         return words.get(word);
     }
@@ -372,7 +372,7 @@ public class AnalysisTools {
      */
     public final int totalNumberOfClasses() {
 
-        HashMap<String, Integer> words = new HashMap<String, Integer>();
+        Map<String, Integer> words = new HashMap<String, Integer>();
         for (int i = 0; i < stringInput.length; i++) {
             String classification = stringInput[i][1];
 
@@ -392,9 +392,9 @@ public class AnalysisTools {
      * 
      * @return a map of classes and precision values.
      */
-    public HashMap<String, Integer> buildPrecisionMap() {
+    public Map<String, Integer> buildPrecisionMap() {
 
-        HashMap<String, Integer> words = new HashMap<String, Integer>();
+        Map<String, Integer> words = new HashMap<String, Integer>();
 
         for (int i = 0; i < stringInput.length; i++) {
             String classification = stringInput[i][1];
@@ -423,7 +423,7 @@ public class AnalysisTools {
      */
     public int buildrecallMap() {
 
-        HashMap<String, Integer> words = new HashMap<String, Integer>();
+        Map<String, Integer> words = new HashMap<String, Integer>();
         for (int i = 0; i < stringInput.length; i++) {
             String classification = stringInput[i][1];
 
@@ -446,7 +446,7 @@ public class AnalysisTools {
      */
     public int totalNumberInEachClass(final String classToLookFor) {
 
-        HashMap<String, Integer> words = new HashMap<String, Integer>();
+        Map<String, Integer> words = new HashMap<String, Integer>();
         for (int i = 0; i < stringInput.length; i++) {
             String classification = stringInput[i][1];
 
@@ -469,7 +469,7 @@ public class AnalysisTools {
      */
     public int totalNumberInEachPrediction(final String classToLookFor) {
 
-        HashMap<String, Integer> words = new HashMap<String, Integer>();
+        Map<String, Integer> words = new HashMap<String, Integer>();
         for (int i = 0; i < stringInput.length; i++) {
             String classification = stringInput[i][2];
 
@@ -494,11 +494,11 @@ public class AnalysisTools {
      * 
      * @return map of input words ordered by frequency.
      */
-    public HashMap<String, Integer> listWordsOrderedByFrequency() {
+    public Map<String, Integer> listWordsOrderedByFrequency() {
 
-        HashMap<String, Integer> words = buildMapping();
+        Map<String, Integer> words = buildMapping();
         words.values();
-        HashMap<String, Integer> sortedWords = (HashMap<String, Integer>) sortByValue(words);
+        Map<String, Integer> sortedWords = (HashMap<String, Integer>) sortByValue(words);
         Set<String> k = sortedWords.keySet();
         Object[] ka = k.toArray();
         Collection<Integer> v = sortedWords.values();
@@ -547,9 +547,9 @@ public class AnalysisTools {
      *
      * @return the hash map
      */
-    private HashMap<String, Integer> buildMapping() {
+    private Map<String, Integer> buildMapping() {
 
-        HashMap<String, Integer> words = new HashMap<String, Integer>();
+        Map<String, Integer> words = new HashMap<String, Integer>();
         for (int i = 0; i < stringInput.length; i++) {
             String[] lineWords = stringInput[i][0].split("\\s");
 
@@ -677,11 +677,11 @@ public class AnalysisTools {
      * @return the unique lines
      * @throws IOException Signals that an I/O exception has occurred.
      */
-    public HashMap<String, Integer> getUniqueLines(final File trainingFile) throws IOException {
+    public Map<String, Integer> getUniqueLines(final File trainingFile) throws IOException {
 
         BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(trainingFile), "UTF8"));
         String line = "";
-        HashMap<String, Integer> uniqueLines = new HashMap<String, Integer>();
+        Map<String, Integer> uniqueLines = new HashMap<String, Integer>();
         while ((line = br.readLine()) != null) {
             line = line.split("\\t")[0].trim();
             line = standardise(line);

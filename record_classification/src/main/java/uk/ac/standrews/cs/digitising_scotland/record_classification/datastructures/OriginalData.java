@@ -1,7 +1,7 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures;
 
-import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeTriple;
@@ -18,7 +18,7 @@ public class OriginalData implements java.io.Serializable {
     private static final long serialVersionUID = -1453338613207961366L;
 
     /** The description. */
-    private ArrayList<String> description;
+    private List<String> description;
 
     /** The year. */
     private int year;
@@ -40,7 +40,7 @@ public class OriginalData implements java.io.Serializable {
      * @param fileName name of file containing original data in record
      * @throws InputFormatException If one or more of the inputs are null.
      */
-    public OriginalData(final ArrayList<String> description, final int year, final int imageQuality, final String fileName) throws InputFormatException {
+    public OriginalData(final List<String> description, final int year, final int imageQuality, final String fileName) throws InputFormatException {
 
         if (imageQuality < 0 || imageQuality > 1) {
             //FIXME  - check if this is correct, pilot study has 2s and nulls in the data!  throw new NumberFormatException("image quality must be 0 or 1, currently: " + imageQuality + "\ndescription: " + description);
@@ -60,7 +60,7 @@ public class OriginalData implements java.io.Serializable {
      *
      * @return the description
      */
-    public ArrayList<String> getDescription() {
+    public List<String> getDescription() {
 
         return description;
     }
