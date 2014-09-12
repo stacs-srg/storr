@@ -14,7 +14,7 @@ package uk.ac.standrews.cs.digitising_scotland.record_classification.test;
 import static org.junit.Assert.assertEquals;
 
 import java.io.File;
-import java.util.HashMap;
+import java.util.Map;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -155,7 +155,7 @@ public class AnalysisToolsTest {
     @Test
     public void testPrecision1() {
 
-        HashMap<String, Integer> map = at.buildPrecisionMap();
+        Map<String, Integer> map = at.buildPrecisionMap();
         assertEquals(12, (int) map.get("Cows"));
         assertEquals(9, (int) map.get("Dogs"));
         assertEquals(6, (int) map.get("Cats"));
@@ -174,7 +174,7 @@ public class AnalysisToolsTest {
     @Test
     public void testPrecision2() {
 
-        HashMap<String, Integer> map = at1.buildPrecisionMap();
+        Map<String, Integer> map = at1.buildPrecisionMap();
 
         assertEquals(12, (int) map.get("Cows"));
         assertEquals(6, (int) map.get("Dogs"));
