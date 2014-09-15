@@ -29,18 +29,37 @@ import uk.ac.standrews.cs.digitising_scotland.tools.Timer;
 import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
 import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearningConfiguration;
 
-public class PipelineUtils {
+/**
+ * Utility class containing methods to help with the creation and use of the exact match and machine learning pipelines.
+ * @author jkc25
+ *
+ */
+public final class PipelineUtils {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PipelineUtils.class);
 
+    private PipelineUtils() {
+
+    }
+
+    /**
+     * Generates a file containing all the codes that were in the given bucket.
+     * @param bucket Bucket to generate mapping file from
+     */
     protected static void generateActualCodeMappings(final Bucket bucket) {
 
         Map<String, Integer> codeMapping = new HashMap<>();
         for (Record record : bucket) {
-            for (CodeTriple currentCodeTriple : record.getGoldStandardClassificationSet()) {
-                codeMapping.put(currentCodeTriple.getCode().getCodeAsString(), 1);
-            }
+            addAllCodesToMap(codeMapping, record);
         }
+
+        StringBuilder sb = buildOutputString(codeMapping);
+        File codeFile = new File("target/customCodeMap.txt");
+        Utils.writeToFile(sb.toString(), codeFile.getAbsolutePath());
+        CodeFactory.getInstance().loadDictionary(codeFile);
+    }
+
+    private static StringBuilder buildOutputString(final Map<String, Integer> codeMapping) {
 
         StringBuilder sb = new StringBuilder();
         Set<String> keySet = codeMapping.keySet();
@@ -48,10 +67,15 @@ public class PipelineUtils {
         for (String key : keySet) {
             sb.append(key + "\t" + key + "\n");
         }
-        //    sb.append("\n");
-        File codeFile = new File("target/customCodeMap.txt");
-        Utils.writeToFile(sb.toString(), codeFile.getAbsolutePath());
-        CodeFactory.getInstance().loadDictionary(codeFile);
+
+        return sb;
+    }
+
+    private static void addAllCodesToMap(final Map<String, Integer> codeMapping, final Record record) {
+
+        for (CodeTriple currentCodeTriple : record.getGoldStandardClassificationSet()) {
+            codeMapping.put(currentCodeTriple.getCode().getCodeAsString(), 1);
+        }
     }
 
     protected static void generateAndPrintStats(final Bucket classifiedBucket, final String header, final String bucketIdentifier, final String experimentalFolderName) throws IOException {
