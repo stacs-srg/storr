@@ -55,14 +55,15 @@ public class OLRPool implements Runnable {
      * @param testingVectorList          internal testing vector list
      * @param properties                 properties
      */
-    public OLRPool(final Properties properties, final ArrayList<NamedVector> internalTrainingVectorList, final ArrayList<NamedVector> testingVectorList) {
+    public OLRPool(final Properties properties, final List<NamedVector> internalTrainingVectorList, final List<NamedVector> testingVectorList) {
 
         this.properties = properties;
         this.testingVectorList = testingVectorList;
         getConfigOptions();
 
         for (int i = 0; i < poolSize; i++) {
-            OLRShuffled model = new OLRShuffled(properties, new ArrayList<NamedVector>((ArrayList<NamedVector>) internalTrainingVectorList.clone()));
+            final ArrayList<NamedVector> trainingVectorList = new ArrayList<NamedVector>((ArrayList<NamedVector>) ((ArrayList<NamedVector>) internalTrainingVectorList).clone());
+            OLRShuffled model = new OLRShuffled(properties, trainingVectorList);
             models.add(model);
         }
         modelTrainable = true;
@@ -231,7 +232,7 @@ public class OLRPool implements Runnable {
         return survivors.get(0).numCategories();
     }
 
-    private ArrayList<OLRShuffled> getSurvivors(final ArrayList<ModelDoublePair> modelPairs) {
+    private List<OLRShuffled> getSurvivors(final List<ModelDoublePair> modelPairs) {
 
         ArrayList<OLRShuffled> survivors = new ArrayList<OLRShuffled>();
         Collections.sort(modelPairs);

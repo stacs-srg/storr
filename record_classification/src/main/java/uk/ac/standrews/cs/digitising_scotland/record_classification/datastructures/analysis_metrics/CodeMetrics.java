@@ -248,13 +248,18 @@ public class CodeMetrics {
      */
     private double[] add(final double[] array1, final double[] array2) {
 
-        if (array1.length != array2.length) { throw new RuntimeException("Cannot add arrays of different length, array1 length: " + array1.length + " array2 length: " + array2.length); }
+        checkArraysAreEqual(array1, array2);
         double[] sum = new double[array1.length];
 
         for (int i = 0; i < sum.length; i++) {
             sum[i] = array1[i] + array2[i];
         }
         return sum;
+    }
+
+    private void checkArraysAreEqual(final double[] array1, final double[] array2) {
+
+        if (array1.length != array2.length) { throw new RuntimeException("Cannot add arrays of different length, array1 length: " + array1.length + " array2 length: " + array2.length); }
     }
 
     /**
@@ -266,7 +271,7 @@ public class CodeMetrics {
      */
     private double[] subtract(final double[] array1, final double[] array2) {
 
-        if (array1.length != array2.length) { throw new RuntimeException("Cannot add arrays of different length, array1 length: " + array1.length + " array2 length: " + array2.length); }
+        checkArraysAreEqual(array1, array2);
         double[] sum = new double[array1.length];
 
         for (int i = 0; i < sum.length; i++) {
@@ -284,7 +289,7 @@ public class CodeMetrics {
      */
     private double[] division(final double[] numerator, final double[] denominator) {
 
-        if (numerator.length != denominator.length) { throw new RuntimeException("Cannot add arrays of different length, array1 length: " + numerator.length + " array2 length: " + denominator.length); }
+        checkArraysAreEqual(numerator, denominator);
 
         double[] divisionResult = new double[numerator.length];
         for (int i = 0; i < divisionResult.length; i++) {
@@ -309,7 +314,7 @@ public class CodeMetrics {
      */
     private double[] multiply(final double[] array1, final double[] array2) {
 
-        if (array1.length != array2.length) { throw new RuntimeException("Cannot add arrays of different length, array1 length: " + array1.length + " array2 length: " + array2.length); }
+        checkArraysAreEqual(array1, array2);
         double[] result = new double[array1.length];
 
         for (int i = 0; i < result.length; i++) {

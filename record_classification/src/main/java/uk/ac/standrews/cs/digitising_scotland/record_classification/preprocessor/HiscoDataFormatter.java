@@ -21,7 +21,7 @@ public class HiscoDataFormatter {
     private File inputFile;
 
     /** The input map. */
-    private HashMap<String, HashMap<String, Integer>> inputMap;
+    private Map<String, Map<String, Integer>> inputMap;
 
     /**
      * The main method.
@@ -68,14 +68,14 @@ public class HiscoDataFormatter {
      * @return the hash map
      * @throws IOException Signals that an I/O exception has occurred.
      */
-    public HashMap<String, Map<String, Integer>> correctClassesToMostPopular() throws IOException {
+    public Map<String, Map<String, Integer>> correctClassesToMostPopular() throws IOException {
 
         StringBuilder sb = new StringBuilder();
 
-        Set<Entry<String, HashMap<String, Integer>>> set = inputMap.entrySet();
-        Iterator<Entry<String, HashMap<String, Integer>>> outerIterator = set.iterator();
+        Set<Entry<String, Map<String, Integer>>> set = inputMap.entrySet();
+        Iterator<Entry<String, Map<String, Integer>>> outerIterator = set.iterator();
 
-        HashMap<String, Map<String, Integer>> sortedMap = generateSortedMap(outerIterator);
+        Map<String, Map<String, Integer>> sortedMap = generateSortedMap(outerIterator);
 
         Iterator<Entry<String, Map<String, Integer>>> iterator = sortedMap.entrySet().iterator();
 
@@ -113,11 +113,11 @@ public class HiscoDataFormatter {
      * @param outerIterator the outer iterator
      * @return the hash map
      */
-    private HashMap<String, Map<String, Integer>> generateSortedMap(final Iterator<Entry<String, HashMap<String, Integer>>> outerIterator) {
+    private Map<String, Map<String, Integer>> generateSortedMap(final Iterator<Entry<String, Map<String, Integer>>> outerIterator) {
 
-        HashMap<String, Map<String, Integer>> sortedMap = new HashMap<String, Map<String, Integer>>();
+        Map<String, Map<String, Integer>> sortedMap = new HashMap<String, Map<String, Integer>>();
         while (outerIterator.hasNext()) {
-            Entry<String, HashMap<String, Integer>> element = outerIterator.next();
+            Entry<String, Map<String, Integer>> element = outerIterator.next();
             if (element.getValue() != null && !element.getKey().toString().trim().equals("")) {
 
                 Map<String, Integer> inner = Utils.sortByValueDescending(inputMap.get(element.getKey()));
@@ -134,12 +134,12 @@ public class HiscoDataFormatter {
      * @return sorted hashmap of new data.
      * @throws IOException Signals that an I/O exception has occurred.
      */
-    public HashMap<String, Map<String, Integer>> correctClassesRemoveMostVariable() throws IOException {
+    public Map<String, Map<String, Integer>> correctClassesRemoveMostVariable() throws IOException {
 
-        Set<Entry<String, HashMap<String, Integer>>> set = inputMap.entrySet();
-        Iterator<Entry<String, HashMap<String, Integer>>> outerIterator = set.iterator();
+        Set<Entry<String, Map<String, Integer>>> set = inputMap.entrySet();
+        Iterator<Entry<String, Map<String, Integer>>> outerIterator = set.iterator();
 
-        HashMap<String, Map<String, Integer>> sortedMap = generateSortedMap(outerIterator);
+        Map<String, Map<String, Integer>> sortedMap = generateSortedMap(outerIterator);
 
         StringBuilder sb = new StringBuilder();
 
@@ -208,7 +208,7 @@ public class HiscoDataFormatter {
      * Gets the input map.
      * @return the input map
      */
-    public HashMap<String, HashMap<String, Integer>> getInputMap() {
+    public Map<String, Map<String, Integer>> getInputMap() {
 
         return inputMap;
     }
@@ -217,7 +217,7 @@ public class HiscoDataFormatter {
      * Sets the input map.
      * @param inputMap inputmap
      */
-    public void setInputMap(final HashMap<String, HashMap<String, Integer>> inputMap) {
+    public void setInputMap(final Map<String, Map<String, Integer>> inputMap) {
 
         this.inputMap = inputMap;
     }
