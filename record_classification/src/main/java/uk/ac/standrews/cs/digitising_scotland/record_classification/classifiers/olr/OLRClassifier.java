@@ -92,7 +92,6 @@ public class OLRClassifier extends AbstractClassifier {
         for (Record record : bucket) {
             final List<NamedVector> listOfVectors = vectorFactory.generateVectorsFromRecord(record);
             trainingVectorList.addAll(listOfVectors);
-            System.out.println(listOfVectors + "\t" + record.getDescription());
         }
 
         Collections.shuffle(trainingVectorList);

@@ -92,8 +92,8 @@ public class TopicModel {
      */
     private void dumpResultsMatrix() {
 
-        System.out.println("LDA with Topics set to " + Integer.parseInt(MachineLearningConfiguration.getDefaultProperties().getProperty("lda.numTopics")));
-        System.out.println("lda \t 1 \t 2 \t 3 \t 4 \t 5 \t 6 \t 7 \t8 \t 9 \t 10");
+        LOGGER.info("LDA with Topics set to " + Integer.parseInt(MachineLearningConfiguration.getDefaultProperties().getProperty("lda.numTopics")));
+        LOGGER.info("lda \t 1 \t 2 \t 3 \t 4 \t 5 \t 6 \t 7 \t8 \t 9 \t 10");
 
         for (int i = 0; i < resultsMatrix.length; i++) {
             for (int j = 0; j < resultsMatrix[i].length; j++) {
@@ -268,7 +268,8 @@ public class TopicModel {
             for (int position = 0; position < tokens.getLength(); position++) {
                 out.format("%s-%d ", dataAlphabet.lookupObject(tokens.getIndexAtPosition(position)), topics.getIndexAtPosition(position));
             }
-            System.out.println(out);
+            LOGGER.info(out.toString());
+            out.close();
         }
 
         BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(inputFile), "UTF8"));
@@ -322,10 +323,10 @@ public class TopicModel {
             topicNumbers.put(topics.getIndexAtPosition(position), 1);
         }
         numberOfTopics = topicNumbers.size();
-        System.out.println(out);
+        LOGGER.info(out.toString());
         String contents = lineSplit[0] + "\t" + lineSplit[1] + "\t" + lineSplit[2] + "\t" + out.toString() + "\t" + numberOfTopics + "\n";
         Utils.writeToFile(contents, outputFile.getAbsolutePath(), true);
-
+        out.close();
         return outputFile;
     }
 
@@ -393,8 +394,8 @@ public class TopicModel {
         //                tm.modelTopics(input, output);
         //            }
         //            catch (ArrayIndexOutOfBoundsException e) {
-        //                System.out.println("broken");
-        //                System.out.println(e.getMessage());
+        //                LOGGER.info("broken");
+        //                LOGGER.info(e.getMessage());
         //            }
         //        }
         //
@@ -404,8 +405,8 @@ public class TopicModel {
         //                tm.modelTopics(input, output);
         //            }
         //            catch (ArrayIndexOutOfBoundsException e) {
-        //                System.out.println("broken");
-        //                System.out.println(e.getMessage());
+        //                LOGGER.info("broken");
+        //                LOGGER.info(e.getMessage());
         //            }
         //        }
         System.exit(0);

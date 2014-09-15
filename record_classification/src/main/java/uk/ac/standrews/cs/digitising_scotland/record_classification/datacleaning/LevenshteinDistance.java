@@ -1,11 +1,18 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.datacleaning;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.PipelineUtils;
+
 /**
  * 
  * http://stackoverflow.com/questions/955110/similarity-string-comparison-in-java.
  *
  */
 public final class LevenshteinDistance {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(LevenshteinCleaner.class);
 
     /**
      * Instantiates a new levenshtein distance.
@@ -78,7 +85,7 @@ public final class LevenshteinDistance {
      */
     public static void printDistance(final String s1, final String s2) {
 
-        System.out.println(s1 + "-->" + s2 + ": " + computeEditDistance(s1, s2) + " (" + similarity(s1, s2) + ")");
+        LOGGER.info(s1 + "-->" + s2 + ": " + computeEditDistance(s1, s2) + " (" + similarity(s1, s2) + ")");
     }
 
     /**

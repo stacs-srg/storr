@@ -7,6 +7,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.apache.mahout.math.Vector;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Used by {@link VectorFactory}
@@ -17,6 +19,8 @@ import org.apache.mahout.math.Vector;
  * Created by fraserdunlop on 23/04/2014 at 19:37.
  */
 public class SimpleVectorEncoder extends AbstractVectorEncoder {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(SimpleVectorEncoder.class);
 
     private Map<String, Integer> dictionary;
     private Integer currentMaxTokenIndexValue;
@@ -103,9 +107,9 @@ public class SimpleVectorEncoder extends AbstractVectorEncoder {
         int currentMaxTokenIndexValue = inputStream.readInt();
         for (int i = 0; i < currentMaxTokenIndexValue; i++) {
             int readint = inputStream.readInt();
-            System.out.println(i);
+
             if (i != readint) {
-                System.out.println("problem");
+                LOGGER.error("error reading SimpleVectorEncoder dictionary");
                 throw new RuntimeException("error reading SimpleVectorEncoder dictionary");
             }
             updateDictionary(inputStream.readUTF());

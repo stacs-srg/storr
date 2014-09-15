@@ -149,14 +149,12 @@ public class MachineLearningClassificationPipeline {
         populateMatrix(ngramSet, resolverMatrix);
 
         resolverMatrix.chopBelowConfidence(CONFIDENCE_CHOP_LEVEL);
-        System.out.println("Resolver matrix complexity before chop: " + resolverMatrix.complexity());
 
         List<Set<CodeTriple>> triples = resolverMatrix.getValidCodeTriples(cleanedTokenSet);
         Set<CodeTriple> best;
 
         if (!triples.isEmpty()) {
             best = ResolverUtils.getBest(triples);
-            System.out.println("triples not empty");
         }
         else {
             best = new HashSet<>();

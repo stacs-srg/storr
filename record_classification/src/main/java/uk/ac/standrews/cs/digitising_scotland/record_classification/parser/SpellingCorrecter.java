@@ -23,6 +23,9 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * The Class SpellingCorrecter.
  */
@@ -111,9 +114,11 @@ class SpellingCorrecter {
      */
     public static void main(final String[] args) throws IOException {
 
+        final Logger logger = LoggerFactory.getLogger(SpellingCorrecter.class);
+
         if (args.length > 0) {
             for (int i = 0; i < args.length; i++) {
-                System.out.println(new SpellingCorrecter("dictSmall.txt").correct(args[i]));
+                logger.info(new SpellingCorrecter("dictSmall.txt").correct(args[i]));
             }
         }
 

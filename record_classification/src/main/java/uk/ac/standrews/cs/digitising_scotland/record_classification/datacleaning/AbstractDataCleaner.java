@@ -14,6 +14,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datareaders.AbstractFormatConverter;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datareaders.LongFormatConverter;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
@@ -33,6 +36,8 @@ import com.google.common.collect.Multiset;
  * Created by fraserdunlop on 16/07/2014 at 15:21.
  */
 public abstract class AbstractDataCleaner {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractDataCleaner.class);
 
     /**
      * The Constant TOKENLIMIT. The default is 4 but this can be changed by calling setTokenLimit.
@@ -195,10 +200,11 @@ public abstract class AbstractDataCleaner {
 
         try {
             tokenLimit = Integer.parseInt(args[2]);
-            System.out.println("TOKENLIMIT set to " + tokenLimit);
+            LOGGER.info("TOKENLIMIT set to " + tokenLimit);
         }
         catch (ArrayIndexOutOfBoundsException e) {
-            System.out.println("No TOKENLIMIT argument. Default is " + tokenLimit);
+            LOGGER.error("No TOKENLIMIT argument. Default is " + tokenLimit);
+            LOGGER.error(e.toString());
         }
     }
 
@@ -209,7 +215,7 @@ public abstract class AbstractDataCleaner {
     public static void setTokenLimit(final int tokenLimit) {
 
         AbstractDataCleaner.tokenLimit = tokenLimit;
-        System.out.println("TOKENLIMIT set to " + tokenLimit);
+        LOGGER.info("TOKENLIMIT set to " + tokenLimit);
 
     }
 

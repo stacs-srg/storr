@@ -74,9 +74,6 @@ public class CustomWordCleaner extends AbstractDataCleaner {
     @Override
     public String correct(final String token) {
 
-        if (token.equals("disease")) {
-            System.out.println("disease");
-        }
         if (WORD_LIST.contains(token)) {
             printDebugInfo(token);
             return "";
