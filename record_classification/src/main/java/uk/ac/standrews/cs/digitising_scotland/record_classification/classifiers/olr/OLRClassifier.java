@@ -169,6 +169,24 @@ public class OLRClassifier extends AbstractClassifier {
         return pair;
     }
 
+    /* (non-Javadoc)
+     * @see uk.ac.standrews.cs.digitising_scotland.parser.classifiers.AbstractClassifier#getModelFromDefaultLocation()
+     */
+    @Override
+    public OLRClassifier getModelFromDefaultLocation() {
+
+        OLRClassifier olr = null;
+        try {
+            olr = deSerializeModel(modelPath);
+            model = olr.model;
+        }
+        catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return olr;
+    }
+
     /**
      * Allows serialization of the model to file.
      *
@@ -213,21 +231,4 @@ public class OLRClassifier extends AbstractClassifier {
         return olrClassifier;
     }
 
-    /* (non-Javadoc)
-     * @see uk.ac.standrews.cs.digitising_scotland.parser.classifiers.AbstractClassifier#getModelFromDefaultLocation()
-     */
-    @Override
-    public OLRClassifier getModelFromDefaultLocation() {
-
-        OLRClassifier olr = null;
-        try {
-            olr = deSerializeModel(modelPath);
-            model = olr.model;
-        }
-        catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        return olr;
-    }
 }

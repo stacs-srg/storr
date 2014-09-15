@@ -3,8 +3,6 @@ package uk.ac.standrews.cs.digitising_scotland.record_classification.datacleanin
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.PipelineUtils;
-
 /**
  * 
  * http://stackoverflow.com/questions/955110/similarity-string-comparison-in-java.
