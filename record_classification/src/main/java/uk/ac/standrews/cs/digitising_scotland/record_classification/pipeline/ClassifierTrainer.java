@@ -47,17 +47,6 @@ public class ClassifierTrainer {
 
     }
 
-    public void getExistingsModels(String modelLocations) {
-
-        exactMatchClassifier = new ExactMatchClassifier();
-        exactMatchClassifier.setModelFileName(modelLocations + "/lookupTable");
-        exactMatchClassifier.getModelFromDefaultLocation();
-        olrClassifier = new OLRClassifier(new VectorFactory());
-        OLRClassifier.setModelPath(modelLocations + "/olrModel");
-        olrClassifier = olrClassifier.getModelFromDefaultLocation();
-
-    }
-
     /**
      * Trains an exact match classifier with data from the training bucket. The model is written to the experimental folder name
      * /Models/lookupTable.
@@ -89,6 +78,22 @@ public class ClassifierTrainer {
         OLRClassifier.setModelPath(experimentalFolderName + "/Models/olrModel");
         olrClassifier.train(trainingBucket);
         return olrClassifier;
+    }
+
+    /**
+     * Instansiates an {@link ExactMatchClassifier} and a {@link OLRClassifier} from models stored on disk.
+     * The model locations should be in "/lookupTable" and "/olrModel" from modelLocations path.
+     * @param modelLocations Path to parent directory of pre-built models.
+     */
+    public void getExistingsModels(final String modelLocations) {
+
+        exactMatchClassifier = new ExactMatchClassifier();
+        exactMatchClassifier.setModelFileName(modelLocations + "/lookupTable");
+        exactMatchClassifier.getModelFromDefaultLocation();
+        olrClassifier = new OLRClassifier(new VectorFactory());
+        OLRClassifier.setModelPath(modelLocations + "/olrModel");
+        olrClassifier = olrClassifier.getModelFromDefaultLocation();
+
     }
 
     /**

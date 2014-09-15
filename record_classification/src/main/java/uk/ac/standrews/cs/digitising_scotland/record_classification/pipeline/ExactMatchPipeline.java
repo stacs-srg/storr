@@ -69,7 +69,9 @@ public class ExactMatchPipeline {
                     allMatch = false;
                 }
             }
-            if (allMatch) classified.addRecordToBucket(record);
+            if (allMatch) {
+                classified.addRecordToBucket(record);
+            }
 
         }
         LOGGER.info("Total exact matched = " + match + "/" + bucket.size());
@@ -77,23 +79,11 @@ public class ExactMatchPipeline {
     }
 
     /**
-     * Returns the classification of a {@link Record} as a Set of
-     * {@link CodeTriple}.
-     * 
-     * @param record
-     *            to classify
-     * @return Set<CodeTriple> the classifications
-     * @throws IOException
-     *             indicates an I/O Error
+     * Classifies a String, which should correspond to a description, to a set of {@link CodeTriple} objects.
+     * @param description String to classify
+     * @return A set of {@link CodeTriple}s that contain the code, confidence and tokens used to produce classification.
+     * @throws IOException I/O Exception
      */
-    public Set<CodeTriple> classify(final Record record) throws IOException {
-
-        TokenSet cleanedTokenSet = new TokenSet(record.getDescription());
-
-        return classifier.classifyTokenSetToCodeTripleSet(cleanedTokenSet);
-
-    }
-
     public Set<CodeTriple> classify(final String description) throws IOException {
 
         return classifier.classifyTokenSetToCodeTripleSet(new TokenSet(description));

@@ -62,7 +62,8 @@ public class OLRPool implements Runnable {
         getConfigOptions();
 
         for (int i = 0; i < poolSize; i++) {
-            final List<NamedVector> trainingVectorList = new ArrayList<NamedVector>(internalTrainingVectorList); //TODO workout if a clone() is needed here or not
+            //TODO workout if a clone() is needed here or not
+            final List<NamedVector> trainingVectorList = new ArrayList<NamedVector>(internalTrainingVectorList);
             OLRShuffled model = new OLRShuffled(properties, trainingVectorList);
             models.add(model);
         }
