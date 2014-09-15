@@ -49,6 +49,7 @@ public class ExactMatchPipeline {
         int count = 0;
         int match = 0;
         boolean allMatch = false;
+
         for (Record record : bucket) {
             count++;
             LOGGER.info("Exact Matching record " + count + " of " + bucket.size());
@@ -69,6 +70,7 @@ public class ExactMatchPipeline {
                     allMatch = false;
                 }
             }
+
             if (allMatch) {
                 classified.addRecordToBucket(record);
             }

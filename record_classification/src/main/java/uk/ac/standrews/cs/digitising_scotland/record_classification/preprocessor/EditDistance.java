@@ -2,7 +2,6 @@ package uk.ac.standrews.cs.digitising_scotland.record_classification.preprocesso
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Scanner;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Pair;
 
@@ -35,7 +34,7 @@ public class EditDistance {
 
         int matchDist; // Edit distance if first char. match or do a replace
         int insertDist; // Edit distance if insert first char of s1 in front of s2.
-        int deleteDist; // Edit distance if delete first char of s2.
+        int deleteDist; // Edit distance if delete first char of s2.    
         int swapDist; // edit distance for twiddle (first 2 char. must swap).
 
         if (s1.length() == 0) {
@@ -106,7 +105,7 @@ public class EditDistance {
             return s1.length(); // Delete the remainder of s1
         }
         else {
-            Pair<String, String> pair = new Pair(s1, s2);
+            Pair<String, String> pair = new Pair<String, String>(s1, s2);
             Integer result = solvedProblems.get(pair);
 
             if (result != null) {
@@ -135,32 +134,5 @@ public class EditDistance {
                 return dist;
             }
         }
-    }
-
-    /**
-     * Testing program.
-     */
-    public static void main(final String[] args) {
-
-        Scanner input = new Scanner(System.in);
-        String s1, s2; // The strings to find the edit distance between
-        EditDistance calc = new EditDistance();
-
-        System.out.println("Enter two strings, one per line");
-        s1 = input.nextLine();
-        s2 = input.nextLine();
-
-        while (s1.length() > 0) {
-            System.out.println("The edit distance between \"" + s1 + "\" and \"" + s2 + "\" is " + naiveEditDistance(s1, s2));
-            System.out.println();
-
-            System.out.println("The edit distance between \"" + s1 + "\" and \"" + s2 + "\" is " + calc.memoizedEditDist(s1, s2));
-            System.out.println();
-
-            System.out.println("Enter two strings, one per line");
-            s1 = input.nextLine();
-            s2 = input.nextLine();
-        }
-        input.close();
     }
 }

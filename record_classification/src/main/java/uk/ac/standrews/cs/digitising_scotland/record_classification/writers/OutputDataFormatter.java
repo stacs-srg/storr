@@ -54,7 +54,7 @@ public class OutputDataFormatter {
 
     /**
      * Gets the codes and appends each one with the delimiter.
-     *
+     * @param description The description to get the codes for
      * @param record the record
      * @return the codes
      */

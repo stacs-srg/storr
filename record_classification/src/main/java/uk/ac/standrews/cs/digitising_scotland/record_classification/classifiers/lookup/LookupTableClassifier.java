@@ -72,6 +72,12 @@ public class LookupTableClassifier extends AbstractClassifier implements Seriali
         record.addAllCodeTriples(classifiedGramsSet);
     }
 
+    @Override
+    public Pair<Code, Double> classify(final TokenSet tokenSet) throws IOException {
+
+        throw new UnsupportedOperationException();
+    }
+
     /**
      * Classifies all the records in a {@link Bucket}.
      *
@@ -110,11 +116,8 @@ public class LookupTableClassifier extends AbstractClassifier implements Seriali
 
         Set<CodeTriple> classificationSet = new HashSet<>();
         for (TokenSet gram : grams) {
-
             CodeTriple classifiedGram = classifyIndividualGram(new TokenSet(gram));
-
             if (classifiedGram != null) {
-
                 classificationSet.add(classifiedGram);
             }
         }
@@ -168,12 +171,6 @@ public class LookupTableClassifier extends AbstractClassifier implements Seriali
         }
         else if (!lookupTable.equals(other.lookupTable)) { return false; }
         return true;
-    }
-
-    @Override
-    public Pair<Code, Double> classify(final TokenSet tokenSet) throws IOException {
-
-        throw new UnsupportedOperationException();
     }
 
 }

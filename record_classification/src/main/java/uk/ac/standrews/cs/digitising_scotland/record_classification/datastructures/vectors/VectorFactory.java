@@ -83,13 +83,12 @@ public class VectorFactory {
         return vectors;
     }
 
-    private Collection<? extends NamedVector> createUnNamedVectorsFromDescriptopn(List<String> description) {
+    private Collection<? extends NamedVector> createUnNamedVectorsFromDescriptopn(final List<String> description) {
 
         List<NamedVector> vectorList = new ArrayList<>();
 
         for (String string : description) {
             Vector v = createVectorFromString(string);
-
             vectorList.add(new NamedVector(v, "noGoldStandard"));
         }
 

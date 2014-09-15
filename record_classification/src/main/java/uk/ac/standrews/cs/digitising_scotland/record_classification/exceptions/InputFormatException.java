@@ -15,14 +15,15 @@ public class InputFormatException extends Exception {
      * Instantiates a new input format exception.
      *
      * @param errorMessage the error message
+     * @param parent parent class name to enable logging of where error originated
      */
     public InputFormatException(final String errorMessage, final Class parent) {
 
         super(errorMessage);
-        Logger LOGGER = LoggerFactory.getLogger(parent);
-        LOGGER.error(this.toString());
+        Logger logger = LoggerFactory.getLogger(parent);
+        logger.error(this.toString());
         for (StackTraceElement trace : this.getStackTrace()) {
-            LOGGER.error(trace.toString());
+            logger.error(trace.toString());
 
         }
     }

@@ -164,7 +164,7 @@ public final class TrainAndMultiplyClassify {
         LOGGER.info("Codes that were null and weren't adter chopping: " + CodeFactory.getInstance().getCodeMapNullCounter());
     }
 
-    private static ExactMatchClassifier trainExactMatchClassifier(Bucket trainingRecords) throws Exception {
+    private static ExactMatchClassifier trainExactMatchClassifier(final Bucket trainingRecords) throws Exception {
 
         ExactMatchClassifier exactMatchClassifier = new ExactMatchClassifier();
         exactMatchClassifier.setModelFileName(experimentalFolderName + "/Models/lookupTable");

@@ -86,6 +86,7 @@ public class HiscoDataFormatter {
             Entry<String, Integer> best = innerIterator.next();
             String mostPopularClass = best.getKey();
             int numberOfPopularClass = best.getValue();
+
             for (int i = 0; i < numberOfPopularClass; i++) {
                 sb.append(codings.getKey() + "\t" + mostPopularClass + "\n");
             }
