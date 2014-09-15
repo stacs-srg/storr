@@ -92,8 +92,8 @@ public class OriginalData implements java.io.Serializable {
      */
     private void checkNotNull() throws InputFormatException {
 
-        if (description == null) { throw new InputFormatException("description passed to constructor cannot be null"); }
-        if (fileName == null) { throw new InputFormatException("file name passed to constructor cannot be null"); }
+        if (description == null) { throw new InputFormatException("description passed to constructor cannot be null", this.getClass()); }
+        if (fileName == null) { throw new InputFormatException("file name passed to constructor cannot be null", this.getClass()); }
 
     }
 

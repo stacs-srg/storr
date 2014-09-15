@@ -6,6 +6,9 @@ package uk.ac.standrews.cs.digitising_scotland.record_classification.exceptions;
  */
 public class FolderCreationException extends RuntimeException {
 
+    /** The Constant serialVersionUID. */
+    private static final long serialVersionUID = -8768682566508579625L;
+
     /**
      * Instantiates a new folder creation exception.
      *
@@ -15,8 +18,5 @@ public class FolderCreationException extends RuntimeException {
 
         super(message);
     }
-
-    /** The Constant serialVersionUID. */
-    private static final long serialVersionUID = -8768682566508579625L;
 
 }
