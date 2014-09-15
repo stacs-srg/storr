@@ -125,9 +125,9 @@ public class MachineLearningClassificationPipeline {
      * @throws IOException
      *             indicates an I/O Error
      */
-    public Set<CodeTriple> classify(final String desc) throws IOException {
+    public Set<CodeTriple> classify(final String description) throws IOException {
 
-        TokenSet cleanedTokenSet = new TokenSet(desc);
+        TokenSet cleanedTokenSet = new TokenSet(description);
 
         return classifyTokenSet(cleanedTokenSet);
 
@@ -154,7 +154,7 @@ public class MachineLearningClassificationPipeline {
         List<Set<CodeTriple>> triples = resolverMatrix.getValidCodeTriples(cleanedTokenSet);
         Set<CodeTriple> best;
 
-        if (triples.size() > 0) {
+        if (!triples.isEmpty()) {
             best = ResolverUtils.getBest(triples);
             System.out.println("triples not empty");
         }
@@ -166,9 +166,9 @@ public class MachineLearningClassificationPipeline {
     }
 
     /**
-     * Populate matrix.
+     * Populates the resolver matrix.
      *
-     * @param tokenSetSet the token set set
+     * @param tokenSetSet the tokenSet set
      * @param resolverMatrix the resolver matrix
      * @throws IOException Signals that an I/O exception has occurred.
      */

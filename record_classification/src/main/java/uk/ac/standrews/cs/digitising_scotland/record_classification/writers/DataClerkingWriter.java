@@ -63,7 +63,7 @@ public class DataClerkingWriter extends OutputDataFormatter implements Closeable
     private String formatRecord(final Record record) {
 
         StringBuilder sb = new StringBuilder();
-        char fieldID = 97;
+        char fieldID = 'a';
         for (String description : record.getDescription()) {
             int id = record.getid();
             String year = getYear(record);
