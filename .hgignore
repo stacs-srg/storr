@@ -25,3 +25,8 @@ syntax: regexp
 ^record_classification/ModData/modDataSample11\.txt$
 syntax: regexp
 ^record_classification/ModData/testCodeMap\.txt$
+
+syntax: regexp
+^record_classification/top level files$
+syntax: regexp
+^record_classification/ModData$
