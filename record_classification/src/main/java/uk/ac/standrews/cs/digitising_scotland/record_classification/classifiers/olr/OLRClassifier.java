@@ -2,6 +2,7 @@ package uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -213,6 +214,7 @@ public class OLRClassifier extends AbstractClassifier {
      */
     public void serializeModel(final String filename) throws IOException {
 
+        CodeFactory.getInstance().writeCodeFactory(new File(filename + "CodeFactory"));
         DataOutputStream out = OLR.getDataOutputStream(filename);
         write(out);
         out.close();

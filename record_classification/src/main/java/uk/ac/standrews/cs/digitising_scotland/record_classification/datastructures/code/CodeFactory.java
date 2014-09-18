@@ -317,14 +317,14 @@ public final class CodeFactory implements Serializable {
         this.codeMapNullCounter = codeMapNullCounter;
     }
 
-    public void writeCodeFactory(File path) throws IOException {
+    public void writeCodeFactory(final File path) throws IOException {
 
         FileOutputStream fos = new FileOutputStream(path.getAbsoluteFile() + ".ser");
         ObjectOutputStream oos = new ObjectOutputStream(fos);
         write(oos);
     }
 
-    public CodeFactory readCodeFactory(File path) throws IOException, ClassNotFoundException {
+    public CodeFactory readCodeFactory(final File path) throws IOException, ClassNotFoundException {
 
         InputStream file = new FileInputStream(path.getAbsoluteFile() + ".ser");
         InputStream buffer = new BufferedInputStream(file);
@@ -343,7 +343,7 @@ public final class CodeFactory implements Serializable {
         return recoveredFactory;
     }
 
-    private void write(final ObjectOutputStream oos) throws IOException {
+    public void write(final ObjectOutputStream oos) throws IOException {
 
         oos.writeObject(this);
         oos.close();
@@ -361,21 +361,21 @@ public final class CodeFactory implements Serializable {
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
 
-        if (this == obj) return true;
-        if (obj == null) return false;
-        if (getClass() != obj.getClass()) return false;
+        if (this == obj) { return true; }
+        if (obj == null) { return false; }
+        if (getClass() != obj.getClass()) { return false; }
         CodeFactory other = (CodeFactory) obj;
         if (codeMap == null) {
-            if (other.codeMap != null) return false;
+            if (other.codeMap != null) { return false; }
         }
-        else if (!codeMap.equals(other.codeMap)) return false;
-        if (currentMaxID != other.currentMaxID) return false;
+        else if (!codeMap.equals(other.codeMap)) { return false; }
+        if (currentMaxID != other.currentMaxID) { return false; }
         if (idToCodeMap == null) {
-            if (other.idToCodeMap != null) return false;
+            if (other.idToCodeMap != null) { return false; }
         }
-        else if (!idToCodeMap.equals(other.idToCodeMap)) return false;
+        else if (!idToCodeMap.equals(other.idToCodeMap)) { return false; }
         return true;
     }
 

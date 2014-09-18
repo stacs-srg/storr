@@ -78,4 +78,8 @@ public class CodeFactoryTest {
 
     }
 
+    @Test
+    public void gettingExpandedCodeFactoryTest() {
+
+    }
 }
