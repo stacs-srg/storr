@@ -1,10 +1,17 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.ObjectInput;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -18,7 +25,9 @@ import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearnin
  *
  * @author jkc25, frjd2
  */
-public final class CodeFactory {
+public final class CodeFactory implements Serializable {
+
+    private static final long serialVersionUID = 3721498072294663528L;
 
     /** The Constant INSTANCE. */
     private static final CodeFactory INSTANCE = new CodeFactory();
@@ -306,6 +315,74 @@ public final class CodeFactory {
     public void setCodeMapNullCounter(final int codeMapNullCounter) {
 
         this.codeMapNullCounter = codeMapNullCounter;
+    }
+
+    public void writeCodeFactory(File path) throws IOException {
+
+        FileOutputStream fos = new FileOutputStream(path.getAbsoluteFile() + ".ser");
+        ObjectOutputStream oos = new ObjectOutputStream(fos);
+        write(oos);
+    }
+
+    public CodeFactory readCodeFactory(File path) throws IOException, ClassNotFoundException {
+
+        InputStream file = new FileInputStream(path.getAbsoluteFile() + ".ser");
+        InputStream buffer = new BufferedInputStream(file);
+        ObjectInput input = new ObjectInputStream(buffer);
+        CodeFactory recoveredFactory = null;
+        try {
+            recoveredFactory = (CodeFactory) input.readObject();
+            codeMap = recoveredFactory.codeMap;
+            idToCodeMap = recoveredFactory.idToCodeMap;
+            currentMaxID = recoveredFactory.currentMaxID;
+
+        }
+        finally {
+            input.close();
+        }
+        return recoveredFactory;
+    }
+
+    private void write(final ObjectOutputStream oos) throws IOException {
+
+        oos.writeObject(this);
+        oos.close();
+    }
+
+    @Override
+    public int hashCode() {
+
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((codeMap == null) ? 0 : codeMap.hashCode());
+        result = prime * result + currentMaxID;
+        result = prime * result + ((idToCodeMap == null) ? 0 : idToCodeMap.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+
+        if (this == obj) return true;
+        if (obj == null) return false;
+        if (getClass() != obj.getClass()) return false;
+        CodeFactory other = (CodeFactory) obj;
+        if (codeMap == null) {
+            if (other.codeMap != null) return false;
+        }
+        else if (!codeMap.equals(other.codeMap)) return false;
+        if (currentMaxID != other.currentMaxID) return false;
+        if (idToCodeMap == null) {
+            if (other.idToCodeMap != null) return false;
+        }
+        else if (!idToCodeMap.equals(other.idToCodeMap)) return false;
+        return true;
+    }
+
+    @Override
+    public String toString() {
+
+        return "CodeFactory [codeMap=" + codeMap + ", idToCodeMap=" + idToCodeMap + ", doOnce=" + doOnce + ", inputFile=" + inputFile + ", currentMaxID=" + currentMaxID + ", codeMapNullCounter=" + codeMapNullCounter + "]";
     }
 
 }

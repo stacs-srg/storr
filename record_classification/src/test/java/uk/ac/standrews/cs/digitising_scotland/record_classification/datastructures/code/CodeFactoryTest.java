@@ -19,7 +19,7 @@ public class CodeFactoryTest {
      * @throws Exception the exception
      */
     @Before
-    public void setUp() throws Exception {
+    public void setup() throws Exception {
 
         File codeFile = new File(getClass().getResource("/CodeFactoryTestFile.txt").getFile());
         CodeFactory.getInstance().loadDictionary(codeFile);
@@ -63,6 +63,19 @@ public class CodeFactoryTest {
     public void testMapInitAndDescriptionRecall() throws IOException, CodeNotValidException {
 
         Assert.assertEquals("2100 Architects and Town Planners", CodeFactory.getInstance().getCode("2100").getDescription());
+    }
+
+    @Test
+    public void serliazationTest() throws IOException, ClassNotFoundException {
+
+        File path = new File("target/codeFactoryTest");
+        CodeFactory cf1 = CodeFactory.getInstance();
+        cf1.writeCodeFactory(path);
+
+        CodeFactory cf2 = CodeFactory.getInstance().readCodeFactory(path);
+        Assert.assertTrue(cf1.equals(cf2));
+        Assert.assertTrue(CodeFactory.getInstance().equals(cf2));
+
     }
 
 }
