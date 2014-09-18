@@ -47,6 +47,36 @@ public class OLRShuffled implements Runnable {
     private boolean stopped = false;
 
     //----constructors---
+    /**
+     * Constructor.
+     *
+     * @param properties         the properties object that specifies among other things the number of training repetitions
+     * @param trainingVectorList2 the training vector list
+     */
+    public OLRShuffled(final Properties properties, final List<NamedVector> trainingVectorList2) {
+
+        this.properties = properties;
+        getConfigOptions();
+        this.trainingVectorList = trainingVectorList2;
+        this.model = new OLR(properties);
+        modelTrainable = true;
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param properties the properties object that specifies among other things the number of training repetitions
+     * @param betaMatrix the new beta matrix which is used as a starting point for model training
+     * @param trainingVectorList the training vector list
+     */
+    public OLRShuffled(final Properties properties, final Matrix betaMatrix, final List<NamedVector> trainingVectorList) {
+
+        this.properties = properties;
+        getConfigOptions();
+        this.trainingVectorList = trainingVectorList;
+        this.model = new OLR(properties, betaMatrix);
+        modelTrainable = true;
+    }
 
     /**
      * Constructor.
@@ -57,6 +87,8 @@ public class OLRShuffled implements Runnable {
 
         this(MachineLearningConfiguration.getDefaultProperties(), trainingVectorList);
     }
+
+    //----------------
 
     /**
      * Gets the running log likelihood.
@@ -74,21 +106,6 @@ public class OLRShuffled implements Runnable {
     public void resetRunningLogLikelihood() {
 
         model.resetRunningLogLikelihood();
-    }
-
-    /**
-     * Constructor.
-     *
-     * @param properties         the properties object that specifies among other things the number of training repetitions
-     * @param trainingVectorList2 the training vector list
-     */
-    public OLRShuffled(final Properties properties, final List<NamedVector> trainingVectorList2) {
-
-        this.properties = properties;
-        getConfigOptions();
-        this.trainingVectorList = trainingVectorList2;
-        this.model = new OLR(properties);
-        modelTrainable = true;
     }
 
     /**

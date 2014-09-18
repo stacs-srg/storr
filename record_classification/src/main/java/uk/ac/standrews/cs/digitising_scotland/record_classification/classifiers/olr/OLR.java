@@ -123,9 +123,13 @@ public class OLR {
      *
      * @param beta the beta
      */
-    public OLR(final Matrix beta) {
+    public OLR(final Properties properties, final Matrix beta) {
 
-        initialiseMode(beta);
+        resetRunningLogLikelihood();
+        this.properties = properties;
+        this.prior = new L1();
+        getConfigOptions();
+        initialiseModel(beta.clone());
     }
 
     /**
@@ -165,6 +169,21 @@ public class OLR {
     public void setBeta(final Matrix beta) {
 
         this.beta = beta;
+    }
+
+    public int getNumFeatures() {
+
+        return numFeatures;
+    }
+
+    public Vector getUpdateSteps() {
+
+        return updateSteps;
+    }
+
+    public Vector getUpdateCounts() {
+
+        return updateCounts;
     }
 
     /**
@@ -543,21 +562,25 @@ public class OLR {
      */
     private void initialiseModel() {
 
-        updateSteps = new DenseVector(numFeatures);
-        updateCounts = new DenseVector(numFeatures);
+        initStepsAndCounts();
         beta = new DenseMatrix(numCategories - 1, numFeatures);
     }
 
     /**
-     * Initialise mode.
+     * Initialise model with new beta matrix. Sets the number of rows and cols to size of beta.
      *
      * @param beta the beta
      */
-    private void initialiseMode(final Matrix beta) {
+    private void initialiseModel(final Matrix beta) {
 
         this.beta = beta;
         numFeatures = beta.numCols();
         numCategories = beta.numRows() + 1;
+        initStepsAndCounts();
+    }
+
+    private void initStepsAndCounts() {
+
         updateSteps = new DenseVector(numFeatures);
         updateCounts = new DenseVector(numFeatures);
     }

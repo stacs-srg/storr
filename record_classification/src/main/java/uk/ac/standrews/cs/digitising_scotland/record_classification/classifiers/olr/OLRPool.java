@@ -15,6 +15,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.mahout.math.DenseVector;
+import org.apache.mahout.math.Matrix;
 import org.apache.mahout.math.NamedVector;
 import org.apache.mahout.math.Vector;
 import org.apache.mahout.math.function.DoubleDoubleFunction;
@@ -65,6 +66,21 @@ public class OLRPool implements Runnable {
             //TODO workout if a clone() is needed here or not
             final List<NamedVector> trainingVectorList = new ArrayList<NamedVector>(internalTrainingVectorList);
             OLRShuffled model = new OLRShuffled(properties, trainingVectorList);
+            models.add(model);
+        }
+        modelTrainable = true;
+    }
+
+    public OLRPool(Properties properties, Matrix betaMatrix, ArrayList<NamedVector> internalTrainingVectorList, ArrayList<NamedVector> testingVectorList) {
+
+        this.properties = properties;
+        this.testingVectorList = testingVectorList;
+        getConfigOptions();
+
+        for (int i = 0; i < poolSize; i++) {
+            //TODO workout if a clone() is needed here or not
+            final List<NamedVector> trainingVectorList = new ArrayList<NamedVector>(internalTrainingVectorList);
+            OLRShuffled model = new OLRShuffled(properties, betaMatrix, trainingVectorList);
             models.add(model);
         }
         modelTrainable = true;

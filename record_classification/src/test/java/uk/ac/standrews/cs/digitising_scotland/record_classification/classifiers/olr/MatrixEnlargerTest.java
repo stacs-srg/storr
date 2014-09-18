@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.apache.mahout.math.DenseMatrix;
 import org.apache.mahout.math.Matrix;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -38,7 +39,18 @@ public class MatrixEnlargerTest {
         assertInitialMatrixContainedInNew(matrix, largerMatrix);
     }
 
-    private void fillWithRandomDoubles(final Matrix matrix) {
+    @Test
+    public void testClone() {
+
+        Matrix cloned = matrix.clone();
+        Assert.assertFalse(matrix == cloned);
+        Assert.assertEquals(matrix.rowSize(), cloned.rowSize());
+        Assert.assertEquals(matrix.columnSize(), cloned.columnSize());
+        assertInitialMatrixContainedInNew(cloned, matrix);
+
+    }
+
+    protected static void fillWithRandomDoubles(final Matrix matrix) {
 
         for (int i = 0; i < matrix.numRows(); i++) {
             for (int j = 0; j < matrix.numCols(); j++) {
@@ -47,7 +59,7 @@ public class MatrixEnlargerTest {
         }
     }
 
-    private void assertInitialMatrixContainedInNew(final Matrix matrix, final Matrix largerMatrix) {
+    protected static void assertInitialMatrixContainedInNew(final Matrix matrix, final Matrix largerMatrix) {
 
         for (int i = 0; i < matrix.numRows(); i++) {
             for (int j = 0; j < matrix.numCols(); j++) {
@@ -61,7 +73,7 @@ public class MatrixEnlargerTest {
         }
     }
 
-    private boolean withinBounds(final Matrix matrix, final int i, final int j) {
+    private static boolean withinBounds(final Matrix matrix, final int i, final int j) {
 
         return i < matrix.numRows() && j < matrix.numCols();
     }

@@ -53,6 +53,14 @@ public class OLRCrossFold {
     private OLR classifier;
 
     /**
+     * Instantiates a new OLR crossfold model.
+     */
+    protected OLRCrossFold() {
+
+        modelTrainable = false;
+    }
+
+    /**
      * Constructor.
      *
      * @param trainingVectorList training vectors
@@ -60,14 +68,30 @@ public class OLRCrossFold {
      */
     public OLRCrossFold(final List<NamedVector> trainingVectorList, final Properties properties) {
 
-        this.properties = properties;
-        getConfigOptions();
-        ArrayList<NamedVector>[][] trainingVectors = CrossFoldedDataStructure.make(trainingVectorList, folds);
+        ArrayList<NamedVector>[][] trainingVectors = init(trainingVectorList, properties);
         for (int i = 0; i < this.folds + 1; i++) {
             OLRPool model = new OLRPool(properties, trainingVectors[i][0], trainingVectors[i][1]);
             models.add(model);
         }
         modelTrainable = true;
+    }
+
+    public OLRCrossFold(final List<NamedVector> trainingVectorList, final Properties properties, Matrix betaMatrix) {
+
+        ArrayList<NamedVector>[][] trainingVectors = init(trainingVectorList, properties);
+        for (int i = 0; i < this.folds + 1; i++) {
+            OLRPool model = new OLRPool(properties, betaMatrix, trainingVectors[i][0], trainingVectors[i][1]);
+            models.add(model);
+        }
+        modelTrainable = true;
+    }
+
+    private ArrayList<NamedVector>[][] init(final List<NamedVector> trainingVectorList, final Properties properties) {
+
+        this.properties = properties;
+        getConfigOptions();
+        ArrayList<NamedVector>[][] trainingVectors = CrossFoldedDataStructure.make(trainingVectorList, folds);
+        return trainingVectors;
     }
 
     /**
@@ -161,7 +185,7 @@ public class OLRCrossFold {
 
         List<OLRShuffled> survivors = getSurvivors();
         Matrix classifierMatrix = getClassifierMatrix(survivors);
-        classifier = new OLR(classifierMatrix);
+        classifier = new OLR(properties, classifierMatrix);
     }
 
     /**
@@ -290,14 +314,6 @@ public class OLRCrossFold {
         olrCrossFold.readFields(in);
         in.close();
         return olrCrossFold;
-    }
-
-    /**
-     * Instantiates a new OLR crossfold model.
-     */
-    protected OLRCrossFold() {
-
-        modelTrainable = false;
     }
 
     /**

@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 
+import org.apache.mahout.math.Matrix;
 import org.apache.mahout.math.NamedVector;
 import org.apache.mahout.math.Vector;
 import org.slf4j.Logger;
@@ -97,6 +98,24 @@ public class OLRClassifier extends AbstractClassifier {
         Collections.shuffle(trainingVectorList);
 
         model = new OLRCrossFold(trainingVectorList, properties);
+
+        model.train();
+
+        writeModel();
+    }
+
+    public void train(final Bucket bucket, final Matrix betaMatrix) throws InterruptedException {
+
+        ArrayList<NamedVector> trainingVectorList = new ArrayList<NamedVector>();
+
+        for (Record record : bucket) {
+            final List<NamedVector> listOfVectors = vectorFactory.generateVectorsFromRecord(record);
+            trainingVectorList.addAll(listOfVectors);
+        }
+
+        Collections.shuffle(trainingVectorList);
+
+        model = new OLRCrossFold(trainingVectorList, properties, betaMatrix);
 
         model.train();
 
