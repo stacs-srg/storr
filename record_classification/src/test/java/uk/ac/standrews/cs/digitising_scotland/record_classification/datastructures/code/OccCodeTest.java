@@ -23,7 +23,7 @@ public class OccCodeTest {
     public ExpectedException expectedEx = ExpectedException.none();
 
     /**
-     * Setup, run before each test. Sets the {@link CodeFactory} code map and sets code1 and code2 to use code 2100.
+     * Setup, run before each test. Sets the {@link CodeIndexer} code map and sets code1 and code2 to use code 2100.
      *
      * @throws Exception the exception
      */
@@ -31,9 +31,9 @@ public class OccCodeTest {
     public void setUp() throws Exception {
 
         File codeFile = new File(getClass().getResource("/CodeFactoryTestFile.txt").getFile());
-        CodeFactory.getInstance().loadDictionary(codeFile);
-        code1 = CodeFactory.getInstance().getCode("2100");
-        code2 = CodeFactory.getInstance().getCode("2100");
+        CodeIndexer.getInstance().loadDictionary(codeFile);
+        code1 = CodeIndexer.getInstance().getCode("2100");
+        code2 = CodeIndexer.getInstance().getCode("2100");
 
     }
 
@@ -69,7 +69,7 @@ public class OccCodeTest {
 
         expectedEx.expect(CodeNotValidException.class);
         expectedEx.expectMessage("999999" + " is not a valid code, or is not in the code dictionary");
-        code3 = CodeFactory.getInstance().getCodeFromMap("999999");
+        code3 = CodeIndexer.getInstance().getCodeFromMap("999999");
     }
 
     /**
@@ -78,8 +78,8 @@ public class OccCodeTest {
     @Test
     public void testGetCodingLevel() {
 
-        code4 = CodeFactory.getInstance().getCode("9500");
-        Code code5 = CodeFactory.getInstance().getCode("95120");
+        code4 = CodeIndexer.getInstance().getCode("9500");
+        Code code5 = CodeIndexer.getInstance().getCode("95120");
         Assert.assertEquals(4, code4.getCodingLevel());
         Assert.assertEquals(5, code5.getCodingLevel());
 
@@ -91,9 +91,9 @@ public class OccCodeTest {
     @Test
     public void testIsDescendent() {
 
-        code4 = CodeFactory.getInstance().getCode("9500");
-        code3 = CodeFactory.getInstance().getCode("952");
-        Code code6 = CodeFactory.getInstance().getCode("95240");
+        code4 = CodeIndexer.getInstance().getCode("9500");
+        code3 = CodeIndexer.getInstance().getCode("952");
+        Code code6 = CodeIndexer.getInstance().getCode("95240");
         Assert.assertFalse(code1.isDescendant(code1));
         Assert.assertTrue(code6.isDescendant(code3));
         Assert.assertFalse(code3.isDescendant(code6));

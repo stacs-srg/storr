@@ -16,7 +16,7 @@ import org.junit.Test;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datareaders.LongFormatConverter;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeFactory;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeIndexer;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.RecordFactory;
@@ -35,7 +35,7 @@ public class RecordFactoryTest {
     public void makeMultipleCodedTrainingRecords() throws IOException, InputFormatException {
 
         File codeFile = new File(getClass().getResource("/testCodeMap.txt").getFile());
-        CodeFactory.getInstance().loadDictionary(codeFile);
+        CodeIndexer.getInstance().loadDictionary(codeFile);
 
         String file = getClass().getResource("/multipleCauseRecordsTest.csv").getFile();
         File inputFile = new File(file);
@@ -57,10 +57,10 @@ public class RecordFactoryTest {
                 Assert.assertEquals(originalData.getAgeGroup(), 5);
 
                 Collection<Classification> knownCorrect = new HashSet<>();
-                knownCorrect.add(new Classification(CodeFactory.getInstance().getCode("I269"), new TokenSet("pulmonary embolism"), 1.0));
-                knownCorrect.add(new Classification(CodeFactory.getInstance().getCode("R54"), new TokenSet("old age"), 1.0));
+                knownCorrect.add(new Classification(CodeIndexer.getInstance().getCode("I269"), new TokenSet("pulmonary embolism"), 1.0));
+                knownCorrect.add(new Classification(CodeIndexer.getInstance().getCode("R54"), new TokenSet("old age"), 1.0));
 
-                originalData.getGoldStandardCodeTriples().containsAll(knownCorrect);
+                originalData.getGoldStandardClassifications().containsAll(knownCorrect);
             }
 
             if (i == 1) {
@@ -71,9 +71,9 @@ public class RecordFactoryTest {
                 Assert.assertEquals(originalData.getAgeGroup(), 5);
 
                 Collection<Classification> knownCorrect = new HashSet<>();
-                knownCorrect.add(new Classification(CodeFactory.getInstance().getCode("J988"), new TokenSet("chest infection"), 1.0));
+                knownCorrect.add(new Classification(CodeIndexer.getInstance().getCode("J988"), new TokenSet("chest infection"), 1.0));
 
-                originalData.getGoldStandardCodeTriples().containsAll(knownCorrect);
+                originalData.getGoldStandardClassifications().containsAll(knownCorrect);
             }
 
             if (i == 2) {
@@ -84,9 +84,9 @@ public class RecordFactoryTest {
                 Assert.assertEquals(originalData.getAgeGroup(), 5);
 
                 Collection<Classification> knownCorrect = new HashSet<>();
-                knownCorrect.add(new Classification(CodeFactory.getInstance().getCode("R54"), new TokenSet("old age"), 1.0));
+                knownCorrect.add(new Classification(CodeIndexer.getInstance().getCode("R54"), new TokenSet("old age"), 1.0));
 
-                originalData.getGoldStandardCodeTriples().containsAll(knownCorrect);
+                originalData.getGoldStandardClassifications().containsAll(knownCorrect);
             }
 
             if (i == 3) {
@@ -99,10 +99,10 @@ public class RecordFactoryTest {
                 Assert.assertEquals(originalData.getAgeGroup(), 5);
 
                 Collection<Classification> knownCorrect = new HashSet<>();
-                knownCorrect.add(new Classification(CodeFactory.getInstance().getCode("I251"), new TokenSet("coronary artery disease"), 1.0));
-                knownCorrect.add(new Classification(CodeFactory.getInstance().getCode("D469"), new TokenSet("myelodysplasia syndrome"), 1.0));
+                knownCorrect.add(new Classification(CodeIndexer.getInstance().getCode("I251"), new TokenSet("coronary artery disease"), 1.0));
+                knownCorrect.add(new Classification(CodeIndexer.getInstance().getCode("D469"), new TokenSet("myelodysplasia syndrome"), 1.0));
 
-                originalData.getGoldStandardCodeTriples().containsAll(knownCorrect);
+                originalData.getGoldStandardClassifications().containsAll(knownCorrect);
             }
 
             if (i == 4) {
@@ -113,10 +113,10 @@ public class RecordFactoryTest {
                 Assert.assertEquals(originalData.getAgeGroup(), 2);
 
                 Collection<Classification> knownCorrect = new HashSet<>();
-                knownCorrect.add(new Classification(CodeFactory.getInstance().getCode("D649"), new TokenSet("Low Platelet and Anaemia"), 1.0));
-                knownCorrect.add(new Classification(CodeFactory.getInstance().getCode("D696"), new TokenSet("Low Platelet and Anaemia"), 1.0));
+                knownCorrect.add(new Classification(CodeIndexer.getInstance().getCode("D649"), new TokenSet("Low Platelet and Anaemia"), 1.0));
+                knownCorrect.add(new Classification(CodeIndexer.getInstance().getCode("D696"), new TokenSet("Low Platelet and Anaemia"), 1.0));
 
-                originalData.getGoldStandardCodeTriples().containsAll(knownCorrect);
+                originalData.getGoldStandardClassifications().containsAll(knownCorrect);
             }
 
         }
@@ -219,10 +219,10 @@ public class RecordFactoryTest {
         File codeList = new File(getClass().getResource("/CodeFactoryCoDFile.txt").getFile());
         File originalCodeList = new File(getClass().getResource("/CodeFactoryTestFile.txt").getFile());
 
-        CodeFactory.getInstance().loadDictionary(codeList);
+        CodeIndexer.getInstance().loadDictionary(codeList);
         List<Record> records = RecordFactory.makeCodedRecordsFromFile(inputFile);
         Bucket codTrainingBucket = new Bucket(records);
-        CodeFactory.getInstance().loadDictionary(originalCodeList);
+        CodeIndexer.getInstance().loadDictionary(originalCodeList);
 
     }
 
@@ -244,7 +244,7 @@ public class RecordFactoryTest {
         //    sb.append("\n");
         File codeFile = new File("target/customCodeMap.txt");
         Utils.writeToFile(sb.toString(), codeFile.getAbsolutePath());
-        CodeFactory.getInstance().loadDictionary(codeFile);
+        CodeIndexer.getInstance().loadDictionary(codeFile);
     }
 
 }

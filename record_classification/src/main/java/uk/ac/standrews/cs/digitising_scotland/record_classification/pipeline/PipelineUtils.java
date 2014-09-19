@@ -19,7 +19,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.analysis_metrics.StrictConfusionMatrix;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.BucketFilter;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeFactory;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeIndexer;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.exceptions.FolderCreationException;
@@ -56,7 +56,7 @@ public final class PipelineUtils {
         StringBuilder sb = buildOutputString(codeMapping);
         File codeFile = new File("target/customCodeMap.txt");
         Utils.writeToFile(sb.toString(), codeFile.getAbsolutePath());
-        CodeFactory.getInstance().loadDictionary(codeFile);
+        CodeIndexer.getInstance().loadDictionary(codeFile);
     }
 
     private static StringBuilder buildOutputString(final Map<String, Integer> codeMapping) {
@@ -183,7 +183,7 @@ public final class PipelineUtils {
         LOGGER.info("********** Training Classifiers **********");
         LOGGER.info("Training with a dictionary size of: " + MachineLearningConfiguration.getDefaultProperties().getProperty("numFeatures"));
         LOGGER.info("Training with this number of output classes: " + MachineLearningConfiguration.getDefaultProperties().getProperty("numCategories"));
-        LOGGER.info("Codes that were null and weren't adter chopping: " + CodeFactory.getInstance().getCodeMapNullCounter());
+        LOGGER.info("Codes that were null and weren't adter chopping: " + CodeIndexer.getInstance().getCodeMapNullCounter());
     }
 
     protected static boolean checkFileType(final File inputFile) throws IOException {

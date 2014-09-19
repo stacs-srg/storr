@@ -100,7 +100,7 @@ public class LookupTableClassifier extends AbstractClassifier implements Seriali
      */
     protected void addRecordToLookupTable(final Record record) {
 
-        for (Classification codeTriple : record.getOriginalData().getGoldStandardCodeTriples()) {
+        for (Classification codeTriple : record.getOriginalData().getGoldStandardClassifications()) {
             lookupTable.put(codeTriple.getTokenSet(), codeTriple.getCode());
         }
     }

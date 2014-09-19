@@ -1,7 +1,7 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.analysis_metrics;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeFactory;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeIndexer;
 import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
 
 /**
@@ -73,7 +73,7 @@ public class CodeMetrics {
         falseNegative = confusionMatrix.getFalseNegative();
         truePositive = confusionMatrix.getTruePositive();
 
-        numberOfOutputClasses = CodeFactory.getInstance().getNumberOfOutputClasses();
+        numberOfOutputClasses = CodeIndexer.getInstance().getNumberOfOutputClasses();
         precision = new double[numberOfOutputClasses];
         recall = new double[numberOfOutputClasses];
         specificity = new double[numberOfOutputClasses];
@@ -360,7 +360,7 @@ public class CodeMetrics {
     public String getStatsPerCode(final int id) {
 
         StringBuilder sb = new StringBuilder();
-        sb.append(CodeFactory.getInstance().getCode(id).getCodeAsString()).append(", ");
+        sb.append(CodeIndexer.getInstance().getCode(id).getCodeAsString()).append(", ");
         sb.append(truePositive[id]).append(", ");
         sb.append(trueNegative[id]).append(", ");
         sb.append(falsePositive[id]).append(", ");

@@ -115,7 +115,7 @@ public class ExactMatchClassifier extends AbstractClassifier {
      */
     private void addRecordToLookupTable(final Record record) {
 
-        final Set<Classification> goldStandardCodes = record.getOriginalData().getGoldStandardCodeTriples();
+        final Set<Classification> goldStandardCodes = record.getOriginalData().getGoldStandardClassifications();
         for (Classification t : goldStandardCodes) {
             final TokenSet description = new TokenSet(t.getTokenSet());
             Set<Classification> st = new HashSet<Classification>();

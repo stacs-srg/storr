@@ -5,7 +5,7 @@ import java.io.IOException;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Pair;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeFactory;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeIndexer;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
 
@@ -48,13 +48,13 @@ public class MockClassifier extends AbstractClassifier {
 
         if (tokenSet.size() % 2 == 0) {
             Pair<Code, Double> testvalue;
-            testvalue = new Pair<>(CodeFactory.getInstance().getCode(0), 0.8);
+            testvalue = new Pair<>(CodeIndexer.getInstance().getCode(0), 0.8);
             return testvalue;
         }
         else {
 
             Pair<Code, Double> testvalue;
-            testvalue = new Pair<>(CodeFactory.getInstance().getCode(1), 0.4);
+            testvalue = new Pair<>(CodeIndexer.getInstance().getCode(1), 0.4);
             return testvalue;
         }
     }

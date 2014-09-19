@@ -157,7 +157,7 @@ public class OriginalData implements java.io.Serializable {
      *
      * @return Set<CodeTriple> the gold standard code triples
      */
-    public Set<Classification> getGoldStandardCodeTriples() {
+    public Set<Classification> getGoldStandardClassifications() {
 
         return goldStandardClassification;
     }

@@ -20,21 +20,21 @@ public class CodeCheckerTest {
     @Test
     public void initTest() throws IOException {
 
-        CodeChecker checker = new CodeChecker(correctCodes);
+        CodeDictionary checker = new CodeDictionary(correctCodes);
         Assert.assertEquals(109, checker.getTotalNumberOfCodes());
     }
 
     @Test
     public void isValidTrueTest() throws IOException {
 
-        CodeChecker checker = new CodeChecker(correctCodes);
+        CodeDictionary checker = new CodeDictionary(correctCodes);
         Assert.assertTrue(checker.isValidCode("A15"));
     }
 
     @Test
     public void isValidFalseTest() throws IOException {
 
-        CodeChecker checker = new CodeChecker(correctCodes);
+        CodeDictionary checker = new CodeDictionary(correctCodes);
         Assert.assertFalse(checker.isValidCode("A1111"));
     }
 

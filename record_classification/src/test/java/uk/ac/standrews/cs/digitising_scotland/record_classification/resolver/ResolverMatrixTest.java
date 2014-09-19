@@ -11,7 +11,7 @@ import org.junit.Test;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Pair;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeFactory;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeIndexer;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
 
@@ -27,13 +27,13 @@ public class ResolverMatrixTest {
     private ResolverMatrix matrix;
 
     /**
-     * Setup, run before each test. Creates a new {@link ResolverMatrix} and sets the {@link CodeFactory} to use
+     * Setup, run before each test. Creates a new {@link ResolverMatrix} and sets the {@link CodeIndexer} to use
      * a compatible code map.
      */
     @Before
     public void setup() {
 
-        CodeFactory.getInstance().loadDictionary(new File("src/test/resources/CodeFactoryTestFile.txt"));
+        CodeIndexer.getInstance().loadDictionary(new File("src/test/resources/CodeFactoryTestFile.txt"));
         matrix = new ResolverMatrix();
 
     }
@@ -46,7 +46,7 @@ public class ResolverMatrixTest {
     public void tripleSetIsValidTest() {
 
         TokenSet originalSet = new TokenSet("the brown dog brown dog dog");
-        Code code = CodeFactory.getInstance().getCode(0);
+        Code code = CodeIndexer.getInstance().getCode(0);
         Classification codeTriple = new Classification(code, new TokenSet("brown dog"), 1.0);
         Set<Classification> tripleSet = new HashSet<>();
         tripleSet.add(codeTriple);
@@ -61,7 +61,7 @@ public class ResolverMatrixTest {
     public void tripleSetIsValidTest2() {
 
         TokenSet originalSet = new TokenSet("the brown dog brown dog dog");
-        Code code = CodeFactory.getInstance().getCode(0);
+        Code code = CodeIndexer.getInstance().getCode(0);
         Classification codeTriple = new Classification(code, new TokenSet("the the the brown dog"), 1.0);
         Set<Classification> tripleSet = new HashSet<>();
         tripleSet.add(codeTriple);
@@ -76,7 +76,7 @@ public class ResolverMatrixTest {
     public void tripleSetIsValidTest3() {
 
         TokenSet originalSet = new TokenSet("the brown dog brown dog dog");
-        Code code = CodeFactory.getInstance().getCode(0);
+        Code code = CodeIndexer.getInstance().getCode(0);
         Classification codeTriple = new Classification(code, new TokenSet("the brown dog brown dog dog"), 1.0);
         Set<Classification> tripleSet = new HashSet<>();
         tripleSet.add(codeTriple);
@@ -91,7 +91,7 @@ public class ResolverMatrixTest {
     public void tripleSetIsValidTest4() {
 
         TokenSet originalSet = new TokenSet("the brown dog brown dog dog");
-        Code code = CodeFactory.getInstance().getCode(0);
+        Code code = CodeIndexer.getInstance().getCode(0);
         Classification codeTriple = new Classification(code, new TokenSet("the brown dog brown dog dog bat"), 1.0);
         Set<Classification> tripleSet = new HashSet<>();
         tripleSet.add(codeTriple);
@@ -192,7 +192,7 @@ public class ResolverMatrixTest {
     private void addMockEntryToMatrix(final String string, final int id, final double conf) {
 
         TokenSet tokenSet = new TokenSet(string);
-        Code code = CodeFactory.getInstance().getCode(id);
+        Code code = CodeIndexer.getInstance().getCode(id);
         matrix.add(tokenSet, new Pair<>(code, conf));
     }
 
@@ -206,7 +206,7 @@ public class ResolverMatrixTest {
     private void addMockEntryToMatrix(final String string, final String codeAsString, final double conf) {
 
         TokenSet tokenSet = new TokenSet(string);
-        Code code = CodeFactory.getInstance().getCode(codeAsString);
+        Code code = CodeIndexer.getInstance().getCode(codeAsString);
         matrix.add(tokenSet, new Pair<>(code, conf));
     }
 

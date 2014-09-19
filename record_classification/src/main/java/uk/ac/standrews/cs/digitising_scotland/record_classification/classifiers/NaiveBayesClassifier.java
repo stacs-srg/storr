@@ -31,7 +31,7 @@ import org.slf4j.LoggerFactory;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Pair;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeFactory;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeIndexer;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
@@ -128,7 +128,7 @@ public class NaiveBayesClassifier extends AbstractClassifier {
         Collection<String> seen = new HashSet<String>();
 
         for (Record record : trainingBucket) {
-            Set<Classification> codeTriple = record.getOriginalData().getGoldStandardCodeTriples();
+            Set<Classification> codeTriple = record.getOriginalData().getGoldStandardClassifications();
             for (Classification codeTriple2 : codeTriple) {
                 String theLabel = codeTriple2.getCode().getCodeAsString();
                 if (!seen.contains(theLabel)) {
@@ -315,7 +315,7 @@ public class NaiveBayesClassifier extends AbstractClassifier {
     }
 
     /**
-     * Gets an Occ Code from the {@link CodeFactory}.
+     * Gets an Occ Code from the {@link CodeIndexer}.
      * 
      * @param resultOfClassification
      *            the string representation of the classification code
@@ -326,7 +326,7 @@ public class NaiveBayesClassifier extends AbstractClassifier {
      */
     private Code getCode(final int resultOfClassification) throws IOException {
 
-        return CodeFactory.getInstance().getCode(resultOfClassification);
+        return CodeIndexer.getInstance().getCode(resultOfClassification);
 
     }
 
@@ -375,7 +375,7 @@ public class NaiveBayesClassifier extends AbstractClassifier {
         Pair<Code, Double> pair;
         NamedVector vector = vectorFactory.createNamedVectorFromString(tokenSet.toString(), "unknown");
         int classificationID = getClassifier().classifyFull(vector).maxValueIndex();
-        Code code = CodeFactory.getInstance().getCode(classificationID);
+        Code code = CodeIndexer.getInstance().getCode(classificationID);
         // double confidence =
         // Math.exp(getClassifier().logLikelihood(classificationID, vector));
         // TODO THIS WONT WORK - Baysian classifier don't give real confidence measures - Need to fudge it

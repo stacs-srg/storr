@@ -9,7 +9,7 @@ import java.util.Set;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeFactory;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeIndexer;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeNotValidException;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
@@ -122,7 +122,7 @@ public class ClassifierTestingHelper {
     private void loadDictionary(final String codeDictionaryFile) throws URISyntaxException {
 
         File file = new File(this.getClass().getResource(codeDictionaryFile).toURI());
-        CodeFactory.getInstance().loadDictionary(file);
+        CodeIndexer.getInstance().loadDictionary(file);
     }
 
     /**
@@ -134,7 +134,7 @@ public class ClassifierTestingHelper {
      */
     private Record addGoldStandardCodeToRecord(final Record record, final String goldStandardCode) {
 
-        Code code = CodeFactory.getInstance().getCode(goldStandardCode);
+        Code code = CodeIndexer.getInstance().getCode(goldStandardCode);
         Classification c = new Classification(code, new TokenSet(record.getOriginalData().getDescription()), 1.0);
         Set<Classification> set = new HashSet<>();
         set.add(c);
@@ -151,7 +151,7 @@ public class ClassifierTestingHelper {
      */
     private Record addCodeTriplesStandardCodeToRecord(final Record record, final String codeAsString) {
 
-        Code code = CodeFactory.getInstance().getCode(codeAsString);
+        Code code = CodeIndexer.getInstance().getCode(codeAsString);
         Classification c = new Classification(code, new TokenSet(record.getOriginalData().getDescription()), 1.0);
         Set<Classification> set = new HashSet<>();
         set.add(c);

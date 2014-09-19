@@ -21,7 +21,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Pair;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeFactory;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeIndexer;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
@@ -153,7 +153,7 @@ public class OLRClassifier extends AbstractClassifier {
 
         for (NamedVector vector : vectorList) {
             Integer classificationID = model.classifyFull(vector).maxValueIndex();
-            Code code = CodeFactory.getInstance().getCode(classificationID);
+            Code code = CodeIndexer.getInstance().getCode(classificationID);
             double confidence = Math.exp(model.logLikelihood(classificationID, vector)); //TODO test
             codeTripleSet.add(new Classification(code, new TokenSet(record.getDescription()), confidence));
         }
@@ -183,7 +183,7 @@ public class OLRClassifier extends AbstractClassifier {
         NamedVector vector = vectorFactory.createNamedVectorFromString(tokenSet.toString(), "unknown");
         Vector classifyFull = model.classifyFull(vector);
         int classificationID = classifyFull.maxValueIndex();
-        Code code = CodeFactory.getInstance().getCode(classificationID);
+        Code code = CodeIndexer.getInstance().getCode(classificationID);
         double confidence = Math.exp(model.logLikelihood(classificationID, vector));
         pair = new Pair<>(code, confidence);
         return pair;
@@ -214,7 +214,7 @@ public class OLRClassifier extends AbstractClassifier {
      */
     public void serializeModel(final String filename) throws IOException {
 
-        CodeFactory.getInstance().writeCodeFactory(new File(filename + "CodeFactory"));
+        CodeIndexer.getInstance().writeCodeFactory(new File(filename + "CodeFactory"));
         DataOutputStream out = OLR.getDataOutputStream(filename);
         write(out);
         out.close();

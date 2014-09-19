@@ -18,7 +18,7 @@ import org.junit.Test;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.ClassifierTestingHelper;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeFactory;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeIndexer;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.RecordFactory;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.vectors.VectorFactory;
@@ -89,7 +89,7 @@ public class OLRClassifierTest {
     public void testClassifyWithDeSerializedModel() throws InterruptedException, IOException {
 
         File codeFile = new File(getClass().getResource("/CodeFactoryTestFile.txt").getFile());
-        CodeFactory.getInstance().loadDictionary(codeFile);
+        CodeIndexer.getInstance().loadDictionary(codeFile);
 
         VectorFactory vectorFactory = new VectorFactory(bucketA);
         OLRClassifier olrClassifier1 = new OLRClassifier(vectorFactory);
@@ -123,7 +123,7 @@ public class OLRClassifierTest {
         properties.setProperty("numDropped", "1");
 
         File codeFile = new File(getClass().getResource("/CodeFactoryTestFile.txt").getFile());
-        CodeFactory.getInstance().loadDictionary(codeFile);
+        CodeIndexer.getInstance().loadDictionary(codeFile);
         File inputFileTraining = new File(getClass().getResource("/occupationTestFormatPipe.txt").getFile());
         List<Record> listOfRecordsTraining = RecordFactory.makeUnCodedRecordsFromFile(inputFileTraining);
         bucketA = new Bucket(listOfRecordsTraining);

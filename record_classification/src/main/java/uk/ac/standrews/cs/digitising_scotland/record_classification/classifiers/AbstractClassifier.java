@@ -67,7 +67,7 @@ public abstract class AbstractClassifier {
      */
     public Record classify(final Record record) throws IOException {
 
-        for (Classification codeTriple : record.getOriginalData().getGoldStandardCodeTriples()) {
+        for (Classification codeTriple : record.getOriginalData().getGoldStandardClassifications()) {
             TokenSet tokenSet = codeTriple.getTokenSet();
             Pair<Code, Double> classification = classify(tokenSet);
             Code code = classification.getLeft();

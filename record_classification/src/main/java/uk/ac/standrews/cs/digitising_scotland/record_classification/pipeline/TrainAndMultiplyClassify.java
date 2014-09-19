@@ -18,7 +18,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datareaders.
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.BucketFilter;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.BucketUtils;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeFactory;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeIndexer;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.RecordFactory;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.vectors.VectorFactory;
@@ -141,7 +141,7 @@ public final class TrainAndMultiplyClassify {
         final Bucket uniqueRecordsOnly = BucketFilter.uniqueRecordsOnly(allClassified);
         PipelineUtils.generateAndPrintStats(uniqueRecordsOnly, "Unique Only", "UniqueOnly", experimentalFolderName);
 
-        LOGGER.info("Codes that were null and weren't adter chopping: " + CodeFactory.getInstance().getCodeMapNullCounter());
+        LOGGER.info("Codes that were null and weren't adter chopping: " + CodeIndexer.getInstance().getCodeMapNullCounter());
 
         timer.stop();
 
@@ -161,7 +161,7 @@ public final class TrainAndMultiplyClassify {
         LOGGER.info("********** Training Classifiers **********");
         LOGGER.info("Training with a dictionary size of: " + MachineLearningConfiguration.getDefaultProperties().getProperty("numFeatures"));
         LOGGER.info("Training with this number of output classes: " + MachineLearningConfiguration.getDefaultProperties().getProperty("numCategories"));
-        LOGGER.info("Codes that were null and weren't adter chopping: " + CodeFactory.getInstance().getCodeMapNullCounter());
+        LOGGER.info("Codes that were null and weren't adter chopping: " + CodeIndexer.getInstance().getCodeMapNullCounter());
     }
 
     private static ExactMatchClassifier trainExactMatchClassifier(final Bucket trainingRecords) throws Exception {

@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.CODOrignalData;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeFactory;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeIndexer;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
@@ -116,7 +116,7 @@ public final class LongFormatConverter extends AbstractFormatConverter {
                 int causeIdentifier = Integer.parseInt(lineSplit[i]);
 
                 if (causeIdentifier != start_pos) {
-                    Code code = CodeFactory.getInstance().getCode(removeQuotes(lineSplit[i + 2]));
+                    Code code = CodeIndexer.getInstance().getCode(removeQuotes(lineSplit[i + 2]));
 
                     TokenSet tokenSet = new TokenSet(lineSplit[causeIdentifier]);
 

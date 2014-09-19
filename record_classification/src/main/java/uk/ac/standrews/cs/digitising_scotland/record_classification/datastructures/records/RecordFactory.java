@@ -11,7 +11,7 @@ import java.util.List;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.CODOrignalData;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.OriginalData;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeFactory;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeIndexer;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.exceptions.InputFormatException;
@@ -150,7 +150,7 @@ public abstract class RecordFactory {
             OriginalData originalData = new CODOrignalData(description, year, ageGroup, sex, imageQuality, inputFile.getPath());
 
             for (int i = 6; i < lineSplit.length; i++) {
-                Code thisCode = CodeFactory.getInstance().getCode(lineSplit[i].trim());
+                Code thisCode = CodeIndexer.getInstance().getCode(lineSplit[i].trim());
                 Record newRecord = createRecord(thisCode, originalData);
                 recordList.add(newRecord);
             }
@@ -173,7 +173,7 @@ public abstract class RecordFactory {
         int id = (int) Math.rint(Math.random() * scaleFactor);
         Record record = new Record(id, originalData);
         Classification goldStandardClassification = new Classification(thisCode, new TokenSet(originalData.getDescription()), 1.0);
-        record.getOriginalData().getGoldStandardCodeTriples().add(goldStandardClassification);
+        record.getOriginalData().getGoldStandardClassifications().add(goldStandardClassification);
         return record;
     }
 

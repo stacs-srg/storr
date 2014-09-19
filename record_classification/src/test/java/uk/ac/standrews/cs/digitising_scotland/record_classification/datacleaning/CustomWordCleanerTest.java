@@ -6,7 +6,7 @@ import java.io.IOException;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeFactory;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeIndexer;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.exceptions.InputFormatException;
 
 public class CustomWordCleanerTest {
@@ -15,7 +15,7 @@ public class CustomWordCleanerTest {
     @Test
     public void test() throws IOException, InputFormatException {
 
-        CodeFactory.getInstance().loadDictionary(new File(getClass().getResource("/CodeFactoryCoDFile.txt").getFile()));
+        CodeIndexer.getInstance().loadDictionary(new File(getClass().getResource("/CodeFactoryCoDFile.txt").getFile()));
 
         CustomWordCleaner.getWordMultiset();
 

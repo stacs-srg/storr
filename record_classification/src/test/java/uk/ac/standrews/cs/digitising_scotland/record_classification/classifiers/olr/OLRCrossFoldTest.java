@@ -15,7 +15,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeFactory;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeIndexer;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.vectors.VectorFactory;
 import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearningConfiguration;
 
@@ -48,7 +48,7 @@ public class OLRCrossFoldTest {
         if (!new File("target/olrModelPath").delete()) {
             System.err.println("Could not clean up all resources.");
         }
-        CodeFactory.getInstance().loadDictionary(new File("target/test-classes/CodeFactoryTestFile.txt"));
+        CodeIndexer.getInstance().loadDictionary(new File("target/test-classes/CodeFactoryTestFile.txt"));
         vectorFactory = new VectorFactory();
         populateDictionary();
 
@@ -120,8 +120,8 @@ public class OLRCrossFoldTest {
         String codeFromFile = splitLine[0].trim();
         String descriptionFromFile = splitLine[1].trim();
         File file = new File(getClass().getResource("/CodeFactoryOLRTestFile.txt").getFile());
-        CodeFactory.getInstance().loadDictionary(file);
-        int id = CodeFactory.getInstance().getCode(codeFromFile).getID();
+        CodeIndexer.getInstance().loadDictionary(file);
+        int id = CodeIndexer.getInstance().getCode(codeFromFile).getID();
         return vectorFactory.createNamedVectorFromString(descriptionFromFile, Integer.toString(id));
     }
 
@@ -196,7 +196,7 @@ public class OLRCrossFoldTest {
         String codeFromFile = getCodeFromLine(line);
         Vector testVector = vectorFactory.createVectorFromString(codeFromFile);
         int classification = getClassification(model, testVector);
-        Assert.assertEquals(codeFromFile, CodeFactory.getInstance().getCode(classification).getCodeAsString());
+        Assert.assertEquals(codeFromFile, CodeIndexer.getInstance().getCode(classification).getCodeAsString());
     }
 
     /**

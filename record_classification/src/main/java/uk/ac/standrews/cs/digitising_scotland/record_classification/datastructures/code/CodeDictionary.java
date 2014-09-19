@@ -10,11 +10,20 @@ import java.util.Map;
 
 import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
 
-public class CodeChecker {
+/**
+ * This class contains a collection of all of the possible valid codes that can be used in training or classification.
+ * If a code is not in this class then it is assumed that the code is not correct, ie a possible typo or mistaken entry.
+ * @author jkc25, frjd2
+ *
+ */
+public class CodeDictionary {
 
+    /**
+     * Map of codes strings to code descriptions
+     */
     private Map<String, String> validCodes;
 
-    public CodeChecker(final File correctCodes) throws IOException {
+    public CodeDictionary(final File correctCodes) throws IOException {
 
         validCodes = new HashMap<>();
         validCodes = initMap(correctCodes);
@@ -50,6 +59,11 @@ public class CodeChecker {
     public int getTotalNumberOfCodes() {
 
         return validCodes.size();
+    }
+
+    public String getDescription(String code) {
+
+        return validCodes.get(code);
     }
 
 }

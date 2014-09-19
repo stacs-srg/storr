@@ -78,7 +78,7 @@ public class Record {
      */
     public Set<Classification> getGoldStandardClassificationSet() {
 
-        return originalData.getGoldStandardCodeTriples();
+        return originalData.getGoldStandardClassifications();
     }
 
     /**
@@ -98,7 +98,7 @@ public class Record {
     @Override
     public String toString() {
 
-        return "Record [id=" + id + ", goldStandardTriples=" + originalData.getGoldStandardCodeTriples() + ", codeTriples=" + codeTriples + "]";
+        return "Record [id=" + id + ", goldStandardTriples=" + originalData.getGoldStandardClassifications() + ", codeTriples=" + codeTriples + "]";
     }
 
     @Override

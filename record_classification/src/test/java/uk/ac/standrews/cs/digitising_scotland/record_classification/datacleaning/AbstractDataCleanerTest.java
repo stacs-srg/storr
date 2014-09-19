@@ -14,7 +14,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeFactory;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeIndexer;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.exceptions.InputFormatException;
 import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
@@ -34,7 +34,7 @@ public class AbstractDataCleanerTest {
     @Before
     public void setup() {
 
-        CodeFactory.getInstance().loadDictionary(new File(getClass().getResource("/testCodeMap.txt").getFile()));
+        CodeIndexer.getInstance().loadDictionary(new File(getClass().getResource("/testCodeMap.txt").getFile()));
         buildCorrectionMap();
     }
 

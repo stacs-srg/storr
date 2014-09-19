@@ -15,7 +15,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeFactory;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeIndexer;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.vectors.VectorFactory;
 import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearningConfiguration;
 
@@ -45,7 +45,7 @@ public class OLRShuffledTest {
     public void setup() throws Exception {
 
         String codeDictionary = getClass().getResource("/CodeFactoryOLRTestFile.txt").getFile();
-        CodeFactory.getInstance().loadDictionary(new File(codeDictionary));
+        CodeIndexer.getInstance().loadDictionary(new File(codeDictionary));
         vectorFactory = new VectorFactory();
         properties.setProperty("numCategories", "5");
         trainingVectorList = generateTrainingVectors();
@@ -142,7 +142,7 @@ public class OLRShuffledTest {
      */
     private int getCodeID(final String codeFromFile) {
 
-        return CodeFactory.getInstance().getCode(codeFromFile).getID();
+        return CodeIndexer.getInstance().getCode(codeFromFile).getID();
     }
 
     /**
@@ -224,7 +224,7 @@ public class OLRShuffledTest {
         String[] splitLine = line.split("\t");
         String codeFromFile = splitLine[0].trim();
         String descriptionFromFile = splitLine[1].trim();
-        int id = CodeFactory.getInstance().getCode(codeFromFile).getID();
+        int id = CodeIndexer.getInstance().getCode(codeFromFile).getID();
         return vectorFactory.createNamedVectorFromString(descriptionFromFile, String.valueOf(id));
     }
 
