@@ -36,11 +36,11 @@ public class CodeFactoryTest {
     @Test
     public void testIDGeneration() throws IOException, CodeNotValidException {
 
-        Assert.assertEquals(0, codeFactory.getCode("2100").getID());
-        Assert.assertEquals(1, codeFactory.getCode("2200").getID());
-        Assert.assertEquals(2, codeFactory.getCode("3000").getID());
-        Assert.assertEquals(3, codeFactory.getCode("4215").getID());
-        Assert.assertEquals(4, codeFactory.getCode("6700").getID());
+        Assert.assertEquals(0, codeFactory.getID("2100"));
+        Assert.assertEquals(1, codeFactory.getCode("2200"));
+        Assert.assertEquals(2, codeFactory.getCode("3000"));
+        Assert.assertEquals(3, codeFactory.getCode("4215"));
+        Assert.assertEquals(4, codeFactory.getCode("6700"));
     }
 
     /**

@@ -19,27 +19,29 @@ import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
 public class CodeDictionary {
 
     /**
-     * Map of codes strings to code descriptions
+     * Map of codes strings to code descriptions.
      */
-    private Map<String, String> validCodes;
+    private Map<String, Code> validCodes;
 
-    public CodeDictionary(final File correctCodes) throws IOException {
+    /**
+     * Instantiates a new CodeDictionary.
+     * @param codeDictionaryFile
+     * @throws IOException
+     */
+    public CodeDictionary(final File codeDictionaryFile) throws IOException {
 
-        validCodes = new HashMap<>();
-        validCodes = initMap(correctCodes);
+        validCodes = initMap(codeDictionaryFile);
     }
 
-    private Map<String, String> initMap(final File correctCodes) throws IOException {
+    private Map<String, Code> initMap(final File correctCodes) throws IOException {
 
+        validCodes = new HashMap<>();
         BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(correctCodes), FileManipulation.FILE_CHARSET));
         String line;
-
         while ((line = br.readLine()) != null) {
             parseLineAndAddToMap(line);
         }
-
         br.close();
-
         return validCodes;
     }
 
@@ -48,22 +50,24 @@ public class CodeDictionary {
         String[] splitLine = line.split("\t");
         String codeFromFile = splitLine[0].trim();
         String descriptionFromFile = splitLine[1].trim();
-        validCodes.put(codeFromFile, descriptionFromFile);
+        createCodeAndAddToMap(codeFromFile, descriptionFromFile);
     }
 
-    public boolean isValidCode(final String code) {
+    private void createCodeAndAddToMap(final String codeFromFile, final String descriptionFromFile) {
 
-        return validCodes.containsKey(code);
+        Code code = new Code(codeFromFile, descriptionFromFile);
+        validCodes.put(codeFromFile, code);
+    }
+
+    public Code getCode(String codeAsString) throws CodeNotValidException {
+
+        final Code code = validCodes.get(codeAsString);
+        if (code == null) { throw new CodeNotValidException(codeAsString + " is not a valid code"); }
+        return code;
     }
 
     public int getTotalNumberOfCodes() {
 
         return validCodes.size();
     }
-
-    public String getDescription(String code) {
-
-        return validCodes.get(code);
-    }
-
 }

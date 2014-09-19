@@ -18,16 +18,13 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearningConfiguration;
 
 /**
- *FIXME rewrite this
+ * FIXME rewrite this
  *
  * @author jkc25, frjd2
  */
 public final class CodeIndexer implements Serializable {
 
     private static final long serialVersionUID = 3721498072294663528L;
-
-    /** The code map. */
-    private Map<String, Code> codeMap = new HashMap<String, Code>();
 
     /** Maps UID's to codes. */
     private Map<Integer, Code> idToCodeMap = new HashMap<Integer, Code>();
@@ -38,15 +35,12 @@ public final class CodeIndexer implements Serializable {
     /** The current max id. */
     private int currentMaxID;
 
-    private CodeDictionary codeDictionary;
-
     /**
      * Instantiates a new code factory.
      * @param codeChecker the definitive list of codes so that no malformed codes are added to the codeIndexer.
      */
-    public CodeIndexer(final CodeDictionary codeChecker) {
+    public CodeIndexer() {
 
-        this.codeDictionary = codeChecker;
         MachineLearningConfiguration.getDefaultProperties().setProperty("numCategories", String.valueOf(idToCodeMap.size()));
     }
 
@@ -59,7 +53,7 @@ public final class CodeIndexer implements Serializable {
 
         for (Record record : bucket) {
             for (Classification classification : record.getOriginalData().getGoldStandardClassifications()) {
-                putCodeInMap(classification.getCode().getCodeAsString());
+                putCodeInMap(classification.getCode());
             }
         }
 
@@ -68,11 +62,21 @@ public final class CodeIndexer implements Serializable {
     /**
      * Returns the code that this id is mapped to.
      * @param id associated with mapped code
-     * @return Code assosciated with this id
+     * @return Code associated with this id
      */
     public Code getCode(final Integer id) {
 
         return idToCodeMap.get(id);
+    }
+
+    /**
+     * Returns the ID that this code is mapped to.
+     * @param code associated with mapped id
+     * @return ID associated with this code
+     */
+    public Integer getID(final Code code) {
+
+        return codeToIDMap.get(code);
     }
 
     /**
@@ -81,7 +85,7 @@ public final class CodeIndexer implements Serializable {
      */
     public int getNumberOfOutputClasses() {
 
-        return codeMap.size();
+        return codeToIDMap.size();
     }
 
     /**
@@ -90,31 +94,18 @@ public final class CodeIndexer implements Serializable {
      * @param code the code to add to the map
      * @throws CodeNotValidException the code not valid exception, thrown if a code is not in the {@link CodeDictionary}
      */
-    private void putCodeInMap(final String code) throws CodeNotValidException {
+    private void putCodeInMap(final Code code) throws CodeNotValidException {
 
-        if (!codeMap.containsKey(code)) {
-            if (codeIsValid(code)) {
-                createCodeAndAddToMaps(code);
-            }
-            else {
-                throw new CodeNotValidException("Code is not in definitve code list supplied");
-            }
-
+        if (!codeToIDMap.containsKey(code)) {
+            createCodeAndAddToMaps(code);
         }
     }
 
-    private void createCodeAndAddToMaps(final String codeToAdd) {
+    private void createCodeAndAddToMaps(final Code code) {
 
-        Code code = new Code(codeToAdd, codeDictionary.getDescription(codeToAdd));
-        codeMap.put(codeToAdd, code);
         idToCodeMap.put(currentMaxID, code);
         codeToIDMap.put(code, currentMaxID);
         currentMaxID++;
-    }
-
-    private boolean codeIsValid(final String codeToAdd) {
-
-        return codeDictionary.isValidCode(codeToAdd);
     }
 
     public void writeCodeFactory(final File path) throws IOException {
@@ -132,8 +123,8 @@ public final class CodeIndexer implements Serializable {
         CodeIndexer recoveredFactory = null;
         try {
             recoveredFactory = (CodeIndexer) input.readObject();
-            codeMap = recoveredFactory.codeMap;
             idToCodeMap = recoveredFactory.idToCodeMap;
+            codeToIDMap = recoveredFactory.codeToIDMap;
             currentMaxID = recoveredFactory.currentMaxID;
 
         }
