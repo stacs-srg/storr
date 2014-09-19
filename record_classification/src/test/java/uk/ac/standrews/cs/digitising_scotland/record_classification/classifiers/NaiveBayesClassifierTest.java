@@ -12,7 +12,7 @@ import org.junit.Test;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Pair;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeTriple;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.RecordFactory;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
@@ -149,7 +149,7 @@ public class NaiveBayesClassifierTest {
         for (Record r : bucketA) {
             TokenSet tokenSet = new TokenSet(r.getOriginalData().getDescription());
             Pair<Code, Double> result = nbc.classify(new TokenSet(r.getOriginalData().getDescription()));
-            r.addCodeTriples(new CodeTriple(result.getLeft(), tokenSet, result.getRight()));
+            r.addCodeTriples(new Classification(result.getLeft(), tokenSet, result.getRight()));
         }
 
     }

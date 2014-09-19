@@ -11,7 +11,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeFactory;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeNotValidException;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeTriple;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.RecordFactory;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
@@ -82,7 +82,7 @@ public class ClassifierTestingHelper {
     public Bucket giveBucketTestingCODCodes(final Bucket bucket) throws URISyntaxException {
 
         for (Record record : bucket) {
-            Set<CodeTriple> codeTriples = new HashSet<CodeTriple>();
+            Set<Classification> codeTriples = new HashSet<Classification>();
             loadDictionary("/CodeFactoryCoDFile.txt");
             addCodeTriplesStandardCodeToRecord(record, "R99");
             record.addAllCodeTriples(codeTriples);
@@ -102,7 +102,7 @@ public class ClassifierTestingHelper {
     public Bucket giveBucketTestingHICODCodes(final Bucket bucket, final String code) throws URISyntaxException {
 
         for (Record record : bucket) {
-            Set<CodeTriple> codeTriples = new HashSet<CodeTriple>();
+            Set<Classification> codeTriples = new HashSet<Classification>();
             loadDictionary("/CodeFactoryCoDFile.txt");
             addCodeTriplesStandardCodeToRecord(record, code);
             record.addAllCodeTriples(codeTriples);
@@ -135,8 +135,8 @@ public class ClassifierTestingHelper {
     private Record addGoldStandardCodeToRecord(final Record record, final String goldStandardCode) {
 
         Code code = CodeFactory.getInstance().getCode(goldStandardCode);
-        CodeTriple c = new CodeTriple(code, new TokenSet(record.getOriginalData().getDescription()), 1.0);
-        Set<CodeTriple> set = new HashSet<>();
+        Classification c = new Classification(code, new TokenSet(record.getOriginalData().getDescription()), 1.0);
+        Set<Classification> set = new HashSet<>();
         set.add(c);
         record.getOriginalData().setGoldStandardClassification(set);
         return record;
@@ -152,8 +152,8 @@ public class ClassifierTestingHelper {
     private Record addCodeTriplesStandardCodeToRecord(final Record record, final String codeAsString) {
 
         Code code = CodeFactory.getInstance().getCode(codeAsString);
-        CodeTriple c = new CodeTriple(code, new TokenSet(record.getOriginalData().getDescription()), 1.0);
-        Set<CodeTriple> set = new HashSet<>();
+        Classification c = new Classification(code, new TokenSet(record.getOriginalData().getDescription()), 1.0);
+        Set<Classification> set = new HashSet<>();
         set.add(c);
         record.addCodeTriples(c);
         return record;

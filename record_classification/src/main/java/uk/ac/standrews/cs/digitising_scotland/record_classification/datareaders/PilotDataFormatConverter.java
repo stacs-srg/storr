@@ -10,7 +10,7 @@ import java.util.HashSet;
 import java.util.List;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.CODOrignalData;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeTriple;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.exceptions.InputFormatException;
 
@@ -74,7 +74,7 @@ public final class PilotDataFormatConverter extends AbstractFormatConverter {
             int year = Integer.parseInt(removeQuotes(lineSplit[YEAR_POSITION]));
 
             CODOrignalData originalData = new CODOrignalData(description, year, ageGroup, sex, imageQuality, inputFile.getName());
-            HashSet<CodeTriple> goldStandard = new HashSet<>();
+            HashSet<Classification> goldStandard = new HashSet<>();
 
             Record r = new Record(id, originalData);
             r.getOriginalData().setGoldStandardClassification(goldStandard);

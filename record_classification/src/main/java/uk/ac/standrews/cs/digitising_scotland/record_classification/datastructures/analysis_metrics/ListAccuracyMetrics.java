@@ -8,7 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeTriple;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
 
@@ -174,10 +174,10 @@ public class ListAccuracyMetrics {
         int exactMatch = 0;
 
         for (Record record : bucket) {
-            final Iterator<CodeTriple> iterator = record.getCodeTriples().iterator();
+            final Iterator<Classification> iterator = record.getCodeTriples().iterator();
             double totalConfidence = 0;
             while (iterator.hasNext()) {
-                CodeTriple codeTriple = iterator.next();
+                Classification codeTriple = iterator.next();
                 totalConfidence += codeTriple.getConfidence();
             }
 
@@ -322,7 +322,7 @@ public class ListAccuracyMetrics {
         twoClassifications = 0;
         moreThanTwoClassifications = 0;
         for (Record record : bucket) {
-            Set<CodeTriple> setCodeTriples = record.getCodeTriples();
+            Set<Classification> setCodeTriples = record.getCodeTriples();
             int size = setCodeTriples.size();
             if (size < 1) {
                 unclassified++;
@@ -351,14 +351,14 @@ public class ListAccuracyMetrics {
         double propGoldPredicted = 0.;
 
         for (Record record : bucket) {
-            Set<CodeTriple> setCodeTriples = record.getCodeTriples();
-            Set<CodeTriple> goldStandardTriples = record.getGoldStandardClassificationSet();
+            Set<Classification> setCodeTriples = record.getCodeTriples();
+            Set<Classification> goldStandardTriples = record.getGoldStandardClassificationSet();
             if (goldStandardTriples.size() < 1) {
                 break;
             }
             int count = 0;
-            for (CodeTriple goldTriple : goldStandardTriples) {
-                for (CodeTriple classification : setCodeTriples) {
+            for (Classification goldTriple : goldStandardTriples) {
+                for (Classification classification : setCodeTriples) {
                     if (goldTriple.getCode() == classification.getCode()) {
                         count++;
                     }
@@ -382,8 +382,8 @@ public class ListAccuracyMetrics {
         int totallookup = 0;
 
         for (Record record : bucket) {
-            Set<CodeTriple> setCodeTriples = record.getCodeTriples();
-            for (CodeTriple classification : setCodeTriples) {
+            Set<Classification> setCodeTriples = record.getCodeTriples();
+            for (Classification classification : setCodeTriples) {
                 if (classification.getConfidence() == 1) {
                     totallookup++;
                 }
@@ -406,8 +406,8 @@ public class ListAccuracyMetrics {
         int totalMi = 0;
 
         for (Record record : bucket) {
-            Set<CodeTriple> setCodeTriples = record.getCodeTriples();
-            for (CodeTriple classification : setCodeTriples) {
+            Set<Classification> setCodeTriples = record.getCodeTriples();
+            for (Classification classification : setCodeTriples) {
                 if (classification.getConfidence() != 1) {
                     totalMi++;
                 }
@@ -431,8 +431,8 @@ public class ListAccuracyMetrics {
         double totalMeasurements = 0;
 
         for (Record record : bucket) {
-            Set<CodeTriple> setCodeTriples = record.getCodeTriples();
-            for (CodeTriple codeTriple : setCodeTriples) {
+            Set<Classification> setCodeTriples = record.getCodeTriples();
+            for (Classification codeTriple : setCodeTriples) {
                 totalConfidence += codeTriple.getConfidence();
                 totalMeasurements++;
 

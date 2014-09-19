@@ -2,7 +2,7 @@ package uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.lo
 
 import java.util.Set;
 
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeTriple;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
 
 /**
  * Loss function that sums the confidences but weights each confidence by the length of the tokenset.
@@ -13,11 +13,11 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 public class LengthWeightedLossFunction extends AbstractLossFunction {
 
     @Override
-    public double calculate(final Set<CodeTriple> set) {
+    public double calculate(final Set<Classification> set) {
 
         double confidenceSum = 0;
 
-        for (CodeTriple triple : set) {
+        for (Classification triple : set) {
             confidenceSum += triple.getConfidence() * triple.getTokenSet().size();
         }
 

@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeTriple;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.exceptions.InputFormatException;
 
 /**
@@ -30,7 +30,7 @@ public class OriginalData implements java.io.Serializable {
     private String fileName;
 
     /** The gold standard classification. */
-    private Set<CodeTriple> goldStandardClassification;
+    private Set<Classification> goldStandardClassification;
 
     /**
      * Describes original data from NRS.
@@ -50,7 +50,7 @@ public class OriginalData implements java.io.Serializable {
         this.year = year;
         this.imageQuality = imageQuality;
         this.fileName = fileName;
-        goldStandardClassification = new HashSet<CodeTriple>();
+        goldStandardClassification = new HashSet<Classification>();
         checkNotNull();
 
     }
@@ -157,7 +157,7 @@ public class OriginalData implements java.io.Serializable {
      *
      * @return Set<CodeTriple> the gold standard code triples
      */
-    public Set<CodeTriple> getGoldStandardCodeTriples() {
+    public Set<Classification> getGoldStandardCodeTriples() {
 
         return goldStandardClassification;
     }
@@ -167,7 +167,7 @@ public class OriginalData implements java.io.Serializable {
      *
      * @param goldStandardClassification the new gold standard classification
      */
-    public void setGoldStandardClassification(final Set<CodeTriple> goldStandardClassification) {
+    public void setGoldStandardClassification(final Set<Classification> goldStandardClassification) {
 
         this.goldStandardClassification = goldStandardClassification;
     }

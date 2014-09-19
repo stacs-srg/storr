@@ -12,7 +12,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.OriginalData;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeFactory;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeTriple;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.exceptions.InputFormatException;
 
@@ -172,7 +172,7 @@ public abstract class RecordFactory {
         final int scaleFactor = 1000;
         int id = (int) Math.rint(Math.random() * scaleFactor);
         Record record = new Record(id, originalData);
-        CodeTriple goldStandardClassification = new CodeTriple(thisCode, new TokenSet(originalData.getDescription()), 1.0);
+        Classification goldStandardClassification = new Classification(thisCode, new TokenSet(originalData.getDescription()), 1.0);
         record.getOriginalData().getGoldStandardCodeTriples().add(goldStandardClassification);
         return record;
     }

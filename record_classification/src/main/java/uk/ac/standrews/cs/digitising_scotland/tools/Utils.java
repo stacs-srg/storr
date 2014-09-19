@@ -27,7 +27,7 @@ import org.slf4j.LoggerFactory;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeTriple;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.writers.DataClerkingWriter;
 import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
@@ -548,9 +548,9 @@ public final class Utils {
      * @param setCodeTriples to check in
      * @return true if code is a member of the set
      */
-    public static boolean contains(final Code code, final Set<CodeTriple> setCodeTriples) {
+    public static boolean contains(final Code code, final Set<Classification> setCodeTriples) {
 
-        for (CodeTriple codeTriple : setCodeTriples) {
+        for (Classification codeTriple : setCodeTriples) {
             if (codeTriple.getCode() == code) { return true; }
         }
         return false;
@@ -562,9 +562,9 @@ public final class Utils {
      * @param setCodeTriples to check in
      * @return true if code is a member of the set
      */
-    public static CodeTriple getCodeTripleWithCode(final Code code, final Set<CodeTriple> setCodeTriples) {
+    public static Classification getCodeTripleWithCode(final Code code, final Set<Classification> setCodeTriples) {
 
-        for (CodeTriple codeTriple : setCodeTriples) {
+        for (Classification codeTriple : setCodeTriples) {
             if (codeTriple.getCode() == code) { return codeTriple; }
         }
         return null;

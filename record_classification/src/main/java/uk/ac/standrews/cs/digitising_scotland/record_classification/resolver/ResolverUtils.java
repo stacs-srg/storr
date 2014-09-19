@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.Set;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeTriple;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.loss_functions.AbstractLossFunction;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.loss_functions.LengthWeightedLossFunction;
@@ -65,15 +65,15 @@ public final class ResolverUtils {
     }
 
     /**
-     * Given a List of Sets of {@link CodeTriple}s this method will return the set
+     * Given a List of Sets of {@link Classification}s this method will return the set
      * with the best output from the loss function as defined by the lossFunction() method.
      *
-     * @param triples the list of sets of {@link CodeTriple}s to evaluate with the loss function
-     * @return the set of {@link CodeTriple}s with the best return from the lossFunction method
+     * @param triples the list of sets of {@link Classification}s to evaluate with the loss function
+     * @return the set of {@link Classification}s with the best return from the lossFunction method
      */
-    public static Set<CodeTriple> getBest(final List<Set<CodeTriple>> triples) {
+    public static Set<Classification> getBest(final List<Set<Classification>> triples) {
 
-        Map<Set<CodeTriple>, Double> map = mapCodeTripleSetsToLoss(triples);
+        Map<Set<Classification>, Double> map = mapCodeTripleSetsToLoss(triples);
         map = sortByValue(map);
         return map.keySet().iterator().next();
     }
@@ -84,10 +84,10 @@ public final class ResolverUtils {
      * @param triples the triples to evaluate
      * @return the map of sets to loss values
      */
-    public static Map<Set<CodeTriple>, Double> mapCodeTripleSetsToLoss(final List<Set<CodeTriple>> triples) {
+    public static Map<Set<Classification>, Double> mapCodeTripleSetsToLoss(final List<Set<Classification>> triples) {
 
-        Map<Set<CodeTriple>, Double> map = new HashMap<>();
-        for (Set<CodeTriple> set : triples) {
+        Map<Set<Classification>, Double> map = new HashMap<>();
+        for (Set<Classification> set : triples) {
             map.put(set, lossFunction(set));
         }
         return map;
@@ -101,7 +101,7 @@ public final class ResolverUtils {
      * @param set the set to evaluate
      * @return the double loss value
      */
-    public static double lossFunction(final Set<CodeTriple> set) {
+    public static double lossFunction(final Set<Classification> set) {
 
         return lossFunction.calculate(set);
     }
@@ -120,14 +120,14 @@ public final class ResolverUtils {
     }
 
     /**
-     * Checks if the union of the token sets from a set of {@link CodeTriple}s
+     * Checks if the union of the token sets from a set of {@link Classification}s
      * is a a member of powerSet.
      *
-     * @param triple a set of {@link CodeTriple}s
+     * @param triple a set of {@link Classification}s
      * @param originalTokenSet the token set from the original data
      * @return true, if successful
      */
-    public static boolean tripleSetIsValid(final Set<CodeTriple> triple, final TokenSet originalTokenSet) {
+    public static boolean tripleSetIsValid(final Set<Classification> triple, final TokenSet originalTokenSet) {
 
         TokenSet union = getUnion(getTokenSetsFromTriple(triple));
         return originalTokenSet.containsAll(union) && noTokenAppearsInUnionMoreOftenThanInOriginalSet(originalTokenSet, union);
@@ -146,15 +146,15 @@ public final class ResolverUtils {
     }
 
     /**
-     * Creates a Multiset of the token sets belonging to a set of {@link CodeTriple}s.
+     * Creates a Multiset of the token sets belonging to a set of {@link Classification}s.
      *
      * @param triples the triples
      * @return the token sets from triple
      */
-    private static Multiset<TokenSet> getTokenSetsFromTriple(final Set<CodeTriple> triples) {
+    private static Multiset<TokenSet> getTokenSetsFromTriple(final Set<Classification> triples) {
 
         Multiset<TokenSet> tokenSetSet = HashMultiset.create();
-        for (CodeTriple triple : triples) {
+        for (Classification triple : triples) {
             tokenSetSet.add(triple.getTokenSet());
         }
         return tokenSetSet;

@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.OriginalData;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeTriple;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
 
 import com.google.common.collect.HashMultimap;
 
@@ -22,9 +22,9 @@ public class Record {
     private OriginalData originalData;
 
     /** The code triples. */
-    private Set<CodeTriple> codeTriples;
+    private Set<Classification> codeTriples;
 
-    private HashMultimap<String, CodeTriple> listOfClassifications;
+    private HashMultimap<String, Classification> listOfClassifications;
 
     /**
      * Instantiates a new record.
@@ -71,12 +71,12 @@ public class Record {
     }
 
     /**
-     * Returns the gold standard set of {@link CodeTriple} for this Record.
-     * If no gold standard set exists then an empty {@link CodeTriple} will be returned.
+     * Returns the gold standard set of {@link Classification} for this Record.
+     * If no gold standard set exists then an empty {@link Classification} will be returned.
      *
      * @return the gold standard classification set
      */
-    public Set<CodeTriple> getGoldStandardClassificationSet() {
+    public Set<Classification> getGoldStandardClassificationSet() {
 
         return originalData.getGoldStandardCodeTriples();
     }
@@ -132,22 +132,22 @@ public class Record {
     }
 
     /**
-     * Gets the Set of {@link CodeTriple}s contained in this record.
+     * Gets the Set of {@link Classification}s contained in this record.
      *
      * @return the Set of CodeTriples.
      */
-    public Set<CodeTriple> getCodeTriples() {
+    public Set<Classification> getCodeTriples() {
 
         return codeTriples;
     }
 
     /**
-     * Adds a code triple to the set of {@link CodeTriple}s maintained by this record.
+     * Adds a code triple to the set of {@link Classification}s maintained by this record.
      * The CodeTriple is only added if it is non null.
      *
      * @param codeTriples the code triple to add
      */
-    public void addCodeTriples(final CodeTriple codeTriples) {
+    public void addCodeTriples(final Classification codeTriples) {
 
         if (codeTriples != null) {
             this.codeTriples.add(codeTriples);
@@ -160,19 +160,19 @@ public class Record {
      * 
      * @param codeTriples the  collection of code triples to add.
      */
-    public void addAllCodeTriples(final Collection<CodeTriple> codeTriples) {
+    public void addAllCodeTriples(final Collection<Classification> codeTriples) {
 
-        for (CodeTriple codeTriple : codeTriples) {
+        for (Classification codeTriple : codeTriples) {
             addCodeTriples(codeTriple);
         }
     }
 
-    public HashMultimap<String, CodeTriple> getListOfClassifications() {
+    public HashMultimap<String, Classification> getListOfClassifications() {
 
         return listOfClassifications;
     }
 
-    public void setListOfClassifications(final HashMultimap<String, CodeTriple> listOfClassifications) {
+    public void setListOfClassifications(final HashMultimap<String, Classification> listOfClassifications) {
 
         this.listOfClassifications = listOfClassifications;
     }

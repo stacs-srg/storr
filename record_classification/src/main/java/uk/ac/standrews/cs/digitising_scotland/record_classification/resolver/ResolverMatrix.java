@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.AbstractClassifier;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Pair;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeTriple;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
 
 /**
@@ -46,7 +46,7 @@ public class ResolverMatrix {
     /**
      * The Code, List<Pair> matrix.
      */
-    private Map<Code, List<CodeTriple>> matrix;
+    private Map<Code, List<Classification>> matrix;
 
     /**
      * Instantiates a new empty resolver matrix.
@@ -70,26 +70,26 @@ public class ResolverMatrix {
         Code code = codeDoublePair.getLeft();
         Double confidence = codeDoublePair.getRight();
         if (matrix.get(code) == null) {
-            matrix.put(code, new ArrayList<CodeTriple>());
+            matrix.put(code, new ArrayList<Classification>());
         }
-        matrix.get(code).add(new CodeTriple(code, tokenSet, confidence));
+        matrix.get(code).add(new Classification(code, tokenSet, confidence));
     }
 
     /**
-     * Gets the valid sets of {@link CodeTriple}s from the matrix in the form of a List.
+     * Gets the valid sets of {@link Classification}s from the matrix in the form of a List.
      * <p>
-     * A {@link CodeTriple} is defined as being valid if the union of the Set of TokenSets is a subset of the specified powerSet.
+     * A {@link Classification} is defined as being valid if the union of the Set of TokenSets is a subset of the specified powerSet.
      * Any null entries in the matrix are not returned.
      *
      * @param originalSet the power set of valid tokenSets
-     * @return List<Set<CodeTriple>> the List of Sets of valid {@link CodeTriple}s
+     * @return List<Set<CodeTriple>> the List of Sets of valid {@link Classification}s
      */
-    public List<Set<CodeTriple>> getValidCodeTriples(final TokenSet originalSet) {
+    public List<Set<Classification>> getValidCodeTriples(final TokenSet originalSet) {
 
         chopUntilComplexityWithinBound(COMPLEXITY_UPPERLIMIT);
 
         resolveHierarchies();
-        List<Set<CodeTriple>> merged = new ArrayList<>();
+        List<Set<Classification>> merged = new ArrayList<>();
         merged.add(null);
 
         if (matrix.keySet().size() > KEYSET_SIZE_LIMIT) {
@@ -151,13 +151,13 @@ public class ResolverMatrix {
      * @param codeTriples the pairs
      * @param code        the code
      */
-    private void merge(final List<Set<CodeTriple>> merged, final List<CodeTriple> codeTriples, final Code code, final TokenSet originalSet) {
+    private void merge(final List<Set<Classification>> merged, final List<Classification> codeTriples, final Code code, final TokenSet originalSet) {
 
-        List<Set<CodeTriple>> temporaryMerge = new ArrayList<>();
-        for (Set<CodeTriple> tripleSet : merged) {
-            for (CodeTriple triple : codeTriples) {
-                CodeTriple tempCodeTriple = new CodeTriple(code, triple.getTokenSet(), triple.getConfidence());
-                Set<CodeTriple> tempTripleSet = new HashSet<>();
+        List<Set<Classification>> temporaryMerge = new ArrayList<>();
+        for (Set<Classification> tripleSet : merged) {
+            for (Classification triple : codeTriples) {
+                Classification tempCodeTriple = new Classification(code, triple.getTokenSet(), triple.getConfidence());
+                Set<Classification> tempTripleSet = new HashSet<>();
                 if (tripleSet != null) {
                     tempTripleSet.addAll(tripleSet);
                 }
@@ -185,12 +185,12 @@ public class ResolverMatrix {
         }
     }
 
-    private static class CodeTripleComparator implements Comparator<CodeTriple>, Serializable {
+    private static class CodeTripleComparator implements Comparator<Classification>, Serializable {
 
         private static final long serialVersionUID = -2746182512036694544L;
 
         @Override
-        public int compare(final CodeTriple o1, final CodeTriple o2) {
+        public int compare(final Classification o1, final Classification o2) {
 
             double measure1 = o1.getTokenSet().size() * o1.getConfidence();
             double measure2 = o2.getTokenSet().size() * o2.getConfidence();
@@ -214,9 +214,9 @@ public class ResolverMatrix {
     public void chopBelowConfidence(final Double confidence) {
 
         for (Code code : matrix.keySet()) {
-            List<CodeTriple> oldList = matrix.get(code);
-            List<CodeTriple> newList = new ArrayList<>();
-            for (CodeTriple triple : oldList) {
+            List<Classification> oldList = matrix.get(code);
+            List<Classification> newList = new ArrayList<>();
+            for (Classification triple : oldList) {
                 if (triple.getConfidence() >= confidence) {
                     newList.add(triple);
                 }

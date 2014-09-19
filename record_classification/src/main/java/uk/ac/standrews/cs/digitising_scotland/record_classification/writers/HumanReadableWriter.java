@@ -11,7 +11,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.Set;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeTriple;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
 
@@ -80,9 +80,9 @@ public class HumanReadableWriter extends OutputDataFormatter implements Closeabl
     public String getCodes(final Record record) {
 
         StringBuilder sb = new StringBuilder();
-        Set<CodeTriple> classifications = record.getCodeTriples();
+        Set<Classification> classifications = record.getCodeTriples();
 
-        for (CodeTriple codeTriple : classifications) {
+        for (Classification codeTriple : classifications) {
 
             Code code = codeTriple.getCode();
             String codeAsString = code.getCodeAsString();

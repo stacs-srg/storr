@@ -32,7 +32,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeFactory;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeTriple;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.vectors.CustomVectorWriter;
@@ -128,8 +128,8 @@ public class NaiveBayesClassifier extends AbstractClassifier {
         Collection<String> seen = new HashSet<String>();
 
         for (Record record : trainingBucket) {
-            Set<CodeTriple> codeTriple = record.getOriginalData().getGoldStandardCodeTriples();
-            for (CodeTriple codeTriple2 : codeTriple) {
+            Set<Classification> codeTriple = record.getOriginalData().getGoldStandardCodeTriples();
+            for (Classification codeTriple2 : codeTriple) {
                 String theLabel = codeTriple2.getCode().getCodeAsString();
                 if (!seen.contains(theLabel)) {
                     Utils.writeToFile(theLabel + ", ", "labelindex.csv", true);
@@ -190,7 +190,7 @@ public class NaiveBayesClassifier extends AbstractClassifier {
     public Record classify(final Record record) throws IOException {
 
         Record classifiedRecord = record;
-        Set<CodeTriple> resultSet = new HashSet<>();
+        Set<Classification> resultSet = new HashSet<>();
         List<NamedVector> vectors = vectorFactory.generateVectorsFromRecord(record);
 
         for (NamedVector namedVector : vectors) {
@@ -209,7 +209,7 @@ public class NaiveBayesClassifier extends AbstractClassifier {
      * @return the classification
      * @throws IOException Signals that an I/O exception has occurred.
      */
-    private CodeTriple getClassification(final Record record, final NamedVector namedVector) throws IOException {
+    private Classification getClassification(final Record record, final NamedVector namedVector) throws IOException {
 
         Dictionary dictionary = buildDictionaryFromLabelMap(properties.getProperty("labelindex"));
 
@@ -223,7 +223,7 @@ public class NaiveBayesClassifier extends AbstractClassifier {
 
         double confidence = getConfidence(cr.getLogLikelihood());
 
-        return new CodeTriple(code, new TokenSet(record.getDescription()), confidence);
+        return new Classification(code, new TokenSet(record.getDescription()), confidence);
     }
 
     /**

@@ -22,7 +22,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeFactory;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeTriple;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.vectors.VectorFactory;
@@ -149,13 +149,13 @@ public class OLRClassifier extends AbstractClassifier {
         }
 
         List<NamedVector> vectorList = vectorFactory.generateVectorsFromRecord(record);
-        Set<CodeTriple> codeTripleSet = new HashSet<>();
+        Set<Classification> codeTripleSet = new HashSet<>();
 
         for (NamedVector vector : vectorList) {
             Integer classificationID = model.classifyFull(vector).maxValueIndex();
             Code code = CodeFactory.getInstance().getCode(classificationID);
             double confidence = Math.exp(model.logLikelihood(classificationID, vector)); //TODO test
-            codeTripleSet.add(new CodeTriple(code, new TokenSet(record.getDescription()), confidence));
+            codeTripleSet.add(new Classification(code, new TokenSet(record.getDescription()), confidence));
         }
 
         record.addAllCodeTriples(codeTripleSet);

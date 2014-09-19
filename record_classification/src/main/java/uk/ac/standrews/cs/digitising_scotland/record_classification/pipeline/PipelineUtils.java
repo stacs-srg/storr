@@ -20,7 +20,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.BucketFilter;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeFactory;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeTriple;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.exceptions.FolderCreationException;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.writers.DataClerkingWriter;
@@ -73,7 +73,7 @@ public final class PipelineUtils {
 
     private static void addAllCodesToMap(final Map<String, Integer> codeMapping, final Record record) {
 
-        for (CodeTriple currentCodeTriple : record.getGoldStandardClassificationSet()) {
+        for (Classification currentCodeTriple : record.getGoldStandardClassificationSet()) {
             codeMapping.put(currentCodeTriple.getCode().getCodeAsString(), 1);
         }
     }

@@ -12,7 +12,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
  * @author jkc25, frjd2
  * Created by fraserdunlop on 11/06/2014 at 10:51.
  */
-public class CodeTriple implements Serializable {
+public class Classification implements Serializable {
 
     /** The Constant serialVersionUID. */
     private static final long serialVersionUID = 7683621012309471383L;
@@ -33,7 +33,7 @@ public class CodeTriple implements Serializable {
      * @param tokenSet the token set
      * @param confidence the confidence
      */
-    public CodeTriple(final Code code, final TokenSet tokenSet, final Double confidence) {
+    public Classification(final Code code, final TokenSet tokenSet, final Double confidence) {
 
         this.code = code;
         this.tokenSet = tokenSet;
@@ -93,7 +93,7 @@ public class CodeTriple implements Serializable {
         if (this == obj) { return true; }
         if (obj == null) { return false; }
         if (getClass() != obj.getClass()) { return false; }
-        CodeTriple other = (CodeTriple) obj;
+        Classification other = (Classification) obj;
         if (code == null) {
             if (other.code != null) { return false; }
         }

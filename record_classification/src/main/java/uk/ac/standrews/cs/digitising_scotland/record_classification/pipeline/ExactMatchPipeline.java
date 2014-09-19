@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.lookup.ExactMatchClassifier;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeTriple;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
 
@@ -56,7 +56,7 @@ public class ExactMatchPipeline {
             allMatch = true;
 
             for (String description : record.getDescription()) {
-                final Set<CodeTriple> result = classify(description);
+                final Set<Classification> result = classify(description);
 
                 if (result != null) {
                     match++;
@@ -77,22 +77,22 @@ public class ExactMatchPipeline {
         return classified;
     }
 
-    private void addResultToRecord(final Record record, final String description, final Set<CodeTriple> result) {
+    private void addResultToRecord(final Record record, final String description, final Set<Classification> result) {
 
         record.addAllCodeTriples(result);
 
-        for (CodeTriple codeTriple : result) {
+        for (Classification codeTriple : result) {
             record.getListOfClassifications().put(description, codeTriple);
         }
     }
 
     /**
-     * Classifies a String, which should correspond to a description, to a set of {@link CodeTriple} objects.
+     * Classifies a String, which should correspond to a description, to a set of {@link Classification} objects.
      * @param description String to classify
-     * @return A set of {@link CodeTriple}s that contain the code, confidence and tokens used to produce classification.
+     * @return A set of {@link Classification}s that contain the code, confidence and tokens used to produce classification.
      * @throws IOException I/O Exception
      */
-    public Set<CodeTriple> classify(final String description) throws IOException {
+    public Set<Classification> classify(final String description) throws IOException {
 
         return classifier.classifyTokenSetToCodeTripleSet(new TokenSet(description));
 

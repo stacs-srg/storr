@@ -4,7 +4,7 @@ import java.util.Set;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeTriple;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
 
 /**
  * This confusion matrix counts predictions as correct if they are either exactly
@@ -30,9 +30,9 @@ public class SoftConfusionMatrix extends AbstractConfusionMatrix {
      * @param setCodeTriples the set code triples
      * @param goldStandardTriples the gold standard triples
      */
-    protected void truePosAndFalseNeg(final Set<CodeTriple> setCodeTriples, final Set<CodeTriple> goldStandardTriples) {
+    protected void truePosAndFalseNeg(final Set<Classification> setCodeTriples, final Set<Classification> goldStandardTriples) {
 
-        for (CodeTriple goldStanardCode : goldStandardTriples) {
+        for (Classification goldStanardCode : goldStandardTriples) {
             final Code code = goldStanardCode.getCode();
             if (containsOrHasAncestors(code, setCodeTriples)) {
                 truePositive[code.getID()]++;
@@ -50,9 +50,9 @@ public class SoftConfusionMatrix extends AbstractConfusionMatrix {
      * @param setCodeTriples the set code triples
      * @param goldStandardTriples the gold standard triples
      */
-    protected void totalAndFalsePos(final Set<CodeTriple> setCodeTriples, final Set<CodeTriple> goldStandardTriples) {
+    protected void totalAndFalsePos(final Set<Classification> setCodeTriples, final Set<Classification> goldStandardTriples) {
 
-        for (CodeTriple predictedCode : setCodeTriples) {
+        for (Classification predictedCode : setCodeTriples) {
             final Code code = predictedCode.getCode();
             totalPredictions[code.getID()]++;
             if (!containsOrHasDescendants(code, goldStandardTriples)) {
@@ -68,9 +68,9 @@ public class SoftConfusionMatrix extends AbstractConfusionMatrix {
      * @param setCodeTriples the set code triples
      * @return true, if successful
      */
-    private boolean containsOrHasDescendants(final Code code, final Set<CodeTriple> setCodeTriples) {
+    private boolean containsOrHasDescendants(final Code code, final Set<Classification> setCodeTriples) {
 
-        for (CodeTriple codeTriple : setCodeTriples) {
+        for (Classification codeTriple : setCodeTriples) {
             if (codeTriple.getCode() == code || codeTriple.getCode().isDescendant(code)) { return true; }
         }
         return false;
@@ -83,9 +83,9 @@ public class SoftConfusionMatrix extends AbstractConfusionMatrix {
      * @param setCodeTriples set to check in
      * @return true if present
      */
-    public boolean containsOrHasAncestors(final Code code, final Set<CodeTriple> setCodeTriples) {
+    public boolean containsOrHasAncestors(final Code code, final Set<Classification> setCodeTriples) {
 
-        for (CodeTriple codeTriple : setCodeTriples) {
+        for (Classification codeTriple : setCodeTriples) {
             if (codeTriple.getCode() == code || codeTriple.getCode().isAncestor(code)) { return true; }
         }
         return false;

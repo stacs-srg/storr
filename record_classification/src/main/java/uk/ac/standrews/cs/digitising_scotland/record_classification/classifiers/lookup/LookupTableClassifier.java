@@ -11,7 +11,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Pair;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeTriple;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
 
@@ -68,7 +68,7 @@ public class LookupTableClassifier extends AbstractClassifier implements Seriali
     private void classifyStringWithNgrams(final String description, final Record record) throws IOException {
 
         NGramSubstrings nGrams = new NGramSubstrings(description);
-        Set<CodeTriple> classifiedGramsSet = classify(nGrams, record);
+        Set<Classification> classifiedGramsSet = classify(nGrams, record);
         record.addAllCodeTriples(classifiedGramsSet);
     }
 
@@ -95,28 +95,28 @@ public class LookupTableClassifier extends AbstractClassifier implements Seriali
     }
 
     /**
-     * Adds each {@link TokenSet} in the records {@link CodeTriple} to the lookupTable.
+     * Adds each {@link TokenSet} in the records {@link Classification} to the lookupTable.
      * @param record to add
      */
     protected void addRecordToLookupTable(final Record record) {
 
-        for (CodeTriple codeTriple : record.getOriginalData().getGoldStandardCodeTriples()) {
+        for (Classification codeTriple : record.getOriginalData().getGoldStandardCodeTriples()) {
             lookupTable.put(codeTriple.getTokenSet(), codeTriple.getCode());
         }
     }
 
     /**
-     * Classifies and {@link NGramSubstrings} object and return a set of {@link CodeTriple}.
+     * Classifies and {@link NGramSubstrings} object and return a set of {@link Classification}.
      *
      * @param grams the grams
      * @param record the record that the grams came from
      * @return the classification set
      */
-    protected Set<CodeTriple> classify(final NGramSubstrings grams, final Record record) {
+    protected Set<Classification> classify(final NGramSubstrings grams, final Record record) {
 
-        Set<CodeTriple> classificationSet = new HashSet<>();
+        Set<Classification> classificationSet = new HashSet<>();
         for (TokenSet gram : grams) {
-            CodeTriple classifiedGram = classifyIndividualGram(new TokenSet(gram));
+            Classification classifiedGram = classifyIndividualGram(new TokenSet(gram));
             if (classifiedGram != null) {
                 classificationSet.add(classifiedGram);
             }
@@ -137,9 +137,9 @@ public class LookupTableClassifier extends AbstractClassifier implements Seriali
      * @param gram the gram to classify
      * @return the classification set containing the results of the classification
      */
-    private CodeTriple classifyIndividualGram(final TokenSet gram) {
+    private Classification classifyIndividualGram(final TokenSet gram) {
 
-        CodeTriple codeTriple = new CodeTriple(lookupTable.get(gram), gram, 1.0);
+        Classification codeTriple = new Classification(lookupTable.get(gram), gram, 1.0);
 
         return codeTriple;
     }

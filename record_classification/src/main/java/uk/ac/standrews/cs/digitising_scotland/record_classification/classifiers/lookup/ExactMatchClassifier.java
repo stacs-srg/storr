@@ -17,7 +17,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Pair;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeTriple;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
 
@@ -28,7 +28,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
  */
 public class ExactMatchClassifier extends AbstractClassifier {
 
-    private Map<TokenSet, Set<CodeTriple>> lookupTable;
+    private Map<TokenSet, Set<Classification>> lookupTable;
     private String modelFileName = "target/lookupTable";
 
     /**
@@ -80,7 +80,7 @@ public class ExactMatchClassifier extends AbstractClassifier {
     @Override
     public Record classify(final Record record) throws IOException {
 
-        Set<CodeTriple> result = lookupTable.get(new TokenSet(record.getDescription()));
+        Set<Classification> result = lookupTable.get(new TokenSet(record.getDescription()));
         if (result == null) {
             return record;
         }
@@ -110,15 +110,15 @@ public class ExactMatchClassifier extends AbstractClassifier {
     }
 
     /**
-     * Adds each gold standard {@link CodeTriple} in the records to the lookupTable.
+     * Adds each gold standard {@link Classification} in the records to the lookupTable.
      * @param record to add
      */
     private void addRecordToLookupTable(final Record record) {
 
-        final Set<CodeTriple> goldStandardCodes = record.getOriginalData().getGoldStandardCodeTriples();
-        for (CodeTriple t : goldStandardCodes) {
+        final Set<Classification> goldStandardCodes = record.getOriginalData().getGoldStandardCodeTriples();
+        for (Classification t : goldStandardCodes) {
             final TokenSet description = new TokenSet(t.getTokenSet());
-            Set<CodeTriple> st = new HashSet<CodeTriple>();
+            Set<Classification> st = new HashSet<Classification>();
             st.add(t);
             lookupTable.put(description, st);
         }
@@ -153,7 +153,7 @@ public class ExactMatchClassifier extends AbstractClassifier {
         ObjectInput input = new ObjectInputStream(buffer);
         try {
 
-            Map<TokenSet, Set<CodeTriple>> recoveredMap = (Map<TokenSet, Set<CodeTriple>>) input.readObject();
+            Map<TokenSet, Set<Classification>> recoveredMap = (Map<TokenSet, Set<Classification>>) input.readObject();
             lookupTable = recoveredMap;
 
         }
@@ -218,14 +218,14 @@ public class ExactMatchClassifier extends AbstractClassifier {
     }
 
     /**
-     * Classifies a {@link TokenSet} to a set of {@link CodeTriple}s using the classifiers lookup table.
+     * Classifies a {@link TokenSet} to a set of {@link Classification}s using the classifiers lookup table.
      * @param tokenSet to classify
      * @return Set<CodeTripe> code triples from lookup table
      * @throws IOException Indicates an I/O error
      */
-    public Set<CodeTriple> classifyTokenSetToCodeTripleSet(final TokenSet tokenSet) throws IOException {
+    public Set<Classification> classifyTokenSetToCodeTripleSet(final TokenSet tokenSet) throws IOException {
 
-        Set<CodeTriple> result = lookupTable.get(tokenSet);
+        Set<Classification> result = lookupTable.get(tokenSet);
 
         if (result != null) {
             result = setConfidenceLevels(result, 2.0);
@@ -237,11 +237,11 @@ public class ExactMatchClassifier extends AbstractClassifier {
         }
     }
 
-    private Set<CodeTriple> setConfidenceLevels(final Set<CodeTriple> result, final double i) {
+    private Set<Classification> setConfidenceLevels(final Set<Classification> result, final double i) {
 
-        Set<CodeTriple> newResults = new HashSet<CodeTriple>();
-        for (CodeTriple codeTriple : result) {
-            CodeTriple newCodeT = new CodeTriple(codeTriple.getCode(), codeTriple.getTokenSet(), i);
+        Set<Classification> newResults = new HashSet<Classification>();
+        for (Classification codeTriple : result) {
+            Classification newCodeT = new Classification(codeTriple.getCode(), codeTriple.getTokenSet(), i);
             newResults.add(newCodeT);
         }
         return newResults;
@@ -250,10 +250,10 @@ public class ExactMatchClassifier extends AbstractClassifier {
     @Override
     public Pair<Code, Double> classify(final TokenSet tokenSet) throws IOException {
 
-        Set<CodeTriple> result = lookupTable.get(tokenSet);
+        Set<Classification> result = lookupTable.get(tokenSet);
 
         if (result != null) {
-            CodeTriple current = result.iterator().next();
+            Classification current = result.iterator().next();
             return new Pair<Code, Double>(current.getCode(), current.getConfidence());
 
         }

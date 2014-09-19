@@ -12,7 +12,7 @@ import org.junit.Test;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Pair;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeFactory;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeTriple;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
 
 // TODO: Auto-generated Javadoc
@@ -39,7 +39,7 @@ public class ResolverMatrixTest {
     }
 
     /**
-     * Tests that s {@link CodeTriple} is a valid subset of another set using ResolverUtils.tripleSetIsValid().
+     * Tests that s {@link Classification} is a valid subset of another set using ResolverUtils.tripleSetIsValid().
      * Should pass with ResolverUtils.tripleSetIsValid returning true.
      */
     @Test
@@ -47,14 +47,14 @@ public class ResolverMatrixTest {
 
         TokenSet originalSet = new TokenSet("the brown dog brown dog dog");
         Code code = CodeFactory.getInstance().getCode(0);
-        CodeTriple codeTriple = new CodeTriple(code, new TokenSet("brown dog"), 1.0);
-        Set<CodeTriple> tripleSet = new HashSet<>();
+        Classification codeTriple = new Classification(code, new TokenSet("brown dog"), 1.0);
+        Set<Classification> tripleSet = new HashSet<>();
         tripleSet.add(codeTriple);
         Assert.assertTrue(ResolverUtils.tripleSetIsValid(tripleSet, originalSet));
     }
 
     /**
-     * Tests that s {@link CodeTriple} is a valid subset of another set using ResolverUtils.tripleSetIsValid().
+     * Tests that s {@link Classification} is a valid subset of another set using ResolverUtils.tripleSetIsValid().
      * Should pass with ResolverUtils.tripleSetIsValid returning false.
      */
     @Test
@@ -62,14 +62,14 @@ public class ResolverMatrixTest {
 
         TokenSet originalSet = new TokenSet("the brown dog brown dog dog");
         Code code = CodeFactory.getInstance().getCode(0);
-        CodeTriple codeTriple = new CodeTriple(code, new TokenSet("the the the brown dog"), 1.0);
-        Set<CodeTriple> tripleSet = new HashSet<>();
+        Classification codeTriple = new Classification(code, new TokenSet("the the the brown dog"), 1.0);
+        Set<Classification> tripleSet = new HashSet<>();
         tripleSet.add(codeTriple);
         Assert.assertFalse(ResolverUtils.tripleSetIsValid(tripleSet, originalSet));
     }
 
     /**
-     * Tests that s {@link CodeTriple} is a valid subset of another set using ResolverUtils.tripleSetIsValid().
+     * Tests that s {@link Classification} is a valid subset of another set using ResolverUtils.tripleSetIsValid().
      * Should pass with ResolverUtils.tripleSetIsValid returning true.
      */
     @Test
@@ -77,14 +77,14 @@ public class ResolverMatrixTest {
 
         TokenSet originalSet = new TokenSet("the brown dog brown dog dog");
         Code code = CodeFactory.getInstance().getCode(0);
-        CodeTriple codeTriple = new CodeTriple(code, new TokenSet("the brown dog brown dog dog"), 1.0);
-        Set<CodeTriple> tripleSet = new HashSet<>();
+        Classification codeTriple = new Classification(code, new TokenSet("the brown dog brown dog dog"), 1.0);
+        Set<Classification> tripleSet = new HashSet<>();
         tripleSet.add(codeTriple);
         Assert.assertTrue(ResolverUtils.tripleSetIsValid(tripleSet, originalSet));
     }
 
     /**
-     * Tests that s {@link CodeTriple} is a valid subset of another set using ResolverUtils.tripleSetIsValid().
+     * Tests that s {@link Classification} is a valid subset of another set using ResolverUtils.tripleSetIsValid().
      * Should pass with ResolverUtils.tripleSetIsValid returning false.
      */
     @Test
@@ -92,8 +92,8 @@ public class ResolverMatrixTest {
 
         TokenSet originalSet = new TokenSet("the brown dog brown dog dog");
         Code code = CodeFactory.getInstance().getCode(0);
-        CodeTriple codeTriple = new CodeTriple(code, new TokenSet("the brown dog brown dog dog bat"), 1.0);
-        Set<CodeTriple> tripleSet = new HashSet<>();
+        Classification codeTriple = new Classification(code, new TokenSet("the brown dog brown dog dog bat"), 1.0);
+        Set<Classification> tripleSet = new HashSet<>();
         tripleSet.add(codeTriple);
         Assert.assertFalse(ResolverUtils.tripleSetIsValid(tripleSet, originalSet));
     }
@@ -115,18 +115,18 @@ public class ResolverMatrixTest {
         addMockEntryToMatrix("brown", 4, 0.85);
         addMockEntryToMatrix("white", 4, 0.83);
         TokenSet originalSet = new TokenSet("brown white");
-        List<Set<CodeTriple>> validTriples = matrix.getValidCodeTriples(originalSet);
+        List<Set<Classification>> validTriples = matrix.getValidCodeTriples(originalSet);
         Assert.assertEquals(20, validTriples.size());
         addMockEntryToMatrix("blue", 2, 0.83);
         TokenSet originalSet1 = new TokenSet("brown white blue");
         validTriples = matrix.getValidCodeTriples(originalSet1);
         Assert.assertEquals(41, validTriples.size());
-        for (Set<CodeTriple> set : validTriples) {
+        for (Set<Classification> set : validTriples) {
             Assert.assertEquals(1.5, ResolverUtils.lossFunction(set), 1.5);
         }
-        Set<CodeTriple> best = ResolverUtils.getBest(validTriples);
+        Set<Classification> best = ResolverUtils.getBest(validTriples);
         Double averageConfidence = 0.;
-        for (CodeTriple triple : best) {
+        for (Classification triple : best) {
             averageConfidence += triple.getConfidence();
         }
         Assert.assertEquals((2 * 0.87 + 0.83), averageConfidence, 0.001);

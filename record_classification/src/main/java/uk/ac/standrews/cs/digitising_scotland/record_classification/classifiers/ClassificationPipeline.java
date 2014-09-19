@@ -6,7 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeTriple;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 
 /**
@@ -83,7 +83,7 @@ public class ClassificationPipeline implements Iterable<AbstractClassifier> {
      */
     private boolean exactMatchCheck(final Record record) {
 
-        for (CodeTriple codeTriple : record.getCodeTriples()) {
+        for (Classification codeTriple : record.getCodeTriples()) {
             if (codeTriple.getConfidence() == 1) { return true; }
         }
 

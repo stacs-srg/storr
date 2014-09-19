@@ -8,7 +8,7 @@ import java.util.Map;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.AbstractClassifier;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Pair;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeTriple;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
 
 /**
  * The Class TokenClassificationCache provides a caching facility to an {@link AbstractClassifier}.
@@ -66,9 +66,9 @@ public class TokenClassificationCache {
      * Add all CodeTriples to the cache.
      * @param setOfCodeTriples Set to add
      */
-    public void addAll(final List<CodeTriple> setOfCodeTriples) {
+    public void addAll(final List<Classification> setOfCodeTriples) {
 
-        for (CodeTriple codeTriple : setOfCodeTriples) {
+        for (Classification codeTriple : setOfCodeTriples) {
             classifications.put(codeTriple.getTokenSet(), new Pair<Code, Double>(codeTriple.getCode(), codeTriple.getConfidence()));
         }
     }

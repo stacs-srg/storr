@@ -17,7 +17,7 @@ import org.junit.Test;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datareaders.LongFormatConverter;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeFactory;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeTriple;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.RecordFactory;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
@@ -56,9 +56,9 @@ public class RecordFactoryTest {
                 Assert.assertEquals(originalData.getSex(), 1);
                 Assert.assertEquals(originalData.getAgeGroup(), 5);
 
-                Collection<CodeTriple> knownCorrect = new HashSet<>();
-                knownCorrect.add(new CodeTriple(CodeFactory.getInstance().getCode("I269"), new TokenSet("pulmonary embolism"), 1.0));
-                knownCorrect.add(new CodeTriple(CodeFactory.getInstance().getCode("R54"), new TokenSet("old age"), 1.0));
+                Collection<Classification> knownCorrect = new HashSet<>();
+                knownCorrect.add(new Classification(CodeFactory.getInstance().getCode("I269"), new TokenSet("pulmonary embolism"), 1.0));
+                knownCorrect.add(new Classification(CodeFactory.getInstance().getCode("R54"), new TokenSet("old age"), 1.0));
 
                 originalData.getGoldStandardCodeTriples().containsAll(knownCorrect);
             }
@@ -70,8 +70,8 @@ public class RecordFactoryTest {
                 Assert.assertEquals(originalData.getSex(), 0);
                 Assert.assertEquals(originalData.getAgeGroup(), 5);
 
-                Collection<CodeTriple> knownCorrect = new HashSet<>();
-                knownCorrect.add(new CodeTriple(CodeFactory.getInstance().getCode("J988"), new TokenSet("chest infection"), 1.0));
+                Collection<Classification> knownCorrect = new HashSet<>();
+                knownCorrect.add(new Classification(CodeFactory.getInstance().getCode("J988"), new TokenSet("chest infection"), 1.0));
 
                 originalData.getGoldStandardCodeTriples().containsAll(knownCorrect);
             }
@@ -83,8 +83,8 @@ public class RecordFactoryTest {
                 Assert.assertEquals(originalData.getSex(), 1);
                 Assert.assertEquals(originalData.getAgeGroup(), 5);
 
-                Collection<CodeTriple> knownCorrect = new HashSet<>();
-                knownCorrect.add(new CodeTriple(CodeFactory.getInstance().getCode("R54"), new TokenSet("old age"), 1.0));
+                Collection<Classification> knownCorrect = new HashSet<>();
+                knownCorrect.add(new Classification(CodeFactory.getInstance().getCode("R54"), new TokenSet("old age"), 1.0));
 
                 originalData.getGoldStandardCodeTriples().containsAll(knownCorrect);
             }
@@ -98,9 +98,9 @@ public class RecordFactoryTest {
                 Assert.assertEquals(originalData.getSex(), 0);
                 Assert.assertEquals(originalData.getAgeGroup(), 5);
 
-                Collection<CodeTriple> knownCorrect = new HashSet<>();
-                knownCorrect.add(new CodeTriple(CodeFactory.getInstance().getCode("I251"), new TokenSet("coronary artery disease"), 1.0));
-                knownCorrect.add(new CodeTriple(CodeFactory.getInstance().getCode("D469"), new TokenSet("myelodysplasia syndrome"), 1.0));
+                Collection<Classification> knownCorrect = new HashSet<>();
+                knownCorrect.add(new Classification(CodeFactory.getInstance().getCode("I251"), new TokenSet("coronary artery disease"), 1.0));
+                knownCorrect.add(new Classification(CodeFactory.getInstance().getCode("D469"), new TokenSet("myelodysplasia syndrome"), 1.0));
 
                 originalData.getGoldStandardCodeTriples().containsAll(knownCorrect);
             }
@@ -112,9 +112,9 @@ public class RecordFactoryTest {
                 Assert.assertEquals(originalData.getSex(), 0);
                 Assert.assertEquals(originalData.getAgeGroup(), 2);
 
-                Collection<CodeTriple> knownCorrect = new HashSet<>();
-                knownCorrect.add(new CodeTriple(CodeFactory.getInstance().getCode("D649"), new TokenSet("Low Platelet and Anaemia"), 1.0));
-                knownCorrect.add(new CodeTriple(CodeFactory.getInstance().getCode("D696"), new TokenSet("Low Platelet and Anaemia"), 1.0));
+                Collection<Classification> knownCorrect = new HashSet<>();
+                knownCorrect.add(new Classification(CodeFactory.getInstance().getCode("D649"), new TokenSet("Low Platelet and Anaemia"), 1.0));
+                knownCorrect.add(new Classification(CodeFactory.getInstance().getCode("D696"), new TokenSet("Low Platelet and Anaemia"), 1.0));
 
                 originalData.getGoldStandardCodeTriples().containsAll(knownCorrect);
             }
@@ -230,7 +230,7 @@ public class RecordFactoryTest {
 
         HashMap<String, Integer> codeMapping = new HashMap<>();
         for (Record record : bucket) {
-            for (CodeTriple ct : record.getGoldStandardClassificationSet()) {
+            for (Classification ct : record.getGoldStandardClassificationSet()) {
                 codeMapping.put(ct.getCode().getCodeAsString(), 1);
             }
         }

@@ -9,7 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeTriple;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.RecordFactory;
 
@@ -68,9 +68,9 @@ public class LookupTableClassifierTest {
         for (Record record : testingBucket) {
             Record classifiedRecord = lookupClassifier.classify(record);
 
-            Set<CodeTriple> codeTriples = classifiedRecord.getCodeTriples();
+            Set<Classification> codeTriples = classifiedRecord.getCodeTriples();
             if (!codeTriples.isEmpty()) {
-                for (CodeTriple codeTriple : codeTriples) {
+                for (Classification codeTriple : codeTriples) {
                     Assert.assertEquals(codeTriple.getConfidence(), 1.0, 0.01);
 
                 }
@@ -90,9 +90,9 @@ public class LookupTableClassifierTest {
         LookupTableClassifier lookupClassifier = train();
         Bucket classifiedBucket = lookupClassifier.classify(testingBucket);
         for (Record record : classifiedBucket) {
-            Set<CodeTriple> codeTriples = record.getCodeTriples();
+            Set<Classification> codeTriples = record.getCodeTriples();
             if (!codeTriples.isEmpty()) {
-                for (CodeTriple codeTriple : codeTriples) {
+                for (Classification codeTriple : codeTriples) {
                     Assert.assertEquals(codeTriple.getConfidence(), 1.0, 0.01);
 
                 }

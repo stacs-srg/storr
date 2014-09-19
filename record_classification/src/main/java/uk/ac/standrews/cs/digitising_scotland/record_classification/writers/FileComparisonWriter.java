@@ -11,7 +11,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.Set;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeTriple;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
 import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
@@ -79,10 +79,10 @@ public class FileComparisonWriter extends OutputDataFormatter implements Closeab
 
         final String dlim = getDelimiter();
         StringBuilder sb = new StringBuilder();
-        Set<CodeTriple> classifications = record.getCodeTriples();
-        Set<CodeTriple> goldStandardSet = record.getGoldStandardClassificationSet();
+        Set<Classification> classifications = record.getCodeTriples();
+        Set<Classification> goldStandardSet = record.getGoldStandardClassificationSet();
 
-        for (CodeTriple goldCodeTriple : goldStandardSet) {
+        for (Classification goldCodeTriple : goldStandardSet) {
             Code goldCode = goldCodeTriple.getCode();
 
             if (Utils.contains(goldCode, classifications)) {
@@ -94,7 +94,7 @@ public class FileComparisonWriter extends OutputDataFormatter implements Closeab
             }
         }
 
-        for (CodeTriple codeTriple : classifications) {
+        for (Classification codeTriple : classifications) {
             Code code = codeTriple.getCode();
 
             if (!Utils.contains(code, goldStandardSet)) {

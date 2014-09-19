@@ -13,7 +13,7 @@ import org.junit.Test;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeFactory;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeNotValidException;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeTriple;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.exceptions.InputFormatException;
@@ -70,17 +70,17 @@ public class RecordTest {
 
         File codeFile = new File(getClass().getResource("/CodeFactoryTestFile.txt").getFile());
         CodeFactory.getInstance().loadDictionary(codeFile);
-        Set<CodeTriple> codeTripleSet = new HashSet<>();
+        Set<Classification> codeTripleSet = new HashSet<>();
 
         Code codeTest = CodeFactory.getInstance().getCode("2100");
 
-        CodeTriple codeTriple = new CodeTriple(codeTest, new TokenSet("test String"), 1.0);
+        Classification codeTriple = new Classification(codeTest, new TokenSet("test String"), 1.0);
         codeTripleSet.add(codeTriple);
         record.addAllCodeTriples(codeTripleSet);
 
-        Set<CodeTriple> classificationsFromRecord = record.getCodeTriples();
+        Set<Classification> classificationsFromRecord = record.getCodeTriples();
 
-        CodeTriple clssfication = classificationsFromRecord.iterator().next();
+        Classification clssfication = classificationsFromRecord.iterator().next();
         Assert.assertEquals("2100", clssfication.getCode().getCodeAsString());
         Assert.assertEquals("test string", clssfication.getTokenSet().toString());
 
@@ -129,7 +129,7 @@ public class RecordTest {
         int id = (int) Math.rint(Math.random() * 1000);
         Record x = new Record(id, originalData);
         Record y = new Record(id, originalData);
-        CodeTriple codeTriple = null;
+        Classification codeTriple = null;
         x.addCodeTriples(codeTriple);
         assertTheSame(x, y);
     }

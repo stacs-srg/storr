@@ -4,7 +4,7 @@ import java.util.Set;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeTriple;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
 import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
 
 /**
@@ -30,9 +30,9 @@ public class StrictConfusionMatrix extends AbstractConfusionMatrix {
      * @param setCodeTriples the set code triples
      * @param goldStandardTriples the gold standard triples
      */
-    protected void truePosAndFalseNeg(final Set<CodeTriple> setCodeTriples, final Set<CodeTriple> goldStandardTriples) {
+    protected void truePosAndFalseNeg(final Set<Classification> setCodeTriples, final Set<Classification> goldStandardTriples) {
 
-        for (CodeTriple goldStandardCode : goldStandardTriples) {
+        for (Classification goldStandardCode : goldStandardTriples) {
             final Code code = goldStandardCode.getCode();
             if (contains(code, setCodeTriples)) {
                 truePositive[code.getID()]++;
@@ -50,9 +50,9 @@ public class StrictConfusionMatrix extends AbstractConfusionMatrix {
      * @param setCodeTriples the set code triples
      * @param goldStandardTriples the gold standard triples
      */
-    protected void totalAndFalsePos(final Set<CodeTriple> setCodeTriples, final Set<CodeTriple> goldStandardTriples) {
+    protected void totalAndFalsePos(final Set<Classification> setCodeTriples, final Set<Classification> goldStandardTriples) {
 
-        for (CodeTriple predictedCode : setCodeTriples) {
+        for (Classification predictedCode : setCodeTriples) {
             final Code code = predictedCode.getCode();
             totalPredictions[code.getID()]++;
             if (!contains(code, goldStandardTriples)) {
@@ -67,7 +67,7 @@ public class StrictConfusionMatrix extends AbstractConfusionMatrix {
      * @param setCodeTriples set to check in
      * @return true if present
      */
-    public boolean contains(final Code code, final Set<CodeTriple> setCodeTriples) {
+    public boolean contains(final Code code, final Set<Classification> setCodeTriples) {
 
         return Utils.contains(code, setCodeTriples);
     }

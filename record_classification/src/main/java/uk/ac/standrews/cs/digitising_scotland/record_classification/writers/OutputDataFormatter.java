@@ -4,7 +4,7 @@ import java.util.Set;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.CODOrignalData;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeTriple;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 
 /**
@@ -62,8 +62,8 @@ public class OutputDataFormatter {
 
         StringBuilder sb = new StringBuilder();
 
-        Set<CodeTriple> ct = record.getListOfClassifications().get(description);
-        for (CodeTriple codeTriple : ct) {
+        Set<Classification> ct = record.getListOfClassifications().get(description);
+        for (Classification codeTriple : ct) {
 
             Code code = codeTriple.getCode();
             String codeAsString = code.getCodeAsString();

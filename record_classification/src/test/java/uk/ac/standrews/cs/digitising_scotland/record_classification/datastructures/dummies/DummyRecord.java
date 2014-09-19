@@ -5,7 +5,7 @@ import java.util.Collection;
 import java.util.Set;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.OriginalData;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeTriple;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 
 /**
@@ -33,7 +33,7 @@ public class DummyRecord extends Record {
     }
 
     @Override
-    public Set<CodeTriple> getGoldStandardClassificationSet() {
+    public Set<Classification> getGoldStandardClassificationSet() {
 
         return null;
     }
@@ -51,18 +51,18 @@ public class DummyRecord extends Record {
     }
 
     @Override
-    public Set<CodeTriple> getCodeTriples() {
+    public Set<Classification> getCodeTriples() {
 
         return null;
     }
 
     @Override
-    public void addCodeTriples(final CodeTriple codeTriples) {
+    public void addCodeTriples(final Classification codeTriples) {
 
     }
 
     @Override
-    public void addAllCodeTriples(final Collection<CodeTriple> codeTriples) {
+    public void addAllCodeTriples(final Collection<Classification> codeTriples) {
 
     }
 }

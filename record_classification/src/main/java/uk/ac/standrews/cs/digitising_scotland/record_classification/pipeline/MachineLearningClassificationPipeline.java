@@ -16,7 +16,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Pair;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeTriple;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenClassificationCache;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
@@ -26,7 +26,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.Res
 import com.google.common.collect.Multiset;
 
 /**
- * This class is produces a set of {@link CodeTriple}s that represent the
+ * This class is produces a set of {@link Classification}s that represent the
  * classification for a {@link Record}.
  * 
  * @author jkc25, frjd2
@@ -43,7 +43,7 @@ public class MachineLearningClassificationPipeline {
     private TokenClassificationCache cache;
 
     /** The record cache. */
-    private Map<String, Set<CodeTriple>> recordCache;
+    private Map<String, Set<Classification>> recordCache;
 
     /**
      * Constructs a new {@link MachineLearningClassificationPipeline} with the specified
@@ -84,7 +84,7 @@ public class MachineLearningClassificationPipeline {
 
         for (String description : record.getDescription()) {
             if (!previouslyClassified(record, description)) {
-                Set<CodeTriple> result = recordCache.get(description);
+                Set<Classification> result = recordCache.get(description);
                 if (result == null) {
                     result = classify(description);
                     if (result != null) {
@@ -97,7 +97,7 @@ public class MachineLearningClassificationPipeline {
         }
     }
 
-    private void addResultToRecord(final Record record, final String description, final Set<CodeTriple> result) {
+    private void addResultToRecord(final Record record, final String description, final Set<Classification> result) {
 
         record.addAllCodeTriples(result);
         addCodeTriplesAndDescriptions(record, description, result);
@@ -108,16 +108,16 @@ public class MachineLearningClassificationPipeline {
         return record.getListOfClassifications().containsKey(description);
     }
 
-    private void addCodeTriplesAndDescriptions(final Record record, final String desc, final Set<CodeTriple> result) {
+    private void addCodeTriplesAndDescriptions(final Record record, final String desc, final Set<Classification> result) {
 
-        for (CodeTriple codeTriple : result) {
+        for (Classification codeTriple : result) {
             record.getListOfClassifications().put(desc, codeTriple);
         }
     }
 
     /**
      * Returns the classification of a {@link Record} as a Set of
-     * {@link CodeTriple}.
+     * {@link Classification}.
      * 
      * @param record
      *            to classify
@@ -125,7 +125,7 @@ public class MachineLearningClassificationPipeline {
      * @throws IOException
      *             indicates an I/O Error
      */
-    public Set<CodeTriple> classify(final String description) throws IOException {
+    public Set<Classification> classify(final String description) throws IOException {
 
         TokenSet cleanedTokenSet = new TokenSet(description);
 
@@ -140,7 +140,7 @@ public class MachineLearningClassificationPipeline {
      * @return the sets the
      * @throws IOException Signals that an I/O exception has occurred.
      */
-    private Set<CodeTriple> classifyTokenSet(final TokenSet cleanedTokenSet) throws IOException {
+    private Set<Classification> classifyTokenSet(final TokenSet cleanedTokenSet) throws IOException {
 
         ResolverMatrix resolverMatrix = new ResolverMatrix();
 
@@ -150,8 +150,8 @@ public class MachineLearningClassificationPipeline {
 
         resolverMatrix.chopBelowConfidence(CONFIDENCE_CHOP_LEVEL);
 
-        List<Set<CodeTriple>> triples = resolverMatrix.getValidCodeTriples(cleanedTokenSet);
-        Set<CodeTriple> best;
+        List<Set<Classification>> triples = resolverMatrix.getValidCodeTriples(cleanedTokenSet);
+        Set<Classification> best;
 
         if (!triples.isEmpty()) {
             best = ResolverUtils.getBest(triples);
@@ -186,7 +186,7 @@ public class MachineLearningClassificationPipeline {
     private void prePopulateCache(final Bucket trainingBucket) {
 
         for (Record record : trainingBucket) {
-            List<CodeTriple> singles = getSinglyCodedTriples(record);
+            List<Classification> singles = getSinglyCodedTriples(record);
             cache.addAll(singles);
         }
 
@@ -198,14 +198,14 @@ public class MachineLearningClassificationPipeline {
      * @param record the record to get single triples from
      * @return the singly coded triples
      */
-    protected List<CodeTriple> getSinglyCodedTriples(final Record record) {
+    protected List<Classification> getSinglyCodedTriples(final Record record) {
 
-        List<CodeTriple> singles = new ArrayList<>();
+        List<Classification> singles = new ArrayList<>();
 
-        final Set<CodeTriple> goldStandardClassificationSet = record.getGoldStandardClassificationSet();
-        for (CodeTriple codeTriple1 : goldStandardClassificationSet) {
+        final Set<Classification> goldStandardClassificationSet = record.getGoldStandardClassificationSet();
+        for (Classification codeTriple1 : goldStandardClassificationSet) {
             int count = 0;
-            for (CodeTriple codeTriple2 : goldStandardClassificationSet) {
+            for (Classification codeTriple2 : goldStandardClassificationSet) {
                 if (codeTriple1.getTokenSet().equals(codeTriple2.getTokenSet())) {
                     count++;
                 }

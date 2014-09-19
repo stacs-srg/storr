@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.CODOrignalData;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeFactory;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeTriple;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.exceptions.InputFormatException;
@@ -81,7 +81,7 @@ public final class LongFormatConverter extends AbstractFormatConverter {
             int year = Integer.parseInt(removeQuotes(lineSplit[YEAR_POSITION]));
 
             CODOrignalData originalData = new CODOrignalData(description, year, ageGroup, sex, imageQuality, inputFile.getName());
-            HashSet<CodeTriple> goldStandard = new HashSet<>();
+            HashSet<Classification> goldStandard = new HashSet<>();
             populateGoldStandardSet(lineSplit, goldStandard);
 
             Record r = new Record(id, originalData);
@@ -105,7 +105,7 @@ public final class LongFormatConverter extends AbstractFormatConverter {
      * @param lineSplit the line split
      * @param goldStandard the gold standard
      */
-    private static void populateGoldStandardSet(final String[] lineSplit, final HashSet<CodeTriple> goldStandard) {
+    private static void populateGoldStandardSet(final String[] lineSplit, final HashSet<Classification> goldStandard) {
 
         final int start_pos = 6;
         final int end_pos = 31;
@@ -120,7 +120,7 @@ public final class LongFormatConverter extends AbstractFormatConverter {
 
                     TokenSet tokenSet = new TokenSet(lineSplit[causeIdentifier]);
 
-                    CodeTriple codeTriple = new CodeTriple(code, tokenSet, 1.0);
+                    Classification codeTriple = new Classification(code, tokenSet, 1.0);
                     goldStandard.add(codeTriple);
                 }
             }

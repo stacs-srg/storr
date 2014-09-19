@@ -16,7 +16,7 @@ import org.apache.mahout.math.RandomAccessSparseVector;
 import org.apache.mahout.math.Vector;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeTriple;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.machinelearning.tokenizing.StandardTokenizerIterable;
 import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearningConfiguration;
@@ -72,7 +72,7 @@ public class VectorFactory {
     public List<NamedVector> generateVectorsFromRecord(final Record record) {
 
         List<NamedVector> vectors = new ArrayList<>();
-        Set<CodeTriple> goldStandardClassificationSet = record.getGoldStandardClassificationSet();
+        Set<Classification> goldStandardClassificationSet = record.getGoldStandardClassificationSet();
 
         if (!goldStandardClassificationSet.isEmpty()) {
             vectors.addAll(createNamedVectorsWithGoldStandardCodes(record));
@@ -98,9 +98,9 @@ public class VectorFactory {
     private List<NamedVector> createNamedVectorsWithGoldStandardCodes(final Record record) {
 
         List<NamedVector> vectors = new ArrayList<>();
-        Set<CodeTriple> goldStandardCodeTriple = record.getGoldStandardClassificationSet();
+        Set<Classification> goldStandardCodeTriple = record.getGoldStandardClassificationSet();
 
-        for (CodeTriple codeTriple : goldStandardCodeTriple) {
+        for (Classification codeTriple : goldStandardCodeTriple) {
             Integer id = codeTriple.getCode().getID();
             vectors.add(createNamedVectorFromString(codeTriple.getTokenSet().toString(), id.toString()));
         }

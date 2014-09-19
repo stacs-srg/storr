@@ -2,7 +2,7 @@ package uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.lo
 
 import java.util.Set;
 
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeTriple;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
 
 /**
  * Abstract loss function class. Allows swap-able loss functions.
@@ -18,6 +18,6 @@ public abstract class AbstractLossFunction {
      * @param set the set to evaluate
      * @return the double loss value
      */
-    public abstract double calculate(final Set<CodeTriple> set);
+    public abstract double calculate(final Set<Classification> set);
 
 }
