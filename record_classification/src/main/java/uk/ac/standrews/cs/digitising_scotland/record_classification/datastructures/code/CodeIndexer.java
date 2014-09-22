@@ -1,6 +1,8 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code;
 
 import java.io.BufferedInputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -11,7 +13,12 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
@@ -25,6 +32,8 @@ import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearnin
 public final class CodeIndexer implements Serializable {
 
     private static final long serialVersionUID = 3721498072294663528L;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(CodeIndexer.class);
 
     /** Maps UID's to codes. */
     private Map<Integer, Code> idToCodeMap = new HashMap<Integer, Code>();
@@ -49,8 +58,32 @@ public final class CodeIndexer implements Serializable {
      */
     public CodeIndexer(final Bucket bucket) {
 
-        this();
         addGoldStandardCodes(bucket);
+
+    }
+
+    /**
+     * Instantiates a new CodeIndexer with all the codes from the {@link CodeDictionary} in the index.
+     * @param dictionary The dictionary to add the codes from
+     */
+    public CodeIndexer(final CodeDictionary dictionary) {
+
+        addGoldStandardCodes(dictionary);
+    }
+
+    /**
+     * Adds gold standard codes from each record to the {@link CodeIndexer}.
+     * @param bucket bucket with gold standard codes
+     */
+    public void addGoldStandardCodes(final CodeDictionary dictionary) {
+
+        Iterator<Entry<String, Code>> i = dictionary.getIterator();
+        while (i.hasNext()) {
+            Entry<String, Code> entry = i.next();
+            putCodeInMap(entry.getValue());
+        }
+
+        MachineLearningConfiguration.getDefaultProperties().setProperty("numCategories", String.valueOf(idToCodeMap.size()));
 
     }
 
@@ -148,6 +181,63 @@ public final class CodeIndexer implements Serializable {
 
         oos.writeObject(this);
         oos.close();
+    }
+
+    public void write(final DataOutputStream outputStream) throws IOException {
+
+        outputStream.writeInt(currentMaxID);
+        writeIDMap(outputStream, idToCodeMap);
+        //   writeCodeMap(outputStream, idToCodeMap);
+
+    }
+
+    private void writeIDMap(final DataOutputStream outputStream, Map<Integer, Code> map) throws IOException {
+
+        for (Integer id : map.keySet()) {
+            outputStream.writeInt(id);
+            outputStream.writeUTF(map.get(id).getCodeAsString());
+            outputStream.writeUTF(map.get(id).getDescription());
+        }
+    }
+
+    private void writeCodeMap(final DataOutputStream outputStream, Map<Integer, Code> map) throws IOException {
+
+        for (Integer id : map.keySet()) {
+            outputStream.writeUTF(map.get(id).getCodeAsString());
+            outputStream.writeUTF(map.get(id).getDescription());
+            outputStream.writeInt(id);
+        }
+    }
+
+    /**
+     * Read fields.
+     *
+     * @param inputStream the in
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
+    public void readFields(final DataInputStream inputStream) throws IOException {
+
+        int currentMaxTokenIndexValue = inputStream.readInt();
+
+        for (int i = 0; i < currentMaxTokenIndexValue; i++) {
+
+            int readint = inputStream.readInt();
+
+            if (i != readint) {
+                LOGGER.error("error reading CodeIndexer");
+                throw new RuntimeException("error reading SimpleVectorEncoder dictionary");
+            }
+            Code c = new Code(inputStream.readUTF(), inputStream.readUTF());
+            putCodeInMap(c);
+        }
+        MachineLearningConfiguration.getDefaultProperties().setProperty("numCategories", String.valueOf(idToCodeMap.size()));
+
+    }
+
+    @Override
+    public String toString() {
+
+        return "CodeIndexer [idToCodeMap=" + idToCodeMap + ", codeToIDMap=" + codeToIDMap + ", currentMaxID=" + currentMaxID + "]";
     }
 
 }

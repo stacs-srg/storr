@@ -245,7 +245,6 @@ public class OLRClassifier extends AbstractClassifier {
 
         DataInputStream in = OLR.getDataInputStream(filename);
         VectorFactory vectorFactory = new VectorFactory();
-        //  vectorFactory.readFields(in);
         OLRClassifier olrClassifier = new OLRClassifier(vectorFactory);
         olrClassifier.readFields(in);
 

@@ -6,7 +6,9 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
 
@@ -69,5 +71,15 @@ public class CodeDictionary {
     public int getTotalNumberOfCodes() {
 
         return validCodes.size();
+    }
+
+    /**
+     * Returns an iterator over the validCode map.
+     * @return A set of String, Code entries
+     */
+    public Iterator<Entry<String, Code>> getIterator() {
+
+        return validCodes.entrySet().iterator();
+
     }
 }

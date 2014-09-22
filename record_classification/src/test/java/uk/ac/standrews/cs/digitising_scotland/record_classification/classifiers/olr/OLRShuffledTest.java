@@ -13,9 +13,9 @@ import org.apache.mahout.math.Vector;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeDictionary;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeIndexer;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeNotValidException;
@@ -25,7 +25,6 @@ import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearnin
 /**
  * The Class OLRShuffledTest.
  */
-@Ignore("Needs to be updated to new CodeIndex/DictionaryFormat")
 //FIXME
 public class OLRShuffledTest {
 
@@ -41,9 +40,8 @@ public class OLRShuffledTest {
     /** The model. */
     private OLRShuffled model;
 
-    CodeDictionary cd;
-
-    CodeIndexer index;
+    private CodeDictionary cd;
+    private CodeIndexer index;
 
     /**
      * Setup.
@@ -56,6 +54,7 @@ public class OLRShuffledTest {
         String codeDictionary = getClass().getResource("/CodeFactoryOLRTestFile.txt").getFile();
 
         cd = new CodeDictionary(new File(codeDictionary));
+        index = new CodeIndexer(cd);
         vectorFactory = new VectorFactory();
         properties.setProperty("numCategories", "5");
         trainingVectorList = generateTrainingVectors();
@@ -229,6 +228,7 @@ public class OLRShuffledTest {
         while ((line = br.readLine()) != null) {
             vectorFactory.updateDictionary(line.split("\t")[1]);
         }
+
     }
 
     /**
@@ -243,7 +243,8 @@ public class OLRShuffledTest {
         String[] splitLine = line.split("\t");
         String codeFromFile = splitLine[0].trim();
         String descriptionFromFile = splitLine[1].trim();
-        int id = index.getID(cd.getCode(codeFromFile));
+        final Code code = cd.getCode(codeFromFile);
+        int id = index.getID(code);
         return vectorFactory.createNamedVectorFromString(descriptionFromFile, String.valueOf(id));
     }
 

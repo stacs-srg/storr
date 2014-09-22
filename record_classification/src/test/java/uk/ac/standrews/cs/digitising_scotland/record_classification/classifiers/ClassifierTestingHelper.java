@@ -45,9 +45,19 @@ public class ClassifierTestingHelper {
      */
     public Bucket giveBucketTestingOccCodes(final Bucket bucket) throws IOException, CodeNotValidException, URISyntaxException {
 
+        loadDictionary("/CodeFactoryTestFile.txt");
+        int c = 0;
+        int size = bucket.size();
         for (Record record : bucket) {
-            loadDictionary("/CodeFactoryTestFile.txt");
-            record = addGoldStandardCodeToRecord(record, "2200");
+            if (c < (size / 2.0)) {
+                record = addGoldStandardCodeToRecord(record, "2200");
+            }
+            else {
+                record = addGoldStandardCodeToRecord(record, "2100");
+
+            }
+            c++;
+
         }
 
         return bucket;

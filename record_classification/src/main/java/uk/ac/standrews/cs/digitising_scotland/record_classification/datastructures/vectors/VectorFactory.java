@@ -174,6 +174,8 @@ public class VectorFactory {
 
         outputStream.writeInt(numFeatures);
         vectorEncoder.write(outputStream);
+        index.write(outputStream);
+
     }
 
     /**
@@ -186,6 +188,7 @@ public class VectorFactory {
 
         numFeatures = in.readInt();
         vectorEncoder.readFields(in);
+        index.readFields(in);
     }
 
     public CodeIndexer getCodeIndexer() {

@@ -14,7 +14,6 @@ import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.ClassifierTestingHelper;
@@ -29,7 +28,6 @@ import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearnin
 /**
  * The Class OLRClassifierTest.
  */
-@Ignore("Needs to be updated to new CodeIndex/DictionaryFormat")
 //FIXME
 public class OLRClassifierTest {
 
@@ -47,7 +45,9 @@ public class OLRClassifierTest {
 
     private Properties properties = MachineLearningConfiguration.getDefaultProperties();
 
-    CodeIndexer index;
+    private CodeIndexer index;
+
+    private CodeDictionary codeDictionary;
 
     /**
      * Setup.
@@ -57,6 +57,7 @@ public class OLRClassifierTest {
     @Before
     public void setup() throws Exception {
 
+        codeDictionary = new CodeDictionary(new File(getClass().getResource("/CodeFactoryTestFile.txt").getFile()));
         createTrainingBucket();
         index = new CodeIndexer(bucketA);
         divertOutputStream();
@@ -125,8 +126,6 @@ public class OLRClassifierTest {
         properties.setProperty("perTermLearning", "false");
         properties.setProperty("olrRegularisation", "false");
         properties.setProperty("numDropped", "1");
-
-        CodeDictionary cd = new CodeDictionary(new File(getClass().getResource("/CodeFactoryTestFile.txt").getFile()));
 
         File inputFileTraining = new File(getClass().getResource("/occupationTestFormatPipe.txt").getFile());
         List<Record> listOfRecordsTraining = RecordFactory.makeUnCodedRecordsFromFile(inputFileTraining);
