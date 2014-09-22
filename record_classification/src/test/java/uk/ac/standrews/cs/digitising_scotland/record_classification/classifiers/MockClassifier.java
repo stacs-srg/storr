@@ -5,11 +5,11 @@ import java.io.IOException;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Pair;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeIndexer;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeDictionary;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeNotValidException;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
 
-// TODO: Auto-generated Javadoc
 /**
  * Deterministic mock classifier object. Used for testing.
  * Classify(tokenSet) will return the first code in the map with a confidence of 0.8 if
@@ -46,15 +46,28 @@ public class MockClassifier extends AbstractClassifier {
     @Override
     public Pair<Code, Double> classify(final TokenSet tokenSet) throws IOException {
 
+        CodeDictionary codeDictionary = new CodeDictionary(null);
         if (tokenSet.size() % 2 == 0) {
-            Pair<Code, Double> testvalue;
-            testvalue = new Pair<>(CodeIndexer.getInstance().getCode(0), 0.8);
+            Pair<Code, Double> testvalue = null;
+            try {
+                testvalue = new Pair<>(codeDictionary.getCode("2100"), 0.8);
+            }
+            catch (CodeNotValidException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
             return testvalue;
         }
         else {
 
-            Pair<Code, Double> testvalue;
-            testvalue = new Pair<>(CodeIndexer.getInstance().getCode(1), 0.4);
+            Pair<Code, Double> testvalue = null;
+            try {
+                testvalue = new Pair<>(codeDictionary.getCode("2200"), 0.4);
+            }
+            catch (CodeNotValidException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
             return testvalue;
         }
     }

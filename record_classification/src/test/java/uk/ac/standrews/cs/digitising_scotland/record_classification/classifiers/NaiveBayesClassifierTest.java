@@ -14,6 +14,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeIndexer;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.RecordFactory;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
@@ -35,6 +36,8 @@ public class NaiveBayesClassifierTest {
     /** The list of records. */
     private List<Record> listOfRecords;
 
+    private CodeIndexer indexer;
+
     // FIXME  private ClassifierTestingHelper helper = new ClassifierTestingHelper();
 
     /**
@@ -50,6 +53,7 @@ public class NaiveBayesClassifierTest {
         if (tempFiles.exists()) {
             FileUtils.deleteDirectory(tempFiles);
         }
+        indexer = new CodeIndexer(bucketB);
 
     }
 
@@ -91,7 +95,7 @@ public class NaiveBayesClassifierTest {
      */
     private NaiveBayesClassifier train() throws Exception {
 
-        VectorFactory vectorFactory = new VectorFactory(bucketB);
+        VectorFactory vectorFactory = new VectorFactory(bucketB, indexer);
         NaiveBayesClassifier nbc = new NaiveBayesClassifier(vectorFactory);
         nbc.train(bucketB);
         return nbc;

@@ -6,16 +6,18 @@ import java.io.IOException;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeIndexer;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeDictionary;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeNotValidException;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.exceptions.InputFormatException;
 
 public class CustomWordCleanerTest {
 
     @Ignore("Need to implement proper checking on this")
+    //FIXME
     @Test
-    public void test() throws IOException, InputFormatException {
+    public void test() throws IOException, InputFormatException, CodeNotValidException {
 
-        CodeIndexer.getInstance().loadDictionary(new File(getClass().getResource("/CodeFactoryCoDFile.txt").getFile()));
+        CodeDictionary cd = new CodeDictionary(new File(getClass().getResource("/CodeFactoryCoDFile.txt").getFile()));
 
         CustomWordCleaner.getWordMultiset();
 

@@ -16,7 +16,10 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeDictionary;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeIndexer;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeNotValidException;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.vectors.VectorFactory;
 import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearningConfiguration;
 
@@ -38,19 +41,26 @@ public class OLRCrossFoldTest {
     /** The model. */
     private OLRCrossFold model;
 
+    CodeIndexer index;
+
+    CodeDictionary codeDictionary;
+
     /**
      * Setup.
      *
      * @throws IOException Signals that an I/O exception has occurred.
+     * @throws CodeNotValidException 
      */
     @Before
-    public void setup() throws IOException {
+    public void setup() throws IOException, CodeNotValidException {
 
         if (!new File("target/olrModelPath").delete()) {
             System.err.println("Could not clean up all resources.");
         }
-        CodeIndexer.getInstance().loadDictionary(new File("target/test-classes/CodeFactoryTestFile.txt"));
+
+        codeDictionary = new CodeDictionary(new File("target/test-classes/CodeFactoryTestFile.txt"));
         vectorFactory = new VectorFactory();
+
         populateDictionary();
 
         properties.setProperty("numCategories", "8");
@@ -63,6 +73,8 @@ public class OLRCrossFoldTest {
         properties.setProperty("numDropped", "1");
 
         trainingVectorList = generateTrainingVectors();
+        Bucket bucket = new Bucket();
+        index = new CodeIndexer(bucket);
         model = new OLRCrossFold(trainingVectorList, properties);
         model.train();
 
@@ -81,8 +93,9 @@ public class OLRCrossFoldTest {
      *
      * @return the array list
      * @throws IOException Signals that an I/O exception has occurred.
+     * @throws CodeNotValidException 
      */
-    private ArrayList<NamedVector> generateTrainingVectors() throws IOException {
+    private ArrayList<NamedVector> generateTrainingVectors() throws IOException, CodeNotValidException {
 
         BufferedReader br = getBufferedReaderOfCodeDictionaryFile();
         String line;
@@ -114,15 +127,17 @@ public class OLRCrossFoldTest {
      *
      * @param line the line
      * @return the named vector
+     * @throws IOException 
+     * @throws CodeNotValidException 
      */
-    private NamedVector createTrainingVector(final String line) {
+    private NamedVector createTrainingVector(final String line) throws IOException, CodeNotValidException {
 
         String[] splitLine = line.split("\t");
         String codeFromFile = splitLine[0].trim();
         String descriptionFromFile = splitLine[1].trim();
-        File file = new File(getClass().getResource("/CodeFactoryOLRTestFile.txt").getFile());
-        CodeIndexer.getInstance().loadDictionary(file);
-        int id = CodeIndexer.getInstance().getCode(codeFromFile).getID();
+        CodeDictionary codeDictionary = new CodeDictionary(new File(getClass().getResource("/CodeFactoryOLRTestFile.txt").getFile()));
+
+        int id = index.getID(codeDictionary.getCode(codeFromFile));
         return vectorFactory.createNamedVectorFromString(descriptionFromFile, Integer.toString(id));
     }
 
@@ -199,7 +214,7 @@ public class OLRCrossFoldTest {
         String codeFromFile = getCodeFromLine(line);
         Vector testVector = vectorFactory.createVectorFromString(codeFromFile);
         int classification = getClassification(model, testVector);
-        Assert.assertEquals(codeFromFile, CodeIndexer.getInstance().getCode(classification).getCodeAsString());
+        Assert.assertEquals(codeFromFile, index.getCode(classification).getCodeAsString());
     }
 
     /**

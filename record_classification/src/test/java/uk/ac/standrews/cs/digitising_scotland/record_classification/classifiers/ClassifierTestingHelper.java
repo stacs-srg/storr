@@ -8,10 +8,10 @@ import java.util.List;
 import java.util.Set;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeIndexer;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeNotValidException;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeDictionary;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeNotValidException;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.RecordFactory;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
@@ -23,6 +23,8 @@ public class ClassifierTestingHelper {
 
     /** The testing bucket. */
     private Bucket testingBucket;
+
+    private CodeDictionary codeDictionary;
 
     /**
      * Instantiates a new classifier testing helper.
@@ -78,8 +80,9 @@ public class ClassifierTestingHelper {
      * @param bucket the bucket
      * @return the bucket
      * @throws URISyntaxException the URI syntax exception
+     * @throws IOException 
      */
-    public Bucket giveBucketTestingCODCodes(final Bucket bucket) throws URISyntaxException {
+    public Bucket giveBucketTestingCODCodes(final Bucket bucket) throws URISyntaxException, IOException {
 
         for (Record record : bucket) {
             Set<Classification> codeTriples = new HashSet<Classification>();
@@ -98,8 +101,9 @@ public class ClassifierTestingHelper {
      * @param code the code to give to the records in the bucket
      * @return the bucket
      * @throws URISyntaxException the URI syntax exception
+     * @throws IOException 
      */
-    public Bucket giveBucketTestingHICODCodes(final Bucket bucket, final String code) throws URISyntaxException {
+    public Bucket giveBucketTestingHICODCodes(final Bucket bucket, final String code) throws URISyntaxException, IOException {
 
         for (Record record : bucket) {
             Set<Classification> codeTriples = new HashSet<Classification>();
@@ -118,11 +122,12 @@ public class ClassifierTestingHelper {
      *
      * @param codeDictionaryFile the code dictionary file
      * @throws URISyntaxException the URI syntax exception
+     * @throws IOException 
      */
-    private void loadDictionary(final String codeDictionaryFile) throws URISyntaxException {
+    private void loadDictionary(final String codeDictionaryFile) throws URISyntaxException, IOException {
 
         File file = new File(this.getClass().getResource(codeDictionaryFile).toURI());
-        CodeIndexer.getInstance().loadDictionary(file);
+        codeDictionary = new CodeDictionary(file);
     }
 
     /**
@@ -134,7 +139,14 @@ public class ClassifierTestingHelper {
      */
     private Record addGoldStandardCodeToRecord(final Record record, final String goldStandardCode) {
 
-        Code code = CodeIndexer.getInstance().getCode(goldStandardCode);
+        Code code = null;
+        try {
+            code = codeDictionary.getCode(goldStandardCode);
+        }
+        catch (CodeNotValidException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
         Classification c = new Classification(code, new TokenSet(record.getOriginalData().getDescription()), 1.0);
         Set<Classification> set = new HashSet<>();
         set.add(c);
@@ -151,7 +163,14 @@ public class ClassifierTestingHelper {
      */
     private Record addCodeTriplesStandardCodeToRecord(final Record record, final String codeAsString) {
 
-        Code code = CodeIndexer.getInstance().getCode(codeAsString);
+        Code code = null;
+        try {
+            code = codeDictionary.getCode(codeAsString);
+        }
+        catch (CodeNotValidException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
         Classification c = new Classification(code, new TokenSet(record.getOriginalData().getDescription()), 1.0);
         Set<Classification> set = new HashSet<>();
         set.add(c);

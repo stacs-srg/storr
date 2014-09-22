@@ -19,6 +19,7 @@ import org.junit.Test;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.ClassifierTestingHelper;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeDictionary;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeIndexer;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.RecordFactory;
@@ -46,6 +47,8 @@ public class OLRClassifierTest {
 
     private Properties properties = MachineLearningConfiguration.getDefaultProperties();
 
+    CodeIndexer index;
+
     /**
      * Setup.
      *
@@ -55,6 +58,7 @@ public class OLRClassifierTest {
     public void setup() throws Exception {
 
         createTrainingBucket();
+        index = new CodeIndexer(bucketA);
         divertOutputStream();
     }
 
@@ -91,10 +95,7 @@ public class OLRClassifierTest {
     @Test
     public void testClassifyWithDeSerializedModel() throws InterruptedException, IOException {
 
-        File codeFile = new File(getClass().getResource("/CodeFactoryTestFile.txt").getFile());
-        CodeIndexer.getInstance().loadDictionary(codeFile);
-
-        VectorFactory vectorFactory = new VectorFactory(bucketA);
+        VectorFactory vectorFactory = new VectorFactory(bucketA, index);
         OLRClassifier olrClassifier1 = new OLRClassifier(vectorFactory);
 
         olrClassifier1.train(bucketA);
@@ -125,8 +126,8 @@ public class OLRClassifierTest {
         properties.setProperty("olrRegularisation", "false");
         properties.setProperty("numDropped", "1");
 
-        File codeFile = new File(getClass().getResource("/CodeFactoryTestFile.txt").getFile());
-        CodeIndexer.getInstance().loadDictionary(codeFile);
+        CodeDictionary cd = new CodeDictionary(new File(getClass().getResource("/CodeFactoryTestFile.txt").getFile()));
+
         File inputFileTraining = new File(getClass().getResource("/occupationTestFormatPipe.txt").getFile());
         List<Record> listOfRecordsTraining = RecordFactory.makeUnCodedRecordsFromFile(inputFileTraining);
         bucketA = new Bucket(listOfRecordsTraining);
@@ -146,7 +147,7 @@ public class OLRClassifierTest {
         InputStream stdin = System.in;
         System.setIn(new ByteArrayInputStream(data.getBytes()));
 
-        VectorFactory vectorFactory = new VectorFactory(bucketA);
+        VectorFactory vectorFactory = new VectorFactory(bucketA, index);
         OLRClassifier olrClassifier1 = new OLRClassifier(vectorFactory);
         MachineLearningConfiguration.getDefaultProperties().setProperty("reps", "1000");
 

@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures;
 
+import java.io.IOException;
 import java.net.URISyntaxException;
 
 import org.junit.Assert;
@@ -64,7 +65,7 @@ public class ListAccuracyMetricsTest {
     @Test
     @Ignore("Needs to be updated to new CodeIndex/DictionaryFormat")
     //FIXME
-    public void testAverageConfidence() throws URISyntaxException {
+    public void testAverageConfidence() throws URISyntaxException, IOException {
 
         cth.giveBucketTestingCODCodes(trainingBucket);
         ListAccuracyMetrics lam = new ListAccuracyMetrics(trainingBucket);
