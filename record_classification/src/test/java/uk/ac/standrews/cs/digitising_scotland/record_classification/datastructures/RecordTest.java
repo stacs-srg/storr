@@ -13,7 +13,7 @@ import org.junit.Test;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeIndexer;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeDictionary;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeNotValidException;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
@@ -72,10 +72,10 @@ public class RecordTest {
     public void testAddCodeTriples() throws IOException, CodeNotValidException {
 
         File codeFile = new File(getClass().getResource("/CodeFactoryTestFile.txt").getFile());
-        CodeIndexer.getInstance().loadDictionary(codeFile);
+        CodeDictionary cd = new CodeDictionary(codeFile);
         Set<Classification> codeTripleSet = new HashSet<>();
 
-        Code codeTest = CodeIndexer.getInstance().getCode("2100");
+        Code codeTest = cd.getCode("2100");
 
         Classification codeTriple = new Classification(codeTest, new TokenSet("test String"), 1.0);
         codeTripleSet.add(codeTriple);

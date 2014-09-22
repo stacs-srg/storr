@@ -16,7 +16,9 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeDictionary;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeIndexer;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeNotValidException;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.vectors.VectorFactory;
 import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearningConfiguration;
 
@@ -39,6 +41,10 @@ public class OLRShuffledTest {
     /** The model. */
     private OLRShuffled model;
 
+    CodeDictionary cd;
+
+    CodeIndexer index;
+
     /**
      * Setup.
      *
@@ -48,7 +54,8 @@ public class OLRShuffledTest {
     public void setup() throws Exception {
 
         String codeDictionary = getClass().getResource("/CodeFactoryOLRTestFile.txt").getFile();
-        CodeIndexer.getInstance().loadDictionary(new File(codeDictionary));
+
+        cd = new CodeDictionary(new File(codeDictionary));
         vectorFactory = new VectorFactory();
         properties.setProperty("numCategories", "5");
         trainingVectorList = generateTrainingVectors();
@@ -145,7 +152,14 @@ public class OLRShuffledTest {
      */
     private int getCodeID(final String codeFromFile) {
 
-        return CodeIndexer.getInstance().getCode(codeFromFile).getID();
+        try {
+            return index.getID(cd.getCode(codeFromFile));
+        }
+        catch (CodeNotValidException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return 0;
     }
 
     /**
@@ -189,8 +203,9 @@ public class OLRShuffledTest {
      *
      * @return the array list
      * @throws IOException Signals that an I/O exception has occurred.
+     * @throws CodeNotValidException 
      */
-    private ArrayList<NamedVector> generateTrainingVectors() throws IOException {
+    private ArrayList<NamedVector> generateTrainingVectors() throws IOException, CodeNotValidException {
 
         populateDictionary();
         BufferedReader br = getBufferedReaderOfCodeDictionaryFile();
@@ -221,13 +236,14 @@ public class OLRShuffledTest {
      *
      * @param line the line
      * @return the named vector
+     * @throws CodeNotValidException 
      */
-    private NamedVector createTrainingVector(final String line) {
+    private NamedVector createTrainingVector(final String line) throws CodeNotValidException {
 
         String[] splitLine = line.split("\t");
         String codeFromFile = splitLine[0].trim();
         String descriptionFromFile = splitLine[1].trim();
-        int id = CodeIndexer.getInstance().getCode(codeFromFile).getID();
+        int id = index.getID(cd.getCode(codeFromFile));
         return vectorFactory.createNamedVectorFromString(descriptionFromFile, String.valueOf(id));
     }
 

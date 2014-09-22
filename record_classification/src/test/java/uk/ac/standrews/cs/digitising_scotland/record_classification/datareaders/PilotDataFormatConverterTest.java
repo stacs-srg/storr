@@ -8,6 +8,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeDictionary;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.exceptions.InputFormatException;
 
@@ -20,9 +21,10 @@ public class PilotDataFormatConverterTest {
 
         File inputFile = new File(getClass().getResource("/pilotStudyTestCase.tsv").getFile());
 
+        CodeDictionary cd = new CodeDictionary(inputFile);
         PilotDataFormatConverter converter = new PilotDataFormatConverter();
 
-        Bucket bucket = new Bucket(converter.convert(inputFile));
+        Bucket bucket = new Bucket(converter.convert(inputFile, cd));
 
         Record record1 = bucket.getRecord(1);
         Record record2 = bucket.getRecord(2);
