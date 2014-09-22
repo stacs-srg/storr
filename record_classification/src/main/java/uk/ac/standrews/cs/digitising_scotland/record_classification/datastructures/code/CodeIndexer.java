@@ -36,8 +36,7 @@ public final class CodeIndexer implements Serializable {
     private int currentMaxID;
 
     /**
-     * Instantiates a new code factory.
-     * @param codeChecker the definitive list of codes so that no malformed codes are added to the codeIndexer.
+     * Instantiates a new CodeIndexer.
      */
     public CodeIndexer() {
 
@@ -45,17 +44,28 @@ public final class CodeIndexer implements Serializable {
     }
 
     /**
+     * Instantiates a new CodeIndexer with all the codes from the supplied bucket added to the index.
+     * @param bucket The bucket to add the codes from
+     */
+    public CodeIndexer(final Bucket bucket) {
+
+        this();
+        addGoldStandardCodes(bucket);
+
+    }
+
+    /**
      * Adds gold standard codes from each record to the {@link CodeIndexer}.
      * @param bucket bucket with gold standard codes
-     * @throws CodeNotValidException indicates a code is not in the {@link CodeIndexer}, usually because it is malformed
      */
-    public void addGoldStandardCodes(final Bucket bucket) throws CodeNotValidException {
+    public void addGoldStandardCodes(final Bucket bucket) {
 
         for (Record record : bucket) {
             for (Classification classification : record.getOriginalData().getGoldStandardClassifications()) {
                 putCodeInMap(classification.getCode());
             }
         }
+        MachineLearningConfiguration.getDefaultProperties().setProperty("numCategories", String.valueOf(idToCodeMap.size()));
 
     }
 
@@ -94,7 +104,7 @@ public final class CodeIndexer implements Serializable {
      * @param code the code to add to the map
      * @throws CodeNotValidException the code not valid exception, thrown if a code is not in the {@link CodeDictionary}
      */
-    private void putCodeInMap(final Code code) throws CodeNotValidException {
+    private void putCodeInMap(final Code code) {
 
         if (!codeToIDMap.containsKey(code)) {
             createCodeAndAddToMaps(code);
@@ -115,7 +125,7 @@ public final class CodeIndexer implements Serializable {
         write(oos);
     }
 
-    public CodeIndexer readCodeFactory(final File path) throws IOException, ClassNotFoundException {
+    public CodeIndexer read(final File path) throws IOException, ClassNotFoundException {
 
         InputStream file = new FileInputStream(path.getAbsoluteFile() + ".ser");
         InputStream buffer = new BufferedInputStream(file);

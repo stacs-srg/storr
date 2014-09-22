@@ -3,8 +3,9 @@ package uk.ac.standrews.cs.digitising_scotland.record_classification.datastructu
 import java.util.Set;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeIndexer;
 
 /**
  * This confusion matrix counts predictions as correct if they are either exactly
@@ -19,9 +20,9 @@ public class SoftConfusionMatrix extends AbstractConfusionMatrix {
      *
      * @param bucket the bucket
      */
-    public SoftConfusionMatrix(final Bucket bucket) {
+    public SoftConfusionMatrix(final Bucket bucket, final CodeIndexer index) {
 
-        super(bucket);
+        super(bucket, index);
     }
 
     /**
@@ -34,11 +35,13 @@ public class SoftConfusionMatrix extends AbstractConfusionMatrix {
 
         for (Classification goldStanardCode : goldStandardTriples) {
             final Code code = goldStanardCode.getCode();
+            int codeID = index.getID(code);
+
             if (containsOrHasAncestors(code, setCodeTriples)) {
-                truePositive[code.getID()]++;
+                truePositive[codeID]++;
             }
             else {
-                falseNegative[code.getID()]++;
+                falseNegative[codeID]++;
             }
         }
 
@@ -54,9 +57,10 @@ public class SoftConfusionMatrix extends AbstractConfusionMatrix {
 
         for (Classification predictedCode : setCodeTriples) {
             final Code code = predictedCode.getCode();
-            totalPredictions[code.getID()]++;
+            int codeID = index.getID(code);
+            totalPredictions[codeID]++;
             if (!containsOrHasDescendants(code, goldStandardTriples)) {
-                falsePositive[code.getID()]++;
+                falsePositive[codeID]++;
             }
         }
     }

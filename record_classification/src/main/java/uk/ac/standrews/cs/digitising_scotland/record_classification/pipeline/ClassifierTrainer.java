@@ -7,6 +7,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.lookup.ExactMatchClassifier;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.olr.OLRClassifier;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeIndexer;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.vectors.VectorFactory;
 
 /**
@@ -39,11 +40,11 @@ public class ClassifierTrainer {
      * @param trainingBucket the training bucket
      * @param experimentalFolderName the experimental folder name
      */
-    public ClassifierTrainer(final Bucket trainingBucket, final String experimentalFolderName) {
+    public ClassifierTrainer(final Bucket trainingBucket, final String experimentalFolderName, final CodeIndexer codeIndex) {
 
         this.trainingBucket = trainingBucket;
         this.experimentalFolderName = experimentalFolderName;
-        vectorFactory = new VectorFactory(trainingBucket);
+        vectorFactory = new VectorFactory(trainingBucket, codeIndex);
 
     }
 

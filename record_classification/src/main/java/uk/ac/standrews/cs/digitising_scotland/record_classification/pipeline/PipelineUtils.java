@@ -5,9 +5,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +17,6 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.BucketFilter;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeIndexer;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.exceptions.FolderCreationException;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.writers.DataClerkingWriter;
@@ -42,51 +38,15 @@ public final class PipelineUtils {
 
     }
 
-    /**
-     * Generates a file containing all the codes that were in the given bucket.
-     * @param bucket Bucket to generate mapping file from
-     */
-    protected static void generateActualCodeMappings(final Bucket bucket) {
-
-        Map<String, Integer> codeMapping = new HashMap<>();
-        for (Record record : bucket) {
-            addAllCodesToMap(codeMapping, record);
-        }
-
-        StringBuilder sb = buildOutputString(codeMapping);
-        File codeFile = new File("target/customCodeMap.txt");
-        Utils.writeToFile(sb.toString(), codeFile.getAbsolutePath());
-        CodeIndexer.getInstance().loadDictionary(codeFile);
-    }
-
-    private static StringBuilder buildOutputString(final Map<String, Integer> codeMapping) {
-
-        StringBuilder sb = new StringBuilder();
-        Set<String> keySet = codeMapping.keySet();
-
-        for (String key : keySet) {
-            sb.append(key + "\t" + key + "\n");
-        }
-
-        return sb;
-    }
-
-    private static void addAllCodesToMap(final Map<String, Integer> codeMapping, final Record record) {
-
-        for (Classification currentCodeTriple : record.getGoldStandardClassificationSet()) {
-            codeMapping.put(currentCodeTriple.getCode().getCodeAsString(), 1);
-        }
-    }
-
-    protected static void generateAndPrintStats(final Bucket classifiedBucket, final String header, final String bucketIdentifier, final String experimentalFolderName) throws IOException {
+    protected static void generateAndPrintStats(final Bucket classifiedBucket, final CodeIndexer codeIndexer, final String header, final String bucketIdentifier, final String experimentalFolderName) throws IOException {
 
         LOGGER.info(header);
         ListAccuracyMetrics accuracyMetrics = new ListAccuracyMetrics(classifiedBucket);
         accuracyMetrics.prettyPrint(header);
-        generateStats(classifiedBucket, accuracyMetrics, experimentalFolderName, bucketIdentifier);
+        generateStats(classifiedBucket, accuracyMetrics, codeIndexer, experimentalFolderName, bucketIdentifier);
     }
 
-    protected static void generateStats(final Bucket bucket, final ListAccuracyMetrics accuracyMetrics, final String experimentalFolderName, final String bucketIdentifier) throws IOException {
+    protected static void generateStats(final Bucket bucket, final ListAccuracyMetrics accuracyMetrics, final CodeIndexer codeIndexer, final String experimentalFolderName, final String bucketIdentifier) throws IOException {
 
         final String matrixDataPath = experimentalFolderName + "/Data/classificationCountMatrix.csv";
         final String matrixImagePath = "classificationMatrix";
@@ -94,13 +54,13 @@ public final class PipelineUtils {
 
         final String strictCodeStatsPath = experimentalFolderName + "/Data/strictCodeStats" + bucketIdentifier + ".csv";
         final String strictCodePath = "strictCodeStats" + bucketIdentifier;
-        printCodeMetrics(bucket, accuracyMetrics, strictCodeStatsPath, strictCodePath, experimentalFolderName);
+        printCodeMetrics(bucket, accuracyMetrics, codeIndexer, strictCodeStatsPath, strictCodePath, experimentalFolderName);
 
         final String softCodeStatsPath = experimentalFolderName + "/Data/softCodeStats" + bucketIdentifier + ".csv";
         final String softCodePath = "softCodeStats" + bucketIdentifier;
-        printCodeMetrics(bucket, accuracyMetrics, softCodeStatsPath, softCodePath, experimentalFolderName);
+        printCodeMetrics(bucket, accuracyMetrics, codeIndexer, softCodeStatsPath, softCodePath, experimentalFolderName);
 
-        AbstractConfusionMatrix invertedConfusionMatrix = new InvertedSoftConfusionMatrix(bucket);
+        AbstractConfusionMatrix invertedConfusionMatrix = new InvertedSoftConfusionMatrix(bucket, codeIndexer);
         double totalCorrectlyPredicted = invertedConfusionMatrix.getTotalCorrectlyPredicted();
         LOGGER.info("Number of predictions too specific: " + totalCorrectlyPredicted);
         LOGGER.info("Proportion of predictions too specific: " + totalCorrectlyPredicted / invertedConfusionMatrix.getTotalPredicted());
@@ -111,9 +71,9 @@ public final class PipelineUtils {
 
     }
 
-    protected static String printCodeMetrics(final Bucket bucket, final ListAccuracyMetrics accuracyMetrics, final String strictCodeStatsPath, final String codeStatsPath, final String experimentalFolderName) {
+    protected static String printCodeMetrics(final Bucket bucket, final ListAccuracyMetrics accuracyMetrics, final CodeIndexer codeIndexer, final String strictCodeStatsPath, final String codeStatsPath, final String experimentalFolderName) {
 
-        CodeMetrics codeMetrics = new CodeMetrics(new StrictConfusionMatrix(bucket));
+        CodeMetrics codeMetrics = new CodeMetrics(new StrictConfusionMatrix(bucket, codeIndexer), codeIndexer);
         LOGGER.info(codeMetrics.getMicroStatsAsString());
         codeMetrics.writeStats(strictCodeStatsPath);
         LOGGER.info(strictCodeStatsPath + ": " + codeMetrics.getTotalCorrectlyPredicted());
@@ -152,9 +112,9 @@ public final class PipelineUtils {
         return timer;
     }
 
-    protected static ClassifierTrainer train(final Bucket trainingBucket, final String experimentalFolderName) throws Exception {
+    protected static ClassifierTrainer train(final Bucket trainingBucket, final String experimentalFolderName, final CodeIndexer codeIndex) throws Exception {
 
-        ClassifierTrainer trainer = new ClassifierTrainer(trainingBucket, experimentalFolderName);
+        ClassifierTrainer trainer = new ClassifierTrainer(trainingBucket, experimentalFolderName, codeIndex);
         trainer.trainExactMatchClassifier();
         trainer.trainOLRClassifier();
         return trainer;
@@ -162,7 +122,7 @@ public final class PipelineUtils {
 
     protected static ClassifierTrainer getExistingModels(final String modelLocations, final Bucket trainingBucket, final String experimentalFolderName) {
 
-        ClassifierTrainer trainer = new ClassifierTrainer(trainingBucket, experimentalFolderName);
+        ClassifierTrainer trainer = new ClassifierTrainer(trainingBucket, experimentalFolderName, null);
         trainer.getExistingsModels(modelLocations);
 
         return trainer;
@@ -183,7 +143,6 @@ public final class PipelineUtils {
         LOGGER.info("********** Training Classifiers **********");
         LOGGER.info("Training with a dictionary size of: " + MachineLearningConfiguration.getDefaultProperties().getProperty("numFeatures"));
         LOGGER.info("Training with this number of output classes: " + MachineLearningConfiguration.getDefaultProperties().getProperty("numCategories"));
-        LOGGER.info("Codes that were null and weren't adter chopping: " + CodeIndexer.getInstance().getCodeMapNullCounter());
     }
 
     protected static boolean checkFileType(final File inputFile) throws IOException {
@@ -213,15 +172,15 @@ public final class PipelineUtils {
         comparisonWriter.close();
     }
 
-    protected static void generateAndPrintStatistics(final ClassificationHolder classifier, final String experimentalFolderName) throws IOException {
+    protected static void generateAndPrintStatistics(final ClassificationHolder classifier, final CodeIndexer codeIndexer, final String experimentalFolderName) throws IOException {
 
         LOGGER.info("********** Output Stats **********");
 
         final Bucket uniqueRecordsOnly = BucketFilter.uniqueRecordsOnly(classifier.getAllClassified());
 
-        PipelineUtils.generateAndPrintStats(classifier.getAllClassified(), "All Records", "AllRecords", experimentalFolderName);
+        PipelineUtils.generateAndPrintStats(classifier.getAllClassified(), codeIndexer, "All Records", "AllRecords", experimentalFolderName);
 
-        PipelineUtils.generateAndPrintStats(uniqueRecordsOnly, "Unique Only", "UniqueOnly", experimentalFolderName);
+        PipelineUtils.generateAndPrintStats(uniqueRecordsOnly, codeIndexer, "Unique Only", "UniqueOnly", experimentalFolderName);
     }
 
     protected static String setupExperimentalFolders(final String baseFolder) {

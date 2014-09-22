@@ -17,6 +17,7 @@ import org.apache.mahout.math.Vector;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeIndexer;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.machinelearning.tokenizing.StandardTokenizerIterable;
 import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearningConfiguration;
@@ -27,6 +28,7 @@ import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearnin
  */
 public class VectorFactory {
 
+    private CodeIndexer index;
     private SimpleVectorEncoder vectorEncoder;
     private int numFeatures;
 
@@ -35,6 +37,7 @@ public class VectorFactory {
      */
     public VectorFactory() {
 
+        index = new CodeIndexer();
         vectorEncoder = new SimpleVectorEncoder();
         numFeatures = 0;
     }
@@ -44,8 +47,9 @@ public class VectorFactory {
      *
      * @param bucket bucket
      */
-    public VectorFactory(final Bucket bucket) {
+    public VectorFactory(final Bucket bucket, final CodeIndexer index) {
 
+        this.index = index;
         vectorEncoder = new SimpleVectorEncoder();
         for (Record record : bucket) {
             for (String descriptionTerm : record.getDescription()) {
@@ -101,7 +105,7 @@ public class VectorFactory {
         Set<Classification> goldStandardCodeTriple = record.getGoldStandardClassificationSet();
 
         for (Classification codeTriple : goldStandardCodeTriple) {
-            Integer id = codeTriple.getCode().getID();
+            Integer id = index.getID(codeTriple.getCode());
             vectors.add(createNamedVectorFromString(codeTriple.getTokenSet().toString(), id.toString()));
         }
 
@@ -182,5 +186,10 @@ public class VectorFactory {
 
         numFeatures = in.readInt();
         vectorEncoder.readFields(in);
+    }
+
+    public CodeIndexer getCodeIndexer() {
+
+        return index;
     }
 }

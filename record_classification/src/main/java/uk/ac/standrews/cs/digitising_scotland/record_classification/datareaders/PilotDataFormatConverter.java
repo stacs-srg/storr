@@ -11,6 +11,7 @@ import java.util.List;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.CODOrignalData;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeDictionary;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.exceptions.InputFormatException;
 
@@ -54,7 +55,7 @@ public final class PilotDataFormatConverter extends AbstractFormatConverter {
      * @throws IOException Signals that an I/O exception has occurred.
      * @throws InputFormatException the input format exception
      */
-    public List<Record> convert(final File inputFile) throws IOException, InputFormatException {
+    public List<Record> convert(final File inputFile, final CodeDictionary codeDictionary) throws IOException, InputFormatException {
 
         BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(inputFile), CHARSET_NAME));
 

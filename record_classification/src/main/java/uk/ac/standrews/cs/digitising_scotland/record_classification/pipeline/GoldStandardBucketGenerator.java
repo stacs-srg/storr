@@ -9,6 +9,8 @@ import org.slf4j.LoggerFactory;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datareaders.AbstractFormatConverter;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datareaders.LongFormatConverter;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeDictionary;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeNotValidException;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.RecordFactory;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.exceptions.InputFormatException;
@@ -26,6 +28,13 @@ public class GoldStandardBucketGenerator {
      */
     private static AbstractFormatConverter formatConverter = new LongFormatConverter();
 
+    private CodeDictionary codeDictionary;
+
+    public GoldStandardBucketGenerator(final CodeDictionary codeDictionary) {
+
+        this.codeDictionary = codeDictionary;
+    }
+
     /**
      * Generates a bucket of training records (with gold standard codes) from the given training file.
      * The file should be either in the short NRS format or in the format the matches the {@link AbstractFormatConverter}
@@ -35,14 +44,11 @@ public class GoldStandardBucketGenerator {
      * @return the bucket that will be populated
      * @throws IOException Signals that an I/O exception has occurred.
      * @throws InputFormatException the input format exception
+     * @throws CodeNotValidException 
      */
-    public Bucket generate(final File trainingFile) throws IOException, InputFormatException {
+    public Bucket generate(final File trainingFile) throws IOException, InputFormatException, CodeNotValidException {
 
         LOGGER.info("********** Generating Training Bucket **********");
-
-        Bucket tempBucketForCodeMapCreation = createBucketOfRecords(trainingFile);
-
-        PipelineUtils.generateActualCodeMappings(tempBucketForCodeMapCreation);
 
         return createBucketOfRecords(trainingFile);
 
@@ -58,18 +64,19 @@ public class GoldStandardBucketGenerator {
      * @return the bucket to be populated
      * @throws IOException Signals that an I/O exception has occurred.
      * @throws InputFormatException the input format exception
+     * @throws CodeNotValidException 
      */
-    private static Bucket createBucketOfRecords(final File training) throws IOException, InputFormatException {
+    private Bucket createBucketOfRecords(final File training) throws IOException, InputFormatException, CodeNotValidException {
 
         Bucket bucket = new Bucket();
         Iterable<Record> records;
         boolean longFormat = PipelineUtils.checkFileType(training);
 
         if (longFormat) {
-            records = formatConverter.convert(training);
+            records = formatConverter.convert(training, codeDictionary);
         }
         else {
-            records = RecordFactory.makeCodedRecordsFromFile(training);
+            records = RecordFactory.makeCodedRecordsFromFile(training, codeDictionary);
         }
 
         bucket.addCollectionOfRecords(records);

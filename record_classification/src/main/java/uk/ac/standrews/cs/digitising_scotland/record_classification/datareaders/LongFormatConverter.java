@@ -13,9 +13,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.CODOrignalData;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeIndexer;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeDictionary;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeNotValidException;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.exceptions.InputFormatException;
@@ -60,8 +61,9 @@ public final class LongFormatConverter extends AbstractFormatConverter {
      * @return the list of records
      * @throws IOException Signals that an I/O exception has occurred.
      * @throws InputFormatException the input format exception
+     * @throws CodeNotValidException 
      */
-    public List<Record> convert(final File inputFile) throws IOException, InputFormatException {
+    public List<Record> convert(final File inputFile, final CodeDictionary codeDictionary) throws IOException, InputFormatException, CodeNotValidException {
 
         BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(inputFile), CHARSET_NAME));
 
@@ -82,7 +84,7 @@ public final class LongFormatConverter extends AbstractFormatConverter {
 
             CODOrignalData originalData = new CODOrignalData(description, year, ageGroup, sex, imageQuality, inputFile.getName());
             HashSet<Classification> goldStandard = new HashSet<>();
-            populateGoldStandardSet(lineSplit, goldStandard);
+            populateGoldStandardSet(codeDictionary, lineSplit, goldStandard);
 
             Record r = new Record(id, originalData);
             r.getOriginalData().setGoldStandardClassification(goldStandard);
@@ -104,8 +106,9 @@ public final class LongFormatConverter extends AbstractFormatConverter {
      *
      * @param lineSplit the line split
      * @param goldStandard the gold standard
+     * @throws CodeNotValidException 
      */
-    private static void populateGoldStandardSet(final String[] lineSplit, final HashSet<Classification> goldStandard) {
+    private static void populateGoldStandardSet(final CodeDictionary codeDictionary, final String[] lineSplit, final HashSet<Classification> goldStandard) throws CodeNotValidException {
 
         final int start_pos = 6;
         final int end_pos = 31;
@@ -116,7 +119,7 @@ public final class LongFormatConverter extends AbstractFormatConverter {
                 int causeIdentifier = Integer.parseInt(lineSplit[i]);
 
                 if (causeIdentifier != start_pos) {
-                    Code code = CodeIndexer.getInstance().getCode(removeQuotes(lineSplit[i + 2]));
+                    Code code = codeDictionary.getCode(removeQuotes(lineSplit[i + 2]));
 
                     TokenSet tokenSet = new TokenSet(lineSplit[causeIdentifier]);
 

@@ -30,9 +30,9 @@ import org.slf4j.LoggerFactory;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Pair;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeIndexer;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.vectors.CustomVectorWriter;
@@ -326,7 +326,7 @@ public class NaiveBayesClassifier extends AbstractClassifier {
      */
     private Code getCode(final int resultOfClassification) throws IOException {
 
-        return CodeIndexer.getInstance().getCode(resultOfClassification);
+        return vectorFactory.getCodeIndexer().getCode(resultOfClassification);
 
     }
 
@@ -375,7 +375,7 @@ public class NaiveBayesClassifier extends AbstractClassifier {
         Pair<Code, Double> pair;
         NamedVector vector = vectorFactory.createNamedVectorFromString(tokenSet.toString(), "unknown");
         int classificationID = getClassifier().classifyFull(vector).maxValueIndex();
-        Code code = CodeIndexer.getInstance().getCode(classificationID);
+        Code code = vectorFactory.getCodeIndexer().getCode(classificationID);
         // double confidence =
         // Math.exp(getClassifier().logLikelihood(classificationID, vector));
         // TODO THIS WONT WORK - Baysian classifier don't give real confidence measures - Need to fudge it

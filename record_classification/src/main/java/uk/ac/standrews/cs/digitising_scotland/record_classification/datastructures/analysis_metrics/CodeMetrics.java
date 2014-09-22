@@ -12,6 +12,8 @@ import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
  */
 public class CodeMetrics {
 
+    private CodeIndexer index;
+
     /** The false positive. */
     private double[] falsePositive;
 
@@ -65,15 +67,16 @@ public class CodeMetrics {
      *
      * @param confusionMatrix the confusion matrix
      */
-    public CodeMetrics(final AbstractConfusionMatrix confusionMatrix) {
+    public CodeMetrics(final AbstractConfusionMatrix confusionMatrix, final CodeIndexer codeIndex) {
 
+        this.index = codeIndex;
         this.confusionMatrix = confusionMatrix;
         falsePositive = confusionMatrix.getFalsePositive();
         trueNegative = confusionMatrix.getTrueNegative();
         falseNegative = confusionMatrix.getFalseNegative();
         truePositive = confusionMatrix.getTruePositive();
 
-        numberOfOutputClasses = CodeIndexer.getInstance().getNumberOfOutputClasses();
+        numberOfOutputClasses = index.getNumberOfOutputClasses();
         precision = new double[numberOfOutputClasses];
         recall = new double[numberOfOutputClasses];
         specificity = new double[numberOfOutputClasses];
@@ -348,7 +351,7 @@ public class CodeMetrics {
      */
     public String getStatsPerCode(final Code code) {
 
-        return getStatsPerCode(code.getID());
+        return getStatsPerCode(index.getID(code));
     }
 
     /**
@@ -360,7 +363,7 @@ public class CodeMetrics {
     public String getStatsPerCode(final int id) {
 
         StringBuilder sb = new StringBuilder();
-        sb.append(CodeIndexer.getInstance().getCode(id).getCodeAsString()).append(", ");
+        sb.append(index.getCode(id).getCodeAsString()).append(", ");
         sb.append(truePositive[id]).append(", ");
         sb.append(trueNegative[id]).append(", ");
         sb.append(falsePositive[id]).append(", ");

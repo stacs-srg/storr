@@ -9,6 +9,8 @@ import org.slf4j.LoggerFactory;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.AbstractClassifier;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.BucketFilter;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeDictionary;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeIndexer;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.vectors.VectorFactory;
 import uk.ac.standrews.cs.digitising_scotland.tools.Timer;
@@ -74,15 +76,18 @@ public final class TrainClassifyOneFile {
         experimentalFolderName = PipelineUtils.setupExperimentalFolders("Experiments");
 
         parseInput(args);
+        File codeDictionaryFile = null; //FIXME
+        CodeDictionary codeDictionary = new CodeDictionary(codeDictionaryFile);
 
-        GoldStandardBucketGenerator generator = new GoldStandardBucketGenerator();
+        GoldStandardBucketGenerator generator = new GoldStandardBucketGenerator(codeDictionary);
         Bucket allRecords = generator.generate(goldStandard);
 
         randomlyAssignToTrainingAndPrediction(allRecords);
 
         PipelineUtils.printStatusUpdate();
 
-        ClassifierTrainer trainer = PipelineUtils.train(trainingBucket, experimentalFolderName);
+        CodeIndexer codeIndex = new CodeIndexer(allRecords);
+        ClassifierTrainer trainer = PipelineUtils.train(trainingBucket, experimentalFolderName, codeIndex);
 
         ClassificationHolder classifier = PipelineUtils.classify(allRecords, predictionBucket, trainer);
 
@@ -91,7 +96,7 @@ public final class TrainClassifyOneFile {
 
         PipelineUtils.writeRecords(classifier.getAllClassified(), experimentalFolderName);
 
-        generateAndPrintStatistics(classifier);
+        generateAndPrintStatistics(classifier, codeIndex);
 
         timer.stop();
 
@@ -120,15 +125,15 @@ public final class TrainClassifyOneFile {
         }
     }
 
-    private static void generateAndPrintStatistics(final ClassificationHolder classifier) throws IOException {
+    private static void generateAndPrintStatistics(final ClassificationHolder classifier, CodeIndexer codeIndexer) throws IOException {
 
         LOGGER.info("********** Output Stats **********");
 
         final Bucket uniqueRecordsOnly = BucketFilter.uniqueRecordsOnly(classifier.getAllClassified());
 
-        PipelineUtils.generateAndPrintStats(classifier.getAllClassified(), "All Records", "AllRecords", experimentalFolderName);
+        PipelineUtils.generateAndPrintStats(classifier.getAllClassified(), codeIndexer, "All Records", "AllRecords", experimentalFolderName);
 
-        PipelineUtils.generateAndPrintStats(uniqueRecordsOnly, "Unique Only", "UniqueOnly", experimentalFolderName);
+        PipelineUtils.generateAndPrintStats(uniqueRecordsOnly, codeIndexer, "Unique Only", "UniqueOnly", experimentalFolderName);
     }
 
     private static void randomlyAssignToTrainingAndPrediction(final Bucket bucket) {

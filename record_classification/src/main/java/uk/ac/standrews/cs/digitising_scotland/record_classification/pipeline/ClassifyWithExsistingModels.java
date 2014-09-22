@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.AbstractClassifier;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeDictionary;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.vectors.VectorFactory;
 import uk.ac.standrews.cs.digitising_scotland.tools.Timer;
@@ -70,7 +71,9 @@ public final class ClassifyWithExsistingModels {
 
         parseInput(args);
 
-        GoldStandardBucketGenerator generator = new GoldStandardBucketGenerator();
+        File codeDictionaryFile = null; //FIXME
+        CodeDictionary codeDictionary = new CodeDictionary(codeDictionaryFile);
+        GoldStandardBucketGenerator generator = new GoldStandardBucketGenerator(codeDictionary);
         Bucket allRecords = generator.generate(goldStandard);
 
         PipelineUtils.printStatusUpdate();
@@ -84,7 +87,7 @@ public final class ClassifyWithExsistingModels {
 
         PipelineUtils.writeRecords(classifier.getAllClassified(), experimentalFolderName);
 
-        PipelineUtils.generateAndPrintStatistics(classifier, experimentalFolderName);
+        PipelineUtils.generateAndPrintStatistics(classifier, trainer.getVectorFactory().getCodeIndexer(), experimentalFolderName);
 
         timer.stop();
 

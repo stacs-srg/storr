@@ -20,9 +20,9 @@ import org.slf4j.LoggerFactory;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.AbstractClassifier;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Pair;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeIndexer;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.vectors.VectorFactory;
@@ -40,9 +40,9 @@ import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearnin
 public class OLRClassifier extends AbstractClassifier {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(OLRClassifier.class);
-
     private OLRCrossFold model = null;
     private final Properties properties;
+    private CodeIndexer index;
 
     /** The Constant MODELPATH. Default is target/olrModelPath, but can be overwritten. */
     private static String modelPath = "target/olrModelPath";
@@ -63,6 +63,7 @@ public class OLRClassifier extends AbstractClassifier {
     public OLRClassifier(final VectorFactory vectorFactory) {
 
         super(vectorFactory);
+        index = vectorFactory.getCodeIndexer();
         model = new OLRCrossFold();
         properties = MachineLearningConfiguration.getDefaultProperties();
     }
@@ -153,7 +154,7 @@ public class OLRClassifier extends AbstractClassifier {
 
         for (NamedVector vector : vectorList) {
             Integer classificationID = model.classifyFull(vector).maxValueIndex();
-            Code code = CodeIndexer.getInstance().getCode(classificationID);
+            Code code = index.getCode(classificationID);
             double confidence = Math.exp(model.logLikelihood(classificationID, vector)); //TODO test
             codeTripleSet.add(new Classification(code, new TokenSet(record.getDescription()), confidence));
         }
@@ -183,7 +184,7 @@ public class OLRClassifier extends AbstractClassifier {
         NamedVector vector = vectorFactory.createNamedVectorFromString(tokenSet.toString(), "unknown");
         Vector classifyFull = model.classifyFull(vector);
         int classificationID = classifyFull.maxValueIndex();
-        Code code = CodeIndexer.getInstance().getCode(classificationID);
+        Code code = index.getCode(classificationID);
         double confidence = Math.exp(model.logLikelihood(classificationID, vector));
         pair = new Pair<>(code, confidence);
         return pair;
@@ -214,7 +215,7 @@ public class OLRClassifier extends AbstractClassifier {
      */
     public void serializeModel(final String filename) throws IOException {
 
-        CodeIndexer.getInstance().writeCodeFactory(new File(filename + "CodeFactory"));
+        index.writeCodeFactory(new File(filename + "CodeFactory"));
         DataOutputStream out = OLR.getDataOutputStream(filename);
         write(out);
         out.close();

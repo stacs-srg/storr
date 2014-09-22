@@ -5,12 +5,20 @@ import java.io.File;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datareaders.AbstractFormatConverter;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datareaders.PilotDataFormatConverter;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeDictionary;
 
 /**
  * The Class PredictionBucketGenerator creates a bucket of records that are waiting to have predictions made on them,
  * ie they have no gold standard classifications.
  */
 public class PredictionBucketGenerator {
+
+    CodeDictionary codeDictionary;
+
+    public PredictionBucketGenerator(final CodeDictionary codeDictionary) {
+
+        this.codeDictionary = codeDictionary;
+    }
 
     /**
      * Creates the prediction bucket from the given text file. This method currently expects the data to be in the form of the
@@ -25,7 +33,7 @@ public class PredictionBucketGenerator {
         AbstractFormatConverter formatConverter = new PilotDataFormatConverter();
 
         try {
-            toClassify = new Bucket(formatConverter.convert(prediction));
+            toClassify = new Bucket(formatConverter.convert(prediction, codeDictionary));
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -47,7 +55,7 @@ public class PredictionBucketGenerator {
         Bucket toClassify = null;
 
         try {
-            toClassify = new Bucket(formatConverter.convert(prediction));
+            toClassify = new Bucket(formatConverter.convert(prediction, codeDictionary));
         }
         catch (Exception e) {
             e.printStackTrace();

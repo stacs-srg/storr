@@ -10,9 +10,10 @@ import java.util.List;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.CODOrignalData;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.OriginalData;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeIndexer;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeDictionary;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeNotValidException;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.exceptions.InputFormatException;
 
@@ -127,8 +128,9 @@ public abstract class RecordFactory {
      * @return List<Record> of {@link Record} from the file.
      * @throws IOException Signals that an I/O exception has occurred.
      * @throws InputFormatException the input format exception
+     * @throws CodeNotValidException 
      */
-    public static List<Record> makeCodedRecordsFromFile(final File inputFile) throws IOException, InputFormatException {
+    public static List<Record> makeCodedRecordsFromFile(final File inputFile, final CodeDictionary codeDictionary) throws IOException, InputFormatException, CodeNotValidException {
 
         final int yearPos = 1;
         final int imageQualityPos = 2;
@@ -150,7 +152,7 @@ public abstract class RecordFactory {
             OriginalData originalData = new CODOrignalData(description, year, ageGroup, sex, imageQuality, inputFile.getPath());
 
             for (int i = 6; i < lineSplit.length; i++) {
-                Code thisCode = CodeIndexer.getInstance().getCode(lineSplit[i].trim());
+                Code thisCode = codeDictionary.getCode(lineSplit[i].trim());
                 Record newRecord = createRecord(thisCode, originalData);
                 recordList.add(newRecord);
             }

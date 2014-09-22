@@ -3,8 +3,9 @@ package uk.ac.standrews.cs.digitising_scotland.record_classification.datastructu
 import java.util.Set;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeIndexer;
 
 /**
  * Exists to count the number of predicted codes that are too specific. i.e. A1234
@@ -20,9 +21,9 @@ public class InvertedSoftConfusionMatrix extends AbstractConfusionMatrix {
      *
      * @param bucket the bucket
      */
-    public InvertedSoftConfusionMatrix(final Bucket bucket) {
+    public InvertedSoftConfusionMatrix(final Bucket bucket, final CodeIndexer codeIndex) {
 
-        super(bucket);
+        super(bucket, codeIndex);
     }
 
     /**
@@ -36,7 +37,7 @@ public class InvertedSoftConfusionMatrix extends AbstractConfusionMatrix {
         for (Classification goldStandardCode : goldStandardTriples) {
             final Code code = goldStandardCode.getCode();
             if (hasDescendants(code, setCodeTriples)) {
-                truePositive[code.getID()]++;
+                truePositive[index.getID(code)]++;
             }
         }
     }
@@ -51,7 +52,7 @@ public class InvertedSoftConfusionMatrix extends AbstractConfusionMatrix {
 
         for (Classification predictedCode : setCodeTriples) {
             final Code code = predictedCode.getCode();
-            totalPredictions[code.getID()]++;
+            totalPredictions[index.getID(code)]++;
         }
     }
 

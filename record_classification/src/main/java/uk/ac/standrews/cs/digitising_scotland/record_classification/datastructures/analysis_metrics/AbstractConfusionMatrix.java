@@ -3,8 +3,8 @@ package uk.ac.standrews.cs.digitising_scotland.record_classification.datastructu
 import java.util.Set;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeIndexer;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeIndexer;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 
 /**
@@ -29,14 +29,17 @@ public abstract class AbstractConfusionMatrix {
     /** The true positive. */
     protected double[] truePositive;
 
+    protected CodeIndexer index;
+
     /**
      * Instantiates a new abstract confusion matrix and populated the variables.
      *
      * @param bucket the bucket of classified records.
      */
-    public AbstractConfusionMatrix(final Bucket bucket) {
+    public AbstractConfusionMatrix(final Bucket bucket, final CodeIndexer codeIndex) {
 
-        int numberOfOutputClasses = CodeIndexer.getInstance().getNumberOfOutputClasses();
+        this.index = codeIndex;
+        int numberOfOutputClasses = index.getNumberOfOutputClasses();
         totalPredictions = new double[numberOfOutputClasses];
         falsePositive = new double[numberOfOutputClasses];
         trueNegative = new double[numberOfOutputClasses];

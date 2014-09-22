@@ -7,6 +7,8 @@ import org.slf4j.LoggerFactory;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.AbstractClassifier;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeDictionary;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeIndexer;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.vectors.VectorFactory;
 import uk.ac.standrews.cs.digitising_scotland.tools.Timer;
@@ -70,15 +72,20 @@ public final class PIlot {
 
         parseInput(args);
 
-        GoldStandardBucketGenerator trainingGenerator = new GoldStandardBucketGenerator();
+        File codeDictionaryFile = null;
+        CodeDictionary codeDictionary = new CodeDictionary(codeDictionaryFile);
+
+        GoldStandardBucketGenerator trainingGenerator = new GoldStandardBucketGenerator(codeDictionary);
         Bucket trainingBucket = trainingGenerator.generate(training);
 
-        PredictionBucketGenerator predictionBucketGenerator = new PredictionBucketGenerator();
+        CodeIndexer codeIndex = new CodeIndexer(trainingBucket);
+
+        PredictionBucketGenerator predictionBucketGenerator = new PredictionBucketGenerator(codeDictionary);
         Bucket predictionBucket = predictionBucketGenerator.createPredictionBucket(prediction);
 
         PipelineUtils.printStatusUpdate();
 
-        ClassifierTrainer trainer = PipelineUtils.train(trainingBucket, experimentalFolderName);
+        ClassifierTrainer trainer = PipelineUtils.train(trainingBucket, experimentalFolderName, codeIndex);
 
         ClassificationHolder classifier = PipelineUtils.classify(trainingBucket, predictionBucket, trainer);
 
@@ -87,7 +94,7 @@ public final class PIlot {
 
         PipelineUtils.writeRecords(classifier.getAllClassified(), experimentalFolderName);
 
-        PipelineUtils.generateAndPrintStatistics(classifier, experimentalFolderName);
+        PipelineUtils.generateAndPrintStatistics(classifier, codeIndex, experimentalFolderName);
 
         timer.stop();
 

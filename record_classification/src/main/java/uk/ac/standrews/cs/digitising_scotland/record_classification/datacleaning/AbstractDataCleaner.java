@@ -21,6 +21,8 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datareaders.
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datareaders.LongFormatConverter;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeDictionary;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeNotValidException;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.exceptions.InputFormatException;
@@ -37,14 +39,13 @@ import com.google.common.collect.Multiset;
  */
 public abstract class AbstractDataCleaner {
 
+    private AbstractFormatConverter formatConverter = new LongFormatConverter();
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractDataCleaner.class);
 
     /**
      * The Constant TOKENLIMIT. The default is 4 but this can be changed by calling setTokenLimit.
      */
     private static int tokenLimit = 4;
-
-    private AbstractFormatConverter formatConverter = new LongFormatConverter();
 
     /**
      * The word multiset.
@@ -68,13 +69,16 @@ public abstract class AbstractDataCleaner {
      *             states the frequency of occurrence below which we start correcting tokens.
      * @throws IOException Indicates an IO Error
      * @throws InputFormatException Indicates an error with the input file format
+     * @throws CodeNotValidException 
      */
-    public void runOnFile(final String... args) throws IOException, InputFormatException {
+    public void runOnFile(final String... args) throws IOException, InputFormatException, CodeNotValidException {
 
         File file = new File(args[0]);
         File correctedFile = new File(args[1]);
         setTokenLimit(args);
-        List<Record> records = formatConverter.convert(file);
+        File codeDictionaryFile = null; //FIXME
+        CodeDictionary CodeDictionary = new CodeDictionary(codeDictionaryFile);
+        List<Record> records = formatConverter.convert(file, CodeDictionary);
         Bucket bucket = new Bucket(records);
         buildTokenOccurrenceMap(bucket);
         buildCorrectionMap(bucket);
