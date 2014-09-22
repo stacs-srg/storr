@@ -15,7 +15,8 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Pair;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeIndexer;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeDictionary;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeNotValidException;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenClassificationCache;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
@@ -29,11 +30,13 @@ import com.google.common.collect.Multiset;
  */
 public class ResolverMkIITest {
 
+    private static CodeDictionary codeDictionary;
+
     @Before
-    public void setUp() {
+    public void setUp() throws IOException {
 
         File codeFile = new File(getClass().getResource("/CodeFactoryTestFile.txt").getFile());
-        CodeIndexer.getInstance().loadDictionary(codeFile);
+        codeDictionary = new CodeDictionary(codeFile);
     }
 
     /**
@@ -73,22 +76,23 @@ public class ResolverMkIITest {
 
     /**
      * Removes the ancestors test.
+     * @throws CodeNotValidException 
      */
     @Test
-    public void removeAncestorsTest() {
+    public void removeAncestorsTest() throws CodeNotValidException {
 
         Set<Code> codes = new HashSet<>();
-        codes.add(CodeIndexer.getInstance().getCode("95120"));
-        codes.add(CodeIndexer.getInstance().getCode("9500"));
-        codes.add(CodeIndexer.getInstance().getCode("95240"));
-        codes.add(CodeIndexer.getInstance().getCode("952"));
+        codes.add(codeDictionary.getCode("95120"));
+        codes.add(codeDictionary.getCode("9500"));
+        codes.add(codeDictionary.getCode("95240"));
+        codes.add(codeDictionary.getCode("952"));
 
         Set<Code> ancestorsRemoved = ResolverUtils.removeAncestors(codes);
 
         Assert.assertEquals(3, ancestorsRemoved.size());
 
-        Assert.assertTrue(codes.contains(CodeIndexer.getInstance().getCode("952")));
-        Assert.assertFalse(ancestorsRemoved.contains(CodeIndexer.getInstance().getCode("952")));
+        Assert.assertTrue(codes.contains(codeDictionary.getCode("952")));
+        Assert.assertFalse(ancestorsRemoved.contains(codeDictionary.getCode("952")));
     }
 
     /**
@@ -129,15 +133,16 @@ public class ResolverMkIITest {
      * Classification cache.
      *
      * @throws IOException Signals that an I/O exception has occurred.
+     * @throws CodeNotValidException 
      */
     @Test
-    public void classificationCache() throws IOException {
+    public void classificationCache() throws IOException, CodeNotValidException {
 
         TokenClassificationCache cache = new TokenClassificationCache(new mockClassifier());
         TokenSet tokenSet0 = new TokenSet("brown dog");
         TokenSet tokenSet1 = new TokenSet("jumped");
 
-        Code code = CodeIndexer.getInstance().getCode(0);
+        Code code = codeDictionary.getCode("2100");
         Double d = 0.5;
         Pair<Code, Double> codeDoublePair = new Pair<>(code, d);
 
@@ -174,7 +179,14 @@ public class ResolverMkIITest {
         @Override
         public Pair<Code, Double> classify(final TokenSet string) throws IOException {
 
-            Code code = CodeIndexer.getInstance().getCode(0);
+            Code code = null;
+            try {
+                code = codeDictionary.getCode("2100");
+            }
+            catch (CodeNotValidException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
             Double d = 0.5;
             return new Pair<>(code, d);
         }

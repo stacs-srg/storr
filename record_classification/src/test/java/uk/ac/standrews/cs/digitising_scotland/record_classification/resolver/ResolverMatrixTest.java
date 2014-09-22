@@ -1,6 +1,7 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.resolver;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -10,9 +11,11 @@ import org.junit.Before;
 import org.junit.Test;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Pair;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeIndexer;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeDictionary;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeIndexer;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeNotValidException;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
 
 // TODO: Auto-generated Javadoc
@@ -26,6 +29,8 @@ public class ResolverMatrixTest {
     /** The ResolverMatrix. */
     private ResolverMatrix matrix;
 
+    private CodeDictionary codeDictionary;
+
     /**
      * Setup, run before each test. Creates a new {@link ResolverMatrix} and sets the {@link CodeIndexer} to use
      * a compatible code map.
@@ -33,7 +38,15 @@ public class ResolverMatrixTest {
     @Before
     public void setup() {
 
-        CodeIndexer.getInstance().loadDictionary(new File("src/test/resources/CodeFactoryTestFile.txt"));
+        File codeDictionaryFile = new File("src/test/resources/CodeFactoryTestFile.txt");
+        try {
+            codeDictionary = new CodeDictionary(codeDictionaryFile);
+        }
+        catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
         matrix = new ResolverMatrix();
 
     }
@@ -41,12 +54,13 @@ public class ResolverMatrixTest {
     /**
      * Tests that s {@link Classification} is a valid subset of another set using ResolverUtils.tripleSetIsValid().
      * Should pass with ResolverUtils.tripleSetIsValid returning true.
+     * @throws CodeNotValidException 
      */
     @Test
-    public void tripleSetIsValidTest() {
+    public void tripleSetIsValidTest() throws CodeNotValidException {
 
         TokenSet originalSet = new TokenSet("the brown dog brown dog dog");
-        Code code = CodeIndexer.getInstance().getCode(0);
+        Code code = codeDictionary.getCode("2100");
         Classification codeTriple = new Classification(code, new TokenSet("brown dog"), 1.0);
         Set<Classification> tripleSet = new HashSet<>();
         tripleSet.add(codeTriple);
@@ -56,12 +70,13 @@ public class ResolverMatrixTest {
     /**
      * Tests that s {@link Classification} is a valid subset of another set using ResolverUtils.tripleSetIsValid().
      * Should pass with ResolverUtils.tripleSetIsValid returning false.
+     * @throws CodeNotValidException 
      */
     @Test
-    public void tripleSetIsValidTest2() {
+    public void tripleSetIsValidTest2() throws CodeNotValidException {
 
         TokenSet originalSet = new TokenSet("the brown dog brown dog dog");
-        Code code = CodeIndexer.getInstance().getCode(0);
+        Code code = codeDictionary.getCode("2100");
         Classification codeTriple = new Classification(code, new TokenSet("the the the brown dog"), 1.0);
         Set<Classification> tripleSet = new HashSet<>();
         tripleSet.add(codeTriple);
@@ -71,12 +86,13 @@ public class ResolverMatrixTest {
     /**
      * Tests that s {@link Classification} is a valid subset of another set using ResolverUtils.tripleSetIsValid().
      * Should pass with ResolverUtils.tripleSetIsValid returning true.
+     * @throws CodeNotValidException 
      */
     @Test
-    public void tripleSetIsValidTest3() {
+    public void tripleSetIsValidTest3() throws CodeNotValidException {
 
         TokenSet originalSet = new TokenSet("the brown dog brown dog dog");
-        Code code = CodeIndexer.getInstance().getCode(0);
+        Code code = codeDictionary.getCode("2100");
         Classification codeTriple = new Classification(code, new TokenSet("the brown dog brown dog dog"), 1.0);
         Set<Classification> tripleSet = new HashSet<>();
         tripleSet.add(codeTriple);
@@ -86,12 +102,13 @@ public class ResolverMatrixTest {
     /**
      * Tests that s {@link Classification} is a valid subset of another set using ResolverUtils.tripleSetIsValid().
      * Should pass with ResolverUtils.tripleSetIsValid returning false.
+     * @throws CodeNotValidException 
      */
     @Test
-    public void tripleSetIsValidTest4() {
+    public void tripleSetIsValidTest4() throws CodeNotValidException {
 
         TokenSet originalSet = new TokenSet("the brown dog brown dog dog");
-        Code code = CodeIndexer.getInstance().getCode(0);
+        Code code = codeDictionary.getCode("2100");
         Classification codeTriple = new Classification(code, new TokenSet("the brown dog brown dog dog bat"), 1.0);
         Set<Classification> tripleSet = new HashSet<>();
         tripleSet.add(codeTriple);
@@ -106,18 +123,18 @@ public class ResolverMatrixTest {
     @Test
     public void getValidCodeTriplesTest() {
 
-        addMockEntryToMatrix("brown", 0, 0.5);
-        addMockEntryToMatrix("white", 0, 0.85);
-        addMockEntryToMatrix("brown", 1, 0.81);
-        addMockEntryToMatrix("white", 1, 0.87);
-        addMockEntryToMatrix("brown", 3, 0.87);
-        addMockEntryToMatrix("white", 3, 0.8);
-        addMockEntryToMatrix("brown", 4, 0.85);
-        addMockEntryToMatrix("white", 4, 0.83);
+        addMockEntryToMatrix("brown", "2100", 0.5);
+        addMockEntryToMatrix("white", "2100", 0.85);
+        addMockEntryToMatrix("brown", "2200", 0.81);
+        addMockEntryToMatrix("white", "2200", 0.87);
+        addMockEntryToMatrix("brown", "4215", 0.87);
+        addMockEntryToMatrix("white", "4215", 0.8);
+        addMockEntryToMatrix("brown", "6700", 0.85);
+        addMockEntryToMatrix("white", "6700", 0.83);
         TokenSet originalSet = new TokenSet("brown white");
         List<Set<Classification>> validTriples = matrix.getValidCodeTriples(originalSet);
         Assert.assertEquals(20, validTriples.size());
-        addMockEntryToMatrix("blue", 2, 0.83);
+        addMockEntryToMatrix("blue", "3000", 0.83);
         TokenSet originalSet1 = new TokenSet("brown white blue");
         validTriples = matrix.getValidCodeTriples(originalSet1);
         Assert.assertEquals(41, validTriples.size());
@@ -138,10 +155,10 @@ public class ResolverMatrixTest {
     @Test
     public void resolveHierarchiesTest() {
 
-        addMockEntryToMatrix("brown dog", 0, 0.5);
-        addMockEntryToMatrix("white dog", 0, 0.85);
-        addMockEntryToMatrix("brown dog", 1, 0.81);
-        addMockEntryToMatrix("white dog", 1, 0.87);
+        addMockEntryToMatrix("brown dog", "2100", 0.5);
+        addMockEntryToMatrix("white dog", "2100", 0.85);
+        addMockEntryToMatrix("brown dog", "2200", 0.81);
+        addMockEntryToMatrix("white dog", "2200", 0.87);
         addMockEntryToMatrix("brown dog", "952", 0.87);
         addMockEntryToMatrix("white dog", "952", 0.8);
         addMockEntryToMatrix("brown dog", "95240", 0.85);
@@ -157,10 +174,10 @@ public class ResolverMatrixTest {
     @Test
     public void chopBelowConfidenceTest() {
 
-        addMockEntryToMatrix("brown dog", 0, 0.5);
-        addMockEntryToMatrix("white dog", 0, 0.85);
-        addMockEntryToMatrix("brown dog", 1, 0.81);
-        addMockEntryToMatrix("white dog", 1, 0.87);
+        addMockEntryToMatrix("brown dog", "2100", 0.5);
+        addMockEntryToMatrix("white dog", "2100", 0.85);
+        addMockEntryToMatrix("brown dog", "2200", 0.81);
+        addMockEntryToMatrix("white dog", "2200", 0.87);
         Assert.assertEquals(4, matrix.complexity());
         matrix.chopBelowConfidence(0.7);
         Assert.assertEquals(2, matrix.complexity());
@@ -172,28 +189,14 @@ public class ResolverMatrixTest {
     @Test
     public void complexityTest() {
 
-        addMockEntryToMatrix("brown dog", 0, 0.8);
+        addMockEntryToMatrix("brown dog", "2100", 0.8);
         Assert.assertEquals(1, matrix.complexity());
-        addMockEntryToMatrix("white dog", 0, 0.85);
+        addMockEntryToMatrix("white dog", "2100", 0.85);
         Assert.assertEquals(2, matrix.complexity());
-        addMockEntryToMatrix("brown dog", 1, 0.81);
+        addMockEntryToMatrix("brown dog", "2200", 0.81);
         Assert.assertEquals(2, matrix.complexity());
-        addMockEntryToMatrix("white dog", 1, 0.87);
+        addMockEntryToMatrix("white dog", "2200", 0.87);
         Assert.assertEquals(4, matrix.complexity());
-    }
-
-    /**
-     * Adds the mock entry to matrix.
-     *
-     * @param string the string
-     * @param id the id
-     * @param conf the conf
-     */
-    private void addMockEntryToMatrix(final String string, final int id, final double conf) {
-
-        TokenSet tokenSet = new TokenSet(string);
-        Code code = CodeIndexer.getInstance().getCode(id);
-        matrix.add(tokenSet, new Pair<>(code, conf));
     }
 
     /**
@@ -206,8 +209,14 @@ public class ResolverMatrixTest {
     private void addMockEntryToMatrix(final String string, final String codeAsString, final double conf) {
 
         TokenSet tokenSet = new TokenSet(string);
-        Code code = CodeIndexer.getInstance().getCode(codeAsString);
+        Code code = null;
+        try {
+            code = codeDictionary.getCode(codeAsString);
+        }
+        catch (CodeNotValidException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
         matrix.add(tokenSet, new Pair<>(code, conf));
     }
-
 }

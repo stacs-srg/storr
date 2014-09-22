@@ -7,6 +7,7 @@ import org.junit.Test;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.olr.OLR;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.olr.OLRClassifier;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeIndexer;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.vectors.VectorFactory;
 
 public class TrainOnNewDataTest {
@@ -18,7 +19,8 @@ public class TrainOnNewDataTest {
         OLR olrModel = new OLR();
         Matrix beta = olrModel.getBeta();
         Bucket bucket = null;
-        VectorFactory vectorFactory = new VectorFactory(bucket);
+        CodeIndexer codeIndexer = new CodeIndexer();
+        VectorFactory vectorFactory = new VectorFactory(bucket, codeIndexer);
         OLRClassifier olrClassifer = new OLRClassifier(vectorFactory);
 
         Bucket newBucket = null;
