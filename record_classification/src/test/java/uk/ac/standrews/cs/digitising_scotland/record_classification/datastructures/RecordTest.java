@@ -8,7 +8,6 @@ import java.util.Set;
 
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
@@ -23,7 +22,6 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.exceptions.I
  * The Class RecordTest tests the creation of Records and their subclasses, parameters etc.
  * 
  */
-@Ignore("Needs to be updated to new CodeIndex/DictionaryFormat")
 //FIXME
 public class RecordTest {
 
