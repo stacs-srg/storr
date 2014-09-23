@@ -147,7 +147,6 @@ public class OLRPool implements Runnable {
         }
         catch (InterruptedException e) {
             LOGGER.error(e.getMessage(), e);
-            e.printStackTrace();
         }
     }
 

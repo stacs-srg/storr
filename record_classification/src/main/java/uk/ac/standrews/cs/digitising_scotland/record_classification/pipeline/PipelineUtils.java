@@ -99,7 +99,7 @@ public final class PipelineUtils {
 
         if (executeCommand.equals("RScript required but it's not installed.  Aborting.\n")) {
             LOGGER.error("Stats not generated. R or RScript is not installed.");
-            System.exit(2);
+            // System.exit(2);FIXME check if this exit is really required.
             return false;
         }
         return true;
@@ -197,7 +197,7 @@ public final class PipelineUtils {
 
         if (!file.exists()) {
             System.err.println(file.getAbsolutePath() + " does not exsist. Exiting");
-            System.exit(1);
+            System.exit(2);
         }
 
     }

@@ -13,11 +13,14 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.AbstractClassifier;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Pair;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
 
@@ -27,6 +30,8 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
  *
  */
 public class ExactMatchClassifier extends AbstractClassifier {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ExactMatchClassifier.class);
 
     private Map<TokenSet, Set<Classification>> lookupTable;
     private String modelFileName = "target/lookupTable";
@@ -186,10 +191,10 @@ public class ExactMatchClassifier extends AbstractClassifier {
             classifier = readModel(modelFileName);
         }
         catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            LOGGER.error("Could not get model from default location. Class not found exception.", e.getException());
         }
         catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error("Could not get model from default location. IOException.", e.getCause());
         }
         return classifier;
     }

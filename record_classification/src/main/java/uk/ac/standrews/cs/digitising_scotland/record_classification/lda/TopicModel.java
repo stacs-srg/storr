@@ -113,13 +113,13 @@ public class TopicModel {
             outputFile = modelTopics(input.getAbsolutePath(), output.getAbsolutePath());
         }
         catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e.getCause());
         }
         catch (FileNotFoundException e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e.getCause());
         }
         catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e.getCause());
         }
         return outputFile;
     }
@@ -342,7 +342,7 @@ public class TopicModel {
                 bufferedReader.close();
             }
             catch (IOException e) {
-                e.printStackTrace();
+                LOGGER.error(e.getMessage(), e.getCause());
             }
         }
     }

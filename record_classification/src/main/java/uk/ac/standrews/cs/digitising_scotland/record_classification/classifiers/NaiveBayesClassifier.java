@@ -81,7 +81,6 @@ public class NaiveBayesClassifier extends AbstractClassifier {
         }
         catch (IOException e) {
             LOGGER.error(e.getMessage(), e);
-            e.printStackTrace();
         }
     }
 
@@ -360,8 +359,7 @@ public class NaiveBayesClassifier extends AbstractClassifier {
             model = getModel();
         }
         catch (IOException e) {
-            LOGGER.error(e.getMessage(), e);
-            e.printStackTrace();
+            LOGGER.error("Could not get model from default location. IOExcepion has occured\n" + e.getMessage(), e);
         }
         return this;
     }

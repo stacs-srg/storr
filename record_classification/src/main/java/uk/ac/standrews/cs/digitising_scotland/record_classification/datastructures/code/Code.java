@@ -101,16 +101,16 @@ public class Code implements java.io.Serializable {
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
 
-        if (this == obj) return true;
-        if (obj == null) return false;
-        if (getClass() != obj.getClass()) return false;
+        if (this == obj) { return true; }
+        if (obj == null) { return false; }
+        if (getClass() != obj.getClass()) { return false; }
         Code other = (Code) obj;
         if (code == null) {
-            if (other.code != null) return false;
+            if (other.code != null) { return false; }
         }
-        else if (!code.equals(other.code)) return false;
+        else if (!code.equals(other.code)) { return false; }
         return true;
     }
 
