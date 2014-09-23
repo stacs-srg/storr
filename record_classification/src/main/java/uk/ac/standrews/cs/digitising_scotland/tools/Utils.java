@@ -26,8 +26,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.writers.DataClerkingWriter;
 import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
@@ -190,7 +190,7 @@ public final class Utils {
                 }
                 catch (IOException e) {
 
-                    e.printStackTrace();
+                    LOGGER.error(e.getMessage(), e.getCause());
                 }
             }
             else {
@@ -198,7 +198,7 @@ public final class Utils {
                     FileUtils.moveDirectory(toMove[i], toHere);
                 }
                 catch (IOException e) {
-                    e.printStackTrace();
+                    LOGGER.error(e.getMessage(), e.getCause());
                 }
             }
         }
@@ -281,7 +281,7 @@ public final class Utils {
             out.close();
         }
         catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e.getCause());
         }
     }
 
@@ -303,7 +303,7 @@ public final class Utils {
             out.close();
         }
         catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e.getCause());
         }
 
     }
@@ -334,7 +334,7 @@ public final class Utils {
         }
         catch (IOException e) {
 
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e.getCause());
         }
     }
 
@@ -487,7 +487,7 @@ public final class Utils {
             }
         }
         catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e.getCause());
         }
     }
 
@@ -536,7 +536,7 @@ public final class Utils {
             }
         }
         catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e.getCause());
         }
 
         return output.toString();

@@ -7,6 +7,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
 
 import com.google.common.base.Charsets;
@@ -19,6 +22,7 @@ public class CodeDescritionChanger {
 
     /** The code mapping. */
     private HashMap<String, String> codeMapping;
+    private static final Logger LOGGER = LoggerFactory.getLogger(CodeDescritionChanger.class);
 
     /**
      * Main method. Runs the code description changer on file "outputFile.csv".
@@ -32,7 +36,7 @@ public class CodeDescritionChanger {
             cdc.changeDescriptionToCode(new File("outputFile.csv"), new File(""));
         }
         catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e.getCause());
         }
 
     }

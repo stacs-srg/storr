@@ -27,6 +27,8 @@ import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.util.Version;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
 
@@ -38,6 +40,8 @@ import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
  * 
  */
 public class AnalysisTools {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(AnalysisTools.class);
 
     /** The Constant LUCENE_VERSION. */
     private static final Version LUCENE_VERSION = Version.LUCENE_36;
@@ -81,7 +85,7 @@ public class AnalysisTools {
             calculateTN();
         }
         catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e.getCause());
         }
     }
 
@@ -111,7 +115,7 @@ public class AnalysisTools {
             }
         }
         catch (FileNotFoundException e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e.getCause());
         }
         finally {
             br.close();
@@ -238,7 +242,7 @@ public class AnalysisTools {
                 classificationMap.get(classification).setTN(nl - tp - fn - fp);
             }
             catch (IOException e) {
-                e.printStackTrace();
+                LOGGER.error(e.getMessage(), e.getCause());
             }
         }
         return (double) numberOfCorrectItems / (double) totalNumberActuallyInClass;
@@ -268,7 +272,7 @@ public class AnalysisTools {
                 classificationMap.get(classification).setTN(nl - tp - fn - fp);
             }
             catch (IOException e) {
-                e.printStackTrace();
+                LOGGER.error(e.getMessage(), e.getCause());
             }
         }
 

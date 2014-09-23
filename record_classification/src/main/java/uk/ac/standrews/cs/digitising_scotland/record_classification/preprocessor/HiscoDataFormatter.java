@@ -8,6 +8,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
 import uk.ac.standrews.cs.digitising_scotland.tools.analysis.HumanCodingAnalyser;
 
@@ -23,6 +26,8 @@ public class HiscoDataFormatter {
     /** The input map. */
     private Map<String, Map<String, Integer>> inputMap;
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(HiscoDataFormatter.class);
+
     /**
      * The main method.
      *
@@ -36,7 +41,7 @@ public class HiscoDataFormatter {
             hdf.correctClassesRemoveMostVariable();
         }
         catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e.getCause());
         }
     }
 

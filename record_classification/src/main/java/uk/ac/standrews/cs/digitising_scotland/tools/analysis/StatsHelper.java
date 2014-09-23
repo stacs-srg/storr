@@ -9,6 +9,9 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
 
 /**
@@ -18,6 +21,8 @@ import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
  * 
  */
 public final class StatsHelper {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(StatsHelper.class);
 
     private StatsHelper() {
 
@@ -67,11 +72,11 @@ public final class StatsHelper {
         }
         catch (NumberFormatException e) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e.getCause());
         }
         catch (IOException e) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e.getCause());
         }
         closeReader(in);
         Utils.writeToFile(data, "ttest.csv");
@@ -86,7 +91,7 @@ public final class StatsHelper {
         }
         catch (IOException e) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e.getCause());
         }
     }
 
@@ -105,10 +110,10 @@ public final class StatsHelper {
             }
         }
         catch (NumberFormatException e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e.getCause());
         }
         catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e.getCause());
         }
         closeReader(in);
         return maxRange;
@@ -120,8 +125,8 @@ public final class StatsHelper {
         try {
             in = new BufferedReader(new InputStreamReader(new FileInputStream(inputFile), "UTF8"));
         }
-        catch (UnsupportedEncodingException e1) {
-            e1.printStackTrace();
+        catch (UnsupportedEncodingException e) {
+            LOGGER.error(e.getMessage(), e.getCause());
         }
         return in;
     }

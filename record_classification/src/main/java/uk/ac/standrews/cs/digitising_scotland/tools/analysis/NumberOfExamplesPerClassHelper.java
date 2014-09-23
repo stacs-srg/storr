@@ -21,8 +21,12 @@ import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.util.Version;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class NumberOfExamplesPerClassHelper {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(NumberOfExamplesPerClassHelper.class);
 
     /**
      * @param args
@@ -42,10 +46,8 @@ public class NumberOfExamplesPerClassHelper {
         getComparison(testingMap, trainingMap);
 
         testingMap = n.getWordCount(new File(splitOutputTesting));
-        // n.printMap(testingMap);
         System.out.println("/////");
         trainingMap = n.getWordCount(new File(splitOutputTraining));
-        // n.printMap(trainingMap);
         System.out.println("/////");
 
         getComparison(testingMap, trainingMap);
@@ -94,13 +96,13 @@ public class NumberOfExamplesPerClassHelper {
             }
         }
         catch (FileNotFoundException e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e.getCause());
         }
         catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e.getCause());
         }
         catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e.getCause());
         }
         finally {
             closeReader(reader);
@@ -117,7 +119,7 @@ public class NumberOfExamplesPerClassHelper {
             }
         }
         catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e.getCause());
         }
     }
 
@@ -172,10 +174,10 @@ public class NumberOfExamplesPerClassHelper {
             }
         }
         catch (FileNotFoundException e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e.getCause());
         }
         catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e.getCause());
         }
         finally {
             closeReader(br);

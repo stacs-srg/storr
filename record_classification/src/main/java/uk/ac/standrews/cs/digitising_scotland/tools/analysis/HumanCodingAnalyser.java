@@ -12,6 +12,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
 
 import com.google.common.base.Charsets;
@@ -25,6 +28,7 @@ public class HumanCodingAnalyser {
 
     private File inputFile;
     private Map<String, Map<String, Integer>> inputMap;
+    private static final Logger LOGGER = LoggerFactory.getLogger(HumanCodingAnalyser.class);
 
     /**
      * Constructs a {@link HumanCodingAnalyser} class witht the given input file.
@@ -97,22 +101,27 @@ public class HumanCodingAnalyser {
 
         }
         catch (FileNotFoundException e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e.getCause());
         }
         catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e.getCause());
         }
         finally {
-            if (reader != null) {
-                try {
-                    reader.close();
-                }
-                catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
+            closeReader(reader);
         }
         return inputMap;
+    }
+
+    private void closeReader(final BufferedReader reader) {
+
+        if (reader != null) {
+            try {
+                reader.close();
+            }
+            catch (IOException e) {
+                LOGGER.error(e.getMessage(), e.getCause());
+            }
+        }
     }
 
     /**
