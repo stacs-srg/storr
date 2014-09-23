@@ -6,6 +6,9 @@ import java.io.FileOutputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
 
 /**
@@ -16,6 +19,8 @@ import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
  */
 public class ZipUsingJavaUtil {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(ZipUsingJavaUtil.class);
+
     /**
      * Zip function zip all files and folders.
      * @param args not used.
@@ -23,6 +28,7 @@ public class ZipUsingJavaUtil {
     public static void main(final String[] args) {
 
         ZipUsingJavaUtil zip = new ZipUsingJavaUtil();
+
         try {
             if (zip.zipFiles("ModernDataRun1/parsedData91a", "parsed91JAavaTesta.zip")) {
                 Utils.deleteDirectory(new File("ModernDataRun1/parsedData91a"));
@@ -43,17 +49,17 @@ public class ZipUsingJavaUtil {
 
         boolean result = false;
         try {
-            System.out.println("Program Start zipping the given files: " + srcFolder);
+            LOGGER.info("Program Start zipping the given files: " + srcFolder);
             /*
              * send to the zip procedure
              */
             zipFolder(srcFolder, destZipFile);
             result = true;
-            System.out.println("Given files are successfully zipped");
+            LOGGER.info("Given files are successfully zipped");
         }
         catch (Exception e) {
-            System.out.println("Some Errors happned during the zip process");
-            System.out.println(e);
+            LOGGER.info("Some Errors happned during the zip process");
+            LOGGER.error(e.getMessage(), e.getCause());
             e.printStackTrace();
         }
         return result;
@@ -142,7 +148,7 @@ public class ZipUsingJavaUtil {
          * check the empty folder
          */
         if (folder.list().length == 0) {
-            System.out.println(folder.getName());
+            LOGGER.info(folder.getName());
             addFileToZip(path, srcFolder, zip, true);
         }
         else {

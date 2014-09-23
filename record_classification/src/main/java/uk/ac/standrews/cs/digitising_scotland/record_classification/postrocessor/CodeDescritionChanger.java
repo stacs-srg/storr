@@ -73,7 +73,7 @@ public class CodeDescritionChanger {
         }
 
         reader.close();
-        System.out.println("Writing to file: " + outputFile.getAbsolutePath());
+        LOGGER.info("Writing to file: " + outputFile.getAbsolutePath());
         Utils.writeToFile(sb.toString(), outputFile.getAbsolutePath());
 
         return outputFile;
@@ -93,7 +93,7 @@ public class CodeDescritionChanger {
 
         while ((line = reader.readLine()) != null) {
             if (line.contains("Shipsï¿½ï¿½_ Deck Ratings, Barge Crews and Boatmen")) {
-                System.out.println("problem here");
+                LOGGER.info("problem here");
             }
             String[] lineSplit = line.split("\t");
             codeMapping.put(lineSplit[1], lineSplit[0]);

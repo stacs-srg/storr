@@ -41,9 +41,9 @@ public class OLRCrossFoldTest {
     /** The model. */
     private OLRCrossFold model;
 
-    CodeIndexer index;
+    private CodeIndexer index;
 
-    CodeDictionary codeDictionary;
+    private CodeDictionary codeDictionary;
 
     /**
      * Setup.

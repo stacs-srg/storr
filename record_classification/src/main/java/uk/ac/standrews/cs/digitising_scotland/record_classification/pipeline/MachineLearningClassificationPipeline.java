@@ -125,8 +125,8 @@ public class MachineLearningClassificationPipeline {
      * Returns the classification of a {@link Record} as a Set of
      * {@link Classification}.
      * 
-     * @param record
-     *            to classify
+     * @param description
+     *            the description to classify
      * @return Set<CodeTriple> the classifications
      * @throws IOException
      *             indicates an I/O Error

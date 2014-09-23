@@ -508,7 +508,7 @@ public class AnalysisTools {
         Collection<Integer> v = sortedWords.values();
         Object[] va = v.toArray();
         for (int i = 0; i < ka.length; i++) {
-            System.out.println(ka[i] + "\t" + va[i]);
+            LOGGER.info(ka[i] + "\t" + va[i]);
         }
         return sortedWords;
     }
@@ -541,7 +541,7 @@ public class AnalysisTools {
         for (Map.Entry<String, Integer> entry1 : sortedSet) {
             sortedMap.put(entry1.getKey(), entry1.getValue());
         }
-        System.out.println(sortedMap);
+        LOGGER.info(sortedMap.toString());
 
         return sortedMap;
     }
@@ -590,7 +590,7 @@ public class AnalysisTools {
         });
 
         for (AccuracyMetrics p : classbyRecall) {
-            System.out.println("Recall of " + p.getClassification() + "\t" + p.getRecall());
+            LOGGER.info("Recall of " + p.getClassification() + "\t" + p.getRecall());
         }
 
         return classbyRecall;
@@ -616,7 +616,7 @@ public class AnalysisTools {
         });
 
         for (AccuracyMetrics p : classbyPrecision) {
-            System.out.println("Precision of " + p.getClassification() + "\t" + p.getPrecision());
+            LOGGER.info("Precision of " + p.getClassification() + "\t" + p.getPrecision());
         }
 
         return classbyPrecision;
@@ -642,7 +642,7 @@ public class AnalysisTools {
         });
 
         for (AccuracyMetrics p : classbyAccuracy) {
-            System.out.println("Accuracy of " + p.getClassification() + "\t" + p.getAccuracy());
+            LOGGER.info("Accuracy of " + p.getClassification() + "\t" + p.getAccuracy());
         }
         return classbyAccuracy;
     }
@@ -667,8 +667,8 @@ public class AnalysisTools {
                 uniqueTestingLines++;
             }
         }
-        System.out.println("uniqueTestingLines " + uniqueTestingLines);
-        System.out.println("uniqueLinesTraining " + uniqueLinesTraining.size());
+        LOGGER.info("uniqueTestingLines " + uniqueTestingLines);
+        LOGGER.info("uniqueLinesTraining " + uniqueLinesTraining.size());
         ratio = uniqueTestingLines / (double) uniqueLinesTraining.size();
         return ratio;
     }

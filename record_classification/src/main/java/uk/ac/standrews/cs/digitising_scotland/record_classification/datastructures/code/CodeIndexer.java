@@ -73,7 +73,7 @@ public final class CodeIndexer implements Serializable {
 
     /**
      * Adds gold standard codes from each record to the {@link CodeIndexer}.
-     * @param bucket bucket with gold standard codes
+     * @param dictionary CodeDictionary with codes to be added
      */
     public void addGoldStandardCodes(final CodeDictionary dictionary) {
 

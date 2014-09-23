@@ -90,7 +90,7 @@ public class ClassifierTestingHelper {
      * @param bucket the bucket
      * @return the bucket
      * @throws URISyntaxException the URI syntax exception
-     * @throws IOException 
+     * @throws IOException
      */
     public Bucket giveBucketTestingCODCodes(final Bucket bucket) throws URISyntaxException, IOException {
 
@@ -111,7 +111,7 @@ public class ClassifierTestingHelper {
      * @param code the code to give to the records in the bucket
      * @return the bucket
      * @throws URISyntaxException the URI syntax exception
-     * @throws IOException 
+     * @throws IOException
      */
     public Bucket giveBucketTestingHICODCodes(final Bucket bucket, final String code) throws URISyntaxException, IOException {
 
@@ -132,7 +132,7 @@ public class ClassifierTestingHelper {
      *
      * @param codeDictionaryFile the code dictionary file
      * @throws URISyntaxException the URI syntax exception
-     * @throws IOException 
+    s
      */
     private void loadDictionary(final String codeDictionaryFile) throws URISyntaxException, IOException {
 
