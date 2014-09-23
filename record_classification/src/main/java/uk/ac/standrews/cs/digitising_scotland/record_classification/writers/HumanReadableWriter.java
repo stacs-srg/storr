@@ -87,7 +87,7 @@ public class HumanReadableWriter extends OutputDataFormatter implements Closeabl
             Code code = codeTriple.getCode();
             String codeAsString = code.getCodeAsString();
             String description = getDesciption(record, code);
-            sb.append(codeAsString + getDelimiter() + description + getDelimiter());
+            sb.append(codeAsString).append(getDelimiter()).append(description).append(getDelimiter());
 
         }
 

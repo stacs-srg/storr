@@ -1,6 +1,5 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.lookup;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -53,45 +52,10 @@ public class LookupTableClassifier extends AbstractClassifier implements Seriali
         fillLookupTable(bucket);
     }
 
-    /* (non-Javadoc)
-     * @see uk.ac.standrews.cs.digitising_scotland.parser.classifiers.AbstractClassifier#classify(uk.ac.standrews.cs.digitising_scotland.parser.datastructures.Record)
-     */
     @Override
-    public Record classify(final Record record) throws IOException {
-
-        for (String description : record.getDescription()) {
-            classifyStringWithNgrams(description, record);
-        }
-        return record;
-    }
-
-    private void classifyStringWithNgrams(final String description, final Record record) throws IOException {
-
-        NGramSubstrings nGrams = new NGramSubstrings(description);
-        Set<Classification> classifiedGramsSet = classify(nGrams, record);
-        record.addAllCodeTriples(classifiedGramsSet);
-    }
-
-    @Override
-    public Pair<Code, Double> classify(final TokenSet tokenSet) throws IOException {
+    public Pair<Code, Double> classify(final TokenSet tokenSet) {
 
         throw new UnsupportedOperationException();
-    }
-
-    /**
-     * Classifies all the records in a {@link Bucket}.
-     *
-     * @param bucket Bucket to classify
-     * @return the bucket with classified records.
-     * @throws IOException Signals that an I/O exception has occurred.
-     */
-    public Bucket classify(final Bucket bucket) throws IOException {
-
-        Bucket classifiedBucket = new Bucket();
-        for (Record record : bucket) {
-            classifiedBucket.addRecordToBucket(classify(record));
-        }
-        return classifiedBucket;
     }
 
     /**
@@ -144,11 +108,6 @@ public class LookupTableClassifier extends AbstractClassifier implements Seriali
         return codeTriple;
     }
 
-    @Override
-    public AbstractClassifier getModelFromDefaultLocation() {
-
-        return this;
-    }
 
     @Override
     public int hashCode() {

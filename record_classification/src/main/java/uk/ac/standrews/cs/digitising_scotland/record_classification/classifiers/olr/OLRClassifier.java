@@ -108,7 +108,7 @@ public class OLRClassifier extends AbstractClassifier {
 
     public void train(final Bucket bucket, final Matrix betaMatrix) throws InterruptedException {
 
-        ArrayList<NamedVector> trainingVectorList = new ArrayList<NamedVector>();
+        ArrayList<NamedVector> trainingVectorList = new ArrayList<>();
 
         for (Record record : bucket) {
             final List<NamedVector> listOfVectors = vectorFactory.generateVectorsFromRecord(record);
@@ -138,47 +138,8 @@ public class OLRClassifier extends AbstractClassifier {
         }
     }
 
-    /* (non-Javadoc)
-     * @see uk.ac.standrews.cs.digitising_scotland.parser.classifiers.AbstractClassifier#classify(uk.ac.standrews.cs.digitising_scotland.parser.datastructures.Record)
-     */
     @Override
-    public Record classify(final Record record) {
-
-        if (model == null) {
-            LOGGER.error("Model has not been trained.");
-            return record;
-        }
-
-        List<NamedVector> vectorList = vectorFactory.generateVectorsFromRecord(record);
-        Set<Classification> codeTripleSet = new HashSet<>();
-
-        for (NamedVector vector : vectorList) {
-            Integer classificationID = model.classifyFull(vector).maxValueIndex();
-            Code code = index.getCode(classificationID);
-            double confidence = Math.exp(model.logLikelihood(classificationID, vector)); //TODO test
-            codeTripleSet.add(new Classification(code, new TokenSet(record.getDescription()), confidence));
-        }
-
-        record.addAllCodeTriples(codeTripleSet);
-
-        return record;
-    }
-
-    /* (non-Javadoc)
-     * @see uk.ac.standrews.cs.digitising_scotland.parser.classifiers.AbstractClassifier#classify(uk.ac.standrews.cs.digitising_scotland.parser.datastructures.Bucket)
-     */
-    @Override
-    public Bucket classify(final Bucket bucket) throws IOException {
-
-        if (model == null) {
-            LOGGER.error("Model has not been trained.");
-            return bucket;
-        }
-        return super.classify(bucket);
-    }
-
-    @Override
-    public Pair<Code, Double> classify(final TokenSet tokenSet) throws IOException {
+    public Pair<Code, Double> classify(final TokenSet tokenSet) {
 
         Pair<Code, Double> pair;
         NamedVector vector = vectorFactory.createNamedVectorFromString(tokenSet.toString(), "unknown");
@@ -193,7 +154,6 @@ public class OLRClassifier extends AbstractClassifier {
     /* (non-Javadoc)
      * @see uk.ac.standrews.cs.digitising_scotland.parser.classifiers.AbstractClassifier#getModelFromDefaultLocation()
      */
-    @Override
     public OLRClassifier getModelFromDefaultLocation() {
 
         OLRClassifier olr = null;

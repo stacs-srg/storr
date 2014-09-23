@@ -56,13 +56,4 @@ public class DummyRecord extends Record {
         return null;
     }
 
-    @Override
-    public void addCodeTriples(final Classification codeTriples) {
-
-    }
-
-    @Override
-    public void addAllCodeTriples(final Collection<Classification> codeTriples) {
-
-    }
 }

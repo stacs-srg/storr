@@ -95,10 +95,8 @@ public class ClassifierTestingHelper {
     public Bucket giveBucketTestingCODCodes(final Bucket bucket) throws URISyntaxException, IOException {
 
         for (Record record : bucket) {
-            Set<Classification> codeTriples = new HashSet<Classification>();
             loadDictionary("/CodeFactoryCoDFile.txt");
             addCodeTriplesStandardCodeToRecord(record, "R99");
-            record.addAllCodeTriples(codeTriples);
         }
 
         return bucket;
@@ -116,10 +114,8 @@ public class ClassifierTestingHelper {
     public Bucket giveBucketTestingHICODCodes(final Bucket bucket, final String code) throws URISyntaxException, IOException {
 
         for (Record record : bucket) {
-            Set<Classification> codeTriples = new HashSet<Classification>();
             loadDictionary("/CodeFactoryCoDFile.txt");
             addCodeTriplesStandardCodeToRecord(record, code);
-            record.addAllCodeTriples(codeTriples);
         }
 
         return bucket;
@@ -184,7 +180,6 @@ public class ClassifierTestingHelper {
         Classification c = new Classification(code, new TokenSet(record.getOriginalData().getDescription()), 1.0);
         Set<Classification> set = new HashSet<>();
         set.add(c);
-        record.addCodeTriples(c);
         return record;
     }
 

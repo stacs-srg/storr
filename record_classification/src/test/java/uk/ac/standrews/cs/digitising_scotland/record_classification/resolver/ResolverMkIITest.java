@@ -165,15 +165,6 @@ public class ResolverMkIITest {
         }
 
         /* (non-Javadoc)
-         * @see uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.AbstractClassifier#classify(uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Record)
-         */
-        @Override
-        public Record classify(final Record record) throws IOException {
-
-            return null;
-        }
-
-        /* (non-Javadoc)
          * @see uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.AbstractClassifier#classify(uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.TokenSet)
          */
         @Override
@@ -191,13 +182,5 @@ public class ResolverMkIITest {
             return new Pair<>(code, d);
         }
 
-        /* (non-Javadoc)
-         * @see uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.AbstractClassifier#getModelFromDefaultLocation()
-         */
-        @Override
-        public AbstractClassifier getModelFromDefaultLocation() {
-
-            return this;
-        }
     }
 }

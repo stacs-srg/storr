@@ -1,9 +1,6 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records;
 
-import java.util.Collection;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.OriginalData;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
@@ -22,8 +19,6 @@ public class Record {
     private OriginalData originalData;
 
     /** The code triples. */
-    private Set<Classification> codeTriples;
-
     private HashMultimap<String, Classification> listOfClassifications;
 
     /**
@@ -35,7 +30,6 @@ public class Record {
 
         this.id = id;
         this.originalData = originalData;
-        this.codeTriples = new LinkedHashSet<>();
         listOfClassifications = HashMultimap.create();
 
     }
@@ -98,38 +92,9 @@ public class Record {
     @Override
     public String toString() {
 
-        return "Record [id=" + id + ", goldStandardTriples=" + originalData.getGoldStandardClassifications() + ", codeTriples=" + codeTriples + "]";
+        return "Record [id=" + id + ", goldStandardTriples=" + originalData.getGoldStandardClassifications() + ", codeTriples=" + getCodeTriples() + "]";
     }
 
-    @Override
-    public int hashCode() {
-
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((codeTriples == null) ? 0 : codeTriples.hashCode());
-        result = prime * result + id;
-        result = prime * result + ((originalData == null) ? 0 : originalData.hashCode());
-        return result;
-    }
-
-    @Override
-    public boolean equals(final Object obj) {
-
-        if (this == obj) { return true; }
-        if (obj == null) { return false; }
-        if (getClass() != obj.getClass()) { return false; }
-        Record other = (Record) obj;
-        if (codeTriples == null) {
-            if (other.codeTriples != null) { return false; }
-        }
-        else if (!codeTriples.equals(other.codeTriples)) { return false; }
-        if (id != other.id) { return false; }
-        if (originalData == null) {
-            if (other.originalData != null) { return false; }
-        }
-        else if (!originalData.equals(other.originalData)) { return false; }
-        return true;
-    }
 
     /**
      * Gets the Set of {@link Classification}s contained in this record.
@@ -137,34 +102,7 @@ public class Record {
      * @return the Set of CodeTriples.
      */
     public Set<Classification> getCodeTriples() {
-
-        return codeTriples;
-    }
-
-    /**
-     * Adds a code triple to the set of {@link Classification}s maintained by this record.
-     * The CodeTriple is only added if it is non null.
-     *
-     * @param codeTriples the code triple to add
-     */
-    public void addCodeTriples(final Classification codeTriples) {
-
-        if (codeTriples != null) {
-            this.codeTriples.add(codeTriples);
-        }
-    }
-
-    /**
-     * Adds all the code triples in the collection.
-     * Null CodeTriples are not added.
-     * 
-     * @param codeTriples the  collection of code triples to add.
-     */
-    public void addAllCodeTriples(final Collection<Classification> codeTriples) {
-
-        for (Classification codeTriple : codeTriples) {
-            addCodeTriples(codeTriple);
-        }
+        return new HashSet<>(listOfClassifications.values());
     }
 
     public HashMultimap<String, Classification> getListOfClassifications() {

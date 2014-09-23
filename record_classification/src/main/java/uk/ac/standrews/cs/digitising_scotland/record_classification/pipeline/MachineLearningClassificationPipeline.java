@@ -15,6 +15,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.lookup.NGramSubstrings;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Pair;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
@@ -104,8 +105,6 @@ public class MachineLearningClassificationPipeline {
     }
 
     private void addResultToRecord(final Record record, final String description, final Set<Classification> result) {
-
-        record.addAllCodeTriples(result);
         addCodeTriplesAndDescriptions(record, description, result);
     }
 

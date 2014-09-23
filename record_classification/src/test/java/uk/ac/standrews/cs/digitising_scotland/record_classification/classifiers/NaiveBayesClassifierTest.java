@@ -134,7 +134,6 @@ public class NaiveBayesClassifierTest {
 
         //        LevenShteinCleaner.cleanData(bucketA);
 
-        nbc.classify(bucketA);
     }
 
     /**
@@ -156,7 +155,6 @@ public class NaiveBayesClassifierTest {
         for (Record r : bucketA) {
             TokenSet tokenSet = new TokenSet(r.getOriginalData().getDescription());
             Pair<Code, Double> result = nbc.classify(new TokenSet(r.getOriginalData().getDescription()));
-            r.addCodeTriples(new Classification(result.getLeft(), tokenSet, result.getRight()));
         }
 
     }
