@@ -3,12 +3,10 @@ package uk.ac.standrews.cs.digitising_scotland.record_classification.writers;
 import java.io.BufferedWriter;
 import java.io.Closeable;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
-import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
+import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
 
 /**
  * Contains methods for writing {@link Record}s to file in the format specified by NRS.
@@ -27,9 +25,7 @@ public class DataClerkingWriter extends OutputDataFormatter implements Closeable
      */
     public DataClerkingWriter(final File outputPath) throws IOException {
 
-        FileOutputStream fileOutputStream = new FileOutputStream(outputPath);
-        OutputStreamWriter outputStream = new OutputStreamWriter(fileOutputStream, FileManipulation.FILE_CHARSET);
-        writer = new BufferedWriter(outputStream);
+        writer = (BufferedWriter) Utils.createBufferedWriter(outputPath);
     }
 
     /**

@@ -1,13 +1,8 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.datacleaning;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.HashMap;
 import java.util.List;
@@ -145,7 +140,7 @@ public abstract class AbstractDataCleaner {
     private void correctTokensInFile(final File file, final File correctedFile) throws IOException {
 
         BufferedReader br = Utils.createBufferedReader(file);
-        Writer bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(correctedFile.getAbsoluteFile()), "UTF-8"));
+        Writer bw = Utils.createBufferedWriter(correctedFile.getAbsoluteFile());
         String line;
         while ((line = br.readLine()) != null) {
             String correctedLine = correctLine(line);
