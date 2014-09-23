@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline;
+package uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.main;
 
 import java.io.File;
 
@@ -8,8 +8,15 @@ import org.slf4j.LoggerFactory;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.AbstractClassifier;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeDictionary;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeIndexer;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.vectors.VectorFactory;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.ClassificationHolder;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.ClassifierTrainer;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.GoldStandardBucketGenerator;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.MachineLearningClassificationPipeline;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.PipelineUtils;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.PredictionBucketGenerator;
 import uk.ac.standrews.cs.digitising_scotland.tools.Timer;
 
 /**
@@ -41,15 +48,11 @@ import uk.ac.standrews.cs.digitising_scotland.tools.Timer;
  * 
  * @author jkc25, frjd2
  */
-public final class ClassifyWithExsistingModels {
+public final class PIlot {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ClassifyWithExsistingModels.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(PIlot.class);
 
-    private static String experimentalFolderName;
-    private static File goldStandard;
-    private static String modelLocation;
-
-    private ClassifyWithExsistingModels() {
+    private PIlot() {
 
         // no public constructor
     }
@@ -65,46 +68,63 @@ public final class ClassifyWithExsistingModels {
      */
     public static void main(final String[] args) throws Exception {
 
+        String experimentalFolderName;
+        File training;
+        File prediction;
+
         Timer timer = PipelineUtils.initAndStartTimer();
 
         experimentalFolderName = PipelineUtils.setupExperimentalFolders("Experiments");
 
-        parseInput(args);
+        File[] inputFiles = parseInput(args);
+        training = inputFiles[0];
+        prediction = inputFiles[1];
 
-        File codeDictionaryFile = null; //FIXME
+        File codeDictionaryFile = null;
         CodeDictionary codeDictionary = new CodeDictionary(codeDictionaryFile);
-        GoldStandardBucketGenerator generator = new GoldStandardBucketGenerator(codeDictionary);
-        Bucket allRecords = generator.generate(goldStandard);
+
+        GoldStandardBucketGenerator trainingGenerator = new GoldStandardBucketGenerator(codeDictionary);
+        Bucket trainingBucket = trainingGenerator.generate(training);
+
+        CodeIndexer codeIndex = new CodeIndexer(trainingBucket);
+
+        PredictionBucketGenerator predictionBucketGenerator = new PredictionBucketGenerator(codeDictionary);
+        Bucket predictionBucket = predictionBucketGenerator.createPredictionBucket(prediction);
 
         PipelineUtils.printStatusUpdate();
 
-        ClassifierTrainer trainer = PipelineUtils.getExistingModels(modelLocation, allRecords, experimentalFolderName);
+        ClassifierTrainer trainer = PipelineUtils.train(trainingBucket, experimentalFolderName, codeIndex);
 
-        ClassificationHolder classifier = PipelineUtils.classify(allRecords, allRecords, trainer);
+        ClassificationHolder classifier = PipelineUtils.classify(trainingBucket, predictionBucket, trainer);
 
         LOGGER.info("Exact Matched Bucket Size: " + classifier.getExactMatched().size());
         LOGGER.info("Machine Learned Bucket Size: " + classifier.getMachineLearned().size());
 
         PipelineUtils.writeRecords(classifier.getAllClassified(), experimentalFolderName);
 
-        PipelineUtils.generateAndPrintStatistics(classifier, trainer.getVectorFactory().getCodeIndexer(), experimentalFolderName);
+        PipelineUtils.generateAndPrintStatistics(classifier, codeIndex, experimentalFolderName);
 
         timer.stop();
 
     }
 
-    private static void parseInput(final String[] args) {
+    private static File[] parseInput(final String[] args) {
 
-        if (args.length > 2) {
-            System.err.println("usage: $" + ClassifyWithExsistingModels.class.getSimpleName() + "    <goldStandardDataFile>    <trainingRatio(optional)>");
+        //Training file in [0], prediction file in [1]
+        File[] trainingPrediction = new File[2];
+
+        if (args.length != 2) {
+            System.err.println("You must supply 2 arguments");
+            System.err.println("usage: $" + PIlot.class.getSimpleName() + "    <trainingFile>    <predictionFile>");
         }
         else {
-            goldStandard = new File(args[0]);
-            modelLocation = args[1];
-            PipelineUtils.exitIfDoesNotExist(goldStandard);
-            PipelineUtils.exitIfDoesNotExist(new File(modelLocation));
-
+            trainingPrediction[0] = new File(args[0]);
+            trainingPrediction[1] = new File(args[1]);
+            PipelineUtils.exitIfDoesNotExist(trainingPrediction[0]);
+            PipelineUtils.exitIfDoesNotExist(trainingPrediction[1]);
         }
+
+        return trainingPrediction;
     }
 
 }

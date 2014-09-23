@@ -38,7 +38,7 @@ public final class PipelineUtils {
 
     }
 
-    protected static void generateAndPrintStats(final Bucket classifiedBucket, final CodeIndexer codeIndexer, final String header, final String bucketIdentifier, final String experimentalFolderName) throws IOException {
+    public static void generateAndPrintStats(final Bucket classifiedBucket, final CodeIndexer codeIndexer, final String header, final String bucketIdentifier, final String experimentalFolderName) throws IOException {
 
         LOGGER.info(header);
         ListAccuracyMetrics accuracyMetrics = new ListAccuracyMetrics(classifiedBucket);
@@ -46,7 +46,7 @@ public final class PipelineUtils {
         generateStats(classifiedBucket, accuracyMetrics, codeIndexer, experimentalFolderName, bucketIdentifier);
     }
 
-    protected static void generateStats(final Bucket bucket, final ListAccuracyMetrics accuracyMetrics, final CodeIndexer codeIndexer, final String experimentalFolderName, final String bucketIdentifier) throws IOException {
+    public static void generateStats(final Bucket bucket, final ListAccuracyMetrics accuracyMetrics, final CodeIndexer codeIndexer, final String experimentalFolderName, final String bucketIdentifier) throws IOException {
 
         final String matrixDataPath = experimentalFolderName + "/Data/classificationCountMatrix.csv";
         final String matrixImagePath = "classificationMatrix";
@@ -71,7 +71,7 @@ public final class PipelineUtils {
 
     }
 
-    protected static String printCodeMetrics(final Bucket bucket, final ListAccuracyMetrics accuracyMetrics, final CodeIndexer codeIndexer, final String strictCodeStatsPath, final String codeStatsPath, final String experimentalFolderName) {
+    public static String printCodeMetrics(final Bucket bucket, final ListAccuracyMetrics accuracyMetrics, final CodeIndexer codeIndexer, final String strictCodeStatsPath, final String codeStatsPath, final String experimentalFolderName) {
 
         CodeMetrics codeMetrics = new CodeMetrics(new StrictConfusionMatrix(bucket, codeIndexer), codeIndexer);
         LOGGER.info(codeMetrics.getMicroStatsAsString());
@@ -81,7 +81,7 @@ public final class PipelineUtils {
         return strictCodeStatsPath;
     }
 
-    protected static void runRscript(final String pathToRScript, final String dataPath, final String reportsPath, final String imageName) throws IOException {
+    public static void runRscript(final String pathToRScript, final String dataPath, final String reportsPath, final String imageName) throws IOException {
 
         if (!isRinstalled()) { return; }
 
@@ -90,7 +90,7 @@ public final class PipelineUtils {
         LOGGER.info(Utils.executeCommand(command));
     }
 
-    protected static boolean isRinstalled() {
+    public static boolean isRinstalled() {
 
         final String pathToScript = Utils.class.getResource("/scripts/checkScript.sh").getFile();
         String checkSystemForR = "sh " + pathToScript + " RScript";
@@ -105,14 +105,14 @@ public final class PipelineUtils {
         return true;
     }
 
-    protected static Timer initAndStartTimer() {
+    public static Timer initAndStartTimer() {
 
         Timer timer = new Timer();
         timer.start();
         return timer;
     }
 
-    protected static ClassifierTrainer train(final Bucket trainingBucket, final String experimentalFolderName, final CodeIndexer codeIndex) throws Exception {
+    public static ClassifierTrainer train(final Bucket trainingBucket, final String experimentalFolderName, final CodeIndexer codeIndex) throws Exception {
 
         ClassifierTrainer trainer = new ClassifierTrainer(trainingBucket, experimentalFolderName, codeIndex);
         trainer.trainExactMatchClassifier();
@@ -120,7 +120,7 @@ public final class PipelineUtils {
         return trainer;
     }
 
-    protected static ClassifierTrainer getExistingModels(final String modelLocations, final Bucket trainingBucket, final String experimentalFolderName) {
+    public static ClassifierTrainer getExistingModels(final String modelLocations, final Bucket trainingBucket, final String experimentalFolderName) {
 
         ClassifierTrainer trainer = new ClassifierTrainer(trainingBucket, experimentalFolderName, null);
         trainer.getExistingsModels(modelLocations);
@@ -128,7 +128,7 @@ public final class PipelineUtils {
         return trainer;
     }
 
-    protected static ClassificationHolder classify(final Bucket trainingBucket, final Bucket predictionBucket, final ClassifierTrainer trainer) throws IOException {
+    public static ClassificationHolder classify(final Bucket trainingBucket, final Bucket predictionBucket, final ClassifierTrainer trainer) throws IOException {
 
         ExactMatchPipeline exactMatchPipeline = new ExactMatchPipeline(trainer.getExactMatchClassifier());
         MachineLearningClassificationPipeline machineLearningClassifier = new MachineLearningClassificationPipeline(trainer.getOlrClassifier(), trainingBucket);
@@ -138,14 +138,14 @@ public final class PipelineUtils {
         return classifier;
     }
 
-    protected static void printStatusUpdate() {
+    public static void printStatusUpdate() {
 
         LOGGER.info("********** Training Classifiers **********");
         LOGGER.info("Training with a dictionary size of: " + MachineLearningConfiguration.getDefaultProperties().getProperty("numFeatures"));
         LOGGER.info("Training with this number of output classes: " + MachineLearningConfiguration.getDefaultProperties().getProperty("numCategories"));
     }
 
-    protected static boolean checkFileType(final File inputFile) throws IOException {
+    public static boolean checkFileType(final File inputFile) throws IOException {
 
         BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(inputFile), "UTF8"));
         String line = br.readLine();
@@ -155,7 +155,7 @@ public final class PipelineUtils {
         return false;
     }
 
-    protected static void writeRecords(final Bucket classifiedBucket, final String experimentalFolderName) throws IOException {
+    public static void writeRecords(final Bucket classifiedBucket, final String experimentalFolderName) throws IOException {
 
         final String nrsReportPath = "/Data/NRSData.txt";
         final DataClerkingWriter writer = new DataClerkingWriter(new File(experimentalFolderName + nrsReportPath));
@@ -172,7 +172,7 @@ public final class PipelineUtils {
         comparisonWriter.close();
     }
 
-    protected static void generateAndPrintStatistics(final ClassificationHolder classifier, final CodeIndexer codeIndexer, final String experimentalFolderName) throws IOException {
+    public static void generateAndPrintStatistics(final ClassificationHolder classifier, final CodeIndexer codeIndexer, final String experimentalFolderName) throws IOException {
 
         LOGGER.info("********** Output Stats **********");
 
@@ -183,7 +183,7 @@ public final class PipelineUtils {
         PipelineUtils.generateAndPrintStats(uniqueRecordsOnly, codeIndexer, "Unique Only", "UniqueOnly", experimentalFolderName);
     }
 
-    protected static String setupExperimentalFolders(final String baseFolder) {
+    public static String setupExperimentalFolders(final String baseFolder) {
 
         final String experimentalFolderName = Utils.getExperimentalFolderName(baseFolder, "Experiment");
 
@@ -193,7 +193,7 @@ public final class PipelineUtils {
         return experimentalFolderName;
     }
 
-    protected static void exitIfDoesNotExist(final File file) {
+    public static void exitIfDoesNotExist(final File file) {
 
         if (!file.exists()) {
             LOGGER.error(file.getAbsolutePath() + " does not exsist. Exiting");

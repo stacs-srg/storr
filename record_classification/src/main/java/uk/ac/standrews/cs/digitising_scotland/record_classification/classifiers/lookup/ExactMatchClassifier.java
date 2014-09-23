@@ -32,7 +32,6 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 public class ExactMatchClassifier extends AbstractClassifier {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ExactMatchClassifier.class);
-
     private Map<TokenSet, Set<Classification>> lookupTable;
     private String modelFileName = "target/lookupTable";
 
@@ -77,6 +76,41 @@ public class ExactMatchClassifier extends AbstractClassifier {
         fillLookupTable(bucket);
         writeModel(modelFileName);
 
+    }
+
+    /* (non-Javadoc)
+     * @see uk.ac.standrews.cs.digitising_scotland.parser.classifiers.AbstractClassifier#classify(uk.ac.standrews.cs.digitising_scotland.parser.datastructures.Record)
+     */
+    @Override
+    public Record classify(final Record record) throws IOException {
+
+        Set<Classification> result = lookupTable.get(new TokenSet(record.getDescription()));
+        if (result == null) {
+            return record;
+        }
+        else {
+            record.addAllCodeTriples(result);
+            return record;
+
+        }
+
+    }
+
+    /**
+     * Classifies all the records in a {@link Bucket}.
+     *
+     * @param bucket Bucket to classify
+     * @return the bucket with classified records.
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
+    public Bucket classify(final Bucket bucket) throws IOException {
+
+        Bucket classifiedBucket = new Bucket();
+        for (Record record : bucket) {
+            classifiedBucket.addRecordToBucket(classify(record));
+        }
+
+        return classifiedBucket;
     }
 
     /**
@@ -148,6 +182,7 @@ public class ExactMatchClassifier extends AbstractClassifier {
         oos.close();
     }
 
+    @Override
     public AbstractClassifier getModelFromDefaultLocation() {
 
         AbstractClassifier classifier = null;
