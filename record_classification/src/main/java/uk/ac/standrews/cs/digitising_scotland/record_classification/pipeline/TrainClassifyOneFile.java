@@ -48,13 +48,6 @@ public final class TrainClassifyOneFile {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TrainClassifyOneFile.class);
 
-    private static String experimentalFolderName;
-    private static File goldStandard;
-    private static Bucket trainingBucket;
-    private static Bucket predictionBucket;
-
-    private static double trainingRatio = 0.8;
-
     private TrainClassifyOneFile() {
 
         // no public constructor
@@ -71,18 +64,28 @@ public final class TrainClassifyOneFile {
      */
     public static void main(final String[] args) throws Exception {
 
+        String experimentalFolderName;
+        File goldStandard;
+        Bucket trainingBucket;
+        Bucket predictionBucket;
+        double trainingRatio = 0.8;
+
         Timer timer = PipelineUtils.initAndStartTimer();
 
         experimentalFolderName = PipelineUtils.setupExperimentalFolders("Experiments");
 
-        parseInput(args);
+        goldStandard = parseGoldStandFile(args);
+        trainingRatio = parseTrainingPct(args);
+
         File codeDictionaryFile = null; //FIXME
         CodeDictionary codeDictionary = new CodeDictionary(codeDictionaryFile);
 
         GoldStandardBucketGenerator generator = new GoldStandardBucketGenerator(codeDictionary);
         Bucket allRecords = generator.generate(goldStandard);
 
-        randomlyAssignToTrainingAndPrediction(allRecords);
+        Bucket[] trainingPredicition = randomlyAssignToTrainingAndPrediction(allRecords, trainingRatio);
+        trainingBucket = trainingPredicition[0];
+        predictionBucket = trainingPredicition[1];
 
         PipelineUtils.printStatusUpdate();
 
@@ -96,36 +99,43 @@ public final class TrainClassifyOneFile {
 
         PipelineUtils.writeRecords(classifier.getAllClassified(), experimentalFolderName);
 
-        generateAndPrintStatistics(classifier, codeIndex);
+        generateAndPrintStatistics(classifier, codeIndex, experimentalFolderName);
 
         timer.stop();
 
     }
 
-    private static void parseInput(final String[] args) {
+    private static File parseGoldStandFile(final String[] args) {
 
+        File goldStandard = null;
         if (args.length > 2) {
             System.err.println("usage: $" + TrainClassifyOneFile.class.getSimpleName() + "    <goldStandardDataFile>    <trainingRatio(optional)>");
         }
         else {
             goldStandard = new File(args[0]);
             PipelineUtils.exitIfDoesNotExist(goldStandard);
-            if (args.length > 1) {
-                double userRatio = Double.valueOf(args[1]);
-                if (userRatio > 0 && userRatio < 1) {
-                    trainingRatio = userRatio;
-                }
-                else {
-                    System.err.println("trainingRatio must be between 0 and 1. Exiting.");
-                    System.exit(1);
-
-                }
-            }
 
         }
+        return goldStandard;
     }
 
-    private static void generateAndPrintStatistics(final ClassificationHolder classifier, CodeIndexer codeIndexer) throws IOException {
+    private static double parseTrainingPct(final String[] args) {
+
+        double trainingRatio = 0;
+        if (args.length > 1) {
+            double userRatio = Double.valueOf(args[1]);
+            if (userRatio > 0 && userRatio < 1) {
+                trainingRatio = userRatio;
+            }
+            else {
+                System.err.println("trainingRatio must be between 0 and 1. Exiting.");
+                System.exit(1);
+            }
+        }
+        return trainingRatio;
+    }
+
+    private static void generateAndPrintStatistics(final ClassificationHolder classifier, CodeIndexer codeIndexer, final String experimentalFolderName) throws IOException {
 
         LOGGER.info("********** Output Stats **********");
 
@@ -136,18 +146,19 @@ public final class TrainClassifyOneFile {
         PipelineUtils.generateAndPrintStats(uniqueRecordsOnly, codeIndexer, "Unique Only", "UniqueOnly", experimentalFolderName);
     }
 
-    private static void randomlyAssignToTrainingAndPrediction(final Bucket bucket) {
+    private static Bucket[] randomlyAssignToTrainingAndPrediction(final Bucket bucket, final double trainingRatio) {
 
-        trainingBucket = new Bucket();
-        predictionBucket = new Bucket();
+        Bucket[] buckets = new Bucket[2];
+
         for (Record record : bucket) {
             if (Math.random() < trainingRatio) {
-                trainingBucket.addRecordToBucket(record);
+                buckets[0].addRecordToBucket(record);
             }
             else {
-                predictionBucket.addRecordToBucket(record);
+                buckets[1].addRecordToBucket(record);
             }
         }
+        return buckets;
     }
 
 }

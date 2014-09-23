@@ -46,10 +46,6 @@ public final class PIlot {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PIlot.class);
 
-    private static String experimentalFolderName;
-    private static File training;
-    private static File prediction;
-
     private PIlot() {
 
         // no public constructor
@@ -66,11 +62,17 @@ public final class PIlot {
      */
     public static void main(final String[] args) throws Exception {
 
+        String experimentalFolderName;
+        File training;
+        File prediction;
+
         Timer timer = PipelineUtils.initAndStartTimer();
 
         experimentalFolderName = PipelineUtils.setupExperimentalFolders("Experiments");
 
-        parseInput(args);
+        File[] inputFiles = parseInput(args);
+        training = inputFiles[0];
+        prediction = inputFiles[1];
 
         File codeDictionaryFile = null;
         CodeDictionary codeDictionary = new CodeDictionary(codeDictionaryFile);
@@ -100,18 +102,23 @@ public final class PIlot {
 
     }
 
-    private static void parseInput(final String[] args) {
+    private static File[] parseInput(final String[] args) {
+
+        //Training file in [0], prediction file in [1]
+        File[] trainingPrediction = new File[2];
 
         if (args.length != 2) {
             System.err.println("You must supply 2 arguments");
             System.err.println("usage: $" + PIlot.class.getSimpleName() + "    <trainingFile>    <predictionFile>");
         }
         else {
-            training = new File(args[0]);
-            prediction = new File(args[1]);
-            PipelineUtils.exitIfDoesNotExist(training);
-            PipelineUtils.exitIfDoesNotExist(prediction);
+            trainingPrediction[0] = new File(args[0]);
+            trainingPrediction[1] = new File(args[1]);
+            PipelineUtils.exitIfDoesNotExist(trainingPrediction[0]);
+            PipelineUtils.exitIfDoesNotExist(trainingPrediction[1]);
         }
+
+        return trainingPrediction;
     }
 
 }
