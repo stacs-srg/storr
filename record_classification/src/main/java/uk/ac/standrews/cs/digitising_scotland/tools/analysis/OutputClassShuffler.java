@@ -2,9 +2,7 @@ package uk.ac.standrews.cs.digitising_scotland.tools.analysis;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -41,7 +39,7 @@ public class OutputClassShuffler {
      */
     public File shuffleAndWriteToFile(final File outputFile) throws IOException {
 
-        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(inputFile), "UTF8"));
+        BufferedReader br = Utils.createBufferedReader(inputFile);
 
         String line = "";
         List<String> cod = new ArrayList<String>();

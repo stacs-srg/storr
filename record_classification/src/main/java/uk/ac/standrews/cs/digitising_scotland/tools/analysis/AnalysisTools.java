@@ -2,10 +2,8 @@ package uk.ac.standrews.cs.digitising_scotland.tools.analysis;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringReader;
 import java.util.ArrayList;
@@ -96,7 +94,7 @@ public class AnalysisTools {
      */
     private void buildMap() throws IOException {
 
-        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(input), "UTF8"));
+        BufferedReader br = Utils.createBufferedReader(inputFile);
 
         int i = 0;
         int noOfLines = getNumberOfLines();
@@ -683,7 +681,7 @@ public class AnalysisTools {
      */
     public Map<String, Integer> getUniqueLines(final File trainingFile) throws IOException {
 
-        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(trainingFile), "UTF8"));
+        BufferedReader br = Utils.createBufferedReader(inputFile);
         String line = "";
         Map<String, Integer> uniqueLines = new HashMap<String, Integer>();
         while ((line = br.readLine()) != null) {

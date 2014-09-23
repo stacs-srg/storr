@@ -6,11 +6,11 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 
 /**
  * This class represents a classification, either gold standard or from a classifier.
+ * A classification consists of the foloowing:
  * The class contains 3 variables, the {@link Code}, the {@link TokenSet} that relates to the code and finally
  * the confidence of that code.
  * <br><br>
  * @author jkc25, frjd2
- * Created by fraserdunlop on 11/06/2014 at 10:51.
  */
 public class Classification implements Serializable {
 

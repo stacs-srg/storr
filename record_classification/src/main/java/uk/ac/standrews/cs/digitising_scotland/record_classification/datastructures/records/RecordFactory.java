@@ -2,9 +2,7 @@ package uk.ac.standrews.cs.digitising_scotland.record_classification.datastructu
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +14,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeNotValidException;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.exceptions.InputFormatException;
+import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
 
 /**
  * Creates {@link Record} objects populated with data from file.
@@ -39,7 +38,7 @@ public abstract class RecordFactory {
 
         boolean isCoDFile = isCauseOfDeath(inputFile);
         List<Record> recordList = new ArrayList<Record>();
-        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(inputFile), ENCODING));
+        BufferedReader br = Utils.createBufferedReader(inputFile);
         String line;
 
         while ((line = br.readLine()) != null) {
@@ -139,7 +138,7 @@ public abstract class RecordFactory {
         final int descriptionPos = 5;
 
         List<Record> recordList = new ArrayList<Record>();
-        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(inputFile), ENCODING));
+        BufferedReader br = Utils.createBufferedReader(inputFile);
         String line;
 
         while ((line = br.readLine()) != null) {
@@ -189,7 +188,7 @@ public abstract class RecordFactory {
     private static boolean isCauseOfDeath(final File inputFile) throws IOException {
 
         //TODO build more comprehensive check here later
-        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(inputFile), ENCODING));
+        BufferedReader br = Utils.createBufferedReader(inputFile);
         String firstLine = br.readLine();
         br.close();
         if (firstLine == null) { return false; }

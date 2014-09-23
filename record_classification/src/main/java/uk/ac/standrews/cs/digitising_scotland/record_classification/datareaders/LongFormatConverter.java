@@ -2,9 +2,7 @@ package uk.ac.standrews.cs.digitising_scotland.record_classification.datareaders
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -65,7 +63,7 @@ public final class LongFormatConverter extends AbstractFormatConverter {
      */
     public List<Record> convert(final File inputFile, final CodeDictionary codeDictionary) throws IOException, InputFormatException, CodeNotValidException {
 
-        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(inputFile), CHARSET_NAME));
+        BufferedReader br = Utils.createBufferedReader(inputFile);
 
         String line = "";
         List<Record> recordList = new ArrayList<>();

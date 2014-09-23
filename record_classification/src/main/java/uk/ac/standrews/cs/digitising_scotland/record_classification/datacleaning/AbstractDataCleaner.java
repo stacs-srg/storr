@@ -144,7 +144,7 @@ public abstract class AbstractDataCleaner {
      */
     private void correctTokensInFile(final File file, final File correctedFile) throws IOException {
 
-        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"));
+        BufferedReader br = Utils.createBufferedReader(file);
         Writer bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(correctedFile.getAbsoluteFile()), "UTF-8"));
         String line;
         while ((line = br.readLine()) != null) {

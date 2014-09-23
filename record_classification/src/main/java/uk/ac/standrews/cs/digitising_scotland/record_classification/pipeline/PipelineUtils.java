@@ -2,9 +2,7 @@ package uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -147,7 +145,7 @@ public final class PipelineUtils {
 
     public static boolean checkFileType(final File inputFile) throws IOException {
 
-        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(inputFile), "UTF8"));
+        BufferedReader br = Utils.createBufferedReader(inputFile);
         String line = br.readLine();
         br.close();
         final int expectedLineLength = 38;

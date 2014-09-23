@@ -2,9 +2,7 @@ package uk.ac.standrews.cs.digitising_scotland.record_classification.datareaders
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -14,6 +12,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeDictionary;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.exceptions.InputFormatException;
+import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
 
 /**
  * The Class FormatConverter converts a comma separated text file in the format that is used by the modern cod data
@@ -57,7 +56,7 @@ public final class PilotDataFormatConverter extends AbstractFormatConverter {
      */
     public List<Record> convert(final File inputFile, final CodeDictionary codeDictionary) throws IOException, InputFormatException {
 
-        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(inputFile), CHARSET_NAME));
+        BufferedReader br = Utils.createBufferedReader(inputFile);
 
         String line = "";
         List<Record> recordList = new ArrayList<>();

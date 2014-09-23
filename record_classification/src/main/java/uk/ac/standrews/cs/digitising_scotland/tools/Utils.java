@@ -3,6 +3,8 @@ package uk.ac.standrews.cs.digitising_scotland.tools;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
@@ -568,5 +570,23 @@ public final class Utils {
             if (codeTriple.getCode() == code) { return codeTriple; }
         }
         return null;
+    }
+
+    /**
+     * Constructs a {@link BufferedReader} with the default File_Charset specified in {@link FileManipulation}.
+     * @param inputFile the file to create the reader for
+     * @return BufferedReader for the specified file
+     */
+    public static BufferedReader createBufferedReader(final File inputFile) {
+
+        try {
+            return new BufferedReader(new InputStreamReader(new FileInputStream(inputFile), FileManipulation.FILE_CHARSET));
+        }
+        catch (FileNotFoundException e) {
+            LOGGER.error(e.getMessage(), e.getCause());
+        }
+
+        return null;
+
     }
 }

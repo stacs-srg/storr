@@ -2,15 +2,13 @@ package uk.ac.standrews.cs.digitising_scotland.record_classification.datastructu
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
+import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
 
 /**
  * This class contains a collection of all of the possible valid codes that can be used in training or classification.
@@ -38,7 +36,7 @@ public class CodeDictionary {
     private Map<String, Code> initMap(final File correctCodes) throws IOException {
 
         validCodes = new HashMap<>();
-        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(correctCodes), FileManipulation.FILE_CHARSET));
+        BufferedReader br = Utils.createBufferedReader(correctCodes);
         String line;
         while ((line = br.readLine()) != null) {
             parseLineAndAddToMap(line);

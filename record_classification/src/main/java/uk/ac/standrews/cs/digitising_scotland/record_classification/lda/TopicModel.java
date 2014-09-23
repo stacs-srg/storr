@@ -272,7 +272,7 @@ public class TopicModel {
             out.close();
         }
 
-        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(inputFile), "UTF8"));
+        BufferedReader br = Utils.createBufferedReader(inputFile);
 
         String line = "";
         for (int i = 0; i < model.getData().size(); i++) {
