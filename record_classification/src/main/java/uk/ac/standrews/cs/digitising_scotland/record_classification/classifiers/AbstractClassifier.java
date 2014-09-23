@@ -1,12 +1,13 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers;
+
+import java.io.IOException;
+
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Pair;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.vectors.VectorFactory;
-
-import java.io.IOException;
 
 /**
  * All classifiers should extend this abstract defining training and
@@ -51,7 +52,6 @@ public abstract class AbstractClassifier {
      */
     public abstract void train(final Bucket bucket) throws Exception;
 
-
     /**
      * Classifies a {@link TokenSet} and returns a Mapping of a Code to it's
      * confidence.
@@ -59,7 +59,7 @@ public abstract class AbstractClassifier {
      * @param string
      *            the TokenSet to classify
      * @return Map<Code, Double> The result of the classification.
-     *             Indicatte I/O Error
+     * @throws IOException Indicates an IO error has occured
      */
     public abstract Pair<Code, Double> classify(final TokenSet string) throws IOException;
 }

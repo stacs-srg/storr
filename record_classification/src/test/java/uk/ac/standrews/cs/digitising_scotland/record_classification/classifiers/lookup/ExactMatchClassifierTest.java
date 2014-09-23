@@ -2,13 +2,15 @@ package uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers
 
 import java.io.File;
 import java.util.List;
-import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
-import org.junit.*;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Test;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.RecordFactory;
 
@@ -27,7 +29,6 @@ public class ExactMatchClassifierTest {
 
     /** The exact match classifier. */
     private ExactMatchClassifier exactMatchClassifier;
-
 
     /**
      * Sets the up.
@@ -75,7 +76,7 @@ public class ExactMatchClassifierTest {
 
         ExactMatchClassifier exactMatchClassifer = train();
         for (Record record : testingBucket) {
-          Assert.fail();
+            Assert.fail();
         }
 
     }
@@ -91,7 +92,7 @@ public class ExactMatchClassifierTest {
 
         ExactMatchClassifier exactMatchClassifer = train();
 
-Assert.fail();
+        Assert.fail();
     }
 
     /**

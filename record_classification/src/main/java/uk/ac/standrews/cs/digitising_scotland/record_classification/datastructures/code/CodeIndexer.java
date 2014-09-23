@@ -193,19 +193,11 @@ public final class CodeIndexer implements Serializable {
 
     private void writeIDMap(final DataOutputStream outputStream, Map<Integer, Code> map) throws IOException {
 
-        for (Integer id : map.keySet()) {
-            outputStream.writeInt(id);
-            outputStream.writeUTF(map.get(id).getCodeAsString());
-            outputStream.writeUTF(map.get(id).getDescription());
-        }
-    }
-
-    private void writeCodeMap(final DataOutputStream outputStream, Map<Integer, Code> map) throws IOException {
-
-        for (Integer id : map.keySet()) {
-            outputStream.writeUTF(map.get(id).getCodeAsString());
-            outputStream.writeUTF(map.get(id).getDescription());
-            outputStream.writeInt(id);
+        for (Entry<Integer, Code> entry : map.entrySet()) {
+            outputStream.writeInt(entry.getKey());
+            final Code code = entry.getValue();
+            outputStream.writeUTF(code.getCodeAsString());
+            outputStream.writeUTF(code.getDescription());
         }
     }
 

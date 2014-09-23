@@ -71,7 +71,7 @@ public class OLRPool implements Runnable {
         modelTrainable = true;
     }
 
-    public OLRPool(Properties properties, Matrix betaMatrix, ArrayList<NamedVector> internalTrainingVectorList, ArrayList<NamedVector> testingVectorList) {
+    public OLRPool(final Properties properties, final Matrix betaMatrix, final ArrayList<NamedVector> internalTrainingVectorList, final ArrayList<NamedVector> testingVectorList) {
 
         this.properties = properties;
         this.testingVectorList = testingVectorList;

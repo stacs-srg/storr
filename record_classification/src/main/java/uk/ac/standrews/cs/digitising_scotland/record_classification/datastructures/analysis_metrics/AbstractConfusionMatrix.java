@@ -35,6 +35,8 @@ public abstract class AbstractConfusionMatrix {
      * Instantiates a new abstract confusion matrix and populated the variables.
      *
      * @param bucket the bucket of classified records.
+     * @param codeIndex the {@link CodeIndexer} that contains the mapping of codes to ID's for these classifications.
+
      */
     public AbstractConfusionMatrix(final Bucket bucket, final CodeIndexer codeIndex) {
 

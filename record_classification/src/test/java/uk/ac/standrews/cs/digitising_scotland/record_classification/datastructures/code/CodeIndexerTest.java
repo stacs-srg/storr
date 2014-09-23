@@ -15,9 +15,9 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.exceptions.I
 
 public class CodeIndexerTest {
 
-    CodeIndexer index;
-    Bucket bucket;
-    CodeDictionary codeDictionary;
+    private CodeIndexer index;
+    private Bucket bucket;
+    private CodeDictionary codeDictionary;
 
     @Before
     public void setUp() throws Exception {
