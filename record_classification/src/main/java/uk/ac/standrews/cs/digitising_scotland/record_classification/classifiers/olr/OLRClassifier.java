@@ -133,8 +133,8 @@ public class OLRClassifier extends AbstractClassifier {
             serializeModel(modelPath);
         }
         catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            LOGGER.error("Could not write model. IOException has occured", e.getCause());
+
         }
     }
 
@@ -162,7 +162,7 @@ public class OLRClassifier extends AbstractClassifier {
             model = olr.model;
         }
         catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error("Could not get model from default location. IOEception has occured.", e.getCause());
         }
         return olr;
     }

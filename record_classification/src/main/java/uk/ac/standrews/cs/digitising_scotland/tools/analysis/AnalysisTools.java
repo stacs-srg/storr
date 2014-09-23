@@ -27,6 +27,8 @@ import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.util.Version;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
 
@@ -38,6 +40,8 @@ import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
  * 
  */
 public class AnalysisTools {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(AnalysisTools.class);
 
     /** The Constant LUCENE_VERSION. */
     private static final Version LUCENE_VERSION = Version.LUCENE_36;
@@ -81,7 +85,7 @@ public class AnalysisTools {
             calculateTN();
         }
         catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e.getCause());
         }
     }
 
@@ -111,7 +115,7 @@ public class AnalysisTools {
             }
         }
         catch (FileNotFoundException e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e.getCause());
         }
         finally {
             br.close();
@@ -238,7 +242,7 @@ public class AnalysisTools {
                 classificationMap.get(classification).setTN(nl - tp - fn - fp);
             }
             catch (IOException e) {
-                e.printStackTrace();
+                LOGGER.error(e.getMessage(), e.getCause());
             }
         }
         return (double) numberOfCorrectItems / (double) totalNumberActuallyInClass;
@@ -268,7 +272,7 @@ public class AnalysisTools {
                 classificationMap.get(classification).setTN(nl - tp - fn - fp);
             }
             catch (IOException e) {
-                e.printStackTrace();
+                LOGGER.error(e.getMessage(), e.getCause());
             }
         }
 
@@ -504,7 +508,7 @@ public class AnalysisTools {
         Collection<Integer> v = sortedWords.values();
         Object[] va = v.toArray();
         for (int i = 0; i < ka.length; i++) {
-            System.out.println(ka[i] + "\t" + va[i]);
+            LOGGER.info(ka[i] + "\t" + va[i]);
         }
         return sortedWords;
     }
@@ -537,7 +541,7 @@ public class AnalysisTools {
         for (Map.Entry<String, Integer> entry1 : sortedSet) {
             sortedMap.put(entry1.getKey(), entry1.getValue());
         }
-        System.out.println(sortedMap);
+        LOGGER.info(sortedMap.toString());
 
         return sortedMap;
     }
@@ -586,7 +590,7 @@ public class AnalysisTools {
         });
 
         for (AccuracyMetrics p : classbyRecall) {
-            System.out.println("Recall of " + p.getClassification() + "\t" + p.getRecall());
+            LOGGER.info("Recall of " + p.getClassification() + "\t" + p.getRecall());
         }
 
         return classbyRecall;
@@ -612,7 +616,7 @@ public class AnalysisTools {
         });
 
         for (AccuracyMetrics p : classbyPrecision) {
-            System.out.println("Precision of " + p.getClassification() + "\t" + p.getPrecision());
+            LOGGER.info("Precision of " + p.getClassification() + "\t" + p.getPrecision());
         }
 
         return classbyPrecision;
@@ -638,7 +642,7 @@ public class AnalysisTools {
         });
 
         for (AccuracyMetrics p : classbyAccuracy) {
-            System.out.println("Accuracy of " + p.getClassification() + "\t" + p.getAccuracy());
+            LOGGER.info("Accuracy of " + p.getClassification() + "\t" + p.getAccuracy());
         }
         return classbyAccuracy;
     }
@@ -663,8 +667,8 @@ public class AnalysisTools {
                 uniqueTestingLines++;
             }
         }
-        System.out.println("uniqueTestingLines " + uniqueTestingLines);
-        System.out.println("uniqueLinesTraining " + uniqueLinesTraining.size());
+        LOGGER.info("uniqueTestingLines " + uniqueTestingLines);
+        LOGGER.info("uniqueLinesTraining " + uniqueLinesTraining.size());
         ratio = uniqueTestingLines / (double) uniqueLinesTraining.size();
         return ratio;
     }

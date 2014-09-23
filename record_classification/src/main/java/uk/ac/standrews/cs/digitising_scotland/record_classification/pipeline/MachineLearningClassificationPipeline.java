@@ -17,6 +17,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenClassificationCache;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
@@ -86,15 +87,21 @@ public class MachineLearningClassificationPipeline {
             if (!previouslyClassified(record, description)) {
                 Set<Classification> result = recordCache.get(description);
                 if (result == null) {
-                    result = classify(description);
-                    if (result != null) {
-                        addResultToRecord(record, description, result);
-                        classified.addRecordToBucket(record);
-                    }
-                    recordCache.put(description, record.getCodeTriples());
+                    getResultAddToCache(record, classified, description);
                 }
             }
         }
+    }
+
+    private void getResultAddToCache(final Record record, final Bucket classified, final String description) throws IOException {
+
+        Set<Classification> result;
+        result = classify(description);
+        if (result != null) {
+            addResultToRecord(record, description, result);
+            classified.addRecordToBucket(record);
+        }
+        recordCache.put(description, record.getCodeTriples());
     }
 
     private void addResultToRecord(final Record record, final String description, final Set<Classification> result) {
@@ -116,8 +123,9 @@ public class MachineLearningClassificationPipeline {
     /**
      * Returns the classification of a {@link Record} as a Set of
      * {@link Classification}.
-     *
-     *            to classify
+     * 
+     * @param description
+     *            the description to classify
      * @return Set<CodeTriple> the classifications
      * @throws IOException
      *             indicates an I/O Error

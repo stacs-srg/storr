@@ -23,17 +23,17 @@ public class OrignalDataTest {
     /** The original data test. */
     private OriginalData originalDataTest;
 
-    ArrayList<String> descList = new ArrayList<>();
-    ArrayList<String> descList2 = new ArrayList<>();
+    private ArrayList<String> descriptionList = new ArrayList<>();
+    private ArrayList<String> descriptionList2 = new ArrayList<>();
 
     @Before
     public void setup() {
 
         String desc = "A test Description";
-        descList.add(desc);
+        descriptionList.add(desc);
 
         desc = "description";
-        descList2.add(desc);
+        descriptionList2.add(desc);
     }
 
     /**
@@ -46,7 +46,7 @@ public class OrignalDataTest {
 
         customException.expect(NumberFormatException.class);
         customException.expectMessage("age group must be between 0 and 5");
-        originalDataTest = new CODOrignalData(descList, 1999, -6, 1, 0, "testFileName");
+        originalDataTest = new CODOrignalData(descriptionList, 1999, -6, 1, 0, "testFileName");
 
     }
 
@@ -60,7 +60,7 @@ public class OrignalDataTest {
 
         customException.expect(NumberFormatException.class);
         customException.expectMessage("age group must be between 0 and 5");
-        originalDataTest = new CODOrignalData(descList, 1999, 7, 1, 0, "testFileName");
+        originalDataTest = new CODOrignalData(descriptionList, 1999, 7, 1, 0, "testFileName");
 
     }
 
@@ -74,7 +74,7 @@ public class OrignalDataTest {
 
         customException.expect(NumberFormatException.class);
         customException.expectMessage("-1 read for sex.\nsex must be 1 or 0. 1 is male, 0 is female");
-        originalDataTest = new CODOrignalData(descList, 1999, 1, -1, 0, "testFileName");
+        originalDataTest = new CODOrignalData(descriptionList, 1999, 1, -1, 0, "testFileName");
 
     }
 
@@ -88,7 +88,7 @@ public class OrignalDataTest {
 
         customException.expect(NumberFormatException.class);
         customException.expectMessage("2 read for sex.\nsex must be 1 or 0. 1 is male, 0 is female");
-        originalDataTest = new CODOrignalData(descList, 1999, 1, 2, 0, "testFileName");
+        originalDataTest = new CODOrignalData(descriptionList, 1999, 1, 2, 0, "testFileName");
 
     }
 
@@ -103,7 +103,7 @@ public class OrignalDataTest {
 
         customException.expect(NumberFormatException.class);
         customException.expectMessage("image quality must be 0 or 1");
-        originalDataTest = new CODOrignalData(descList, 1999, 5, 1, 2, "testFileName");
+        originalDataTest = new CODOrignalData(descriptionList, 1999, 5, 1, 2, "testFileName");
 
     }
 
@@ -118,7 +118,7 @@ public class OrignalDataTest {
 
         customException.expect(NumberFormatException.class);
         customException.expectMessage("image quality must be 0 or 1");
-        originalDataTest = new CODOrignalData(descList, 1999, 5, 11, -1, "testFileName");
+        originalDataTest = new CODOrignalData(descriptionList, 1999, 5, 11, -1, "testFileName");
 
     }
 
@@ -130,7 +130,7 @@ public class OrignalDataTest {
     @Test
     public void testImageQualityJustRight() throws InputFormatException {
 
-        OriginalData originalDataTest = new CODOrignalData(descList, 1999, 5, 1, 0, "testFileName");
+        OriginalData originalDataTest = new CODOrignalData(descriptionList, 1999, 5, 1, 0, "testFileName");
         Assert.assertEquals(0, originalDataTest.getImageQuality());
 
     }
@@ -143,7 +143,7 @@ public class OrignalDataTest {
     @Test
     public void testCauseOfDeathAndOriginalDataConstuctor() throws InputFormatException {
 
-        CODOrignalData codOrginalData = new CODOrignalData(descList2, 2014, 3, 0, 1, "testFileName");
+        CODOrignalData codOrginalData = new CODOrignalData(descriptionList2, 2014, 3, 0, 1, "testFileName");
         Assert.assertEquals("description", codOrginalData.getDescription().get(0));
         Assert.assertEquals(2014, codOrginalData.getYear());
         Assert.assertEquals(3, codOrginalData.getAgeGroup());
@@ -177,7 +177,7 @@ public class OrignalDataTest {
     @Test
     public void testThisEqualsSymmetric() throws InputFormatException {
 
-        CODOrignalData x = new CODOrignalData(descList2, 2014, 1, 0, 0, "fileName");
+        CODOrignalData x = new CODOrignalData(descriptionList2, 2014, 1, 0, 0, "fileName");
         assertTheSame(x, x);
     }
 
@@ -189,8 +189,8 @@ public class OrignalDataTest {
     @Test
     public void testDiffClassEquals() throws InputFormatException {
 
-        CODOrignalData x = new CODOrignalData(descList2, 2014, 1, 0, 0, "fileName");
-        OriginalData y = new OriginalData(descList2, 2014, 1, "fileName");
+        CODOrignalData x = new CODOrignalData(descriptionList2, 2014, 1, 0, 0, "fileName");
+        OriginalData y = new OriginalData(descriptionList2, 2014, 1, "fileName");
         assertDifferent(x, y);
     }
 
@@ -202,8 +202,8 @@ public class OrignalDataTest {
     @Test
     public void testCODEqualsSymmetric() throws InputFormatException {
 
-        CODOrignalData x = new CODOrignalData(descList2, 2014, 1, 0, 0, "fileName");
-        CODOrignalData y = new CODOrignalData(descList2, 2014, 1, 0, 0, "fileName");
+        CODOrignalData x = new CODOrignalData(descriptionList2, 2014, 1, 0, 0, "fileName");
+        CODOrignalData y = new CODOrignalData(descriptionList2, 2014, 1, 0, 0, "fileName");
         assertTheSame(x, y);
     }
 
@@ -215,8 +215,8 @@ public class OrignalDataTest {
     @Test
     public void testCODEqualsSymmetricDifferentDescription() throws InputFormatException {
 
-        CODOrignalData x = new CODOrignalData(descList2, 2014, 1, 0, 0, "fileName");
-        CODOrignalData y = new CODOrignalData(descList, 2014, 1, 0, 0, "fileName");
+        CODOrignalData x = new CODOrignalData(descriptionList2, 2014, 1, 0, 0, "fileName");
+        CODOrignalData y = new CODOrignalData(descriptionList, 2014, 1, 0, 0, "fileName");
         assertDifferent(x, y);
     }
 
@@ -228,8 +228,8 @@ public class OrignalDataTest {
     @Test
     public void testCODEqualsSymmetricDifferntYear() throws InputFormatException {
 
-        CODOrignalData x = new CODOrignalData(descList2, 2014, 1, 0, 0, "fileName");
-        CODOrignalData y = new CODOrignalData(descList2, 2010, 1, 0, 0, "fileName");
+        CODOrignalData x = new CODOrignalData(descriptionList2, 2014, 1, 0, 0, "fileName");
+        CODOrignalData y = new CODOrignalData(descriptionList2, 2010, 1, 0, 0, "fileName");
         assertDifferent(x, y);
     }
 
@@ -241,8 +241,8 @@ public class OrignalDataTest {
     @Test
     public void testCODEqualsSymmetricDifferenImageQuality() throws InputFormatException {
 
-        CODOrignalData x = new CODOrignalData(descList2, 2014, 0, 0, 0, "fileName");
-        CODOrignalData y = new CODOrignalData(descList2, 2014, 1, 0, 0, "fileName");
+        CODOrignalData x = new CODOrignalData(descriptionList2, 2014, 0, 0, 0, "fileName");
+        CODOrignalData y = new CODOrignalData(descriptionList2, 2014, 1, 0, 0, "fileName");
         assertDifferent(x, y);
     }
 
@@ -254,8 +254,8 @@ public class OrignalDataTest {
     @Test
     public void testCODEqualsSymmetricDifferentFileName() throws InputFormatException {
 
-        CODOrignalData x = new CODOrignalData(descList2, 2014, 1, 0, 0, "fileName");
-        CODOrignalData y = new CODOrignalData(descList2, 2014, 1, 0, 0, "differnt/fileName");
+        CODOrignalData x = new CODOrignalData(descriptionList2, 2014, 1, 0, 0, "fileName");
+        CODOrignalData y = new CODOrignalData(descriptionList2, 2014, 1, 0, 0, "differnt/fileName");
         assertDifferent(x, y);
     }
 
@@ -267,8 +267,8 @@ public class OrignalDataTest {
     @Test
     public void testCODEqualsSymmetricDifferentAge() throws InputFormatException {
 
-        CODOrignalData x = new CODOrignalData(descList2, 2014, 1, 1, 0, "fileName");
-        CODOrignalData y = new CODOrignalData(descList2, 2014, 1, 0, 0, "fileName");
+        CODOrignalData x = new CODOrignalData(descriptionList2, 2014, 1, 1, 0, "fileName");
+        CODOrignalData y = new CODOrignalData(descriptionList2, 2014, 1, 0, 0, "fileName");
         assertDifferent(x, y);
     }
 
@@ -280,8 +280,8 @@ public class OrignalDataTest {
     @Test
     public void testCODEqualsSymmetricDifferentSex() throws InputFormatException {
 
-        CODOrignalData x = new CODOrignalData(descList2, 2014, 1, 0, 1, "fileName");
-        CODOrignalData y = new CODOrignalData(descList2, 2014, 1, 0, 0, "fileName");
+        CODOrignalData x = new CODOrignalData(descriptionList2, 2014, 1, 0, 1, "fileName");
+        CODOrignalData y = new CODOrignalData(descriptionList2, 2014, 1, 0, 0, "fileName");
         assertDifferent(x, y);
     }
 
@@ -293,8 +293,8 @@ public class OrignalDataTest {
     @Test
     public void testEqualsSymmetric() throws InputFormatException {
 
-        OriginalData x = new OriginalData(descList2, 2014, 1, "fileName");
-        OriginalData y = new OriginalData(descList2, 2014, 1, "fileName");
+        OriginalData x = new OriginalData(descriptionList2, 2014, 1, "fileName");
+        OriginalData y = new OriginalData(descriptionList2, 2014, 1, "fileName");
         assertTheSame(x, y);
     }
 
@@ -306,8 +306,8 @@ public class OrignalDataTest {
     @Test
     public void testEqualsSymmetricDifferentDescription() throws InputFormatException {
 
-        OriginalData x = new OriginalData(descList2, 2014, 1, "fileName");
-        OriginalData y = new OriginalData(descList, 2014, 1, "fileName");
+        OriginalData x = new OriginalData(descriptionList2, 2014, 1, "fileName");
+        OriginalData y = new OriginalData(descriptionList, 2014, 1, "fileName");
         assertDifferent(x, y);
     }
 
@@ -319,8 +319,8 @@ public class OrignalDataTest {
     @Test
     public void testEqualsSymmetricDifferntYear() throws InputFormatException {
 
-        OriginalData x = new OriginalData(descList2, 2014, 1, "fileName");
-        OriginalData y = new OriginalData(descList2, 2010, 1, "fileName");
+        OriginalData x = new OriginalData(descriptionList2, 2014, 1, "fileName");
+        OriginalData y = new OriginalData(descriptionList2, 2010, 1, "fileName");
         assertDifferent(x, y);
     }
 
@@ -332,8 +332,8 @@ public class OrignalDataTest {
     @Test
     public void testEqualsSymmetricDifferenImageQuality() throws InputFormatException {
 
-        OriginalData x = new OriginalData(descList2, 2014, 0, "fileName");
-        OriginalData y = new OriginalData(descList2, 2014, 1, "fileName");
+        OriginalData x = new OriginalData(descriptionList2, 2014, 0, "fileName");
+        OriginalData y = new OriginalData(descriptionList2, 2014, 1, "fileName");
         assertDifferent(x, y);
     }
 
@@ -345,8 +345,8 @@ public class OrignalDataTest {
     @Test
     public void testEqualsSymmetricDifferentFileName() throws InputFormatException {
 
-        OriginalData x = new OriginalData(descList2, 2014, 1, "fileName");
-        OriginalData y = new OriginalData(descList2, 2014, 1, "differnt/fileName");
+        OriginalData x = new OriginalData(descriptionList2, 2014, 1, "fileName");
+        OriginalData y = new OriginalData(descriptionList2, 2014, 1, "differnt/fileName");
         assertDifferent(x, y);
     }
 

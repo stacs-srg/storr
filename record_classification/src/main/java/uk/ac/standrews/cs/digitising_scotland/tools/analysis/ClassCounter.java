@@ -8,6 +8,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
 
 /**
@@ -21,6 +24,7 @@ public class ClassCounter {
     private File input;
     private int classColumn = 0;
     private HashMap<String, String> outputClasses;
+    private static final Logger LOGGER = LoggerFactory.getLogger(ClassCounter.class);
 
     /**
      * The main method.
@@ -99,28 +103,36 @@ public class ClassCounter {
         catch (ArrayIndexOutOfBoundsException e) {
             System.out.println("There is a problem with your input file. \n " + "Please ensure it is either tab serperated or a csv file \n" + "and that you have supplied the correct coloumn for your class");
 
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e.getCause());
+
         }
         catch (FileNotFoundException e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e.getCause());
         }
         catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e.getCause());
+
         }
         finally {
-            if (br != null) {
-                try {
-                    br.close();
-                }
-                catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
+            closeReader(br);
         }
 
         numberOfClasses = outputClasses.size();
 
         return numberOfClasses;
+    }
+
+    private void closeReader(final BufferedReader br) {
+
+        if (br != null) {
+            try {
+                br.close();
+            }
+            catch (IOException e) {
+                LOGGER.error(e.getMessage(), e.getCause());
+
+            }
+        }
     }
 
     private String getFileType() {

@@ -4,6 +4,8 @@ import java.io.IOException;
 
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.machinelearning.tokenizing.TokenStreamIterator;
 
@@ -12,6 +14,8 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.machinelearn
  * @author frjd2
  */
 public final class Concatenator {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(Concatenator.class);
 
     private Concatenator() {
 
@@ -53,7 +57,7 @@ public final class Concatenator {
             iterator.close();
         }
         catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error("Iterator could not be closed", e.getCause());
         }
     }
 }

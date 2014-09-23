@@ -234,11 +234,9 @@ public class OLRCrossFold {
         }
         catch (InterruptedException e) {
             LOGGER.error(e.getMessage(), e);
-            e.printStackTrace();
         }
         catch (ExecutionException e) {
             LOGGER.error(e.getMessage(), e);
-            e.printStackTrace();
         }
     }
 
@@ -406,7 +404,6 @@ public class OLRCrossFold {
             }
             catch (Exception e) {
                 LOGGER.error(e.getMessage(), e);
-                e.printStackTrace();
             }
         }
 
