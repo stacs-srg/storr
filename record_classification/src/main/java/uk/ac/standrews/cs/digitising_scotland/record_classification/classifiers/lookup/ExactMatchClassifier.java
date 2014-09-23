@@ -74,41 +74,6 @@ public class ExactMatchClassifier extends AbstractClassifier {
 
     }
 
-    /* (non-Javadoc)
-     * @see uk.ac.standrews.cs.digitising_scotland.parser.classifiers.AbstractClassifier#classify(uk.ac.standrews.cs.digitising_scotland.parser.datastructures.Record)
-     */
-    @Override
-    public Record classify(final Record record) throws IOException {
-
-        Set<Classification> result = lookupTable.get(new TokenSet(record.getDescription()));
-        if (result == null) {
-            return record;
-        }
-        else {
-            record.addAllCodeTriples(result);
-            return record;
-
-        }
-
-    }
-
-    /**
-     * Classifies all the records in a {@link Bucket}.
-     *
-     * @param bucket Bucket to classify
-     * @return the bucket with classified records.
-     * @throws IOException Signals that an I/O exception has occurred.
-     */
-    public Bucket classify(final Bucket bucket) throws IOException {
-
-        Bucket classifiedBucket = new Bucket();
-        for (Record record : bucket) {
-            classifiedBucket.addRecordToBucket(classify(record));
-        }
-
-        return classifiedBucket;
-    }
-
     /**
      * Adds each gold standard {@link Classification} in the records to the lookupTable.
      * @param record to add
@@ -178,7 +143,6 @@ public class ExactMatchClassifier extends AbstractClassifier {
         oos.close();
     }
 
-    @Override
     public AbstractClassifier getModelFromDefaultLocation() {
 
         AbstractClassifier classifier = null;

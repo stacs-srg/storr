@@ -183,23 +183,7 @@ public class NaiveBayesClassifier extends AbstractClassifier {
         return new CustomVectorWriter(writer);
     }
 
-    /* (non-Javadoc)
-     * @see uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.AbstractClassifier#classify(uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Record)
-     */
-    @Override
-    public Record classify(final Record record) throws IOException {
 
-        Record classifiedRecord = record;
-        Set<Classification> resultSet = new HashSet<>();
-        List<NamedVector> vectors = vectorFactory.generateVectorsFromRecord(record);
-
-        for (NamedVector namedVector : vectors) {
-            resultSet.add(getClassification(record, namedVector));
-        }
-
-        classifiedRecord.addAllCodeTriples(resultSet);
-        return classifiedRecord;
-    }
 
     /**
      * Gets the classification.
@@ -353,7 +337,6 @@ public class NaiveBayesClassifier extends AbstractClassifier {
     /* (non-Javadoc)
      * @see uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.AbstractClassifier#getModelFromDefaultLocation()
      */
-    @Override
     public AbstractClassifier getModelFromDefaultLocation() {
 
         try {

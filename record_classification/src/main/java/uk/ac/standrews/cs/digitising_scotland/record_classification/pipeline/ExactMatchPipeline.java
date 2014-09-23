@@ -79,8 +79,6 @@ public class ExactMatchPipeline {
 
     private void addResultToRecord(final Record record, final String description, final Set<Classification> result) {
 
-        record.addAllCodeTriples(result);
-
         for (Classification codeTriple : result) {
             record.getListOfClassifications().put(description, codeTriple);
         }

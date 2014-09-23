@@ -98,8 +98,6 @@ public class MachineLearningClassificationPipeline {
     }
 
     private void addResultToRecord(final Record record, final String description, final Set<Classification> result) {
-
-        record.addAllCodeTriples(result);
         addCodeTriplesAndDescriptions(record, description, result);
     }
 
@@ -118,8 +116,7 @@ public class MachineLearningClassificationPipeline {
     /**
      * Returns the classification of a {@link Record} as a Set of
      * {@link Classification}.
-     * 
-     * @param record
+     *
      *            to classify
      * @return Set<CodeTriple> the classifications
      * @throws IOException

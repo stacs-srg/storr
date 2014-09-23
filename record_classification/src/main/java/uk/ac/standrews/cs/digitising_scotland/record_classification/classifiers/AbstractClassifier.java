@@ -1,14 +1,12 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers;
-
-import java.io.IOException;
-
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Pair;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.vectors.VectorFactory;
+
+import java.io.IOException;
 
 /**
  * All classifiers should extend this abstract defining training and
@@ -53,51 +51,6 @@ public abstract class AbstractClassifier {
      */
     public abstract void train(final Bucket bucket) throws Exception;
 
-    /**
-     * Classifies a single {@link Record}.
-     * 
-     * @param record
-     *            Record to classify
-     * @return record record with a new set of classifications
-     * 
-     * @throws IOException
-     *             An exception will be thrown for any number of reasons,
-     *             including using invalid training data, codes or malformed
-     *             data
-     */
-    public Record classify(final Record record) throws IOException {
-
-        for (Classification codeTriple : record.getOriginalData().getGoldStandardClassifications()) {
-            TokenSet tokenSet = codeTriple.getTokenSet();
-            Pair<Code, Double> classification = classify(tokenSet);
-            Code code = classification.getLeft();
-            Double confidence = classification.getRight();
-            record.addCodeTriples(new Classification(code, tokenSet, confidence));
-        }
-        return record;
-    }
-
-    /**
-     * Classifies all {@link Record}s in a {@link Bucket}.
-     * 
-     * @param bucket
-     *            bucket containing Records to classify
-     * @return Bucket with classified records
-     * @throws IOException
-     *             An exception will be thrown for any number of reasons,
-     *             including using invalid training data, codes or malformed
-     *             data
-     */
-    public Bucket classify(final Bucket bucket) throws IOException {
-
-        Bucket classifiedBucket = bucket;
-
-        for (final Record record : bucket) {
-            classifiedBucket.addRecordToBucket(classify(record));
-        }
-
-        return classifiedBucket;
-    }
 
     /**
      * Classifies a {@link TokenSet} and returns a Mapping of a Code to it's
@@ -106,15 +59,7 @@ public abstract class AbstractClassifier {
      * @param string
      *            the TokenSet to classify
      * @return Map<Code, Double> The result of the classification.
-     * @throws IOException
      *             Indicatte I/O Error
      */
     public abstract Pair<Code, Double> classify(final TokenSet string) throws IOException;
-
-    /**
-     * Reads a trained model from the default storage location for a classifier.
-     * @return AbstractClassifier deserialized from file
-     */
-    public abstract AbstractClassifier getModelFromDefaultLocation();
-
 }

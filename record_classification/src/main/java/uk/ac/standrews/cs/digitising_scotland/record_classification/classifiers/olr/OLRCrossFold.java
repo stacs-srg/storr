@@ -348,6 +348,7 @@ public class OLRCrossFold {
         OLR olr = new OLR();
         olr.readFields(inputStream);
         classifier = olr;
+
     }
 
     /**
