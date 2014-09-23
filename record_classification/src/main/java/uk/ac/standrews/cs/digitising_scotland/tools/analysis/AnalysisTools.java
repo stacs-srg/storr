@@ -94,7 +94,7 @@ public class AnalysisTools {
      */
     private void buildMap() throws IOException {
 
-        BufferedReader br = Utils.createBufferedReader(inputFile);
+        BufferedReader br = Utils.createBufferedReader(input);
 
         int i = 0;
         int noOfLines = getNumberOfLines();
@@ -681,7 +681,7 @@ public class AnalysisTools {
      */
     public Map<String, Integer> getUniqueLines(final File trainingFile) throws IOException {
 
-        BufferedReader br = Utils.createBufferedReader(inputFile);
+        BufferedReader br = Utils.createBufferedReader(trainingFile);
         String line = "";
         Map<String, Integer> uniqueLines = new HashMap<String, Integer>();
         while ((line = br.readLine()) != null) {
