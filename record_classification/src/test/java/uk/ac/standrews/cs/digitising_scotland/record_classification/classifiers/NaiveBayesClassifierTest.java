@@ -12,7 +12,6 @@ import org.junit.Test;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Pair;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeIndexer;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
@@ -96,7 +95,7 @@ public class NaiveBayesClassifierTest {
     private NaiveBayesClassifier train() throws Exception {
 
         VectorFactory vectorFactory = new VectorFactory(bucketB, indexer);
-        NaiveBayesClassifier nbc = new NaiveBayesClassifier(vectorFactory);
+        NaiveBayesClassifier nbc = new NaiveBayesClassifier();
         nbc.train(bucketB);
         return nbc;
     }

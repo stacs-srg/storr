@@ -21,7 +21,7 @@ public class TrainOnNewDataTest {
         Bucket bucket = null;
         CodeIndexer codeIndexer = new CodeIndexer();
         VectorFactory vectorFactory = new VectorFactory(bucket, codeIndexer);
-        OLRClassifier olrClassifer = new OLRClassifier(vectorFactory);
+        OLRClassifier olrClassifer = new OLRClassifier();
 
         Bucket newBucket = null;
         olrClassifer.train(newBucket, beta);

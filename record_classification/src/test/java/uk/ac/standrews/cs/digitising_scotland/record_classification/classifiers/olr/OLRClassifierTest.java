@@ -13,7 +13,10 @@ import java.util.Properties;
 import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
-import org.junit.*;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.ClassifierTestingHelper;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
@@ -24,7 +27,6 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.RecordFactory;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.vectors.VectorFactory;
 import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearningConfiguration;
 
 /**
@@ -98,18 +100,16 @@ public class OLRClassifierTest {
     @Test
     public void testClassifyWithDeSerializedModel() throws InterruptedException, IOException {
 
-        VectorFactory vectorFactory = new VectorFactory(bucketA, index);
-        OLRClassifier olrClassifier1 = new OLRClassifier(vectorFactory);
+        OLRClassifier olrClassifier1 = new OLRClassifier();
 
         olrClassifier1.train(bucketA);
         olrClassifier1.serializeModel("target/olrClassifierWriteTest");
-        OLRClassifier olrClassifier2 = new OLRClassifier(new VectorFactory());
+        OLRClassifier olrClassifier2 = new OLRClassifier();
         olrClassifier2 = olrClassifier2.deSerializeModel("target/olrClassifierWriteTest");
 
         for (Record record : bucketA) {
             Code c = olrClassifier2.classify(new TokenSet(record.getDescription())).getLeft();
-            Assert.assertTrue("Record does not have code " + c + " in gold standard set. Set contains "
-                    + record.getGoldStandardClassificationSet()+ ".",recordHasCodeInGoldStandardSet(record,c));
+            Assert.assertTrue("Record does not have code " + c + " in gold standard set. Set contains " + record.getGoldStandardClassificationSet() + ".", recordHasCodeInGoldStandardSet(record, c));
         }
 
     }
@@ -118,9 +118,10 @@ public class OLRClassifierTest {
      * if the record's gold standard set contains the code then return true else return false.
      */
     private boolean recordHasCodeInGoldStandardSet(Record record, Code c) {
+
         Set<Classification> gs = record.getGoldStandardClassificationSet();
-        Set<Code> gsCodes =  new HashSet<>();
-        for(Classification classification : gs){
+        Set<Code> gsCodes = new HashSet<>();
+        for (Classification classification : gs) {
             gsCodes.add(classification.getCode());
         }
         return gsCodes.contains(c);
@@ -162,8 +163,7 @@ public class OLRClassifierTest {
         InputStream stdin = System.in;
         System.setIn(new ByteArrayInputStream(data.getBytes()));
 
-        VectorFactory vectorFactory = new VectorFactory(bucketA, index);
-        OLRClassifier olrClassifier1 = new OLRClassifier(vectorFactory);
+        OLRClassifier olrClassifier1 = new OLRClassifier();
         MachineLearningConfiguration.getDefaultProperties().setProperty("reps", "1000");
 
         olrClassifier1.train(bucketA);

@@ -16,7 +16,6 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.AbstractClassifier;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Pair;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
@@ -29,7 +28,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
  * @author frjd2, jkc25
  *
  */
-public class ExactMatchClassifier extends AbstractClassifier {
+public class ExactMatchClassifier {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ExactMatchClassifier.class);
     private Map<TokenSet, Set<Classification>> lookupTable;
@@ -67,10 +66,6 @@ public class ExactMatchClassifier extends AbstractClassifier {
 
     }
 
-    /* (non-Javadoc)
-     * @see uk.ac.standrews.cs.digitising_scotland.parser.classifiers.AbstractClassifier#train(uk.ac.standrews.cs.digitising_scotland.parser.datastructures.Bucket)
-     */
-    @Override
     public void train(final Bucket bucket) throws Exception {
 
         fillLookupTable(bucket);
@@ -114,7 +109,7 @@ public class ExactMatchClassifier extends AbstractClassifier {
         write(oos);
     }
 
-    protected AbstractClassifier readModel(final String fileName) throws ClassNotFoundException, IOException {
+    protected ExactMatchClassifier readModel(final String fileName) throws ClassNotFoundException, IOException {
 
         //deserialize the .ser file
         InputStream file = new FileInputStream(fileName + ".ser");
@@ -147,9 +142,9 @@ public class ExactMatchClassifier extends AbstractClassifier {
         oos.close();
     }
 
-    public AbstractClassifier getModelFromDefaultLocation() {
+    public ExactMatchClassifier getModelFromDefaultLocation() {
 
-        AbstractClassifier classifier = null;
+        ExactMatchClassifier classifier = null;
         try {
             classifier = readModel(modelFileName);
         }
@@ -160,29 +155,6 @@ public class ExactMatchClassifier extends AbstractClassifier {
             LOGGER.error("Could not get model from default location. IOException.", e.getCause());
         }
         return classifier;
-    }
-
-    @Override
-    public int hashCode() {
-
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((lookupTable == null) ? 0 : lookupTable.hashCode());
-        return result;
-    }
-
-    @Override
-    public boolean equals(final Object obj) {
-
-        if (this == obj) { return true; }
-        if (obj == null) { return false; }
-        if (getClass() != obj.getClass()) { return false; }
-        ExactMatchClassifier other = (ExactMatchClassifier) obj;
-        if (lookupTable == null) {
-            if (other.lookupTable != null) { return false; }
-        }
-        else if (!lookupTable.equals(other.lookupTable)) { return false; }
-        return true;
     }
 
     /**
@@ -215,7 +187,6 @@ public class ExactMatchClassifier extends AbstractClassifier {
         return newResults;
     }
 
-    @Override
     public Pair<Code, Double> classify(final TokenSet tokenSet) throws IOException {
 
         Set<Classification> result = lookupTable.get(tokenSet);

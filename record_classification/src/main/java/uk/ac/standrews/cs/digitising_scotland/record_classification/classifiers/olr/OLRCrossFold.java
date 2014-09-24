@@ -188,6 +188,11 @@ public class OLRCrossFold {
         classifier = new OLR(properties, classifierMatrix);
     }
 
+    public Matrix getAverageBetaMatrix() {
+
+        return classifier.getBeta();
+    }
+
     /**
      * Gets the survivors.
      *

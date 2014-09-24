@@ -11,13 +11,12 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.AbstractClassifier;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.olr.OLRClassifier;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Pair;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeDictionary;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeNotValidException;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenClassificationCache;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
 
@@ -154,21 +153,13 @@ public class ResolverMkIITest {
     /**
      * The Class mockClassifier.
      */
-    static class mockClassifier extends AbstractClassifier {
+    static class mockClassifier extends OLRClassifier {
 
-        /* (non-Javadoc)
-         * @see uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.AbstractClassifier#train(uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Bucket)
-         */
-        @Override
-        public void train(final Bucket bucket) throws Exception {
+        public void train(final Bucket bucket) {
 
         }
 
-        /* (non-Javadoc)
-         * @see uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.AbstractClassifier#classify(uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.TokenSet)
-         */
-        @Override
-        public Pair<Code, Double> classify(final TokenSet string) throws IOException {
+        public Pair<Code, Double> classify(final TokenSet string) {
 
             Code code = null;
             try {

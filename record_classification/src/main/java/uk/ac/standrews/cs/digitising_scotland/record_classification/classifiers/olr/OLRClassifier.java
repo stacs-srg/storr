@@ -15,10 +15,10 @@ import org.apache.mahout.math.Vector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.AbstractClassifier;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Pair;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeIndexer;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.vectors.VectorFactory;
@@ -33,31 +33,22 @@ import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearnin
  * @author frjd2, jkc25
  * 
  */
-public class OLRClassifier extends AbstractClassifier {
+public class OLRClassifier {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(OLRClassifier.class);
     private OLRCrossFold model = null;
     private final Properties properties;
+    private VectorFactory vectorFactory;
 
     /** The Constant MODELPATH. Default is target/olrModelPath, but can be overwritten. */
     private static String modelPath = "target/olrModelPath";
 
     /**
-     * Overrides the default path and sets to the path provided.
-     * @param modelPath New path to write model to
-     */
-    public static void setModelPath(final String modelPath) {
-
-        OLRClassifier.modelPath = modelPath;
-    }
-
-    /**
      * Constructor.
      * @param vectorFactory vector factory
      */
-    public OLRClassifier(final VectorFactory vectorFactory) {
+    public OLRClassifier() {
 
-        super(vectorFactory);
         model = new OLRCrossFold();
         properties = MachineLearningConfiguration.getDefaultProperties();
     }
@@ -68,9 +59,8 @@ public class OLRClassifier extends AbstractClassifier {
      * @param customProperties custom properties file
      * @param vectorFactory vector factory
      */
-    public OLRClassifier(final String customProperties, final VectorFactory vectorFactory) {
+    public OLRClassifier(final String customProperties) {
 
-        super(vectorFactory);
         MachineLearningConfiguration mlc = new MachineLearningConfiguration();
         properties = mlc.extendDefaultProperties(customProperties);
     }
@@ -81,16 +71,33 @@ public class OLRClassifier extends AbstractClassifier {
      * @param bucket bucket to train on
      * @throws InterruptedException the interrupted exception
      */
-    @Override
     public void train(final Bucket bucket) throws InterruptedException {
 
-        //TODO
-        int initNoClasses = vectorFactory.getCodeIndexer().getNumberOfOutputClasses();
-        vectorFactory.getCodeIndexer().addGoldStandardCodes(bucket);
-        int newNoClasses = vectorFactory.getCodeIndexer().getNumberOfOutputClasses();
+        CodeIndexer index;
 
-        int initNoFeatures = vectorFactory.getNumberOfFeatures();
+        if (vectorFactory == null) {
+            index = new CodeIndexer(bucket);
+            vectorFactory = new VectorFactory(bucket, index);
+            ArrayList<NamedVector> trainingVectorList = getTrainingVectors(bucket);
+            Collections.shuffle(trainingVectorList);
+            model = new OLRCrossFold(trainingVectorList, properties);
+        }
+        else {
+            int classCountDiff = getNumClassesAdded(bucket);
+            int featureCountDiff = getFeatureCountDiff(bucket);
+            Matrix matrix = expandModel(featureCountDiff, classCountDiff);
+            ArrayList<NamedVector> trainingVectorList = getTrainingVectors(bucket);
+            Collections.shuffle(trainingVectorList);
+            model = new OLRCrossFold(trainingVectorList, properties, matrix);
 
+        }
+
+        model.train();
+
+        writeModel();
+    }
+
+    private ArrayList<NamedVector> getTrainingVectors(final Bucket bucket) {
 
         ArrayList<NamedVector> trainingVectorList = new ArrayList<NamedVector>();
 
@@ -98,14 +105,30 @@ public class OLRClassifier extends AbstractClassifier {
             final List<NamedVector> listOfVectors = vectorFactory.generateVectorsFromRecord(record);
             trainingVectorList.addAll(listOfVectors);
         }
+        return trainingVectorList;
+    }
 
-        Collections.shuffle(trainingVectorList);
+    private Matrix expandModel(final int featureCountDiff, final int classCountDiff) {
 
-        model = new OLRCrossFold(trainingVectorList, properties);
+        Matrix oldMatrix = model.getAverageBetaMatrix();
+        return MatrixEnlarger.enlarge(oldMatrix, featureCountDiff, classCountDiff);
+    }
 
-        model.train();
+    private int getFeatureCountDiff(final Bucket bucket) {
 
-        writeModel();
+        int initNoFeatures = vectorFactory.getNumberOfFeatures();
+        vectorFactory.updateDictionary(bucket);
+        int newNoFeatures = vectorFactory.getNumberOfFeatures();
+        int featureCountDiff = newNoFeatures - initNoFeatures;
+        return featureCountDiff;
+    }
+
+    private int getNumClassesAdded(final Bucket bucket) {
+
+        int initNoClasses = vectorFactory.getCodeIndexer().getNumberOfOutputClasses();
+        vectorFactory.getCodeIndexer().addGoldStandardCodes(bucket);
+        int newNoClasses = vectorFactory.getCodeIndexer().getNumberOfOutputClasses();
+        return newNoClasses - initNoClasses;
     }
 
     public void train(final Bucket bucket, final Matrix betaMatrix) throws InterruptedException {
@@ -140,7 +163,6 @@ public class OLRClassifier extends AbstractClassifier {
         }
     }
 
-    @Override
     public Pair<Code, Double> classify(final TokenSet tokenSet) {
 
         Pair<Code, Double> pair;
@@ -151,6 +173,15 @@ public class OLRClassifier extends AbstractClassifier {
         double confidence = Math.exp(model.logLikelihood(classificationID, vector));
         pair = new Pair<>(code, confidence);
         return pair;
+    }
+
+    /**
+     * Overrides the default path and sets to the path provided.
+     * @param modelPath New path to write model to
+     */
+    public static void setModelPath(final String modelPath) {
+
+        OLRClassifier.modelPath = modelPath;
     }
 
     /* (non-Javadoc)
@@ -206,8 +237,7 @@ public class OLRClassifier extends AbstractClassifier {
     public OLRClassifier deSerializeModel(final String filename) throws IOException {
 
         DataInputStream in = OLR.getDataInputStream(filename);
-        VectorFactory vectorFactory = new VectorFactory();
-        OLRClassifier olrClassifier = new OLRClassifier(vectorFactory);
+        OLRClassifier olrClassifier = new OLRClassifier();
         olrClassifier.readFields(in);
 
         return olrClassifier;

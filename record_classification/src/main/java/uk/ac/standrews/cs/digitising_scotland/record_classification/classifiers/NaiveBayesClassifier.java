@@ -47,7 +47,7 @@ import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearnin
  * @author jkc25
  * 
  */
-public class NaiveBayesClassifier extends AbstractClassifier {
+public class NaiveBayesClassifier {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(NaiveBayesClassifier.class);
 
@@ -65,6 +65,10 @@ public class NaiveBayesClassifier extends AbstractClassifier {
 
     private static final double STATIC_CONFIDENCE = 0.1;
 
+    VectorFactory vectorFactory;
+
+    CodeIndexer index;
+
     /**
      * Create Naive Bayes classifier with default properties.
      * 
@@ -72,9 +76,10 @@ public class NaiveBayesClassifier extends AbstractClassifier {
      *            This is the vector factory used when creating vectors for each
      *            record.
      */
-    public NaiveBayesClassifier(final VectorFactory vectorFactory) {
+    public NaiveBayesClassifier() {
 
-        super(vectorFactory);
+        index = new CodeIndexer();
+        vectorFactory = new VectorFactory();
         try {
             conf = new Configuration();
             fs = FileSystem.get(conf);
@@ -93,19 +98,16 @@ public class NaiveBayesClassifier extends AbstractClassifier {
      *            This is the vector factory used when creating vectors for each
      *            record.
      */
-    public NaiveBayesClassifier(final String customProperties, final VectorFactory vectorFactory) {
+    public NaiveBayesClassifier(final String customProperties) {
 
-        this(vectorFactory);
         MachineLearningConfiguration mlc = new MachineLearningConfiguration();
         properties = mlc.extendDefaultProperties(customProperties);
     }
 
-    /* (non-Javadoc)
-     * @see uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.AbstractClassifier#train(uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Bucket)
-     */
-    @Override
     public void train(final Bucket trainingBucket) throws Exception {
 
+        index = new CodeIndexer(trainingBucket);
+        vectorFactory = new VectorFactory(trainingBucket, index);
         File trainingVectorsDirectory = new File(properties.getProperty("trainingVectorsDirectory"));
         String trainingVectorFile = trainingVectorsDirectory.getAbsolutePath() + "/part-m-00000";
         String naiveBayesModelPath = properties.getProperty("naiveBayesModelPath");
@@ -181,8 +183,6 @@ public class NaiveBayesClassifier extends AbstractClassifier {
         SequenceFile.Writer writer = new SequenceFile.Writer(fs, conf, new Path(trainingVectorLocation), Text.class, VectorWritable.class);
         return new CustomVectorWriter(writer);
     }
-
-
 
     /**
      * Gets the classification.
@@ -336,7 +336,7 @@ public class NaiveBayesClassifier extends AbstractClassifier {
     /* (non-Javadoc)
      * @see uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.AbstractClassifier#getModelFromDefaultLocation()
      */
-    public AbstractClassifier getModelFromDefaultLocation() {
+    public NaiveBayesClassifier getModelFromDefaultLocation() {
 
         try {
             model = getModel();
@@ -347,10 +347,6 @@ public class NaiveBayesClassifier extends AbstractClassifier {
         return this;
     }
 
-    /* (non-Javadoc)
-     * @see uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.AbstractClassifier#classify(uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.TokenSet)
-     */
-    @Override
     public Pair<Code, Double> classify(final TokenSet tokenSet) throws IOException {
 
         Pair<Code, Double> pair;

@@ -6,11 +6,9 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.AbstractClassifier;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Pair;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
 
@@ -19,7 +17,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
  * @author frjd2, jkc25
  *
  */
-public class LookupTableClassifier extends AbstractClassifier implements Serializable {
+public class LookupTableClassifier implements Serializable {
 
     private static final long serialVersionUID = 4756842760803378314L;
     private final Map<TokenSet, Code> lookupTable;
@@ -43,19 +41,9 @@ public class LookupTableClassifier extends AbstractClassifier implements Seriali
         fillLookupTable(bucket);
     }
 
-    /* (non-Javadoc)
-     * @see uk.ac.standrews.cs.digitising_scotland.parser.classifiers.AbstractClassifier#train(uk.ac.standrews.cs.digitising_scotland.parser.datastructures.Bucket)
-     */
-    @Override
     public void train(final Bucket bucket) throws Exception {
 
         fillLookupTable(bucket);
-    }
-
-    @Override
-    public Pair<Code, Double> classify(final TokenSet tokenSet) {
-
-        throw new UnsupportedOperationException();
     }
 
     /**
@@ -108,8 +96,6 @@ public class LookupTableClassifier extends AbstractClassifier implements Seriali
         return codeTriple;
     }
 
-
-    @Override
     public int hashCode() {
 
         final int prime = 31;
@@ -118,7 +104,6 @@ public class LookupTableClassifier extends AbstractClassifier implements Seriali
         return result;
     }
 
-    @Override
     public boolean equals(final Object obj) {
 
         if (this == obj) { return true; }

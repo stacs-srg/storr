@@ -11,11 +11,10 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.AbstractClassifier;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.lookup.NGramSubstrings;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.olr.OLRClassifier;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Pair;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
@@ -53,7 +52,7 @@ public class MachineLearningClassificationPipeline {
      * @param classifier    {@link AbstractClassifier} used for machine learning classification
      * @param trainingBucket the training bucket
      */
-    public MachineLearningClassificationPipeline(final AbstractClassifier classifier, final Bucket trainingBucket) {
+    public MachineLearningClassificationPipeline(final OLRClassifier classifier, final Bucket trainingBucket) {
 
         this.cache = new TokenClassificationCache(classifier);
         recordCache = new HashMap<>();
@@ -105,6 +104,7 @@ public class MachineLearningClassificationPipeline {
     }
 
     private void addResultToRecord(final Record record, final String description, final Set<Classification> result) {
+
         addCodeTriplesAndDescriptions(record, description, result);
     }
 

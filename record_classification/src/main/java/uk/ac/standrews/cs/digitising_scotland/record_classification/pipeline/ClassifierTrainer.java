@@ -3,7 +3,6 @@ package uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.AbstractClassifier;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.lookup.ExactMatchClassifier;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.olr.OLRClassifier;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
@@ -75,7 +74,7 @@ public class ClassifierTrainer {
     public OLRClassifier trainOLRClassifier() throws Exception {
 
         LOGGER.info("********** Training OLR Classifiers **********");
-        olrClassifier = new OLRClassifier(vectorFactory);
+        olrClassifier = new OLRClassifier();
         OLRClassifier.setModelPath(experimentalFolderName + "/Models/olrModel");
         olrClassifier.train(trainingBucket);
         return olrClassifier;
@@ -91,7 +90,7 @@ public class ClassifierTrainer {
         exactMatchClassifier = new ExactMatchClassifier();
         exactMatchClassifier.setModelFileName(modelLocations + "/lookupTable");
         exactMatchClassifier.getModelFromDefaultLocation();
-        olrClassifier = new OLRClassifier(new VectorFactory());
+        olrClassifier = new OLRClassifier();
         OLRClassifier.setModelPath(modelLocations + "/olrModel");
         olrClassifier = olrClassifier.getModelFromDefaultLocation();
 
@@ -112,7 +111,7 @@ public class ClassifierTrainer {
      *
      * @return the olr classifier
      */
-    public AbstractClassifier getOlrClassifier() {
+    public OLRClassifier getOlrClassifier() {
 
         return olrClassifier;
     }
