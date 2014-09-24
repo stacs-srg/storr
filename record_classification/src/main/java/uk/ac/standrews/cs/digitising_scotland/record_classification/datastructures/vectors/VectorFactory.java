@@ -30,7 +30,6 @@ public class VectorFactory {
 
     private CodeIndexer index;
     private SimpleVectorEncoder vectorEncoder;
-    private int numFeatures;
 
     /**
      * Constructs an empty {@link VectorFactory} with number of features set to 0 and a new vectorEncoder.
@@ -39,7 +38,6 @@ public class VectorFactory {
 
         index = new CodeIndexer();
         vectorEncoder = new SimpleVectorEncoder();
-        numFeatures = 0;
     }
 
     /**
@@ -52,20 +50,22 @@ public class VectorFactory {
         this.index = index;
         vectorEncoder = new SimpleVectorEncoder();
         updateDictionary(bucket);
-        setNumFeatures();
     }
 
     public void updateDictionary(final Bucket bucket) {
+
         for (Record record : bucket) {
-            for (String descriptionTerm : record.getDescription()) {
-                updateDictionary(descriptionTerm);
+            for (Classification c : record.getGoldStandardClassificationSet()) {
+                updateDictionary(c.getTokenSet().toString());
             }
         }
+        setNumFeatures();
+
     }
 
     private void setNumFeatures() {
 
-        numFeatures = vectorEncoder.getDictionarySize();
+        int numFeatures = vectorEncoder.getDictionarySize();
         MachineLearningConfiguration.getDefaultProperties().setProperty("numFeatures", String.valueOf(numFeatures));
     }
 
@@ -126,7 +126,7 @@ public class VectorFactory {
      */
     public Vector createVectorFromString(final String description) {
 
-        Vector vector = new RandomAccessSparseVector(numFeatures);
+        Vector vector = new RandomAccessSparseVector(getNumberOfFeatures());
         addFeaturesToVector(vector, description);
         return vector;
     }
@@ -154,8 +154,6 @@ public class VectorFactory {
         }
     }
 
-
-
     /**
      * Adds all the tokens in the specified string to this {@link VectorFactory}'s dictionary.
      * @param description String to add
@@ -178,7 +176,6 @@ public class VectorFactory {
      */
     public void write(final DataOutputStream outputStream) throws IOException {
 
-        outputStream.writeInt(numFeatures);
         vectorEncoder.write(outputStream);
         index.write(outputStream);
 
@@ -192,7 +189,6 @@ public class VectorFactory {
      */
     public void readFields(final DataInputStream in) throws IOException {
 
-        numFeatures = in.readInt();
         vectorEncoder.readFields(in);
         index.readFields(in);
     }
@@ -203,6 +199,7 @@ public class VectorFactory {
     }
 
     public int getNumberOfFeatures() {
-        return 0;
+
+        return vectorEncoder.getDictionarySize();
     }
 }

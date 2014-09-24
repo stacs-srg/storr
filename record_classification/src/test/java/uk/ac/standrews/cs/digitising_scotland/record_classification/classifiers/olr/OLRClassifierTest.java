@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Properties;
@@ -19,14 +20,16 @@ import org.junit.Before;
 import org.junit.Test;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.ClassifierTestingHelper;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.OriginalData;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeDictionary;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeIndexer;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeNotValidException;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.RecordFactory;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.exceptions.InputFormatException;
 import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearningConfiguration;
 
 /**
@@ -49,7 +52,7 @@ public class OLRClassifierTest {
 
     private Properties properties = MachineLearningConfiguration.getDefaultProperties();
 
-    private CodeIndexer index;
+    // private CodeIndexer index;
 
     private CodeDictionary codeDictionary;
 
@@ -63,8 +66,8 @@ public class OLRClassifierTest {
 
         codeDictionary = new CodeDictionary(new File(getClass().getResource("/CodeFactoryTestFile.txt").getFile()));
         createTrainingBucket();
-        index = new CodeIndexer(bucketA);
-        divertOutputStream();
+        //index = new CodeIndexer(bucketA);
+        //divertOutputStream();
     }
 
     /**
@@ -89,6 +92,52 @@ public class OLRClassifierTest {
         FileUtils.deleteQuietly(new File("target/OLRWriteTest.txt"));
         FileUtils.deleteQuietly(new File("target/olrModelPath"));
 
+    }
+
+    @Test
+    public void trainExistingModelWithNewDataTest() throws InterruptedException, IOException, InputFormatException, CodeNotValidException {
+
+        OLRClassifier olrClassifier1 = new OLRClassifier();
+        olrClassifier1.train(bucketA);
+        olrClassifier1.serializeModel("target/olrClassifierWriteTest2");
+        OLRClassifier olrClassifier2 = new OLRClassifier();
+        olrClassifier2 = olrClassifier2.deSerializeModel("target/olrClassifierWriteTest2");
+        Iterable<Record> records = createNewRecords();
+        bucketA.addCollectionOfRecords(records);
+        olrClassifier2.train(bucketA);
+
+    }
+
+    private Iterable<Record> createNewRecords() throws InputFormatException, CodeNotValidException {
+
+        String[] description = {"Occupation 1", "Another Job", "Foo", "Bar", "FooManChu"};
+        String[] tokenSetArry = {"The Red", "Cat Or", "Should it be fox", "jumped over something", "that", "should maybe be a ", "big cat or something", "idk", "jamie", "fraser"};
+
+        List<Record> records = new ArrayList<Record>();
+
+        for (int i = 0; i < 100; i++) {
+            ArrayList<String> d = new ArrayList<>();
+            d.add(description[i % 5]);
+            final OriginalData originalData = new OriginalData(d, 2010 + i, 1, "fileName.txt");
+            Set<Classification> goldStandardClassification = new HashSet<>();
+            Code code = getRandomCode();
+            goldStandardClassification.add(new Classification(code, new TokenSet(tokenSetArry[i % 10]), 1.0));
+            originalData.setGoldStandardClassification(goldStandardClassification);
+            Record r = new Record(i, originalData);
+            records.add(r);
+        }
+
+        return records;
+    }
+
+    private Code getRandomCode() throws CodeNotValidException {
+
+        double rnd = Math.random();
+        if (rnd < 0.33) {
+            return codeDictionary.getCode("95240");
+        }
+        else if (rnd > 0.3 && rnd < 0.66) { return codeDictionary.getCode("9500"); }
+        return codeDictionary.getCode("952");
     }
 
     /**

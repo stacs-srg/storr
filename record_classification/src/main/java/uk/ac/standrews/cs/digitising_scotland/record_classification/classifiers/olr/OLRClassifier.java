@@ -93,6 +93,7 @@ public class OLRClassifier {
         }
 
         model.train();
+        System.out.println(model.getAverageBetaMatrix().toString());
 
         writeModel();
     }
@@ -111,7 +112,18 @@ public class OLRClassifier {
     private Matrix expandModel(final int featureCountDiff, final int classCountDiff) {
 
         Matrix oldMatrix = model.getAverageBetaMatrix();
-        return MatrixEnlarger.enlarge(oldMatrix, featureCountDiff, classCountDiff);
+        System.out.println("old matrix row size: " + oldMatrix.rowSize());
+        System.out.println("old matrix cols size: " + oldMatrix.columnSize());
+
+        System.out.println(oldMatrix.toString()); //FIXME debug only
+        final Matrix enlarge = MatrixEnlarger.enlarge(oldMatrix, featureCountDiff, classCountDiff);
+
+        System.out.println("new matrix row size: " + enlarge.rowSize());
+        System.out.println("new matrix cols size:" + enlarge.columnSize());
+
+        System.out.println(enlarge); //FIXME debug only
+
+        return enlarge;
     }
 
     private int getFeatureCountDiff(final Bucket bucket) {
