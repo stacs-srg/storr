@@ -11,16 +11,23 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.HashMap;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
+
 /**
- * Reads a file in the NRS data transfer format and converts ICD10 codes to codes described in anothe file.
+ * Reads a file in the NRS data transfer format and converts ICD10 codes to codes described in another file.
  * @author jkc25
  *
  */
 public class ICDCodeConverter {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(ICDCodeConverter.class);
+
     public static void main(final String[] args) throws IOException {
 
-        File inputFile = new File("NRSdata.txt");
+        File inputFile = new File("NRSDataTab.txt");
         File outputFile = new File("convertedNRSdata.txt");
         File mappingFile = new File("mappingFile.txt");
 
@@ -32,7 +39,7 @@ public class ICDCodeConverter {
 
         HashMap<String, String> map = buildMapping(mappingFile);
 
-        BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(inputFile), "UTF8"));
+        BufferedReader in = Utils.createBufferedReader(inputFile);
 
         String str;
         StringBuilder sb = new StringBuilder();
@@ -67,26 +74,33 @@ public class ICDCodeConverter {
 
     private static String getNewLine(final String str, final HashMap<String, String> map) {
 
-        String[] splitString = str.split("\t");
-        String[] splitStringNew = splitString.clone();
-        StringBuilder sb = new StringBuilder();
-        if (splitString.length > 5) {
+        String[] splitString;
 
-            for (int i = 5; i < splitStringNew.length; i = i + 3) {
+        splitString = str.split("\t");
+
+        String[] splitStringNew = splitString.clone();
+        //String[] splitStringNew = cloneAndEnlarge(splitString.clone());
+
+        StringBuilder sb = new StringBuilder();
+        if (splitString.length >= 6) {
+
+            for (int i = 5; i < splitStringNew.length; i = i + 2) {
 
                 String old = splitString[i];
 
                 String newCodeAndDesc = map.get(old);
 
                 if (newCodeAndDesc != null) {
-                    String newCode = newCodeAndDesc.split("\t")[0];
-                    String newDesc = newCodeAndDesc.split("\t")[1];
-                    splitStringNew[i] = newCode;
-                    splitStringNew[i + 1] = newDesc;
-
+                    setNewString(splitStringNew, i, newCodeAndDesc);
                 }
                 else {
-                    System.err.println(old + " isn't in map... record id: " + splitString[0]);
+                    if ((newCodeAndDesc = map.get(old.replaceAll("\\.", ""))) != null) {
+                        setNewString(splitStringNew, i, newCodeAndDesc);
+                    }
+                    else {
+                        LOGGER.error(old + " isn't in map... record id: " + splitString[1]);
+
+                    }
                 }
 
             }
@@ -102,6 +116,23 @@ public class ICDCodeConverter {
 
     }
 
+    private static void setNewString(final String[] splitStringNew, final int i, final String newCodeAndDesc) {
+
+        String newCode = newCodeAndDesc.split("\t")[0];
+        // String newDesc = newCodeAndDesc.split("\t")[1];
+        splitStringNew[i] = newCode;
+        // splitStringNew[i + 1] = newDesc;
+    }
+
+    private static String[] cloneAndEnlarge(final String[] clone) {
+
+        String[] biggerArray = new String[clone.length + 1];
+        for (int i = 0; i < clone.length; i++) {
+            biggerArray[i] = clone[i];
+        }
+        return biggerArray;
+    }
+
     private static void write(final String newLine, final File outputFile) throws IOException {
 
         Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outputFile.getAbsoluteFile()), "UTF-8"));
@@ -113,7 +144,6 @@ public class ICDCodeConverter {
                 out.close();
             }
             catch (Exception e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
         }
