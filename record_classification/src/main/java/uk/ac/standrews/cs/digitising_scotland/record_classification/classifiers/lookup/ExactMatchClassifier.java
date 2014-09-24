@@ -200,4 +200,28 @@ public class ExactMatchClassifier {
             return null;
         }
     }
+
+    @Override
+    public int hashCode() {
+
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((lookupTable == null) ? 0 : lookupTable.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+
+        if (this == obj) return true;
+        if (obj == null) return false;
+        if (getClass() != obj.getClass()) return false;
+        ExactMatchClassifier other = (ExactMatchClassifier) obj;
+        if (lookupTable == null) {
+            if (other.lookupTable != null) return false;
+        }
+        else if (!lookupTable.equals(other.lookupTable)) return false;
+        return true;
+    }
+
 }

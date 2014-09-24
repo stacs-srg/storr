@@ -222,6 +222,7 @@ public class OLRClassifier {
 
     private void readFields(final DataInputStream inputStream) throws IOException {
 
+        vectorFactory = new VectorFactory();
         vectorFactory.readFields(inputStream);
         model.readFields(inputStream);
     }
