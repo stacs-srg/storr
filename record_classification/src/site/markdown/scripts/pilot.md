@@ -16,7 +16,7 @@ The options are as follows:
 
 * <span style="text-decoration: underline">training data</span>
     * This option specifies the file that contains the training data.
-* <span style="text-decoration: underline">training data</span>
+* <span style="text-decoration: underline">data to be classified</span>
     * This option specifies the file that contains the data to be classified.
 * <span style="text-decoration: underline">heap size</span>
     * This option specifies the heap size in GB.
