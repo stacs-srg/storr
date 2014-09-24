@@ -16,10 +16,10 @@ The options are as follows:
 
 * <span style="text-decoration: underline">training data</span>
     * This option specifies the file that contains the training data.
-* ><span style="text-decoration: underline">training data ratio<</span>
+* <span style="text-decoration: underline">training data ratio</span>
     * This option specifies the size of the training data batch to be generated. Must be a value between 0 and 1. A ratio of 0.8 would mean 80% of data will be used for training, 20% for validation.
 * <span style="text-decoration: underline">heap size</span>
-	    * This option specifies the heap size in GB.
+    * This option specifies the heap size in GB.
 
 **EXAMPLE**
 
