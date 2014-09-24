@@ -66,36 +66,6 @@ public class ExactMatchClassifierTest {
     }
 
     /**
-     * Test classify record.
-     *
-     * @throws Exception the exception
-     */
-    @Test
-    @Ignore
-    public void testClassifyRecord() throws Exception {
-
-        ExactMatchClassifier exactMatchClassifer = train();
-        for (Record record : testingBucket) {
-            Assert.fail();
-        }
-
-    }
-
-    /**
-     * Test classify bucket.
-     *
-     * @throws Exception the exception
-     */
-    @Test
-    @Ignore
-    public void testClassifyBucket() throws Exception {
-
-        ExactMatchClassifier exactMatchClassifer = train();
-
-        Assert.fail();
-    }
-
-    /**
      * Train.
      *
      * @return the exact match classifier

@@ -7,18 +7,23 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Properties;
+import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.*;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.ClassifierTestingHelper;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeDictionary;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeIndexer;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.RecordFactory;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.vectors.VectorFactory;
 import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearningConfiguration;
 
@@ -91,7 +96,6 @@ public class OLRClassifierTest {
      * @throws IOException Signals that an I/O exception has occurred.
      */
     @Test
-    @Ignore
     public void testClassifyWithDeSerializedModel() throws InterruptedException, IOException {
 
         VectorFactory vectorFactory = new VectorFactory(bucketA, index);
@@ -103,9 +107,23 @@ public class OLRClassifierTest {
         olrClassifier2 = olrClassifier2.deSerializeModel("target/olrClassifierWriteTest");
 
         for (Record record : bucketA) {
-            Assert.fail();
+            Code c = olrClassifier2.classify(new TokenSet(record.getDescription())).getLeft();
+            Assert.assertTrue("Record does not have code " + c + " in gold standard set. Set contains "
+                    + record.getGoldStandardClassificationSet()+ ".",recordHasCodeInGoldStandardSet(record,c));
         }
 
+    }
+
+    /**
+     * if the record's gold standard set contains the code then return true else return false.
+     */
+    private boolean recordHasCodeInGoldStandardSet(Record record, Code c) {
+        Set<Classification> gs = record.getGoldStandardClassificationSet();
+        Set<Code> gsCodes =  new HashSet<>();
+        for(Classification classification : gs){
+            gsCodes.add(classification.getCode());
+        }
+        return gsCodes.contains(c);
     }
 
     /**

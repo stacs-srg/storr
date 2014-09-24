@@ -51,12 +51,16 @@ public class VectorFactory {
 
         this.index = index;
         vectorEncoder = new SimpleVectorEncoder();
+        updateDictionary(bucket);
+        setNumFeatures();
+    }
+
+    public void updateDictionary(final Bucket bucket) {
         for (Record record : bucket) {
             for (String descriptionTerm : record.getDescription()) {
                 updateDictionary(descriptionTerm);
             }
         }
-        setNumFeatures();
     }
 
     private void setNumFeatures() {
@@ -150,6 +154,8 @@ public class VectorFactory {
         }
     }
 
+
+
     /**
      * Adds all the tokens in the specified string to this {@link VectorFactory}'s dictionary.
      * @param description String to add
@@ -194,5 +200,9 @@ public class VectorFactory {
     public CodeIndexer getCodeIndexer() {
 
         return index;
+    }
+
+    public int getNumberOfFeatures() {
+        return 0;
     }
 }

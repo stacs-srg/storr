@@ -58,33 +58,6 @@ public class LookupTableClassifierTest {
     }
 
     /**
-     * Test classify record.
-     *
-     * @throws Exception the exception
-     */
-    @Test
-    @Ignore
-    public void testClassifyRecord() throws Exception {
-
-        LookupTableClassifier lookupClassifier = train();
-        Assert.fail();
-
-    }
-
-    /**
-     * Test classify bucket.
-     *
-     * @throws Exception the exception
-     */
-    @Test
-    @Ignore
-    public void testClassifyBucket() throws Exception {
-
-        LookupTableClassifier lookupClassifier = train();
-        Assert.fail();
-    }
-
-    /**
      * Trains a lookup classifier with the training bucket.
      *
      * @return the lookup table classifier
