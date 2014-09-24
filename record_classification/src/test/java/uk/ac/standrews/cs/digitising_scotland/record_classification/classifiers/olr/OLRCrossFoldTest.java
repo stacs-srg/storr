@@ -203,42 +203,4 @@ public class OLRCrossFoldTest {
 
     }
 
-    /**
-     * Test classify with code as description.
-     *
-     * @param model the model
-     * @param line the line
-     */
-    private void testClassifyWithCodeAsDescription(final OLRCrossFold model, final String line) {
-
-        String codeFromFile = getCodeFromLine(line);
-        Vector testVector = vectorFactory.createVectorFromString(codeFromFile);
-        int classification = getClassification(model, testVector);
-        Assert.assertEquals(codeFromFile, index.getCode(classification).getCodeAsString());
-    }
-
-    /**
-     * Gets the classification.
-     *
-     * @param model the model
-     * @param testVector the test vector
-     * @return the classification
-     */
-    private int getClassification(final OLRCrossFold model, final Vector testVector) {
-
-        return model.classifyFull(testVector).maxValueIndex();
-    }
-
-    /**
-     * Gets the code from line.
-     *
-     * @param line the line
-     * @return the code from line
-     */
-    private String getCodeFromLine(final String line) {
-
-        String[] splitLine = line.split("\t");
-        return splitLine[0].trim();
-    }
-
 }

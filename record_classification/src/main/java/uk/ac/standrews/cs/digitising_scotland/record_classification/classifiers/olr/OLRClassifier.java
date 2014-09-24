@@ -90,6 +90,14 @@ public class OLRClassifier extends AbstractClassifier {
     @Override
     public void train(final Bucket bucket) throws InterruptedException {
 
+        //TODO
+        int initNoClasses = vectorFactory.getCodeIndexer().getNumberOfOutputClasses();
+        vectorFactory.getCodeIndexer().addGoldStandardCodes(bucket);
+        int newNoClasses = vectorFactory.getCodeIndexer().getNumberOfOutputClasses();
+
+        int initNoFeatures = vectorFactory.getNumberOfFeatures();
+
+
         ArrayList<NamedVector> trainingVectorList = new ArrayList<NamedVector>();
 
         for (Record record : bucket) {
