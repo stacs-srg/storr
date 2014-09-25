@@ -93,7 +93,6 @@ public class OLRClassifier {
         }
 
         model.train();
-        System.out.println(model.getAverageBetaMatrix().toString());
 
         writeModel();
     }

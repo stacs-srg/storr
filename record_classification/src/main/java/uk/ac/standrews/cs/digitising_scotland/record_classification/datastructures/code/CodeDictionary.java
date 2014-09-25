@@ -8,6 +8,9 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
 
 /**
@@ -17,6 +20,8 @@ import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
  *
  */
 public class CodeDictionary {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(CodeDictionary.class);
 
     /**
      * Map of codes strings to code descriptions.
@@ -62,7 +67,11 @@ public class CodeDictionary {
     public Code getCode(String codeAsString) throws CodeNotValidException {
 
         final Code code = validCodes.get(codeAsString);
-        if (code == null) { throw new CodeNotValidException(codeAsString + " is not a valid code"); }
+        if (code == null) {
+            LOGGER.error(codeAsString + " is not a valid code", new CodeNotValidException(codeAsString + " is not a valid code"));
+            throw new CodeNotValidException(codeAsString + " is not a valid code");
+
+        }
         return code;
     }
 

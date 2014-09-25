@@ -18,7 +18,7 @@ public class PredictionBucketGenerator {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PredictionBucketGenerator.class);
 
-    CodeDictionary codeDictionary;
+    private CodeDictionary codeDictionary;
 
     public PredictionBucketGenerator(final CodeDictionary codeDictionary) {
 

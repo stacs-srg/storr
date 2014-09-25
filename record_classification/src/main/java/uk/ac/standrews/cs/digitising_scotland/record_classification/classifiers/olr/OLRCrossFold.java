@@ -221,9 +221,9 @@ public class OLRCrossFold {
         }
         Matrix classifierMatrix = matrices.pop();
         while (!matrices.empty()) {
-            classifierMatrix.plus(matrices.pop());
+            classifierMatrix = classifierMatrix.plus(matrices.pop());
         }
-        classifierMatrix.divide(survivors.size());
+        classifierMatrix = classifierMatrix.divide(survivors.size());
         return classifierMatrix;
     }
 
@@ -233,7 +233,6 @@ public class OLRCrossFold {
      */
     private void trainIfPossible() {
 
-        checkTrainable();
         try {
             this.trainAllModels();
         }

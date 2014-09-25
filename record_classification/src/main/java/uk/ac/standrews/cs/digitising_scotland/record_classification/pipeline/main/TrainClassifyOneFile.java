@@ -18,6 +18,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.Gol
 import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.MachineLearningClassificationPipeline;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.PipelineUtils;
 import uk.ac.standrews.cs.digitising_scotland.tools.Timer;
+import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearningConfiguration;
 
 /**
  * This class integrates the training of machine learning models and the
@@ -51,6 +52,7 @@ import uk.ac.standrews.cs.digitising_scotland.tools.Timer;
 public final class TrainClassifyOneFile {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TrainClassifyOneFile.class);
+    private static double DEFAULT_TRAINING_RATIO = 0.8;
 
     private TrainClassifyOneFile() {
 
@@ -72,16 +74,15 @@ public final class TrainClassifyOneFile {
         File goldStandard;
         Bucket trainingBucket;
         Bucket predictionBucket;
-        double trainingRatio = 0.8;
 
         Timer timer = PipelineUtils.initAndStartTimer();
 
         experimentalFolderName = PipelineUtils.setupExperimentalFolders("Experiments");
 
         goldStandard = parseGoldStandFile(args);
-        trainingRatio = parseTrainingPct(args);
+        double trainingRatio = parseTrainingPct(args);
 
-        File codeDictionaryFile = null; //FIXME
+        File codeDictionaryFile = new File(MachineLearningConfiguration.getDefaultProperties().getProperty("codeDictionaryFile")); //FIXME
         CodeDictionary codeDictionary = new CodeDictionary(codeDictionaryFile);
 
         GoldStandardBucketGenerator generator = new GoldStandardBucketGenerator(codeDictionary);
@@ -125,7 +126,7 @@ public final class TrainClassifyOneFile {
 
     private static double parseTrainingPct(final String[] args) {
 
-        double trainingRatio = 0;
+        double trainingRatio = DEFAULT_TRAINING_RATIO;
         if (args.length > 1) {
             double userRatio = Double.valueOf(args[1]);
             if (userRatio > 0 && userRatio < 1) {
@@ -152,7 +153,7 @@ public final class TrainClassifyOneFile {
 
     private static Bucket[] randomlyAssignToTrainingAndPrediction(final Bucket bucket, final double trainingRatio) {
 
-        Bucket[] buckets = new Bucket[2];
+        Bucket[] buckets = initBuckets();
 
         for (Record record : bucket) {
             if (Math.random() < trainingRatio) {
@@ -161,6 +162,15 @@ public final class TrainClassifyOneFile {
             else {
                 buckets[1].addRecordToBucket(record);
             }
+        }
+        return buckets;
+    }
+
+    private static Bucket[] initBuckets() {
+
+        Bucket[] buckets = new Bucket[2];
+        for (int i = 0; i < buckets.length; i++) {
+            buckets[i] = new Bucket();
         }
         return buckets;
     }
