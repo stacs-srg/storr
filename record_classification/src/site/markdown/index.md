@@ -3,10 +3,10 @@
 This module provides an automatic classification tool, designed to classify historical documents to [ICD10](http://www.who.int/classifications/icd/en/) and [HISCO](http://socialhistory.org/en/projects/hisco-history-work).
 
 * main classes:
-[TrainModels](https://builds.cs.st-andrews.ac.uk/job/digitising_scotland/javadoc/uk/ac/standrews/cs/digitising_scotland/record_classification/pipeline/main/TrainModels.html)
-[ClassifyWithExsistingModels](https://builds.cs.st-andrews.ac.uk/job/digitising_scotland/javadoc/uk/ac/standrews/cs/digitising_scotland/record_classification/pipeline/main/ClassifyWithExsistingModels.html)
-[TrainClassifyOneFile](https://builds.cs.st-andrews.ac.uk/job/digitising_scotland/javadoc/uk/ac/standrews/cs/digitising_scotland/record_classification/pipeline/main/TrainClassifyOneFile.html)
-[PIlot](https://builds.cs.st-andrews.ac.uk/job/digitising_scotland/javadoc/uk/ac/standrews/cs/digitising_scotland/record_classification/pipeline/main/PIlot.html)
+[TrainModels](https://builds.cs.st-andrews.ac.uk/job/digitising_scotland/javadoc/uk/ac/standrews/cs/digitising_scotland/record_classification/pipeline/main/TrainModels.html)    
+[ClassifyWithExsistingModels](https://builds.cs.st-andrews.ac.uk/job/digitising_scotland/javadoc/uk/ac/standrews/cs/digitising_scotland/record_classification/pipeline/main/ClassifyWithExsistingModels.html)    
+[TrainClassifyOneFile](https://builds.cs.st-andrews.ac.uk/job/digitising_scotland/javadoc/uk/ac/standrews/cs/digitising_scotland/record_classification/pipeline/main/TrainClassifyOneFile.html)    
+[PIlot](https://builds.cs.st-andrews.ac.uk/job/digitising_scotland/javadoc/uk/ac/standrews/cs/digitising_scotland/record_classification/pipeline/main/PIlot.html)    
 
 
 ## Documentation
