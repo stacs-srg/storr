@@ -72,7 +72,6 @@ public class MachineLearningClassificationPipeline {
         Bucket classified = new Bucket();
 
         for (Record record : bucket) {
-            LOGGER.info("Classifying record " + count + " of " + bucket.size() + " Description: " + record.getDescription());
             classifyRecordAddToBucket(record, classified);
             count++;
         }
