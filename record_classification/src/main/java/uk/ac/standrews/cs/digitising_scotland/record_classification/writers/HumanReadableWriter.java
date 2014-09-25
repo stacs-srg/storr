@@ -13,6 +13,7 @@ import java.util.Set;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
+import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
 import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
 
 /**
@@ -33,9 +34,8 @@ public class HumanReadableWriter extends OutputDataFormatter implements Closeabl
      */
     public HumanReadableWriter(final File outputPath, final String delimiter) throws FileNotFoundException, UnsupportedEncodingException {
 
-        FileOutputStream fileOutputStream = new FileOutputStream(outputPath);
-        OutputStreamWriter outputStream = new OutputStreamWriter(fileOutputStream, FileManipulation.FILE_CHARSET);
-        writer = new BufferedWriter(outputStream);
+      
+        writer = (BufferedWriter) Utils.createBufferedWriter(outputPath)
         setDelimier(delimiter);
     }
 

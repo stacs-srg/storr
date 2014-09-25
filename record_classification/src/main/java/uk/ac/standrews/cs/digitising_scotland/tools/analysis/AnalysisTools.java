@@ -231,19 +231,24 @@ public class AnalysisTools {
         if (classificationMap.get(classification) != null) {
             classificationMap.get(classification).setFN(totalNumberActuallyInClass - numberOfCorrectItems);
             getPrecision(classification);
-            try {
-                int nl = getNumberOfLines();
-                double tp = classificationMap.get(classification).getTP();
-                double fn = classificationMap.get(classification).getFN();
-                double fp = classificationMap.get(classification).getFP();
-
-                classificationMap.get(classification).setTN(nl - tp - fn - fp);
-            }
-            catch (IOException e) {
-                LOGGER.error(e.getMessage(), e.getCause());
-            }
+            setTN(classification);
         }
         return (double) numberOfCorrectItems / (double) totalNumberActuallyInClass;
+    }
+
+    private void setTN(final String classification) {
+
+        try {
+            int nl = getNumberOfLines();
+            double tp = classificationMap.get(classification).getTP();
+            double fn = classificationMap.get(classification).getFN();
+            double fp = classificationMap.get(classification).getFP();
+
+            classificationMap.get(classification).setTN(nl - tp - fn - fp);
+        }
+        catch (IOException e) {
+            LOGGER.error(e.getMessage(), e.getCause());
+        }
     }
 
     /**
@@ -261,17 +266,7 @@ public class AnalysisTools {
             int numberOfCorrectItems = buildPrecisionMap().get(classification);
             classificationMap.get(classification).setFN(totalNumberActuallyInClass - numberOfCorrectItems);
             getPrecision(classification);
-            try {
-                int nl = getNumberOfLines();
-                double tp = classificationMap.get(classification).getTP();
-                double fn = classificationMap.get(classification).getFN();
-                double fp = classificationMap.get(classification).getFP();
-
-                classificationMap.get(classification).setTN(nl - tp - fn - fp);
-            }
-            catch (IOException e) {
-                LOGGER.error(e.getMessage(), e.getCause());
-            }
+            setTN(classification);
         }
 
     }
