@@ -4,17 +4,14 @@ import java.io.BufferedWriter;
 import java.io.Closeable;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.Set;
 
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
-import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
 
 /**
  * The Class HumanReadableWriter formats the fields in a record into a human readable format.
@@ -34,8 +31,7 @@ public class HumanReadableWriter extends OutputDataFormatter implements Closeabl
      */
     public HumanReadableWriter(final File outputPath, final String delimiter) throws FileNotFoundException, UnsupportedEncodingException {
 
-      
-        writer = (BufferedWriter) Utils.createBufferedWriter(outputPath)
+        writer = (BufferedWriter) Utils.createBufferedWriter(outputPath);
         setDelimier(delimiter);
     }
 

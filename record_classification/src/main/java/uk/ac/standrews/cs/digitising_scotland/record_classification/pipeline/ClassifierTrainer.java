@@ -9,6 +9,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeIndexer;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.vectors.VectorFactory;
 
+// TODO: Auto-generated Javadoc
 /**
  * The Class ClassifierTrainer contains methods for training both {@link OLRClassifier} and {@link ExactMatchClassifier} objects.
  * 
@@ -38,6 +39,7 @@ public class ClassifierTrainer {
      *
      * @param trainingBucket the training bucket
      * @param experimentalFolderName the experimental folder name
+     * @param codeIndex the code index
      */
     public ClassifierTrainer(final Bucket trainingBucket, final String experimentalFolderName, final CodeIndexer codeIndex) {
 
@@ -83,7 +85,9 @@ public class ClassifierTrainer {
     /**
      * Instansiates an {@link ExactMatchClassifier} and a {@link OLRClassifier} from models stored on disk.
      * The model locations should be in "/lookupTable" and "/olrModel" from modelLocations path.
+     *
      * @param modelLocations Path to parent directory of pre-built models.
+     * @return the existings models
      */
     public void getExistingsModels(final String modelLocations) {
 

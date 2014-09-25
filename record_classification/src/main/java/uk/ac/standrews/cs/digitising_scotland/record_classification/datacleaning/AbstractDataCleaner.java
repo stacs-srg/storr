@@ -64,7 +64,7 @@ public abstract class AbstractDataCleaner {
      *             states the frequency of occurrence below which we start correcting tokens.
      * @throws IOException Indicates an IO Error
      * @throws InputFormatException Indicates an error with the input file format
-     * @throws CodeNotValidException 
+     * @throws CodeNotValidException
      */
     public void runOnFile(final String... args) throws IOException, InputFormatException, CodeNotValidException {
 
@@ -72,8 +72,8 @@ public abstract class AbstractDataCleaner {
         File correctedFile = new File(args[1]);
         setTokenLimit(args);
         File codeDictionaryFile = null; //FIXME
-        CodeDictionary CodeDictionary = new CodeDictionary(codeDictionaryFile);
-        List<Record> records = formatConverter.convert(file, CodeDictionary);
+        CodeDictionary codeDictionary = new CodeDictionary(codeDictionaryFile);
+        List<Record> records = formatConverter.convert(file, codeDictionary);
         Bucket bucket = new Bucket(records);
         buildTokenOccurrenceMap(bucket);
         buildCorrectionMap(bucket);
