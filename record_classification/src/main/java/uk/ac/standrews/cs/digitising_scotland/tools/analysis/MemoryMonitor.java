@@ -68,7 +68,7 @@ public class MemoryMonitor implements Runnable {
         //MemoryMXBean
 
         mxbean = ManagementFactory.getMemoryMXBean();
-        System.out.println(dateFormat.format(cal.getTime()));
+        LOGGER.info(dateFormat.format(cal.getTime()));
     }
 
     /**

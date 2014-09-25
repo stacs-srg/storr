@@ -67,7 +67,7 @@ public class OLRClassifierTest {
         codeDictionary = new CodeDictionary(new File(getClass().getResource("/CodeFactoryTestFile.txt").getFile()));
         createTrainingBucket();
         //index = new CodeIndexer(bucketA);
-        //divertOutputStream();
+        divertOutputStream();
     }
 
     /**
