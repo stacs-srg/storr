@@ -45,7 +45,6 @@ public class OLRClassifier {
 
     /**
      * Constructor.
-     * @param vectorFactory vector factory
      */
     public OLRClassifier() {
 
@@ -57,7 +56,6 @@ public class OLRClassifier {
      * Constructor.
      *
      * @param customProperties custom properties file
-     * @param vectorFactory vector factory
      */
     public OLRClassifier(final String customProperties) {
 
@@ -111,17 +109,7 @@ public class OLRClassifier {
     private Matrix expandModel(final int featureCountDiff, final int classCountDiff) {
 
         Matrix oldMatrix = model.getAverageBetaMatrix();
-        System.out.println("old matrix row size: " + oldMatrix.rowSize());
-        System.out.println("old matrix cols size: " + oldMatrix.columnSize());
-
-        System.out.println(oldMatrix.toString()); //FIXME debug only
         final Matrix enlarge = MatrixEnlarger.enlarge(oldMatrix, featureCountDiff, classCountDiff);
-
-        System.out.println("new matrix row size: " + enlarge.rowSize());
-        System.out.println("new matrix cols size:" + enlarge.columnSize());
-
-        System.out.println(enlarge); //FIXME debug only
-
         return enlarge;
     }
 
@@ -142,27 +130,6 @@ public class OLRClassifier {
         return newNoClasses - initNoClasses;
     }
 
-    public void train(final Bucket bucket, final Matrix betaMatrix) throws InterruptedException {
-
-        ArrayList<NamedVector> trainingVectorList = new ArrayList<>();
-
-        for (Record record : bucket) {
-            final List<NamedVector> listOfVectors = vectorFactory.generateVectorsFromRecord(record);
-            trainingVectorList.addAll(listOfVectors);
-        }
-
-        Collections.shuffle(trainingVectorList);
-
-        model = new OLRCrossFold(trainingVectorList, properties, betaMatrix);
-
-        model.train();
-
-        writeModel();
-    }
-
-    /**
-     * Write model.
-     */
     private void writeModel() {
 
         try {
@@ -195,9 +162,6 @@ public class OLRClassifier {
         OLRClassifier.modelPath = modelPath;
     }
 
-    /* (non-Javadoc)
-     * @see uk.ac.standrews.cs.digitising_scotland.parser.classifiers.AbstractClassifier#getModelFromDefaultLocation()
-     */
     public OLRClassifier getModelFromDefaultLocation() {
 
         OLRClassifier olr = null;

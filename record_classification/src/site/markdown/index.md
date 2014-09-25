@@ -1,6 +1,12 @@
-This module provides an automatic classification tool, designed to provide ICD10 and HISCO codes to historical records.
+# Module *record_classification*
 
-* main classes: [TrainAndClassify](https://builds.cs.st-andrews.ac.uk/job/digitising_scotland/javadoc/uk/ac/standrews/cs/digitising_scotland/parser/pipeline/TrainAndMultiplyClassify.html)
+This module provides an automatic classification tool, designed to classify historical documents to [ICD10](http://www.who.int/classifications/icd/en/) and [HISCO](http://socialhistory.org/en/projects/hisco-history-work).
+
+* main classes:
+[TrainModels](https://builds.cs.st-andrews.ac.uk/job/digitising_scotland/javadoc/uk/ac/standrews/cs/digitising_scotland/record_classification/pipeline/main/TrainModels.html)
+[ClassifyWithExsistingModels](https://builds.cs.st-andrews.ac.uk/job/digitising_scotland/javadoc/uk/ac/standrews/cs/digitising_scotland/record_classification/pipeline/main/ClassifyWithExsistingModels.html)
+[TrainClassifyOneFile](https://builds.cs.st-andrews.ac.uk/job/digitising_scotland/javadoc/uk/ac/standrews/cs/digitising_scotland/record_classification/pipeline/main/TrainClassifyOneFile.html)
+[PIlot](https://builds.cs.st-andrews.ac.uk/job/digitising_scotland/javadoc/uk/ac/standrews/cs/digitising_scotland/record_classification/pipeline/main/PIlot.html)
 
 
 ## Documentation
@@ -33,8 +39,14 @@ The Maven repository is here:
 
 A <a href="tutorial.html">brief tutorial</a> on how to use the record classification software is available.
 
+## Algorithms
+
+Information on the algorithms being used can be [found here](algorithms-information.html).
 ## Scripts
 
 A selection of shell scripts are provided to help the user run the software. <a href="scripts-information.html">These can be found here.</a> 
 
+## Contact
+
+Any questions or suggestions may be sent to Graham Kirby at graham.kirby@st-andrews.ac.uk. We would welcome any information on others\' experience with the software.
 
