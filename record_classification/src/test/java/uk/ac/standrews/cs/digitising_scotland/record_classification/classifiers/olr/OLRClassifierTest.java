@@ -3,7 +3,6 @@ package uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
@@ -21,6 +20,7 @@ import org.junit.Test;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.ClassifierTestingHelper;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.OriginalData;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Pair;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
@@ -37,9 +37,6 @@ import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearnin
  */
 //FIXME
 public class OLRClassifierTest {
-
-    /** The bucket a. */
-    private Bucket bucketA;
 
     /** The os. */
     private OutputStream os;
@@ -66,7 +63,6 @@ public class OLRClassifierTest {
 
         codeDictionary = new CodeDictionary(new File(getClass().getResource("/CodeFactoryTestFile.txt").getFile()));
         createTrainingBucket();
-        //index = new CodeIndexer(bucketA);
         divertOutputStream();
     }
 
@@ -95,8 +91,9 @@ public class OLRClassifierTest {
     }
 
     @Test
-    public void trainExistingModelWithNewDataTest() throws InterruptedException, IOException, InputFormatException, CodeNotValidException {
+    public void trainExistingModelWithNewDataTest() throws Exception {
 
+        Bucket bucketA = createTrainingBucket();
         OLRClassifier olrClassifier1 = new OLRClassifier();
         olrClassifier1.train(bucketA);
         olrClassifier1.serializeModel("target/olrClassifierWriteTest2");
@@ -142,12 +139,12 @@ public class OLRClassifierTest {
 
     /**
      * Test classify with de serialized model.
-     *
-     * @throws InterruptedException the interrupted exception
-     * @throws IOException Signals that an I/O exception has occurred.
+     * @throws Exception 
      */
     @Test
-    public void testClassifyWithDeSerializedModel() throws InterruptedException, IOException {
+    public void testClassifyWithDeSerializedModel() throws Exception {
+
+        Bucket bucketA = createTrainingBucket();
 
         OLRClassifier olrClassifier1 = new OLRClassifier();
 
@@ -157,8 +154,12 @@ public class OLRClassifierTest {
         olrClassifier2 = olrClassifier2.deSerializeModel("target/olrClassifierWriteTest");
 
         for (Record record : bucketA) {
-            Code c = olrClassifier2.classify(new TokenSet(record.getDescription())).getLeft();
-            Assert.assertTrue("Record does not have code " + c + " in gold standard set. Set contains " + record.getGoldStandardClassificationSet() + ".", recordHasCodeInGoldStandardSet(record, c));
+            for (String s : record.getDescription()) {
+                Pair<Code, Double> c1 = olrClassifier1.classify(new TokenSet(s));
+                Pair<Code, Double> c2 = olrClassifier2.classify(new TokenSet(s));
+                Assert.assertEquals(c1, c2);
+
+            }
         }
 
     }
@@ -195,7 +196,7 @@ public class OLRClassifierTest {
 
         File inputFileTraining = new File(getClass().getResource("/occupationTestFormatPipe.txt").getFile());
         List<Record> listOfRecordsTraining = RecordFactory.makeUnCodedRecordsFromFile(inputFileTraining);
-        bucketA = new Bucket(listOfRecordsTraining);
+        Bucket bucketA = new Bucket(listOfRecordsTraining);
         bucketA = helper.giveBucketTestingOccCodes(bucketA);
         return bucketA;
     }
@@ -207,6 +208,8 @@ public class OLRClassifierTest {
      */
     @Test
     public void testStop() throws Exception {
+
+        Bucket bucketA = createTrainingBucket();
 
         String data = "stop\n";
         InputStream stdin = System.in;
