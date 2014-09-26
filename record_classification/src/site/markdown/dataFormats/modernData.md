@@ -5,7 +5,8 @@ An overview of the modern data file format is given here.
 Example Records:        
 
 |ID|Cause of Death 1|Cause of Death 2|Cause of Death 3|Underlying Cause of Death|Cod Position| Cod Column|ICD10 Code|Cod Position| Cod Column|ICD10 Code|Cod Position| Cod Column|ICD10 Code|Cod Position| Cod Column|ICD10 Code|Cod Position| Cod Column|ICD10 Code|Cod Position| Cod Column|ICD10 Code|Cod Position| Cod Column|ICD10 Code|Cod Position| Cod Column|ICD10 Code|Underlying ICD10 Code| Age Group?| Sex| Decade?|Year|
-|1|"Pneumonia ","Old Age"|||"Ischaemic Heart Disease; Heart Failure"|1|1|"J189"|2|1|"R54"|6|1|"I509"|||||||||||||||||||"I509"|"8"|"M"|"10"|"2014"|
+|-|----------------------|-|-|----------------------------------------|-|-|------|-|-|-----|-|-|------|||||||||||||||||||------|---|---|----|------|
+|1|"Pneumonia ","Old Age"|-|-|"Ischaemic Heart Disease; Heart Failure"|1|1|"J189"|2|1|"R54"|6|1|"I509"|||||||||||||||||||"I509"|"8"|"M"|"10"|"2014"|
 
 
 
