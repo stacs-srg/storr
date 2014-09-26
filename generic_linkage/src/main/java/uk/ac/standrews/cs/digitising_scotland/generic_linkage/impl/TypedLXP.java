@@ -2,7 +2,7 @@ package uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl;
 
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.types.Type;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXP;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILabels;
+import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ITypeLabel;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ITypedLXP;
 import uk.ac.standrews.cs.digitising_scotland.util.ErrorHandling;
 
@@ -85,7 +85,7 @@ public class TypedLXP extends LXP implements ITypedLXP {
         try {
             Class c = Class.forName(class_name);  // get the class associated with the type - by convention TYPE field contains class name of ILabels meta information
             Object o = c.newInstance();
-            Type field_type = ((ILabels) o).getFieldType(key); // expect the class to implement the ILabels interface
+            Type field_type = ((ITypeLabel) o).getFieldType(key); // expect the class to implement the ILabels interface
             if (field_type.equals(expected_type)) {
                 return true;
             } else {

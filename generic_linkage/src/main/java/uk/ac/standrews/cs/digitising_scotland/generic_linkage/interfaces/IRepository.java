@@ -9,20 +9,20 @@ import java.util.Iterator;
  */
 public interface IRepository {
 
-    IBucket makeBucket(String name) throws RepositoryException;
+    <T extends ILXP> IBucketTypedOLD<T> makeBucket(String name,ILXPFactory<T> tFactory) throws RepositoryException;
 
-    IBucket makeIndirectBucket(String name) throws RepositoryException;
+    <T extends ILXP> IBucketTypedOLD<T> makeIndirectBucket(String name,ILXPFactory<T> tFactory) throws RepositoryException;
 
-    IIndexedBucket makeIndexedBucket(String name) throws RepositoryException;
+    <T extends ILXP> IIndexedBucketTypedOLD<T> makeIndexedBucket(String name,ILXPFactory<T> tFactory) throws RepositoryException;   // todo type parameterise
 
     boolean bucketExists(String name);
 
     void deleteBucket(String name) throws RepositoryException;
 
-    IBucket getBucket(String name) throws RepositoryException;
+    <T extends ILXP> IBucketTypedOLD<T> getBucket(final String name, ILXPFactory<T> tFactory) throws RepositoryException;
 
-    IIndexedBucket getIndexedBucket(String name) throws RepositoryException;
+    IIndexedBucketTypedOLD getIndexedBucket(String name) throws RepositoryException;
 
-    Iterator<IBucket> getIterator();
+    Iterator<IBucketTypedOLD> getIterator();
 
 }

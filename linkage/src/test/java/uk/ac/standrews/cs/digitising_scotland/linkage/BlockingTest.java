@@ -1,14 +1,14 @@
 package uk.ac.standrews.cs.digitising_scotland.linkage;
 
+import factory.TypeFactory;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.LXP;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.RepositoryException;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.Store;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.StoreException;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IBucket;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IRepository;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IStore;
+import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.*;
 import uk.ac.standrews.cs.digitising_scotland.linkage.blocking.FNLFFMFOverBirths;
 import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
 
@@ -26,18 +26,27 @@ public class BlockingTest {
     private static final String births_name = "birth_records";
     private static final String deaths_name = "death_records";
     private static final String marriages_name = "marriage_records";
+    private static final String types_name = "types";
     private static final String births_source_path = source_base_path + "/" + births_name + ".txt";
     private static final String deaths_source_path = source_base_path + "/" + deaths_name + ".txt";
     private static final String marriages_source_path = source_base_path + "/" + marriages_name + ".txt";
 
     private static String store_path = "src/test/resources/STORE";
 
+    private static final String BIRTHRECORDTYPETEMPLATE = "src/test/resources/BirthRecord.jsn";
+    private static final String DEATHRECORDTYPETEMPLATE = "src/test/resources/DeathRecord.jsn";
+    private static final String MARRIAGERECORDTYPETEMPLATE = "src/test/resources/MarriageRecord.jsn";
+
     private static IStore store;
-    private static IBucket births;
-    private static IBucket deaths;
-    private static IBucket marriages;
+    private static IBucketTypedOLD<ILXP> births;
+    private static IBucketTypedOLD<ILXP> deaths;
+    private static IBucketTypedOLD<ILXP> marriages;
+    private static IBucketTypedOLD<ILXP> types;
 
     private IRepository repo;
+    private ITypeLabel birthlabel;
+    private ITypeLabel deathlabel;
+    private ITypeLabel marriagelabel;
 
 
     @Before
@@ -47,9 +56,19 @@ public class BlockingTest {
 
         repo = store.makeRepository(repo_path);
 
-        births = repo.makeBucket(births_name);
-        deaths = repo.makeBucket(deaths_name);
-        marriages = repo.makeBucket(marriages_name);
+        births = repo.makeBucket(births_name, LXP.getInstance());
+        deaths = repo.makeBucket(deaths_name, LXP.getInstance());
+        marriages = repo.makeBucket(marriages_name, LXP.getInstance());
+        types =  repo.makeBucket(types_name, LXP.getInstance());
+        initialiseTypes( types );
+    }
+
+    private void initialiseTypes( IBucketTypedOLD types_bucket ) {
+
+        TypeFactory tf = TypeFactory.getInstance();
+        birthlabel = tf.createType(BIRTHRECORDTYPETEMPLATE, "BIRTH", types_bucket);
+        deathlabel = tf.createType(DEATHRECORDTYPETEMPLATE, "DEATH", types_bucket);
+        marriagelabel = tf.createType(MARRIAGERECORDTYPETEMPLATE, "MARRIAGE", types_bucket);
     }
 
     @After
@@ -63,11 +82,10 @@ public class BlockingTest {
     @Test
     public synchronized void testPFPLMFFF() throws Exception, RepositoryException {
 
-        EventImporter importer = new EventImporter();
 
-        importer.importBirths(births, births_source_path);
-        importer.importDeaths(deaths, deaths_source_path);
-        importer.importMarriages(marriages, marriages_source_path);
+        EventImporter.importDigitisingScotlandRecords(births, births_source_path,birthlabel);
+        EventImporter.importDigitisingScotlandRecords(deaths, deaths_source_path, deathlabel);
+        EventImporter.importDigitisingScotlandRecords(marriages, marriages_source_path, marriagelabel);
 
         FNLFFMFOverBirths blocker = new FNLFFMFOverBirths( births, deaths, repo);
 

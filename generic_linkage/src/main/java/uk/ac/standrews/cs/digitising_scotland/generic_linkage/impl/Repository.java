@@ -1,14 +1,13 @@
 package uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl;
 
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.BucketKind;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IBucket;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IIndexedBucket;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IRepository;
+import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.*;
 import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
 import uk.ac.standrews.cs.nds.util.ErrorHandling;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.Writer;
+import java.lang.reflect.Method;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -42,27 +41,56 @@ public class Repository implements IRepository {
     }
 
     @Override
-    public IBucket makeBucket(final String name) throws RepositoryException {
+    public <T extends ILXP> IBucketTypedOLD makeBucket(final String name, ILXPFactory<T> tFactory ) throws RepositoryException {
 
-        createBucket(name, BucketKind.DIRECTORYBACKED);
-        return getBucket(name);
+        createBucket(name, BucketKind.DIRECTORYBACKED,tFactory);
+        return getBucket(name,tFactory);
     }
 
     @Override
-    public IBucket makeIndirectBucket(final String name) throws RepositoryException {
+    public <T extends ILXP> IBucketTypedOLD<T> makeIndirectBucket(final String name, ILXPFactory<T> tFactory ) throws RepositoryException {
 
-        createBucket(name, BucketKind.INDIRECT);
+        createBucket(name, BucketKind.INDIRECT,tFactory);
         return getIndirectBucket(name);
     }
 
     @Override
-    public IIndexedBucket makeIndexedBucket(final String name) throws RepositoryException {
+    public <T extends ILXP> IIndexedBucketTypedOLD makeIndexedBucket(final String name, ILXPFactory<T> tFactory ) throws RepositoryException {
 
-        createBucket(name, BucketKind.INDIRECT);
+        createBucket(name, BucketKind.INDIRECT,tFactory);
         return getIndexedBucket(name);
     }
 
-    private void createBucket(final String name, BucketKind kind) throws RepositoryException {
+    private void createNewBucket(final String name, BucketKind kind, ITypeLabel type ) throws RepositoryException {  //  TODO AL - NOW NEED TO ADD THE POLY! DELETE THE OLD VERSIONS FROM HERE.
+        if (bucketExists(name)) {
+            throw new RepositoryException("Bucket: " + name + " already exists");
+        }
+
+        try {
+            Path path = getBucketPath(name);
+            FileManipulation.createDirectoryIfDoesNotExist(path);
+            Path impl_kind_path = createBucketImplKind(path, kind);
+            addBucketTypeLabel(path, type);
+
+        } catch (IOException e) {
+            throw new RepositoryException(e.getMessage());
+        }
+    }
+
+    private void addBucketTypeLabel(Path path, ITypeLabel type) throws IOException {
+        Path metapath = path.resolve("META");
+        FileManipulation.createDirectoryIfDoesNotExist(metapath);
+
+        Path typepath = metapath.resolve("TYPELABEL");
+        FileManipulation.createFileIfDoesNotExist((typepath));
+
+        try (Writer writer = Files.newBufferedWriter(typepath, FileManipulation.FILE_CHARSET)) {
+
+            writer.write(type.getId()); // Write the id of the typelabel LXP into this field.
+        }
+    }
+
+    private <T extends ILXP>  void createBucket(final String name, BucketKind kind, ILXPFactory<T> tFactory ) throws RepositoryException {
 
         if (bucketExists(name)) {
             throw new RepositoryException("Bucket: " + name + " already exists");
@@ -71,15 +99,45 @@ public class Repository implements IRepository {
         try {
             Path path = getBucketPath(name);
             FileManipulation.createDirectoryIfDoesNotExist(path);
-            addBucketLabel( path,kind );
+            Path impl_kind_path = createBucketImplKind(path, kind);
+            addBucketType( path, tFactory );
 
         } catch (IOException e) {
             throw new RepositoryException(e.getMessage());
         }
     }
 
-    private void addBucketLabel(Path path, BucketKind kind) throws IOException {
-        FileManipulation.createDirectoryIfDoesNotExist(path.resolve(kind.name())); // create a directory labellled with the kind in the new bucket dir!
+    private void addBucketType(Path path, ILXPFactory<?> tFactory ) throws IOException {
+        // Extract content type of the bucket.
+
+        Class<? extends ILXPFactory> c = tFactory.getClass();
+
+        Method[] methods = c.getMethods();
+        for (Method m : methods) {
+            if( m.getName().equals("create") ) {   // we are interested in the create method - don't know how to extract it easier due to parameterisation
+                Class type = m.getReturnType();
+                String typeString = type.toString();
+
+                Path metapath = path.resolve("META");
+                FileManipulation.createDirectoryIfDoesNotExist(metapath);   // TODO move the labels in here too.
+
+                Path typepath = metapath.resolve("TYPE");
+                FileManipulation.createFileIfDoesNotExist((typepath));
+
+                // Now write the type into this file
+
+                try (Writer writer = Files.newBufferedWriter(typepath, FileManipulation.FILE_CHARSET)) {
+
+                    writer.write(typeString);
+                }
+            }
+        }
+    }
+
+     Path createBucketImplKind(Path path, BucketKind kind) throws IOException {
+        Path labelpath = path.resolve(kind.name());
+        FileManipulation.createDirectoryIfDoesNotExist(labelpath); // create a directory labelled with the kind in the new bucket dir
+        return labelpath;
     }
 
     private Path getBucketPath(final String name) {
@@ -109,10 +167,10 @@ public class Repository implements IRepository {
     }
 
     @Override
-    public IBucket getBucket(final String name) throws RepositoryException {
+    public <T extends ILXP> IBucketTypedOLD getBucket(final String name, ILXPFactory<T> tFactory) throws RepositoryException {
 
         try {
-            IBucket bucket = new DirectoryBackedBucket(name, repo_path);
+            IBucketTypedOLD<? extends ILXP> bucket = new DirectoryBackedBucketTypedOLD(name, repo_path, tFactory);     // TODO TYPES - need to check the type with the expected type!!!
             if( bucket.kind().equals(BucketKind.DIRECTORYBACKED)) {
                 return bucket;
             } else {
@@ -124,10 +182,10 @@ public class Repository implements IRepository {
         }
     }
 
-    public IBucket getIndirectBucket(final String name) throws RepositoryException {
+    public IBucketTypedOLD getIndirectBucket(final String name) throws RepositoryException {
 
         try {
-            IBucket bucket = new DirectoryBackedIndirectBucket(name, repo_path);
+            IBucketTypedOLD bucket = new DirectoryBackedIndirectBucketTypedOLD(name, repo_path);
             if( bucket.kind().equals(BucketKind.INDIRECT)) {
                 return bucket;
             } else {
@@ -140,10 +198,10 @@ public class Repository implements IRepository {
     }
 
 
-    public IIndexedBucket getIndexedBucket(final String name) throws RepositoryException {
+    public IIndexedBucketTypedOLD getIndexedBucket(final String name) throws RepositoryException {
 
         try {
-            IIndexedBucket bucket = new DirectoryBackedIndexedBucket(name, repo_path);
+            IIndexedBucketTypedOLD bucket = new DirectoryBackedIndexedBucketTypedOLD(name, repo_path);
             if( bucket.kind().equals(BucketKind.INDEXED)) {
                 return bucket;
             } else {
@@ -160,7 +218,7 @@ public class Repository implements IRepository {
         return new BucketIterator(this, repo_directory);
     }
 
-    private static class BucketIterator implements Iterator<IBucket> {
+    private static class BucketIterator implements Iterator<IBucketTypedOLD> {
 
         private final Iterator<File> file_iterator;
         private final Repository repository;
@@ -176,12 +234,12 @@ public class Repository implements IRepository {
         }
 
         @Override
-        public IBucket next() {
+        public IBucketTypedOLD next() {
 
             String name = file_iterator.next().getName();
 
             try {
-                return repository.getBucket(name);
+                return repository.getBucket(name,LXP.getInstance());
 
             } catch (RepositoryException e) {
                 ErrorHandling.exceptionError(e, "RepositoryException in iterator");

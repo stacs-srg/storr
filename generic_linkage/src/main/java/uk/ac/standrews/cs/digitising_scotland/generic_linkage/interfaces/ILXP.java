@@ -9,7 +9,7 @@ import org.json.JSONWriter;
  *
  * @author al
  */
-public interface ILXP {
+public interface ILXP extends ILXPFactory {
 
     /**
      * @return the id of the record
@@ -28,4 +28,6 @@ public interface ILXP {
     String put( String key, String value);
 
     boolean containsKey(String key);
+
+    java.util.Set<String> getKeys();
 }

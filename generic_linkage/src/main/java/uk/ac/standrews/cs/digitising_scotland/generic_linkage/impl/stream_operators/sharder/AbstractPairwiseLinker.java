@@ -9,12 +9,12 @@ import java.util.List;
 /**
  * Created by al on 21/05/2014.
  */
-public abstract class AbstractPairwiseLinker implements IPairWiseLinker {
+public abstract class AbstractPairwiseLinker<T extends ILXP> implements IPairWiseLinker<T> {
 
-    private final ILXPInputStream input;
-    private final ILXPOutputStream output;
+    private final ILXPInputStreamTypedOld<T> input;
+    private final ILXPOutputStreamTypedOLD<T> output;
 
-    public AbstractPairwiseLinker(final ILXPInputStream input, final ILXPOutputStream output) {
+    public AbstractPairwiseLinker(final ILXPInputStreamTypedOld<T> input, final ILXPOutputStreamTypedOLD<T> output) {
         this.input = input;
         this.output = output;
     }
@@ -22,9 +22,9 @@ public abstract class AbstractPairwiseLinker implements IPairWiseLinker {
     @Override
     public void pairwiseLink() {
 
-        List<ILXP> records = new ArrayList<>();
+        List<T> records = new ArrayList<T>();
 
-        for (ILXP record : input) {
+        for (T record : input) {
 
             if (record.get("TYPE") == null) {
                 ErrorHandling.error("Found record with no type field: " + record);
@@ -37,16 +37,16 @@ public abstract class AbstractPairwiseLinker implements IPairWiseLinker {
     /**
      * @param records a collection of b & d records for people with the same first name, last name, father's first name and mother's first name.
      */
-    private void linkRecords(final List<ILXP> records) {
+    private void linkRecords(final List<T> records) {
 
-        for (IPair pair : allPairs(records)) {
+        for (IPair<T> pair : allPairs(records)) {
             if (compare(pair)) {
                 addToResults(pair, output);
             }
         }
     }
 
-    private Iterable<IPair> allPairs(final List<ILXP> records) {
+    private Iterable<IPair> allPairs(final List<T> records) {
 
         List<IPair> all = new ArrayList<>();
 
@@ -61,12 +61,12 @@ public abstract class AbstractPairwiseLinker implements IPairWiseLinker {
         return all;
     }
 
-    public abstract boolean compare(IPair pair);
+    public abstract boolean compare(IPair<T> pair);
 
     /**
      * Adds a matched result to a result collection.
      *
      * @param pair
      */
-    public abstract void addToResults(IPair pair, ILXPOutputStream results);
+    public abstract void addToResults(IPair pair, ILXPOutputStreamTypedOLD results);
 }

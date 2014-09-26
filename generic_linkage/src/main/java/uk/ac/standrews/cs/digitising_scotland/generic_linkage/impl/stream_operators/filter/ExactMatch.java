@@ -1,8 +1,8 @@
 package uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.stream_operators.filter;
 
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXP;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXPInputStream;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXPOutputStream;
+import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXPInputStreamTypedOld;
+import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXPOutputStreamTypedOLD;
 
 /**
  * Provides exact match filtering of LXP records based on a label and a value.
@@ -13,7 +13,7 @@ public class ExactMatch extends Filter {
     private final String value;
     private final String label;
 
-    public ExactMatch(final ILXPInputStream input, final ILXPOutputStream output, final String label, final String value) {
+    public ExactMatch(final ILXPInputStreamTypedOld input, final ILXPOutputStreamTypedOLD output, final String label, final String value) {
 
         super(input, output);
         this.label = label;

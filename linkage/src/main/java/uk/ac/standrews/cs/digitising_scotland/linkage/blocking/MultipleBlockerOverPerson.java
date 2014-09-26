@@ -2,10 +2,11 @@ package uk.ac.standrews.cs.digitising_scotland.linkage.blocking;
 
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.RepositoryException;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.stream_operators.sharder.Blocker;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IBucket;
+import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IBucketTypedOLD;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXP;
+import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXPFactory;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IRepository;
-import uk.ac.standrews.cs.digitising_scotland.linkage.labels.PersonLabels;
+import uk.ac.standrews.cs.digitising_scotland.linkage.labels.PersonTypeLabel;
 import uk.ac.standrews.cs.nds.util.ErrorHandling;
 
 import java.util.ArrayList;
@@ -25,11 +26,11 @@ import java.util.ArrayList;
  * <p/>
  * Created by al on 01/08/2014.
  */
-public class MultipleBlockerOverPerson extends Blocker {
+public class MultipleBlockerOverPerson<T extends ILXP> extends Blocker<T> {
 
-    public MultipleBlockerOverPerson(final IBucket peopleBucket, final IRepository output_repo) throws RepositoryException {
+    public MultipleBlockerOverPerson(final IBucketTypedOLD peopleBucket, final IRepository output_repo, ILXPFactory<T> tFactory) throws RepositoryException {
 
-        super(peopleBucket.getInputStream(), output_repo);
+        super(peopleBucket.getInputStream(), output_repo, tFactory);
     }
 
     /**
@@ -42,18 +43,18 @@ public class MultipleBlockerOverPerson extends Blocker {
 
         if (record.containsKey("TYPE") ) {
 
-            if( record.get("TYPE").equals(PersonLabels.TYPE) ) {
+            if( record.get("TYPE").equals(PersonTypeLabel.TYPE) ) {
 
 
                 // Note will concat nulls into key if any fields are null - working hypothesis - this doesn't matter.
 
-                String FN = record.get(PersonLabels.FORENAME);
-                String LN = record.get(PersonLabels.SURNAME);
-                String FF = record.get(PersonLabels.FATHERS_FORENAME);
-                String FL = record.get(PersonLabels.FATHERS_SURNAME);
+                String FN = record.get(PersonTypeLabel.FORENAME);
+                String LN = record.get(PersonTypeLabel.SURNAME);
+                String FF = record.get(PersonTypeLabel.FATHERS_FORENAME);
+                String FL = record.get(PersonTypeLabel.FATHERS_SURNAME);
                 FL = (FL == null || FL.equals("0")) ? LN : FL; // fathers surname coded as "0" if same as baby
-                String MF = record.get(PersonLabels.MOTHERS_FORENAME);
-                String MM = record.get(PersonLabels.MOTHERS_MAIDEN_SURNAME);
+                String MF = record.get(PersonTypeLabel.MOTHERS_FORENAME);
+                String MM = record.get(PersonTypeLabel.MOTHERS_MAIDEN_SURNAME);
 
                 String FNLN = removeNasties(FN + LN);
                 String FNLNMF = removeNasties(FNLN + MF);

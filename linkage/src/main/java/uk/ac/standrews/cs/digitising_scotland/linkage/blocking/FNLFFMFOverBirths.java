@@ -1,15 +1,16 @@
 package uk.ac.standrews.cs.digitising_scotland.linkage.blocking;
 
+import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.LXP;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.RepositoryException;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.merger.TailToTailMergedStream;
+import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.merger.TailToTailMergedStreamTypedOld;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.stream_operators.sharder.Blocker;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IBucket;
+import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IBucketTypedOLD;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXP;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXPInputStream;
+import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXPInputStreamTypedOld;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IRepository;
-import uk.ac.standrews.cs.digitising_scotland.linkage.labels.BirthLabels;
-import uk.ac.standrews.cs.digitising_scotland.linkage.labels.CommonLabels;
-import uk.ac.standrews.cs.digitising_scotland.linkage.labels.DeathLabels;
+import uk.ac.standrews.cs.digitising_scotland.linkage.labels.BirthTypeLabel;
+import uk.ac.standrews.cs.digitising_scotland.linkage.labels.CommonTypeLabel;
+import uk.ac.standrews.cs.digitising_scotland.linkage.labels.DeathTypeLabel;
 import uk.ac.standrews.cs.nds.util.ErrorHandling;
 
 /**
@@ -18,30 +19,30 @@ import uk.ac.standrews.cs.nds.util.ErrorHandling;
  */
 public class FNLFFMFOverBirths extends Blocker {
 
-    public FNLFFMFOverBirths(final IBucket birthsBucket, final IBucket deathsBucket, final IRepository output_repo) throws RepositoryException {
+    public FNLFFMFOverBirths(final IBucketTypedOLD birthsBucket, final IBucketTypedOLD deathsBucket, final IRepository output_repo) throws RepositoryException {
 
-        super(new TailToTailMergedStream(new ILXPInputStream[]{birthsBucket.getInputStream(), deathsBucket.getInputStream()}), output_repo);
+        super(new TailToTailMergedStreamTypedOld(new ILXPInputStreamTypedOld[]{birthsBucket.getInputStream(), deathsBucket.getInputStream()}), output_repo, LXP.getInstance());
     }
 
     @Override
     public String[] determineBlockedBucketNamesForRecord(final ILXP record) {
 
-        if (record.containsKey(CommonLabels.TYPE_LABEL)) {
-            if (record.get(CommonLabels.TYPE_LABEL).equals(BirthLabels.TYPE) ||
-                    record.get(CommonLabels.TYPE_LABEL).equals(DeathLabels.TYPE)) {
+        if (record.containsKey(CommonTypeLabel.TYPE_LABEL)) {
+            if (record.get(CommonTypeLabel.TYPE_LABEL).equals(BirthTypeLabel.TYPE) ||
+                    record.get(CommonTypeLabel.TYPE_LABEL).equals(DeathTypeLabel.TYPE)) {
 
                 // Note will concat nulls into key if any fields are null - working hypothesis - this doesn't matter.
 
                 StringBuilder builder = new StringBuilder();
 
-                builder.append(record.get(BirthLabels.FORENAME));
-                builder.append(record.get(BirthLabels.SURNAME));
-                builder.append(record.get(BirthLabels.FATHERS_FORENAME));
-                builder.append(record.get(BirthLabels.MOTHERS_FORENAME));
+                builder.append(record.get(BirthTypeLabel.FORENAME));
+                builder.append(record.get(BirthTypeLabel.SURNAME));
+                builder.append(record.get(BirthTypeLabel.FATHERS_FORENAME));
+                builder.append(record.get(BirthTypeLabel.MOTHERS_FORENAME));
 
                 return new String[]{removeNasties(builder.toString())};
             } else {
-                ErrorHandling.error("Record with unknown type in input Stream: " + record.get(CommonLabels.TYPE_LABEL) + " - ignoring");
+                ErrorHandling.error("Record with unknown type in input Stream: " + record.get(CommonTypeLabel.TYPE_LABEL) + " - ignoring");
                 return new String[]{};
             }
 

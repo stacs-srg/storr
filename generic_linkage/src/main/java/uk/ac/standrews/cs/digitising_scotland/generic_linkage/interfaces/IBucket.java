@@ -9,20 +9,20 @@ import java.io.IOException;
  * The interface for a Bucket (a repository of LXP records).
  * Each record in the repository is identified by id.
  */
-public interface IBucket {
+public interface IBucket<T extends ILXP> {
 
     /**
      * @param id - the identifier of the LXP record for which a reader is required.
      * @return an LXP record with the specified id, or null if the record cannot be found
      */
-    ILXP get(int id) throws IOException, PersistentObjectException;
+    T get(int id) throws IOException, PersistentObjectException;
 
     /**
      * Writes the state of a record to a bucket
      *
      * @param record whose state is to be written
      */
-    void put(ILXP record) throws IOException, JSONException;
+    void put(T record) throws IOException, JSONException;
 
     /**
      * @param id
@@ -33,12 +33,12 @@ public interface IBucket {
     /**
      * @return an input Stream containing all the LXP records in this Bucket
      */
-    ILXPInputStream getInputStream();
+    ILXPInputStreamTypedNew<T> getTypedInputStream();
 
     /**
      * @return an output Stream which supports the writing of records to this Bucket
      */
-    ILXPOutputStream getOutputStream();
+    ILXPOutputStreamTypedNew<T> getTypedOutputStream();
 
     /**
      * @return the name of the bucket

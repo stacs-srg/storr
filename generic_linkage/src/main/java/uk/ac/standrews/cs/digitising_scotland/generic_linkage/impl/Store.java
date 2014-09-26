@@ -1,7 +1,7 @@
 package uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IBucket;
+import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IBucketTypedOLD;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXP;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IRepository;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IStore;
@@ -115,7 +115,7 @@ public class Store implements IStore {
     @Override
     public ILXP get(int id) throws IOException, PersistentObjectException {
 
-        IBucket bucket = store_index.get(id);
+        IBucketTypedOLD bucket = store_index.get(id);
         if (bucket == null) {
             return null;
         }

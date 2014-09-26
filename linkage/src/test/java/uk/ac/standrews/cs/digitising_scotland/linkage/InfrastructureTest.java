@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.digitising_scotland.linkage;
 
+import factory.TypeFactory;
 import org.json.JSONException;
 import org.junit.After;
 import org.junit.Before;
@@ -7,7 +8,7 @@ import org.junit.Test;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.*;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.stream_operators.filter.ExactMatch;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.*;
-import uk.ac.standrews.cs.digitising_scotland.linkage.labels.BirthLabels;
+import uk.ac.standrews.cs.digitising_scotland.linkage.labels.BirthTypeLabel;
 import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
 
 import java.io.IOException;
@@ -30,11 +31,15 @@ public class InfrastructureTest {
     private static String bucket_name2 = "BUCKET2";
     private static String bucket_name3 = "BLOCKED-BUCKETS";
     private static String bucket_name4 = "INDEX";
+    private static String types_name = "types";
     private static String store_path = "src/test/resources/STORE";
     private static final String BIRTH_RECORDS_PATH = "src/test/resources/1000_TEST_BIRTH_RECORDS.txt";
+    private static final String BIRTHRECORDTYPETEMPLATE = "src/test/resources/BirthRecord.jsn";
 
     private static IStore store;
     private static IRepository repo;
+    private IBucketTypedOLD types;
+    private ITypeLabel birthlabel;
 
     @Before
     public void setUpEachTest() throws RepositoryException, IOException, StoreException {
@@ -45,10 +50,12 @@ public class InfrastructureTest {
 
         repo = store.makeRepository("repo");
 
-        repo.makeBucket(bucket_name1);
-        repo.makeBucket(bucket_name2);
-        repo.makeBucket(bucket_name3);
-        repo.makeIndexedBucket(bucket_name4);
+        repo.makeBucket(bucket_name1,LXP.getInstance());
+        repo.makeBucket(bucket_name2,LXP.getInstance());
+        repo.makeBucket(bucket_name3,LXP.getInstance());
+        repo.makeIndexedBucket(bucket_name4,LXP.getInstance());
+        types =  repo.makeBucket(types_name,LXP.getInstance());
+        birthlabel = TypeFactory.getInstance().createType(BIRTHRECORDTYPETEMPLATE, "BIRTH", types);
     }
 
     @After
@@ -76,7 +83,7 @@ public class InfrastructureTest {
     @Test
 //    @Ignore
     public synchronized void testLXPCreation() throws Exception, RepositoryException {
-        IBucket b = repo.getBucket(bucket_name1);
+        IBucketTypedOLD<LXP> b = repo.getBucket(bucket_name1, LXP.getInstance());
         LXP lxp = new LXP();
         lxp.put("age", "42");
         lxp.put("address", "home");
@@ -86,7 +93,7 @@ public class InfrastructureTest {
     @Test
 //    @Ignore
     public synchronized void testLXPOverwrite() throws Exception, RepositoryException {
-        IBucket b = repo.getBucket(bucket_name1);
+        IBucketTypedOLD<LXP> b = repo.getBucket(bucket_name1, LXP.getInstance());
         LXP lxp = new LXP();
         lxp.put("age", "42");
         lxp.put("address", "home");
@@ -104,7 +111,7 @@ public class InfrastructureTest {
     @Test
 //    @Ignore
     public synchronized void testLXPFromFile() throws Exception, RepositoryException {
-        IBucket b = repo.getBucket(bucket_name1);
+        IBucketTypedOLD<LXP> b = repo.getBucket(bucket_name1, LXP.getInstance());
         LXP lxp = new LXP();
         lxp.put("age", "42");
         lxp.put("address", "home");
@@ -121,7 +128,7 @@ public class InfrastructureTest {
     @Test
 //    @Ignore
     public synchronized void testStreams() throws Exception, RepositoryException {
-        IBucket b = repo.getBucket(bucket_name1);
+        IBucketTypedOLD<LXP> b = repo.getBucket(bucket_name1, LXP.getInstance());
         // create a few records
         for (int i = 1; i < 10; i++) {
             LXP lxp = new LXP();
@@ -144,23 +151,21 @@ public class InfrastructureTest {
 //    @Ignore
     public synchronized void testReadingPopulationRecords() throws RepositoryException, RecordFormatException, JSONException, IOException {
 
-        IBucket b = repo.getBucket(bucket_name1);
-        EventImporter importer = new EventImporter();
+        IBucketTypedOLD<LXP> b = repo.getBucket(bucket_name1, LXP.getInstance());
 
-        importer.importBirths(b, BIRTH_RECORDS_PATH);
+        EventImporter.importDigitisingScotlandRecords(b, BIRTH_RECORDS_PATH,birthlabel);
     }
 
     @Test
 //    @Ignore
     public synchronized void testSimpleMatchPopulationRecords() throws RepositoryException, RecordFormatException, JSONException, IOException {
 
-        IBucket b = repo.getBucket(bucket_name1);
-        IBucket b2 = repo.getBucket(bucket_name2);
+        IBucketTypedOLD<LXP> b = repo.getBucket(bucket_name1, LXP.getInstance());
+        IBucketTypedOLD<LXP> b2 = repo.getBucket(bucket_name1, LXP.getInstance());
 
-        EventImporter importer = new EventImporter();
-        importer.importBirths(b, BIRTH_RECORDS_PATH);
+        EventImporter.importDigitisingScotlandRecords(b, BIRTH_RECORDS_PATH,birthlabel);
 
-        ExactMatch filter = new ExactMatch(b.getInputStream(), new BucketBackedOutputStream(b2), "surname", "GONTHWICK");
+        ExactMatch filter = new ExactMatch(b.getInputStream(), new BucketBackedOutputStreamOLD(b2), "surname", "GONTHWICK");
         filter.apply();
     }
 
@@ -169,13 +174,12 @@ public class InfrastructureTest {
     @Test
     public synchronized void testIndex() throws Exception, RepositoryException {
 
-        IIndexedBucket b = repo.getIndexedBucket(bucket_name4);
+        IIndexedBucketTypedOLD b = repo.getIndexedBucket(bucket_name4);
 
-        b.addIndex(BirthLabels.SURNAME);
-        EventImporter importer = new EventImporter();
-        int counter1 = importer.importBirths(b, BIRTH_RECORDS_PATH);
+        b.addIndex(BirthTypeLabel.SURNAME);
+        int counter1 = EventImporter.importDigitisingScotlandRecords(b, BIRTH_RECORDS_PATH,birthlabel);
 
-        IBucketIndex index = b.getIndex(BirthLabels.SURNAME);
+        IBucketIndexOLD index = b.getIndex(BirthTypeLabel.SURNAME);
 
         Set<String> keys = index.keySet();
         int counter2 = 0;
