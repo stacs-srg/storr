@@ -1,12 +1,12 @@
 Springer Paper Todo
 
-Section on what the system looks like now, possible trailer for next paper on mulitple classification, preview different techniques etc
 
-Works on comments from Kayes:
+
+Works on comments from Kayes: High Importance
 	Correctness measures when using only unique records
 	How much data can be classified using exact match only
-	Possible comparison and expansion of motivations regarding time for human coder vs system ie cost benefit analysis.
-		time estimations for both human and ml etc
+	Cost Benefit analysis for automatic coding in terms of cost and time.
+	Time estimations for both human and ml etc
 
 
 Give figures for micro/macro precision and recall. 
@@ -26,3 +26,8 @@ Feedback from conference comittee:
 	Possible analysis of other string based approaches such as overlapping terms, overlapping hgh-entropy terms, bag-of-words Jaccard index, ontology-based graph distance 	of terms of corpus descriptions to terms in HISCO descriptions, etc. etc.
 	
 Possible further analysis of best technique, improvements for it in the scope of this problem
+
+
+
+
+Section on what the system looks like now, possible trailer for next paper on mulitple classification, preview different techniques etc
