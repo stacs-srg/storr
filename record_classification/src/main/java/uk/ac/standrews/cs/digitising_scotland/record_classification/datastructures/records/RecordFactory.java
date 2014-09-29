@@ -6,6 +6,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.CODOrignalData;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.OriginalData;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
@@ -23,9 +26,12 @@ import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
  */
 public abstract class RecordFactory {
 
-    /** The Constant ENCODING. */
-    private static final String ENCODING = "UTF-8";
+    private static final Logger LOGGER = LoggerFactory.getLogger(RecordFactory.class);
     private static int highestId = 0;
+
+    private RecordFactory() {
+
+    }
 
     /**
      * Creates a list of {@link Record} objects from a file where the records need to be coded.
@@ -71,10 +77,7 @@ public abstract class RecordFactory {
         int imageQuality = Integer.parseInt(lineSplit[2]);
         OriginalData originalData = new OriginalData(description, year, imageQuality, inputFile.getPath());
         int id = highestId++;
-        Record newRecord = new Record(id, originalData);
-        // newRecord.addClassificationSet(getClassificationSet(line));
-
-        return newRecord;
+        return new Record(id, originalData);
     }
 
     /**
@@ -102,9 +105,7 @@ public abstract class RecordFactory {
         int imageQuality = Integer.parseInt(lineSplit[imageQualityPos]);
 
         OriginalData originalData = new CODOrignalData(description, year, ageGroup, sex, imageQuality, inputFile.getPath());
-
         Record newRecord = new Record(id, originalData);
-        //   newRecord.addClassificationSet(getClassificationSet(line));
 
         return newRecord;
     }
@@ -127,9 +128,9 @@ public abstract class RecordFactory {
      * @return List<Record> of {@link Record} from the file.
      * @throws IOException Signals that an I/O exception has occurred.
      * @throws InputFormatException the input format exception
-     * @throws CodeNotValidException 
+     * @throws NumberFormatException 
      */
-    public static List<Record> makeCodedRecordsFromFile(final File inputFile, final CodeDictionary codeDictionary) throws IOException, InputFormatException, CodeNotValidException {
+    public static List<Record> makeCodedRecordsFromFile(final File inputFile, final CodeDictionary codeDictionary) throws InputFormatException, NumberFormatException, IOException {
 
         final int yearPos = 1;
         final int imageQualityPos = 2;
@@ -151,14 +152,36 @@ public abstract class RecordFactory {
             OriginalData originalData = new CODOrignalData(description, year, ageGroup, sex, imageQuality, inputFile.getPath());
 
             for (int i = 6; i < lineSplit.length; i++) {
-                Code thisCode = codeDictionary.getCode(lineSplit[i].trim());
+                Code thisCode = getCode(codeDictionary, lineSplit, i);
                 Record newRecord = createRecord(thisCode, originalData);
                 recordList.add(newRecord);
             }
 
         }
-        br.close();
+        closeReader(br);
         return recordList;
+    }
+
+    private static Code getCode(final CodeDictionary codeDictionary, final String[] lineSplit, final int i) {
+
+        Code thisCode = null;
+        try {
+            thisCode = codeDictionary.getCode(lineSplit[i].trim());
+        }
+        catch (CodeNotValidException e) {
+            LOGGER.error(e.getMessage(), e);
+        }
+        return thisCode;
+    }
+
+    private static void closeReader(final BufferedReader br) {
+
+        try {
+            br.close();
+        }
+        catch (IOException e) {
+            LOGGER.error(e.getMessage(), e);
+        }
     }
 
     /**
