@@ -25,7 +25,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.output.FileWriterWithEncoding;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,7 +68,7 @@ public final class Utils {
             catch (ExecutionException e) {
                 Throwable rootException = e.getCause();
                 if (rootException != null) {
-                    LOGGER.error(rootException.toString());
+                    LOGGER.error(rootException.toString(), rootException);
                 }
 
             }
@@ -181,35 +180,6 @@ public final class Utils {
     }
 
     /**
-     * Moves files in the toMove array to the toHere location using the Apache FileUtils library.
-     *
-     * @param toMove Move these files
-     * @param toHere to this location
-     */
-    public static void moveFilesApache(final File[] toMove, final File toHere) {
-
-        for (int i = 0; i < toMove.length; i++) {
-            if (toMove[i].isFile()) {
-                try {
-                    FileUtils.moveFile(toMove[i], toHere);
-                }
-                catch (IOException e) {
-
-                    LOGGER.error(e.getMessage(), e.getCause());
-                }
-            }
-            else {
-                try {
-                    FileUtils.moveDirectory(toMove[i], toHere);
-                }
-                catch (IOException e) {
-                    LOGGER.error(e.getMessage(), e.getCause());
-                }
-            }
-        }
-    }
-
-    /**
      * Moves the files specified.
      *
      * @param listOfFilesToMove String array of file names to move
@@ -229,11 +199,11 @@ public final class Utils {
         });
 
         if (!storage.exists()) {
-            System.err.println("folder already exists: " + storage.getAbsolutePath());
+            LOGGER.error("folder already exists: " + storage.getAbsolutePath());
         }
 
         if (!storage.mkdirs()) {
-            System.err.println("Problem creating folder " + storage.getAbsolutePath());
+            LOGGER.error("Problem creating folder " + storage.getAbsolutePath());
         }
 
         File[] toMove = new File[listOfFilesToMove.length];
@@ -286,7 +256,7 @@ public final class Utils {
             out.close();
         }
         catch (IOException e) {
-            LOGGER.error(e.getMessage(), e.getCause());
+            LOGGER.error(e.getMessage(), e);
         }
     }
 
@@ -308,7 +278,7 @@ public final class Utils {
             out.close();
         }
         catch (IOException e) {
-            LOGGER.error(e.getMessage(), e.getCause());
+            LOGGER.error(e.getMessage(), e);
         }
 
     }
@@ -339,7 +309,7 @@ public final class Utils {
         }
         catch (IOException e) {
 
-            LOGGER.error(e.getMessage(), e.getCause());
+            LOGGER.error(e.getMessage(), e);
         }
     }
 
@@ -492,7 +462,7 @@ public final class Utils {
             }
         }
         catch (IOException e) {
-            LOGGER.error(e.getMessage(), e.getCause());
+            LOGGER.error(e.getMessage(), e);
         }
     }
 
@@ -587,7 +557,7 @@ public final class Utils {
             br = new BufferedReader(new InputStreamReader(new FileInputStream(inputFile), FileManipulation.FILE_CHARSET));
         }
         catch (FileNotFoundException e) {
-            LOGGER.error(e.getMessage(), e.getCause());
+            LOGGER.error(e.getMessage(), e);
         }
 
         return br;
@@ -606,7 +576,7 @@ public final class Utils {
             bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outputFile), FileManipulation.FILE_CHARSET));
         }
         catch (FileNotFoundException e) {
-            LOGGER.error(e.getMessage(), e.getCause());
+            LOGGER.error(e.getMessage(), e);
         }
         return bw;
     }
