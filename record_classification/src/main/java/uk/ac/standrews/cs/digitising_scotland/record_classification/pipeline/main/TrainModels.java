@@ -41,7 +41,7 @@ public class TrainModels {
 
         goldStandard = parseGoldStandFile(args);
 
-        File codeDictionaryFile = new File(MachineLearningConfiguration.getDefaultProperties().getProperty("codeDictionaryFile")); //FIXME
+        File codeDictionaryFile = new File(MachineLearningConfiguration.getDefaultProperties().getProperty("codeDictionaryFile"));
         CodeDictionary codeDictionary = new CodeDictionary(codeDictionaryFile);
 
         GoldStandardBucketGenerator generator = new GoldStandardBucketGenerator(codeDictionary);

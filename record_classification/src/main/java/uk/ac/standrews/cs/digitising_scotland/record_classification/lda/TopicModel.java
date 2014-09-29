@@ -161,7 +161,8 @@ public class TopicModel {
         InstanceList instances = new InstanceList(new SerialPipes(pipeList));
 
         Reader fileReader = new InputStreamReader(new FileInputStream(inputFile), "UTF-8");
-        instances.addThruPipe(new CsvIterator(fileReader, Pattern.compile("(^[^\t]*)(.*)"), 2, 0, 0)); // data, label, name fields
+        // data, label, name fields
+        instances.addThruPipe(new CsvIterator(fileReader, Pattern.compile("(^[^\t]*)(.*)"), 2, 0, 0));
 
         int numTopics = Integer.parseInt(MachineLearningConfiguration.getDefaultProperties().getProperty("lda.numTopics"));
 

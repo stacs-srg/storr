@@ -46,7 +46,8 @@ public class TokenStreamIterator<Attribute extends CharTermAttribute> implements
             return tokenizer.incrementToken();
         }
         catch (IOException e) {
-            return false; //Masih says bad practice - fix?
+            //Masih says bad practice - fix?
+            return false;
         }
     }
 

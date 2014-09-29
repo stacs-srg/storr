@@ -30,13 +30,13 @@ public final class LevenshteinDistance {
      */
     public static double similarity(String s1, String s2) {
 
-        if (s1.length() < s2.length()) { // s1 should always be bigger
+        if (s1.length() < s2.length()) {
             String swap = s1;
             s1 = s2;
             s2 = swap;
         }
         int bigLen = s1.length();
-        if (bigLen == 0) { return 1.0; /* both strings are zero length */}
+        if (bigLen == 0) { return 1.0; }
         return (bigLen - computeEditDistance(s1, s2)) / (double) bigLen;
     }
 
@@ -50,8 +50,8 @@ public final class LevenshteinDistance {
 
         String s1 = string1.toLowerCase();
         String s2 = string2.toLowerCase();
-
         int[] costs = new int[s2.length() + 1];
+
         for (int i = 0; i <= s1.length(); i++) {
             int lastValue = i;
             for (int j = 0; j <= s2.length(); j++) {

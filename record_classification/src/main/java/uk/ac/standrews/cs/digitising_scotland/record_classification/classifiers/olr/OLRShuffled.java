@@ -42,7 +42,8 @@ public class OLRShuffled implements Runnable {
     private boolean modelTrainable;
     private OLR model;
     private Properties properties = MachineLearningConfiguration.getDefaultProperties();
-    private int reps; //set in config
+    //set in config
+    private int reps;
     private List<NamedVector> trainingVectorList = new ArrayList<NamedVector>();
     private boolean stopped = false;
 

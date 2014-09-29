@@ -8,20 +8,9 @@ package uk.ac.standrews.cs.digitising_scotland.record_classification.datastructu
  */
 public class Pair<L, R> {
 
-    /** The left. */
+    /** The left object. */
     private L left;
-
-    /**
-     * Sets the right object.
-     *
-     * @param right the new right
-     */
-    public void setRight(final R right) {
-
-        this.right = right;
-    }
-
-    /** The right. */
+    /** The right object. */
     private R right;
 
     /**
@@ -44,6 +33,16 @@ public class Pair<L, R> {
     public void setLeft(final L left) {
 
         this.left = left;
+    }
+
+    /**
+     * Sets the right object.
+     *
+     * @param right the new right
+     */
+    public void setRight(final R right) {
+
+        this.right = right;
     }
 
     /**

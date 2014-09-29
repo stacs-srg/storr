@@ -92,7 +92,8 @@ public class ResolverMatrix {
         merged.add(null);
 
         if (matrix.keySet().size() > KEYSET_SIZE_LIMIT) {
-            LOGGER.info("codeList too big - skipping"); //TODO quick hack to test theory
+            //TODO quick hack to test theory
+            LOGGER.info("codeList too big - skipping");
         }
         else {
             for (Code code : matrix.keySet()) {
@@ -115,7 +116,7 @@ public class ResolverMatrix {
 
         long complexity = 1;
         for (Code code : matrix.keySet()) {
-            if (matrix.get(code).size() > 0) {
+            if (!matrix.get(code).isEmpty()) {
                 complexity = complexity * matrix.get(code).size();
             }
         }

@@ -133,7 +133,6 @@ public class NumberOfExamplesPerClassHelper {
         while (it.hasNext()) {
             Map.Entry pairs = (Map.Entry) it.next();
             LOGGER.info(pairs.getKey() + " = " + pairs.getValue());
-            // it.remove(); // avoids a ConcurrentModificationException
         }
     }
 
