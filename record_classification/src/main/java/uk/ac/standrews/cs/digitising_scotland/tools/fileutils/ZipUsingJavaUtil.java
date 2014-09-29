@@ -50,9 +50,6 @@ public class ZipUsingJavaUtil {
         boolean result = false;
         try {
             LOGGER.info("Program Start zipping the given files: " + srcFolder);
-            /*
-             * send to the zip procedure
-             */
             zipFolder(srcFolder, destZipFile);
             result = true;
             LOGGER.info("Given files are successfully zipped");
@@ -72,18 +69,12 @@ public class ZipUsingJavaUtil {
 
         ZipOutputStream zip = null;
         FileOutputStream fileWriter = null;
-        /*
-         * create the output stream to zip file result
-         */
+        // create the output stream to zip file result
         fileWriter = new FileOutputStream(destZipFile);
         zip = new ZipOutputStream(fileWriter);
-        /*
-         * add the folder to the zip
-         */
+        // add the folder to the zip
         addFolderToZip("", srcFolder, zip);
-        /*
-         * close the zip objects
-         */
+        // close the zip objects
         zip.flush();
         zip.close();
         fileWriter.flush();
@@ -143,9 +134,8 @@ public class ZipUsingJavaUtil {
 
         File folder = new File(srcFolder);
 
-        /*
-         * check the empty folder
-         */
+        //  check the empty folder
+
         if (folder.list().length == 0) {
             LOGGER.info(folder.getName());
             addFileToZip(path, srcFolder, zip, true);
