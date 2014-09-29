@@ -23,19 +23,19 @@ public class ZipUsingJavaUtil {
 
     /**
      * Zip function zip all files and folders.
-     * @param args not used.
+     * @param args String[] argument 0 is file to folder or file, argument 1 is output file.
      */
     public static void main(final String[] args) {
 
         ZipUsingJavaUtil zip = new ZipUsingJavaUtil();
 
         try {
-            if (zip.zipFiles("ModernDataRun1/parsedData91a", "parsed91JAavaTesta.zip")) {
+            if (zip.zipFiles(args[0], args[1])) {
                 Utils.deleteDirectory(new File("ModernDataRun1/parsedData91a"));
             }
         }
         catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e);
         }
     }
 
@@ -59,8 +59,7 @@ public class ZipUsingJavaUtil {
         }
         catch (Exception e) {
             LOGGER.info("Some Errors happned during the zip process");
-            LOGGER.error(e.getMessage(), e.getCause());
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e);
         }
         return result;
 
@@ -156,7 +155,7 @@ public class ZipUsingJavaUtil {
              * list the files in the folder
              */
             for (String fileName : folder.list()) {
-                if (path.equals("")) {
+                if ("".equals(path)) {
                     addFileToZip(folder.getName(), srcFolder + "/" + fileName, zip, false);
                 }
                 else {
