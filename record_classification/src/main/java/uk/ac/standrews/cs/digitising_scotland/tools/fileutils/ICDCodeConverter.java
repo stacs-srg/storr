@@ -10,6 +10,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,9 +36,13 @@ public class ICDCodeConverter {
 
     }
 
+    private ICDCodeConverter() {
+
+    }
+
     private static void convert(final File inputFile, final File outputFile, final File mappingFile) throws IOException {
 
-        HashMap<String, String> map = buildMapping(mappingFile);
+        Map<String, String> map = buildMapping(mappingFile);
 
         BufferedReader in = Utils.createBufferedReader(inputFile);
 
@@ -52,9 +57,9 @@ public class ICDCodeConverter {
         in.close();
     }
 
-    private static HashMap<String, String> buildMapping(final File mappingFile) throws IOException {
+    private static Map<String, String> buildMapping(final File mappingFile) throws IOException {
 
-        HashMap<String, String> map = new HashMap<>();
+        Map<String, String> map = new HashMap<>();
 
         BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(mappingFile), "UTF8"));
 
@@ -72,35 +77,25 @@ public class ICDCodeConverter {
 
     }
 
-    private static String getNewLine(final String str, final HashMap<String, String> map) {
+    private static String getNewLine(final String str, final Map<String, String> map) {
 
         String[] splitString;
-
         splitString = str.split("\t");
-
         String[] splitStringNew = splitString.clone();
-        //String[] splitStringNew = cloneAndEnlarge(splitString.clone());
-
         StringBuilder sb = new StringBuilder();
+
         if (splitString.length >= 6) {
 
             for (int i = 5; i < splitStringNew.length; i = i + 2) {
 
                 String old = splitString[i];
-
                 String newCodeAndDesc = map.get(old);
 
                 if (newCodeAndDesc != null) {
                     setNewString(splitStringNew, i, newCodeAndDesc);
                 }
                 else {
-                    if ((newCodeAndDesc = map.get(old.replaceAll("\\.", ""))) != null) {
-                        setNewString(splitStringNew, i, newCodeAndDesc);
-                    }
-                    else {
-                        LOGGER.error(old + " isn't in map... record id: " + splitString[1]);
-
-                    }
+                    checkWithoutDot(map, splitString, splitStringNew, i, old);
                 }
 
             }
@@ -116,21 +111,22 @@ public class ICDCodeConverter {
 
     }
 
+    private static void checkWithoutDot(final Map<String, String> map, String[] splitString, String[] splitStringNew, int i, String old) {
+
+        String newCodeAndDesc;
+        if ((newCodeAndDesc = map.get(old.replaceAll("\\.", ""))) != null) {
+            setNewString(splitStringNew, i, newCodeAndDesc);
+        }
+        else {
+            LOGGER.error(old + " isn't in map... record id: " + splitString[1]);
+
+        }
+    }
+
     private static void setNewString(final String[] splitStringNew, final int i, final String newCodeAndDesc) {
 
         String newCode = newCodeAndDesc.split("\t")[0];
-        // String newDesc = newCodeAndDesc.split("\t")[1];
         splitStringNew[i] = newCode;
-        // splitStringNew[i + 1] = newDesc;
-    }
-
-    private static String[] cloneAndEnlarge(final String[] clone) {
-
-        String[] biggerArray = new String[clone.length + 1];
-        for (int i = 0; i < clone.length; i++) {
-            biggerArray[i] = clone[i];
-        }
-        return biggerArray;
     }
 
     private static void write(final String newLine, final File outputFile) throws IOException {
@@ -144,6 +140,7 @@ public class ICDCodeConverter {
                 out.close();
             }
             catch (Exception e) {
+                LOGGER.error(e.getMessage(), e);
                 e.printStackTrace();
             }
         }
