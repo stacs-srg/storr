@@ -80,7 +80,7 @@ public final class PIlot {
         training = inputFiles[0];
         prediction = inputFiles[1];
 
-        File codeDictionaryFile = new File(MachineLearningConfiguration.getDefaultProperties().getProperty("codeDictionaryFile")); //FIXME Maybe read this in?
+        File codeDictionaryFile = new File(MachineLearningConfiguration.getDefaultProperties().getProperty("codeDictionaryFile"));
         CodeDictionary codeDictionary = new CodeDictionary(codeDictionaryFile);
 
         GoldStandardBucketGenerator trainingGenerator = new GoldStandardBucketGenerator(codeDictionary);

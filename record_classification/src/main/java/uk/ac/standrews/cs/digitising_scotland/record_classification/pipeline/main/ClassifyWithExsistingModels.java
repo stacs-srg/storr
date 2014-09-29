@@ -77,7 +77,7 @@ public final class ClassifyWithExsistingModels {
         goldStandard = parseGoldStandard(args);
         modelLocation = parseModelLocation(args);
 
-        File codeDictionaryFile = new File(MachineLearningConfiguration.getDefaultProperties().getProperty("codeDictionaryFile")); //TODO make this more portable?
+        File codeDictionaryFile = new File(MachineLearningConfiguration.getDefaultProperties().getProperty("codeDictionaryFile"));
         CodeDictionary codeDictionary = new CodeDictionary(codeDictionaryFile);
         GoldStandardBucketGenerator generator = new GoldStandardBucketGenerator(codeDictionary);
         Bucket allRecords = generator.generate(goldStandard);

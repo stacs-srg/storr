@@ -82,7 +82,7 @@ public final class TrainClassifyOneFile {
         goldStandard = parseGoldStandFile(args);
         double trainingRatio = parseTrainingPct(args);
 
-        File codeDictionaryFile = new File(MachineLearningConfiguration.getDefaultProperties().getProperty("codeDictionaryFile")); //FIXME
+        File codeDictionaryFile = new File(MachineLearningConfiguration.getDefaultProperties().getProperty("codeDictionaryFile"));
         CodeDictionary codeDictionary = new CodeDictionary(codeDictionaryFile);
 
         GoldStandardBucketGenerator generator = new GoldStandardBucketGenerator(codeDictionary);

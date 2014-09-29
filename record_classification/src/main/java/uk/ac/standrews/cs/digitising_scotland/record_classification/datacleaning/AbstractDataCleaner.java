@@ -23,6 +23,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.exceptions.InputFormatException;
 import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
 import uk.ac.standrews.cs.digitising_scotland.tools.analysis.UniqueWordCounter;
+import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearningConfiguration;
 
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multiset;
@@ -34,8 +35,9 @@ import com.google.common.collect.Multiset;
  */
 public abstract class AbstractDataCleaner {
 
-    private AbstractFormatConverter formatConverter = new LongFormatConverter();
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractDataCleaner.class);
+
+    private AbstractFormatConverter formatConverter = new LongFormatConverter();
 
     /**
      * The Constant TOKENLIMIT. The default is 4 but this can be changed by calling setTokenLimit.
@@ -71,7 +73,7 @@ public abstract class AbstractDataCleaner {
         File file = new File(args[0]);
         File correctedFile = new File(args[1]);
         setTokenLimit(args);
-        File codeDictionaryFile = null; //FIXME
+        File codeDictionaryFile = new File(MachineLearningConfiguration.getDefaultProperties().getProperty("codeDictionaryFile"));
         CodeDictionary codeDictionary = new CodeDictionary(codeDictionaryFile);
         List<Record> records = formatConverter.convert(file, codeDictionary);
         Bucket bucket = new Bucket(records);

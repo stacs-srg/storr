@@ -141,7 +141,6 @@ public class ICDCodeConverter {
             }
             catch (Exception e) {
                 LOGGER.error(e.getMessage(), e);
-                e.printStackTrace();
             }
         }
 

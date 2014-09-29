@@ -15,12 +15,17 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Adds a spelling mistake to a string by swapping the two 'middle' characters in a randomly string.
  * 
  * @author jkc25
  */
 public class SpellingMistakeFactory {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(SpellingMistakeFactory.class);
 
     static final int ASCIIOFFSET = 97;
 
@@ -184,7 +189,7 @@ public class SpellingMistakeFactory {
                 s.close();
             }
             catch (FileNotFoundException e) {
-                e.printStackTrace();
+                LOGGER.error(e.getMessage(), e);
                 return false;
             }
             output = stringBuilder.toString();

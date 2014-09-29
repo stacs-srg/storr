@@ -524,7 +524,6 @@ public class AnalysisTools {
             }
         };
         SortedSet<Map.Entry<String, Integer>> sortedSet = new TreeSet<Entry<String, Integer>>(comparator);
-        //   sortedSet.addAll(entry); //dont use this
 
         for (Entry<String, Integer> entry2 : entry) {
             sortedSet.add(entry2);
