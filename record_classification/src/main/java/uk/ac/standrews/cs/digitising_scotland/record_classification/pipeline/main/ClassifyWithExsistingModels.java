@@ -15,6 +15,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.Gol
 import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.MachineLearningClassificationPipeline;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.PipelineUtils;
 import uk.ac.standrews.cs.digitising_scotland.tools.Timer;
+import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearningConfiguration;
 
 /**
  * This class integrates the training of machine learning models and the
@@ -76,7 +77,7 @@ public final class ClassifyWithExsistingModels {
         goldStandard = parseGoldStandard(args);
         modelLocation = parseModelLocation(args);
 
-        File codeDictionaryFile = null; //FIXME
+        File codeDictionaryFile = new File(MachineLearningConfiguration.getDefaultProperties().getProperty("codeDictionaryFile")); //TODO make this more portable?
         CodeDictionary codeDictionary = new CodeDictionary(codeDictionaryFile);
         GoldStandardBucketGenerator generator = new GoldStandardBucketGenerator(codeDictionary);
         Bucket allRecords = generator.generate(goldStandard);

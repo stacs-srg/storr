@@ -13,6 +13,6 @@ ID	|Cause of Death 1	|Cause of Death 2	|Cause of Death 3	|Underlying Cause of De
 Notes    
 
 * Empty columns can be left blank     
-* 
+* ID and at least one cause of death are compulsary.
 * Sex must be 1 or 2    
 * Age group must be between 0 and 5    

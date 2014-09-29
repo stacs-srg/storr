@@ -8,6 +8,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.GoldStandardBucketGenerator;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.PipelineUtils;
 import uk.ac.standrews.cs.digitising_scotland.tools.Timer;
+import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearningConfiguration;
 
 /**
  * Trains a model and a lookup table from the supplied gold standard data file.
@@ -40,7 +41,7 @@ public class TrainModels {
 
         goldStandard = parseGoldStandFile(args);
 
-        File codeDictionaryFile = null; //FIXME
+        File codeDictionaryFile = new File(MachineLearningConfiguration.getDefaultProperties().getProperty("codeDictionaryFile")); //FIXME
         CodeDictionary codeDictionary = new CodeDictionary(codeDictionaryFile);
 
         GoldStandardBucketGenerator generator = new GoldStandardBucketGenerator(codeDictionary);

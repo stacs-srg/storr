@@ -17,6 +17,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.Mac
 import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.PipelineUtils;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.PredictionBucketGenerator;
 import uk.ac.standrews.cs.digitising_scotland.tools.Timer;
+import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearningConfiguration;
 
 /**
  * This class integrates the training of machine learning models and the
@@ -79,7 +80,7 @@ public final class PIlot {
         training = inputFiles[0];
         prediction = inputFiles[1];
 
-        File codeDictionaryFile = null;
+        File codeDictionaryFile = new File(MachineLearningConfiguration.getDefaultProperties().getProperty("codeDictionaryFile")); //FIXME Maybe read this in?
         CodeDictionary codeDictionary = new CodeDictionary(codeDictionaryFile);
 
         GoldStandardBucketGenerator trainingGenerator = new GoldStandardBucketGenerator(codeDictionary);
