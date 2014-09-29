@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 
 import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
 
+// TODO: Auto-generated Javadoc
 /**
  * This class contains a collection of all of the possible valid codes that can be used in training or classification.
  * If a code is not in this class then it is assumed that the code is not correct, ie a possible typo or mistaken entry.
@@ -21,6 +22,7 @@ import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
  */
 public class CodeDictionary {
 
+    /** The Constant LOGGER. */
     private static final Logger LOGGER = LoggerFactory.getLogger(CodeDictionary.class);
 
     /**
@@ -30,14 +32,22 @@ public class CodeDictionary {
 
     /**
      * Instantiates a new CodeDictionary.
-     * @param codeDictionaryFile
-     * @throws IOException
+     *
+     * @param codeDictionaryFile the code dictionary file
+     * @throws IOException Signals that an I/O exception has occurred.
      */
     public CodeDictionary(final File codeDictionaryFile) throws IOException {
 
         validCodes = initMap(codeDictionaryFile);
     }
 
+    /**
+     * Inits the map.
+     *
+     * @param correctCodes the correct codes
+     * @return the map
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
     private Map<String, Code> initMap(final File correctCodes) throws IOException {
 
         validCodes = new HashMap<>();
@@ -50,6 +60,11 @@ public class CodeDictionary {
         return validCodes;
     }
 
+    /**
+     * Parses the line and add to map.
+     *
+     * @param line the line
+     */
     private void parseLineAndAddToMap(final String line) {
 
         String[] splitLine = line.split("\t");
@@ -58,13 +73,26 @@ public class CodeDictionary {
         createCodeAndAddToMap(codeFromFile, descriptionFromFile);
     }
 
+    /**
+     * Creates the code and add to map.
+     *
+     * @param codeFromFile the code from file
+     * @param descriptionFromFile the description from file
+     */
     private void createCodeAndAddToMap(final String codeFromFile, final String descriptionFromFile) {
 
         Code code = new Code(codeFromFile, descriptionFromFile);
         validCodes.put(codeFromFile, code);
     }
 
-    public Code getCode(String codeAsString) throws CodeNotValidException {
+    /**
+     * Gets the code object associated with the string representation.
+     *
+     * @param codeAsString the code as string
+     * @return the code object
+     * @throws CodeNotValidException the code not valid exception
+     */
+    public Code getCode(final String codeAsString) throws CodeNotValidException {
 
         final Code code = validCodes.get(codeAsString);
         if (code == null) {
@@ -75,6 +103,11 @@ public class CodeDictionary {
         return code;
     }
 
+    /**
+     * Gets the total number of codes in the dictionary.
+     *
+     * @return the total number of codes
+     */
     public int getTotalNumberOfCodes() {
 
         return validCodes.size();
