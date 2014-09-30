@@ -9,14 +9,10 @@ import java.util.ArrayList;
 import java.util.Properties;
 
 import org.apache.mahout.math.NamedVector;
-import org.apache.mahout.math.Vector;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeDictionary;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeIndexer;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeNotValidException;
@@ -59,9 +55,21 @@ public class OLRCrossFoldTest {
         }
 
         codeDictionary = new CodeDictionary(new File("target/test-classes/CodeFactoryTestFile.txt"));
+        index = new CodeIndexer(codeDictionary);
         vectorFactory = new VectorFactory();
 
         populateDictionary();
+
+        setProperties();
+
+        trainingVectorList = generateTrainingVectors();
+
+        model = new OLRCrossFold(trainingVectorList, properties);
+        model.train();
+
+    }
+
+    private void setProperties() {
 
         properties.setProperty("numCategories", "8");
         properties.setProperty("OLRPoolSize", "3");
@@ -71,13 +79,6 @@ public class OLRCrossFoldTest {
         properties.setProperty("perTermLearning", "false");
         properties.setProperty("olrRegularisation", "false");
         properties.setProperty("numDropped", "1");
-
-        trainingVectorList = generateTrainingVectors();
-        Bucket bucket = new Bucket();
-        index = new CodeIndexer(bucket);
-        model = new OLRCrossFold(trainingVectorList, properties);
-        model.train();
-
     }
 
     @After
@@ -153,54 +154,17 @@ public class OLRCrossFoldTest {
         return new BufferedReader(new FileReader(file));
     }
 
-    //    /**
-    //     * Test model.
-    //     *
-    //     * @throws IOException Signals that an I/O exception has occurred.
-    //     */
-    //    @Test
-    //    public void testModel() throws IOException {
-    //
-    //        BufferedReader br = getBufferedReaderOfCodeDictionaryFile();
-    //        String line;
-    //        while ((line = br.readLine()) != null) {
-    //            testClassifyWithCodeAsDescription(model, line);
-    //        }
-    //
-    //    }
-
-    /**
-     * Test write.
-     *
-     * @throws Exception the exception
-     */
-    //    @Test
-    //    public void testWrite() throws Exception {
-    //
-    //        model.serializeModel("target/testOLRCrossfoldWrite.txt");
-    //        OLRCrossFold olrCrossFold = OLRCrossFold.deSerializeModel("target/testOLRCrossfoldWrite.txt");
-    //
-    //        BufferedReader br = getBufferedReaderOfCodeDictionaryFile();
-    //        String line;
-    //        while ((line = br.readLine()) != null) {
-    //            testClassifyWithCodeAsDescription(olrCrossFold, line);
-    //        }
-    //    }
-
     /**
      * Test training de serialized model.
      *
      * @throws IOException Signals that an I/O exception has occurred.
      */
     @Test(expected = UnsupportedOperationException.class)
-    @Ignore("Needs to be updated to new CodeIndex/DictionaryFormat")
-    //FIXME
     public void testTrainingDeSerializedModel() throws IOException {
 
         model.serializeModel("target/testOLRCrossfoldWrite.txt");
         OLRCrossFold olrCrossFold = OLRCrossFold.deSerializeModel("target/testOLRCrossfoldWrite.txt");
         olrCrossFold.train();
-
     }
 
 }

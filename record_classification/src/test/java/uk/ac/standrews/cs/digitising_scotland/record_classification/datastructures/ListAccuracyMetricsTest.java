@@ -5,7 +5,6 @@ import java.net.URISyntaxException;
 
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.ClassifierTestingHelper;
@@ -63,8 +62,6 @@ public class ListAccuracyMetricsTest {
     }
 
     @Test
-    @Ignore("Needs to be updated to new CodeIndex/DictionaryFormat")
-    //FIXME
     public void testAverageConfidence() throws URISyntaxException, IOException {
 
         cth.giveBucketTestingCODCodes(trainingBucket);

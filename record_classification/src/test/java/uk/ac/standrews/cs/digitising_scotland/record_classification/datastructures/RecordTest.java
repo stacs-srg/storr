@@ -80,7 +80,6 @@ public class RecordTest {
         Classification codeTriple = new Classification(codeTest, new TokenSet("test String"), 1.0);
         codeTripleSet.add(codeTriple);
 
-
         Set<Classification> classificationsFromRecord = record.getCodeTriples();
 
         Classification clssfication = classificationsFromRecord.iterator().next();
