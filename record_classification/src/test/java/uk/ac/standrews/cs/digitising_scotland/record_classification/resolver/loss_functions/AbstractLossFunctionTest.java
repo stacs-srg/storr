@@ -10,6 +10,11 @@ import org.junit.Test;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
 
+/**
+ * Tests that the calculate methods for each class that extends AbstractLossFunction works as expected.
+ * @author jkc25
+ *
+ */
 public class AbstractLossFunctionTest {
 
     private AbstractLossFunction sumLoss;
