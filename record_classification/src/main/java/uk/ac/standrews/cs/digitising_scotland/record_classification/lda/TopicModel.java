@@ -147,8 +147,8 @@ public class TopicModel {
      */
     private File modelTopics(final String inputFileName, final String outputFileName) throws IOException {
 
-        MemoryMonitor monitor = new MemoryMonitor();
-        monitorMemoryStart(monitor);
+        //MemoryMonitor monitor = new MemoryMonitor();
+        // monitorMemoryStart(monitor);
         Timer timer = new Timer();
         timer.start();
 
@@ -213,7 +213,7 @@ public class TopicModel {
 
         writeModel(model, testing);
 
-        monitorMemoryStop(monitor);
+        // monitorMemoryStop(monitor);
         timer.stop();
 
         writeExecutionData(timer, numberOfLines);

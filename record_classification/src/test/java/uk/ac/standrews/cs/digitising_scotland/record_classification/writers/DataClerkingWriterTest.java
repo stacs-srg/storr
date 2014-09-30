@@ -52,14 +52,14 @@ public class DataClerkingWriterTest {
     @AfterClass
     public static void cleanUp() {
 
-        //        File file = new File(OCCBUCKET);
-        //        Assert.assertTrue(file.delete());
-        //        file = new File(CODBUCKET);
-        //        Assert.assertTrue(file.delete());
-        //        file = new File(HICODBUCKET);
-        //        Assert.assertTrue(file.delete());
-        //        file = new File(MULTICODBUCKET);
-        //        Assert.assertTrue(file.delete());
+                File file = new File(OCCBUCKET);
+                Assert.assertTrue(file.delete());
+                file = new File(CODBUCKET);
+                Assert.assertTrue(file.delete());
+                file = new File(HICODBUCKET);
+                Assert.assertTrue(file.delete());
+                file = new File(MULTICODBUCKET);
+                Assert.assertTrue(file.delete());
     }
 
     /**
