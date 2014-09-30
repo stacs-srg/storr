@@ -96,7 +96,7 @@ public class Record {
      * @param classification to add.
      * @return true if the method increased the size of the multimap, or false if the multimap already contained the key-value pair
      */
-    public boolean addClassification(Classification classification) {
+    public boolean addClassification(final Classification classification) {
 
         return listOfClassifications.put(classification.getTokenSet().toString(), classification);
     }
@@ -106,7 +106,7 @@ public class Record {
      * @param classification to add.
      * @return true if the method increased the size of the multimap, or false if the multimap already contained the key-value pair
      */
-    public boolean addClassification(String description, Classification classification) {
+    public boolean addClassification(final String description, final Classification classification) {
 
         return listOfClassifications.put(description, classification);
     }

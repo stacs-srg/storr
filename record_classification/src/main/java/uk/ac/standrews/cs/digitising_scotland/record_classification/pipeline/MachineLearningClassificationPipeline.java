@@ -115,7 +115,7 @@ public class MachineLearningClassificationPipeline {
     private void addCodeTriplesAndDescriptions(final Record record, final String desc, final Set<Classification> result) {
 
         for (Classification codeTriple : result) {
-            record.getListOfClassifications().put(desc, codeTriple);
+            record.addClassification(desc, codeTriple);
         }
     }
 

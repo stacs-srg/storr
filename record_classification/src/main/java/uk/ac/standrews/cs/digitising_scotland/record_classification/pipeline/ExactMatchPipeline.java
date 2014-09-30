@@ -80,7 +80,7 @@ public class ExactMatchPipeline {
     private void addResultToRecord(final Record record, final String description, final Set<Classification> result) {
 
         for (Classification codeTriple : result) {
-            record.getListOfClassifications().put(description, codeTriple);
+            record.addClassification(description, codeTriple);
         }
     }
 

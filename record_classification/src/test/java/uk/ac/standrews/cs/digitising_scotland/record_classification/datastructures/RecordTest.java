@@ -78,7 +78,7 @@ public class RecordTest {
 
         Classification classification = new Classification(codeTest, new TokenSet("test String"), 1.0);
         classificationSet.add(classification);
-        record.getListOfClassifications().put(classification.getTokenSet().toString(), classification);
+        record.addClassification(classification.getTokenSet().toString(), classification);
 
         HashMultimap<String, Classification> classificationsFromRecord = record.getListOfClassifications();
 
