@@ -58,12 +58,13 @@ public class OLRCrossFold {
     protected OLRCrossFold() {
 
         modelTrainable = false;
+        classifier = new OLR();
     }
 
     /**
-     * Constructor.
+     * Constructs an OLRCrossFold object with the given trainingVectors.
      *
-     * @param trainingVectorList training vectors
+     * @param trainingVectorList training vectors to use when training/validating each fold.
      * @param properties         properties
      */
     public OLRCrossFold(final List<NamedVector> trainingVectorList, final Properties properties) {
@@ -74,9 +75,18 @@ public class OLRCrossFold {
             models.add(model);
         }
         modelTrainable = true;
+        classifier = new OLR();
+
     }
 
-    public OLRCrossFold(final List<NamedVector> trainingVectorList, final Properties properties, Matrix betaMatrix) {
+    /**
+     * Constructs an OLRCrossFold object with the given trainingVectors.
+     *
+     * @param trainingVectorList training vectors to use when training/validating each fold.
+     * @param properties         properties properties file.
+     * @param betaMatrix        betaMatrix this matrix contains the betas and will be propagated down to the lowest OLR object.
+     */
+    public OLRCrossFold(final List<NamedVector> trainingVectorList, final Properties properties, final Matrix betaMatrix) {
 
         ArrayList<NamedVector>[][] trainingVectors = init(trainingVectorList, properties);
         for (int i = 0; i < this.folds + 1; i++) {
@@ -84,14 +94,15 @@ public class OLRCrossFold {
             models.add(model);
         }
         modelTrainable = true;
+        classifier = new OLR();
+
     }
 
     private ArrayList<NamedVector>[][] init(final List<NamedVector> trainingVectorList, final Properties properties) {
 
         this.properties = properties;
         getConfigOptions();
-        ArrayList<NamedVector>[][] trainingVectors = CrossFoldedDataStructure.make(trainingVectorList, folds);
-        return trainingVectors;
+        return CrossFoldedDataStructure.make(trainingVectorList, folds);
     }
 
     /**
@@ -123,7 +134,7 @@ public class OLRCrossFold {
     }
 
     /**
-     * Reset running log likelihoods.
+     * Resets running log likelihoods.
      */
     public void resetRunningLogLikelihoods() {
 
@@ -143,7 +154,7 @@ public class OLRCrossFold {
     }
 
     /**
-     * trains models.
+     * Trains all the OLR models contained in this OLRCrossfold.
      */
     public void train() {
 
@@ -179,7 +190,7 @@ public class OLRCrossFold {
     }
 
     /**
-     * Prepare classifier.
+     * Prepares the averaged OLR classifier for use by finding the top performing models and averaging their beta matrices.
      */
     private void prepareClassifier() {
 
@@ -188,13 +199,18 @@ public class OLRCrossFold {
         classifier = new OLR(properties, classifierMatrix);
     }
 
+    /**
+     * Returns the averaged beta matrix for this OLRCrossfold. If the OLRCrossfold has not been trained than an empty matrix will be returned.
+     * 
+     * @return the averaged beta matrix for this OLRCrossfold, or an empty matrix if no training has been done.
+     */
     public Matrix getAverageBetaMatrix() {
 
         return classifier.getBeta();
     }
 
     /**
-     * Gets the survivors.
+     * Gets the survivors for each of the {@link OLRShuffled} models.
      *
      * @return the survivors
      */
@@ -284,7 +300,8 @@ public class OLRCrossFold {
     private void getConfigOptions() {
 
         folds = Integer.parseInt(properties.getProperty("OLRFolds"));
-        if (folds > 20) {
+        final int foldWarningThreshold = 20;
+        if (folds > foldWarningThreshold) {
             LOGGER.info("You have selected a large value of OLRfolds. Please check that you meant to do this. It may harm performance");
         }
     }
