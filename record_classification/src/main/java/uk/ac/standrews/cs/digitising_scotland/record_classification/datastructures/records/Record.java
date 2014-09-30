@@ -92,11 +92,31 @@ public class Record {
     }
 
     /**
+     * Adds a {@link Classification} to the list of classifications that this record has. The classification's tokenSet is used as the key.
+     * @param classification to add.
+     * @return true if the method increased the size of the multimap, or false if the multimap already contained the key-value pair
+     */
+    public boolean addClassification(Classification classification) {
+
+        return listOfClassifications.put(classification.getTokenSet().toString(), classification);
+    }
+
+    /**
+     * Adds a {@link Classification} to the list of classifications that this record has. The description given is used as the key.
+     * @param classification to add.
+     * @return true if the method increased the size of the multimap, or false if the multimap already contained the key-value pair
+     */
+    public boolean addClassification(String description, Classification classification) {
+
+        return listOfClassifications.put(description, classification);
+    }
+
+    /**
      * Gets the Set of {@link Classification}s contained in this record.
      *
      * @return the Set of CodeTriples.
      */
-    public Set<Classification> getCodeTriples() {
+    public Set<Classification> getClassifications() {
 
         return new HashSet<>(listOfClassifications.values());
     }

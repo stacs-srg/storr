@@ -51,7 +51,7 @@ public class DummyRecord extends Record {
     }
 
     @Override
-    public Set<Classification> getCodeTriples() {
+    public Set<Classification> getClassifications() {
 
         return null;
     }

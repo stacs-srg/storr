@@ -76,7 +76,7 @@ public class HumanReadableWriter extends OutputDataFormatter implements Closeabl
     public String getCodes(final Record record) {
 
         StringBuilder sb = new StringBuilder();
-        Set<Classification> classifications = record.getCodeTriples();
+        Set<Classification> classifications = record.getClassifications();
 
         for (Classification codeTriple : classifications) {
 

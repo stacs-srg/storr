@@ -76,7 +76,7 @@ public abstract class AbstractConfusionMatrix {
     private void countStats(final Bucket bucket) {
 
         for (Record record : bucket) {
-            Set<Classification> setCodeTriples = record.getCodeTriples();
+            Set<Classification> setCodeTriples = record.getClassifications();
             Set<Classification> goldStandardTriples = record.getGoldStandardClassificationSet();
             totalAndFalsePos(setCodeTriples, goldStandardTriples);
             truePosAndFalseNeg(setCodeTriples, goldStandardTriples);
