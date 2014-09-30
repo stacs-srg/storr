@@ -135,7 +135,6 @@ public class ZipUsingJavaUtil {
         File folder = new File(srcFolder);
 
         //  check the empty folder
-
         if (folder.list().length == 0) {
             LOGGER.info(folder.getName());
             addFileToZip(path, srcFolder, zip, true);
