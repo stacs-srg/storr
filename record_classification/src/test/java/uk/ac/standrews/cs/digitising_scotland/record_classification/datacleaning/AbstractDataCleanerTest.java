@@ -14,7 +14,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeDictionary;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeNotValidException;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.exceptions.InputFormatException;
@@ -31,13 +30,12 @@ public class AbstractDataCleanerTest {
     private static final String outputFilePath = "AbstractDataCleaningTestOutputFile.txt";
     private static final String TOKENLIMIT = "10000";
     private Map<String, String> correctionMap;
-    private CodeDictionary codeDictionary;
+    String codeDictionaryFile;
 
     @Before
     public void setup() throws IOException {
 
-        File codeDictionaryFile = new File(getClass().getResource("/testCodeMap.txt").getFile());
-        codeDictionary = new CodeDictionary(codeDictionaryFile);
+        codeDictionaryFile = (getClass().getResource("/testCodeMap.txt").getFile());
         buildCorrectionMap();
     }
 
@@ -57,7 +55,7 @@ public class AbstractDataCleanerTest {
 
         AbstractDataCleaner cleaner = new DummyCleaner(correctionMap);
         try {
-            cleaner.runOnFile(incorrectFilePath, outputFilePath, TOKENLIMIT);
+            cleaner.runOnFile(incorrectFilePath, outputFilePath, TOKENLIMIT, codeDictionaryFile);
         }
         catch (CodeNotValidException e) {
             e.printStackTrace();

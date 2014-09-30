@@ -23,7 +23,6 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.exceptions.InputFormatException;
 import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
 import uk.ac.standrews.cs.digitising_scotland.tools.analysis.UniqueWordCounter;
-import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearningConfiguration;
 
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multiset;
@@ -73,7 +72,7 @@ public abstract class AbstractDataCleaner {
         File file = new File(args[0]);
         File correctedFile = new File(args[1]);
         setTokenLimit(args);
-        File codeDictionaryFile = new File(MachineLearningConfiguration.getDefaultProperties().getProperty("codeDictionaryFile"));
+        File codeDictionaryFile = new File(args[3]);
         CodeDictionary codeDictionary = new CodeDictionary(codeDictionaryFile);
         List<Record> records = formatConverter.convert(file, codeDictionary);
         Bucket bucket = new Bucket(records);
