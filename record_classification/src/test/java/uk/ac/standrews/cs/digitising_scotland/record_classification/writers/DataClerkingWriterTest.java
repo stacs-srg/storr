@@ -7,18 +7,18 @@ import java.nio.file.Files;
 
 import org.junit.AfterClass;
 import org.junit.Assert;
-import org.junit.Ignore;
+import org.junit.Before;
 import org.junit.Test;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.ClassifierTestingHelper;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeNotValidException;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.RecordFactory;
 
 /**
  * The Class DataClerkingWriterTest.
  */
-@Ignore("Need to rewrite the expected classes")
 public class DataClerkingWriterTest {
 
     /** The helper. */
@@ -38,6 +38,13 @@ public class DataClerkingWriterTest {
 
     /** The Constant MULTICODBUCKET. */
     private static final String MULTICODBUCKET = "target/MultipleCODRecordWriteTest.txt";
+
+    @Before
+    public void setUp() {
+
+        RecordFactory.resetIdCount();
+
+    }
 
     /**
      * Clean up.

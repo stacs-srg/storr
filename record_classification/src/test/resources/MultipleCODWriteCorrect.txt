@@ -1,6 +1,8 @@
-acute bronchitis|1855|1|F|(0) 0 - 1|R99|R99 fistula||I6191|I61.91 Intracerebral haemorrhage, unspecified|Coded to the extended historical version (codes ending .01 to .09)|X59|X59 accident other||
-acute bron|1855|1|M|(1) 2 - 5|R99|R99 fistula||I6191|I61.91 Intracerebral haemorrhage, unspecified|Coded to the extended historical version (codes ending .01 to .09)|X59|X59 accident other||
-acute bron|1855|1|M|(2) 6 - 10|R99|R99 fistula||I6191|I61.91 Intracerebral haemorrhage, unspecified|Coded to the extended historical version (codes ending .01 to .09)|X59|X59 accident other||
-"acute bron, heart disease"|1855|1|M|(3) 11 - 15|R99|R99 fistula||I6191|I61.91 Intracerebral haemorrhage, unspecified|Coded to the extended historical version (codes ending .01 to .09)|X59|X59 accident other||
-"acute bron, heart disease"|1855|1|M|(4) 16 - 45|R99|R99 fistula||I6191|I61.91 Intracerebral haemorrhage, unspecified|Coded to the extended historical version (codes ending .01 to .09)|X59|X59 accident other||
-"acute hydrocephalus, fever"|1855|1|M|(5) 56+|R99|R99 fistula||I6191|I61.91 Intracerebral haemorrhage, unspecified|Coded to the extended historical version (codes ending .01 to .09)|X59|X59 accident other||
+1855|4157|a|"acute bron"|"acute bron" "heart disease"|I6191|"acute bron" "heart disease"|X59|"acute bron" "heart disease"|R99|
+1855|4157|b|"heart disease"|
+1855|4112|a|"acute hydrocephalus"|"acute hydrocephalus" "fever"|I6191|"acute hydrocephalus" "fever"|R99|"acute hydrocephalus" "fever"|X59|
+1855|4112|b|"fever"|
+1855|4111|a|acute bronchitis|acute bronchitis|X59|acute bronchitis|R99|acute bronchitis|I6191|
+1855|4159|a|acute bron|acute bron|X59|acute bron|R99|acute bron|I6191|
+1855|4160|a|acute bron|acute bron|X59|acute bron|R99|acute bron|I6191|
+1855|4158|a|"acute bron, heart disease"|"acute bron, heart disease"|X59|"acute bron, heart disease"|I6191|"acute bron, heart disease"|R99|

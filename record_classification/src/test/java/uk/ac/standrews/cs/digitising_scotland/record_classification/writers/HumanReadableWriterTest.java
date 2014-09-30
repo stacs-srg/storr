@@ -16,7 +16,6 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.RecordFactory;
 
-//@Ignore("Need to rewrite the expected classes")
 public class HumanReadableWriterTest {
 
     /** The helper. */
