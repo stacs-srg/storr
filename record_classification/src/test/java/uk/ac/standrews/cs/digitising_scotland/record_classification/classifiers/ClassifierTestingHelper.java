@@ -180,6 +180,7 @@ public class ClassifierTestingHelper {
         Classification c = new Classification(code, new TokenSet(record.getOriginalData().getDescription()), 1.0);
         Set<Classification> set = new HashSet<>();
         set.add(c);
+        record.getListOfClassifications().put(record.getOriginalData().getDescription().get(0), c);
         return record;
     }
 
