@@ -18,10 +18,6 @@ import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearnin
  */
 public class TrainModels {
 
-    private TrainModels() {
-
-    }
-
     /**
      * Entry method for training a model on a batch of records.
      * 
@@ -32,14 +28,18 @@ public class TrainModels {
      */
     public static void main(final String[] args) throws Exception {
 
-        String experimentalFolderName;
-        File goldStandard;
+        TrainModels instance = new TrainModels();
+        instance.run(args);
+
+    }
+
+    public void run(String[] args) throws Exception {
 
         Timer timer = PipelineUtils.initAndStartTimer();
 
-        experimentalFolderName = PipelineUtils.setupExperimentalFolders("Experiments");
+        String experimentalFolderName = PipelineUtils.setupExperimentalFolders("Experiments");
 
-        goldStandard = parseGoldStandFile(args);
+        File goldStandard = parseGoldStandFile(args);
 
         File codeDictionaryFile = new File(MachineLearningConfiguration.getDefaultProperties().getProperty("codeDictionaryFile"));
         CodeDictionary codeDictionary = new CodeDictionary(codeDictionaryFile);
@@ -53,10 +53,9 @@ public class TrainModels {
         PipelineUtils.train(allRecords, experimentalFolderName, codeIndex);
 
         timer.stop();
-
     }
 
-    private static File parseGoldStandFile(final String[] args) {
+    private File parseGoldStandFile(final String[] args) {
 
         File goldStandard = null;
         if (args.length > 2) {
