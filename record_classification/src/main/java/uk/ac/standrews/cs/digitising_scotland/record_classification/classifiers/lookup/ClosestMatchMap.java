@@ -14,9 +14,9 @@ public class ClosestMatchMap<K,V> implements Map<K,V>{
     private final Similaritor<K> similaritor;
     private Map<K,V> map;
 
-    ClosestMatchMap(Similaritor<K> similaritor, Map<K,V> map){
+    ClosestMatchMap(SimilarityMetric<K> metric, Map<K,V> map){
         this.map = map;
-        this.similaritor = similaritor;
+        this.similaritor = new Similaritor<>(metric);
     }
 
     /**

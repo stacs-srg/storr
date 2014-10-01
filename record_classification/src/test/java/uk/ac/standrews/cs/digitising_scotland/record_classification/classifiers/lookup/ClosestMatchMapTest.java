@@ -16,10 +16,8 @@ public class ClosestMatchMapTest {
 
     @Test
     public void test(){
-        Similaritor<TokenSet> similaritor = new Similaritor<>(new LevenshteinTokenSetSimilarity());
         Map<TokenSet, Set<Classification>> map = new HashMap<>();
-        ClosestMatchMap<TokenSet, Set<Classification>> classifier = new ClosestMatchMap<>(similaritor, map);
-
+        ClosestMatchMap<TokenSet, Set<Classification>> classifier = new ClosestMatchMap<>(new LevenshteinTokenSetSimilarity(), map);
     }
 
 
