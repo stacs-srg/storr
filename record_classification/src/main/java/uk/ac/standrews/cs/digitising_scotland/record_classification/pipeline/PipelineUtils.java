@@ -194,8 +194,9 @@ public final class PipelineUtils {
     public static void exitIfDoesNotExist(final File file) {
 
         if (!file.exists()) {
-            LOGGER.error(file.getAbsolutePath() + " does not exsist. Exiting");
-            System.exit(2);
+            LOGGER.error(file.getAbsolutePath() + " does not exist. Exiting");
+            throw new RuntimeException();
+            // System.exit(2);
         }
 
     }
