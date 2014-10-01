@@ -47,13 +47,31 @@ public class Record {
     }
 
     /**
-     * Gets the cleaned description.The cleaned description is the original description with punctuation etc removed.
+     * Gets the description from the record's original data object.
      *
      * @return the cleaned description
      */
     public List<String> getDescription() {
 
         return originalData.getDescription();
+    }
+
+    /**
+     * Updates a specific line of the description to a new value.
+     * @param oldDescription line to update
+     * @param newDescription new value
+     * @return true if replacement successful
+     */
+    public boolean updateDescription(final String oldDescription, final String newDescription) {
+
+        int index = originalData.getDescription().indexOf(oldDescription);
+        if (index != -1) {
+            originalData.getDescription().set(index, newDescription);
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 
     /**
