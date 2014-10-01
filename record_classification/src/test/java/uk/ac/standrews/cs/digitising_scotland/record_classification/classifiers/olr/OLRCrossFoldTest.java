@@ -71,7 +71,7 @@ public class OLRCrossFoldTest {
 
     private void setProperties() {
 
-        properties.setProperty("numCategories", "8");
+        properties.setProperty("numCategories", "10");
         properties.setProperty("OLRPoolSize", "3");
         properties.setProperty("OLRFolds", "3");
         properties.setProperty("OLRPoolNumSurvivors", "1");
