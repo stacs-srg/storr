@@ -40,7 +40,7 @@ public class ClosestMatchMap<K,V> implements Map<K,V>{
      */
     private K getClosestKey(K key) {
         List<K> keyList = new ArrayList<>(keySet());
-        keyList.sort(similaritor.getComparator(key));
+        Collections.sort(keyList, similaritor.getComparator(key));
         return keyList.get(0);
     }
 
