@@ -59,11 +59,16 @@ public class TrainModels {
 
         File goldStandard = null;
         if (args.length > 2) {
-            System.err.println("usage: $" + TrainClassifyOneFile.class.getSimpleName() + "    <goldStandardDataFile>    <trainingRatio(optional)>");
+            System.err.println("usage: $" + TrainClassifyOneFile.class.getSimpleName() + "    <goldStandardDataFile>    <modelLocation(optional)>");
+        }
+        if (args.length < 2) {
+            System.err.println("usage: $" + TrainClassifyOneFile.class.getSimpleName() + "    <goldStandardDataFile>    <modelLocation(optional)>");
         }
         else {
             goldStandard = new File(args[0]);
             PipelineUtils.exitIfDoesNotExist(goldStandard);
+            File modelLocation = new File(args[1]);
+            PipelineUtils.exitIfDoesNotExist(modelLocation);
 
         }
         return goldStandard;

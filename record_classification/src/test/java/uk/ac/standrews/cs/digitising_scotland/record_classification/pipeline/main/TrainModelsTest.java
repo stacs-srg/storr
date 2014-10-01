@@ -19,10 +19,20 @@ public class TrainModelsTest {
     }
 
     @Test
-    public void testRun() throws Exception {
+    public void testRunNoGoldStandard() throws Exception {
 
         expectedEx.expect(RuntimeException.class);
         String[] args = {"testFile", "modelLoc"};
+        trainer.run(args);
+
+    }
+
+    @Test
+    public void testRunNoModelLocation() throws Exception {
+
+        String goldStandardFile = getClass().getResource("/CauseOfDeathTestFileSmall.txt").getFile();
+        expectedEx.expect(RuntimeException.class);
+        String[] args = {goldStandardFile, "nonExistantModelLocation"};
         trainer.run(args);
 
     }
