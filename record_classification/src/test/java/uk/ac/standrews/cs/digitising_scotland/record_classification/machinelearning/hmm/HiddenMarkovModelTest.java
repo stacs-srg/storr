@@ -13,13 +13,14 @@ import cc.mallet.types.Alphabet;
 
 public class HiddenMarkovModelTest {
 
-    static final String outputFilePath = "target/hmmOutput.txt";
+    private static final String outputFilePath = "target/hmmOutput.txt";
 
     @After
     public void tearDown() {
 
         File outputFile = new File(outputFilePath);
         FileUtils.deleteQuietly(outputFile);
+        FileUtils.deleteQuietly(new File("target/alphabet"));
 
     }
 

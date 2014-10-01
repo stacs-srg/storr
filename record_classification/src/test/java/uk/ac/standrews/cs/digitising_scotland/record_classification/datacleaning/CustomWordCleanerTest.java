@@ -1,12 +1,10 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.datacleaning;
 
-import java.io.File;
 import java.io.IOException;
 
 import org.junit.Ignore;
 import org.junit.Test;
 
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeDictionary;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeNotValidException;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.exceptions.InputFormatException;
 
@@ -17,7 +15,7 @@ public class CustomWordCleanerTest {
     @Test
     public void test() throws IOException, InputFormatException, CodeNotValidException {
 
-        CodeDictionary cd = new CodeDictionary(new File(getClass().getResource("/CodeFactoryCoDFile.txt").getFile()));
+        String codeDictionary = getClass().getResource("/CodeFactoryCoDFile.txt").getFile();
 
         CustomWordCleaner.getWordMultiset();
 

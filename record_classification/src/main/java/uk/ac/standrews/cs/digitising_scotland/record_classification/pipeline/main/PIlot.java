@@ -91,6 +91,8 @@ public final class PIlot {
         PredictionBucketGenerator predictionBucketGenerator = new PredictionBucketGenerator(codeDictionary);
         Bucket predictionBucket = predictionBucketGenerator.createPredictionBucket(prediction);
 
+        LOGGER.info("Prediction bucket contains " + predictionBucket.size() + " records");
+
         PipelineUtils.printStatusUpdate();
 
         ClassifierTrainer trainer = PipelineUtils.train(trainingBucket, experimentalFolderName, codeIndex);
@@ -99,6 +101,7 @@ public final class PIlot {
 
         LOGGER.info("Exact Matched Bucket Size: " + classifier.getExactMatched().size());
         LOGGER.info("Machine Learned Bucket Size: " + classifier.getMachineLearned().size());
+        LOGGER.info("All Classified Size: " + classifier.getAllClassified().size());
 
         PipelineUtils.writeRecords(classifier.getAllClassified(), experimentalFolderName);
 

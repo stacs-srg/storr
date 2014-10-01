@@ -8,7 +8,6 @@ import java.util.Set;
 
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
@@ -19,11 +18,13 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.exceptions.InputFormatException;
 
+import com.google.common.collect.HashMultimap;
+
 /**
  * The Class RecordTest tests the creation of Records and their subclasses, parameters etc.
  * 
  */
-//FIXME
+//
 public class RecordTest {
 
     /** The record. */
@@ -40,7 +41,7 @@ public class RecordTest {
     @Before
     public void setUp() throws Exception {
 
-        ArrayList<String> descList = new ArrayList();
+        ArrayList<String> descList = new ArrayList<>();
         final String desc = "A test Description";
         descList.add(desc);
 
@@ -68,22 +69,20 @@ public class RecordTest {
      * @throws CodeNotValidException the code not valid exception
      */
     @Test
-    @Ignore
     public void testAddCodeTriples() throws IOException, CodeNotValidException {
 
         File codeFile = new File(getClass().getResource("/CodeFactoryTestFile.txt").getFile());
-        CodeDictionary cd = new CodeDictionary(codeFile);
-        Set<Classification> codeTripleSet = new HashSet<>();
+        CodeDictionary codeDictionary = new CodeDictionary(codeFile);
+        Set<Classification> classificationSet = new HashSet<>();
+        Code codeTest = codeDictionary.getCode("2100");
 
-        Code codeTest = cd.getCode("2100");
+        Classification classification = new Classification(codeTest, new TokenSet("test String"), 1.0);
+        classificationSet.add(classification);
+        record.addClassification(classification.getTokenSet().toString(), classification);
 
-        Classification codeTriple = new Classification(codeTest, new TokenSet("test String"), 1.0);
-        codeTripleSet.add(codeTriple);
+        HashMultimap<String, Classification> classificationsFromRecord = record.getListOfClassifications();
 
-
-        Set<Classification> classificationsFromRecord = record.getCodeTriples();
-
-        Classification clssfication = classificationsFromRecord.iterator().next();
+        Classification clssfication = classificationsFromRecord.entries().iterator().next().getValue();
         Assert.assertEquals("2100", clssfication.getCode().getCodeAsString());
         Assert.assertEquals("test string", clssfication.getTokenSet().toString());
 
@@ -115,7 +114,6 @@ public class RecordTest {
      * Test equals symmetric.
      */
     @Test
-    @Ignore
     public void testEqualsSymmetric() {
 
         int id = (int) Math.rint(Math.random() * 1000);
@@ -128,7 +126,6 @@ public class RecordTest {
      * Test equals() different with classification sets where one is null.
      */
     @Test
-    @Ignore
     public void testEqualsSymmetricDifferentClassificationSetsNull() {
 
         int id = (int) Math.rint(Math.random() * 1000);
@@ -143,7 +140,6 @@ public class RecordTest {
      * Test equals symmetric different vectors.
      */
     @Test
-    @Ignore
     public void testEqualsSymmetricDifferentVectors() {
 
         int id = (int) Math.rint(Math.random() * 1000);

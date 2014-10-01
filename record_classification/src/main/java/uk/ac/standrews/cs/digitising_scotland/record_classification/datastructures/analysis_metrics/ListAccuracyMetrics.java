@@ -132,7 +132,7 @@ public class ListAccuracyMetrics {
         overUnderPredictionMatrix = new int[maxCodes + 1][maxCodes + 1];
         for (Record record : bucket) {
             int goldStandardSize = record.getGoldStandardClassificationSet().size();
-            int actualSize = record.getCodeTriples().size();
+            int actualSize = record.getClassifications().size();
             overUnderPredictionMatrix[actualSize][goldStandardSize]++;
         }
         return overUnderPredictionMatrix;
@@ -153,8 +153,8 @@ public class ListAccuracyMetrics {
             if (record.getGoldStandardClassificationSet().size() > maxCodes) {
                 maxCodes = record.getGoldStandardClassificationSet().size();
             }
-            if (record.getCodeTriples().size() > maxCodes) {
-                maxCodes = record.getCodeTriples().size();
+            if (record.getClassifications().size() > maxCodes) {
+                maxCodes = record.getClassifications().size();
             }
         }
 
@@ -174,14 +174,14 @@ public class ListAccuracyMetrics {
         int exactMatch = 0;
 
         for (Record record : bucket) {
-            final Iterator<Classification> iterator = record.getCodeTriples().iterator();
+            final Iterator<Classification> iterator = record.getClassifications().iterator();
             double totalConfidence = 0;
             while (iterator.hasNext()) {
                 Classification codeTriple = iterator.next();
                 totalConfidence += codeTriple.getConfidence();
             }
 
-            if ((totalConfidence / (double) record.getCodeTriples().size()) % 2 == 0) {
+            if ((totalConfidence / (double) record.getClassifications().size()) % 2 == 0) {
                 exactMatch++;
             }
         }
@@ -322,7 +322,7 @@ public class ListAccuracyMetrics {
         twoClassifications = 0;
         moreThanTwoClassifications = 0;
         for (Record record : bucket) {
-            Set<Classification> setCodeTriples = record.getCodeTriples();
+            Set<Classification> setCodeTriples = record.getClassifications();
             int size = setCodeTriples.size();
             if (size < 1) {
                 unclassified++;
@@ -351,7 +351,7 @@ public class ListAccuracyMetrics {
         double propGoldPredicted = 0.;
 
         for (Record record : bucket) {
-            Set<Classification> setCodeTriples = record.getCodeTriples();
+            Set<Classification> setCodeTriples = record.getClassifications();
             Set<Classification> goldStandardTriples = record.getGoldStandardClassificationSet();
             if (goldStandardTriples.size() < 1) {
                 break;
@@ -382,7 +382,7 @@ public class ListAccuracyMetrics {
         int totallookup = 0;
 
         for (Record record : bucket) {
-            Set<Classification> setCodeTriples = record.getCodeTriples();
+            Set<Classification> setCodeTriples = record.getClassifications();
             for (Classification classification : setCodeTriples) {
                 if (classification.getConfidence() == 1) {
                     totallookup++;
@@ -406,7 +406,7 @@ public class ListAccuracyMetrics {
         int totalMi = 0;
 
         for (Record record : bucket) {
-            Set<Classification> setCodeTriples = record.getCodeTriples();
+            Set<Classification> setCodeTriples = record.getClassifications();
             for (Classification classification : setCodeTriples) {
                 if (classification.getConfidence() != 1) {
                     totalMi++;
@@ -431,7 +431,7 @@ public class ListAccuracyMetrics {
         double totalMeasurements = 0;
 
         for (Record record : bucket) {
-            Set<Classification> setCodeTriples = record.getCodeTriples();
+            Set<Classification> setCodeTriples = record.getClassifications();
             for (Classification codeTriple : setCodeTriples) {
                 totalConfidence += codeTriple.getConfidence();
                 totalMeasurements++;

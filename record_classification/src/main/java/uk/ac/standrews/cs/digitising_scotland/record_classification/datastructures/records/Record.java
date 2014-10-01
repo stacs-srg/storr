@@ -1,6 +1,8 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.OriginalData;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
@@ -45,13 +47,31 @@ public class Record {
     }
 
     /**
-     * Gets the cleaned description.The cleaned description is the original description with punctuation etc removed.
+     * Gets the description from the record's original data object.
      *
      * @return the cleaned description
      */
     public List<String> getDescription() {
 
         return originalData.getDescription();
+    }
+
+    /**
+     * Updates a specific line of the description to a new value.
+     * @param oldDescription line to update
+     * @param newDescription new value
+     * @return true if replacement successful
+     */
+    public boolean updateDescription(final String oldDescription, final String newDescription) {
+
+        int index = originalData.getDescription().indexOf(oldDescription);
+        if (index != -1) {
+            originalData.getDescription().set(index, newDescription);
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 
     /**
@@ -89,19 +109,33 @@ public class Record {
         return false;
     }
 
-    @Override
-    public String toString() {
+    /**
+     * Adds a {@link Classification} to the list of classifications that this record has. The classification's tokenSet is used as the key.
+     * @param classification to add.
+     * @return true if the method increased the size of the multimap, or false if the multimap already contained the key-value pair
+     */
+    public boolean addClassification(final Classification classification) {
 
-        return "Record [id=" + id + ", goldStandardTriples=" + originalData.getGoldStandardClassifications() + ", codeTriples=" + getCodeTriples() + "]";
+        return listOfClassifications.put(classification.getTokenSet().toString(), classification);
     }
 
+    /**
+     * Adds a {@link Classification} to the list of classifications that this record has. The description given is used as the key.
+     * @param classification to add.
+     * @return true if the method increased the size of the multimap, or false if the multimap already contained the key-value pair
+     */
+    public boolean addClassification(final String description, final Classification classification) {
+
+        return listOfClassifications.put(description, classification);
+    }
 
     /**
      * Gets the Set of {@link Classification}s contained in this record.
      *
      * @return the Set of CodeTriples.
      */
-    public Set<Classification> getCodeTriples() {
+    public Set<Classification> getClassifications() {
+
         return new HashSet<>(listOfClassifications.values());
     }
 
@@ -114,4 +148,41 @@ public class Record {
 
         this.listOfClassifications = listOfClassifications;
     }
+
+    @Override
+    public int hashCode() {
+
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + id;
+        result = prime * result + ((listOfClassifications == null) ? 0 : listOfClassifications.hashCode());
+        result = prime * result + ((originalData == null) ? 0 : originalData.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+
+        if (this == obj) { return true; }
+        if (obj == null) { return false; }
+        if (getClass() != obj.getClass()) { return false; }
+        Record other = (Record) obj;
+        if (id != other.id) { return false; }
+        if (listOfClassifications == null) {
+            if (other.listOfClassifications != null) { return false; }
+        }
+        else if (!listOfClassifications.equals(other.listOfClassifications)) { return false; }
+        if (originalData == null) {
+            if (other.originalData != null) { return false; }
+        }
+        else if (!originalData.equals(other.originalData)) { return false; }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+
+        return "Record [id=" + id + ", originalData=" + originalData + ", listOfClassifications=" + listOfClassifications + "]";
+    }
+
 }

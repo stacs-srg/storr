@@ -7,13 +7,11 @@ import java.util.List;
 import org.apache.commons.io.FileUtils;
 import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Pair;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeIndexer;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.RecordFactory;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
@@ -21,7 +19,6 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 /**
  * The Class NaiveBayesClassifierTest.
  */
-@Ignore("Needs to be updated to new CodeIndex/DictionaryFormat")
 //FIXME
 public class NaiveBayesClassifierTest {
 
@@ -34,9 +31,7 @@ public class NaiveBayesClassifierTest {
     /** The list of records. */
     private List<Record> listOfRecords;
 
-    private CodeIndexer indexer;
-
-    // FIXME  private ClassifierTestingHelper helper = new ClassifierTestingHelper();
+    private ClassifierTestingHelper helper = new ClassifierTestingHelper();
 
     /**
      * Setup. Run before each test.
@@ -51,7 +46,6 @@ public class NaiveBayesClassifierTest {
         if (tempFiles.exists()) {
             FileUtils.deleteDirectory(tempFiles);
         }
-        indexer = new CodeIndexer(bucketB);
 
     }
 
@@ -109,7 +103,7 @@ public class NaiveBayesClassifierTest {
         File inputFileTraining = new File(getClass().getResource("/occupationTestFormatPipe.txt").getFile());
         List<Record> listOfRecordsTraining = RecordFactory.makeUnCodedRecordsFromFile(inputFileTraining);
         bucketB = new Bucket(listOfRecordsTraining);
-        //FIXME   bucketB = helper.giveBucketTestingOccCodes(bucketB);
+        bucketB = helper.giveBucketTestingOccCodes(bucketB);
         return bucketB;
     }
 

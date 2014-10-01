@@ -99,7 +99,7 @@ public class MachineLearningClassificationPipeline {
             addResultToRecord(record, description, result);
             classified.addRecordToBucket(record);
         }
-        recordCache.put(description, record.getCodeTriples());
+        recordCache.put(description, record.getClassifications());
     }
 
     private void addResultToRecord(final Record record, final String description, final Set<Classification> result) {
@@ -115,7 +115,7 @@ public class MachineLearningClassificationPipeline {
     private void addCodeTriplesAndDescriptions(final Record record, final String desc, final Set<Classification> result) {
 
         for (Classification codeTriple : result) {
-            record.getListOfClassifications().put(desc, codeTriple);
+            record.addClassification(desc, codeTriple);
         }
     }
 

@@ -74,7 +74,7 @@ public class FileComparisonWriter extends OutputDataFormatter implements Closeab
 
         final String dlim = getDelimiter();
         StringBuilder sb = new StringBuilder();
-        Set<Classification> classifications = record.getCodeTriples();
+        Set<Classification> classifications = record.getClassifications();
         Set<Classification> goldStandardSet = record.getGoldStandardClassificationSet();
 
         for (Classification goldCodeTriple : goldStandardSet) {
