@@ -64,9 +64,9 @@ public class ClosestMatchMapTest {
         return randomString(randomStringLengthUpperBound);
     }
 
-    private String randomString( int upperBound ){
+    private String randomString( int lengthUpperBound ){
         Random rnd = new Random();
-        int len = rnd.nextInt(upperBound);
+        int len = rnd.nextInt(lengthUpperBound);
         String AB = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         StringBuilder sb = new StringBuilder( len );
         for( int i = 0; i < len; i++ )

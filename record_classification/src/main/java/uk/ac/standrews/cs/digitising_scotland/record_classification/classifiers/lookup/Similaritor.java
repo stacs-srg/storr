@@ -3,7 +3,6 @@ package uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers
 import java.util.Comparator;
 
 /**
- * TODO test!
  * Similaritor is a factory which creates Comparators
  * which compare the similarity of objects to a reference object k.
  * If the metric supplied at construction larger values for more similar
