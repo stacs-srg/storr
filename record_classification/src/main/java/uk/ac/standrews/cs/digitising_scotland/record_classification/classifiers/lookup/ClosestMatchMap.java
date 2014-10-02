@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * TODO test
  * An extension of the Java Collections map interface with a method
  * for getting the value of the closest matching key according to a
  * similarity metric supplied at construction.
