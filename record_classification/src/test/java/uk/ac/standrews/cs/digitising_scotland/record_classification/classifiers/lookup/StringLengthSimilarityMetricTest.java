@@ -11,18 +11,18 @@ import java.util.Collection;
 import static org.junit.runners.Parameterized.Parameters;
 
 /**
- *
+ * Testing the basic string similarity metric.
  * Created by fraserdunlop on 02/10/2014 at 10:09.
  */
 @RunWith(Parameterized.class)
-public class SimilariritorTest {
+public class StringLengthSimilarityMetricTest {
 
 
     private final String o1;
     private final String o2;
     private StringLengthSimilarityMetric stringLengthSimilarity;
 
-    public SimilariritorTest(String o1, String o2){
+    public StringLengthSimilarityMetricTest(String o1, String o2){
         stringLengthSimilarity = new StringLengthSimilarityMetric();
         this.o1 = o1;
         this.o2 = o2;
