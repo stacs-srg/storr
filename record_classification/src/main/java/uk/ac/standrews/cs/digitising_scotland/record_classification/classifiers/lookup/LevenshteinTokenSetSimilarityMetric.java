@@ -6,7 +6,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
  * TODO
  * Created by fraserdunlop on 01/10/2014 at 15:42.
  */
-public class LevenshteinTokenSetSimilarity implements SimilarityMetric<TokenSet>{
+public class LevenshteinTokenSetSimilarityMetric implements SimilarityMetric<TokenSet> {
 
 
     @Override
