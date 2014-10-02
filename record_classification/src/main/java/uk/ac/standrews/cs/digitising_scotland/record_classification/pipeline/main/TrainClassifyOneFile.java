@@ -70,6 +70,12 @@ public final class TrainClassifyOneFile {
      */
     public static void main(final String[] args) throws Exception {
 
+        TrainClassifyOneFile instance = new TrainClassifyOneFile();
+        instance.run(args);
+    }
+
+    public void run(String[] args) throws Exception {
+
         String experimentalFolderName;
         File goldStandard;
         Bucket trainingBucket;

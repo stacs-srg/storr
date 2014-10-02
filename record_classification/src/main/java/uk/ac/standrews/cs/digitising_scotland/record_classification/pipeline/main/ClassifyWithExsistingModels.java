@@ -50,11 +50,6 @@ public final class ClassifyWithExsistingModels {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ClassifyWithExsistingModels.class);
 
-    private ClassifyWithExsistingModels() {
-
-        // no public constructor
-    }
-
     /**
      * Entry method for training and classifying a batch of records into
      * multiple codes.
@@ -65,6 +60,13 @@ public final class ClassifyWithExsistingModels {
      *             If exception occurs
      */
     public static void main(final String[] args) throws Exception {
+
+        ClassifyWithExsistingModels instance = new ClassifyWithExsistingModels();
+        instance.run(args);
+
+    }
+
+    public void run(String[] args) throws Exception {
 
         String experimentalFolderName;
         File goldStandard;
@@ -96,7 +98,6 @@ public final class ClassifyWithExsistingModels {
         PipelineUtils.generateAndPrintStatistics(classifier, trainer.getVectorFactory().getCodeIndexer(), experimentalFolderName);
 
         timer.stop();
-
     }
 
     private static File parseGoldStandard(final String[] args) {

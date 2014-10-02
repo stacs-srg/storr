@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Formatter;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 import java.util.TreeSet;
 import java.util.regex.Pattern;
@@ -156,7 +157,7 @@ public class TopicModel {
         File outputFile = new File(outputFileName);
         int numberOfLines = Utils.getNumberOfLines(inputFile);
 
-        ArrayList<Pipe> pipeList = initPipeList();
+        List<Pipe> pipeList = initPipeList();
 
         InstanceList instances = new InstanceList(new SerialPipes(pipeList));
 
@@ -172,7 +173,7 @@ public class TopicModel {
 
         model.addInstances(instances);
 
-        // Use two parallel samplers, which each look at one half the corpus and combine
+        // Use x parallel samplers, which each look at one half the corpus and combine
         //  statistics after every iteration.
         model.setNumThreads(1);
 
@@ -190,7 +191,7 @@ public class TopicModel {
         double[] topicDistribution = model.getTopicProbabilities(0);
 
         // Get an array of sorted sets of word ID/count pairs
-        ArrayList<TreeSet<IDSorter>> topicSortedWords = model.getSortedWords();
+        List<TreeSet<IDSorter>> topicSortedWords = model.getSortedWords();
 
         // Show top 5 words in topics with proportions for the first document
         printTop5Words(numTopics, dataAlphabet, topicDistribution, topicSortedWords);
@@ -239,7 +240,7 @@ public class TopicModel {
         Utils.writeToFile(data, "target/LDAExecutionTimes.txt", true);
     }
 
-    private void printTop5Words(final int numTopics, final Alphabet dataAlphabet, final double[] topicDistribution, final ArrayList<TreeSet<IDSorter>> topicSortedWords) {
+    private void printTop5Words(final int numTopics, final Alphabet dataAlphabet, final double[] topicDistribution, final List<TreeSet<IDSorter>> topicSortedWords) {
 
         Formatter out = new Formatter(new StringBuilder(), Locale.US);
         for (int topic = 0; topic < numTopics; topic++) {
@@ -288,10 +289,10 @@ public class TopicModel {
         closeReader(br);
     }
 
-    private ArrayList<Pipe> initPipeList() {
+    private List<Pipe> initPipeList() {
 
         // Begin by importing documents from text to feature sequences
-        ArrayList<Pipe> pipeList = new ArrayList<Pipe>();
+        List<Pipe> pipeList = new ArrayList<Pipe>();
 
         // Pipes: lowercase, tokenize, remove stopwords, map to features
         pipeList.add(new CharSequenceLowercase());
@@ -385,32 +386,6 @@ public class TopicModel {
 
         tm.process(new File(args[0]));
 
-        //
-        //        String input = args[0];
-        //        String output = "ldaoutput1000Topics.txt";
-        //
-        //        args[0] = "kilmshrunk16.txt";
-        //        for (int i = 0; i < 10; i++) {
-        //            try {
-        //                tm.modelTopics(input, output);
-        //            }
-        //            catch (ArrayIndexOutOfBoundsException e) {
-        //                LOGGER.info("broken");
-        //                LOGGER.info(e.getMessage());
-        //            }
-        //        }
-        //
-        //        args[0] = "kilmshrunk32.txt";
-        //        for (int i = 0; i < 10; i++) {
-        //            try {
-        //                tm.modelTopics(input, output);
-        //            }
-        //            catch (ArrayIndexOutOfBoundsException e) {
-        //                LOGGER.info("broken");
-        //                LOGGER.info(e.getMessage());
-        //            }
-        //        }
-        System.exit(0);
     }
 
 }
