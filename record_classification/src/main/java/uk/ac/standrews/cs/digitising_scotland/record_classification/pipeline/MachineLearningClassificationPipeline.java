@@ -87,6 +87,10 @@ public class MachineLearningClassificationPipeline {
                 if (result == null) {
                     getResultAddToCache(record, classified, description);
                 }
+                else {
+                    addResultToRecord(record, description, result);
+                    classified.addRecordToBucket(record);
+                }
             }
         }
     }
