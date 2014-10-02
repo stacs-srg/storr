@@ -11,7 +11,7 @@ class StringLengthSimilarityMetric implements SimilarityMetric<String> {
         return 1/(1+ getLengthDiff(o1,o2));
     }
 
-    protected int getLengthDiff(String o1, String o2) {
+    protected double getLengthDiff(String o1, String o2) {
         return Math.abs(o1.length()-o2.length());
     }
 }

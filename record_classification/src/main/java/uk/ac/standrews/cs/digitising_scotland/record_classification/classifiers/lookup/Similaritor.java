@@ -6,6 +6,9 @@ import java.util.Comparator;
  * TODO test!
  * Similaritor is a factory which creates Comparators
  * which compare the similarity of objects to a reference object k.
+ * If the metric supplied at construction larger values for more similar
+ * objects then the comparator returned will sort a list so that the most
+ * similar object is at the head of the list.
  * Created by fraserdunlop on 01/10/2014 at 16:23.
  */
 public class Similaritor<K> {
