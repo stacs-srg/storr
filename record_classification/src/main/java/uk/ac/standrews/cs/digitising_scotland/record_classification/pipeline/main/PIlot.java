@@ -52,11 +52,6 @@ public final class PIlot {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PIlot.class);
 
-    private PIlot() {
-
-        // no public constructor
-    }
-
     /**
      * Entry method for training and classifying a batch of records into
      * multiple codes.
@@ -67,6 +62,12 @@ public final class PIlot {
      *             If exception occurs
      */
     public static void main(final String[] args) throws Exception {
+
+        PIlot instance = new PIlot();
+        instance.run(args);
+    }
+
+    public void run(final String[] args) throws Exception {
 
         String experimentalFolderName;
         File training;
@@ -108,10 +109,9 @@ public final class PIlot {
         PipelineUtils.generateAndPrintStatistics(classifier, codeIndex, experimentalFolderName);
 
         timer.stop();
-
     }
 
-    private static File[] parseInput(final String[] args) {
+    private File[] parseInput(final String[] args) {
 
         //Training file in [0], prediction file in [1]
         File[] trainingPrediction = new File[2];

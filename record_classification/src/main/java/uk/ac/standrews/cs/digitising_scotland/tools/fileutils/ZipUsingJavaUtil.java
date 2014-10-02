@@ -112,16 +112,15 @@ public class ZipUsingJavaUtil {
                 /*
                  * write the file to the output
                  */
-                byte[] buf = new byte[1024];
+                final int bufferSize = 1024;
+                byte[] buf = new byte[bufferSize];
                 int len;
                 FileInputStream in = new FileInputStream(srcFile);
                 zip.putNextEntry(new ZipEntry(path + "/" + folder.getName()));
                 while ((len = in.read(buf)) > 0) {
-                    /*
-                     * Write the Result
-                     */
                     zip.write(buf, 0, len);
                 }
+
                 in.close();
             }
         }

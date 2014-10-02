@@ -54,11 +54,6 @@ public final class TrainClassifyOneFile {
     private static final Logger LOGGER = LoggerFactory.getLogger(TrainClassifyOneFile.class);
     private static double DEFAULT_TRAINING_RATIO = 0.8;
 
-    private TrainClassifyOneFile() {
-
-        // no public constructor
-    }
-
     /**
      * Entry method for training and classifying a batch of records into
      * multiple codes.
@@ -69,6 +64,12 @@ public final class TrainClassifyOneFile {
      *             If exception occurs
      */
     public static void main(final String[] args) throws Exception {
+
+        TrainClassifyOneFile instance = new TrainClassifyOneFile();
+        instance.run(args);
+    }
+
+    public void run(final String[] args) throws Exception {
 
         String experimentalFolderName;
         File goldStandard;
@@ -140,7 +141,7 @@ public final class TrainClassifyOneFile {
         return trainingRatio;
     }
 
-    private static void generateAndPrintStatistics(final ClassificationHolder classifier, CodeIndexer codeIndexer, final String experimentalFolderName) throws IOException {
+    private void generateAndPrintStatistics(final ClassificationHolder classifier, final CodeIndexer codeIndexer, final String experimentalFolderName) throws IOException {
 
         LOGGER.info("********** Output Stats **********");
 
@@ -151,7 +152,7 @@ public final class TrainClassifyOneFile {
         PipelineUtils.generateAndPrintStats(uniqueRecordsOnly, codeIndexer, "Unique Only", "UniqueOnly", experimentalFolderName);
     }
 
-    private static Bucket[] randomlyAssignToTrainingAndPrediction(final Bucket bucket, final double trainingRatio) {
+    private Bucket[] randomlyAssignToTrainingAndPrediction(final Bucket bucket, final double trainingRatio) {
 
         Bucket[] buckets = initBuckets();
 
@@ -166,7 +167,7 @@ public final class TrainClassifyOneFile {
         return buckets;
     }
 
-    private static Bucket[] initBuckets() {
+    private Bucket[] initBuckets() {
 
         Bucket[] buckets = new Bucket[2];
         for (int i = 0; i < buckets.length; i++) {
