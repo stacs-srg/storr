@@ -17,7 +17,6 @@ import static org.junit.runners.Parameterized.Parameters;
 @RunWith(Parameterized.class)
 public class StringLengthSimilarityMetricTest {
 
-
     private final String o1;
     private final String o2;
     private StringLengthSimilarityMetric stringLengthSimilarity;
@@ -83,7 +82,7 @@ public class StringLengthSimilarityMetricTest {
     }
 
     private void assertCorrectnessOf_LengthMetric_getLengthDiff(String o1, String o2) {
-        Assert.assertEquals(Math.abs(o1.length() - o2.length()), stringLengthSimilarity.getLengthDiff(o1, o2));
+        Assert.assertEquals(Math.abs(o1.length() - o2.length()), stringLengthSimilarity.getLengthDiff(o1, o2),0.0001);
     }
 
     private void assertCommutativityOfLengthMetric_getLengthDiff(String o1, String o2) {
