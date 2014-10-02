@@ -66,7 +66,7 @@ public final class ClassifyWithExsistingModels {
 
     }
 
-    public void run(String[] args) throws Exception {
+    public void run(final String[] args) throws Exception {
 
         String experimentalFolderName;
         File goldStandard;

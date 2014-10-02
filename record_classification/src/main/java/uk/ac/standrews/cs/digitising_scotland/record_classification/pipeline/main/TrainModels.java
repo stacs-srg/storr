@@ -33,7 +33,7 @@ public class TrainModels {
 
     }
 
-    public void run(String[] args) throws Exception {
+    public void run(final String[] args) throws Exception {
 
         Timer timer = PipelineUtils.initAndStartTimer();
 

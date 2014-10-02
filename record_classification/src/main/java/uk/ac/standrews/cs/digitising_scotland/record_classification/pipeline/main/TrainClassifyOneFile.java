@@ -74,7 +74,7 @@ public final class TrainClassifyOneFile {
         instance.run(args);
     }
 
-    public void run(String[] args) throws Exception {
+    public void run(final String[] args) throws Exception {
 
         String experimentalFolderName;
         File goldStandard;
@@ -146,7 +146,7 @@ public final class TrainClassifyOneFile {
         return trainingRatio;
     }
 
-    private void generateAndPrintStatistics(final ClassificationHolder classifier, CodeIndexer codeIndexer, final String experimentalFolderName) throws IOException {
+    private void generateAndPrintStatistics(final ClassificationHolder classifier, final CodeIndexer codeIndexer, final String experimentalFolderName) throws IOException {
 
         LOGGER.info("********** Output Stats **********");
 

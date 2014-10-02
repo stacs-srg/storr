@@ -67,7 +67,7 @@ public final class PIlot {
         instance.run(args);
     }
 
-    public void run(String[] args) throws Exception {
+    public void run(final String[] args) throws Exception {
 
         String experimentalFolderName;
         File training;
