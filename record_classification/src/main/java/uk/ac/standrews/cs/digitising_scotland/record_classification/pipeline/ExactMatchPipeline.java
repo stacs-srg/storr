@@ -74,6 +74,8 @@ public class ExactMatchPipeline {
         }
 
         LOGGER.info("Total exact matched = " + match + "/" + bucket.size());
+        LOGGER.info("Size of classified bucket = " + classified.size());
+
         return classified;
     }
 
