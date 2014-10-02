@@ -1,7 +1,7 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.lookup;
 
 /**
- * Basic string similarity based on string
+ * Basic string similarity based on string.
 * Created by fraserdunlop on 02/10/2014 at 11:21.
 */
 class StringLengthSimilarityMetric implements SimilarityMetric<String> {
