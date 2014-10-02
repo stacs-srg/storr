@@ -2,6 +2,10 @@ package uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline;
 
 import java.io.IOException;
 
+import org.junit.Assert;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.BucketUtils;
 
@@ -9,6 +13,8 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
  * The Class ClassificationHolder.
  */
 public class ClassificationHolder {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ClassificationHolder.class);
 
     /** The exact match pipeline. */
     private ExactMatchPipeline exactMatchPipeline;
@@ -56,10 +62,19 @@ public class ClassificationHolder {
      */
     public Bucket classify(final Bucket predictionBucket) throws IOException {
 
+        LOGGER.info("prediction bucket size: " + predictionBucket.size());
         exactMatched = exactMatchPipeline.classify(predictionBucket);
+        LOGGER.info("exactMatched bucket size: " + exactMatched.size());
         notExactMatched = BucketUtils.getComplement(predictionBucket, exactMatched);
+        LOGGER.info("notExactMatched bucket size: " + notExactMatched.size());
+        Assert.assertEquals(predictionBucket.size(), (notExactMatched.size() + exactMatched.size()));
+
         machineLearned = machineLearningClassifier.classify(notExactMatched);
+        LOGGER.info("machineLearned bucket size: " + machineLearned.size());
+        Assert.assertEquals(machineLearned.size(), notExactMatched.size());
         allClassified = BucketUtils.getUnion(machineLearned, exactMatched);
+        LOGGER.info("allClassified bucket size: " + allClassified.size());
+        Assert.assertEquals(predictionBucket.size(), allClassified.size());
         return allClassified;
     }
 
