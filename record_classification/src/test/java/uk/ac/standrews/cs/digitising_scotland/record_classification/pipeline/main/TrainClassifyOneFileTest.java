@@ -5,9 +5,9 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-public class TrainModelsTest {
+public class TrainClassifyOneFileTest {
 
-    private TrainClassifyOneFile trainer;
+    private TrainModels trainer;
 
     @Rule
     public ExpectedException expectedEx = ExpectedException.none();
@@ -15,7 +15,7 @@ public class TrainModelsTest {
     @Before
     public void setUp() throws Exception {
 
-        trainer = new TrainClassifyOneFile();
+        trainer = new TrainModels();
     }
 
     @Test

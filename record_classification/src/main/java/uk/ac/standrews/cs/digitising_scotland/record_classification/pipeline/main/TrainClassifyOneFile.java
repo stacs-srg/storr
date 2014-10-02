@@ -54,11 +54,6 @@ public final class TrainClassifyOneFile {
     private static final Logger LOGGER = LoggerFactory.getLogger(TrainClassifyOneFile.class);
     private static double DEFAULT_TRAINING_RATIO = 0.8;
 
-    private TrainClassifyOneFile() {
-
-        // no public constructor
-    }
-
     /**
      * Entry method for training and classifying a batch of records into
      * multiple codes.
