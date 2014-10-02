@@ -111,7 +111,7 @@ public final class PIlot {
         timer.stop();
     }
 
-    private static File[] parseInput(final String[] args) {
+    private File[] parseInput(final String[] args) {
 
         //Training file in [0], prediction file in [1]
         File[] trainingPrediction = new File[2];

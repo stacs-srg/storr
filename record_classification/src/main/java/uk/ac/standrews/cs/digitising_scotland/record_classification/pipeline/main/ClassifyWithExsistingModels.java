@@ -100,7 +100,7 @@ public final class ClassifyWithExsistingModels {
         timer.stop();
     }
 
-    private static File parseGoldStandard(final String[] args) {
+    private File parseGoldStandard(final String[] args) {
 
         File goldStandard = null;
         if (args.length > 2) {
@@ -114,7 +114,7 @@ public final class ClassifyWithExsistingModels {
 
     }
 
-    private static String parseModelLocation(final String[] args) {
+    private String parseModelLocation(final String[] args) {
 
         String modelLocation = null;
         if (args.length > 2) {

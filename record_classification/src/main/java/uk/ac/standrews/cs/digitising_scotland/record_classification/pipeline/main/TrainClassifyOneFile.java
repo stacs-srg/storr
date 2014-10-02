@@ -146,7 +146,7 @@ public final class TrainClassifyOneFile {
         return trainingRatio;
     }
 
-    private static void generateAndPrintStatistics(final ClassificationHolder classifier, CodeIndexer codeIndexer, final String experimentalFolderName) throws IOException {
+    private void generateAndPrintStatistics(final ClassificationHolder classifier, CodeIndexer codeIndexer, final String experimentalFolderName) throws IOException {
 
         LOGGER.info("********** Output Stats **********");
 
@@ -157,7 +157,7 @@ public final class TrainClassifyOneFile {
         PipelineUtils.generateAndPrintStats(uniqueRecordsOnly, codeIndexer, "Unique Only", "UniqueOnly", experimentalFolderName);
     }
 
-    private static Bucket[] randomlyAssignToTrainingAndPrediction(final Bucket bucket, final double trainingRatio) {
+    private Bucket[] randomlyAssignToTrainingAndPrediction(final Bucket bucket, final double trainingRatio) {
 
         Bucket[] buckets = initBuckets();
 
@@ -172,7 +172,7 @@ public final class TrainClassifyOneFile {
         return buckets;
     }
 
-    private static Bucket[] initBuckets() {
+    private Bucket[] initBuckets() {
 
         Bucket[] buckets = new Bucket[2];
         for (int i = 0; i < buckets.length; i++) {
