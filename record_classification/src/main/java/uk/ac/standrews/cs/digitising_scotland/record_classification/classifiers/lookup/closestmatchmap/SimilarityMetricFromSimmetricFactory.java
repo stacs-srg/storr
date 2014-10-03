@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.lookup;
+package uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.lookup.closestmatchmap;
 
 import uk.ac.shef.wit.simmetrics.similaritymetrics.AbstractStringMetric;
 
@@ -27,4 +27,6 @@ public class SimilarityMetricFromSimmetricFactory {
         }
 
     }
+
+
 }

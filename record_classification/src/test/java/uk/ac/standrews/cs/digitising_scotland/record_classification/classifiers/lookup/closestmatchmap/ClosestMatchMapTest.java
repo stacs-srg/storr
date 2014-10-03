@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.lookup;
+package uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.lookup.closestmatchmap;
 
 import org.junit.Assert;
 import org.junit.Before;
