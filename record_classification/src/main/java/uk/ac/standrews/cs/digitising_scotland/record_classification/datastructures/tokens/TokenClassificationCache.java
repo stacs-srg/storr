@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.olr.OLRClassifier;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.IClassifier;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Pair;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
@@ -21,7 +21,7 @@ public class TokenClassificationCache {
     private Map<TokenSet, Pair<Code, Double>> classifications;
 
     /** The abstract classifier used to populate the cache. */
-    private OLRClassifier classifier;
+    private IClassifier classifier;
 
     /**
      * Instantiates a new token classification cache with the {@link AbstractClassifier} specified.
@@ -29,7 +29,7 @@ public class TokenClassificationCache {
      *
      * @param classifier the abstract classifier to use when populating the cache
      */
-    public TokenClassificationCache(final OLRClassifier classifier) {
+    public TokenClassificationCache(final IClassifier classifier) {
 
         classifications = new HashMap<>();
         this.classifier = classifier;

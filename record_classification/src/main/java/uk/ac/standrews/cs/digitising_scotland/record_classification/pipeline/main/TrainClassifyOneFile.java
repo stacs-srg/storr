@@ -15,7 +15,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.ClassificationHolder;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.ClassifierTrainer;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.GoldStandardBucketGenerator;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.MachineLearningClassificationPipeline;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.ClassifierPipeline;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.PipelineUtils;
 import uk.ac.standrews.cs.digitising_scotland.tools.Timer;
 import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearningConfiguration;
@@ -41,7 +41,7 @@ import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearnin
  * <br>
  * After the records have been created and stored in a bucket, classification
  * can begin. This is carried out by the {@link BucketClassifier} class which in
- * turn implements the {@link MachineLearningClassificationPipeline}. Please see this
+ * turn implements the {@link ClassifierPipeline}. Please see this
  * class for implementation details. <br>
  * <br>
  * Some initial metrics are then printed to the console and classified records

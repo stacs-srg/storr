@@ -11,8 +11,8 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.IClassifier;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.lookup.NGramSubstrings;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.olr.OLRClassifier;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Pair;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
@@ -32,9 +32,9 @@ import com.google.common.collect.Multiset;
  * @author jkc25, frjd2
  * 
  */
-public class MachineLearningClassificationPipeline {
+public class ClassifierPipeline {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(MachineLearningClassificationPipeline.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ClassifierPipeline.class);
 
     /** The Constant CONFIDENCE_CHOP_LEVEL. */
     private static final double CONFIDENCE_CHOP_LEVEL = 0.3;
@@ -46,13 +46,13 @@ public class MachineLearningClassificationPipeline {
     private Map<String, Set<Classification>> recordCache;
 
     /**
-     * Constructs a new {@link MachineLearningClassificationPipeline} with the specified
+     * Constructs a new {@link ClassifierPipeline} with the specified
      * {@link AbstractClassifier} used to perform the classification duties.
      *
      * @param classifier    {@link AbstractClassifier} used for machine learning classification
      * @param trainingBucket the training bucket
      */
-    public MachineLearningClassificationPipeline(final OLRClassifier classifier, final Bucket trainingBucket) {
+    public ClassifierPipeline(final IClassifier classifier, final Bucket trainingBucket) {
 
         this.cache = new TokenClassificationCache(classifier);
         recordCache = new HashMap<>();
@@ -66,7 +66,7 @@ public class MachineLearningClassificationPipeline {
      * @return bucket this is the bucket of classified records
      * @throws IOException Signals that an I/O exception has occurred.
      */
-    public Bucket classify(final Bucket bucket, boolean multipleClassifications) throws IOException {
+    public Bucket classify(final Bucket bucket, final boolean multipleClassifications) throws IOException {
 
         int count = 0;
         Bucket classified = new Bucket();
@@ -79,7 +79,7 @@ public class MachineLearningClassificationPipeline {
         return classified;
     }
 
-    private void classifyRecordAddToBucket(final Record record, final Bucket classified, boolean multipleClassifications) throws IOException {
+    private void classifyRecordAddToBucket(final Record record, final Bucket classified, final boolean multipleClassifications) throws IOException {
 
         for (String description : record.getDescription()) {
             if (!previouslyClassified(record, description)) {
@@ -95,7 +95,7 @@ public class MachineLearningClassificationPipeline {
         }
     }
 
-    private void getResultAddToCache(final Record record, final Bucket classified, final String description, boolean multipleClassifications) throws IOException {
+    private void getResultAddToCache(final Record record, final Bucket classified, final String description, final boolean multipleClassifications) throws IOException {
 
         Set<Classification> result;
         result = classify(description, multipleClassifications);
@@ -133,7 +133,7 @@ public class MachineLearningClassificationPipeline {
      * @throws IOException
      *             indicates an I/O Error
      */
-    public Set<Classification> classify(final String description, boolean multipleClassifications) throws IOException {
+    public Set<Classification> classify(final String description, final boolean multipleClassifications) throws IOException {
 
         TokenSet cleanedTokenSet = new TokenSet(description);
 

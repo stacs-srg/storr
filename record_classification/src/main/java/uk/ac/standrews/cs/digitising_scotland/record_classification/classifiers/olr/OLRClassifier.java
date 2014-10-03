@@ -15,6 +15,7 @@ import org.apache.mahout.math.Vector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.IClassifier;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Pair;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
@@ -33,7 +34,7 @@ import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearnin
  * @author frjd2, jkc25
  * 
  */
-public class OLRClassifier {
+public class OLRClassifier implements IClassifier {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(OLRClassifier.class);
     private OLRCrossFold model = null;

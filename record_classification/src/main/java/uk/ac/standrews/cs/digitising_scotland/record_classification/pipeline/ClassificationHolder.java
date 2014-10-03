@@ -20,7 +20,7 @@ public class ClassificationHolder {
     private ExactMatchPipeline exactMatchPipeline;
 
     /** The machine learning classifier. */
-    private MachineLearningClassificationPipeline machineLearningClassifier;
+    private ClassifierPipeline machineLearningClassifier;
 
     /** The exact matched. */
     private Bucket exactMatched;
@@ -35,13 +35,13 @@ public class ClassificationHolder {
     private Bucket allClassified;
 
     /**
-     * Instantiates a new classification holder with an {@link ExactMatchPipeline} and a {@link MachineLearningClassificationPipeline} that
+     * Instantiates a new classification holder with an {@link ExactMatchPipeline} and a {@link ClassifierPipeline} that
      * will be used to classify records that are passed in.
      *
      * @param exactMatchPipeline the ExactMatchPipeline used for exact matching records
      * @param machineLearningPipeline the MachineLearningClassificationPipeline used to produce multiply classified records
      */
-    public ClassificationHolder(final ExactMatchPipeline exactMatchPipeline, final MachineLearningClassificationPipeline machineLearningPipeline) {
+    public ClassificationHolder(final ExactMatchPipeline exactMatchPipeline, final ClassifierPipeline machineLearningPipeline) {
 
         this.exactMatchPipeline = exactMatchPipeline;
         this.machineLearningClassifier = machineLearningPipeline;
