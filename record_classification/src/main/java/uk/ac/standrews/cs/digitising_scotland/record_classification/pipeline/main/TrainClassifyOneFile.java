@@ -82,6 +82,7 @@ public final class TrainClassifyOneFile {
 
         goldStandard = parseGoldStandFile(args);
         double trainingRatio = parseTrainingPct(args);
+        boolean multipleClassifications = parseMultipleClassifications(args);
 
         File codeDictionaryFile = new File(MachineLearningConfiguration.getDefaultProperties().getProperty("codeDictionaryFile"));
         CodeDictionary codeDictionary = new CodeDictionary(codeDictionaryFile);
@@ -98,7 +99,7 @@ public final class TrainClassifyOneFile {
         CodeIndexer codeIndex = new CodeIndexer(allRecords);
         ClassifierTrainer trainer = PipelineUtils.train(trainingBucket, experimentalFolderName, codeIndex);
 
-        ClassificationHolder classifier = PipelineUtils.classify(allRecords, predictionBucket, trainer);
+        ClassificationHolder classifier = PipelineUtils.classify(allRecords, predictionBucket, trainer, multipleClassifications);
 
         LOGGER.info("Exact Matched Bucket Size: " + classifier.getExactMatched().size());
         LOGGER.info("Machine Learned Bucket Size: " + classifier.getMachineLearned().size());
@@ -114,7 +115,7 @@ public final class TrainClassifyOneFile {
     private static File parseGoldStandFile(final String[] args) {
 
         File goldStandard = null;
-        if (args.length > 2) {
+        if (args.length > 4) {
             System.err.println("usage: $" + TrainClassifyOneFile.class.getSimpleName() + "    <goldStandardDataFile>    <trainingRatio(optional)>");
         }
         else {
@@ -123,6 +124,18 @@ public final class TrainClassifyOneFile {
 
         }
         return goldStandard;
+    }
+
+    private boolean parseMultipleClassifications(String[] args) {
+
+        if (args.length > 3) {
+            System.err.println("usage: $" + ClassifyWithExsistingModels.class.getSimpleName() + "    <goldStandardDataFile>    <trainingRatio(optional)>    <output multiple classificatiosn");
+        }
+        else {
+            if (args[2].equals("1")) return true;
+        }
+        return false;
+
     }
 
     private static double parseTrainingPct(final String[] args) {

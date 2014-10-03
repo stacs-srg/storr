@@ -126,13 +126,13 @@ public final class PipelineUtils {
         return trainer;
     }
 
-    public static ClassificationHolder classify(final Bucket trainingBucket, final Bucket predictionBucket, final ClassifierTrainer trainer) throws IOException {
+    public static ClassificationHolder classify(final Bucket trainingBucket, final Bucket predictionBucket, final ClassifierTrainer trainer, final boolean multipleClassifications) throws IOException {
 
         ExactMatchPipeline exactMatchPipeline = new ExactMatchPipeline(trainer.getExactMatchClassifier());
         MachineLearningClassificationPipeline machineLearningClassifier = new MachineLearningClassificationPipeline(trainer.getOlrClassifier(), trainingBucket);
 
         ClassificationHolder classifier = new ClassificationHolder(exactMatchPipeline, machineLearningClassifier);
-        classifier.classify(predictionBucket);
+        classifier.classify(predictionBucket, multipleClassifications);
         return classifier;
     }
 

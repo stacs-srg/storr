@@ -43,11 +43,10 @@ public class ResolverMatrixTest {
             codeDictionary = new CodeDictionary(codeDictionaryFile);
         }
         catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
 
-        matrix = new ResolverMatrix();
+        matrix = new ResolverMatrix(true);
 
     }
 
@@ -166,6 +165,26 @@ public class ResolverMatrixTest {
         Assert.assertEquals(16, matrix.complexity());
         matrix.resolveHierarchies();
         Assert.assertEquals(16, matrix.complexity());
+    }
+
+    /**
+     * Resolve hierarchies test.
+     */
+    @Test
+    public void resolveHierarchiesSingleClassificationTest() {
+
+        matrix = new ResolverMatrix(false);
+        addMockEntryToMatrix("brown dog", "2100", 0.5);
+        addMockEntryToMatrix("white dog", "2100", 0.85);
+        addMockEntryToMatrix("brown dog", "2200", 0.81);
+        addMockEntryToMatrix("white dog", "2200", 0.87);
+        addMockEntryToMatrix("brown dog", "952", 0.87);
+        addMockEntryToMatrix("white dog", "952", 0.8);
+        addMockEntryToMatrix("brown dog", "95240", 0.85);
+        addMockEntryToMatrix("white dog", "95240", 0.83);
+        Assert.assertEquals(16, matrix.complexity());
+        matrix.resolveHierarchies();
+        Assert.assertEquals(8, matrix.complexity());
     }
 
     /**

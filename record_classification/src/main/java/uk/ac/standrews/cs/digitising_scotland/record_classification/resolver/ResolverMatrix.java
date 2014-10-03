@@ -42,6 +42,7 @@ public class ResolverMatrix {
 
     private static final int LOWER_BOUND = 1;
 
+    private boolean multipleClassifications;
     /**
      * The Code, List<Pair> matrix.
      */
@@ -50,8 +51,9 @@ public class ResolverMatrix {
     /**
      * Instantiates a new empty resolver matrix.
      */
-    public ResolverMatrix() {
+    public ResolverMatrix(final boolean multipleClassifications) {
 
+        this.multipleClassifications = multipleClassifications;
         matrix = new HashMap<>();
     }
 
@@ -96,6 +98,7 @@ public class ResolverMatrix {
             LOGGER.info("codeList too big - skipping");
         }
         else {
+            //TODO refactor as a proper recursive functions
             for (Code code : matrix.keySet()) {
                 merge(merged, matrix.get(code), code, originalSet);
             }
@@ -135,13 +138,31 @@ public class ResolverMatrix {
         Set<Code> keySet = new HashSet<>();
         keySet.addAll(matrix.keySet());
 
-        for (Code code : keySet) {
-            Code ancestor = ResolverUtils.whichCodeIsAncestorOfCodeInSet(code, keySet);
-            if (ancestor != null) {
-                matrix.get(code).addAll(matrix.get(ancestor));
-                matrix.remove(ancestor);
+        if (multipleClassifications) {
+
+            for (Code code : keySet) {
+                Code ancestor = ResolverUtils.whichCodeIsAncestorOfCodeInSet(code, keySet);
+                if (ancestor != null) {
+                    matrix.get(code).addAll(matrix.get(ancestor));
+                    matrix.remove(ancestor);
+                }
             }
         }
+        else {
+            Map<Code, List<Classification>> singleColumnMatri = new HashMap<>();
+            // pick any code here as it's not used in single classifications.
+            Code c = matrix.keySet().iterator().next();
+            singleColumnMatri.put(c, new ArrayList<Classification>());
+            for (Code code : keySet) {
+                singleColumnMatri.get(c).addAll(matrix.get(code));
+            }
+            matrix = singleColumnMatri;
+
+        }
+    }
+
+    private void mergeForMutlipleClassifications(Set<Code> keySet) {
+
     }
 
     /**

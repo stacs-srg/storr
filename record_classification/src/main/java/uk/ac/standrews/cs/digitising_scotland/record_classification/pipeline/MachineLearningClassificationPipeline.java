@@ -66,26 +66,26 @@ public class MachineLearningClassificationPipeline {
      * @return bucket this is the bucket of classified records
      * @throws IOException Signals that an I/O exception has occurred.
      */
-    public Bucket classify(final Bucket bucket) throws IOException {
+    public Bucket classify(final Bucket bucket, boolean multipleClassifications) throws IOException {
 
         int count = 0;
         Bucket classified = new Bucket();
 
         for (Record record : bucket) {
-            classifyRecordAddToBucket(record, classified);
+            classifyRecordAddToBucket(record, classified, multipleClassifications);
             count++;
         }
 
         return classified;
     }
 
-    private void classifyRecordAddToBucket(final Record record, final Bucket classified) throws IOException {
+    private void classifyRecordAddToBucket(final Record record, final Bucket classified, boolean multipleClassifications) throws IOException {
 
         for (String description : record.getDescription()) {
             if (!previouslyClassified(record, description)) {
                 Set<Classification> result = recordCache.get(description);
                 if (result == null) {
-                    getResultAddToCache(record, classified, description);
+                    getResultAddToCache(record, classified, description, multipleClassifications);
                 }
                 else {
                     addResultToRecord(record, description, result);
@@ -95,10 +95,10 @@ public class MachineLearningClassificationPipeline {
         }
     }
 
-    private void getResultAddToCache(final Record record, final Bucket classified, final String description) throws IOException {
+    private void getResultAddToCache(final Record record, final Bucket classified, final String description, boolean multipleClassifications) throws IOException {
 
         Set<Classification> result;
-        result = classify(description);
+        result = classify(description, multipleClassifications);
         if (result != null) {
             addResultToRecord(record, description, result);
             classified.addRecordToBucket(record);
@@ -133,11 +133,11 @@ public class MachineLearningClassificationPipeline {
      * @throws IOException
      *             indicates an I/O Error
      */
-    public Set<Classification> classify(final String description) throws IOException {
+    public Set<Classification> classify(final String description, boolean multipleClassifications) throws IOException {
 
         TokenSet cleanedTokenSet = new TokenSet(description);
 
-        return classifyTokenSet(cleanedTokenSet);
+        return classifyTokenSet(cleanedTokenSet, multipleClassifications);
 
     }
 
@@ -148,9 +148,9 @@ public class MachineLearningClassificationPipeline {
      * @return the sets the
      * @throws IOException Signals that an I/O exception has occurred.
      */
-    private Set<Classification> classifyTokenSet(final TokenSet cleanedTokenSet) throws IOException {
+    private Set<Classification> classifyTokenSet(final TokenSet cleanedTokenSet, final boolean multipleClassifications) throws IOException {
 
-        ResolverMatrix resolverMatrix = new ResolverMatrix();
+        ResolverMatrix resolverMatrix = new ResolverMatrix(multipleClassifications);
 
         NGramSubstrings ngs = new NGramSubstrings(cleanedTokenSet);
         Multiset<TokenSet> ngramSet = ngs.getGramMultiset();

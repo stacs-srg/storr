@@ -97,8 +97,9 @@ public final class PIlot {
         PipelineUtils.printStatusUpdate();
 
         ClassifierTrainer trainer = PipelineUtils.train(trainingBucket, experimentalFolderName, codeIndex);
+        boolean multipleClassifications = true;
 
-        ClassificationHolder classifier = PipelineUtils.classify(trainingBucket, predictionBucket, trainer);
+        ClassificationHolder classifier = PipelineUtils.classify(trainingBucket, predictionBucket, trainer, multipleClassifications);
 
         LOGGER.info("Exact Matched Bucket Size: " + classifier.getExactMatched().size());
         LOGGER.info("Machine Learned Bucket Size: " + classifier.getMachineLearned().size());
