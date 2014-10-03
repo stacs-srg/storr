@@ -1,9 +1,10 @@
-package uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.lookup;
+package uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.lookup.closestmatchmap;
 
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.lookup.closestmatchmap.StringLengthSimilarityMetric;
 
 import java.util.Arrays;
 import java.util.Collection;

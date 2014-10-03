@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.lookup;
+package uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.lookup.closestmatchmap;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * TODO test
  * An extension of the Java Collections map interface with a method
  * for getting the value of the closest matching key according to a
  * similarity metric supplied at construction.
