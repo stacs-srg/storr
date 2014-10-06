@@ -1,12 +1,13 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.resolverpipelinetools;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.MultiValueMap;
-
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Comparator;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.MultiValueMap;
 
 /**
  *
@@ -19,7 +20,8 @@ public class MultiValueMapPruner<K, V, C extends Comparator<V>> {
     private static final int COMPLEXITY_UPPERLIMIT = 2000;
     private final C comparator;
 
-    public MultiValueMapPruner(C comparator){
+    public MultiValueMapPruner(final C comparator) {
+
         this.comparator = comparator;
     }
 

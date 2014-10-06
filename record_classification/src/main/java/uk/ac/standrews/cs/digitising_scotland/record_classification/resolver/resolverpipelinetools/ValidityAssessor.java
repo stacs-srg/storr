@@ -5,5 +5,6 @@ package uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.re
  * Created by fraserdunlop on 06/10/2014 at 16:35.
  */
 public interface ValidityAssessor<C, T> {
-    public boolean assess(C c, T t);
+
+    boolean assess(C c, T t);
 }
