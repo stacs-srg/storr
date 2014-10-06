@@ -1,5 +1,7 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code;
 
+import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.AncestorAble;
+
 /**
  * Represents either a HICOD or HISCO code.
  * As isValid will be a different check for each type o code, only CoDCode and OccCode can
@@ -7,7 +9,7 @@ package uk.ac.standrews.cs.digitising_scotland.record_classification.datastructu
  * @author jkc25, frjd2
  *
  */
-public class Code implements java.io.Serializable {
+public class Code implements java.io.Serializable, AncestorAble<Code> {
 
     private static final long serialVersionUID = 2214478914861326040L;
     private String code;

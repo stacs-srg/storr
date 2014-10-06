@@ -1,11 +1,6 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.resolver;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
-import uk.ac.standrews.cs.digitising_scotland.tools.DeepCloner;
-
 import java.io.IOException;
 import java.util.*;
 
@@ -16,41 +11,50 @@ import java.util.*;
 public class HierarchyResolver {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(HierarchyResolver.class);
-    DeepCloner deepCloner = new DeepCloner();
 
-    /**
-     * Resolves hierarchies in the matrix by removing the ancestors of {@link uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code}s in the matrix.
-     * This utilises the ResolverUtils.removeAncestors() method to achieve this.
-     */
-    protected MultiValueMap<Code,Classification> resolveHierarchies(final MultiValueMap<Code,Classification> matrix, final boolean multipleClassifications) throws IOException, ClassNotFoundException {
-        MultiValueMap<Code,Classification> clone = deepCloner.deepClone(matrix);
-        if (multipleClassifications)
-            return resolveForMultipleClassifications(clone);
-        else
-            return flattenForSingleClassifications(clone);
-    }
-
-    private MultiValueMap<Code,Classification> flattenForSingleClassifications(final MultiValueMap<Code,Classification> matrix) {
-
-        Map<Code, List<Classification>> singleColumnMatrix = new HashMap<>();
-        // pick any code here as it's not used in single classifications.
-        Code c = matrix.iterator().next();
-        singleColumnMatrix.put(c, new ArrayList<Classification>());
-        for (Code code : matrix) {
-            singleColumnMatrix.get(c).addAll(matrix.get(code));
-        }
-        return new MultiValueMap<>(singleColumnMatrix);
-    }
-
-    private MultiValueMap<Code,Classification> resolveForMultipleClassifications(final MultiValueMap<Code,Classification> matrix) throws IOException, ClassNotFoundException {
-        MultiValueMap<Code,Classification> clone = deepCloner.deepClone(matrix);
-        for (Code code : matrix) {
-            Code ancestor = ResolverUtils.whichCodeIsAncestorOfCodeInCollection(code, clone.keySet());
-            if (ancestor != null) {
-                clone.get(code).addAll(matrix.get(ancestor));
-                clone.remove(ancestor);
-            }
-        }
+    public  <K, V> MultiValueMap<K, V> flattenForSingleClassifications(final MultiValueMap<K, V> map) throws IOException, ClassNotFoundException {
+        MultiValueMap<K, V> clone = map.deepClone();
+        K key = map.iterator().next();
+        moveAllIntoKey(map, clone, key);
         return clone;
     }
+
+    public <K extends AncestorAble<K>, V> MultiValueMap<K, V> moveAncestorsToDescendantKeys(final MultiValueMap<K, V> map) throws IOException, ClassNotFoundException {
+        MultiValueMap<K, V> clone = map.deepClone();
+        for (K key : map)
+            moveAncestorsIntoKey(map, clone, key);
+        return clone;
+    }
+
+    private <K, V> void moveAllIntoKey(MultiValueMap<K,V> map, MultiValueMap<K, V> clone, K key) {
+        for(K k : map){
+            if(clone.containsKey(k)) {
+                clone.get(key).addAll(clone.get(k));
+                if (k != key)
+                    clone.remove(k);
+            }
+        }
+    }
+
+    private <K extends AncestorAble<K>, V> void moveAncestorsIntoKey(MultiValueMap<K, V> matrix, MultiValueMap<K, V> clone, K decedentKey) {
+        for(K ancestor : getAncestors(decedentKey, clone.keySet())) {
+                clone.get(decedentKey).addAll(matrix.get(ancestor));
+                clone.remove(ancestor);
+        }
+    }
+
+    /**
+     * Returns the set of ancestors of K k contained in Set<K> keys.
+     * @param k the key
+     * @param keys the keys
+     * @return the ancestors of k.
+     */
+    private <K extends AncestorAble<K>> Set<K> getAncestors(final K k, final Set<K> keys) {
+        Set<K> ancestors = new HashSet<>();
+        for (K key : keys) {
+            if (k.isAncestor(key)) { ancestors.add(key); }
+        }
+        return ancestors;
+    }
+
 }

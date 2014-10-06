@@ -12,7 +12,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
  * <br><br>
  * @author jkc25, frjd2
  */
-public class Classification implements Serializable {
+public class Classification implements Serializable, Comparable<Double> {
 
     /** The Constant serialVersionUID. */
     private static final long serialVersionUID = 7683621012309471383L;
@@ -118,4 +118,12 @@ public class Classification implements Serializable {
         return "CodeTriple [code=" + code + ", tokenSet=" + tokenSet + ", confidence=" + confidence + "]";
     }
 
+    @Override
+    public int compareTo(Double o) {
+        if(confidence>o)
+            return 1;
+        if(confidence.equals(o))
+            return 0;
+        else return -1;
+    }
 }

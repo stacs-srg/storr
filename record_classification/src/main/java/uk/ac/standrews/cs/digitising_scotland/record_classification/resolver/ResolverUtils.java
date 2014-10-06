@@ -221,21 +221,6 @@ public final class ResolverUtils {
     }
 
     /**
-     * Finds if the specified code is an anscetor of a code in the set of codes, and returns which one.
-     *
-     * @param code the code
-     * @param codes the codes
-     * @return true, if codes contains child of code
-     */
-    static Code whichCodeIsAncestorOfCodeInCollection(final Code code, final Collection<? extends Code> codes) {
-
-        for (Code c : codes) {
-            if (code.isAncestor(c)) { return c; }
-        }
-        return null;
-    }
-
-    /**
      *  Calculates the power set of the original set.
      *
      * @param originalSet the original set {@link TokenSet}

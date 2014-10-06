@@ -26,10 +26,12 @@ public class ResolverMatrixTest {
 
     /** The ResolverMatrix. */
     private MultiValueMap<Code,Classification> matrix;
-    ResolverMatrixPruner pruner = new ResolverMatrixPruner();
-    HierarchyResolver resolver = new HierarchyResolver();
+    private MultiValueMapPruner<Code,Classification,ClassificationComparator> pruner
+            = new MultiValueMapPruner<>(new ClassificationComparator());
+    private HierarchyResolver resolver = new HierarchyResolver();
     private CodeDictionary codeDictionary;
     private ValidCodeTripleGetter validCodeTripleGetter = new ValidCodeTripleGetter();
+    private BelowThresholdRemover belowThresholdRemover = new BelowThresholdRemover();
 
     /**
      * Setup, run before each test. Creates a new {@link MultiValueMap} and sets the {@link CodeIndexer} to use
@@ -163,7 +165,7 @@ public class ResolverMatrixTest {
         addMockEntryToMatrix("brown dog", "95240", 0.85);
         addMockEntryToMatrix("white dog", "95240", 0.83);
         Assert.assertEquals(16, matrix.complexity());
-        matrix = resolver.resolveHierarchies(matrix,true);
+        matrix = resolver.moveAncestorsToDescendantKeys(matrix);
         Assert.assertEquals(16, matrix.complexity());
     }
 
@@ -183,7 +185,7 @@ public class ResolverMatrixTest {
         addMockEntryToMatrix("brown dog", "95240", 0.85);
         addMockEntryToMatrix("white dog", "95240", 0.83);
         Assert.assertEquals(4, matrix.size());
-        MultiValueMap matrix2 = resolver.resolveHierarchies(matrix,true);
+        MultiValueMap<Code,Classification> matrix2 = resolver.moveAncestorsToDescendantKeys(matrix);
         Assert.assertEquals(3,matrix2.size());
         Assert.assertEquals(matrix.complexity(), matrix2.complexity());
     }
@@ -199,7 +201,7 @@ public class ResolverMatrixTest {
         addMockEntryToMatrix("brown dog", "2200", 0.81);
         addMockEntryToMatrix("white dog", "2200", 0.87);
         Assert.assertEquals(4, matrix.complexity());
-        MultiValueMap matrix2 = pruner.chopBelowConfidence(matrix,0.7);
+        MultiValueMap matrix2 = belowThresholdRemover.removeBelowThreshold(matrix,0.7);
         Assert.assertEquals(2, matrix2.complexity());
     }
 

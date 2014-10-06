@@ -20,12 +20,9 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenClassificationCache;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.MultiValueMap;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.ResolverMatrixPruner;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.ResolverUtils;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.*;
 
 import com.google.common.collect.Multiset;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.ValidCodeTripleGetter;
 
 /**
  * This class is produces a set of {@link Classification}s that represent the
@@ -158,10 +155,20 @@ public class ClassifierPipeline {
         Multiset<TokenSet> ngramSet = ngs.getGramMultiset();
         populateMatrix(ngramSet, multiValueMap);
 
-        ResolverMatrixPruner resolverMatrixPruner = new ResolverMatrixPruner();
-        multiValueMap = resolverMatrixPruner.chopBelowConfidence(multiValueMap,CONFIDENCE_CHOP_LEVEL);
-
+        MultiValueMapPruner<Code,Classification,
+                ClassificationComparator> multiValueMapPruner
+                = new MultiValueMapPruner<>(new ClassificationComparator());
+        BelowThresholdRemover belowThresholdRemover = new BelowThresholdRemover();
         ValidCodeTripleGetter validCodeTripleGetter = new ValidCodeTripleGetter();
+        HierarchyResolver hierarchyResolver = new HierarchyResolver();
+
+        multiValueMap = belowThresholdRemover.removeBelowThreshold(multiValueMap,CONFIDENCE_CHOP_LEVEL);
+        if(multipleClassifications) {
+            multiValueMap = hierarchyResolver.moveAncestorsToDescendantKeys(multiValueMap);
+        } else {
+            multiValueMap = hierarchyResolver.flattenForSingleClassifications(multiValueMap);
+        }
+        multiValueMap = multiValueMapPruner.pruneUntilComplexityWithinBound(multiValueMap);
 
         List<Set<Classification>> triples = validCodeTripleGetter.getValidCodeTriples(multiValueMap,cleanedTokenSet);
         Set<Classification> best;
