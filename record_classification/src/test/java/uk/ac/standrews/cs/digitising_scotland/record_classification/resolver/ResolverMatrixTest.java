@@ -2,37 +2,40 @@ package uk.ac.standrews.cs.digitising_scotland.record_classification.resolver;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Pair;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeDictionary;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeIndexer;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeNotValidException;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.resolverpipelinetools.*;
 
 // TODO: Auto-generated Javadoc
 /**
- * Unit tests to test functionality of the {@link ResolverMatrix} class.
+ * Unit tests to test functionality of the {@link MultiValueMap} class.
  * @author jkc25, frjd2
  * Created by fraserdunlop on 10/06/2014 at 15:14.
  */
 public class ResolverMatrixTest {
 
     /** The ResolverMatrix. */
-    private ResolverMatrix matrix;
-
+    private MultiValueMap<Code,Classification> matrix;
+    private MultiValueMapPruner<Code,Classification,ClassificationComparator> pruner
+            = new MultiValueMapPruner<>(new ClassificationComparator());
+    private HierarchyResolver resolver = new HierarchyResolver();
     private CodeDictionary codeDictionary;
+    private ResolverPipelineTools resPipTooz = new ResolverPipelineTools();
+    private BelowThresholdRemover belowThresholdRemover = new BelowThresholdRemover();
 
     /**
-     * Setup, run before each test. Creates a new {@link ResolverMatrix} and sets the {@link CodeIndexer} to use
+     * Setup, run before each test. Creates a new {@link MultiValueMap} and sets the {@link CodeIndexer} to use
      * a compatible code map.
      */
     @Before
@@ -46,7 +49,7 @@ public class ResolverMatrixTest {
             e.printStackTrace();
         }
 
-        matrix = new ResolverMatrix(true);
+        matrix = new MultiValueMap<>(new HashMap<Code,List<Classification>>());
 
     }
 
@@ -120,7 +123,7 @@ public class ResolverMatrixTest {
 
      */
     @Test
-    public void getValidCodeTriplesTest() {
+    public void getValidCodeTriplesTest() throws Exception {
 
         addMockEntryToMatrix("brown", "2100", 0.5);
         addMockEntryToMatrix("white", "2100", 0.85);
@@ -131,11 +134,11 @@ public class ResolverMatrixTest {
         addMockEntryToMatrix("brown", "6700", 0.85);
         addMockEntryToMatrix("white", "6700", 0.83);
         TokenSet originalSet = new TokenSet("brown white");
-        List<Set<Classification>> validTriples = matrix.getValidCodeTriples(originalSet);
+        List<Set<Classification>> validTriples = resPipTooz.getValidSets(matrix, originalSet);
         Assert.assertEquals(20, validTriples.size());
         addMockEntryToMatrix("blue", "3000", 0.83);
         TokenSet originalSet1 = new TokenSet("brown white blue");
-        validTriples = matrix.getValidCodeTriples(originalSet1);
+        validTriples = resPipTooz.getValidSets(matrix, originalSet1);
         Assert.assertEquals(41, validTriples.size());
         for (Set<Classification> set : validTriples) {
             Assert.assertEquals(1.5, ResolverUtils.lossFunction(set), 1.5);
@@ -152,7 +155,7 @@ public class ResolverMatrixTest {
      * Resolve hierarchies test.
      */
     @Test
-    public void resolveHierarchiesTest() {
+    public void resolveHierarchiesTest() throws IOException, ClassNotFoundException {
 
         addMockEntryToMatrix("brown dog", "2100", 0.5);
         addMockEntryToMatrix("white dog", "2100", 0.85);
@@ -163,7 +166,7 @@ public class ResolverMatrixTest {
         addMockEntryToMatrix("brown dog", "95240", 0.85);
         addMockEntryToMatrix("white dog", "95240", 0.83);
         Assert.assertEquals(16, matrix.complexity());
-        matrix.resolveHierarchies();
+        matrix = resolver.moveAncestorsToDescendantKeys(matrix);
         Assert.assertEquals(16, matrix.complexity());
     }
 
@@ -171,9 +174,9 @@ public class ResolverMatrixTest {
      * Resolve hierarchies test.
      */
     @Test
-    public void resolveHierarchiesSingleClassificationTest() {
+    public void resolveHierarchiesSingleClassificationTest() throws IOException, ClassNotFoundException {
 
-        matrix = new ResolverMatrix(false);
+        matrix = new MultiValueMap<>(new HashMap<Code,List<Classification>>());
         addMockEntryToMatrix("brown dog", "2100", 0.5);
         addMockEntryToMatrix("white dog", "2100", 0.85);
         addMockEntryToMatrix("brown dog", "2200", 0.81);
@@ -182,24 +185,25 @@ public class ResolverMatrixTest {
         addMockEntryToMatrix("white dog", "952", 0.8);
         addMockEntryToMatrix("brown dog", "95240", 0.85);
         addMockEntryToMatrix("white dog", "95240", 0.83);
-        Assert.assertEquals(16, matrix.complexity());
-        matrix.resolveHierarchies();
-        Assert.assertEquals(8, matrix.complexity());
+        Assert.assertEquals(4, matrix.size());
+        MultiValueMap<Code,Classification> matrix2 = resolver.moveAncestorsToDescendantKeys(matrix);
+        Assert.assertEquals(3,matrix2.size());
+        Assert.assertEquals(matrix.complexity(), matrix2.complexity());
     }
 
     /**
      * Chop below confidence test.
      */
     @Test
-    public void chopBelowConfidenceTest() {
+    public void chopBelowConfidenceTest() throws IOException, ClassNotFoundException {
 
         addMockEntryToMatrix("brown dog", "2100", 0.5);
         addMockEntryToMatrix("white dog", "2100", 0.85);
         addMockEntryToMatrix("brown dog", "2200", 0.81);
         addMockEntryToMatrix("white dog", "2200", 0.87);
         Assert.assertEquals(4, matrix.complexity());
-        matrix.chopBelowConfidence(0.7);
-        Assert.assertEquals(2, matrix.complexity());
+        MultiValueMap matrix2 = belowThresholdRemover.removeBelowThreshold(matrix,0.7);
+        Assert.assertEquals(2, matrix2.complexity());
     }
 
     /**
@@ -236,6 +240,6 @@ public class ResolverMatrixTest {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        matrix.add(tokenSet, new Pair<>(code, conf));
+        matrix.add(code,new Classification(code,tokenSet,conf));
     }
 }

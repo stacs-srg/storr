@@ -21,8 +21,7 @@ public class StringSimilarityClassifier implements IClassifier {
         if (pair == null) {
             String s = map.getClosestKey(tokenSet.toString());
             double similarity = map.getSimilarity(tokenSet.toString(), s);
-            final Pair<Code, Double> pair2 = new Pair<Code, Double>(map.getClosestMatch(s).getLeft(), similarity);
-            return pair2;
+            return new Pair<>(map.getClosestMatch(s).getLeft(), similarity);
         }
         else {
             return new Pair<Code, Double>(pair.getLeft(), 1.0);

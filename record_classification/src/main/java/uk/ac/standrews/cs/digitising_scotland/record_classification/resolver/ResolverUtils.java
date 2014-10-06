@@ -1,15 +1,6 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.resolver;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
@@ -119,19 +110,21 @@ public final class ResolverUtils {
         return powerSet.contains(tokenSet);
     }
 
+
     /**
-     * Checks if the union of the token sets from a set of {@link Classification}s
+     * Checks if the union of the token sets from a set of {@link uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification}s
      * is a a member of powerSet.
      *
-     * @param triple a set of {@link Classification}s
+     * @param triple a set of {@link uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification}s
      * @param originalTokenSet the token set from the original data
      * @return true, if successful
      */
-    public static boolean tripleSetIsValid(final Set<Classification> triple, final TokenSet originalTokenSet) {
+    public static boolean tripleSetIsValid(final Set<uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification> triple, final TokenSet originalTokenSet) {
 
         TokenSet union = getUnion(getTokenSetsFromTriple(triple));
         return originalTokenSet.containsAll(union) && noTokenAppearsInUnionMoreOftenThanInOriginalSet(originalTokenSet, union);
     }
+
 
     private static boolean noTokenAppearsInUnionMoreOftenThanInOriginalSet(final TokenSet originalTokenSet, final TokenSet union) {
 
@@ -227,21 +220,6 @@ public final class ResolverUtils {
             if (code.isAncestor(c)) { return true; }
         }
         return false;
-    }
-
-    /**
-     * Finds if the specified code is an anscetor of a code in the set of codes, and returns which one.
-     *
-     * @param code the code
-     * @param codes the codes
-     * @return true, if codes contains child of code
-     */
-    static Code whichCodeIsAncestorOfCodeInSet(final Code code, final Set<Code> codes) {
-
-        for (Code c : codes) {
-            if (code.isAncestor(c)) { return c; }
-        }
-        return null;
     }
 
     /**

@@ -6,6 +6,6 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 
 public interface IClassifier {
 
-    Pair<Code, Double> classify(TokenSet tokenSet);
+    public abstract Pair<Code, Double> classify(TokenSet tokenSet);
 
 }

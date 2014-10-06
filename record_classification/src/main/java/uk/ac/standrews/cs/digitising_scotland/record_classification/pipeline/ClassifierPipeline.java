@@ -20,10 +20,10 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenClassificationCache;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.ResolverMatrix;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.ResolverUtils;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.*;
 
 import com.google.common.collect.Multiset;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.resolverpipelinetools.*;
 
 /**
  * This class is produces a set of {@link Classification}s that represent the
@@ -47,9 +47,9 @@ public class ClassifierPipeline {
 
     /**
      * Constructs a new {@link ClassifierPipeline} with the specified
-     * {@link AbstractClassifier} used to perform the classification duties.
+     * {@link uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.IClassifier} used to perform the classification duties.
      *
-     * @param classifier    {@link AbstractClassifier} used for machine learning classification
+     * @param classifier    {@link uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.IClassifier} used for machine learning classification
      * @param cachePopulationBucket the training bucket
      */
     public ClassifierPipeline(final IClassifier classifier, final Bucket cachePopulationBucket) {
@@ -66,7 +66,7 @@ public class ClassifierPipeline {
      * @return bucket this is the bucket of classified records
      * @throws IOException Signals that an I/O exception has occurred.
      */
-    public Bucket classify(final Bucket bucket, final boolean multipleClassifications) throws IOException {
+    public Bucket classify(final Bucket bucket, final boolean multipleClassifications) throws Exception {
 
         int count = 0;
         Bucket classified = new Bucket();
@@ -79,7 +79,7 @@ public class ClassifierPipeline {
         return classified;
     }
 
-    private void classifyRecordAddToBucket(final Record record, final Bucket classified, final boolean multipleClassifications) throws IOException {
+    private void classifyRecordAddToBucket(final Record record, final Bucket classified, final boolean multipleClassifications) throws Exception {
 
         for (String description : record.getDescription()) {
             if (!previouslyClassified(record, description)) {
@@ -95,7 +95,7 @@ public class ClassifierPipeline {
         }
     }
 
-    private void getResultAddToCache(final Record record, final Bucket classified, final String description, final boolean multipleClassifications) throws IOException {
+    private void getResultAddToCache(final Record record, final Bucket classified, final String description, final boolean multipleClassifications) throws Exception {
 
         Set<Classification> result;
         result = classify(description, multipleClassifications);
@@ -133,7 +133,7 @@ public class ClassifierPipeline {
      * @throws IOException
      *             indicates an I/O Error
      */
-    public Set<Classification> classify(final String description, final boolean multipleClassifications) throws IOException {
+    public Set<Classification> classify(final String description, final boolean multipleClassifications) throws Exception {
 
         TokenSet cleanedTokenSet = new TokenSet(description);
 
@@ -148,18 +148,25 @@ public class ClassifierPipeline {
      * @return the sets the
      * @throws IOException Signals that an I/O exception has occurred.
      */
-    private Set<Classification> classifyTokenSet(final TokenSet cleanedTokenSet, final boolean multipleClassifications) throws IOException {
+    private Set<Classification> classifyTokenSet(final TokenSet cleanedTokenSet, final boolean multipleClassifications) throws Exception {
 
-        LOGGER.info("Classifying " + cleanedTokenSet + " dahling");
-        ResolverMatrix resolverMatrix = new ResolverMatrix(multipleClassifications);
+        MultiValueMap<Code,Classification> multiValueMap = new MultiValueMap<>(new HashMap<Code,List<Classification>>());
 
         NGramSubstrings ngs = new NGramSubstrings(cleanedTokenSet);
         Multiset<TokenSet> ngramSet = ngs.getGramMultiset();
-        populateMatrix(ngramSet, resolverMatrix);
+        populateMatrix(ngramSet, multiValueMap);
 
-        resolverMatrix.chopBelowConfidence(CONFIDENCE_CHOP_LEVEL);
+        ResolverPipelineTools resolverPipelineTools = new ResolverPipelineTools();
 
-        List<Set<Classification>> triples = resolverMatrix.getValidCodeTriples(cleanedTokenSet);
+        multiValueMap = resolverPipelineTools.removeBelowThreshold(multiValueMap,CONFIDENCE_CHOP_LEVEL);
+        if(multipleClassifications) {
+            multiValueMap = resolverPipelineTools.moveAncestorsToDescendantKeys(multiValueMap);
+        } else {
+            multiValueMap = resolverPipelineTools.flattenForSingleClassifications(multiValueMap);
+        }
+        multiValueMap = resolverPipelineTools.pruneUntilComplexityWithinBound(multiValueMap);
+
+        List<Set<Classification>> triples = resolverPipelineTools.getValidSets(multiValueMap, cleanedTokenSet);
         Set<Classification> best;
 
         if (!triples.isEmpty()) {
@@ -176,14 +183,14 @@ public class ClassifierPipeline {
      * Populates the resolver matrix.
      *
      * @param tokenSetSet the tokenSet set
-     * @param resolverMatrix the resolver matrix
+     * @param multiValueMap the resolver matrix
      * @throws IOException Signals that an I/O exception has occurred.
      */
-    private void populateMatrix(final Multiset<TokenSet> tokenSetSet, final ResolverMatrix resolverMatrix) throws IOException {
+    private void populateMatrix(final Multiset<TokenSet> tokenSetSet, final MultiValueMap<Code,Classification> multiValueMap) throws IOException {
 
         for (TokenSet tokenSet : tokenSetSet) {
             Pair<Code, Double> codeDoublePair = cache.getClassification(tokenSet);
-            resolverMatrix.add(tokenSet, codeDoublePair);
+            multiValueMap.add(codeDoublePair.getLeft(), new Classification(codeDoublePair.getLeft(),tokenSet,codeDoublePair.getRight()));
         }
     }
 
