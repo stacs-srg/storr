@@ -160,7 +160,7 @@ public class ClassifierPipeline {
                         ClassificationComparator> multiValueMapPruner
                 = new MultiValueMapPruner<>(new ClassificationComparator());
         BelowThresholdRemover belowThresholdRemover = new BelowThresholdRemover();
-        ValidCodeTripleGetter validCodeTripleGetter = new ValidCodeTripleGetter();
+        ValidCombinationGetter validCombinationGetter = new ValidCombinationGetter();
         HierarchyResolver hierarchyResolver = new HierarchyResolver();
 
         multiValueMap = belowThresholdRemover.removeBelowThreshold(multiValueMap,CONFIDENCE_CHOP_LEVEL);
@@ -171,7 +171,7 @@ public class ClassifierPipeline {
         }
         multiValueMap = multiValueMapPruner.pruneUntilComplexityWithinBound(multiValueMap);
 
-        List<Set<Classification>> triples = validCodeTripleGetter.getValidCodeTriples(multiValueMap,cleanedTokenSet);
+        List<Set<Classification>> triples = validCombinationGetter.getValidSets(multiValueMap, cleanedTokenSet);
         Set<Classification> best;
 
         if (!triples.isEmpty()) {

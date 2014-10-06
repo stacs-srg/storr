@@ -31,7 +31,7 @@ public class ResolverMatrixTest {
             = new MultiValueMapPruner<>(new ClassificationComparator());
     private HierarchyResolver resolver = new HierarchyResolver();
     private CodeDictionary codeDictionary;
-    private ValidCodeTripleGetter validCodeTripleGetter = new ValidCodeTripleGetter();
+    private ValidCombinationGetter validCombinationGetter = new ValidCombinationGetter();
     private BelowThresholdRemover belowThresholdRemover = new BelowThresholdRemover();
 
     /**
@@ -134,11 +134,11 @@ public class ResolverMatrixTest {
         addMockEntryToMatrix("brown", "6700", 0.85);
         addMockEntryToMatrix("white", "6700", 0.83);
         TokenSet originalSet = new TokenSet("brown white");
-        List<Set<Classification>> validTriples = validCodeTripleGetter.getValidCodeTriples(matrix,originalSet);
+        List<Set<Classification>> validTriples = validCombinationGetter.getValidSets(matrix, originalSet);
         Assert.assertEquals(20, validTriples.size());
         addMockEntryToMatrix("blue", "3000", 0.83);
         TokenSet originalSet1 = new TokenSet("brown white blue");
-        validTriples = validCodeTripleGetter.getValidCodeTriples(matrix,originalSet1);
+        validTriples = validCombinationGetter.getValidSets(matrix, originalSet1);
         Assert.assertEquals(41, validTriples.size());
         for (Set<Classification> set : validTriples) {
             Assert.assertEquals(1.5, ResolverUtils.lossFunction(set), 1.5);
