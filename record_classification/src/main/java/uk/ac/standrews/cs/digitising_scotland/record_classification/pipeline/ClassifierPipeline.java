@@ -23,6 +23,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.*;
 
 import com.google.common.collect.Multiset;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.resolverpipelinetools.*;
 
 /**
  * This class is produces a set of {@link Classification}s that represent the
@@ -156,7 +157,7 @@ public class ClassifierPipeline {
         populateMatrix(ngramSet, multiValueMap);
 
         MultiValueMapPruner<Code,Classification,
-                ClassificationComparator> multiValueMapPruner
+                        ClassificationComparator> multiValueMapPruner
                 = new MultiValueMapPruner<>(new ClassificationComparator());
         BelowThresholdRemover belowThresholdRemover = new BelowThresholdRemover();
         ValidCodeTripleGetter validCodeTripleGetter = new ValidCodeTripleGetter();
