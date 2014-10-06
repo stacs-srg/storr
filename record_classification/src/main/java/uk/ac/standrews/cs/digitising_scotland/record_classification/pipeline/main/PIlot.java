@@ -105,9 +105,9 @@ public final class PIlot {
         LOGGER.info("Machine Learned Bucket Size: " + classifier.getMachineLearned().size());
         LOGGER.info("All Classified Size: " + classifier.getAllClassified().size());
 
-        PipelineUtils.writeRecords(classifier.getAllClassified(), experimentalFolderName);
+        PipelineUtils.writeRecords(classifier.getAllClassified(), experimentalFolderName, "MachineLearning");
 
-        PipelineUtils.generateAndPrintStatistics(classifier, codeIndex, experimentalFolderName);
+        PipelineUtils.generateAndPrintStatistics(classifier, codeIndex, experimentalFolderName, "MachineLearning");
 
         timer.stop();
     }

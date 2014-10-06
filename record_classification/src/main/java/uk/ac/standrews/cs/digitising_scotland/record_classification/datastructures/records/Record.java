@@ -37,6 +37,16 @@ public class Record {
     }
 
     /**
+     * Copy the current records original attributes.
+     * @param source
+     */
+    public Record copyOfOriginalRecord(Record source) {
+
+        return new Record(source.id, source.originalData);
+
+    }
+
+    /**
      * Gets the original data. Original data is the data supplied on records.
      *
      * @return the original data

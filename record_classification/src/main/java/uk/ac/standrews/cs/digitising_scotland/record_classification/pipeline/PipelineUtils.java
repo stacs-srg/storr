@@ -24,6 +24,8 @@ import uk.ac.standrews.cs.digitising_scotland.tools.Timer;
 import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
 import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearningConfiguration;
 
+import com.google.common.io.Files;
+
 /**
  * Utility class containing methods to help with the creation and use of the exact match and machine learning pipelines.
  * @author jkc25
@@ -37,27 +39,28 @@ public final class PipelineUtils {
 
     }
 
-    public static void generateAndPrintStats(final Bucket classifiedBucket, final CodeIndexer codeIndexer, final String header, final String bucketIdentifier, final String experimentalFolderName) throws IOException {
+    public static void generateAndPrintStats(final Bucket classifiedBucket, final CodeIndexer codeIndexer, final String header, final String bucketIdentifier, final String experimentalFolderName, final String identifier) throws IOException {
 
         LOGGER.info(header);
-        ListAccuracyMetrics accuracyMetrics = new ListAccuracyMetrics(classifiedBucket);
+        CodeMetrics codeMetrics = new CodeMetrics(new StrictConfusionMatrix(classifiedBucket, codeIndexer), codeIndexer);
+        ListAccuracyMetrics accuracyMetrics = new ListAccuracyMetrics(classifiedBucket, codeMetrics);
         accuracyMetrics.prettyPrint(header);
-        generateStats(classifiedBucket, accuracyMetrics, codeIndexer, experimentalFolderName, bucketIdentifier);
+        generateStats(classifiedBucket, codeMetrics, accuracyMetrics, codeIndexer, experimentalFolderName, bucketIdentifier, identifier);
     }
 
-    public static void generateStats(final Bucket bucket, final ListAccuracyMetrics accuracyMetrics, final CodeIndexer codeIndexer, final String experimentalFolderName, final String bucketIdentifier) throws IOException {
+    public static void generateStats(final Bucket bucket, CodeMetrics codeMetrics, final ListAccuracyMetrics accuracyMetrics, final CodeIndexer codeIndexer, final String experimentalFolderName, final String bucketIdentifier, final String identifier) throws IOException {
 
-        final String matrixDataPath = experimentalFolderName + "/Data/classificationCountMatrix.csv";
+        final String matrixDataPath = experimentalFolderName + "/Data/" + identifier + "/classificationCountMatrix.csv";
         final String matrixImagePath = "classificationMatrix";
         final String reportspath = experimentalFolderName + "/Reports/";
 
-        final String strictCodeStatsPath = experimentalFolderName + "/Data/strictCodeStats" + bucketIdentifier + ".csv";
+        final String strictCodeStatsPath = experimentalFolderName + "/Data/" + identifier + "/strictCodeStats" + bucketIdentifier + ".csv";
         final String strictCodePath = "strictCodeStats" + bucketIdentifier;
-        printCodeMetrics(bucket, accuracyMetrics, codeIndexer, strictCodeStatsPath, strictCodePath, experimentalFolderName);
+        printCodeMetrics(bucket, codeMetrics, accuracyMetrics, codeIndexer, strictCodeStatsPath, strictCodePath, experimentalFolderName, identifier);
 
-        final String softCodeStatsPath = experimentalFolderName + "/Data/softCodeStats" + bucketIdentifier + ".csv";
+        final String softCodeStatsPath = experimentalFolderName + "/Data/" + identifier + "/softCodeStats" + bucketIdentifier + ".csv";
         final String softCodePath = "softCodeStats" + bucketIdentifier;
-        printCodeMetrics(bucket, accuracyMetrics, codeIndexer, softCodeStatsPath, softCodePath, experimentalFolderName);
+        printCodeMetrics(bucket, codeMetrics, accuracyMetrics, codeIndexer, softCodeStatsPath, softCodePath, experimentalFolderName, identifier);
 
         AbstractConfusionMatrix invertedConfusionMatrix = new InvertedSoftConfusionMatrix(bucket, codeIndexer);
         double totalCorrectlyPredicted = invertedConfusionMatrix.getTotalCorrectlyPredicted();
@@ -70,13 +73,12 @@ public final class PipelineUtils {
 
     }
 
-    public static String printCodeMetrics(final Bucket bucket, final ListAccuracyMetrics accuracyMetrics, final CodeIndexer codeIndexer, final String strictCodeStatsPath, final String codeStatsPath, final String experimentalFolderName) {
+    public static String printCodeMetrics(final Bucket bucket, CodeMetrics codeMetrics, final ListAccuracyMetrics accuracyMetrics, final CodeIndexer codeIndexer, final String strictCodeStatsPath, final String codeStatsPath, final String experimentalFolderName, final String identifier) {
 
-        CodeMetrics codeMetrics = new CodeMetrics(new StrictConfusionMatrix(bucket, codeIndexer), codeIndexer);
         LOGGER.info(codeMetrics.getMicroStatsAsString());
         codeMetrics.writeStats(strictCodeStatsPath);
         LOGGER.info(strictCodeStatsPath + ": " + codeMetrics.getTotalCorrectlyPredicted());
-        accuracyMetrics.generateMarkDownSummary(experimentalFolderName, codeStatsPath);
+        accuracyMetrics.generateMarkDownSummary(experimentalFolderName, codeStatsPath, identifier);
         return strictCodeStatsPath;
     }
 
@@ -163,32 +165,38 @@ public final class PipelineUtils {
         return false;
     }
 
-    public static void writeRecords(final Bucket classifiedBucket, final String experimentalFolderName) throws IOException {
+    public static void writeRecords(final Bucket classifiedBucket, final String experimentalFolderName, final String identifier) throws IOException {
 
-        final String nrsReportPath = "/Data/NRSData.txt";
-        final DataClerkingWriter writer = new DataClerkingWriter(new File(experimentalFolderName + nrsReportPath));
+        final String nrsReportPath = "/Data/" + identifier + "/NRSData.txt";
+        final File outputPath = new File(experimentalFolderName + nrsReportPath);
+        Files.createParentDirs(outputPath);
+        final DataClerkingWriter writer = new DataClerkingWriter(outputPath);
+
         for (final Record record : classifiedBucket) {
             writer.write(record);
         }
         writer.close();
 
-        final String comparisonReportPath = "/Data/comaprison.txt";
-        final FileComparisonWriter comparisonWriter = new FileComparisonWriter(new File(experimentalFolderName + comparisonReportPath), "\t");
+        final String comparisonReportPath = "/Data/" + identifier + "/comaprison.txt";
+        final File outputPath2 = new File(experimentalFolderName + comparisonReportPath);
+        Files.createParentDirs(outputPath2);
+
+        final FileComparisonWriter comparisonWriter = new FileComparisonWriter(outputPath2, "\t");
         for (final Record record : classifiedBucket) {
             comparisonWriter.write(record);
         }
         comparisonWriter.close();
     }
 
-    public static void generateAndPrintStatistics(final ClassificationHolder classifier, final CodeIndexer codeIndexer, final String experimentalFolderName) throws IOException {
+    public static void generateAndPrintStatistics(final ClassificationHolder classifier, final CodeIndexer codeIndexer, final String experimentalFolderName, final String identifier) throws IOException {
 
         LOGGER.info("********** Output Stats **********");
 
         final Bucket uniqueRecordsOnly = BucketFilter.uniqueRecordsOnly(classifier.getAllClassified());
 
-        PipelineUtils.generateAndPrintStats(classifier.getAllClassified(), codeIndexer, "All Records", "AllRecords", experimentalFolderName);
+        PipelineUtils.generateAndPrintStats(classifier.getAllClassified(), codeIndexer, "All Records", "AllRecords", experimentalFolderName, identifier);
 
-        PipelineUtils.generateAndPrintStats(uniqueRecordsOnly, codeIndexer, "Unique Only", "UniqueOnly", experimentalFolderName);
+        PipelineUtils.generateAndPrintStats(uniqueRecordsOnly, codeIndexer, "Unique Only", "UniqueOnly", experimentalFolderName, identifier);
     }
 
     public static String setupExperimentalFolders(final String baseFolder) {
