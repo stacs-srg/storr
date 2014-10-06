@@ -28,7 +28,7 @@ public class ICDCodeConverter {
 
     public static void main(final String[] args) throws IOException {
 
-        File inputFile = new File("NRSDataTab.txt");
+        File inputFile = new File("NRSDataEditedTab.txt");
         File outputFile = new File("convertedNRSdata.txt");
         File mappingFile = new File("mappingFile.txt");
 

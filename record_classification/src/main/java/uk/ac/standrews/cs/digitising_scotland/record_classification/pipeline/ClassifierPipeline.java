@@ -50,13 +50,13 @@ public class ClassifierPipeline {
      * {@link AbstractClassifier} used to perform the classification duties.
      *
      * @param classifier    {@link AbstractClassifier} used for machine learning classification
-     * @param trainingBucket the training bucket
+     * @param cachePopulationBucket the training bucket
      */
-    public ClassifierPipeline(final IClassifier classifier, final Bucket trainingBucket) {
+    public ClassifierPipeline(final IClassifier classifier, final Bucket cachePopulationBucket) {
 
         this.cache = new TokenClassificationCache(classifier);
         recordCache = new HashMap<>();
-        prePopulateCache(trainingBucket);
+        prePopulateCache(cachePopulationBucket);
     }
 
     /**
@@ -150,6 +150,7 @@ public class ClassifierPipeline {
      */
     private Set<Classification> classifyTokenSet(final TokenSet cleanedTokenSet, final boolean multipleClassifications) throws IOException {
 
+        LOGGER.info("Classifying " + cleanedTokenSet + " dahling");
         ResolverMatrix resolverMatrix = new ResolverMatrix(multipleClassifications);
 
         NGramSubstrings ngs = new NGramSubstrings(cleanedTokenSet);

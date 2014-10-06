@@ -18,7 +18,7 @@ public class ClosestMatchMap<K, V> implements Map<K, V> {
     private final Similaritor<K> similaritor;
     private Map<K, V> map;
 
-    ClosestMatchMap(final SimilarityMetric<K> metric, final Map<K, V> map) {
+    public ClosestMatchMap(final SimilarityMetric<K> metric, final Map<K, V> map) {
 
         this.map = map;
         this.similaritor = new Similaritor<>(metric);
@@ -43,11 +43,16 @@ public class ClosestMatchMap<K, V> implements Map<K, V> {
      * @param key used to construct comparator to sort keys.
      * @return the key at the head of the sorted list of keys.
      */
-    private K getClosestKey(final K key) {
+    public K getClosestKey(final K key) {
 
         List<K> keyList = new ArrayList<>(keySet());
         Collections.sort(keyList, similaritor.getComparator(key));
         return keyList.get(0);
+    }
+
+    public double getSimilarity(K o1, K o2) {
+
+        return similaritor.getSimilarity(o1, o2);
     }
 
     @Override

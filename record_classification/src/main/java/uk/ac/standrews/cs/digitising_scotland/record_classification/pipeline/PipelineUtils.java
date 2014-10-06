@@ -7,6 +7,7 @@ import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.IClassifier;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.analysis_metrics.AbstractConfusionMatrix;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.analysis_metrics.CodeMetrics;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.analysis_metrics.InvertedSoftConfusionMatrix;
@@ -131,9 +132,18 @@ public final class PipelineUtils {
         ExactMatchPipeline exactMatchPipeline = new ExactMatchPipeline(trainer.getExactMatchClassifier());
         ClassifierPipeline machineLearningClassifier = new ClassifierPipeline(trainer.getOlrClassifier(), trainingBucket);
 
-        ClassificationHolder classifier = new ClassificationHolder(exactMatchPipeline, machineLearningClassifier);
-        classifier.classify(predictionBucket, multipleClassifications);
-        return classifier;
+        ClassificationHolder classifierML = new ClassificationHolder(exactMatchPipeline, machineLearningClassifier);
+        classifierML.classify(predictionBucket, multipleClassifications);
+
+        return classifierML;
+    }
+
+    public static ClassificationHolder classify(final Bucket trainingBucket, final Bucket predictionBucket, IClassifier iclassifier, ExactMatchPipeline exactMatch, final boolean multipleClassifications) throws IOException {
+
+        ClassifierPipeline machineLearningClassifier = new ClassifierPipeline(iclassifier, trainingBucket);
+        ClassificationHolder classifierHolder = new ClassificationHolder(exactMatch, machineLearningClassifier);
+        classifierHolder.classify(predictionBucket, multipleClassifications);
+        return classifierHolder;
     }
 
     public static void printStatusUpdate() {

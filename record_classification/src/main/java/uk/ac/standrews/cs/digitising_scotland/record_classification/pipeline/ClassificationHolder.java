@@ -62,18 +62,13 @@ public class ClassificationHolder {
      */
     public Bucket classify(final Bucket predictionBucket, boolean multipleClassifications) throws IOException {
 
-        LOGGER.info("prediction bucket size: " + predictionBucket.size());
         exactMatched = exactMatchPipeline.classify(predictionBucket);
-        LOGGER.info("exactMatched bucket size: " + exactMatched.size());
         notExactMatched = BucketUtils.getComplement(predictionBucket, exactMatched);
-        LOGGER.info("notExactMatched bucket size: " + notExactMatched.size());
-        Assert.assertEquals(predictionBucket.size(), (notExactMatched.size() + exactMatched.size()));
-
         machineLearned = machineLearningClassifier.classify(notExactMatched, multipleClassifications);
-        LOGGER.info("machineLearned bucket size: " + machineLearned.size());
-        Assert.assertEquals(machineLearned.size(), notExactMatched.size());
         allClassified = BucketUtils.getUnion(machineLearned, exactMatched);
-        LOGGER.info("allClassified bucket size: " + allClassified.size());
+
+        Assert.assertEquals(machineLearned.size(), notExactMatched.size());
+        Assert.assertEquals(predictionBucket.size(), (notExactMatched.size() + exactMatched.size()));
         Assert.assertEquals(predictionBucket.size(), allClassified.size());
         return allClassified;
     }

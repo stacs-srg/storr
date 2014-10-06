@@ -1,11 +1,20 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline;
 
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import uk.ac.shef.wit.simmetrics.similaritymetrics.AbstractStringMetric;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.lookup.ExactMatchClassifier;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.lookup.closestmatchmap.ClosestMatchMap;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.lookup.closestmatchmap.SimilarityMetric;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.lookup.closestmatchmap.SimilarityMetricFromSimmetricFactory;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.lookup.closestmatchmap.StringSimilarityClassifier;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.olr.OLRClassifier;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Pair;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeIndexer;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.vectors.VectorFactory;
 
@@ -24,6 +33,8 @@ public class ClassifierTrainer {
 
     /** The olr classifier. */
     private OLRClassifier olrClassifier;
+
+    private StringSimilarityClassifier stringSimClassifier;
 
     /** The exact match classifier. */
     private ExactMatchClassifier exactMatchClassifier;
@@ -47,6 +58,19 @@ public class ClassifierTrainer {
         this.experimentalFolderName = experimentalFolderName;
         vectorFactory = new VectorFactory(trainingBucket, codeIndex);
 
+    }
+
+    public StringSimilarityClassifier trainStringSimilarityClassifier(final Map<String, Pair<Code, Double>> map, final AbstractStringMetric simMetric) {
+
+        SimilarityMetricFromSimmetricFactory factory = new SimilarityMetricFromSimmetricFactory();
+        SimilarityMetric<String> metric = factory.create(simMetric);
+        ClosestMatchMap<String, Pair<Code, Double>> closestMatchMap = new ClosestMatchMap<>(metric, map);
+        return stringSimClassifier = new StringSimilarityClassifier(closestMatchMap);
+    }
+
+    public StringSimilarityClassifier getStringSimClassifier() {
+
+        return stringSimClassifier;
     }
 
     /**
