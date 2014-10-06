@@ -1,9 +1,9 @@
-package uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.resolverpipelinetools;
+package uk.ac.standrews.cs.digitising_scotland.record_classification.resolver;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.MultiValueMap;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.resolverpipelinetools.*;
 
 import java.io.IOException;
 import java.util.List;

@@ -23,7 +23,6 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.*;
 
 import com.google.common.collect.Multiset;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.resolverpipelinetools.*;
 
 /**
  * This class is produces a set of {@link Classification}s that represent the
