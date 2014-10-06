@@ -138,7 +138,7 @@ public final class PipelineUtils {
         return classifierML;
     }
 
-    public static ClassificationHolder classify(final Bucket trainingBucket, final Bucket predictionBucket, IClassifier iclassifier, ExactMatchPipeline exactMatch, final boolean multipleClassifications) throws IOException {
+    public static ClassificationHolder classify(final Bucket trainingBucket, final Bucket predictionBucket, IClassifier iclassifier, ExactMatchPipeline exactMatch, final boolean multipleClassifications) throws IOException, ClassNotFoundException {
 
         ClassifierPipeline machineLearningClassifier = new ClassifierPipeline(iclassifier, trainingBucket);
         ClassificationHolder classifierHolder = new ClassificationHolder(exactMatch, machineLearningClassifier);
