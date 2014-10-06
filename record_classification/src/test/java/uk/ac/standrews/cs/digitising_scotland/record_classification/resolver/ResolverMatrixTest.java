@@ -163,7 +163,7 @@ public class ResolverMatrixTest {
         addMockEntryToMatrix("brown dog", "95240", 0.85);
         addMockEntryToMatrix("white dog", "95240", 0.83);
         Assert.assertEquals(16, matrix.complexity());
-        resolver.resolveHierarchies(matrix,true);
+        matrix = resolver.resolveHierarchies(matrix,true);
         Assert.assertEquals(16, matrix.complexity());
     }
 

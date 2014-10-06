@@ -46,14 +46,14 @@ public class MultiValueMap<K, V> implements Iterable<K>, Serializable, Map<K,Lis
      * @return the int numerical representation of the complexity of the matrix.
      */
     public long complexity() {
-
         long complexity = 1;
         long overFlowCheck = 1;
         for (K k : this) {
-            if (!this.get(k).isEmpty())
-                overFlowCheck = complexity * this.get(k).size();
+            if (!map.get(k).isEmpty())
+                overFlowCheck = complexity * map.get(k).size();
             if(overFlowCheck<complexity)
                 return Long.MAX_VALUE;
+            complexity = overFlowCheck;
         }
         return complexity;
     }
