@@ -1,15 +1,6 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.resolver;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
@@ -236,7 +227,7 @@ public final class ResolverUtils {
      * @param codes the codes
      * @return true, if codes contains child of code
      */
-    static Code whichCodeIsAncestorOfCodeInSet(final Code code, final Set<Code> codes) {
+    static Code whichCodeIsAncestorOfCodeInCollection(final Code code, final Collection<? extends Code> codes) {
 
         for (Code c : codes) {
             if (code.isAncestor(c)) { return c; }
