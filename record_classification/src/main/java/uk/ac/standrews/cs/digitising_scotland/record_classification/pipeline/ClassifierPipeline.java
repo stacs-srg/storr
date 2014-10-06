@@ -49,16 +49,16 @@ public class ClassifierPipeline {
 
     /**
      * Constructs a new {@link ClassifierPipeline} with the specified
-     * used to perform the classification duties.
+     * {@link uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.IClassifier} used to perform the classification duties.
      *
-     * @param classifier    used for machine learning classification
-     * @param trainingBucket the training bucket
+     * @param classifier    {@link uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.IClassifier} used for machine learning classification
+     * @param cachePopulationBucket the training bucket
      */
-    public ClassifierPipeline(final IClassifier classifier, final Bucket trainingBucket) {
+    public ClassifierPipeline(final IClassifier classifier, final Bucket cachePopulationBucket) {
 
         this.cache = new TokenClassificationCache(classifier);
         recordCache = new HashMap<>();
-        prePopulateCache(trainingBucket);
+        prePopulateCache(cachePopulationBucket);
     }
 
     /**
