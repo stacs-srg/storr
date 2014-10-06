@@ -60,7 +60,7 @@ public class ClassificationHolder {
      * @return the bucket with all the classified records
      * @throws IOException Signals that an I/O exception has occurred.
      */
-    public Bucket classify(final Bucket predictionBucket, boolean multipleClassifications) throws IOException, ClassNotFoundException {
+    public Bucket classify(final Bucket predictionBucket, boolean multipleClassifications) throws Exception {
 
         exactMatched = exactMatchPipeline.classify(predictionBucket);
         notExactMatched = BucketUtils.getComplement(predictionBucket, exactMatched);

@@ -127,7 +127,7 @@ public final class PipelineUtils {
         return trainer;
     }
 
-    public static ClassificationHolder classify(final Bucket trainingBucket, final Bucket predictionBucket, final ClassifierTrainer trainer, final boolean multipleClassifications) throws IOException, ClassNotFoundException {
+    public static ClassificationHolder classify(final Bucket trainingBucket, final Bucket predictionBucket, final ClassifierTrainer trainer, final boolean multipleClassifications) throws Exception {
 
         ExactMatchPipeline exactMatchPipeline = new ExactMatchPipeline(trainer.getExactMatchClassifier());
         ClassifierPipeline machineLearningClassifier = new ClassifierPipeline(trainer.getOlrClassifier(), trainingBucket);
@@ -138,7 +138,7 @@ public final class PipelineUtils {
         return classifierML;
     }
 
-    public static ClassificationHolder classify(final Bucket trainingBucket, final Bucket predictionBucket, IClassifier iclassifier, ExactMatchPipeline exactMatch, final boolean multipleClassifications) throws IOException, ClassNotFoundException {
+    public static ClassificationHolder classify(final Bucket trainingBucket, final Bucket predictionBucket, IClassifier iclassifier, ExactMatchPipeline exactMatch, final boolean multipleClassifications) throws Exception {
 
         ClassifierPipeline machineLearningClassifier = new ClassifierPipeline(iclassifier, trainingBucket);
         ClassificationHolder classifierHolder = new ClassificationHolder(exactMatch, machineLearningClassifier);

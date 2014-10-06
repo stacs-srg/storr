@@ -66,7 +66,7 @@ public class ClassifierPipeline {
      * @return bucket this is the bucket of classified records
      * @throws IOException Signals that an I/O exception has occurred.
      */
-    public Bucket classify(final Bucket bucket, final boolean multipleClassifications) throws IOException, ClassNotFoundException {
+    public Bucket classify(final Bucket bucket, final boolean multipleClassifications) throws Exception {
 
         int count = 0;
         Bucket classified = new Bucket();
@@ -79,7 +79,7 @@ public class ClassifierPipeline {
         return classified;
     }
 
-    private void classifyRecordAddToBucket(final Record record, final Bucket classified, final boolean multipleClassifications) throws IOException, ClassNotFoundException {
+    private void classifyRecordAddToBucket(final Record record, final Bucket classified, final boolean multipleClassifications) throws Exception {
 
         for (String description : record.getDescription()) {
             if (!previouslyClassified(record, description)) {
@@ -95,7 +95,7 @@ public class ClassifierPipeline {
         }
     }
 
-    private void getResultAddToCache(final Record record, final Bucket classified, final String description, final boolean multipleClassifications) throws IOException, ClassNotFoundException {
+    private void getResultAddToCache(final Record record, final Bucket classified, final String description, final boolean multipleClassifications) throws Exception {
 
         Set<Classification> result;
         result = classify(description, multipleClassifications);
@@ -133,7 +133,7 @@ public class ClassifierPipeline {
      * @throws IOException
      *             indicates an I/O Error
      */
-    public Set<Classification> classify(final String description, final boolean multipleClassifications) throws IOException, ClassNotFoundException {
+    public Set<Classification> classify(final String description, final boolean multipleClassifications) throws Exception {
 
         TokenSet cleanedTokenSet = new TokenSet(description);
 
@@ -148,7 +148,7 @@ public class ClassifierPipeline {
      * @return the sets the
      * @throws IOException Signals that an I/O exception has occurred.
      */
-    private Set<Classification> classifyTokenSet(final TokenSet cleanedTokenSet, final boolean multipleClassifications) throws IOException, ClassNotFoundException {
+    private Set<Classification> classifyTokenSet(final TokenSet cleanedTokenSet, final boolean multipleClassifications) throws Exception {
 
         MultiValueMap<Code,Classification> multiValueMap = new MultiValueMap<>(new HashMap<Code,List<Classification>>());
 
@@ -156,22 +156,17 @@ public class ClassifierPipeline {
         Multiset<TokenSet> ngramSet = ngs.getGramMultiset();
         populateMatrix(ngramSet, multiValueMap);
 
-        MultiValueMapPruner<Code,Classification,
-                        ClassificationComparator> multiValueMapPruner
-                = new MultiValueMapPruner<>(new ClassificationComparator());
-        BelowThresholdRemover belowThresholdRemover = new BelowThresholdRemover();
-        ValidCombinationGetter validCombinationGetter = new ValidCombinationGetter();
-        HierarchyResolver hierarchyResolver = new HierarchyResolver();
+        ResolverPipelineTools resolverPipelineTools = new ResolverPipelineTools();
 
-        multiValueMap = belowThresholdRemover.removeBelowThreshold(multiValueMap,CONFIDENCE_CHOP_LEVEL);
+        multiValueMap = resolverPipelineTools.removeBelowThreshold(multiValueMap,CONFIDENCE_CHOP_LEVEL);
         if(multipleClassifications) {
-            multiValueMap = hierarchyResolver.moveAncestorsToDescendantKeys(multiValueMap);
+            multiValueMap = resolverPipelineTools.moveAncestorsToDescendantKeys(multiValueMap);
         } else {
-            multiValueMap = hierarchyResolver.flattenForSingleClassifications(multiValueMap);
+            multiValueMap = resolverPipelineTools.flattenForSingleClassifications(multiValueMap);
         }
-        multiValueMap = multiValueMapPruner.pruneUntilComplexityWithinBound(multiValueMap);
+        multiValueMap = resolverPipelineTools.pruneUntilComplexityWithinBound(multiValueMap);
 
-        List<Set<Classification>> triples = validCombinationGetter.getValidSets(multiValueMap, cleanedTokenSet);
+        List<Set<Classification>> triples = resolverPipelineTools.getValidSets(multiValueMap, cleanedTokenSet);
         Set<Classification> best;
 
         if (!triples.isEmpty()) {
