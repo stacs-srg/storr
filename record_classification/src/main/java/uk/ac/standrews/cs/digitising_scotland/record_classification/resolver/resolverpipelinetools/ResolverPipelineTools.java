@@ -7,7 +7,7 @@ import java.util.Set;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.MultiValueMap;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.multivaluemap.*;
 
 /**
  *
@@ -19,6 +19,7 @@ public class ResolverPipelineTools {
     private HierarchyResolver<Code, Classification> hR = new HierarchyResolver<>();
     private MultiValueMapPruner<Code, Classification, ClassificationComparator> mVMP = new MultiValueMapPruner<>(new ClassificationComparator());
     private ValidCombinationGetter<Code, Classification, TokenSet, ClassificationSetValidityAssessor> vCG = new ValidCombinationGetter<>(new ClassificationSetValidityAssessor());
+    private Flattener<Code,Classification> flattener = new Flattener<>();
 
     public MultiValueMap<Code, Classification> removeBelowThreshold(final MultiValueMap<Code, Classification> map, final Double threshold) throws IOException, ClassNotFoundException {
 
@@ -32,7 +33,7 @@ public class ResolverPipelineTools {
 
     public MultiValueMap<Code, Classification> flattenForSingleClassifications(final MultiValueMap<Code, Classification> map) throws IOException, ClassNotFoundException {
 
-        return hR.flattenForSingleClassifications(map);
+        return flattener.flatten(map);
     }
 
     public MultiValueMap<Code, Classification> pruneUntilComplexityWithinBound(final MultiValueMap<Code, Classification> map) throws IOException, ClassNotFoundException {
