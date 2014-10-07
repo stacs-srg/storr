@@ -5,14 +5,14 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.generic.*;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.generic.ValidCombinationGetter;
-
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
 /**
- *
+ * A suite of tools which can be used to construct classification/resolution pipelines
+ * TODO - test, document, extend!
  * Created by fraserdunlop on 06/10/2014 at 15:02.
  */
 public class ResolverPipelineTools {
