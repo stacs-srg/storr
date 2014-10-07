@@ -4,6 +4,7 @@ import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multiset;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.multivaluemap.ValidityAssessor;
 
 import java.util.Set;
 
@@ -22,17 +23,17 @@ public class ClassificationSetValidityAssessor implements ValidityAssessor<Set<C
      */
     @Override
     public boolean assess(Set<Classification> classifications, TokenSet tokenSet) {
-        Multiset<TokenSet> tokenSetsFromClassifications = getTokenSetsFromTriple(classifications);
-        TokenSet unionOfTokenSets = getUnion(tokenSetsFromClassifications);
+        Multiset<TokenSet> tokenSetsFromClassifications = getTokenSetsFromClassifications(classifications);
+        TokenSet unionOfTokenSets = getUnionOfTokenSets(tokenSetsFromClassifications);
         return tokenSet.containsAll(unionOfTokenSets) && noTokenAppearsInUnionMoreOftenThanInOriginalSet(tokenSet, unionOfTokenSets);
     }
 
     /**
      * Gets the union of a multiset of tokenSets.
      * @param tokenSets the tokenSet Multiset to create a union from.
-     * @return the union of all sets in the Multiset.
+     * @return the union of all sets in the Multiset - a TokenSet.
      */
-    private TokenSet getUnion(final Multiset<TokenSet> tokenSets) {
+    private TokenSet getUnionOfTokenSets(final Multiset<TokenSet> tokenSets) {
         Multiset<String> union = HashMultiset.create();
         for (TokenSet tokenSet : tokenSets) {
             for (String token : tokenSet) {
@@ -47,7 +48,7 @@ public class ClassificationSetValidityAssessor implements ValidityAssessor<Set<C
      * @param classifications the classifications
      * @return the token sets from triple
      */
-    private Multiset<TokenSet> getTokenSetsFromTriple(final Set<Classification> classifications) {
+    private Multiset<TokenSet> getTokenSetsFromClassifications(final Set<Classification> classifications) {
         Multiset<TokenSet> tokenSets = HashMultiset.create();
         for (Classification classification : classifications) {
             tokenSets.add(classification.getTokenSet());

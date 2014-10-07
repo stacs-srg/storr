@@ -1,22 +1,12 @@
-package uk.ac.standrews.cs.digitising_scotland.record_classification.resolver;
+package uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.multivaluemap;
 
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.*;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Pair;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
 import uk.ac.standrews.cs.digitising_scotland.tools.DeepCloner;
 
 /**
- * ResolverMatrix stores mappings between {@link K}s and the list of {@link Pair}<TokenSet, Double> objects
- * that were classified as that code.
- * <p>
- * It implements methods that allow  for the reduction in size of the lists for each code via removing overlapping
- * codes and low confidence codes.
- * <p>
- * It also implements the getValidCodeTriples() method that allows the user to find all Code->Pair<TokenSet, Double>
- * mappings that are valid with respect to a given power set.
- *
+ * A map from keys to lists of values, iterable over keys and serializable.
  * @author frjd2
  * @author jkc25
  *         Created by fraserdunlop on 10/06/2014 at 14:57.
@@ -24,10 +14,6 @@ import uk.ac.standrews.cs.digitising_scotland.tools.DeepCloner;
 public class MultiValueMap<K, V> implements Iterable<K>, Serializable, Map<K,List<V>>{
 
     DeepCloner deepCloner = new DeepCloner();
-
-    /**
-     * The Code, List<Pair> map.
-     */
     private final Map<K, List<V>> map;
 
     public MultiValueMap(final Map<K, List<V>> map) {
@@ -59,20 +45,16 @@ public class MultiValueMap<K, V> implements Iterable<K>, Serializable, Map<K,Lis
     }
 
     /**
-     * Adds a {@link TokenSet} and {@link Pair}<Code, Double> to the map.
-     * <p>
-     * The Pair<Code, Double> should represent the output of an  where the Code is the
-     * returned code and the Double represents the confidence of that classification.
-     *
-     * @param code       the code to add
-     * @param classification the classification
+     * Adds the value v to the list associated with key k.
+     * @param k the key
+     * @param v the value
      */
-    public void add(final K code, final V classification) {
+    public void add(final K k, final V v) {
 
-        if (map.get(code) == null) {
-            map.put(code, new ArrayList<V>());
+        if (map.get(k) == null) {
+            map.put(k, new ArrayList<V>());
         }
-        map.get(code).add(classification);
+        map.get(k).add(v);
     }
 
     @Override
