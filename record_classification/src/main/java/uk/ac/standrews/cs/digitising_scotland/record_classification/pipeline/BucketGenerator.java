@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datareaders.AbstractFormatConverter;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datareaders.LongFormatConverter;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datareaders.PilotDataFormatConverter;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeDictionary;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeNotValidException;
@@ -18,10 +19,10 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.exceptions.I
 /**
  * The Class TrainingBucketGenerator.
  */
-public class GoldStandardBucketGenerator {
+public class BucketGenerator {
 
     /** The Constant LOGGER. */
-    private static final Logger LOGGER = LoggerFactory.getLogger(GoldStandardBucketGenerator.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(BucketGenerator.class);
 
     /** The Abstract Format converter. This is set to be an instance of {@link LongFormatConverter} by default.
      *  This can be changed as and when is necessary in the future.
@@ -30,7 +31,7 @@ public class GoldStandardBucketGenerator {
 
     private CodeDictionary codeDictionary;
 
-    public GoldStandardBucketGenerator(final CodeDictionary codeDictionary) {
+    public BucketGenerator(final CodeDictionary codeDictionary) {
 
         this.codeDictionary = codeDictionary;
     }
@@ -46,11 +47,11 @@ public class GoldStandardBucketGenerator {
      * @throws InputFormatException the input format exception
      * @throws CodeNotValidException 
      */
-    public Bucket generate(final File trainingFile) throws IOException, InputFormatException, CodeNotValidException {
+    public Bucket generateTrainingBucket(final File trainingFile) throws IOException, InputFormatException, CodeNotValidException {
 
         LOGGER.info("********** Generating Training Bucket **********");
 
-        return createBucketOfRecords(trainingFile);
+        return createTrainingBucket(trainingFile);
 
     }
 
@@ -66,7 +67,7 @@ public class GoldStandardBucketGenerator {
      * @throws InputFormatException the input format exception
      * @throws CodeNotValidException 
      */
-    private Bucket createBucketOfRecords(final File training) throws IOException, InputFormatException, CodeNotValidException {
+    private Bucket createTrainingBucket(final File training) throws IOException, InputFormatException, CodeNotValidException {
 
         Bucket bucket = new Bucket();
         Iterable<Record> records;
@@ -82,6 +83,50 @@ public class GoldStandardBucketGenerator {
         bucket.addCollectionOfRecords(records);
 
         return bucket;
+    }
+
+    /**
+     * Creates the prediction bucket from the given text file. This method currently expects the data to be in the form of the
+     * pilot data. The source code should be updated if this changes.
+     *
+     * @param prediction file containing the records to be classified, one per line.
+     * @return the bucket containing records to be classified
+     */
+    public Bucket createPredictionBucket(final File prediction) {
+
+        Bucket toClassify = null;
+        AbstractFormatConverter formatConverter = new PilotDataFormatConverter();
+
+        try {
+            toClassify = new Bucket(formatConverter.convert(prediction, codeDictionary));
+        }
+        catch (Exception e) {
+            LOGGER.error(e.getMessage(), e.getCause());
+        }
+
+        return toClassify;
+    }
+
+    /**
+     * Creates the prediction bucket from the given text file. This method takes an {@link AbstractFormatConverter} and
+     * uses this to perform the record creation.
+     *
+     * @param prediction the file containing the prediction records
+     * @param formatConverter the format converter to create records with
+     * @return the bucket
+     */
+    public Bucket createPredictionBucket(final File prediction, final AbstractFormatConverter formatConverter) {
+
+        Bucket toClassify = null;
+
+        try {
+            toClassify = new Bucket(formatConverter.convert(prediction, codeDictionary));
+        }
+        catch (Exception e) {
+            LOGGER.error(e.getMessage(), e.getCause());
+        }
+
+        return toClassify;
     }
 
 }

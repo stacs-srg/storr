@@ -47,6 +47,7 @@ public class ExactMatchPipeline {
 
         Bucket classified = new Bucket();
         int count = 0;
+        int descriptionCount = 0;
         int match = 0;
         boolean allMatch = false;
 
@@ -56,6 +57,7 @@ public class ExactMatchPipeline {
             allMatch = true;
 
             for (String description : record.getDescription()) {
+                descriptionCount++;
                 final Set<Classification> result = classify(description);
 
                 if (result != null) {
@@ -73,13 +75,13 @@ public class ExactMatchPipeline {
 
         }
 
-        LOGGER.info("Total exact matched = " + match + "/" + bucket.size());
+        LOGGER.info("Total exact matched = " + match + "/" + descriptionCount);
         LOGGER.info("Size of classified bucket = " + classified.size());
 
         return classified;
     }
 
-    private void addResultToRecord(final Record record, final String description, final Set<Classification> result) {
+    protected void addResultToRecord(final Record record, final String description, final Set<Classification> result) {
 
         for (Classification codeTriple : result) {
             record.addClassification(description, codeTriple);

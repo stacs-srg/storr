@@ -10,12 +10,11 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeIndexer;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.vectors.VectorFactory;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.BucketGenerator;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.ClassificationHolder;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.ClassifierPipeline;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.ClassifierTrainer;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.GoldStandardBucketGenerator;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.PipelineUtils;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.PredictionBucketGenerator;
 import uk.ac.standrews.cs.digitising_scotland.tools.Timer;
 import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearningConfiguration;
 
@@ -84,13 +83,12 @@ public final class PIlot {
         File codeDictionaryFile = new File(MachineLearningConfiguration.getDefaultProperties().getProperty("codeDictionaryFile"));
         CodeDictionary codeDictionary = new CodeDictionary(codeDictionaryFile);
 
-        GoldStandardBucketGenerator trainingGenerator = new GoldStandardBucketGenerator(codeDictionary);
-        Bucket trainingBucket = trainingGenerator.generate(training);
+        BucketGenerator generator = new BucketGenerator(codeDictionary);
+        Bucket trainingBucket = generator.generateTrainingBucket(training);
 
         CodeIndexer codeIndex = new CodeIndexer(trainingBucket);
 
-        PredictionBucketGenerator predictionBucketGenerator = new PredictionBucketGenerator(codeDictionary);
-        Bucket predictionBucket = predictionBucketGenerator.createPredictionBucket(prediction);
+        Bucket predictionBucket = generator.createPredictionBucket(prediction);
 
         LOGGER.info("Prediction bucket contains " + predictionBucket.size() + " records");
 
