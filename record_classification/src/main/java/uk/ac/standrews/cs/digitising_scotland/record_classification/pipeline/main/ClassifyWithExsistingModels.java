@@ -12,7 +12,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.ClassificationHolder;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.ClassifierPipeline;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.ClassifierTrainer;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.GoldStandardBucketGenerator;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.BucketGenerator;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.PipelineUtils;
 import uk.ac.standrews.cs.digitising_scotland.tools.Timer;
 import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearningConfiguration;
@@ -78,7 +78,7 @@ public final class ClassifyWithExsistingModels {
 
         File codeDictionaryFile = new File(MachineLearningConfiguration.getDefaultProperties().getProperty("codeDictionaryFile"));
         CodeDictionary codeDictionary = new CodeDictionary(codeDictionaryFile);
-        GoldStandardBucketGenerator generator = new GoldStandardBucketGenerator(codeDictionary);
+        BucketGenerator generator = new BucketGenerator(codeDictionary);
         Bucket allRecords = generator.generate(goldStandard);
 
         PipelineUtils.printStatusUpdate();
