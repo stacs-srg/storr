@@ -16,7 +16,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
  * The Class ExactMatchPipeline us a holder class for an {@link ExactMatchClassifier}.
  * Provides convenience methods for classifying records and buckets.
  */
-public class ExactMatchPipeline {
+public class ExactMatchPipeline implements IPipeline {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ExactMatchPipeline.class);
 
@@ -43,7 +43,7 @@ public class ExactMatchPipeline {
      * @return the bucket of exact matched records
      * @throws IOException Signals that an I/O exception has occurred.
      */
-    public Bucket classify(final Bucket bucket) throws IOException {
+    public Bucket classify(final Bucket bucket, final boolean multipleClassifications) throws IOException {
 
         Bucket classified = new Bucket();
         int count = 0;

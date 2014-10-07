@@ -20,10 +20,11 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenClassificationCache;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.*;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.ResolverPipelineTools;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.ResolverUtils;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.multivaluemap.MultiValueMap;
 
 import com.google.common.collect.Multiset;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.multivaluemap.MultiValueMap;
 
 /**
  * This class is produces a set of {@link Classification}s that represent the
@@ -32,7 +33,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.mul
  * @author jkc25, frjd2
  * 
  */
-public class ClassifierPipeline {
+public class ClassifierPipeline implements IPipeline {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ClassifierPipeline.class);
 
@@ -150,7 +151,7 @@ public class ClassifierPipeline {
      */
     private Set<Classification> classifyTokenSet(final TokenSet cleanedTokenSet, final boolean multipleClassifications) throws Exception {
 
-        MultiValueMap<Code,Classification> multiValueMap = new MultiValueMap<>(new HashMap<Code,List<Classification>>());
+        MultiValueMap<Code, Classification> multiValueMap = new MultiValueMap<>(new HashMap<Code, List<Classification>>());
 
         NGramSubstrings ngs = new NGramSubstrings(cleanedTokenSet);
         Multiset<TokenSet> ngramSet = ngs.getGramMultiset();
@@ -158,10 +159,11 @@ public class ClassifierPipeline {
 
         ResolverPipelineTools resolverPipelineTools = new ResolverPipelineTools();
 
-        multiValueMap = resolverPipelineTools.removeBelowThreshold(multiValueMap,CONFIDENCE_CHOP_LEVEL);
-        if(multipleClassifications) {
+        multiValueMap = resolverPipelineTools.removeBelowThreshold(multiValueMap, CONFIDENCE_CHOP_LEVEL);
+        if (multipleClassifications) {
             multiValueMap = resolverPipelineTools.moveAncestorsToDescendantKeys(multiValueMap);
-        } else {
+        }
+        else {
             multiValueMap = resolverPipelineTools.flattenForSingleClassifications(multiValueMap);
         }
         multiValueMap = resolverPipelineTools.pruneUntilComplexityWithinBound(multiValueMap);
@@ -186,11 +188,11 @@ public class ClassifierPipeline {
      * @param multiValueMap the resolver matrix
      * @throws IOException Signals that an I/O exception has occurred.
      */
-    private void populateMatrix(final Multiset<TokenSet> tokenSetSet, final MultiValueMap<Code,Classification> multiValueMap) throws IOException {
+    private void populateMatrix(final Multiset<TokenSet> tokenSetSet, final MultiValueMap<Code, Classification> multiValueMap) throws IOException {
 
         for (TokenSet tokenSet : tokenSetSet) {
             Pair<Code, Double> codeDoublePair = cache.getClassification(tokenSet);
-            multiValueMap.add(codeDoublePair.getLeft(), new Classification(codeDoublePair.getLeft(),tokenSet,codeDoublePair.getRight()));
+            multiValueMap.add(codeDoublePair.getLeft(), new Classification(codeDoublePair.getLeft(), tokenSet, codeDoublePair.getRight()));
         }
     }
 

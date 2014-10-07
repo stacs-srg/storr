@@ -131,8 +131,8 @@ public final class PipelineUtils {
 
     public static ClassificationHolder classify(final Bucket trainingBucket, final Bucket predictionBucket, final ClassifierTrainer trainer, final boolean multipleClassifications) throws Exception {
 
-        ExactMatchPipeline exactMatchPipeline = new ExactMatchPipeline(trainer.getExactMatchClassifier());
-        ClassifierPipeline machineLearningClassifier = new ClassifierPipeline(trainer.getOlrClassifier(), trainingBucket);
+        IPipeline exactMatchPipeline = new ExactMatchPipeline(trainer.getExactMatchClassifier());
+        IPipeline machineLearningClassifier = new ClassifierPipeline(trainer.getOlrClassifier(), trainingBucket);
 
         ClassificationHolder classifierML = new ClassificationHolder(exactMatchPipeline, machineLearningClassifier);
         classifierML.classify(predictionBucket, multipleClassifications);

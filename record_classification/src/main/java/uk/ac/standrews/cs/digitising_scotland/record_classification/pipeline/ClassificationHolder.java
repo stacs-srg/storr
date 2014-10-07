@@ -17,10 +17,10 @@ public class ClassificationHolder {
     private static final Logger LOGGER = LoggerFactory.getLogger(ClassificationHolder.class);
 
     /** The exact match pipeline. */
-    private ExactMatchPipeline exactMatchPipeline;
+    private IPipeline exactMatchPipeline;
 
     /** The machine learning classifier. */
-    private ClassifierPipeline machineLearningClassifier;
+    private IPipeline machineLearningClassifier;
 
     /** The exact matched. */
     private Bucket exactMatched;
@@ -41,7 +41,7 @@ public class ClassificationHolder {
      * @param exactMatchPipeline the ExactMatchPipeline used for exact matching records
      * @param machineLearningPipeline the MachineLearningClassificationPipeline used to produce multiply classified records
      */
-    public ClassificationHolder(final ExactMatchPipeline exactMatchPipeline, final ClassifierPipeline machineLearningPipeline) {
+    public ClassificationHolder(final IPipeline exactMatchPipeline, final IPipeline machineLearningPipeline) {
 
         this.exactMatchPipeline = exactMatchPipeline;
         this.machineLearningClassifier = machineLearningPipeline;
@@ -62,7 +62,7 @@ public class ClassificationHolder {
      */
     public Bucket classify(final Bucket predictionBucket, boolean multipleClassifications) throws Exception {
 
-        exactMatched = exactMatchPipeline.classify(predictionBucket);
+        exactMatched = exactMatchPipeline.classify(predictionBucket, true);
         notExactMatched = BucketUtils.getComplement(predictionBucket, exactMatched);
         machineLearned = machineLearningClassifier.classify(notExactMatched, multipleClassifications);
         allClassified = BucketUtils.getUnion(machineLearned, exactMatched);
