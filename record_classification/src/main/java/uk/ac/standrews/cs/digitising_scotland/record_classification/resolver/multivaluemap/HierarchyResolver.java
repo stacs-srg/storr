@@ -5,7 +5,7 @@ import java.util.*;
 
 /**
  * Resolves hierarchies in the keys of a MultiValueMap. Moves ancestor key contents
- * into decendent key lists.
+ * into decendent key lists. Keys must implement Ancestorable<K> interface.
  * Created by fraserdunlop on 06/10/2014 at 10:00.
  */
 public class HierarchyResolver<K extends AncestorAble<K>, V> {
