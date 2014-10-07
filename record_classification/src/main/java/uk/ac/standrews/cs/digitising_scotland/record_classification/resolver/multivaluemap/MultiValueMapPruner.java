@@ -13,8 +13,8 @@ import java.util.Comparator;
  */
 public class MultiValueMapPruner<K, V, C extends Comparator<V>> {
 
-    private static final int LOWER_BOUND = 1;
-    private static final int COMPLEXITY_UPPER_LIMIT = 2000;
+    private int LOWER_BOUND = 1;
+    private int COMPLEXITY_UPPER_LIMIT = 2000;
     private final C comparator;
 
     public MultiValueMapPruner(C comparator){
@@ -48,8 +48,16 @@ public class MultiValueMapPruner<K, V, C extends Comparator<V>> {
      * @return int length
      */
     private int estimateListLengthToCutTo(MultiValueMap<K, V> map) {
-        int maxLength = (int) Math.pow(COMPLEXITY_UPPER_LIMIT, 1.0 / (double) map.size());
+        int maxLength = (int) Math.floor(Math.pow(COMPLEXITY_UPPER_LIMIT, 1.0 / (double) map.size()));
         maxLength = Math.max(LOWER_BOUND, maxLength);
         return maxLength;
+    }
+
+    public void setComplexityUpperBound(final int i) {
+        COMPLEXITY_UPPER_LIMIT = i;
+    }
+
+    public void setListLengthLowerBound(final int i) {
+        LOWER_BOUND = i;
     }
 }

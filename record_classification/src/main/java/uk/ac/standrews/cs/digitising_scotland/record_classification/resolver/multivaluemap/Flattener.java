@@ -11,31 +11,18 @@ import java.io.IOException;
 public class Flattener<K, V> {
 
     /**
-     * Flattens a MultiValueMap. All of the values are migrated to the List associated
-     * with the key K which the iterator returns first. All other keys are removed from the
-     * map.
-     * @param map a MultiValueMap
-     * @return a new MultiValueMap with only one Key/Value Pair
-     * @throws IOException
-     * @throws ClassNotFoundException
-     */
-    public MultiValueMap<K, V> flatten(final MultiValueMap<K, V> map) throws IOException, ClassNotFoundException {
-        K key = map.iterator().next();
-        return moveAllIntoKey(map, key);
-    }
-
-    /**
      * Migrates all Values into key K. All other keys are removed from the map.
      * @param map MultiValueMap.
      * @param key Key to migrate values to.
      */
-    private  MultiValueMap<K, V> moveAllIntoKey(MultiValueMap<K,V> map, K key) throws IOException, ClassNotFoundException {
+    public   MultiValueMap<K, V> moveAllIntoKey(MultiValueMap<K,V> map, K key) throws IOException, ClassNotFoundException {
         MultiValueMap<K, V> clone = map.deepClone();
         for(K k : map){
             if(clone.containsKey(k)) {
-                clone.get(key).addAll(clone.get(k));
-                if (k != key)
+                if (k != key) {
+                    clone.get(key).addAll(clone.get(k));
                     clone.remove(k);
+                }
             }
         }
         return clone;

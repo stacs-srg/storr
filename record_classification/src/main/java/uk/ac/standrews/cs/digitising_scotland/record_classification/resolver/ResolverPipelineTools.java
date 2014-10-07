@@ -33,7 +33,7 @@ public class ResolverPipelineTools {
     }
 
     public MultiValueMap<Code, Classification> flattenForSingleClassifications(final MultiValueMap<Code, Classification> map) throws IOException, ClassNotFoundException {
-        return flattener.flatten(map);
+        return flattener.moveAllIntoKey(map,map.iterator().next());
     }
 
     public MultiValueMap<Code, Classification> pruneUntilComplexityWithinBound(final MultiValueMap<Code, Classification> map) throws IOException, ClassNotFoundException {
