@@ -15,6 +15,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.lookup.NGramSubstrings;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Pair;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.BucketUtils;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
@@ -46,6 +47,8 @@ public class ClassifierPipeline implements IPipeline {
     /** The record cache. */
     private Map<String, Set<Classification>> recordCache;
 
+    private Bucket classified;
+
     /**
      * Constructs a new {@link ClassifierPipeline} with the specified
      * {@link uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.IClassifier} used to perform the classification duties.
@@ -55,13 +58,15 @@ public class ClassifierPipeline implements IPipeline {
      */
     public ClassifierPipeline(final IClassifier classifier, final Bucket cachePopulationBucket) {
 
+        setClassified(new Bucket());
         this.cache = new TokenClassificationCache(classifier);
         recordCache = new HashMap<>();
         prePopulateCache(cachePopulationBucket);
     }
 
     /**
-     * Classify all records in a bucket.
+     * Classifies all records in a bucket. Any uncoded records are returned to the user. 
+     * Classified records are stored in the classified field.
      *
      * @param bucket the bucket to classifiy
      * @return bucket this is the bucket of classified records
@@ -77,7 +82,13 @@ public class ClassifierPipeline implements IPipeline {
             count++;
         }
 
-        return classified;
+        this.setClassified(classified);
+        return getUnClassified(classified, bucket);
+    }
+
+    private Bucket getUnClassified(final Bucket classified, final Bucket bucket) {
+
+        return BucketUtils.getComplement(bucket, classified);
     }
 
     private void classifyRecordAddToBucket(final Record record, final Bucket classified, final boolean multipleClassifications) throws Exception {
@@ -104,7 +115,7 @@ public class ClassifierPipeline implements IPipeline {
             addResultToRecord(record, description, result);
             classified.addRecordToBucket(record);
         }
-        recordCache.put(description, record.getClassifications());
+        recordCache.put(description, record.getListOfClassifications().get(description));
     }
 
     private void addResultToRecord(final Record record, final String description, final Set<Classification> result) {
@@ -234,6 +245,16 @@ public class ClassifierPipeline implements IPipeline {
         }
 
         return singles;
+    }
+
+    public Bucket getClassified() {
+
+        return classified;
+    }
+
+    private void setClassified(final Bucket classified) {
+
+        this.classified = classified;
     }
 
 }
