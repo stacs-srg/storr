@@ -6,18 +6,18 @@ import org.junit.Test;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeNotValidException;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.generic.BelowThresholdRemover;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.generic.HierarchyResolver;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.generic.MultiValueMap;
 
 import java.io.IOException;
 
 /**
- * Testing BelowThresholdRemover with Codes and Classifications.
- * Created by fraserdunlop on 07/10/2014 at 11:53.
+ *
+ * Created by fraserdunlop on 07/10/2014 at 12:33.
  */
-public class BelowThresholdRemoverTest {
+public class HierarchyResolverTest {
 
-    private BelowThresholdRemover<Code,Classification,Double> belowThresholdRemover = new BelowThresholdRemover<>();
+    private HierarchyResolver<Code, Classification> resolver = new HierarchyResolver<>();
     private MultiValueMapTestHelper mvmHelper;
 
     @Before
@@ -27,16 +27,22 @@ public class BelowThresholdRemoverTest {
         mvmHelper.addMockEntryToMatrix("white dog", "2100", 0.85);
         mvmHelper.addMockEntryToMatrix("brown dog", "2200", 0.81);
         mvmHelper.addMockEntryToMatrix("white dog", "2200", 0.87);
+        mvmHelper.addMockEntryToMatrix("brown dog", "952", 0.87);
+        mvmHelper.addMockEntryToMatrix("white dog", "952", 0.8);
+        mvmHelper.addMockEntryToMatrix("brown dog", "95240", 0.85);
+        mvmHelper.addMockEntryToMatrix("white dog", "95240", 0.83);
     }
 
     /**
-     * Chop below confidence test.
+     * Resolve hierarchies test.
      */
     @Test
-    public void removeBelowThresholdTest() throws IOException, ClassNotFoundException {
-        MultiValueMap<Code,Classification> map = mvmHelper.getMap();
-        Assert.assertEquals(4, map.complexity());
-        MultiValueMap<Code,Classification> matrix2 = belowThresholdRemover.removeBelowThreshold(map,0.7);
-        Assert.assertEquals(2, matrix2.complexity());
+    public void resolveHierarchiesTest() throws IOException, ClassNotFoundException {
+        MultiValueMap<Code, Classification> map = mvmHelper.getMap();
+        Assert.assertEquals(16, map.complexity());
+        Assert.assertEquals(4, map.size());
+        MultiValueMap<Code, Classification> map2 = resolver.moveAncestorsToDescendantKeys(map);
+        Assert.assertEquals(16, map2.complexity());
+        Assert.assertEquals(3, map2.size());
     }
 }

@@ -1,8 +1,9 @@
-package uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.loss_functions;
+package uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.project_specific;
 
 import java.util.Set;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.generic.AbstractLossFunction;
 
 /**
  * Calculates the loss for a set of CodeTriples.
@@ -10,10 +11,10 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
  * @author jkc25
  *
  */
-public class SumLossFunction extends AbstractLossFunction {
+public class SumLossFunction extends AbstractLossFunction<Set<Classification>,Double> {
 
     @Override
-    public double calculate(final Set<Classification> set) {
+    public Double calculate(final Set<Classification> set) {
 
         double confidenceSum = 0;
 

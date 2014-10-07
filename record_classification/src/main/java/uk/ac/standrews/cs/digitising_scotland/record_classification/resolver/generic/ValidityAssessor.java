@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.multivaluemap;
+package uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.generic;
 
 /**
  * Assesses the validity of c given criterion t.

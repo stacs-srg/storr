@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.multivaluemap;
+package uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.generic;
 
 import java.util.*;
 
@@ -10,7 +10,6 @@ import java.util.*;
  */
 public class ValidCombinationGetter<K, V, ValidityCriterion, P_ValidityAssessor extends ValidityAssessor<Set<V>, ValidityCriterion>> {
 
-    private static final int KEYSET_SIZE_LIMIT = 30;
     private final P_ValidityAssessor validityAssessor;
 
     public ValidCombinationGetter(P_ValidityAssessor validityAssessor){
@@ -27,9 +26,6 @@ public class ValidCombinationGetter<K, V, ValidityCriterion, P_ValidityAssessor 
      */
     public List<Set<V>> getValidSets(final MultiValueMap<K, V> map, final ValidityCriterion validityCriterion) throws Exception {
         List<Set<V>> validSets;
-        if (map.size() > KEYSET_SIZE_LIMIT) {
-            throw new Exception("ValidCombinationGetter KEYSET_SIZE_LIMIT exceeded. KEYSET_SIZE_LIMIT set to: " + KEYSET_SIZE_LIMIT);
-        }
         validSets = calculateValidSets(map, validityCriterion);
         return validSets;
     }

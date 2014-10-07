@@ -6,18 +6,18 @@ import org.junit.Test;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeNotValidException;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.generic.BelowThresholdRemover;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.generic.Flattener;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.generic.MultiValueMap;
 
 import java.io.IOException;
 
 /**
- * Testing BelowThresholdRemover with Codes and Classifications.
- * Created by fraserdunlop on 07/10/2014 at 11:53.
+ *
+ * Created by fraserdunlop on 07/10/2014 at 12:22.
  */
-public class BelowThresholdRemoverTest {
+public class FlattenerTest {
 
-    private BelowThresholdRemover<Code,Classification,Double> belowThresholdRemover = new BelowThresholdRemover<>();
+    Flattener<Code,Classification> flattener = new Flattener<>();
     private MultiValueMapTestHelper mvmHelper;
 
     @Before
@@ -29,14 +29,13 @@ public class BelowThresholdRemoverTest {
         mvmHelper.addMockEntryToMatrix("white dog", "2200", 0.87);
     }
 
-    /**
-     * Chop below confidence test.
-     */
     @Test
-    public void removeBelowThresholdTest() throws IOException, ClassNotFoundException {
+    public void testFlattener() throws IOException, ClassNotFoundException {
         MultiValueMap<Code,Classification> map = mvmHelper.getMap();
         Assert.assertEquals(4, map.complexity());
-        MultiValueMap<Code,Classification> matrix2 = belowThresholdRemover.removeBelowThreshold(map,0.7);
-        Assert.assertEquals(2, matrix2.complexity());
+        Assert.assertEquals(2, map.size());
+        MultiValueMap<Code,Classification> map2 = flattener.moveAllIntoKey(map,map.iterator().next());
+        Assert.assertEquals(4, map2.complexity());
+        Assert.assertEquals(1, map2.size());
     }
 }

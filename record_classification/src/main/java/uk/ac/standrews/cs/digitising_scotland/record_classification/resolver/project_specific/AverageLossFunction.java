@@ -1,10 +1,11 @@
-package uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.loss_functions;
+package uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.project_specific;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.generic.AbstractLossFunction;
 
 /**
  * Calculates the loss for a set of CodeTriples.
@@ -12,10 +13,10 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
  * @author jkc25
  *
  */
-public class AverageLossFunction extends AbstractLossFunction {
+public class AverageLossFunction extends AbstractLossFunction<Set<Classification>,Double> {
 
     @Override
-    public double calculate(final Set<Classification> set) {
+    public Double calculate(final Set<Classification> set) {
 
         List<Double> confidences = new ArrayList<>();
         for (Classification triple : set) {
@@ -26,9 +27,7 @@ public class AverageLossFunction extends AbstractLossFunction {
             confidenceSum += conf;
         }
 
-        double average = confidenceSum / (double) confidences.size();
-
-        return average;
+        return confidenceSum / (double) confidences.size();
     }
 
 }

@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.multivaluemap;
+package uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.generic;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -12,7 +12,7 @@ import uk.ac.standrews.cs.digitising_scotland.tools.DeepCloner;
  *         Created by fraserdunlop on 10/06/2014 at 14:57.
  */
 public class MultiValueMap<K, V> implements Iterable<K>, Serializable, Map<K,List<V>>{
-
+    //TODO test directly!
     DeepCloner deepCloner = new DeepCloner();
     private final Map<K, List<V>> map;
 
@@ -38,7 +38,7 @@ public class MultiValueMap<K, V> implements Iterable<K>, Serializable, Map<K,Lis
             if (!map.get(k).isEmpty())
                 overFlowCheck = complexity * map.get(k).size();
             if(overFlowCheck<complexity)
-                return Long.MAX_VALUE;
+                return Long.MAX_VALUE; //TODO check that this happens, not tested yet!
             complexity = overFlowCheck;
         }
         return complexity;

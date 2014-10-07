@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.resolverpipelinetools;
+package uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.project_specific;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
 import java.io.Serializable;

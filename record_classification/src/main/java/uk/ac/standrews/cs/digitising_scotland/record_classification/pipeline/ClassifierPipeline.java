@@ -27,6 +27,9 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.mul
 
 import com.google.common.collect.Multiset;
 
+import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.generic.MultiValueMap;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.project_specific.ResolverPipelineTools;
+
 /**
  * This class is produces a set of {@link Classification}s that represent the
  * classification for a {@link Record}.
