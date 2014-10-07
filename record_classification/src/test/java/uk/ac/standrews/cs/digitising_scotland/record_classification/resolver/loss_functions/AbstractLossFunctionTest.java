@@ -9,6 +9,10 @@ import org.junit.Test;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.generic.AbstractLossFunction;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.project_specific.AverageLossFunction;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.project_specific.LengthWeightedLossFunction;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.project_specific.SumLossFunction;
 
 /**
  * Tests that the calculate methods for each class that extends AbstractLossFunction works as expected.

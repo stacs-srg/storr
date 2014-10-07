@@ -6,7 +6,9 @@ import org.junit.Test;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeNotValidException;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.resolverpipelinetools.ClassificationComparator;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.generic.MultiValueMap;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.generic.MultiValueMapPruner;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.project_specific.ClassificationComparator;
 
 import java.io.IOException;
 

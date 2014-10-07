@@ -1,10 +1,9 @@
-package uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.loss_functions;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.loss_functions.AbstractLossFunction;
+package uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.project_specific;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.generic.AbstractLossFunction;
 import uk.ac.standrews.cs.digitising_scotland.tools.MapSorter;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 

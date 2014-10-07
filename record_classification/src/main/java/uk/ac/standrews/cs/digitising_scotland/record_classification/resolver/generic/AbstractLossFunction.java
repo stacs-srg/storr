@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.loss_functions;
+package uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.generic;
 
 /**
  * Abstract loss function class. Allows swap-able loss functions.

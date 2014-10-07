@@ -1,13 +1,10 @@
-package uk.ac.standrews.cs.digitising_scotland.record_classification.resolver;
+package uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.project_specific;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.loss_functions.LengthWeightedLossFunction;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.loss_functions.LossFunctionHolder;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.multivaluemap.*;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.resolverpipelinetools.*;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.validcombinations.ValidCombinationGetter;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.generic.*;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.generic.ValidCombinationGetter;
 
 import java.io.IOException;
 import java.util.Collection;

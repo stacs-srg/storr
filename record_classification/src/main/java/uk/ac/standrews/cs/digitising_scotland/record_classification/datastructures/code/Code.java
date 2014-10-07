@@ -1,6 +1,6 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code;
 
-import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.multivaluemap.AncestorAble;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.generic.AncestorAble;
 
 /**
  * Represents either a HICOD or HISCO code.
