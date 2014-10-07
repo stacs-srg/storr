@@ -1,5 +1,7 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.analysis_metrics;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -11,6 +13,8 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
+
+import com.google.common.io.Files;
 
 /**
  * Class representing the statistics about a bucket of Records.
@@ -55,12 +59,12 @@ public class ListAccuracyMetrics {
     /**
      * The micro recall.
      */
-    private double microRecall;
+    private double microRecall = -1;
 
     /**
      * The macro precision.
      */
-    private double macroPrecision;
+    private double macroPrecision = -1;
 
     /**
      * The macro recall.
@@ -88,15 +92,17 @@ public class ListAccuracyMetrics {
     /** The over under predicion matrix. */
     private int[][] overUnderPredictionMatrix;
 
+    private CodeMetrics metrics;
+
     /**
      * Instantiates a new list accuracy metrics.
      * 
      * @param listOfRecrods
      *            the list of recrods
      */
-    public ListAccuracyMetrics(final List<Record> listOfRecrods) {
+    public ListAccuracyMetrics(final List<Record> listOfRecrods, CodeMetrics metrics) {
 
-        this(new Bucket(listOfRecrods));
+        this(new Bucket(listOfRecrods), metrics);
     }
 
     /**
@@ -105,7 +111,7 @@ public class ListAccuracyMetrics {
      * @param bucket
      *            the bucket of records
      */
-    public ListAccuracyMetrics(final Bucket bucket) {
+    public ListAccuracyMetrics(final Bucket bucket, CodeMetrics metrics) {
 
         recordsInBucket = bucket.size();
         averageConfidence = calculateAverageConfidence(bucket);
@@ -116,6 +122,17 @@ public class ListAccuracyMetrics {
         countNumClassifications(bucket);
         int maxCodes = calculateMaxCodes(bucket);
         overUnderPredictionMatrix = calculateOverPredictionMatrix(bucket, maxCodes);
+        if (metrics != null) {
+            this.metrics = metrics;
+            microPrecision = metrics.getMicroPrecision();
+            microRecall = metrics.getMicroRecall();
+        }
+
+    }
+
+    public ListAccuracyMetrics(final Bucket bucket) {
+
+        this(bucket, null);
     }
 
     /**
@@ -280,10 +297,12 @@ public class ListAccuracyMetrics {
      * @param pathToGraph
      *            the path to graph
      */
-    public void generateMarkDownSummary(final String pathToExperiemntFolder, final String pathToGraph) {
+    public void generateMarkDownSummary(final String pathToExperiemntFolder, final String pathToGraph, final String identifier) {
 
         StringBuilder sb = new StringBuilder();
         sb.append("#Classification Report    \n" + "##Summary    \n");
+        sb.append("Micro Precision: ").append(getMicroPrecision()).append("   \n");
+        sb.append("Micro Recall: ").append(getMicroRecall()).append("   \n");
         sb.append("Total records in bucket: ").append(recordsInBucket).append("   \n");
         sb.append("Average confidence: ").append(averageConfidence).append("    \n");
         sb.append("Total number of classifications: ").append(numConfidenceNotOne + numConfidenceOfOne).append("   \n");
@@ -304,9 +323,22 @@ public class ListAccuracyMetrics {
         sb.append("   \n\n");
         sb.append("[").append(pathToGraph).append("]: ").append(pathToGraph).append(".png \"Graph Matrix\"    \n");
         // sb.append("![Graph](graph.png)");
-        Utils.writeToFile(sb.toString(), pathToExperiemntFolder + "/Reports/summary.md", true);
-        Utils.writeToFile(getMatrixAsString(overUnderPredictionMatrix, ",", false), pathToExperiemntFolder + "/Data/classificationCountMatrix.csv");
 
+        final String fileName = pathToExperiemntFolder + "/Reports/" + identifier + "/summary.md";
+        createFolder(fileName);
+        Utils.writeToFile(sb.toString(), fileName, true);
+        Utils.writeToFile(getMatrixAsString(overUnderPredictionMatrix, ",", false), pathToExperiemntFolder + "/Data/" + identifier + "/classificationCountMatrix.csv");
+
+    }
+
+    private void createFolder(final String fileName) {
+
+        try {
+            Files.createParentDirs(new File(fileName));
+        }
+        catch (IOException e) {
+            LOGGER.error(e.getMessage(), e);
+        }
     }
 
     /**

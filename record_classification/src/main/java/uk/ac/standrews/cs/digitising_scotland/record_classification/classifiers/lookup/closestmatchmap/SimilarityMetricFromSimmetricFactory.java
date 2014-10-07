@@ -9,24 +9,26 @@ import uk.ac.shef.wit.simmetrics.similaritymetrics.AbstractStringMetric;
  */
 public class SimilarityMetricFromSimmetricFactory {
 
-    public SimilarityMetric<String> create(AbstractStringMetric stringMetric){
+    public SimilarityMetric<String> create(AbstractStringMetric stringMetric) {
+
         return new StringMetric(stringMetric);
     }
 
-    private class StringMetric implements SimilarityMetric<String>{
+    private class StringMetric implements SimilarityMetric<String> {
 
         private final AbstractStringMetric stringMetric;
 
         @Override
         public double getSimilarity(String o1, String o2) {
-            return stringMetric.getSimilarity(o1,o1);
+
+            return stringMetric.getSimilarity(o1, o2);
         }
 
-        public StringMetric(AbstractStringMetric stringMetric){
+        public StringMetric(AbstractStringMetric stringMetric) {
+
             this.stringMetric = stringMetric;
         }
 
     }
-
 
 }

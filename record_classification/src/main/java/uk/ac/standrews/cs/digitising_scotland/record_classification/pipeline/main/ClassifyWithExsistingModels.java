@@ -10,9 +10,9 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.vectors.VectorFactory;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.ClassificationHolder;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.ClassifierPipeline;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.ClassifierTrainer;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.GoldStandardBucketGenerator;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.ClassifierPipeline;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.PipelineUtils;
 import uk.ac.standrews.cs.digitising_scotland.tools.Timer;
 import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearningConfiguration;
@@ -90,9 +90,10 @@ public final class ClassifyWithExsistingModels {
         LOGGER.info("Exact Matched Bucket Size: " + classifier.getExactMatched().size());
         LOGGER.info("Machine Learned Bucket Size: " + classifier.getMachineLearned().size());
 
-        PipelineUtils.writeRecords(classifier.getAllClassified(), experimentalFolderName);
+        String identifier = "MachineLearing";
+        PipelineUtils.writeRecords(classifier.getAllClassified(), experimentalFolderName, identifier);
 
-        PipelineUtils.generateAndPrintStatistics(classifier, trainer.getVectorFactory().getCodeIndexer(), experimentalFolderName);
+        PipelineUtils.generateAndPrintStatistics(classifier, trainer.getVectorFactory().getCodeIndexer(), experimentalFolderName, identifier);
 
         timer.stop();
     }
