@@ -7,6 +7,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.los
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.loss_functions.LossFunctionHolder;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.multivaluemap.*;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.resolverpipelinetools.*;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.validcombinations.ValidCombinationGetter;
 
 import java.io.IOException;
 import java.util.Collection;

@@ -7,11 +7,12 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeNotValidException;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.ResolverUtils;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.loss_functions.AbstractLossFunction;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.loss_functions.LengthWeightedLossFunction;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.loss_functions.LossFunctionHolder;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.resolverpipelinetools.ClassificationSetValidityAssessor;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.validcombinations.ValidCombinationGetter;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.Set;

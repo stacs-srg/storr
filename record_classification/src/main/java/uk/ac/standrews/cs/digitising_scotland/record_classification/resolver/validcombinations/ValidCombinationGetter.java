@@ -1,4 +1,6 @@
-package uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.multivaluemap;
+package uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.validcombinations;
+
+import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.multivaluemap.MultiValueMap;
 
 import java.util.*;
 

@@ -4,7 +4,7 @@ import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multiset;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.multivaluemap.ValidityAssessor;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.validcombinations.ValidityAssessor;
 
 import java.util.Set;
 
