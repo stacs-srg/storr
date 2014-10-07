@@ -29,7 +29,6 @@ public class MultiValueMapPrunerTest {
         mvmHelper.addMockEntryToMatrix("white dog", "952", 0.4);
         mvmHelper.addMockEntryToMatrix("brown dog", "95240", 0.85);
         mvmHelper.addMockEntryToMatrix("white dog", "95240", 0.83);
-
         mvmHelper.addMockEntryToMatrix("red dog", "2100", 0.5);
         mvmHelper.addMockEntryToMatrix("blue dog", "2100", 0.75);
         mvmHelper.addMockEntryToMatrix("red dog", "2200", 0.81);
@@ -46,29 +45,34 @@ public class MultiValueMapPrunerTest {
     @Test
     public void prunerTest() throws IOException, ClassNotFoundException {
         MultiValueMap<Code, Classification> map = mvmHelper.getMap();
-        testPruner(map,1000,1,256,4);
-        testPruner(map,256,1,256,4);
-        testPruner(map,255,1,81,4);
-        testPruner(map,16,1,16,4);
-        testPruner(map, 1, 2, 16, 4);
-        testPruner(map,1,4,256,4);
-        testPruner(map,1,10,256,4);
-        testPruner(map,1,3,81,4);
-        testPruner(map,81,1,81,4);
-        testPruner(map,70,1,16,4);
-        testPruner(map,17,1,16,4);
-        //TODO document weird behaviour! must be aware of powers of keysets when specifying complexity upper bound!
+        //params :-           map, complexityUpperBound,listLengthLowerBound,expectedComplexity,expectedKeySetSize
+        assertPrunedCorrectly(map,                 1000,                   1,               256,                4);
+        assertPrunedCorrectly(map,                  256,                   1,               256,                4);
+        assertPrunedCorrectly(map,                  255,                   1,               192,                4);
+        assertPrunedCorrectly(map,                   16,                   1,                16,                4);
+        assertPrunedCorrectly(map,                    1,                   2,                16,                4);
+        assertPrunedCorrectly(map,                    1,                   4,               256,                4);
+        assertPrunedCorrectly(map,                    1,                  10,               256,                4);
+        assertPrunedCorrectly(map,                    1,                   3,                81,                4);
+        assertPrunedCorrectly(map,                   81,                   1,                81,                4);
+        assertPrunedCorrectly(map,                   70,                   1,                54,                4);
+        assertPrunedCorrectly(map,                   17,                   1,                16,                4);
     }
 
-    private void testPruner(MultiValueMap<Code, Classification> map,
-                            int complexityUpperBound,
-                            int listLengthLowerBound,
-                            int expectedComplexity,
-                            int expectedKeySetSize) throws IOException, ClassNotFoundException {
+    private void assertPrunedCorrectly(MultiValueMap<Code, Classification> map,
+                                       int complexityUpperBound,
+                                       int listLengthLowerBound,
+                                       int expectedComplexity,
+                                       int expectedKeySetSize) throws IOException, ClassNotFoundException {
         pruner.setComplexityUpperBound(complexityUpperBound);
         pruner.setListLengthLowerBound(listLengthLowerBound);
         MultiValueMap<Code, Classification> map4 = pruner.pruneUntilComplexityWithinBound(map);
         Assert.assertEquals(expectedComplexity, map4.complexity());
         Assert.assertEquals(expectedKeySetSize, map4.size());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testSetListLengthLowerBoundIncorrectly(){
+        pruner.setListLengthLowerBound(-1);
     }
 }

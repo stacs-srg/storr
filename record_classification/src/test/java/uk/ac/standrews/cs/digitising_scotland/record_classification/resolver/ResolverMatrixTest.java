@@ -60,7 +60,7 @@ public class ResolverMatrixTest {
     /**
      * Tests that s {@link Classification} is a valid subset of another set using ResolverUtils.tripleSetIsValid().
      * Should pass with ResolverUtils.tripleSetIsValid returning true.
-     * @throws CodeNotValidException 
+     * @throws CodeNotValidException
      */
     @Test
     public void tripleSetIsValidTest() throws CodeNotValidException {
@@ -76,7 +76,7 @@ public class ResolverMatrixTest {
     /**
      * Tests that s {@link Classification} is a valid subset of another set using ResolverUtils.tripleSetIsValid().
      * Should pass with ResolverUtils.tripleSetIsValid returning false.
-     * @throws CodeNotValidException 
+     * @throws CodeNotValidException
      */
     @Test
     public void tripleSetIsValidTest2() throws CodeNotValidException {
@@ -92,7 +92,7 @@ public class ResolverMatrixTest {
     /**
      * Tests that s {@link Classification} is a valid subset of another set using ResolverUtils.tripleSetIsValid().
      * Should pass with ResolverUtils.tripleSetIsValid returning true.
-     * @throws CodeNotValidException 
+     * @throws CodeNotValidException
      */
     @Test
     public void tripleSetIsValidTest3() throws CodeNotValidException {
@@ -108,7 +108,7 @@ public class ResolverMatrixTest {
     /**
      * Tests that s {@link Classification} is a valid subset of another set using ResolverUtils.tripleSetIsValid().
      * Should pass with ResolverUtils.tripleSetIsValid returning false.
-     * @throws CodeNotValidException 
+     * @throws CodeNotValidException
      */
     @Test
     public void tripleSetIsValidTest4() throws CodeNotValidException {
