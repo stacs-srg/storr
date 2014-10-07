@@ -4,8 +4,7 @@ import java.util.*;
 
 /**
  * Utility class for function which gets a List of all valid Sets of values from a MultiValueMap
- * given a ValidityCriterion and the assumption that values associated with the same key will not
- * be a valid combination. Values from the same key are not considered as combinations.
+ * given a ValidityCriterion. Values associated with the same key are not considered allowable combinations.
  * Created by fraserdunlop on 06/10/2014 at 09:45.
  */
 public class ValidCombinationGetter<K, V, ValidityCriterion, P_ValidityAssessor extends ValidityAssessor<Set<V>, ValidityCriterion>> {

@@ -5,10 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * For MultiValueMaps where the values extend comparable so that
- * they are comparable with a third parameter Q we may use this tool.
- * The compareTo method is used for comparing values V with a threshold Q,
- * values V which fall below this threshold are removed from the MultiValueMap.
+ * The V.compareTo(Q) method implemented by V is used for comparing values V with a threshold Q.
+ * Values which fall below this threshold are removed from the MultiValueMap.
  * Created by fraserdunlop on 06/10/2014 at 14:21.
  */
 public class BelowThresholdRemover<K, V extends Comparable<Q>,Q> {

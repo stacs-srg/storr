@@ -6,4 +6,4 @@
  */
 package uk.ac.standrews.cs.digitising_scotland.record_classification.resolver;
 
-//TODO
+//TODO move ClassifierPipeline.classifyTokenSet into package?
