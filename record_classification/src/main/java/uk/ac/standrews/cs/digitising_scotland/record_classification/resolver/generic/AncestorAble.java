@@ -1,7 +1,7 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.generic;
 
 /**
- * Implementing class should have a well ancestral hierarchy
+ * Implementing class should have a well defined ancestral hierarchy
  * over its instances. T should be set to the implementing class
  * by the implementing class. isAncestor may then be implemented
  * such that it forms a boolean operator between two T objects.

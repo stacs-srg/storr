@@ -7,7 +7,9 @@ import java.util.*;
  * Allows pruning of MultiValueMap values using a Comparator.
  * The Comparator is used to sort the lists of values. The values
  * at the heads of the lists are kept and those at the tails discarded.
- * The lists are cut down to a length calculated
+ * The lists are cut down to a length calculated to reduce the complexity
+ * to below the Complexity_Upper_Limit. The list length Lower_Bound can be set
+ * which overrides the list length calculated from the Complexity_Upper_Limit.
  * Created by fraserdunlop on 06/10/2014 at 10:38.
  */
 public class MultiValueMapPruner<K, V, C extends Comparator<V>> {
@@ -46,6 +48,16 @@ public class MultiValueMapPruner<K, V, C extends Comparator<V>> {
 
     }
 
+    public void setComplexityUpperBound(final int i) {
+        COMPLEXITY_UPPER_LIMIT = i;
+    }
+
+    public void setListLengthLowerBound(final int i) {
+        if(i<1)
+            throw new IllegalArgumentException("List length lower bound must be a positive integer.");
+        LOWER_BOUND = i;
+    }
+
     private int[] calculatePrunedListSizes(int[] listSizes) {
         int[] pruned = listSizes.clone();
         while (complexity(pruned) > COMPLEXITY_UPPER_LIMIT)
@@ -70,15 +82,5 @@ public class MultiValueMapPruner<K, V, C extends Comparator<V>> {
         for(int i : listSizes)
             complexity *= i;
         return complexity;
-    }
-
-    public void setComplexityUpperBound(final int i) {
-        COMPLEXITY_UPPER_LIMIT = i;
-    }
-
-    public void setListLengthLowerBound(final int i) {
-        if(i<1)
-            throw new IllegalArgumentException("List length lower bound must be a positive integer.");
-        LOWER_BOUND = i;
     }
 }

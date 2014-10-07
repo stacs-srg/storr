@@ -9,10 +9,9 @@ public abstract class AbstractLossFunction<O, LossMetric extends Comparable<Loss
 
     /**
      * The loss function.
-     *
-     * @param set the set to evaluate
+     * @param o the object to evaluate
      * @return the double loss value
      */
-    public abstract LossMetric calculate(final O set);
+    public abstract LossMetric calculate(final O o);
 
 }
