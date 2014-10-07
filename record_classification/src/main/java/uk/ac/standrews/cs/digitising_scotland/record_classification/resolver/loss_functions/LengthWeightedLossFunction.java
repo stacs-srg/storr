@@ -10,10 +10,10 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
  * @author jkc25
  *
  */
-public class LengthWeightedLossFunction extends AbstractLossFunction {
+public class LengthWeightedLossFunction extends AbstractLossFunction<Set<Classification>,Double> {
 
     @Override
-    public double calculate(final Set<Classification> set) {
+    public Double calculate(final Set<Classification> set) {
 
         double confidenceSum = 0;
 

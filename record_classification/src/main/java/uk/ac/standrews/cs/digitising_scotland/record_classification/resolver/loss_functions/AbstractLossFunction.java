@@ -1,23 +1,18 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.loss_functions;
 
-import java.util.Set;
-
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
-
 /**
  * Abstract loss function class. Allows swap-able loss functions.
  * @author jkc25
  *
  */
-public abstract class AbstractLossFunction {
+public abstract class AbstractLossFunction<O, LossMetric extends Comparable<LossMetric>> {
 
     /**
-     * The loss function. This should be implemented by extending classes.
-     * 
+     * The loss function.
      *
      * @param set the set to evaluate
      * @return the double loss value
      */
-    public abstract double calculate(final Set<Classification> set);
+    public abstract LossMetric calculate(final O set);
 
 }

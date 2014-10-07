@@ -3,10 +3,13 @@ package uk.ac.standrews.cs.digitising_scotland.record_classification.resolver;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.loss_functions.LengthWeightedLossFunction;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.loss_functions.LossFunctionHolder;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.multivaluemap.*;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.resolverpipelinetools.*;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -23,6 +26,8 @@ public class ResolverPipelineTools {
     private ValidCombinationGetter<Code,Classification,TokenSet,ClassificationSetValidityAssessor> vCG =
             new ValidCombinationGetter<>(new ClassificationSetValidityAssessor());
     private Flattener<Code,Classification> flattener = new Flattener<>();
+    private LossFunctionHolder<Set<Classification>,Double,LengthWeightedLossFunction> lFH =
+            new LossFunctionHolder<>(new LengthWeightedLossFunction());
 
     public MultiValueMap<Code, Classification> removeBelowThreshold(MultiValueMap<Code, Classification> map, Double threshold) throws IOException, ClassNotFoundException {
         return bTR.removeBelowThreshold(map, threshold);
@@ -33,7 +38,7 @@ public class ResolverPipelineTools {
     }
 
     public MultiValueMap<Code, Classification> flattenForSingleClassifications(final MultiValueMap<Code, Classification> map) throws IOException, ClassNotFoundException {
-        return flattener.moveAllIntoKey(map,map.iterator().next());
+        return flattener.moveAllIntoKey(map, map.iterator().next());
     }
 
     public MultiValueMap<Code, Classification> pruneUntilComplexityWithinBound(final MultiValueMap<Code, Classification> map) throws IOException, ClassNotFoundException {
@@ -42,5 +47,9 @@ public class ResolverPipelineTools {
 
     public List<Set<Classification>> getValidSets(MultiValueMap<Code, Classification> map, TokenSet tokenSet) throws Exception {
         return vCG.getValidSets(map,tokenSet);
+    }
+
+    public Set<Classification> getBestSetAccordingToLossFunction(Collection<Set<Classification>> classifications){
+        return lFH.getBest(classifications);
     }
 }

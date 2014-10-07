@@ -8,6 +8,9 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeNotValidException;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.ResolverUtils;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.loss_functions.AbstractLossFunction;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.loss_functions.LengthWeightedLossFunction;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.loss_functions.LossFunctionHolder;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.resolverpipelinetools.ClassificationSetValidityAssessor;
 import java.io.IOException;
 import java.util.List;
@@ -22,6 +25,10 @@ public class ValidCombinationGetterTest {
     private ValidCombinationGetter<Code,Classification,TokenSet,ClassificationSetValidityAssessor> vCG =
             new ValidCombinationGetter<>(new ClassificationSetValidityAssessor());
     private MultiValueMapTestHelper mvmHelper;
+    private AbstractLossFunction<Set<Classification>,Double> lengthWeighted = new LengthWeightedLossFunction();
+    private LossFunctionHolder<Set<Classification>,Double,LengthWeightedLossFunction> lossFunctionHolder =
+            new LossFunctionHolder<>(new LengthWeightedLossFunction());
+
 
     @Before
     public void setup() throws IOException, CodeNotValidException {
@@ -49,9 +56,9 @@ public class ValidCombinationGetterTest {
         validTriples = vCG.getValidSets(mvmHelper.getMap(), originalSet1);
         Assert.assertEquals(41, validTriples.size());
         for (Set<Classification> set : validTriples) {
-            Assert.assertEquals(1.5, ResolverUtils.lossFunction(set), 1.5);
+            Assert.assertEquals(1.5, lengthWeighted.calculate(set), 1.5);
         }
-        Set<Classification> best = ResolverUtils.getBest(validTriples);
+        Set<Classification> best = lossFunctionHolder.getBest(validTriples);
         Double averageConfidence = 0.;
         for (Classification triple : best) {
             averageConfidence += triple.getConfidence();

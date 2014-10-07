@@ -170,7 +170,7 @@ public class ClassifierPipeline {
         Set<Classification> best;
 
         if (!triples.isEmpty()) {
-            best = ResolverUtils.getBest(triples);
+            best = resolverPipelineTools.getBestSetAccordingToLossFunction(triples);
         }
         else {
             best = new HashSet<>();

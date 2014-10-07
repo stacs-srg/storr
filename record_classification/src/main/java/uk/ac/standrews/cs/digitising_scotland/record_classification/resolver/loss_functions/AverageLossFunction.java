@@ -12,10 +12,10 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
  * @author jkc25
  *
  */
-public class AverageLossFunction extends AbstractLossFunction {
+public class AverageLossFunction extends AbstractLossFunction<Set<Classification>,Double> {
 
     @Override
-    public double calculate(final Set<Classification> set) {
+    public Double calculate(final Set<Classification> set) {
 
         List<Double> confidences = new ArrayList<>();
         for (Classification triple : set) {
@@ -26,9 +26,7 @@ public class AverageLossFunction extends AbstractLossFunction {
             confidenceSum += conf;
         }
 
-        double average = confidenceSum / (double) confidences.size();
-
-        return average;
+        return confidenceSum / (double) confidences.size();
     }
 
 }

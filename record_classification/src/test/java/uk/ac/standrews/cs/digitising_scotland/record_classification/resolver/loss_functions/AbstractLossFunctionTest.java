@@ -17,9 +17,9 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
  */
 public class AbstractLossFunctionTest {
 
-    private AbstractLossFunction sumLoss;
-    private AbstractLossFunction averageLoss;
-    private AbstractLossFunction lengthWeighted;
+    private AbstractLossFunction<Set<Classification>,Double> sumLoss;
+    private AbstractLossFunction<Set<Classification>,Double> averageLoss;
+    private AbstractLossFunction<Set<Classification>,Double> lengthWeighted;
     private Set<Classification> classifications;
 
     @Before
