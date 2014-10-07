@@ -86,10 +86,7 @@ public class ExactMatchPipelineTest {
     @Test
     public void addResultToRecordTest() throws InputFormatException, IOException, CodeNotValidException {
 
-        List<String> descriptionList = new ArrayList<>();
-        descriptionList.add("decription");
-        OriginalData originalData = new OriginalData(descriptionList, 2014, 1, "filename");
-        Record record = new Record(0, originalData);
+        Record record = buildRecord(0, "description");
 
         String description = "new description";
         Set<Classification> result = pipeline.classify("old age");
@@ -103,10 +100,7 @@ public class ExactMatchPipelineTest {
     @Test
     public void addResultsToRecordTest() throws InputFormatException, IOException, CodeNotValidException {
 
-        List<String> descriptionList = new ArrayList<>();
-        descriptionList.add("decription");
-        OriginalData originalData = new OriginalData(descriptionList, 2014, 1, "filename");
-        Record record = new Record(0, originalData);
+        Record record = buildRecord(0, "decription");
 
         String description = "new description";
         Set<Classification> result1 = pipeline.classify("old age");
@@ -120,5 +114,30 @@ public class ExactMatchPipelineTest {
         Assert.assertTrue(iterator.next().getCode().equals(codeDictionary.getCode("R54")));
         Assert.assertTrue(iterator.next().getCode().equals(codeDictionary.getCode("I26")));
 
+    }
+
+    @Test
+    public void testClassifyBucket() throws InputFormatException, IOException, CodeNotValidException {
+
+        List<Record> list = new ArrayList<>();
+        list.add(buildRecord(0, "old age"));
+        list.add(buildRecord(1, "Massive Pulmonary Embolism"));
+        list.add(buildRecord(2, "foo"));
+        Bucket bucket = new Bucket(list);
+        Bucket classified = pipeline.classify(bucket);
+
+        Assert.assertEquals(codeDictionary.getCode("R54"), classified.getRecord(0).getListOfClassifications().get("old age").iterator().next().getCode());
+        Assert.assertEquals(codeDictionary.getCode("I26"), classified.getRecord(1).getListOfClassifications().get("Massive Pulmonary Embolism").iterator().next().getCode());
+        Assert.assertNull(classified.getRecord(2));
+
+    }
+
+    private Record buildRecord(int i, String description) throws InputFormatException {
+
+        List<String> descriptionList = new ArrayList<>();
+        descriptionList.add(description);
+        OriginalData originalData = new OriginalData(descriptionList, 2014, 1, "filename");
+        Record record = new Record(i, originalData);
+        return record;
     }
 }
