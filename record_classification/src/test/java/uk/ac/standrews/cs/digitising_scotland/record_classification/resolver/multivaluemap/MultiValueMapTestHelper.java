@@ -15,7 +15,7 @@ import java.util.List;
  * Holds a MultiValueMap and CodeDictionary. Allows mock entries to be added to map using CodeDictionary.
  * Created by fraserdunlop on 07/10/2014 at 12:03.
  */
-public class MVMTestHelper {
+public class MultiValueMapTestHelper {
 
     private final CodeDictionary codeDictionary;
     private final MultiValueMap<Code, Classification> map;
@@ -24,7 +24,7 @@ public class MVMTestHelper {
         return map;
     }
 
-    public MVMTestHelper() throws IOException {
+    public MultiValueMapTestHelper() throws IOException {
         File codeDictionaryFile = new File(getClass().getResource("/CodeFactoryTestFile.txt").getFile());
         codeDictionary = new CodeDictionary(codeDictionaryFile);
         map = new MultiValueMap<>(new HashMap<Code,List<Classification>>());

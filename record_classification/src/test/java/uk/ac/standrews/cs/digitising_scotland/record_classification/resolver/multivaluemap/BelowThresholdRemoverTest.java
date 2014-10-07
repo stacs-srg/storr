@@ -15,15 +15,15 @@ import java.io.IOException;
 public class BelowThresholdRemoverTest {
 
     private BelowThresholdRemover<Code,Classification,Double> belowThresholdRemover = new BelowThresholdRemover<>();
-    private MVMTestHelper mvmTestHelper;
+    private MultiValueMapTestHelper mvmHelper;
 
     @Before
     public void setup() throws IOException, CodeNotValidException {
-        mvmTestHelper = new MVMTestHelper();
-        mvmTestHelper.addMockEntryToMatrix("brown dog", "2100", 0.5);
-        mvmTestHelper.addMockEntryToMatrix("white dog", "2100", 0.85);
-        mvmTestHelper.addMockEntryToMatrix("brown dog", "2200", 0.81);
-        mvmTestHelper.addMockEntryToMatrix("white dog", "2200", 0.87);
+        mvmHelper = new MultiValueMapTestHelper();
+        mvmHelper.addMockEntryToMatrix("brown dog", "2100", 0.5);
+        mvmHelper.addMockEntryToMatrix("white dog", "2100", 0.85);
+        mvmHelper.addMockEntryToMatrix("brown dog", "2200", 0.81);
+        mvmHelper.addMockEntryToMatrix("white dog", "2200", 0.87);
     }
 
     /**
@@ -31,7 +31,7 @@ public class BelowThresholdRemoverTest {
      */
     @Test
     public void removeBelowThresholdTest() throws IOException, ClassNotFoundException {
-        MultiValueMap<Code,Classification> map = mvmTestHelper.getMap();
+        MultiValueMap<Code,Classification> map = mvmHelper.getMap();
         Assert.assertEquals(4, map.complexity());
         MultiValueMap<Code,Classification> matrix2 = belowThresholdRemover.removeBelowThreshold(map,0.7);
         Assert.assertEquals(2, matrix2.complexity());
