@@ -21,14 +21,10 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenClassificationCache;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.ResolverPipelineTools;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.ResolverUtils;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.multivaluemap.MultiValueMap;
-
-import com.google.common.collect.Multiset;
-
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.generic.MultiValueMap;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.project_specific.ResolverPipelineTools;
+
+import com.google.common.collect.Multiset;
 
 /**
  * This class is produces a set of {@link Classification}s that represent the
@@ -186,7 +182,7 @@ public class ClassifierPipeline implements IPipeline {
         Set<Classification> best;
 
         if (!triples.isEmpty()) {
-            best = ResolverUtils.getBest(triples);
+            best = resolverPipelineTools.getBestSetAccordingToLossFunction(triples);
         }
         else {
             best = new HashSet<>();
