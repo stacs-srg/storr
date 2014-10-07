@@ -15,11 +15,15 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeIndexer;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeNotValidException;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.multivaluemap.BelowThresholdRemover;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.multivaluemap.HierarchyResolver;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.multivaluemap.MultiValueMap;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.multivaluemap.MultiValueMapPruner;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.resolverpipelinetools.*;
 
 // TODO: Auto-generated Javadoc
 /**
- * Unit tests to test functionality of the {@link MultiValueMap} class.
+ * Unit tests to test functionality of the {@link uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.multivaluemap.MultiValueMap} class.
  * @author jkc25, frjd2
  * Created by fraserdunlop on 10/06/2014 at 15:14.
  */

@@ -1,18 +1,18 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.resolverpipelinetools;
 
-import java.util.Set;
-
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
-
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multiset;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.multivaluemap.ValidityAssessor;
+
+import java.util.Set;
 
 /**
  * Validity assessor for sets of classifications.
  * Created by fraserdunlop on 06/10/2014 at 16:37.
  */
-public class ClassificationSetValidityAssessor implements ValidityAssessor<Set<Classification>, TokenSet> {
+public class ClassificationSetValidityAssessor implements ValidityAssessor<Set<Classification>,TokenSet> {
 
     /**
      * Assesses if the union of the token sets  of the set of
@@ -22,20 +22,18 @@ public class ClassificationSetValidityAssessor implements ValidityAssessor<Set<C
      * @return boolean.
      */
     @Override
-    public boolean assess(final Set<Classification> classifications, final TokenSet tokenSet) {
-
-        Multiset<TokenSet> tokenSetsFromClassifications = getTokenSetsFromTriple(classifications);
-        TokenSet unionOfTokenSets = getUnion(tokenSetsFromClassifications);
+    public boolean assess(Set<Classification> classifications, TokenSet tokenSet) {
+        Multiset<TokenSet> tokenSetsFromClassifications = getTokenSetsFromClassifications(classifications);
+        TokenSet unionOfTokenSets = getUnionOfTokenSets(tokenSetsFromClassifications);
         return tokenSet.containsAll(unionOfTokenSets) && noTokenAppearsInUnionMoreOftenThanInOriginalSet(tokenSet, unionOfTokenSets);
     }
 
     /**
      * Gets the union of a multiset of tokenSets.
      * @param tokenSets the tokenSet Multiset to create a union from.
-     * @return the union of all sets in the Multiset.
+     * @return the union of all sets in the Multiset - a TokenSet.
      */
-    private TokenSet getUnion(final Multiset<TokenSet> tokenSets) {
-
+    private TokenSet getUnionOfTokenSets(final Multiset<TokenSet> tokenSets) {
         Multiset<String> union = HashMultiset.create();
         for (TokenSet tokenSet : tokenSets) {
             for (String token : tokenSet) {
@@ -50,8 +48,7 @@ public class ClassificationSetValidityAssessor implements ValidityAssessor<Set<C
      * @param classifications the classifications
      * @return the token sets from triple
      */
-    private Multiset<TokenSet> getTokenSetsFromTriple(final Set<Classification> classifications) {
-
+    private Multiset<TokenSet> getTokenSetsFromClassifications(final Set<Classification> classifications) {
         Multiset<TokenSet> tokenSets = HashMultiset.create();
         for (Classification classification : classifications) {
             tokenSets.add(classification.getTokenSet());
@@ -67,7 +64,6 @@ public class ClassificationSetValidityAssessor implements ValidityAssessor<Set<C
      * @return boolean
      */
     private boolean noTokenAppearsInUnionMoreOftenThanInOriginalSet(final TokenSet originalTokenSet, final TokenSet union) {
-
         for (String token : union) {
             TokenSet originalCopy = new TokenSet(originalTokenSet);
             TokenSet unionCopy = new TokenSet(union);
