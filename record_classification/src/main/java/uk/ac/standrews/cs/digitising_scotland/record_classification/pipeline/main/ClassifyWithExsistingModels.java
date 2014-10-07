@@ -79,7 +79,7 @@ public final class ClassifyWithExsistingModels {
         File codeDictionaryFile = new File(MachineLearningConfiguration.getDefaultProperties().getProperty("codeDictionaryFile"));
         CodeDictionary codeDictionary = new CodeDictionary(codeDictionaryFile);
         BucketGenerator generator = new BucketGenerator(codeDictionary);
-        Bucket allRecords = generator.generate(goldStandard);
+        Bucket allRecords = generator.generateTrainingBucket(goldStandard);
 
         PipelineUtils.printStatusUpdate();
 

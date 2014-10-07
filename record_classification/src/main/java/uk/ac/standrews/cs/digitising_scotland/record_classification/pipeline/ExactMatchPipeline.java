@@ -81,7 +81,7 @@ public class ExactMatchPipeline {
         return classified;
     }
 
-    private void addResultToRecord(final Record record, final String description, final Set<Classification> result) {
+    protected void addResultToRecord(final Record record, final String description, final Set<Classification> result) {
 
         for (Classification codeTriple : result) {
             record.addClassification(description, codeTriple);

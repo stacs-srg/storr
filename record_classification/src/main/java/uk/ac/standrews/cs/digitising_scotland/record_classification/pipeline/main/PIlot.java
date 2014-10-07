@@ -84,7 +84,7 @@ public final class PIlot {
         CodeDictionary codeDictionary = new CodeDictionary(codeDictionaryFile);
 
         BucketGenerator generator = new BucketGenerator(codeDictionary);
-        Bucket trainingBucket = generator.generate(training);
+        Bucket trainingBucket = generator.generateTrainingBucket(training);
 
         CodeIndexer codeIndex = new CodeIndexer(trainingBucket);
 

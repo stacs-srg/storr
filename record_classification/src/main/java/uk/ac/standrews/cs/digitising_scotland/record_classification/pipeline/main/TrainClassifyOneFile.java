@@ -88,7 +88,7 @@ public final class TrainClassifyOneFile {
         CodeDictionary codeDictionary = new CodeDictionary(codeDictionaryFile);
 
         BucketGenerator generator = new BucketGenerator(codeDictionary);
-        Bucket allRecords = generator.generate(goldStandard);
+        Bucket allRecords = generator.generateTrainingBucket(goldStandard);
 
         Bucket[] trainingPredicition = randomlyAssignToTrainingAndPrediction(allRecords, trainingRatio);
         trainingBucket = trainingPredicition[0];

@@ -47,7 +47,7 @@ public class BucketGenerator {
      * @throws InputFormatException the input format exception
      * @throws CodeNotValidException 
      */
-    public Bucket generate(final File trainingFile) throws IOException, InputFormatException, CodeNotValidException {
+    public Bucket generateTrainingBucket(final File trainingFile) throws IOException, InputFormatException, CodeNotValidException {
 
         LOGGER.info("********** Generating Training Bucket **********");
 
