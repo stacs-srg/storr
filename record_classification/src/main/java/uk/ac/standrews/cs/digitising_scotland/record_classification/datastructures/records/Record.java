@@ -36,6 +36,16 @@ public class Record {
 
     }
 
+    public boolean descriptionIsClassified(final String description){
+        return listOfClassifications.containsKey(description);
+    }
+
+    public void addClassificationsToDescription(final String description, final Set<Classification> classifications){
+        for (Classification codeTriple : classifications) {
+            addClassification(description, codeTriple);
+        }
+    }
+
     /**
      * Copy the current records original attributes.
      * @param source
@@ -45,6 +55,8 @@ public class Record {
         return new Record(source.id, source.originalData);
 
     }
+
+
 
     /**
      * Gets the original data. Original data is the data supplied on records.

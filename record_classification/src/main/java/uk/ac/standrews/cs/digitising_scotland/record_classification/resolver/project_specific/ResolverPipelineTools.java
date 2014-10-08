@@ -7,12 +7,13 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.gen
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.generic.ValidCombinationGetter;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 /**
  * A suite of tools which can be used to construct classification/resolution pipelines
- * TODO - test, document, extend!
+ * TODO - test! - fraser 8/Oct
  * Created by fraserdunlop on 06/10/2014 at 15:02.
  */
 public class ResolverPipelineTools {
@@ -48,6 +49,8 @@ public class ResolverPipelineTools {
     }
 
     public Set<Classification> getBestSetAccordingToLossFunction(Collection<Set<Classification>> classifications){
+        if(classifications.isEmpty())
+            return new HashSet<>();
         return lFH.getBest(classifications);
     }
 }
