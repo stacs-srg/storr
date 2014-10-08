@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens;
+package uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers;
 
 import java.util.*;
 
