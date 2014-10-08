@@ -47,7 +47,7 @@ public class ExactMatchPipeline implements IPipeline {
      * @return the bucket of exact matched records
      * @throws IOException Signals that an I/O exception has occurred.
      */
-    public Bucket classify(final Bucket bucket, final boolean multipleClassifications) throws IOException {
+    public Bucket classify(final Bucket bucket) throws IOException {
 
         Bucket classified = new Bucket();
         int count = 0;
@@ -117,7 +117,7 @@ public class ExactMatchPipeline implements IPipeline {
     }
 
     @Override
-    public Bucket getClassified() {
+    public Bucket getSuccessfullyClassified() {
 
         return classifed;
     }

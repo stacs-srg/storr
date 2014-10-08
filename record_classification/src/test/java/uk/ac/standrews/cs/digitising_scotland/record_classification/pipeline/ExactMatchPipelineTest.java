@@ -124,8 +124,8 @@ public class ExactMatchPipelineTest {
         list.add(buildRecord(1, "Massive Pulmonary Embolism"));
         list.add(buildRecord(2, "foo"));
         Bucket bucket = new Bucket(list);
-        Bucket notClassified = pipeline.classify(bucket, true);
-        Bucket classified = pipeline.getClassified();
+        Bucket notClassified = pipeline.classify(bucket);
+        Bucket classified = pipeline.getSuccessfullyClassified();
 
         Assert.assertEquals(codeDictionary.getCode("R54"), classified.getRecord(0).getListOfClassifications().get("old age").iterator().next().getCode());
         Assert.assertEquals(codeDictionary.getCode("I26"), classified.getRecord(1).getListOfClassifications().get("Massive Pulmonary Embolism").iterator().next().getCode());
