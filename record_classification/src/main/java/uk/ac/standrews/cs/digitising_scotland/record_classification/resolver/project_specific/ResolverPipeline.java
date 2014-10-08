@@ -23,14 +23,12 @@ public class ResolverPipeline {
 
     private final boolean multipleClassifications;
     private TokenClassificationCache cache;
-    private double CONFIDENCE_CHOP_LEVEL = 0.3;
-    private ResolverPipelineTools<Code,Classification,Double,LengthWeightedLossFunction,ClassificationComparator, TokenSet, ClassificationSetValidityAssessor> rPT;
+    private ResolverPipelineTools<Code,Double,Classification,Double,LengthWeightedLossFunction,ClassificationComparator, TokenSet, ClassificationSetValidityAssessor> rPT;
 
     public ResolverPipeline(final TokenClassificationCache cache, final boolean multipleClassifications, final double CONFIDENCE_CHOP_LEVEL){
         this.cache = cache;
-        this.CONFIDENCE_CHOP_LEVEL = CONFIDENCE_CHOP_LEVEL;
         this.multipleClassifications = multipleClassifications;
-        rPT = new ResolverPipelineTools<>(new LengthWeightedLossFunction(), new ClassificationComparator(),new ClassificationSetValidityAssessor());
+        rPT = new ResolverPipelineTools<>(new LengthWeightedLossFunction(), new ClassificationComparator(),new ClassificationSetValidityAssessor(),CONFIDENCE_CHOP_LEVEL);
     }
 
 
@@ -40,7 +38,7 @@ public class ResolverPipeline {
     }
 
     private Set<Classification> resolverPipeline(MultiValueMap<Code, Classification> multiValueMap, final TokenSet tokenSet) throws Exception {
-        multiValueMap = rPT.removeBelowThreshold(multiValueMap, CONFIDENCE_CHOP_LEVEL);
+        multiValueMap = rPT.removeBelowThreshold(multiValueMap);
         if(multipleClassifications) {
             multiValueMap = rPT.moveAncestorsToDescendantKeys(multiValueMap);
         } else {

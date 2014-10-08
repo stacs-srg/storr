@@ -7,9 +7,9 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeNotValidException;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.generic.AbstractLossFunction;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.Interfaces.LossFunction;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.project_specific.LengthWeightedLossFunction;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.generic.LossFunctionHolder;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.generic.LossFunctionApplier;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.project_specific.ClassificationSetValidityAssessor;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.generic.ValidCombinationGetter;
 
@@ -26,9 +26,9 @@ public class ValidCombinationGetterTest {
     private ValidCombinationGetter<Code,Classification,TokenSet,ClassificationSetValidityAssessor> vCG =
             new ValidCombinationGetter<>(new ClassificationSetValidityAssessor());
     private MultiValueMapTestHelper mvmHelper;
-    private AbstractLossFunction<Set<Classification>,Double> lengthWeighted = new LengthWeightedLossFunction();
-    private LossFunctionHolder<Set<Classification>,Double,LengthWeightedLossFunction> lossFunctionHolder =
-            new LossFunctionHolder<>(new LengthWeightedLossFunction());
+    private LossFunction<Set<Classification>,Double> lengthWeighted = new LengthWeightedLossFunction();
+    private LossFunctionApplier<Set<Classification>,Double,LengthWeightedLossFunction> lossFunctionApplier =
+            new LossFunctionApplier<>(new LengthWeightedLossFunction());
 
 
     @Before
@@ -59,7 +59,7 @@ public class ValidCombinationGetterTest {
         for (Set<Classification> set : validTriples) {
             Assert.assertEquals(1.5, lengthWeighted.calculate(set), 1.5);
         }
-        Set<Classification> best = lossFunctionHolder.getBest(validTriples);
+        Set<Classification> best = lossFunctionApplier.getBest(validTriples);
         Double averageConfidence = 0.;
         for (Classification triple : best) {
             averageConfidence += triple.getConfidence();

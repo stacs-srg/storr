@@ -3,7 +3,7 @@ package uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.pr
 import java.util.Set;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.generic.AbstractLossFunction;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.Interfaces.LossFunction;
 
 /**
  * Loss function that sums the confidences but weights each confidence by the length of the tokenset.
@@ -11,7 +11,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.gen
  * @author jkc25
  *
  */
-public class LengthWeightedLossFunction extends AbstractLossFunction<Set<Classification>,Double> {
+public class LengthWeightedLossFunction implements LossFunction<Set<Classification>,Double> {
 
     @Override
     public Double calculate(final Set<Classification> set) {

@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.generic;
+package uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.Interfaces;
 
 /**
  * Implementing class should have a well defined ancestral hierarchy

@@ -1,11 +1,11 @@
-package uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.generic;
+package uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.Interfaces;
 
 /**
  * Abstract loss function class. Allows swap-able loss functions.
  * @author jkc25
  *
  */
-public abstract class AbstractLossFunction<O, LossMetric extends Comparable<LossMetric>> {
+public interface LossFunction<O, LossMetric extends Comparable<LossMetric>> {
 
     /**
      * The loss function.
