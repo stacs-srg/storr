@@ -10,6 +10,7 @@ import org.junit.Test;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
+import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearningConfiguration;
 
 public class PIlotTest {
 
@@ -19,6 +20,8 @@ public class PIlotTest {
     public void setUp() throws Exception {
 
         pilot = new PIlot();
+        String codeDictionaryLocation = getClass().getResource("/pilotTestCodeDictionary.txt").getFile();
+        MachineLearningConfiguration.getDefaultProperties().setProperty("codeDictionaryFile", codeDictionaryLocation);
     }
 
     @Test
@@ -29,6 +32,7 @@ public class PIlotTest {
         String trainingData = getClass().getResource("/PilotTestTrainingData.txt").getFile();
         String testData = getClass().getResource("/pilotTest.tsv").getFile();
         String[] args = {trainingData, testData};
+
         Bucket allClassified = pilot.run(args);
 
         Set<Classification> classifications = allClassified.getRecord(46999).getClassifications();

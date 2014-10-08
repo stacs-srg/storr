@@ -71,7 +71,7 @@ public class ClassifierPipeline implements IPipeline {
         return forFurtherProcessing;
     }
 
-    private void putRecordIntoAppropriateBucket(Record record) {
+    private void putRecordIntoAppropriateBucket(final Record record) {
 
         if (record.isFullyClassified()) {
             successfullyClassified.addRecordToBucket(record);
