@@ -8,7 +8,6 @@ import org.slf4j.LoggerFactory;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.lookup.ExactMatchClassifier;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.BucketUtils;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
@@ -24,7 +23,7 @@ public class ExactMatchPipeline implements IPipeline {
     /** The exact match classifier. */
     private ExactMatchClassifier classifier;
 
-    private Bucket classifed;
+    private Bucket fullyClassified;
 
     /**
      * Instantiates a new exact match pipeline.
@@ -34,7 +33,7 @@ public class ExactMatchPipeline implements IPipeline {
     public ExactMatchPipeline(final ExactMatchClassifier exactMatchClassifier) {
 
         this.classifier = exactMatchClassifier;
-        setClassifed(new Bucket());
+        fullyClassified = new Bucket();
     }
 
     /**
@@ -49,47 +48,34 @@ public class ExactMatchPipeline implements IPipeline {
      */
     public Bucket classify(final Bucket bucket) throws IOException {
 
-        Bucket classified = new Bucket();
-        int count = 0;
-        int descriptionCount = 0;
-        int match = 0;
-        boolean allMatch = false;
+        Bucket partialClassified = new Bucket();
 
         for (Record record : bucket) {
-            count++;
-            LOGGER.info("Exact Matching record " + count + " of " + bucket.size());
-            allMatch = true;
 
             for (String description : record.getDescription()) {
-                descriptionCount++;
-                final Set<Classification> result = classify(description);
-
-                if (result != null) {
-                    match++;
-                    addResultToRecord(record, description, result);
-                }
-                else {
-                    allMatch = false;
-                }
+                classifyDescription(record, description);
             }
 
-            if (allMatch) {
-                classified.addRecordToBucket(record);
+            if (record.isFullyClassified()) {
+                fullyClassified.addRecordToBucket(record);
+            }
+            else {
+                partialClassified.addRecordToBucket(record);
             }
 
         }
 
-        LOGGER.info("Total exact matched = " + match + "/" + descriptionCount);
-        LOGGER.info("Size of classified bucket = " + classified.size());
+        LOGGER.info("Size of fully classified bucket = " + fullyClassified.size());
 
-        this.setClassifed(classified);
-
-        return getUnClassified(classified, bucket);
+        return partialClassified;
     }
 
-    private Bucket getUnClassified(final Bucket classified, final Bucket bucket) {
+    private void classifyDescription(final Record record, final String description) throws IOException {
 
-        return BucketUtils.getComplement(bucket, classified);
+        final Set<Classification> result = classify(description);
+        if (result != null) {
+            record.addClassificationsToDescription(description, result);
+        }
     }
 
     protected void addResultToRecord(final Record record, final String description, final Set<Classification> result) {
@@ -111,15 +97,10 @@ public class ExactMatchPipeline implements IPipeline {
 
     }
 
-    private void setClassifed(final Bucket classifed) {
-
-        this.classifed = classifed;
-    }
-
     @Override
     public Bucket getSuccessfullyClassified() {
 
-        return classifed;
+        return fullyClassified;
     }
 
 }
