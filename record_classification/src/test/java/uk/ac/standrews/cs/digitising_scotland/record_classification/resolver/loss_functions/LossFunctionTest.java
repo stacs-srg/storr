@@ -9,7 +9,7 @@ import org.junit.Test;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.generic.AbstractLossFunction;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.Interfaces.LossFunction;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.project_specific.AverageLossFunction;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.project_specific.LengthWeightedLossFunction;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.project_specific.SumLossFunction;
@@ -19,11 +19,11 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.pro
  * @author jkc25
  *
  */
-public class AbstractLossFunctionTest {
+public class LossFunctionTest {
 
-    private AbstractLossFunction<Set<Classification>,Double> sumLoss;
-    private AbstractLossFunction<Set<Classification>,Double> averageLoss;
-    private AbstractLossFunction<Set<Classification>,Double> lengthWeighted;
+    private LossFunction<Set<Classification>,Double> sumLoss;
+    private LossFunction<Set<Classification>,Double> averageLoss;
+    private LossFunction<Set<Classification>,Double> lengthWeighted;
     private Set<Classification> classifications;
 
     @Before

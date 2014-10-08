@@ -1,41 +1,49 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.generic;
 
+import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.Interfaces.AncestorAble;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.Interfaces.IBelowThresholdRemover;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.Interfaces.ValidityAssessor;
+
 import java.io.IOException;
 import java.util.*;
 
 /**
  * A suite of tools which can be used to construct classification/resolution pipelines
  * TODO - test! - fraser 8/Oct
- * TODO genericise!
  * Created by fraserdunlop on 06/10/2014 at 15:02.
  */
 public class ResolverPipelineTools<K extends AncestorAble<K>,
-                                   V extends Comparable<LossMetric>,
+                                   Threshold,
+                                   V extends Comparable<Threshold>,
                                    LossMetric extends Comparable<LossMetric>,
-                                   LossFunction extends AbstractLossFunction<Set<V>,LossMetric>,
+                                   LossFunction extends uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.Interfaces.LossFunction<Set<V>,LossMetric>,
                                    PrunerComparator extends Comparator<V>,
                                    ValidityCriterion,
-                                   P_ValidityAssessor extends ValidityAssessor<Set<V>,ValidityCriterion>> {
+                                   P_ValidityAssessor extends ValidityAssessor<Set<V>,ValidityCriterion>>
+                        implements IBelowThresholdRemover<K, V, Threshold> {
 
-    private BelowThresholdRemover<K, V, LossMetric> bTR;
+    private BelowThresholdRemover<K, V, Threshold> bTR;
     private HierarchyResolver<K, V> hR;
     private MultiValueMapPruner<K, V, PrunerComparator> mVMP;
     private ValidCombinationGetter<K, V,ValidityCriterion,P_ValidityAssessor> vCG;
     private Flattener<K, V> flattener;
-    private LossFunctionHolder<Set<V>,LossMetric,LossFunction> lFH;
+    private LossFunctionApplier<Set<V>,LossMetric,LossFunction> lFH;
 
-    public ResolverPipelineTools(final LossFunction lossFunction, final PrunerComparator comparator, final P_ValidityAssessor validityAssessor){
+    public ResolverPipelineTools(final LossFunction lossFunction,
+                                 final PrunerComparator comparator,
+                                 final P_ValidityAssessor validityAssessor,
+                                 final Threshold threshold){
 
-        bTR = new BelowThresholdRemover<>();
+        bTR = new BelowThresholdRemover<>(threshold);
         hR = new HierarchyResolver<>();
         mVMP = new MultiValueMapPruner<>(comparator);
         vCG = new ValidCombinationGetter<>(validityAssessor);
         flattener = new Flattener<>();
-        lFH = new LossFunctionHolder<>(lossFunction);
+        lFH = new LossFunctionApplier<>(lossFunction);
     }
 
-    public MultiValueMap<K, V> removeBelowThreshold(MultiValueMap<K, V> map, LossMetric threshold) throws IOException, ClassNotFoundException {
-        return bTR.removeBelowThreshold(map, threshold);
+    public MultiValueMap<K, V> removeBelowThreshold(MultiValueMap<K, V> map) throws IOException, ClassNotFoundException {
+        return bTR.removeBelowThreshold(map);
     }
 
     public MultiValueMap<K, V> moveAncestorsToDescendantKeys(final MultiValueMap<K, V> map) throws IOException, ClassNotFoundException {

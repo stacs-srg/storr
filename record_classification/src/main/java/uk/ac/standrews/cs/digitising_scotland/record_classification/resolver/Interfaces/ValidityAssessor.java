@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.generic;
+package uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.Interfaces;
 
 /**
  * Assesses the validity of c given criterion t.

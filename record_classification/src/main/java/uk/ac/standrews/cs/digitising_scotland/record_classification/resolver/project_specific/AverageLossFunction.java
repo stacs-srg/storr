@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.generic.AbstractLossFunction;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.Interfaces.LossFunction;
 
 /**
  * Calculates the loss for a set of CodeTriples.
@@ -13,7 +13,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.gen
  * @author jkc25
  *
  */
-public class AverageLossFunction extends AbstractLossFunction<Set<Classification>,Double> {
+public class AverageLossFunction implements LossFunction<Set<Classification>,Double> {
 
     @Override
     public Double calculate(final Set<Classification> set) {
