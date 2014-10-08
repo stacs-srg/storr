@@ -155,8 +155,8 @@ public class OLRClassifierTest {
 
         for (Record record : bucketA) {
             for (String s : record.getDescription()) {
-                Pair<Code, Double> c1 = olrClassifier1.classify(new TokenSet(s));
-                Pair<Code, Double> c2 = olrClassifier2.classify(new TokenSet(s));
+                Classification c1 = olrClassifier1.classify(new TokenSet(s));
+                Classification c2 = olrClassifier2.classify(new TokenSet(s));
                 Assert.assertEquals(c1, c2);
 
             }

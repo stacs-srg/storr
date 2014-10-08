@@ -2,30 +2,29 @@ package uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.IClassifier;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Pair;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
 
-public class StringSimilarityClassifier implements IClassifier {
+public class StringSimilarityClassifier implements IClassifier<TokenSet,Classification> {
 
-    ClosestMatchMap<String, Pair<Code, Double>> map;
+    ClosestMatchMap<String, Classification> map;
 
-    public StringSimilarityClassifier(final ClosestMatchMap<String, Pair<Code, Double>> closestMatchMap) {
+    public StringSimilarityClassifier(final ClosestMatchMap<String, Classification> closestMatchMap) {
 
         map = closestMatchMap;
     }
 
     @Override
-    public Pair<Code, Double> classify(final TokenSet tokenSet) {
+    public Classification classify(final TokenSet tokenSet) {
 
-        final Pair<Code, Double> pair = map.get(tokenSet.toString());
-        if (pair == null) {
+        final Classification classification = map.get(tokenSet.toString());
+        if (classification == null) {
             String s = map.getClosestKey(tokenSet.toString());
             double similarity = map.getSimilarity(tokenSet.toString(), s);
-            return new Pair<>(map.getClosestMatch(s).getLeft(), similarity);
+            Classification mostSimilar = map.getClosestMatch(s);
+            return new Classification(mostSimilar.getCode(),mostSimilar.getTokenSet(),similarity);
         }
-        else {
-            return new Pair<Code, Double>(pair.getLeft(), 1.0);
-
-        }
+        return classification;
     }
 }

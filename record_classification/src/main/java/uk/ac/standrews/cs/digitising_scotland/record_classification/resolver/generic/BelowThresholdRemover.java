@@ -1,7 +1,5 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.generic;
 
-import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.Interfaces.IBelowThresholdRemover;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +9,7 @@ import java.util.List;
  * Values which fall below this threshold are removed from the MultiValueMap.
  * Created by fraserdunlop on 06/10/2014 at 14:21.
  */
-public class BelowThresholdRemover<K, V extends Comparable<Threshold>, Threshold> implements IBelowThresholdRemover<K, V, Threshold> {
+public class BelowThresholdRemover<K, V extends Comparable<Threshold>, Threshold> {
 
     private final Threshold threshold;
 
@@ -25,7 +23,6 @@ public class BelowThresholdRemover<K, V extends Comparable<Threshold>, Threshold
      * @param map a MultiValueMap whose values extend Comparable<threshold>
      * @return a new MultiValueMap with values falling below threshold removed
      */
-    @Override
     public MultiValueMap<K, V> removeBelowThreshold(final MultiValueMap<K, V> map)
                                                             throws IOException, ClassNotFoundException {
         MultiValueMap<K, V> clone = map.deepClone();
