@@ -8,6 +8,8 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenClassificationCache;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.generic.MultiValueMap;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.generic.ResolverPipelineTools;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -22,12 +24,13 @@ public class ResolverPipeline {
     private final boolean multipleClassifications;
     private TokenClassificationCache cache;
     private double CONFIDENCE_CHOP_LEVEL = 0.3;
-    private ResolverPipelineTools<LengthWeightedLossFunction> rPT = new ResolverPipelineTools<>(new LengthWeightedLossFunction());
+    private ResolverPipelineTools<Code,Classification,Double,LengthWeightedLossFunction,ClassificationComparator, TokenSet, ClassificationSetValidityAssessor> rPT;
 
     public ResolverPipeline(final TokenClassificationCache cache, final boolean multipleClassifications, final double CONFIDENCE_CHOP_LEVEL){
         this.cache = cache;
         this.CONFIDENCE_CHOP_LEVEL = CONFIDENCE_CHOP_LEVEL;
         this.multipleClassifications = multipleClassifications;
+        rPT = new ResolverPipelineTools<>(new LengthWeightedLossFunction(), new ClassificationComparator(),new ClassificationSetValidityAssessor());
     }
 
 
@@ -41,7 +44,7 @@ public class ResolverPipeline {
         if(multipleClassifications) {
             multiValueMap = rPT.moveAncestorsToDescendantKeys(multiValueMap);
         } else {
-            multiValueMap = rPT.flattenForSingleClassifications(multiValueMap);
+            multiValueMap = rPT.flattenMultiValueMapIntoFirstKey(multiValueMap);
         }
         multiValueMap = rPT.pruneUntilComplexityWithinBound(multiValueMap);
         List<Set<Classification>> validSets = rPT.getValidSets(multiValueMap, tokenSet);

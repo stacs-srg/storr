@@ -9,7 +9,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.generic.AbstractLossFunction;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.project_specific.LengthWeightedLossFunction;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.project_specific.LossFunctionHolder;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.generic.LossFunctionHolder;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.project_specific.ClassificationSetValidityAssessor;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.generic.ValidCombinationGetter;
 

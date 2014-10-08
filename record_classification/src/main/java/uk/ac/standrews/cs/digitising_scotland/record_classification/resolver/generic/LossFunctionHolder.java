@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.project_specific;
+package uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.generic;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.generic.AbstractLossFunction;
 import uk.ac.standrews.cs.digitising_scotland.tools.MapSorter;
 
