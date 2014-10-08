@@ -1,0 +1,5 @@
+1,"Myocardial Infarction","Severe Mitral Regurgitation",,,"Endocarditis",1,1,"I219",2,1,"I340",6,1,"J459",,,,,,,,,,,,,,,,,,,"I219","8","F","10","2014"
+2,"Failure of the Right Ventricular","Severe Mitral Regurgitation","Asthma",,"Atrial Fibrillation",1,1,"I501",2,1,"I340",3,1,"I38",6,1,"I48",,,,,,,,,,,,,,,,"I340","7","F","10","2014"
+3,"Cerebral Infarction","Atrial Fibrillation",,,"Extreme Old Age; Aortic Stenosis",1,1,"I639",2,1,"I48",6,1,"J189",6,2,"I350",,,,,,,,,,,,,,,,"I350","8","M","10","2014"
+4,"Myocardial Degeneration","Ischaemic Heart Disease",,,"Community Acquired Pneumonia",1,1,"I515",2,1,"I259",6,1,"R54",,,,,,,,,,,,,,,,,,,"I259","10","F","10","2014"
+5,"Myocardiac Infarction","Ischaemic Heart Disease",,,"Heart Disease",1,1,"I219",2,1,"I259",6,1,"G122",,,,,,,,,,,,,,,,,,,"I219","9","M","10","2014"

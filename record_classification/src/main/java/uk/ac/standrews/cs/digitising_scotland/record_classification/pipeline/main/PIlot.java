@@ -68,7 +68,7 @@ public final class PIlot {
         instance.run(args);
     }
 
-    public void run(final String[] args) throws Exception {
+    public Bucket run(final String[] args) throws Exception {
 
         String experimentalFolderName;
         File training;
@@ -115,6 +115,8 @@ public final class PIlot {
         PipelineUtils.generateAndPrintStatistics(allClassifed, codeIndex, experimentalFolderName, "MachineLearning");
 
         timer.stop();
+
+        return allClassifed;
     }
 
     private File[] parseInput(final String[] args) {
