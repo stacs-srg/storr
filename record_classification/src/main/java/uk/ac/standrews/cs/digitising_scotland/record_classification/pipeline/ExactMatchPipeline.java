@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.lookup.ExactMatchClassifier;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.BucketUtils;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
@@ -16,12 +17,14 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
  * The Class ExactMatchPipeline us a holder class for an {@link ExactMatchClassifier}.
  * Provides convenience methods for classifying records and buckets.
  */
-public class ExactMatchPipeline {
+public class ExactMatchPipeline implements IPipeline {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ExactMatchPipeline.class);
 
     /** The exact match classifier. */
     private ExactMatchClassifier classifier;
+
+    private Bucket classifed;
 
     /**
      * Instantiates a new exact match pipeline.
@@ -31,6 +34,7 @@ public class ExactMatchPipeline {
     public ExactMatchPipeline(final ExactMatchClassifier exactMatchClassifier) {
 
         this.classifier = exactMatchClassifier;
+        setClassifed(new Bucket());
     }
 
     /**
@@ -43,7 +47,7 @@ public class ExactMatchPipeline {
      * @return the bucket of exact matched records
      * @throws IOException Signals that an I/O exception has occurred.
      */
-    public Bucket classify(final Bucket bucket) throws IOException {
+    public Bucket classify(final Bucket bucket, final boolean multipleClassifications) throws IOException {
 
         Bucket classified = new Bucket();
         int count = 0;
@@ -78,7 +82,14 @@ public class ExactMatchPipeline {
         LOGGER.info("Total exact matched = " + match + "/" + descriptionCount);
         LOGGER.info("Size of classified bucket = " + classified.size());
 
-        return classified;
+        this.setClassifed(classified);
+
+        return getUnClassified(classified, bucket);
+    }
+
+    private Bucket getUnClassified(final Bucket classified, final Bucket bucket) {
+
+        return BucketUtils.getComplement(bucket, classified);
     }
 
     protected void addResultToRecord(final Record record, final String description, final Set<Classification> result) {
@@ -98,6 +109,17 @@ public class ExactMatchPipeline {
 
         return classifier.classifyTokenSetToCodeTripleSet(new TokenSet(description));
 
+    }
+
+    private void setClassifed(final Bucket classifed) {
+
+        this.classifed = classifed;
+    }
+
+    @Override
+    public Bucket getClassified() {
+
+        return classifed;
     }
 
 }

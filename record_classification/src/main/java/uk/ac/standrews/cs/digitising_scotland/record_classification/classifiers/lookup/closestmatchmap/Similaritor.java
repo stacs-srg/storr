@@ -37,6 +37,7 @@ public class Similaritor<K> {
 
                 double o1Score = metric.getSimilarity(o1, k);
                 double o2Score = metric.getSimilarity(o2, k);
+                if ((Double) o1Score == null || (Double) o2Score == null) { throw new IllegalArgumentException("o1 or o2 score is null. There may be a problem with your similarity metric."); }
                 if (o1Score == o2Score) return 0;
                 if (o1Score > o2Score) return -1;
                 return 1;

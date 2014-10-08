@@ -8,14 +8,16 @@ import org.slf4j.LoggerFactory;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.BucketFilter;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.BucketUtils;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeDictionary;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeIndexer;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.vectors.VectorFactory;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.ClassificationHolder;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.BucketGenerator;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.ClassifierPipeline;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.ClassifierTrainer;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.BucketGenerator;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.ExactMatchPipeline;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.IPipeline;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.PipelineUtils;
 import uk.ac.standrews.cs.digitising_scotland.tools.Timer;
 import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearningConfiguration;
@@ -99,14 +101,21 @@ public final class TrainClassifyOneFile {
         CodeIndexer codeIndex = new CodeIndexer(allRecords);
         ClassifierTrainer trainer = PipelineUtils.train(trainingBucket, experimentalFolderName, codeIndex);
 
-        ClassificationHolder classifier = PipelineUtils.classify(allRecords, predictionBucket, trainer, multipleClassifications);
+        IPipeline exactMatchPipeline = new ExactMatchPipeline(trainer.getExactMatchClassifier());
+        IPipeline machineLearningClassifier = new ClassifierPipeline(trainer.getOlrClassifier(), trainingBucket);
 
-        LOGGER.info("Exact Matched Bucket Size: " + classifier.getExactMatched().size());
-        LOGGER.info("Machine Learned Bucket Size: " + classifier.getMachineLearned().size());
+        Bucket notExactMatched = exactMatchPipeline.classify(predictionBucket, multipleClassifications);
+        Bucket notMachineLearned = machineLearningClassifier.classify(notExactMatched, multipleClassifications);
 
-        PipelineUtils.writeRecords(classifier.getAllClassified(), experimentalFolderName, "MachineLearning");
+        LOGGER.info("Exact Matched Bucket Size: " + exactMatchPipeline.getClassified().size());
+        LOGGER.info("Machine Learned Bucket Size: " + machineLearningClassifier.getClassified().size());
+        LOGGER.info("Not Classifed Bucket Size: " + notMachineLearned.size());
 
-        generateAndPrintStatistics(classifier, codeIndex, experimentalFolderName);
+        Bucket allClassifed = BucketUtils.getUnion(exactMatchPipeline.getClassified(), machineLearningClassifier.getClassified());
+
+        PipelineUtils.writeRecords(allClassifed, experimentalFolderName, "MachineLearning");
+
+        generateAndPrintStatistics(allClassifed, codeIndex, experimentalFolderName);
 
         timer.stop();
 
@@ -126,13 +135,13 @@ public final class TrainClassifyOneFile {
         return goldStandard;
     }
 
-    private boolean parseMultipleClassifications(String[] args) {
+    private boolean parseMultipleClassifications(final String[] args) {
 
         if (args.length > 3) {
             System.err.println("usage: $" + ClassifyWithExsistingModels.class.getSimpleName() + "    <goldStandardDataFile>    <trainingRatio(optional)>    <output multiple classificatiosn");
         }
         else {
-            if (args[2].equals("1")) return true;
+            if (args[2].equals("1")) { return true; }
         }
         return false;
 
@@ -154,13 +163,13 @@ public final class TrainClassifyOneFile {
         return trainingRatio;
     }
 
-    private void generateAndPrintStatistics(final ClassificationHolder classifier, final CodeIndexer codeIndexer, final String experimentalFolderName) throws IOException {
+    private void generateAndPrintStatistics(final Bucket allClassifed, final CodeIndexer codeIndexer, final String experimentalFolderName) throws IOException {
 
         LOGGER.info("********** Output Stats **********");
 
-        final Bucket uniqueRecordsOnly = BucketFilter.uniqueRecordsOnly(classifier.getAllClassified());
+        final Bucket uniqueRecordsOnly = BucketFilter.uniqueRecordsOnly(allClassifed);
 
-        PipelineUtils.generateAndPrintStats(classifier.getAllClassified(), codeIndexer, "All Records", "AllRecords", experimentalFolderName, "MachineLearning");
+        PipelineUtils.generateAndPrintStats(allClassifed, codeIndexer, "All Records", "AllRecords", experimentalFolderName, "MachineLearning");
 
         PipelineUtils.generateAndPrintStats(uniqueRecordsOnly, codeIndexer, "Unique Only", "UniqueOnly", experimentalFolderName, "MachineLearning");
     }

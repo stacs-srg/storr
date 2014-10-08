@@ -6,13 +6,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.BucketUtils;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeDictionary;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.vectors.VectorFactory;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.ClassificationHolder;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.BucketGenerator;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.ClassifierPipeline;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.ClassifierTrainer;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.BucketGenerator;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.ExactMatchPipeline;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.IPipeline;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.PipelineUtils;
 import uk.ac.standrews.cs.digitising_scotland.tools.Timer;
 import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearningConfiguration;
@@ -85,26 +87,32 @@ public final class ClassifyWithExsistingModels {
 
         ClassifierTrainer trainer = PipelineUtils.getExistingModels(modelLocation, allRecords, experimentalFolderName);
 
-        ClassificationHolder classifier = PipelineUtils.classify(allRecords, allRecords, trainer, multipleClassifications);
+        IPipeline exactMatchPipeline = new ExactMatchPipeline(trainer.getExactMatchClassifier());
+        IPipeline machineLearningClassifier = new ClassifierPipeline(trainer.getOlrClassifier(), allRecords);
 
-        LOGGER.info("Exact Matched Bucket Size: " + classifier.getExactMatched().size());
-        LOGGER.info("Machine Learned Bucket Size: " + classifier.getMachineLearned().size());
+        Bucket notExactMatched = exactMatchPipeline.classify(allRecords, multipleClassifications);
+        Bucket notMachineLearned = machineLearningClassifier.classify(notExactMatched, multipleClassifications);
 
-        String identifier = "MachineLearing";
-        PipelineUtils.writeRecords(classifier.getAllClassified(), experimentalFolderName, identifier);
+        LOGGER.info("Exact Matched Bucket Size: " + exactMatchPipeline.getClassified().size());
+        LOGGER.info("Machine Learned Bucket Size: " + machineLearningClassifier.getClassified().size());
+        LOGGER.info("Not Classifed Bucket Size: " + notMachineLearned.size());
 
-        PipelineUtils.generateAndPrintStatistics(classifier, trainer.getVectorFactory().getCodeIndexer(), experimentalFolderName, identifier);
+        Bucket allClassifed = BucketUtils.getUnion(exactMatchPipeline.getClassified(), machineLearningClassifier.getClassified());
+
+        PipelineUtils.writeRecords(allClassifed, experimentalFolderName, "MachineLearning");
+
+        PipelineUtils.generateAndPrintStatistics(allClassifed, trainer.getVectorFactory().getCodeIndexer(), experimentalFolderName, "MachineLearning");
 
         timer.stop();
     }
 
-    private boolean parseMultipleClassifications(String[] args) {
+    private boolean parseMultipleClassifications(final String[] args) {
 
         if (args.length > 3) {
             System.err.println("usage: $" + ClassifyWithExsistingModels.class.getSimpleName() + "    <goldStandardDataFile>    <trainingRatio(optional)>    <output multiple classificatiosn");
         }
         else {
-            if (args[2].equals("1")) return true;
+            if (args[2].equals("1")) { return true; }
         }
         return false;
 
