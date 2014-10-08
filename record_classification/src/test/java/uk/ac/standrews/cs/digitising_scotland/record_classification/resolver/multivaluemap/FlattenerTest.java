@@ -8,7 +8,6 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeNotValidException;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.generic.Flattener;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.generic.MultiValueMap;
-
 import java.io.IOException;
 
 /**
@@ -17,8 +16,10 @@ import java.io.IOException;
  */
 public class FlattenerTest {
 
-    Flattener<Code,Classification> flattener = new Flattener<>();
+
+    private Flattener<Code,Classification> flattener = new Flattener<>();
     private MultiValueMapTestHelper mvmHelper;
+
 
     @Before
     public void setup() throws IOException, CodeNotValidException {

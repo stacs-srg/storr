@@ -18,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.IClassifier;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Pair;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeIndexer;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
@@ -34,7 +35,7 @@ import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearnin
  * @author frjd2, jkc25
  * 
  */
-public class OLRClassifier implements IClassifier {
+public class OLRClassifier implements IClassifier<TokenSet,Classification> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(OLRClassifier.class);
     private OLRCrossFold model = null;
@@ -142,15 +143,15 @@ public class OLRClassifier implements IClassifier {
         }
     }
 
-    public Pair<Code, Double> classify(final TokenSet tokenSet) {
+    public Classification classify(final TokenSet tokenSet) {
 
-        Pair<Code, Double> pair;
+        Classification pair;
         NamedVector vector = vectorFactory.createNamedVectorFromString(tokenSet.toString(), "unknown");
         Vector classifyFull = model.classifyFull(vector);
         int classificationID = classifyFull.maxValueIndex();
         Code code = vectorFactory.getCodeIndexer().getCode(classificationID);
         double confidence = Math.exp(model.logLikelihood(classificationID, vector));
-        pair = new Pair<>(code, confidence);
+        pair = new Classification(code, tokenSet , confidence);
         return pair;
     }
 

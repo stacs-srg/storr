@@ -9,7 +9,6 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.generic.MultiValueMap;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.generic.MultiValueMapPruner;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.project_specific.ClassificationComparator;
-
 import java.io.IOException;
 
 /**
@@ -17,8 +16,10 @@ import java.io.IOException;
  * Created by fraserdunlop on 07/10/2014 at 12:40.
  */
 public class MultiValueMapPrunerTest {
+
     private MultiValueMapPruner<Code, Classification,ClassificationComparator> pruner = new MultiValueMapPruner<>(new ClassificationComparator());
     private MultiValueMapTestHelper mvmHelper;
+
 
     @Before
     public void setup() throws IOException, CodeNotValidException {

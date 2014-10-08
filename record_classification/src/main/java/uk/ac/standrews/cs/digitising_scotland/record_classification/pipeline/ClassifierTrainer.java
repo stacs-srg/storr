@@ -14,6 +14,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.olr.OLRClassifier;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Pair;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeIndexer;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.vectors.VectorFactory;
@@ -60,11 +61,11 @@ public class ClassifierTrainer {
 
     }
 
-    public StringSimilarityClassifier trainStringSimilarityClassifier(final Map<String, Pair<Code, Double>> map, final AbstractStringMetric simMetric) {
+    public StringSimilarityClassifier trainStringSimilarityClassifier(final Map<String, Classification> map, final AbstractStringMetric simMetric) {
 
         SimilarityMetricFromSimmetricFactory factory = new SimilarityMetricFromSimmetricFactory();
         SimilarityMetric<String> metric = factory.create(simMetric);
-        ClosestMatchMap<String, Pair<Code, Double>> closestMatchMap = new ClosestMatchMap<>(metric, map);
+        ClosestMatchMap<String, Classification> closestMatchMap = new ClosestMatchMap<>(metric, map);
         return stringSimClassifier = new StringSimilarityClassifier(closestMatchMap);
     }
 

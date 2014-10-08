@@ -8,9 +8,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeNotValidException;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.generic.HierarchyResolver;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.generic.MultiValueMap;
-
 import java.io.IOException;
-
 /**
  *
  * Created by fraserdunlop on 07/10/2014 at 12:33.

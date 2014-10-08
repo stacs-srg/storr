@@ -9,7 +9,8 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenClassificationCache;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.CachedClassifier;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenClassificationCachePopulator;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.project_specific.ResolverPipeline;
 
@@ -39,12 +40,13 @@ public class ClassifierPipeline implements IPipeline {
      * @param classifier    {@link uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.IClassifier} used for machine learning classification
      * @param cachePopulationBucket the training bucket
      */
-    public ClassifierPipeline(final IClassifier classifier, final Bucket cachePopulationBucket, final boolean multipleClassifications) {
+    public ClassifierPipeline(final IClassifier<TokenSet,Classification> classifier, final Bucket cachePopulationBucket, final boolean multipleClassifications) {
 
         /* The cache. */
-        TokenClassificationCache cache = new TokenClassificationCache(classifier);
+        TokenClassificationCachePopulator populator = new TokenClassificationCachePopulator();
         recordCache = new HashMap<>();
-        cache.prePopulate(cachePopulationBucket);
+        CachedClassifier<TokenSet,Classification> cache = new CachedClassifier<>(classifier, populator.prePopulate(cachePopulationBucket));
+
         this.resolverPipeline = new ResolverPipeline(cache, multipleClassifications, CONFIDENCE_CHOP_LEVEL);
         this.successfullyClassified = new Bucket();
         this.forFurtherProcessing = new Bucket();
