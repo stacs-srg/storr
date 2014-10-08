@@ -5,13 +5,15 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.IClassifier;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenClassificationCache;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
-
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.project_specific.ResolverPipeline;
 
 /**
@@ -21,17 +23,17 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.pro
  * @author jkc25, frjd2
  * 
  */
-public class ClassifierPipeline implements IPipeline{
+public class ClassifierPipeline implements IPipeline {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ClassifierPipeline.class);
 
     /** The Constant CONFIDENCE_CHOP_LEVEL. */
     private static final double CONFIDENCE_CHOP_LEVEL = 0.3;
-    private final ResolverPipeline resolverPipeline;
 
     /** The record cache. */
     private Map<String, Set<Classification>> recordCache;
 
-    private Bucket successfullyClassified;
-    private Bucket forFurtherProcessing;
+    private ResolverPipeline resolverPipeline;
 
     /**
      * Constructs a new {@link ClassifierPipeline} with the specified
@@ -41,61 +43,59 @@ public class ClassifierPipeline implements IPipeline{
      * @param cachePopulationBucket the training bucket
      */
     public ClassifierPipeline(final IClassifier classifier, final Bucket cachePopulationBucket, final boolean multipleClassifications) {
+
         /* The cache. */
         TokenClassificationCache cache = new TokenClassificationCache(classifier);
         recordCache = new HashMap<>();
         cache.prePopulate(cachePopulationBucket);
         this.resolverPipeline = new ResolverPipeline(cache, multipleClassifications, CONFIDENCE_CHOP_LEVEL);
-        this.successfullyClassified = new Bucket();
-        this.forFurtherProcessing = new Bucket();
-    }
-
-    @Override
-    public Bucket getSuccessfullyClassified(){
-        return successfullyClassified;
     }
 
     /**
      * Classify all records in a bucket.
      *
      * @param bucket the bucket to classifiy
-     * @return bucket this is the bucket of records for further processing
+     * @return bucket this is the bucket of classified records
      * @throws IOException Signals that an I/O exception has occurred.
      */
     public Bucket classify(final Bucket bucket) throws Exception {
+
+        Bucket classified = new Bucket();
         for (Record record : bucket) {
-            putRecordIntoAppropriateBucket(classifyRecord(record));
+            Record recordToInsert = classifyRecord(record);
+            classified.addRecordToBucket(recordToInsert);
         }
-        return forFurtherProcessing;
-    }
-
-    private void putRecordIntoAppropriateBucket(Record record) {
-        if(record.isFullyClassified()){
-            successfullyClassified.addRecordToBucket(record);
-        } else {
-            forFurtherProcessing.addRecordToBucket(record);
-        }
-
+        return classified;
     }
 
     private Record classifyRecord(final Record record) throws Exception {
+
         for (String description : record.getDescription()) {
             if (!record.descriptionIsClassified(description)) {
-                Set<Classification> result = classifyDescription(description);
-                record.addClassificationsToDescription(description, result);
+                if (!getFromCache(record, description)) {
+                    Set<Classification> result = resolverPipeline.classify(new TokenSet(description));
+                    if (result != null) {
+                        record.addClassificationsToDescription(description, result);
+                        recordCache.put(description, result);
+                    }
+                }
             }
         }
         return record;
     }
 
-    private Set<Classification> classifyDescription(final String description) throws Exception {
-        Set<Classification> result;
-        if(recordCache.containsKey(description)) {
-            result = recordCache.get(description);
-        }else {
-            result = resolverPipeline.classify(new TokenSet(description));
-            recordCache.put(description, result);
-        }
-        return result;
+    private boolean getFromCache(final Record record, final String description) {
+
+        Set<Classification> result = recordCache.get(description);
+        if (result == null) return false;
+        record.addClassificationsToDescription(description, result);
+        return true;
+    }
+
+    @Override
+    public Bucket getSuccessfullyClassified() {
+
+        // TODO Auto-generated method stub
+        return null;
     }
 }

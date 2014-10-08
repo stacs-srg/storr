@@ -88,16 +88,16 @@ public final class ClassifyWithExsistingModels {
         ClassifierTrainer trainer = PipelineUtils.getExistingModels(modelLocation, allRecords, experimentalFolderName);
 
         IPipeline exactMatchPipeline = new ExactMatchPipeline(trainer.getExactMatchClassifier());
-        IPipeline machineLearningClassifier = new ClassifierPipeline(trainer.getOlrClassifier(), allRecords);
+        IPipeline machineLearningClassifier = new ClassifierPipeline(trainer.getOlrClassifier(), allRecords, multipleClassifications);
 
-        Bucket notExactMatched = exactMatchPipeline.classify(allRecords, multipleClassifications);
-        Bucket notMachineLearned = machineLearningClassifier.classify(notExactMatched, multipleClassifications);
+        Bucket notExactMatched = exactMatchPipeline.classify(allRecords);
+        Bucket notMachineLearned = machineLearningClassifier.classify(notExactMatched);
 
-        LOGGER.info("Exact Matched Bucket Size: " + exactMatchPipeline.getClassified().size());
-        LOGGER.info("Machine Learned Bucket Size: " + machineLearningClassifier.getClassified().size());
+        LOGGER.info("Exact Matched Bucket Size: " + exactMatchPipeline.getSuccessfullyClassified().size());
+        LOGGER.info("Machine Learned Bucket Size: " + machineLearningClassifier.getSuccessfullyClassified().size());
         LOGGER.info("Not Classifed Bucket Size: " + notMachineLearned.size());
 
-        Bucket allClassifed = BucketUtils.getUnion(exactMatchPipeline.getClassified(), machineLearningClassifier.getClassified());
+        Bucket allClassifed = BucketUtils.getUnion(exactMatchPipeline.getSuccessfullyClassified(), machineLearningClassifier.getSuccessfullyClassified());
 
         PipelineUtils.writeRecords(allClassifed, experimentalFolderName, "MachineLearning");
 

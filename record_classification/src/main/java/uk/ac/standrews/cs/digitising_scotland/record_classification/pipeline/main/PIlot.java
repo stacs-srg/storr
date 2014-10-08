@@ -100,15 +100,15 @@ public final class PIlot {
         boolean multipleClassifications = true;
 
         IPipeline exactMatchPipeline = new ExactMatchPipeline(trainer.getExactMatchClassifier());
-        IPipeline machineLearningClassifier = new ClassifierPipeline(trainer.getOlrClassifier(), trainingBucket);
+        IPipeline machineLearningClassifier = new ClassifierPipeline(trainer.getOlrClassifier(), trainingBucket, multipleClassifications);
 
-        Bucket notExactMatched = exactMatchPipeline.classify(predictionBucket, multipleClassifications);
-        Bucket notMachineLearned = machineLearningClassifier.classify(notExactMatched, multipleClassifications);
-        LOGGER.info("Exact Matched Bucket Size: " + exactMatchPipeline.getClassified().size());
-        LOGGER.info("Machine Learned Bucket Size: " + machineLearningClassifier.getClassified().size());
+        Bucket notExactMatched = exactMatchPipeline.classify(predictionBucket);
+        Bucket notMachineLearned = machineLearningClassifier.classify(notExactMatched);
+        LOGGER.info("Exact Matched Bucket Size: " + exactMatchPipeline.getSuccessfullyClassified().size());
+        LOGGER.info("Machine Learned Bucket Size: " + machineLearningClassifier.getSuccessfullyClassified().size());
         LOGGER.info("Not Classifed Bucket Size: " + notMachineLearned.size());
 
-        Bucket allClassifed = BucketUtils.getUnion(exactMatchPipeline.getClassified(), machineLearningClassifier.getClassified());
+        Bucket allClassifed = BucketUtils.getUnion(exactMatchPipeline.getSuccessfullyClassified(), machineLearningClassifier.getSuccessfullyClassified());
 
         PipelineUtils.writeRecords(allClassifed, experimentalFolderName, "MachineLearning");
 
