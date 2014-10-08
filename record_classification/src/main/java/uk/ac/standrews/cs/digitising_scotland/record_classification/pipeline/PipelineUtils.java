@@ -7,7 +7,6 @@ import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.IClassifier;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.analysis_metrics.AbstractConfusionMatrix;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.analysis_metrics.CodeMetrics;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.analysis_metrics.InvertedSoftConfusionMatrix;
@@ -78,7 +77,7 @@ public final class PipelineUtils {
         LOGGER.info(codeMetrics.getMicroStatsAsString());
         codeMetrics.writeStats(strictCodeStatsPath);
         LOGGER.info(strictCodeStatsPath + ": " + codeMetrics.getTotalCorrectlyPredicted());
-        accuracyMetrics.generateMarkDownSummary(experimentalFolderName, codeStatsPath, identifier);
+        accuracyMetrics.generateMarkDownSummary(experimentalFolderName, codeStatsPath);
         return strictCodeStatsPath;
     }
 
@@ -128,7 +127,6 @@ public final class PipelineUtils {
 
         return trainer;
     }
-
 
     public static void printStatusUpdate() {
 

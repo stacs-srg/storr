@@ -14,12 +14,12 @@ public class Similaritor<K> {
 
     private final SimilarityMetric<K> metric;
 
-    public Similaritor(SimilarityMetric<K> metric) {
+    public Similaritor(final SimilarityMetric<K> metric) {
 
         this.metric = metric;
     }
 
-    public double getSimilarity(K o1, K o2) {
+    public double getSimilarity(final K o1, final K o2) {
 
         return metric.getSimilarity(o1, o2);
     }
@@ -30,18 +30,35 @@ public class Similaritor<K> {
      */
     public Comparator<K> getComparator(final K k) {
 
-        return new Comparator<K>() {
+        return new MetricComparator(k);
+    }
 
-            @Override
-            public int compare(K o1, K o2) {
+    public class MetricComparator implements Comparator<K> {
 
-                double o1Score = metric.getSimilarity(o1, k);
-                double o2Score = metric.getSimilarity(o2, k);
-                if ((Double) o1Score == null || (Double) o2Score == null) { throw new IllegalArgumentException("o1 or o2 score is null. There may be a problem with your similarity metric."); }
-                if (o1Score == o2Score) return 0;
-                if (o1Score > o2Score) return -1;
+        private K k;
+
+        public MetricComparator(final K k) {
+
+            this.k = k;
+        }
+
+        @Override
+        public int compare(final K o1, final K o2) {
+
+            double o1Score = metric.getSimilarity(o1, k);
+            double o2Score = metric.getSimilarity(o2, k);
+            if ((Double) o1Score == null || (Double) o2Score == null) { throw new IllegalArgumentException("o1 or o2 score is null. There may be a problem with your similarity metric."); }
+
+            if (o1Score < o2Score) {
                 return 1;
             }
-        };
+            else if (o1Score > o2Score) {
+                return -1;
+            }
+            else {
+                return 0;
+            }
+        }
+
     }
 }

@@ -1,0 +1,11 @@
+I340	mitral sterosis
+I48	auricular fibrillation
+I38	auricular fibrillation
+I515	myocardial degeneration
+I219	acute cardiac infarction
+I501	asthma
+I639	Cerebral Infarction
+I350	Atrial Fibrillation
+J189	Aortic Stenosis
+I259	Community Acquired Pneumonia
+G122	Heart Disease
