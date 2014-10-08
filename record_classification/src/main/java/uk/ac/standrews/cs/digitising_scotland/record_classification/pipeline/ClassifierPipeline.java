@@ -8,10 +8,14 @@ import java.util.Set;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.IClassifier;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.CachedClassifier;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.CachedClassifier;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenClassificationCachePopulator;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.project_specific.ClassificationComparator;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.project_specific.ClassificationSetValidityAssessor;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.project_specific.LengthWeightedLossFunction;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.project_specific.ResolverPipeline;
 
 /**
@@ -25,7 +29,7 @@ public class ClassifierPipeline implements IPipeline {
 
     /** The Constant CONFIDENCE_CHOP_LEVEL. */
     private static final double CONFIDENCE_CHOP_LEVEL = 0.3;
-    private final ResolverPipeline resolverPipeline;
+    private final ResolverPipeline<Double,Code,Classification,ClassificationComparator,TokenSet,ClassificationSetValidityAssessor,Double,LengthWeightedLossFunction> resolverPipeline;
 
     /** The record cache. */
     private Map<String, Set<Classification>> recordCache;
@@ -47,7 +51,7 @@ public class ClassifierPipeline implements IPipeline {
         recordCache = new HashMap<>();
         CachedClassifier<TokenSet,Classification> cache = new CachedClassifier<>(classifier, populator.prePopulate(cachePopulationBucket));
 
-        this.resolverPipeline = new ResolverPipeline(cache, multipleClassifications, CONFIDENCE_CHOP_LEVEL);
+        this.resolverPipeline = new ResolverPipeline<>(cache, multipleClassifications,new ClassificationComparator(), new ClassificationSetValidityAssessor(), new LengthWeightedLossFunction(),CONFIDENCE_CHOP_LEVEL);
         this.successfullyClassified = new Bucket();
         this.forFurtherProcessing = new Bucket();
     }
@@ -102,7 +106,8 @@ public class ClassifierPipeline implements IPipeline {
             result = recordCache.get(description);
         }
         else {
-            result = resolverPipeline.classify(new TokenSet(description));
+            TokenSet tokenSet = new TokenSet(description);
+            result = resolverPipeline.classify(tokenSet,tokenSet);
             recordCache.put(description, result);
         }
         return result;

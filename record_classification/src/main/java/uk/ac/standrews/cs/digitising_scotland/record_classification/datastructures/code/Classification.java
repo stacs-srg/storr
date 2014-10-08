@@ -3,6 +3,8 @@ package uk.ac.standrews.cs.digitising_scotland.record_classification.datastructu
 import java.io.Serializable;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.Interfaces.HasProperty;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.Interfaces.Value;
 
 /**
  * This class represents a classification, either gold standard or from a classifier.
@@ -12,7 +14,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
  * <br><br>
  * @author jkc25, frjd2
  */
-public class Classification implements Serializable, Comparable<Double> {
+public class Classification extends Value<Code,Double> {
 
     /** The Constant serialVersionUID. */
     private static final long serialVersionUID = 7683621012309471383L;
@@ -125,5 +127,10 @@ public class Classification implements Serializable, Comparable<Double> {
         if(confidence.equals(o))
             return 0;
         else return -1;
+    }
+
+    @Override
+    public Code getProperty() {
+        return getCode();
     }
 }
