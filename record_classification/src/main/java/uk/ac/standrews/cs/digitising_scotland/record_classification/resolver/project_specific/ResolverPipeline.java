@@ -16,7 +16,8 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * TODO - refactored here from ClassifierPipeline. There are no Tests!?!? Test! - fraser 8/Oct :P
+ * TODO refactoring in process - fraser
+ *
  * Created by fraserdunlop on 08/10/2014 at 09:50.
  */
 public class ResolverPipeline<Threshold,
