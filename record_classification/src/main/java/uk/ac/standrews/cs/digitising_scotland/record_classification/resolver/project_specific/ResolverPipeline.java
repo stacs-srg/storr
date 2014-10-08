@@ -22,7 +22,7 @@ public class ResolverPipeline {
     private final boolean multipleClassifications;
     private TokenClassificationCache cache;
     private double CONFIDENCE_CHOP_LEVEL = 0.3;
-    private ResolverPipelineTools rPT = new ResolverPipelineTools();
+    private ResolverPipelineTools<LengthWeightedLossFunction> rPT = new ResolverPipelineTools<>(new LengthWeightedLossFunction());
 
     public ResolverPipeline(final TokenClassificationCache cache, final boolean multipleClassifications, final double CONFIDENCE_CHOP_LEVEL){
         this.cache = cache;

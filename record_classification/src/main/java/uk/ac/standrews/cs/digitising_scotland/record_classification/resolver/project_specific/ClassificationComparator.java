@@ -5,7 +5,7 @@ import java.io.Serializable;
 import java.util.Comparator;
 
 /**
- * Classification comparator
+ * Classification comparator. Compares classifications
  * Created by fraserdunlop on 06/10/2014 at 14:15.
  */
 public class ClassificationComparator implements Comparator<Classification>, Serializable {

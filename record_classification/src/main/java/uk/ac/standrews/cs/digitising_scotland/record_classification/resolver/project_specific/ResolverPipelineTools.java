@@ -14,19 +14,27 @@ import java.util.Set;
 /**
  * A suite of tools which can be used to construct classification/resolution pipelines
  * TODO - test! - fraser 8/Oct
+ * TODO genericise!
  * Created by fraserdunlop on 06/10/2014 at 15:02.
  */
-public class ResolverPipelineTools {
+public class ResolverPipelineTools<LossFunction extends AbstractLossFunction<Set<Classification>,Double>> {
 
-    private BelowThresholdRemover<Code, Classification, Double> bTR = new BelowThresholdRemover<>();
-    private HierarchyResolver<Code, Classification> hR = new HierarchyResolver<>();
-    private MultiValueMapPruner<Code, Classification, ClassificationComparator> mVMP =
-            new MultiValueMapPruner<>(new ClassificationComparator());
-    private ValidCombinationGetter<Code,Classification,TokenSet,ClassificationSetValidityAssessor> vCG =
-            new ValidCombinationGetter<>(new ClassificationSetValidityAssessor());
-    private Flattener<Code,Classification> flattener = new Flattener<>();
-    private LossFunctionHolder<Set<Classification>,Double,LengthWeightedLossFunction> lFH =
-            new LossFunctionHolder<>(new LengthWeightedLossFunction());
+    private BelowThresholdRemover<Code, Classification, Double> bTR;
+    private HierarchyResolver<Code, Classification> hR;
+    private MultiValueMapPruner<Code, Classification, ClassificationComparator> mVMP;
+    private ValidCombinationGetter<Code,Classification,TokenSet,ClassificationSetValidityAssessor> vCG;
+    private Flattener<Code,Classification> flattener;
+    private LossFunctionHolder<Set<Classification>,Double,LossFunction> lFH;
+
+    public ResolverPipelineTools(final LossFunction lossFunction){
+
+        bTR = new BelowThresholdRemover<>();
+        hR = new HierarchyResolver<>();
+        mVMP = new MultiValueMapPruner<>(new ClassificationComparator());
+        vCG = new ValidCombinationGetter<>(new ClassificationSetValidityAssessor());
+        flattener = new Flattener<>();
+        lFH = new LossFunctionHolder<>(lossFunction);
+    }
 
     public MultiValueMap<Code, Classification> removeBelowThreshold(MultiValueMap<Code, Classification> map, Double threshold) throws IOException, ClassNotFoundException {
         return bTR.removeBelowThreshold(map, threshold);
