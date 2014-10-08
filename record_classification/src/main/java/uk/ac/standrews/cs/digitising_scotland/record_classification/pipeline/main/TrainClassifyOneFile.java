@@ -132,7 +132,7 @@ public final class TrainClassifyOneFile {
 
     }
 
-    private void printAllStats(String experimentalFolderName, CodeIndexer codeIndex, Bucket allClassifed, final Bucket uniqueRecordsOnly) throws IOException {
+    private void printAllStats(final String experimentalFolderName, final CodeIndexer codeIndex, final Bucket allClassifed, final Bucket uniqueRecordsOnly) throws IOException {
 
         CodeMetrics codeMetrics = new CodeMetrics(new StrictConfusionMatrix(allClassifed, codeIndex), codeIndex);
         ListAccuracyMetrics accuracyMetrics = new ListAccuracyMetrics(allClassifed, codeMetrics);
@@ -153,7 +153,7 @@ public final class TrainClassifyOneFile {
         printMetrics(experimentalFolderName, codeIndex, allClassifed, codeMetrics, accuracyMetrics);
     }
 
-    private void printMetrics(String experimentalFolderName, CodeIndexer codeIndex, Bucket allClassifed, CodeMetrics codeMetrics, ListAccuracyMetrics accuracyMetrics) throws IOException {
+    private void printMetrics(final String experimentalFolderName, final CodeIndexer codeIndex, final Bucket allClassifed, final CodeMetrics codeMetrics, final ListAccuracyMetrics accuracyMetrics) throws IOException {
 
     }
 
