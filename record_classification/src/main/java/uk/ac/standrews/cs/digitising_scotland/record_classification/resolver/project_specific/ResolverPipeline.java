@@ -1,17 +1,26 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.project_specific;
 
-import com.google.common.collect.Multiset;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.lookup.NGramSubstrings;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.CachedClassifier;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.Interfaces.LossFunction;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.generic.*;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.generic.BelowThresholdRemover;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.generic.Flattener;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.generic.HierarchyResolver;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.generic.LossFunctionApplier;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.generic.MultiValueMap;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.generic.MultiValueMapPruner;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.generic.ValidCombinationGetter;
+
+import com.google.common.collect.Multiset;
 
 /**
  * TODO - refactored here from ClassifierPipeline. There are no Tests!?!? Test! - fraser 8/Oct :P
@@ -20,15 +29,16 @@ import java.util.Set;
 public class ResolverPipeline {
 
     private final boolean multipleClassifications;
-    private CachedClassifier<TokenSet,Classification> cache;
-    private BelowThresholdRemover<Code,Classification,Double> bTR;
-    private HierarchyResolver<Code,Classification> hR;
-    private Flattener<Code,Classification> flattener;
-    private MultiValueMapPruner<Code,Classification,ClassificationComparator> pruner;
-    private ValidCombinationGetter<Code,Classification,TokenSet,ClassificationSetValidityAssessor> vCG;
+    private CachedClassifier<TokenSet, Classification> cache;
+    private BelowThresholdRemover<Code, Classification, Double> bTR;
+    private HierarchyResolver<Code, Classification> hR;
+    private Flattener<Code, Classification> flattener;
+    private MultiValueMapPruner<Code, Classification, ClassificationComparator> pruner;
+    private ValidCombinationGetter<Code, Classification, TokenSet, ClassificationSetValidityAssessor> vCG;
     private LossFunctionApplier<Set<Classification>, Double, ? extends LossFunction<Set<Classification>, Double>> lFA;
 
-    public ResolverPipeline(final CachedClassifier<TokenSet,Classification> cache, final boolean multipleClassifications, final double CONFIDENCE_CHOP_LEVEL){
+    public ResolverPipeline(final CachedClassifier<TokenSet, Classification> cache, final boolean multipleClassifications, final double CONFIDENCE_CHOP_LEVEL) {
+
         this.cache = cache;
         this.multipleClassifications = multipleClassifications;
         bTR = new BelowThresholdRemover<>(CONFIDENCE_CHOP_LEVEL);
@@ -39,26 +49,31 @@ public class ResolverPipeline {
         lFA = new LossFunctionApplier<>(new LengthWeightedLossFunction());
     }
 
-
     public Set<Classification> classify(final TokenSet tokenSet) throws Exception {
-        MultiValueMap<Code,Classification> multiValueMap = classifyNGramSubstrings(tokenSet);
+
+        MultiValueMap<Code, Classification> multiValueMap = classifyNGramSubstrings(tokenSet);
         return resolverPipeline(multiValueMap, tokenSet);
     }
 
     private Set<Classification> resolverPipeline(MultiValueMap<Code, Classification> multiValueMap, final TokenSet tokenSet) throws Exception {
+
         multiValueMap = bTR.removeBelowThreshold(multiValueMap);
-        if(multipleClassifications) {
+        if (multipleClassifications) {
             multiValueMap = hR.moveAncestorsToDescendantKeys(multiValueMap);
-        } else {
-            multiValueMap = flattener.moveAllIntoKey(multiValueMap,multiValueMap.iterator().next());
+        }
+        else {
+            multiValueMap = flattener.moveAllIntoKey(multiValueMap, multiValueMap.iterator().next());
         }
         multiValueMap = pruner.pruneUntilComplexityWithinBound(multiValueMap);
         List<Set<Classification>> validSets = vCG.getValidSets(multiValueMap, tokenSet);
-        return lFA.getBest(validSets);
+        final Set<Classification> best = lFA.getBest(validSets);
+        if (best == null) { return new HashSet<Classification>(); }
+        return best;
     }
 
-    private MultiValueMap<Code,Classification> classifyNGramSubstrings(final TokenSet tokenSet) throws IOException {
-        MultiValueMap<Code,Classification> multiValueMap = new MultiValueMap<>(new HashMap<Code,List<Classification>>());
+    private MultiValueMap<Code, Classification> classifyNGramSubstrings(final TokenSet tokenSet) throws IOException {
+
+        MultiValueMap<Code, Classification> multiValueMap = new MultiValueMap<>(new HashMap<Code, List<Classification>>());
         NGramSubstrings ngs = new NGramSubstrings(tokenSet);
         Multiset<TokenSet> nGramSet = ngs.getGramMultiset();
         for (TokenSet nGram : nGramSet) {
