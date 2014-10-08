@@ -129,24 +129,6 @@ public final class PipelineUtils {
         return trainer;
     }
 
-    public static ClassificationHolder classify(final Bucket trainingBucket, final Bucket predictionBucket, final ClassifierTrainer trainer, final boolean multipleClassifications) throws Exception {
-
-        ExactMatchPipeline exactMatchPipeline = new ExactMatchPipeline(trainer.getExactMatchClassifier());
-        ClassifierPipeline machineLearningClassifier = new ClassifierPipeline(trainer.getOlrClassifier(), trainingBucket,multipleClassifications);
-
-        ClassificationHolder classifierML = new ClassificationHolder(exactMatchPipeline, machineLearningClassifier);
-        classifierML.classify(predictionBucket);
-
-        return classifierML;
-    }
-
-    public static ClassificationHolder classify(final Bucket trainingBucket, final Bucket predictionBucket, IClassifier iclassifier, ExactMatchPipeline exactMatch, final boolean multipleClassifications) throws Exception {
-
-        ClassifierPipeline machineLearningClassifier = new ClassifierPipeline(iclassifier, trainingBucket,multipleClassifications);
-        ClassificationHolder classifierHolder = new ClassificationHolder(exactMatch, machineLearningClassifier);
-        classifierHolder.classify(predictionBucket);
-        return classifierHolder;
-    }
 
     public static void printStatusUpdate() {
 
@@ -188,13 +170,13 @@ public final class PipelineUtils {
         comparisonWriter.close();
     }
 
-    public static void generateAndPrintStatistics(final ClassificationHolder classifier, final CodeIndexer codeIndexer, final String experimentalFolderName, final String identifier) throws IOException {
+    public static void generateAndPrintStatistics(final Bucket bucket, final CodeIndexer codeIndexer, final String experimentalFolderName, final String identifier) throws IOException {
 
         LOGGER.info("********** Output Stats **********");
 
-        final Bucket uniqueRecordsOnly = BucketFilter.uniqueRecordsOnly(classifier.getAllClassified());
+        final Bucket uniqueRecordsOnly = BucketFilter.uniqueRecordsOnly(bucket);
 
-        PipelineUtils.generateAndPrintStats(classifier.getAllClassified(), codeIndexer, "All Records", "AllRecords", experimentalFolderName, identifier);
+        PipelineUtils.generateAndPrintStats(bucket, codeIndexer, "All Records", "AllRecords", experimentalFolderName, identifier);
 
         PipelineUtils.generateAndPrintStats(uniqueRecordsOnly, codeIndexer, "Unique Only", "UniqueOnly", experimentalFolderName, identifier);
     }

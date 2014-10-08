@@ -10,6 +10,9 @@ import java.util.Set;
 
 /**
  * Validity assessor for sets of classifications.
+ * A Set<Classifiction> is said to be valid if the union of the token sets  of the set of
+ * Classifications is a member of the power set of the TokenSet.
+ * TODO check validity of hierarchies?
  * Created by fraserdunlop on 06/10/2014 at 16:37.
  */
 public class ClassificationSetValidityAssessor implements ValidityAssessor<Set<Classification>,TokenSet> {
