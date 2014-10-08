@@ -6,6 +6,9 @@ import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.analysis_metrics.CodeMetrics;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.analysis_metrics.ListAccuracyMetrics;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.analysis_metrics.StrictConfusionMatrix;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.BucketFilter;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.BucketUtils;
@@ -19,6 +22,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.Cla
 import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.ExactMatchPipeline;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.IPipeline;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.PipelineUtils;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.writers.MetricsWriter;
 import uk.ac.standrews.cs.digitising_scotland.tools.Timer;
 import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearningConfiguration;
 
@@ -71,7 +75,7 @@ public final class TrainClassifyOneFile {
         instance.run(args);
     }
 
-    public void run(final String[] args) throws Exception {
+    public Bucket run(final String[] args) throws Exception {
 
         String experimentalFolderName;
         File goldStandard;
@@ -115,9 +119,32 @@ public final class TrainClassifyOneFile {
 
         PipelineUtils.writeRecords(allClassifed, experimentalFolderName, "MachineLearning");
 
-        generateAndPrintStatistics(allClassifed, codeIndex, experimentalFolderName);
+        LOGGER.info("********** Output Stats **********");
+
+        final Bucket uniqueRecordsOnly = BucketFilter.uniqueRecordsOnly(allClassifed);
+
+        LOGGER.info("All Records");
+        CodeMetrics codeMetrics = new CodeMetrics(new StrictConfusionMatrix(allClassifed, codeIndex), codeIndex);
+        ListAccuracyMetrics accuracyMetrics = new ListAccuracyMetrics(allClassifed, codeMetrics);
+        MetricsWriter metricsWriter = new MetricsWriter(accuracyMetrics, "testExperiements", codeIndex);
+        metricsWriter.write("machine learning", "all records");
+
+        accuracyMetrics.prettyPrint("All Records");
+        printMetrics(experimentalFolderName, codeIndex, allClassifed, codeMetrics, accuracyMetrics);
+
+        LOGGER.info("Unique Only");
+        CodeMetrics codeMetrics1 = new CodeMetrics(new StrictConfusionMatrix(uniqueRecordsOnly, codeIndex), codeIndex);
+        ListAccuracyMetrics accuracyMetrics1 = new ListAccuracyMetrics(uniqueRecordsOnly, codeMetrics1);
+        accuracyMetrics1.prettyPrint("Unique Only");
+        PipelineUtils.generateStats(uniqueRecordsOnly, codeMetrics1, accuracyMetrics1, codeIndex, experimentalFolderName, "UniqueOnly", "MachineLearning");
 
         timer.stop();
+
+        return allClassifed;
+
+    }
+
+    private void printMetrics(String experimentalFolderName, CodeIndexer codeIndex, Bucket allClassifed, CodeMetrics codeMetrics, ListAccuracyMetrics accuracyMetrics) throws IOException {
 
     }
 

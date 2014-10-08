@@ -12,7 +12,6 @@ import org.slf4j.LoggerFactory;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
-import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
 
 import com.google.common.io.Files;
 
@@ -94,15 +93,18 @@ public class ListAccuracyMetrics {
 
     private CodeMetrics metrics;
 
+    private Bucket bucket;
+
     /**
      * Instantiates a new list accuracy metrics.
      * 
      * @param listOfRecrods
      *            the list of recrods
      */
-    public ListAccuracyMetrics(final List<Record> listOfRecrods, CodeMetrics metrics) {
+    public ListAccuracyMetrics(final List<Record> listOfRecrods, final CodeMetrics metrics) {
 
         this(new Bucket(listOfRecrods), metrics);
+
     }
 
     /**
@@ -111,8 +113,9 @@ public class ListAccuracyMetrics {
      * @param bucket
      *            the bucket of records
      */
-    public ListAccuracyMetrics(final Bucket bucket, CodeMetrics metrics) {
+    public ListAccuracyMetrics(final Bucket bucket, final CodeMetrics metrics) {
 
+        this.bucket = bucket;
         recordsInBucket = bucket.size();
         averageConfidence = calculateAverageConfidence(bucket);
         numConfidenceOfOne = calculateNumConfidenceOfOne(bucket);
@@ -297,7 +300,7 @@ public class ListAccuracyMetrics {
      * @param pathToGraph
      *            the path to graph
      */
-    public void generateMarkDownSummary(final String pathToExperiemntFolder, final String pathToGraph, final String identifier) {
+    public String generateMarkDownSummary(final String pathToExperiemntFolder, final String pathToGraph) {
 
         StringBuilder sb = new StringBuilder();
         sb.append("#Classification Report    \n" + "##Summary    \n");
@@ -322,13 +325,7 @@ public class ListAccuracyMetrics {
         sb.append("![Graph Matrix][").append(pathToGraph).append("]     \n");
         sb.append("   \n\n");
         sb.append("[").append(pathToGraph).append("]: ").append(pathToGraph).append(".png \"Graph Matrix\"    \n");
-        // sb.append("![Graph](graph.png)");
-
-        final String fileName = pathToExperiemntFolder + "/Reports/" + identifier + "/summary.md";
-        createFolder(fileName);
-        Utils.writeToFile(sb.toString(), fileName, true);
-        Utils.writeToFile(getMatrixAsString(overUnderPredictionMatrix, ",", false), pathToExperiemntFolder + "/Data/" + identifier + "/classificationCountMatrix.csv");
-
+        return sb.toString();
     }
 
     private void createFolder(final String fileName) {
@@ -658,5 +655,20 @@ public class ListAccuracyMetrics {
     public void setCodedBySubStringMatch(final int codedBySubStringMatch) {
 
         this.codedExactMatch = codedBySubStringMatch;
+    }
+
+    public CodeMetrics getMetrics() {
+
+        return metrics;
+    }
+
+    public int[][] getOverUnderPredictionMatrix() {
+
+        return overUnderPredictionMatrix;
+    }
+
+    public Bucket getBucket() {
+
+        return bucket;
     }
 }
