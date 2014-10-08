@@ -132,19 +132,19 @@ public final class PipelineUtils {
     public static ClassificationHolder classify(final Bucket trainingBucket, final Bucket predictionBucket, final ClassifierTrainer trainer, final boolean multipleClassifications) throws Exception {
 
         ExactMatchPipeline exactMatchPipeline = new ExactMatchPipeline(trainer.getExactMatchClassifier());
-        ClassifierPipeline machineLearningClassifier = new ClassifierPipeline(trainer.getOlrClassifier(), trainingBucket);
+        ClassifierPipeline machineLearningClassifier = new ClassifierPipeline(trainer.getOlrClassifier(), trainingBucket,multipleClassifications);
 
         ClassificationHolder classifierML = new ClassificationHolder(exactMatchPipeline, machineLearningClassifier);
-        classifierML.classify(predictionBucket, multipleClassifications);
+        classifierML.classify(predictionBucket);
 
         return classifierML;
     }
 
     public static ClassificationHolder classify(final Bucket trainingBucket, final Bucket predictionBucket, IClassifier iclassifier, ExactMatchPipeline exactMatch, final boolean multipleClassifications) throws Exception {
 
-        ClassifierPipeline machineLearningClassifier = new ClassifierPipeline(iclassifier, trainingBucket);
+        ClassifierPipeline machineLearningClassifier = new ClassifierPipeline(iclassifier, trainingBucket,multipleClassifications);
         ClassificationHolder classifierHolder = new ClassificationHolder(exactMatch, machineLearningClassifier);
-        classifierHolder.classify(predictionBucket, multipleClassifications);
+        classifierHolder.classify(predictionBucket);
         return classifierHolder;
     }
 
