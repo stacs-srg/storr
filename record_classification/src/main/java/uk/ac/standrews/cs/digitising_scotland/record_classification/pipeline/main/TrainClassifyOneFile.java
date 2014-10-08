@@ -96,10 +96,10 @@ public final class TrainClassifyOneFile {
         trainingBucket = trainingPredicition[0];
         predictionBucket = trainingPredicition[1];
 
-        PipelineUtils.printStatusUpdate();
+        LOGGER.info("********** Training Classifiers **********");
 
         CodeIndexer codeIndex = new CodeIndexer(allRecords);
-        ClassifierTrainer trainer = PipelineUtils.train(trainingBucket, experimentalFolderName, codeIndex);
+        final ClassifierTrainer trainer = PipelineUtils.train(trainingBucket, experimentalFolderName, codeIndex);
 
         IPipeline exactMatchPipeline = new ExactMatchPipeline(trainer.getExactMatchClassifier());
         IPipeline machineLearningClassifier = new ClassifierPipeline(trainer.getOlrClassifier(), trainingBucket, multipleClassifications);
