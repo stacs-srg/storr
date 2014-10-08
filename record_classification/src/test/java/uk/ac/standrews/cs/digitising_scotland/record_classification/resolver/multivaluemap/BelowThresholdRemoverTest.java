@@ -8,6 +8,7 @@ import org.junit.runners.Parameterized;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeNotValidException;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.TestInfoPrintTools;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.generic.BelowThresholdRemover;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.Interfaces.IBelowThresholdRemover;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.generic.MultiValueMap;
@@ -32,7 +33,8 @@ public class BelowThresholdRemoverTest {
 
     public BelowThresholdRemoverTest(final IBelowThresholdRemover<Code, Classification, Double> iBelowThresholdRemover){
         this.belowThresholdRemover = iBelowThresholdRemover;
-        System.out.println(this.getClass().getSimpleName() + " is testing " +  belowThresholdRemover.getClass().getSimpleName());
+        TestInfoPrintTools printTools = new TestInfoPrintTools();
+        printTools.printTestSubjectInfo(this, belowThresholdRemover);
     }
 
     @Parameterized.Parameters

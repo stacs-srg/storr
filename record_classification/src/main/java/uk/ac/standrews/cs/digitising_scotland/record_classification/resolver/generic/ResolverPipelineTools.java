@@ -1,8 +1,6 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.generic;
 
-import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.Interfaces.AncestorAble;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.Interfaces.IBelowThresholdRemover;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.Interfaces.ValidityAssessor;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.Interfaces.*;
 
 import java.io.IOException;
 import java.util.*;
@@ -20,7 +18,9 @@ public class ResolverPipelineTools<K extends AncestorAble<K>,
                                    PrunerComparator extends Comparator<V>,
                                    ValidityCriterion,
                                    P_ValidityAssessor extends ValidityAssessor<Set<V>,ValidityCriterion>>
-                        implements IBelowThresholdRemover<K, V, Threshold> {
+                        implements IBelowThresholdRemover<K, V, Threshold>,
+                                   IFlattener<K,V>,
+                                   IHierarchyResolver<K,V>{
 
     private BelowThresholdRemover<K, V, Threshold> bTR;
     private HierarchyResolver<K, V> hR;
@@ -42,16 +42,8 @@ public class ResolverPipelineTools<K extends AncestorAble<K>,
         lFH = new LossFunctionApplier<>(lossFunction);
     }
 
-    public MultiValueMap<K, V> removeBelowThreshold(MultiValueMap<K, V> map) throws IOException, ClassNotFoundException {
-        return bTR.removeBelowThreshold(map);
-    }
-
-    public MultiValueMap<K, V> moveAncestorsToDescendantKeys(final MultiValueMap<K, V> map) throws IOException, ClassNotFoundException {
-        return hR.moveAncestorsToDescendantKeys(map);
-    }
-
     public MultiValueMap<K, V> flattenMultiValueMapIntoFirstKey(final MultiValueMap<K, V> map) throws IOException, ClassNotFoundException {
-        return flattener.moveAllIntoKey(map, map.iterator().next());
+        return moveAllIntoKey(map, map.iterator().next());
     }
 
     public MultiValueMap<K, V> pruneUntilComplexityWithinBound(final MultiValueMap<K, V> map) throws IOException, ClassNotFoundException {
@@ -59,12 +51,27 @@ public class ResolverPipelineTools<K extends AncestorAble<K>,
     }
 
     public List<Set<V>> getValidSets(MultiValueMap<K, V> map, ValidityCriterion tokenSet) throws Exception {
-        return vCG.getValidSets(map,tokenSet);
+        return vCG.getValidSets(map, tokenSet);
     }
 
     public Set<V> getBestSetAccordingToLossFunction(Collection<Set<V>> setCollection){
         if(setCollection.isEmpty())
             return new HashSet<>();
         return lFH.getBest(setCollection);
+    }
+
+    @Override
+    public MultiValueMap<K, V> moveAncestorsToDescendantKeys(final MultiValueMap<K, V> map) throws IOException, ClassNotFoundException {
+        return hR.moveAncestorsToDescendantKeys(map);
+    }
+
+    @Override
+    public MultiValueMap<K, V> removeBelowThreshold(MultiValueMap<K, V> map) throws IOException, ClassNotFoundException {
+        return bTR.removeBelowThreshold(map);
+    }
+
+    @Override
+    public MultiValueMap<K, V> moveAllIntoKey(MultiValueMap<K, V> map, K key) throws IOException, ClassNotFoundException {
+        return flattener.moveAllIntoKey(map, key);
     }
 }

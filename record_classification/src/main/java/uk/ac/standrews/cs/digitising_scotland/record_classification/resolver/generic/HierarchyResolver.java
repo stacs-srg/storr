@@ -1,6 +1,7 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.generic;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.Interfaces.AncestorAble;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.Interfaces.IHierarchyResolver;
 
 import java.io.IOException;
 import java.util.*;
@@ -10,7 +11,7 @@ import java.util.*;
  * into decendent key lists. Keys must implement Ancestorable<K> interface.
  * Created by fraserdunlop on 06/10/2014 at 10:00.
  */
-public class HierarchyResolver<K extends AncestorAble<K>, V> {
+public class HierarchyResolver<K extends AncestorAble<K>, V> implements IHierarchyResolver<K,V> {
 
     /**
      * Moves ancestor key contents to decendent key lists.
