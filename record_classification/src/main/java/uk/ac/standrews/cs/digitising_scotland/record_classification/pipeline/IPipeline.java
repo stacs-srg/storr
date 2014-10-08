@@ -4,8 +4,8 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 
 public interface IPipeline {
 
-    Bucket classify(final Bucket bucket, final boolean multipleClassifications) throws Exception;
+    public Bucket classify(final Bucket bucket) throws Exception;
 
-    Bucket getClassified();
+    public Bucket getSuccessfullyClassified();
 
 }

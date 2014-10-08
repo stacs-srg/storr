@@ -36,6 +36,13 @@ public class Record {
 
     }
 
+    public boolean isFullyClassified() {
+        for(String description : originalData.getDescription())
+            if(!descriptionIsClassified(description))
+                return false;
+        return true;
+    }
+
     public boolean descriptionIsClassified(final String description){
         return listOfClassifications.containsKey(description);
     }
