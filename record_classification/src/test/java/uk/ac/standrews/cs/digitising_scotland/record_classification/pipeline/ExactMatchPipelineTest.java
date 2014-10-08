@@ -90,7 +90,7 @@ public class ExactMatchPipelineTest {
 
         String description = "new description";
         Set<Classification> result = pipeline.classify("old age");
-        pipeline.addResultToRecord(record, description, result);
+        record.addClassificationsToDescription(description, result);
         final HashMultimap<String, Classification> listOfClassifications = record.getListOfClassifications();
         Assert.assertTrue(listOfClassifications.containsKey(description));
         Assert.assertTrue(listOfClassifications.get(description).iterator().next().getCode().equals(codeDictionary.getCode("R54")));
@@ -107,7 +107,7 @@ public class ExactMatchPipelineTest {
         Set<Classification> result2 = pipeline.classify("Massive Pulmonary Embolism");
         result1.add(result2.iterator().next());
 
-        pipeline.addResultToRecord(record, description, result1);
+        record.addClassificationsToDescription(description, result1);
         final HashMultimap<String, Classification> listOfClassifications = record.getListOfClassifications();
         Assert.assertTrue(listOfClassifications.containsKey(description));
         final Iterator<Classification> iterator = listOfClassifications.get(description).iterator();

@@ -52,9 +52,7 @@ public class ExactMatchPipeline implements IPipeline {
 
         for (Record record : bucket) {
 
-            for (String description : record.getDescription()) {
-                classifyDescription(record, description);
-            }
+            classifyRecord(record);
 
             if (record.isFullyClassified()) {
                 fullyClassified.addRecordToBucket(record);
@@ -70,18 +68,18 @@ public class ExactMatchPipeline implements IPipeline {
         return partialClassified;
     }
 
+    protected void classifyRecord(final Record record) throws IOException {
+
+        for (String description : record.getDescription()) {
+            classifyDescription(record, description);
+        }
+    }
+
     private void classifyDescription(final Record record, final String description) throws IOException {
 
         final Set<Classification> result = classify(description);
         if (result != null) {
             record.addClassificationsToDescription(description, result);
-        }
-    }
-
-    protected void addResultToRecord(final Record record, final String description, final Set<Classification> result) {
-
-        for (Classification codeTriple : result) {
-            record.addClassification(description, codeTriple);
         }
     }
 
@@ -91,7 +89,7 @@ public class ExactMatchPipeline implements IPipeline {
      * @return A set of {@link Classification}s that contain the code, confidence and tokens used to produce classification.
      * @throws IOException I/O Exception
      */
-    public Set<Classification> classify(final String description) throws IOException {
+    protected Set<Classification> classify(final String description) throws IOException {
 
         return classifier.classifyTokenSetToCodeTripleSet(new TokenSet(description));
 
