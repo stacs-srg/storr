@@ -94,15 +94,15 @@ public final class TrainClassifyOneFile {
         CodeDictionary codeDictionary = new CodeDictionary(codeDictionaryFile);
 
         BucketGenerator generator = new BucketGenerator(codeDictionary);
-        Bucket allRecords = generator.generateTrainingBucket(goldStandard);
+        Bucket allInputRecords = generator.generateTrainingBucket(goldStandard);
 
-        Bucket[] trainingPredicition = randomlyAssignToTrainingAndPrediction(allRecords, trainingRatio);
+        Bucket[] trainingPredicition = randomlyAssignToTrainingAndPrediction(allInputRecords, trainingRatio);
         trainingBucket = trainingPredicition[0];
         predictionBucket = trainingPredicition[1];
 
         LOGGER.info("********** Training Classifiers **********");
 
-        CodeIndexer codeIndex = new CodeIndexer(allRecords);
+        CodeIndexer codeIndex = new CodeIndexer(allInputRecords);
         final ClassifierTrainer trainer = PipelineUtils.train(trainingBucket, experimentalFolderName, codeIndex);
 
         IPipeline exactMatchPipeline = new ExactMatchPipeline(trainer.getExactMatchClassifier());
@@ -118,6 +118,7 @@ public final class TrainClassifyOneFile {
         LOGGER.info("Not Classifed Bucket Size: " + notMachineLearned.size());
 
         Bucket allClassifed = BucketUtils.getUnion(successfullyClassifiedExactMatch, successfullyClassifiedMachineLearning);
+        Bucket allOutputRecords = BucketUtils.getUnion(allClassifed, notMachineLearned);
 
         PipelineUtils.writeRecords(allClassifed, experimentalFolderName, "MachineLearning");
 
@@ -128,7 +129,7 @@ public final class TrainClassifyOneFile {
         printAllStats(experimentalFolderName, codeIndex, successfullyClassifiedMachineLearning, BucketFilter.uniqueRecordsOnly(successfullyClassifiedMachineLearning));
         timer.stop();
 
-        return allClassifed;
+        return allOutputRecords;
 
     }
 

@@ -12,9 +12,16 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
 import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearningConfiguration;
 
+/**
+ * Test class for the {@link PIlot} class. Exact matches and trains an OLR with known input and output.
+ * Should test all types of classification with exact match and olr.
+ * ie, fully matched, half matched half learned, not matched.
+ * @author jkc25
+ *
+ */
 public class PIlotTest {
 
-    PIlot pilot;
+    private PIlot pilot;
 
     @Before
     public void setUp() throws Exception {
