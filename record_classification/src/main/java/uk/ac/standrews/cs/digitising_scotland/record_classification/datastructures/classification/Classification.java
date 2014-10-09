@@ -2,7 +2,7 @@ package uk.ac.standrews.cs.digitising_scotland.record_classification.datastructu
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.Interfaces.AbstractClassification;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.resolver.Interfaces.AbstractClassification;
 
 /**
  * This class represents a classification, either gold standard or from a classifier.
