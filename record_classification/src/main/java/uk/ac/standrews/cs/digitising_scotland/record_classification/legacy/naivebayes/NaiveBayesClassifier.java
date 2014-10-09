@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.naivebayes;
+package uk.ac.standrews.cs.digitising_scotland.record_classification.legacy.naivebayes;
 
 import java.io.File;
 import java.io.IOException;

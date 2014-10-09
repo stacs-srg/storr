@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.digitising_scotland.record_classification.lda;
+package uk.ac.standrews.cs.digitising_scotland.record_classification.legacy.lda;
 
 import java.io.File;
 

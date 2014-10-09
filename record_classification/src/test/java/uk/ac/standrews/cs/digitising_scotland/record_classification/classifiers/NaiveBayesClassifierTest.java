@@ -9,7 +9,7 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 
-import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.naivebayes.NaiveBayesClassifier;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.legacy.naivebayes.NaiveBayesClassifier;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Pair;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
@@ -81,7 +81,7 @@ public class NaiveBayesClassifierTest {
     }
 
     /**
-     * Trains and returns a {@link uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.naivebayes.NaiveBayesClassifier}.
+     * Trains and returns a {@link uk.ac.standrews.cs.digitising_scotland.record_classification.legacy.naivebayes.NaiveBayesClassifier}.
      *
      * @return the naive bayes classifier
      * @throws Exception the exception
