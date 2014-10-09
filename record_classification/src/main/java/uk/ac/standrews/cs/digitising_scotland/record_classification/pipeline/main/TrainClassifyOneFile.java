@@ -12,6 +12,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.BucketFilter;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.BucketUtils;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.classification.LengthWeightedLossFunction;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeDictionary;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeIndexer;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
@@ -37,7 +38,7 @@ import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearnin
  * these records. The vectorFactory also manages the mapping of vectors IDs to
  * words, ie the vector dictionary. <br>
  * <br>
- * An {@link AbstractClassifier} is then created from the training bucket and
+ * An IClassifier is then created from the training bucket and
  * the model(s) are trained and saved to disk. <br>
  * <br>
  * The records to be classified are held in a file with the correct format as
@@ -46,7 +47,7 @@ import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearnin
  * {@link Bucket}. <br>
  * <br>
  * After the records have been created and stored in a bucket, classification
- * can begin. This is carried out by the {@link BucketClassifier} class which in
+ * can begin. This is carried out by the BucketClassifier class which in
  * turn implements the {@link ClassifierPipeline}. Please see this
  * class for implementation details. <br>
  * <br>
@@ -106,7 +107,7 @@ public final class TrainClassifyOneFile {
         final ClassifierTrainer trainer = PipelineUtils.train(trainingBucket, experimentalFolderName, codeIndex);
 
         IPipeline exactMatchPipeline = new ExactMatchPipeline(trainer.getExactMatchClassifier());
-        IPipeline machineLearningClassifier = new ClassifierPipeline(trainer.getOlrClassifier(), trainingBucket, multipleClassifications);
+        IPipeline machineLearningClassifier = new ClassifierPipeline(trainer.getOlrClassifier(), trainingBucket,new LengthWeightedLossFunction(), multipleClassifications, true);
 
         Bucket notExactMatched = exactMatchPipeline.classify(predictionBucket);
         Bucket notMachineLearned = machineLearningClassifier.classify(notExactMatched);
