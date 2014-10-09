@@ -1,7 +1,6 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.generic;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.Interfaces.ValidityAssessor;
-
 import java.util.*;
 
 /**

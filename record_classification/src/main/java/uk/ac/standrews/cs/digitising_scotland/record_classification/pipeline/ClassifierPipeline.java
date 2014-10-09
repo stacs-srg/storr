@@ -8,14 +8,17 @@ import java.util.Set;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.IClassifier;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.lookup.NGramSubstrings;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.classification.Classification;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.classification.ClassificationComparator;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.classification.ClassificationSetValidityAssessor;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.classification.LengthWeightedLossFunction;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.CachedClassifier;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenClassificationCachePopulator;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.Interfaces.LossFunction;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.generic.ResolverPipeline;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.project_specific.*;
 
 /**
  * This class is produces a set of {@link Classification}s that represent the
@@ -28,7 +31,7 @@ public class ClassifierPipeline implements IPipeline {
 
     /** The Constant CONFIDENCE_CHOP_LEVEL. */
     private static final double CONFIDENCE_CHOP_LEVEL = 0.3;
-    private final ResolverPipeline<Double,Code,Classification,ClassificationComparator,TokenSet,ClassificationSetValidityAssessor,Double,LengthWeightedLossFunction> resolverPipeline;
+    private final RecordClassificationResolverPipeline<? extends LossFunction<Set<Classification>,Double>> resolverPipeline;
 
     /** The record cache. */
     private Map<String, Set<Classification>> recordCache;
@@ -43,14 +46,18 @@ public class ClassifierPipeline implements IPipeline {
      * @param classifier    {@link uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.IClassifier} used for machine learning classification
      * @param cachePopulationBucket the training bucket
      */
-    public ClassifierPipeline(final IClassifier<TokenSet,Classification> classifier, final Bucket cachePopulationBucket, final boolean multipleClassifications) {
+    public ClassifierPipeline(final IClassifier<TokenSet,Classification> classifier,
+                              final Bucket cachePopulationBucket,
+                              final LossFunction<Set<Classification>,Double> lossFunction,
+                              final boolean multipleClassifications,
+                              final boolean resolveHierarchies) {
 
         /* The cache. */
         TokenClassificationCachePopulator populator = new TokenClassificationCachePopulator();
         recordCache = new HashMap<>();
         CachedClassifier<TokenSet,Classification> cache = new CachedClassifier<>(classifier, populator.prePopulate(cachePopulationBucket));
 
-        this.resolverPipeline = new ResolverPipeline<>(cache, multipleClassifications,new ClassificationComparator(), new ClassificationSetValidityAssessor(), new LengthWeightedLossFunction(),new NGramSubstrings(),CONFIDENCE_CHOP_LEVEL);
+        this.resolverPipeline = new RecordClassificationResolverPipeline<>(cache, lossFunction, CONFIDENCE_CHOP_LEVEL, multipleClassifications, resolveHierarchies);
         this.successfullyClassified = new Bucket();
         this.forFurtherProcessing = new Bucket();
     }

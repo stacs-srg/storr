@@ -1,7 +1,6 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.Interfaces;
 
 import com.google.common.collect.Multiset;
-
 import java.io.IOException;
 
 /**

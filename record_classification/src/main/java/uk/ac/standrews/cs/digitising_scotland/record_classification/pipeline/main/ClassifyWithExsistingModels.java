@@ -101,7 +101,7 @@ public final class ClassifyWithExsistingModels {
         ClassifierTrainer trainer = PipelineUtils.getExistingModels(modelLocation, allInputRecords, experimentalFolderName);
 
         IPipeline exactMatchPipeline = new ExactMatchPipeline(trainer.getExactMatchClassifier());
-        IPipeline machineLearningClassifier = new ClassifierPipeline(trainer.getOlrClassifier(), allInputRecords, multipleClassifications);
+        IPipeline machineLearningClassifier = new ClassifierPipeline(trainer.getOlrClassifier(), allRecords,new LengthWeightedLossFunction(), multipleClassifications,true);
 
         Bucket notExactMatched = exactMatchPipeline.classify(allInputRecords);
         Bucket notMachineLearned = machineLearningClassifier.classify(notExactMatched);

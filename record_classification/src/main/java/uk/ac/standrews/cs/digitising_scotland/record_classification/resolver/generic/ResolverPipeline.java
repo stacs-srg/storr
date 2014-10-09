@@ -2,11 +2,7 @@ package uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.ge
 
 import com.google.common.collect.Multiset;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.IClassifier;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.Interfaces.AncestorAble;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.Interfaces.LossFunction;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.Interfaces.ValidityAssessor;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.Interfaces.AbstractClassification;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.Interfaces.SubsetEnumerator;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.Interfaces.*;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -35,6 +31,7 @@ public class ResolverPipeline<Threshold,
                               implements IClassifier<FeatureSet,Set<Classification>>{
 
     private final boolean multipleClassifications;
+    private final boolean resolveHierarchies;
     private IClassifier<FeatureSet, Classification> classifier;
     private BelowThresholdRemover<Code, Classification,Threshold> bTR;
     private HierarchyResolver<Code, Classification> hR;
@@ -50,9 +47,11 @@ public class ResolverPipeline<Threshold,
                             final  P_ValidityAssessor classificationSetValidityAssessor,
                             final P_LossFunction lengthWeightedLossFunction,
                             final SubsetEnumerator<FeatureSet> subsetEnumerator,
-                            final Threshold threshold){
+                            final Threshold threshold,
+                            final boolean resolveHierarchies){
         this.classifier = classifier;
         this.multipleClassifications = multipleClassifications;
+        this.resolveHierarchies = resolveHierarchies;
         bTR = new BelowThresholdRemover<>(threshold);
         hR = new HierarchyResolver<>();
         flattener = new Flattener<>();
@@ -77,7 +76,7 @@ public class ResolverPipeline<Threshold,
     private Set<Classification> resolverPipeline(MultiValueMap<Code, Classification> multiValueMap,
                                                  final FeatureSet featureSet) throws Exception {
         multiValueMap = bTR.removeBelowThreshold(multiValueMap);
-        if(multipleClassifications) {
+        if(multipleClassifications && resolveHierarchies) {
             multiValueMap = hR.moveAncestorsToDescendantKeys(multiValueMap);
         } else {
             multiValueMap = flattener.moveAllIntoKey(multiValueMap,multiValueMap.iterator().next());

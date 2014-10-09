@@ -1,8 +1,7 @@
-package uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.project_specific;
+package uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.classification;
 
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multiset;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.Interfaces.ValidityAssessor;
 
@@ -10,9 +9,8 @@ import java.util.Set;
 
 /**
  * Validity assessor for sets of classifications.
- * A Set<Classifiction> is said to be valid if the union of the token sets  of the set of
+ * A Set<Classification> is said to be valid if the union of the token sets  of the set of
  * Classifications is a member of the power set of the TokenSet.
- * TODO check validity of hierarchies?
  * Created by fraserdunlop on 06/10/2014 at 16:37.
  */
 public class ClassificationSetValidityAssessor implements ValidityAssessor<Set<Classification>,TokenSet> {
