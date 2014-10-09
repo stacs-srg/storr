@@ -14,6 +14,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.pro
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.generic.ValidCombinationGetter;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -27,7 +28,7 @@ public class ValidCombinationGetterTest {
             new ValidCombinationGetter<>(new ClassificationSetValidityAssessor());
     private MultiValueMapTestHelper mvmHelper;
     private LossFunction<Set<Classification>,Double> lengthWeighted = new LengthWeightedLossFunction();
-    private LossFunctionApplier<Set<Classification>,Double,LengthWeightedLossFunction> lossFunctionApplier =
+    private LossFunctionApplier<Classification,Double,LengthWeightedLossFunction> lossFunctionApplier =
             new LossFunctionApplier<>(new LengthWeightedLossFunction());
 
 
@@ -65,5 +66,11 @@ public class ValidCombinationGetterTest {
             averageConfidence += triple.getConfidence();
         }
         Assert.assertEquals((2 * 0.87 + 0.83), averageConfidence, 0.001);
+    }
+
+    @Test
+    public void testLossFunctionApplierReturnsEmptySetWithEmptyGetBestArg(){
+        List<Set<Classification>> classifications = new ArrayList<>();
+        Assert.assertTrue(lossFunctionApplier.getBest(classifications).isEmpty());
     }
 }

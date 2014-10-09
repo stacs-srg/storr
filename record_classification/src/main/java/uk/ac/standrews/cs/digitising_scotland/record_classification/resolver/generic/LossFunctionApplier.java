@@ -26,7 +26,7 @@ public class LossFunctionApplier<V, LossMetric extends Comparable<LossMetric>, F
      * objects. If the comparator for your LossMetric is implemented
      * the wrong way round then getBest will return the worst set
      * rather than the best.
-     * @param sets
+     * @param sets sets to rank based on loss
      * @return best according to lossFunction or null if sets is empty.
      */
     public Set<V> getBest(final Collection<Set<V>> sets) {
