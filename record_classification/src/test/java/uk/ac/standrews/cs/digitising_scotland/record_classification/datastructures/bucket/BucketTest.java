@@ -60,10 +60,9 @@ public class BucketTest {
         Assert.assertEquals(listOfRecords.size(), bucketA.size());
 
         Iterator<Record> originalList = listOfRecords.iterator();
-        Iterator<Record> bucketList = bucketA.iterator();
 
-        while (bucketList.hasNext()) {
-            Assert.assertEquals(originalList.next(), bucketList.next());
+        for (Record record : bucketA) {
+            Assert.assertEquals(originalList.next(), record);
         }
 
     }
@@ -105,10 +104,9 @@ public class BucketTest {
         Assert.assertEquals(listOfRecords.size(), bucketA.size());
 
         Iterator<Record> originalList = listOfRecords.iterator();
-        Iterator<Record> bucketList = bucketA.iterator();
 
-        while (bucketList.hasNext()) {
-            Assert.assertEquals(originalList.next(), bucketList.next());
+        for (Record record : bucketA) {
+            Assert.assertEquals(originalList.next(), record);
         }
 
     }

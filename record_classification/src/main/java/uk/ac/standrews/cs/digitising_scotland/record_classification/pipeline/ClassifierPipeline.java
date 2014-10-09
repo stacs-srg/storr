@@ -11,7 +11,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.classification.Classification;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.cachedclassifier.CachedClassifier;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenClassificationCachePopulator;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenToClassificationMapGenerator;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.resolver.Interfaces.LossFunction;
 
@@ -48,9 +48,9 @@ public class ClassifierPipeline implements IPipeline {
                               final boolean resolveHierarchies) {
 
         /* The cache. */
-        TokenClassificationCachePopulator populator = new TokenClassificationCachePopulator();
+        TokenToClassificationMapGenerator populator = new TokenToClassificationMapGenerator();
         recordCache = new HashMap<>();
-        CachedClassifier<TokenSet,Classification> cache = new CachedClassifier<>(classifier, populator.prePopulate(cachePopulationBucket));
+        CachedClassifier<TokenSet,Classification> cache = new CachedClassifier<>(classifier, populator.generateMap(cachePopulationBucket));
 
         this.resolverPipeline = new RecordClassificationResolverPipeline<>(cache, lossFunction, CONFIDENCE_CHOP_LEVEL, multipleClassifications, resolveHierarchies);
         this.successfullyClassified = new Bucket();
