@@ -1,12 +1,13 @@
-package uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code;
+package uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.classification;
 
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.Interfaces.AbstractClassification;
 
 /**
  * This class represents a classification, either gold standard or from a classifier.
  * A classification consists of the foloowing:
- * The class contains 3 variables, the {@link Code}, the {@link TokenSet} that relates to the code and finally
+ * The class contains 3 variables, the {@link uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code}, the {@link TokenSet} that relates to the code and finally
  * the confidence of that code.
  * <br><br>
  * @author jkc25, frjd2

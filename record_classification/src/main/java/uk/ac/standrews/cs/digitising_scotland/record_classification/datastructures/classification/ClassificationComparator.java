@@ -1,6 +1,5 @@
-package uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.project_specific;
+package uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.classification;
 
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
 import java.io.Serializable;
 import java.util.Comparator;
 

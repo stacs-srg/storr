@@ -11,7 +11,6 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.analysis_metrics.InvertedSoftConfusionMatrix;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.analysis_metrics.ListAccuracyMetrics;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeIndexer;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.PipelineUtils;
 import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
 
 import com.google.common.io.Files;
@@ -75,9 +74,9 @@ public class MetricsWriter {
         AbstractConfusionMatrix invertedConfusionMatrix = new InvertedSoftConfusionMatrix(accuracyMetrics.getBucket(), codeIndex);
 
         try {
-            PipelineUtils.runRscript("src/main/R/CodeStatsPlotter.R", strictCodeStatsPath, reportspath, strictCodePath);
-            PipelineUtils.runRscript("src/main/R/CodeStatsPlotter.R", softCodeStatsPath, reportspath, softCodePath);
-            PipelineUtils.runRscript("src/main/R/HeatMapPlotter.R", matrixDataPath, reportspath, matrixImagePath);
+            runRscript("src/main/R/CodeStatsPlotter.R", strictCodeStatsPath, reportspath, strictCodePath);
+            runRscript("src/main/R/CodeStatsPlotter.R", softCodeStatsPath, reportspath, softCodePath);
+            runRscript("src/main/R/HeatMapPlotter.R", matrixDataPath, reportspath, matrixImagePath);
         }
         catch (IOException e) {
             // TODO Auto-generated catch block
@@ -95,5 +94,28 @@ public class MetricsWriter {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+    }
+    public void runRscript(final String pathToRScript, final String dataPath, final String reportsPath, final String imageName) throws IOException {
+
+        if (!isRinstalled()) { return; }
+
+        String imageOutputPath = reportsPath + imageName + ".png";
+        String command = "Rscript " + pathToRScript + " " + dataPath + " " + imageOutputPath;
+        LOGGER.info(Utils.executeCommand(command));
+    }
+
+    public boolean isRinstalled() {
+
+        final String pathToScript = Utils.class.getResource("/scripts/checkScript.sh").getFile();
+        String checkSystemForR = "sh " + pathToScript + " RScript";
+        final String executeCommand = Utils.executeCommand(checkSystemForR);
+        LOGGER.info(executeCommand);
+
+        if (executeCommand.equals("RScript required but it's not installed.  Aborting.\n")) {
+            LOGGER.error("Stats not generated. R or RScript is not installed.");
+            // System.exit(2);FIXME check if this exit is really required.
+            return false;
+        }
+        return true;
     }
 }

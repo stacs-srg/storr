@@ -2,11 +2,7 @@ package uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.ge
 
 import com.google.common.collect.Multiset;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.IClassifier;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.Interfaces.AncestorAble;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.Interfaces.LossFunction;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.Interfaces.ValidityAssessor;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.Interfaces.AbstractClassification;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.Interfaces.SubsetEnumerator;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.Interfaces.*;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;

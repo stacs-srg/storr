@@ -1,7 +1,6 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.generic;
 
 import java.util.*;
-
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.Interfaces.LossFunction;
 import uk.ac.standrews.cs.digitising_scotland.tools.MapSorter;
 
