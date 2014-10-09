@@ -41,7 +41,7 @@ public class ResolverPipeline<Threshold,
     private Flattener<Code, Classification> flattener;
     private MultiValueMapPruner<Code, Classification, P_Comparator> pruner;
     private ValidCombinationGetter<Code, Classification, FeatureSet,P_ValidityAssessor> vCG;
-    private LossFunctionApplier<Set<Classification>, LossMetric, P_LossFunction> lFA;
+    private LossFunctionApplier<Classification, LossMetric, P_LossFunction> lFA;
     private SubsetEnumerator<FeatureSet> subsetEnumerator;
 
     public ResolverPipeline(final IClassifier<FeatureSet, Classification> classifier,
