@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Set;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.IClassifier;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.lookup.NGramSubstrings;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
@@ -13,10 +14,8 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.CachedClassifier;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenClassificationCachePopulator;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.project_specific.ClassificationComparator;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.project_specific.ClassificationSetValidityAssessor;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.project_specific.LengthWeightedLossFunction;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.project_specific.ResolverPipeline;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.generic.ResolverPipeline;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.project_specific.*;
 
 /**
  * This class is produces a set of {@link Classification}s that represent the
@@ -51,7 +50,7 @@ public class ClassifierPipeline implements IPipeline {
         recordCache = new HashMap<>();
         CachedClassifier<TokenSet,Classification> cache = new CachedClassifier<>(classifier, populator.prePopulate(cachePopulationBucket));
 
-        this.resolverPipeline = new ResolverPipeline<>(cache, multipleClassifications,new ClassificationComparator(), new ClassificationSetValidityAssessor(), new LengthWeightedLossFunction(),CONFIDENCE_CHOP_LEVEL);
+        this.resolverPipeline = new ResolverPipeline<>(cache, multipleClassifications,new ClassificationComparator(), new ClassificationSetValidityAssessor(), new LengthWeightedLossFunction(),new NGramSubstrings(),CONFIDENCE_CHOP_LEVEL);
         this.successfullyClassified = new Bucket();
         this.forFurtherProcessing = new Bucket();
     }
@@ -107,7 +106,7 @@ public class ClassifierPipeline implements IPipeline {
         }
         else {
             TokenSet tokenSet = new TokenSet(description);
-            result = resolverPipeline.classify(tokenSet,tokenSet);
+            result = resolverPipeline.classify(tokenSet);
             recordCache.put(description, result);
         }
         return result;
