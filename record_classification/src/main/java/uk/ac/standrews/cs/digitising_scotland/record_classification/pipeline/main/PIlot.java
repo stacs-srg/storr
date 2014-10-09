@@ -2,6 +2,7 @@ package uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.ma
 
 import java.io.File;
 
+import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -109,6 +110,8 @@ public final class PIlot {
         LOGGER.info("Not Classifed Bucket Size: " + notMachineLearned.size());
 
         Bucket allClassifed = BucketUtils.getUnion(exactMatchPipeline.getSuccessfullyClassified(), machineLearningClassifier.getSuccessfullyClassified());
+        Bucket allRecords = BucketUtils.getUnion(allClassifed, notMachineLearned);
+        Assert.assertTrue(allRecords.size() == predictionBucket.size());
 
         PipelineUtils.writeRecords(allClassifed, experimentalFolderName, "MachineLearning");
 
@@ -116,7 +119,7 @@ public final class PIlot {
 
         timer.stop();
 
-        return allClassifed;
+        return allRecords;
     }
 
     private File[] parseInput(final String[] args) {

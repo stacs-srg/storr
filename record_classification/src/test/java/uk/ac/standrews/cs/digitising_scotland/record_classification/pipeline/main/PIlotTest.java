@@ -33,9 +33,12 @@ public class PIlotTest {
         String testData = getClass().getResource("/pilotTest.tsv").getFile();
         String[] args = {trainingData, testData};
 
-        Bucket allClassified = pilot.run(args);
+        Bucket allRecords = pilot.run(args);
 
-        Set<Classification> classifications = allClassified.getRecord(46999).getClassifications();
+        final int numberOfRecords = 7;
+        Assert.assertTrue(allRecords.size() == numberOfRecords);
+
+        Set<Classification> classifications = allRecords.getRecord(46999).getClassifications();
         System.out.println(classifications);
         Assert.assertEquals(3, classifications.size());
         it = classifications.iterator();
@@ -43,15 +46,21 @@ public class PIlotTest {
         Assert.assertTrue(codesinmap.contains("I340"));
         Assert.assertTrue(codesinmap.contains("I48"));
         Assert.assertTrue(codesinmap.contains("I515"));
+        final Set<Classification> sterosisSet = allRecords.getRecord(46999).getListOfClassifications().get("mitral sterosis");
+        Assert.assertTrue(sterosisSet.size() == 1);
+        Assert.assertTrue(sterosisSet.iterator().next().getConfidence() < 1);
+        final Set<Classification> myocardialSet = allRecords.getRecord(46999).getListOfClassifications().get("myocardial degeneration");
+        Assert.assertTrue(myocardialSet.size() == 1);
+        Assert.assertTrue(myocardialSet.iterator().next().getConfidence() > 1);
 
-        classifications = allClassified.getRecord(72408).getClassifications();
+        classifications = allRecords.getRecord(72408).getClassifications();
         System.out.println(classifications);
         Assert.assertEquals(1, classifications.size());
         it = classifications.iterator();
         codesinmap = getCodesInMap(it);
         Assert.assertTrue(codesinmap.contains("I340"));
 
-        classifications = allClassified.getRecord(6804).getClassifications();
+        classifications = allRecords.getRecord(6804).getClassifications();
         System.out.println(classifications);
         Assert.assertEquals(2, classifications.size());
         it = classifications.iterator();
@@ -59,20 +68,39 @@ public class PIlotTest {
         Assert.assertTrue(codesinmap.contains("I219"));
         Assert.assertTrue(codesinmap.contains("I515"));
 
-        classifications = allClassified.getRecord(43454).getClassifications();
+        classifications = allRecords.getRecord(43454).getClassifications();
         System.out.println(classifications);
         Assert.assertEquals(1, classifications.size());
         it = classifications.iterator();
         codesinmap = getCodesInMap(it);
         Assert.assertTrue(codesinmap.contains("I219"));
 
-        classifications = allClassified.getRecord(6809).getClassifications();
+        classifications = allRecords.getRecord(6809).getClassifications();
         System.out.println(classifications);
         Assert.assertEquals(2, classifications.size());
         it = classifications.iterator();
         codesinmap = getCodesInMap(it);
         Assert.assertTrue(codesinmap.contains("I219"));
         Assert.assertTrue(codesinmap.contains("I515"));
+
+        classifications = allRecords.getRecord(9999).getClassifications();
+        System.out.println(classifications);
+        Assert.assertEquals(0, classifications.size());
+        it = classifications.iterator();
+        codesinmap = getCodesInMap(it);
+        Assert.assertTrue(codesinmap.isEmpty());
+
+        classifications = allRecords.getRecord(1234).getClassifications();
+        System.out.println(classifications);
+        Assert.assertEquals(3, classifications.size());
+        it = classifications.iterator();
+        codesinmap = getCodesInMap(it);
+        Assert.assertTrue(codesinmap.contains("I501"));
+        Assert.assertTrue(codesinmap.contains("I340"));
+        Assert.assertTrue(codesinmap.contains("I38"));
+        final Set<Classification> failureSet = allRecords.getRecord(1234).getListOfClassifications().get("failure of the right ventricular");
+        Assert.assertEquals(1, failureSet.size());
+        Assert.assertTrue(failureSet.iterator().next().getConfidence() > 1);
 
     }
 
