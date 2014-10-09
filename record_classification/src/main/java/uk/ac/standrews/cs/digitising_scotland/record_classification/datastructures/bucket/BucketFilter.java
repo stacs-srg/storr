@@ -1,7 +1,9 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 
@@ -23,13 +25,18 @@ public final class BucketFilter {
      */
     public static Bucket uniqueRecordsOnly(final Bucket bucket) {
 
-        List<Record> recordList = new ArrayList<>();
+        Map<List<String>, Record> map = new HashMap<>();
 
         for (Record record : bucket) {
-            if (!recordList.contains(record)) {
-                recordList.add(record);
+            if (!map.containsKey(record.getDescription())) {
+                map.put(record.getDescription(), record);
             }
+        }
 
+        List<Record> recordList = new ArrayList<>();
+
+        for (Record record : map.values()) {
+            recordList.add(record);
         }
 
         return new Bucket(recordList);

@@ -20,7 +20,6 @@ import org.junit.Test;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.ClassifierTestingHelper;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.OriginalData;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Pair;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Classification;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
@@ -30,6 +29,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.RecordFactory;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.exceptions.InputFormatException;
+import uk.ac.standrews.cs.digitising_scotland.tools.Timer;
 import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearningConfiguration;
 
 /**
@@ -209,19 +209,27 @@ public class OLRClassifierTest {
     @Test
     public void testStop() throws Exception {
 
+        Timer t = new Timer();
+        t.start();
+
         Bucket bucketA = createTrainingBucket();
 
-        String data = "stop\n";
+        String data = "count\n";
         InputStream stdin = System.in;
         System.setIn(new ByteArrayInputStream(data.getBytes()));
 
         OLRClassifier olrClassifier1 = new OLRClassifier();
-        MachineLearningConfiguration.getDefaultProperties().setProperty("reps", "1000");
+        MachineLearningConfiguration.getDefaultProperties().setProperty("reps", "5000000");
 
         olrClassifier1.train(bucketA);
 
         System.setIn(stdin);
-        Assert.assertTrue(new File("target/olrModelPath").exists());
+
+        t.stop();
+        System.setOut(System.out);
+        long elapsedTime = (long) (t.elapsedTime() / 1000000);
+        int cutOff = 1000;
+        Assert.assertTrue(elapsedTime < cutOff);
 
     }
 

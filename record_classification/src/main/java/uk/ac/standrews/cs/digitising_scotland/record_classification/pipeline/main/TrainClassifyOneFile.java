@@ -84,7 +84,7 @@ public final class TrainClassifyOneFile {
 
         Timer timer = PipelineUtils.initAndStartTimer();
 
-        experimentalFolderName = PipelineUtils.setupExperimentalFolders("Experiments");
+        experimentalFolderName = PipelineUtils.setupExperimentalFolders("TestExperiments");
 
         goldStandard = parseGoldStandFile(args);
         double trainingRatio = parseTrainingPct(args);
@@ -110,41 +110,50 @@ public final class TrainClassifyOneFile {
 
         Bucket notExactMatched = exactMatchPipeline.classify(predictionBucket);
         Bucket notMachineLearned = machineLearningClassifier.classify(notExactMatched);
+        Bucket successfullyClassifiedExactMatch = exactMatchPipeline.getSuccessfullyClassified();
+        Bucket successfullyClassifiedMachineLearning = machineLearningClassifier.getSuccessfullyClassified();
 
-        LOGGER.info("Exact Matched Bucket Size: " + exactMatchPipeline.getSuccessfullyClassified().size());
-        LOGGER.info("Machine Learned Bucket Size: " + machineLearningClassifier.getSuccessfullyClassified().size());
+        LOGGER.info("Exact Matched Bucket Size: " + successfullyClassifiedExactMatch.size());
+        LOGGER.info("Machine Learned Bucket Size: " + successfullyClassifiedMachineLearning.size());
         LOGGER.info("Not Classifed Bucket Size: " + notMachineLearned.size());
 
-        Bucket allClassifed = BucketUtils.getUnion(exactMatchPipeline.getSuccessfullyClassified(), machineLearningClassifier.getSuccessfullyClassified());
+        Bucket allClassifed = BucketUtils.getUnion(successfullyClassifiedExactMatch, successfullyClassifiedMachineLearning);
 
         PipelineUtils.writeRecords(allClassifed, experimentalFolderName, "MachineLearning");
 
         LOGGER.info("********** Output Stats **********");
 
         final Bucket uniqueRecordsOnly = BucketFilter.uniqueRecordsOnly(allClassifed);
-
-        LOGGER.info("All Records");
-        CodeMetrics codeMetrics = new CodeMetrics(new StrictConfusionMatrix(allClassifed, codeIndex), codeIndex);
-        ListAccuracyMetrics accuracyMetrics = new ListAccuracyMetrics(allClassifed, codeMetrics);
-        MetricsWriter metricsWriter = new MetricsWriter(accuracyMetrics, "testExperiements", codeIndex);
-        metricsWriter.write("machine learning", "all records");
-
-        accuracyMetrics.prettyPrint("All Records");
-        printMetrics(experimentalFolderName, codeIndex, allClassifed, codeMetrics, accuracyMetrics);
-
-        LOGGER.info("Unique Only");
-        CodeMetrics codeMetrics1 = new CodeMetrics(new StrictConfusionMatrix(uniqueRecordsOnly, codeIndex), codeIndex);
-        ListAccuracyMetrics accuracyMetrics1 = new ListAccuracyMetrics(uniqueRecordsOnly, codeMetrics1);
-        accuracyMetrics1.prettyPrint("Unique Only");
-        PipelineUtils.generateStats(uniqueRecordsOnly, codeMetrics1, accuracyMetrics1, codeIndex, experimentalFolderName, "UniqueOnly", "MachineLearning");
-
+        printAllStats(experimentalFolderName, codeIndex, allClassifed, uniqueRecordsOnly);
+        printAllStats(experimentalFolderName, codeIndex, successfullyClassifiedMachineLearning, BucketFilter.uniqueRecordsOnly(successfullyClassifiedMachineLearning));
         timer.stop();
 
         return allClassifed;
 
     }
 
-    private void printMetrics(String experimentalFolderName, CodeIndexer codeIndex, Bucket allClassifed, CodeMetrics codeMetrics, ListAccuracyMetrics accuracyMetrics) throws IOException {
+    private void printAllStats(final String experimentalFolderName, final CodeIndexer codeIndex, final Bucket allClassifed, final Bucket uniqueRecordsOnly) throws IOException {
+
+        CodeMetrics codeMetrics = new CodeMetrics(new StrictConfusionMatrix(allClassifed, codeIndex), codeIndex);
+        ListAccuracyMetrics accuracyMetrics = new ListAccuracyMetrics(allClassifed, codeMetrics);
+        MetricsWriter metricsWriter = new MetricsWriter(accuracyMetrics, experimentalFolderName, codeIndex);
+        metricsWriter.write("machine learning", "firstBucket");
+        accuracyMetrics.prettyPrint("All Records");
+        printMetrics(experimentalFolderName, codeIndex, allClassifed, codeMetrics, accuracyMetrics);
+
+        LOGGER.info("Unique Only");
+        LOGGER.info("Unique Only  Bucket Size: " + uniqueRecordsOnly.size());
+
+        CodeMetrics codeMetrics1 = new CodeMetrics(new StrictConfusionMatrix(uniqueRecordsOnly, codeIndex), codeIndex);
+        accuracyMetrics = new ListAccuracyMetrics(uniqueRecordsOnly, codeMetrics1);
+        accuracyMetrics.prettyPrint("Unique Only");
+        metricsWriter = new MetricsWriter(accuracyMetrics, experimentalFolderName, codeIndex);
+        metricsWriter.write("machine learning", "unique records");
+        accuracyMetrics.prettyPrint("Unique Records");
+        printMetrics(experimentalFolderName, codeIndex, allClassifed, codeMetrics, accuracyMetrics);
+    }
+
+    private void printMetrics(final String experimentalFolderName, final CodeIndexer codeIndex, final Bucket allClassifed, final CodeMetrics codeMetrics, final ListAccuracyMetrics accuracyMetrics) throws IOException {
 
     }
 

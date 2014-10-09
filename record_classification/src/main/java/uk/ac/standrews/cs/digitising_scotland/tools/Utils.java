@@ -270,6 +270,7 @@ public final class Utils {
 
         FileWriterWithEncoding fstream;
         try {
+            Files.createParentDirs(new File(filename));
             fstream = new FileWriterWithEncoding(filename, Charset.forName("UTF-8"));
             BufferedWriter out = new BufferedWriter(fstream);
             out.write(lloutput);
