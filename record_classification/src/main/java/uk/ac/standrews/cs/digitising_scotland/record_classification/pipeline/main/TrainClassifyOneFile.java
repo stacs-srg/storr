@@ -1,7 +1,9 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.main;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,9 +24,13 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.Cla
 import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.ExactMatchPipeline;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.IPipeline;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.PipelineUtils;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.writers.DataClerkingWriter;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.writers.FileComparisonWriter;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.writers.MetricsWriter;
 import uk.ac.standrews.cs.digitising_scotland.tools.Timer;
 import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearningConfiguration;
+
+import com.google.common.io.Files;
 
 /**
  * This class integrates the training of machine learning models and the
@@ -120,7 +126,8 @@ public final class TrainClassifyOneFile {
         Bucket allClassifed = BucketUtils.getUnion(successfullyClassifiedExactMatch, successfullyClassifiedMachineLearning);
         Bucket allOutputRecords = BucketUtils.getUnion(allClassifed, notMachineLearned);
 
-        PipelineUtils.writeRecords(allClassifed, experimentalFolderName, "MachineLearning");
+        writeRecords(experimentalFolderName, allOutputRecords);
+        writeComparisonFile(experimentalFolderName, allOutputRecords);
 
         LOGGER.info("********** Output Stats **********");
 
@@ -131,6 +138,31 @@ public final class TrainClassifyOneFile {
 
         return allOutputRecords;
 
+    }
+
+    private void writeComparisonFile(String experimentalFolderName, Bucket allClassifed) throws IOException, FileNotFoundException, UnsupportedEncodingException {
+
+        final String comparisonReportPath = "/Data/" + "MachineLearning" + "/comaprison.txt";
+        final File outputPath2 = new File(experimentalFolderName + comparisonReportPath);
+        Files.createParentDirs(outputPath2);
+
+        final FileComparisonWriter comparisonWriter = new FileComparisonWriter(outputPath2, "\t");
+        for (final Record record : allClassifed) {
+            comparisonWriter.write(record);
+        }
+        comparisonWriter.close();
+    }
+
+    private void writeRecords(String experimentalFolderName, Bucket allClassifed) throws IOException {
+
+        final String nrsReportPath = "/Data/" + "MachineLearning" + "/NRSData.txt";
+        final File outputPath = new File(experimentalFolderName + nrsReportPath);
+        Files.createParentDirs(outputPath);
+        final DataClerkingWriter writer = new DataClerkingWriter(outputPath);
+        for (final Record record : allClassifed) {
+            writer.write(record);
+        }
+        writer.close();
     }
 
     private void printAllStats(final String experimentalFolderName, final CodeIndexer codeIndex, final Bucket allClassifed, final Bucket uniqueRecordsOnly) throws IOException {
@@ -192,17 +224,6 @@ public final class TrainClassifyOneFile {
             }
         }
         return trainingRatio;
-    }
-
-    private void generateAndPrintStatistics(final Bucket allClassifed, final CodeIndexer codeIndexer, final String experimentalFolderName) throws IOException {
-
-        LOGGER.info("********** Output Stats **********");
-
-        final Bucket uniqueRecordsOnly = BucketFilter.uniqueRecordsOnly(allClassifed);
-
-        PipelineUtils.generateAndPrintStats(allClassifed, codeIndexer, "All Records", "AllRecords", experimentalFolderName, "MachineLearning");
-
-        PipelineUtils.generateAndPrintStats(uniqueRecordsOnly, codeIndexer, "Unique Only", "UniqueOnly", experimentalFolderName, "MachineLearning");
     }
 
     private Bucket[] randomlyAssignToTrainingAndPrediction(final Bucket bucket, final double trainingRatio) {

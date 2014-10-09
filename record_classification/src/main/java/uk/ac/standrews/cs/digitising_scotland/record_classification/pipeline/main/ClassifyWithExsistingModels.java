@@ -1,13 +1,21 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.main;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.analysis_metrics.CodeMetrics;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.analysis_metrics.ListAccuracyMetrics;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.analysis_metrics.StrictConfusionMatrix;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.BucketFilter;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.BucketUtils;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeDictionary;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeIndexer;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.vectors.VectorFactory;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.BucketGenerator;
@@ -16,8 +24,13 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.Cla
 import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.ExactMatchPipeline;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.IPipeline;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.PipelineUtils;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.writers.DataClerkingWriter;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.writers.FileComparisonWriter;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.writers.MetricsWriter;
 import uk.ac.standrews.cs.digitising_scotland.tools.Timer;
 import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearningConfiguration;
+
+import com.google.common.io.Files;
 
 /**
  * This class integrates the training of machine learning models and the
@@ -68,7 +81,7 @@ public final class ClassifyWithExsistingModels {
 
     }
 
-    public void run(final String[] args) throws Exception {
+    public Bucket run(final String[] args) throws Exception {
 
         Timer timer = PipelineUtils.initAndStartTimer();
 
@@ -81,29 +94,85 @@ public final class ClassifyWithExsistingModels {
         File codeDictionaryFile = new File(MachineLearningConfiguration.getDefaultProperties().getProperty("codeDictionaryFile"));
         CodeDictionary codeDictionary = new CodeDictionary(codeDictionaryFile);
         BucketGenerator generator = new BucketGenerator(codeDictionary);
-        Bucket allRecords = generator.generateTrainingBucket(goldStandard);
+        Bucket allInputRecords = generator.generateTrainingBucket(goldStandard);
 
         PipelineUtils.printStatusUpdate();
 
-        ClassifierTrainer trainer = PipelineUtils.getExistingModels(modelLocation, allRecords, experimentalFolderName);
+        ClassifierTrainer trainer = PipelineUtils.getExistingModels(modelLocation, allInputRecords, experimentalFolderName);
 
         IPipeline exactMatchPipeline = new ExactMatchPipeline(trainer.getExactMatchClassifier());
-        IPipeline machineLearningClassifier = new ClassifierPipeline(trainer.getOlrClassifier(), allRecords, multipleClassifications);
+        IPipeline machineLearningClassifier = new ClassifierPipeline(trainer.getOlrClassifier(), allInputRecords, multipleClassifications);
 
-        Bucket notExactMatched = exactMatchPipeline.classify(allRecords);
+        Bucket notExactMatched = exactMatchPipeline.classify(allInputRecords);
         Bucket notMachineLearned = machineLearningClassifier.classify(notExactMatched);
+        Bucket successfullyClassifiedMachineLearning = machineLearningClassifier.getSuccessfullyClassified();
 
         LOGGER.info("Exact Matched Bucket Size: " + exactMatchPipeline.getSuccessfullyClassified().size());
-        LOGGER.info("Machine Learned Bucket Size: " + machineLearningClassifier.getSuccessfullyClassified().size());
+        LOGGER.info("Machine Learned Bucket Size: " + successfullyClassifiedMachineLearning.size());
         LOGGER.info("Not Classifed Bucket Size: " + notMachineLearned.size());
 
-        Bucket allClassifed = BucketUtils.getUnion(exactMatchPipeline.getSuccessfullyClassified(), machineLearningClassifier.getSuccessfullyClassified());
+        Bucket allClassifed = BucketUtils.getUnion(exactMatchPipeline.getSuccessfullyClassified(), successfullyClassifiedMachineLearning);
+        Bucket allOutputRecords = BucketUtils.getUnion(allClassifed, notMachineLearned);
 
-        PipelineUtils.writeRecords(allClassifed, experimentalFolderName, "MachineLearning");
+        writeRecords(experimentalFolderName, allOutputRecords);
 
-        PipelineUtils.generateAndPrintStatistics(allClassifed, trainer.getVectorFactory().getCodeIndexer(), experimentalFolderName, "MachineLearning");
+        writeComparisons(experimentalFolderName, allOutputRecords);
 
+        CodeIndexer codeIndexer = trainer.getVectorFactory().getCodeIndexer();
+
+        LOGGER.info("********** Output Stats **********");
+
+        final Bucket uniqueRecordsOnly = BucketFilter.uniqueRecordsOnly(allOutputRecords);
+        printAllStats(experimentalFolderName, codeIndexer, allOutputRecords, uniqueRecordsOnly);
+        printAllStats(experimentalFolderName, codeIndexer, successfullyClassifiedMachineLearning, BucketFilter.uniqueRecordsOnly(successfullyClassifiedMachineLearning));
         timer.stop();
+
+        return allOutputRecords;
+    }
+
+    private void writeComparisons(final String experimentalFolderName, final Bucket allClassifed) throws IOException, FileNotFoundException, UnsupportedEncodingException {
+
+        final String comparisonReportPath = "/Data/" + "MachineLearning" + "/comaprison.txt";
+        final File outputPath2 = new File(experimentalFolderName + comparisonReportPath);
+        Files.createParentDirs(outputPath2);
+
+        final FileComparisonWriter comparisonWriter = new FileComparisonWriter(outputPath2, "\t");
+        for (final Record record : allClassifed) {
+            comparisonWriter.write(record);
+        }
+        comparisonWriter.close();
+    }
+
+    private void writeRecords(final String experimentalFolderName, final Bucket allClassifed) throws IOException {
+
+        final String nrsReportPath = "/Data/" + "MachineLearning" + "/NRSData.txt";
+        final File outputPath = new File(experimentalFolderName + nrsReportPath);
+        Files.createParentDirs(outputPath);
+        final DataClerkingWriter writer = new DataClerkingWriter(outputPath);
+
+        for (final Record record : allClassifed) {
+            writer.write(record);
+        }
+        writer.close();
+    }
+
+    private void printAllStats(final String experimentalFolderName, final CodeIndexer codeIndex, final Bucket allClassifed, final Bucket uniqueRecordsOnly) throws IOException {
+
+        CodeMetrics codeMetrics = new CodeMetrics(new StrictConfusionMatrix(allClassifed, codeIndex), codeIndex);
+        ListAccuracyMetrics accuracyMetrics = new ListAccuracyMetrics(allClassifed, codeMetrics);
+        MetricsWriter metricsWriter = new MetricsWriter(accuracyMetrics, experimentalFolderName, codeIndex);
+        metricsWriter.write("machine learning", "firstBucket");
+        accuracyMetrics.prettyPrint("All Records");
+
+        LOGGER.info("Unique Only");
+        LOGGER.info("Unique Only  Bucket Size: " + uniqueRecordsOnly.size());
+
+        CodeMetrics codeMetrics1 = new CodeMetrics(new StrictConfusionMatrix(uniqueRecordsOnly, codeIndex), codeIndex);
+        accuracyMetrics = new ListAccuracyMetrics(uniqueRecordsOnly, codeMetrics1);
+        accuracyMetrics.prettyPrint("Unique Only");
+        metricsWriter = new MetricsWriter(accuracyMetrics, experimentalFolderName, codeIndex);
+        metricsWriter.write("machine learning", "unique records");
+        accuracyMetrics.prettyPrint("Unique Records");
     }
 
     private boolean parseMultipleClassifications(final String[] args) {
