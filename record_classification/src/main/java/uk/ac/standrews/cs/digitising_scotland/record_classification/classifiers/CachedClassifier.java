@@ -19,7 +19,7 @@ public class CachedClassifier<K, V> implements IClassifier<K,V> {
     }
 
     @Override
-    public V classify(final K k) {
+    public V classify(final K k) throws Exception {
         V v = cache.get(k);
         if (v == null) {
             v = classifier.classify(k);

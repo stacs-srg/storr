@@ -31,6 +31,7 @@ public class NGramSubstrings implements Iterable<TokenSet>, SubsetEnumerator<Tok
     //TODO - refactor this class!
 
     private final List<TokenSet> grams;
+
     @Override
     public Multiset<TokenSet> enumerate(TokenSet tokenSet) throws IOException {
         Multiset<TokenSet> multiset = HashMultiset.create();

@@ -7,16 +7,21 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.Int
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.Interfaces.ValidityAssessor;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.Interfaces.AbstractClassification;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.Interfaces.SubsetEnumerator;
-
-import java.io.IOException;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
 /**
- * TODO refactoring in process - fraser
- *
+ * Resolver Pipeline Classifier. Splits FeatureSet into subsets, classifies the subsets,
+ * puts the classifications in a MultiValueMap with Codes as keys, MultiValueMap then
+ * gets handed through the pipeline which removes Classifications below a specified
+ * Threshold, resolves ancestral hierarchies (as they are assumed to be mutually exclusive),
+ * if the multipleClassifications flag is set to false then the MultiValueMap is flattened
+ * rather than hierarchies being resolved, prunes the map until its complexity is within a specified bound,
+ * finds the valid combinations of Classifications from the map (this is expensive for high
+ * complexity MultiValueMaps hence the bound) and finally returns the combination of codes which
+ * maximises the loss function.
  * Created by fraserdunlop on 08/10/2014 at 09:50.
  */
 public class ResolverPipeline<Threshold,
@@ -26,7 +31,8 @@ public class ResolverPipeline<Threshold,
                               FeatureSet,
                               P_ValidityAssessor extends ValidityAssessor<Set<Classification>, FeatureSet>,
                               LossMetric extends Comparable<LossMetric>,
-                              P_LossFunction extends LossFunction<Set<Classification>,LossMetric> >{
+                              P_LossFunction extends LossFunction<Set<Classification>,LossMetric>>
+                              implements IClassifier<FeatureSet,Set<Classification>>{
 
     private final boolean multipleClassifications;
     private IClassifier<FeatureSet, Classification> classifier;
@@ -35,13 +41,19 @@ public class ResolverPipeline<Threshold,
     private Flattener<Code, Classification> flattener;
     private MultiValueMapPruner<Code, Classification, P_Comparator> pruner;
     private ValidCombinationGetter<Code, Classification, FeatureSet,P_ValidityAssessor> vCG;
-    private LossFunctionApplier<Set<Classification>, LossMetric, P_LossFunction> lFA;
+    private LossFunctionApplier<Classification, LossMetric, P_LossFunction> lFA;
     private SubsetEnumerator<FeatureSet> subsetEnumerator;
 
-    public ResolverPipeline(final IClassifier<FeatureSet, Classification> classifier, final boolean multipleClassifications,final P_Comparator classificationComparator, final  P_ValidityAssessor classificationSetValidityAssessor, final P_LossFunction lengthWeightedLossFunction,final SubsetEnumerator<FeatureSet> subsetEnumerator,final Threshold CONFIDENCE_CHOP_LEVEL){
+    public ResolverPipeline(final IClassifier<FeatureSet, Classification> classifier,
+                            final boolean multipleClassifications,
+                            final P_Comparator classificationComparator,
+                            final  P_ValidityAssessor classificationSetValidityAssessor,
+                            final P_LossFunction lengthWeightedLossFunction,
+                            final SubsetEnumerator<FeatureSet> subsetEnumerator,
+                            final Threshold threshold){
         this.classifier = classifier;
         this.multipleClassifications = multipleClassifications;
-        bTR = new BelowThresholdRemover<>(CONFIDENCE_CHOP_LEVEL);
+        bTR = new BelowThresholdRemover<>(threshold);
         hR = new HierarchyResolver<>();
         flattener = new Flattener<>();
         pruner = new MultiValueMapPruner<>(classificationComparator);
@@ -50,13 +62,20 @@ public class ResolverPipeline<Threshold,
         this.subsetEnumerator = subsetEnumerator;
     }
 
-
-    public Set<Classification> classify(final FeatureSet tokenSet) throws Exception {
-        MultiValueMap<Code, Classification> multiValueMap = classifySubsets(tokenSet);
-        return resolverPipeline(multiValueMap, tokenSet);
+    /**
+     * The IClassifier interface, classifies FeatureSets to sets of Classifications.
+     * @param featureSet set of features to classify
+     * @return set of classifications
+     * @throws Exception
+     */
+    @Override
+    public Set<Classification> classify(final FeatureSet featureSet) throws Exception {
+        MultiValueMap<Code, Classification> multiValueMap = classifySubsets(featureSet);
+        return resolverPipeline(multiValueMap, featureSet);
     }
 
-    private Set<Classification> resolverPipeline(MultiValueMap<Code, Classification> multiValueMap, final FeatureSet featureSet) throws Exception {
+    private Set<Classification> resolverPipeline(MultiValueMap<Code, Classification> multiValueMap,
+                                                 final FeatureSet featureSet) throws Exception {
         multiValueMap = bTR.removeBelowThreshold(multiValueMap);
         if(multipleClassifications) {
             multiValueMap = hR.moveAncestorsToDescendantKeys(multiValueMap);
@@ -68,7 +87,7 @@ public class ResolverPipeline<Threshold,
         return lFA.getBest(validSets);
     }
 
-    private MultiValueMap<Code, Classification> classifySubsets(final FeatureSet tokenSet) throws IOException {
+    private MultiValueMap<Code, Classification> classifySubsets(final FeatureSet tokenSet) throws Exception {
         MultiValueMap<Code, Classification> multiValueMap = new MultiValueMap<>(new HashMap<Code,List<Classification>>());
         Multiset<FeatureSet> subsets = subsetEnumerator.enumerate(tokenSet);
         for (FeatureSet set : subsets) {
