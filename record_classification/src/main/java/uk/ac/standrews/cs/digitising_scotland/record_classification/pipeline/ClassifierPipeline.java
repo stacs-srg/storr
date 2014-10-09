@@ -46,7 +46,11 @@ public class ClassifierPipeline implements IPipeline {
      * @param classifier    {@link uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.IClassifier} used for machine learning classification
      * @param cachePopulationBucket the training bucket
      */
-    public ClassifierPipeline(final IClassifier<TokenSet,Classification> classifier, final Bucket cachePopulationBucket,final LossFunction<Set<Classification>,Double> lossFunction, final boolean multipleClassifications, final boolean resolveHierarchies) {
+    public ClassifierPipeline(final IClassifier<TokenSet,Classification> classifier,
+                              final Bucket cachePopulationBucket,
+                              final LossFunction<Set<Classification>,Double> lossFunction,
+                              final boolean multipleClassifications,
+                              final boolean resolveHierarchies) {
 
         /* The cache. */
         TokenClassificationCachePopulator populator = new TokenClassificationCachePopulator();

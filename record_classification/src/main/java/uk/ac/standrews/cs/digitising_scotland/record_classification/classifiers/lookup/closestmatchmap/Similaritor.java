@@ -21,7 +21,13 @@ public class Similaritor<K> {
 
     public double getSimilarity(final K o1, final K o2) {
 
-        return metric.getSimilarity(o1, o2);
+        Double sim =  metric.getSimilarity(o1, o2);
+        if(sim.isNaN()){
+            System.out.println("NaN returned by similarity metric :- o1: " + o1 + " o2: " + o2);
+            return 0;
+        }
+        return sim;
+
     }
 
     /**
