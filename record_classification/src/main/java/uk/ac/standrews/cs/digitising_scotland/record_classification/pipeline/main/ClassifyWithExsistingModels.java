@@ -179,7 +179,7 @@ public final class ClassifyWithExsistingModels {
     private boolean parseMultipleClassifications(final String[] args) {
 
         if (args.length > 3) {
-            System.err.println("usage: $" + ClassifyWithExsistingModelsTest.class.getSimpleName() + "    <goldStandardDataFile>    <trainingRatio(optional)>    <output multiple classificatiosn");
+            System.err.println("usage: $" + ClassifyWithExsistingModels.class.getSimpleName() + "    <goldStandardDataFile>    <trainingRatio(optional)>    <output multiple classificatiosn");
         }
         else {
             if (args[2].equals("1")) { return true; }
@@ -192,7 +192,7 @@ public final class ClassifyWithExsistingModels {
 
         File goldStandard = null;
         if (args.length > 3) {
-            System.err.println("usage: $" + ClassifyWithExsistingModelsTest.class.getSimpleName() + "    <goldStandardDataFile>    <trainingRatio(optional)>");
+            System.err.println("usage: $" + ClassifyWithExsistingModels.class.getSimpleName() + "    <goldStandardDataFile>    <trainingRatio(optional)>");
         }
         else {
             goldStandard = new File(args[0]);
@@ -206,7 +206,7 @@ public final class ClassifyWithExsistingModels {
 
         String modelLocation = null;
         if (args.length > 3) {
-            System.err.println("usage: $" + ClassifyWithExsistingModelsTest.class.getSimpleName() + "    <goldStandardDataFile>    <trainingRatio(optional)>");
+            System.err.println("usage: $" + ClassifyWithExsistingModels.class.getSimpleName() + "    <goldStandardDataFile>    <trainingRatio(optional)>");
         }
         else {
             modelLocation = args[1];
