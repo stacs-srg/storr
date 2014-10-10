@@ -1,22 +1,23 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.resolver.multivaluemap;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.classification.Classification;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeNotValidException;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.resolver.Interfaces.LossFunction;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.classification.LengthWeightedLossFunction;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.resolver.generic.LossFunctionApplier;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.classification.ClassificationSetValidityAssessor;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.resolver.generic.ValidCombinationGetter;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
+import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.resolver.Interfaces.LossFunction;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.resolver.generic.LossFunctionApplier;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.resolver.generic.ValidCombinationGetter;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.classification.Classification;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.classification.ClassificationSetValidityAssessor;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.classification.LengthWeightedLossFunction;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeNotValidException;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
 
 /**
  *
@@ -24,16 +25,14 @@ import java.util.Set;
  */
 public class ValidCombinationGetterTest {
 
-    private ValidCombinationGetter<Code,Classification,TokenSet,ClassificationSetValidityAssessor> vCG =
-            new ValidCombinationGetter<>(new ClassificationSetValidityAssessor());
+    private ValidCombinationGetter<Code, Classification, TokenSet, ClassificationSetValidityAssessor> vCG = new ValidCombinationGetter<>(new ClassificationSetValidityAssessor());
     private MultiValueMapTestHelper mvmHelper;
-    private LossFunction<Set<Classification>,Double> lengthWeighted = new LengthWeightedLossFunction();
-    private LossFunctionApplier<Classification,Double,LengthWeightedLossFunction> lossFunctionApplier =
-            new LossFunctionApplier<>(new LengthWeightedLossFunction());
-
+    private LossFunction<Set<Classification>, Double> lengthWeighted = new LengthWeightedLossFunction();
+    private LossFunctionApplier<Classification, Double, LengthWeightedLossFunction> lossFunctionApplier = new LossFunctionApplier<>(new LengthWeightedLossFunction());
 
     @Before
     public void setup() throws IOException, CodeNotValidException {
+
         mvmHelper = new MultiValueMapTestHelper();
         mvmHelper.addMockEntryToMatrix("brown", "2100", 0.5);
         mvmHelper.addMockEntryToMatrix("white", "2100", 0.85);
@@ -45,10 +44,8 @@ public class ValidCombinationGetterTest {
         mvmHelper.addMockEntryToMatrix("white", "6700", 0.83);
     }
 
-
     @Test
     public void getValidCodeTriplesTest() throws Exception {
-
 
         TokenSet originalSet = new TokenSet("brown white");
         List<Set<Classification>> validTriples = vCG.getValidSets(mvmHelper.getMap(), originalSet);
@@ -69,7 +66,8 @@ public class ValidCombinationGetterTest {
     }
 
     @Test
-    public void testLossFunctionApplierReturnsEmptySetWithEmptyGetBestArg(){
+    public void testLossFunctionApplierReturnsEmptySetWithEmptyGetBestArg() {
+
         List<Set<Classification>> classifications = new ArrayList<>();
         Assert.assertTrue(lossFunctionApplier.getBest(classifications).isEmpty());
     }

@@ -113,7 +113,7 @@ public final class TrainClassifyOneFile {
         final ClassifierTrainer trainer = PipelineUtils.train(trainingBucket, experimentalFolderName, codeIndex);
 
         IPipeline exactMatchPipeline = new ExactMatchPipeline(trainer.getExactMatchClassifier());
-        IPipeline machineLearningClassifier = new ClassifierPipeline(trainer.getOlrClassifier(), trainingBucket,new LengthWeightedLossFunction(), multipleClassifications, true);
+        IPipeline machineLearningClassifier = new ClassifierPipeline(trainer.getOlrClassifier(), trainingBucket, new LengthWeightedLossFunction(), multipleClassifications, true);
 
         Bucket notExactMatched = exactMatchPipeline.classify(predictionBucket);
         Bucket notMachineLearned = machineLearningClassifier.classify(notExactMatched);

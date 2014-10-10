@@ -3,6 +3,7 @@ package uk.ac.standrews.cs.digitising_scotland.record_classification.datastructu
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.resolver.Interfaces.LossFunction;
 
 /**
@@ -11,7 +12,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.
  * @author jkc25
  *
  */
-public class AverageLossFunction implements LossFunction<Set<Classification>,Double> {
+public class AverageLossFunction implements LossFunction<Set<Classification>, Double> {
 
     @Override
     public Double calculate(final Set<Classification> set) {

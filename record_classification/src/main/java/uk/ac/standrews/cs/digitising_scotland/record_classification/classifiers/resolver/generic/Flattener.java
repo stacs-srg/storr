@@ -15,10 +15,11 @@ public class Flattener<K, V> {
      * @param map MultiValueMap.
      * @param key Key to migrate values to.
      */
-    public   MultiValueMap<K, V> moveAllIntoKey(MultiValueMap<K,V> map, K key) throws IOException, ClassNotFoundException {
+    public MultiValueMap<K, V> moveAllIntoKey(MultiValueMap<K, V> map, K key) throws IOException, ClassNotFoundException {
+
         MultiValueMap<K, V> clone = map.deepClone();
-        for(K k : map){
-            if(clone.containsKey(k)) {
+        for (K k : map) {
+            if (clone.containsKey(k)) {
                 if (k != key) {
                     clone.get(key).addAll(clone.get(k));
                     clone.remove(k);

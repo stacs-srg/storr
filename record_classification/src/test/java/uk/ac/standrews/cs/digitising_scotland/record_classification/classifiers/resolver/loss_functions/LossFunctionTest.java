@@ -7,12 +7,12 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.classification.Classification;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.resolver.Interfaces.LossFunction;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.classification.AverageLossFunction;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.classification.Classification;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.classification.LengthWeightedLossFunction;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.classification.SumLossFunction;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
 
 /**
  * Tests that the calculate methods for each class that extends AbstractLossFunction works as expected.
@@ -21,9 +21,9 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
  */
 public class LossFunctionTest {
 
-    private LossFunction<Set<Classification>,Double> sumLoss;
-    private LossFunction<Set<Classification>,Double> averageLoss;
-    private LossFunction<Set<Classification>,Double> lengthWeighted;
+    private LossFunction<Set<Classification>, Double> sumLoss;
+    private LossFunction<Set<Classification>, Double> averageLoss;
+    private LossFunction<Set<Classification>, Double> lengthWeighted;
     private Set<Classification> classifications;
 
     @Before
