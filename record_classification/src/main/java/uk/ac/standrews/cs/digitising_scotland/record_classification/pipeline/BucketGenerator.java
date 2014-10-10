@@ -2,8 +2,10 @@ package uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline;
 
 import java.io.File;
 import java.io.IOException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datareaders.AbstractFormatConverter;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datareaders.LongFormatConverter;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datareaders.PilotDataFormatConverter;
@@ -63,7 +65,7 @@ public class BucketGenerator {
      * @return the bucket to be populated
      * @throws IOException Signals that an I/O exception has occurred.
      * @throws InputFormatException the input format exception
-     * @throws CodeNotValidException 
+     * @throws CodeNotValidException
      */
     private Bucket createTrainingBucket(final File training) throws IOException, InputFormatException, CodeNotValidException {
 

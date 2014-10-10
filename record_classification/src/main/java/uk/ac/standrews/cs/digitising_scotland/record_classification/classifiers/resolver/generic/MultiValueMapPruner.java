@@ -1,7 +1,9 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.resolver.generic;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 /**
  * Allows pruning of MultiValueMap values using a Comparator.
@@ -18,7 +20,8 @@ public class MultiValueMapPruner<K, V, C extends Comparator<V>> {
     private int COMPLEXITY_UPPER_LIMIT = 2000;
     private final C comparator;
 
-    public MultiValueMapPruner(C comparator){
+    public MultiValueMapPruner(final C comparator) {
+
         this.comparator = comparator;
     }
 
@@ -49,27 +52,31 @@ public class MultiValueMapPruner<K, V, C extends Comparator<V>> {
     }
 
     public void setComplexityUpperBound(final int i) {
+
         COMPLEXITY_UPPER_LIMIT = i;
     }
 
     public void setListLengthLowerBound(final int i) {
-        if(i<1)
-            throw new IllegalArgumentException("List length lower bound must be a positive integer.");
+
+        if (i < 1) { throw new IllegalArgumentException("List length lower bound must be a positive integer."); }
         LOWER_BOUND = i;
     }
 
-    private int[] calculatePrunedListSizes(int[] listSizes) {
+    private int[] calculatePrunedListSizes(final int[] listSizes) {
+
         int[] pruned = listSizes.clone();
-        while (complexity(pruned) > COMPLEXITY_UPPER_LIMIT)
+        while (complexity(pruned) > COMPLEXITY_UPPER_LIMIT) {
             pruned[maxValueIndex(pruned)]--;
+        }
         return pruned;
     }
 
-    private int maxValueIndex(int[] pruned) {
+    private int maxValueIndex(final int[] pruned) {
+
         int index = 0;
         int largest = 0;
-        for (int i = 0 ; i < pruned.length ; i++){
-            if (pruned[i]>largest) {
+        for (int i = 0; i < pruned.length; i++) {
+            if (pruned[i] > largest) {
                 largest = pruned[i];
                 index = i;
             }
@@ -77,9 +84,10 @@ public class MultiValueMapPruner<K, V, C extends Comparator<V>> {
         return index;
     }
 
-    private int complexity(int[] listSizes){
+    private int complexity(final int[] listSizes) {
+
         int complexity = 1;
-        for(int i : listSizes)
+        for (int i : listSizes)
             complexity *= i;
         return complexity;
     }

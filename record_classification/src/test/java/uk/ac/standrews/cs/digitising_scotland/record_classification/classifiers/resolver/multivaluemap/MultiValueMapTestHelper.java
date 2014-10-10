@@ -1,16 +1,16 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.resolver.multivaluemap;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+
+import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.resolver.generic.MultiValueMap;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.classification.Classification;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeDictionary;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeNotValidException;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.resolver.generic.MultiValueMap;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
 
 /**
  * Holds a MultiValueMap and CodeDictionary. Allows mock entries to be added to map using CodeDictionary.
@@ -22,13 +22,15 @@ public class MultiValueMapTestHelper {
     private final MultiValueMap<Code, Classification> map;
 
     public MultiValueMap<Code, Classification> getMap() {
+
         return map;
     }
 
     public MultiValueMapTestHelper() throws IOException {
+
         File codeDictionaryFile = new File(getClass().getResource("/CodeFactoryTestFile.txt").getFile());
         codeDictionary = new CodeDictionary(codeDictionaryFile);
-        map = new MultiValueMap<>(new HashMap<Code,List<Classification>>());
+        map = new MultiValueMap<>(new HashMap<Code, List<Classification>>());
     }
 
     /**
@@ -38,6 +40,7 @@ public class MultiValueMapTestHelper {
      * @param conf the conf
      */
     public void addMockEntryToMatrix(final String string, final String codeAsString, final double conf) throws CodeNotValidException {
+
         TokenSet tokenSet = new TokenSet(string);
         Code code = codeDictionary.getCode(codeAsString);
         map.add(code, new Classification(code, tokenSet, conf));

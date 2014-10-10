@@ -82,6 +82,10 @@ public final class ClassifyWithExsistingModels {
 
     }
 
+    public ClassifyWithExsistingModels() {
+
+    }
+
     public Bucket run(final String[] args) throws Exception {
 
         Timer timer = PipelineUtils.initAndStartTimer();

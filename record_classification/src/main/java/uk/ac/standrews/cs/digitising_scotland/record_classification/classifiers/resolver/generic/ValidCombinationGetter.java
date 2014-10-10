@@ -1,7 +1,12 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.resolver.generic;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.resolver.Interfaces.ValidityAssessor;
-import java.util.*;
 
 /**
  * Utility class for function which gets a List of all valid Sets of values from a MultiValueMap
@@ -12,7 +17,8 @@ public class ValidCombinationGetter<K, V, ValidityCriterion, P_ValidityAssessor 
 
     private final P_ValidityAssessor validityAssessor;
 
-    public ValidCombinationGetter(P_ValidityAssessor validityAssessor){
+    public ValidCombinationGetter(final P_ValidityAssessor validityAssessor) {
+
         this.validityAssessor = validityAssessor;
     }
 
@@ -25,6 +31,7 @@ public class ValidCombinationGetter<K, V, ValidityCriterion, P_ValidityAssessor 
      * @return a list of all valid sets of values from the MultiValueMap
      */
     public List<Set<V>> getValidSets(final MultiValueMap<K, V> map, final ValidityCriterion validityCriterion) throws Exception {
+
         List<Set<V>> validSets;
         validSets = calculateValidSets(map, validityCriterion);
         return validSets;
@@ -36,7 +43,8 @@ public class ValidCombinationGetter<K, V, ValidityCriterion, P_ValidityAssessor 
      * @param validityCriterion a validity criterion for assessing the validity of a combination given a condition
      * @return a list of all valid sets of values from the MultiValueMap
      */
-    private List<Set<V>> calculateValidSets(MultiValueMap<K, V> map, ValidityCriterion validityCriterion) {
+    private List<Set<V>> calculateValidSets(final MultiValueMap<K, V> map, final ValidityCriterion validityCriterion) {
+
         List<Set<V>> validSets = new ArrayList<>();
         validSets.add(null);
         validSets = recursiveMerge(validSets, map, map.iterator(), validityCriterion);
@@ -52,17 +60,15 @@ public class ValidCombinationGetter<K, V, ValidityCriterion, P_ValidityAssessor 
      * @param validityCriterion a validity criterion for assessing the validity of a combination given a condition
      * @return a list of all valid sets of values from the MultiValueMap
      */
-    private List<Set<V>> recursiveMerge(final List<Set<V>> validSets,
-                                                     final MultiValueMap<K, V> map,
-                                                     final Iterator<K> iterator, final ValidityCriterion validityCriterion) {
-        if(iterator.hasNext()){
+    private List<Set<V>> recursiveMerge(final List<Set<V>> validSets, final MultiValueMap<K, V> map, final Iterator<K> iterator, final ValidityCriterion validityCriterion) {
+
+        if (iterator.hasNext()) {
             K k = iterator.next();
             mergeStep(validSets, map, validityCriterion, k);
             recursiveMerge(validSets, map, iterator, validityCriterion);
         }
         return validSets;
     }
-
 
     /**
      * A 'merge step' in the recursion. We check all unions of values associated with K and sets in validSets.
@@ -73,14 +79,16 @@ public class ValidCombinationGetter<K, V, ValidityCriterion, P_ValidityAssessor 
      * @param validityCriterion a validity criterion for assessing the validity of a combination given a condition
      * @param k the key whose values are being 'merged' into the sets of validSets
      */
-    private void mergeStep(List<Set<V>> validSets, MultiValueMap<K, V> map, ValidityCriterion validityCriterion, K k) {
+    private void mergeStep(final List<Set<V>> validSets, final MultiValueMap<K, V> map, final ValidityCriterion validityCriterion, final K k) {
+
         List<V> kValues = map.get(k);
         List<Set<V>> tempList = new ArrayList<>();
         for (Set<V> set : validSets) {
             for (V kValue : kValues) {
                 Set<V> tempSet = copyOfUnion(set, kValue);
-                if (tempSetIsValid(validityCriterion, tempSet))
+                if (tempSetIsValid(validityCriterion, tempSet)) {
                     tempList.add(tempSet);
+                }
             }
         }
         validSets.addAll(tempList);
@@ -89,7 +97,8 @@ public class ValidCombinationGetter<K, V, ValidityCriterion, P_ValidityAssessor 
     /**
      * Purely for readability of mergeStep method.
      */
-    private boolean tempSetIsValid(ValidityCriterion validityCriterion, Set<V> tempSet) {
+    private boolean tempSetIsValid(final ValidityCriterion validityCriterion, final Set<V> tempSet) {
+
         return validityAssessor.assess(tempSet, validityCriterion);
     }
 
@@ -99,10 +108,12 @@ public class ValidCombinationGetter<K, V, ValidityCriterion, P_ValidityAssessor 
      * @param v value
      * @return new set - union of set and v
      */
-    private Set<V> copyOfUnion(Set<V> set, V v) {
+    private Set<V> copyOfUnion(final Set<V> set, final V v) {
+
         Set<V> tempSet = new HashSet<>();
-        if(set !=null)
+        if (set != null) {
             tempSet.addAll(set);
+        }
         tempSet.add(v);
         return tempSet;
     }

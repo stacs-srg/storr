@@ -1,9 +1,7 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.main;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -141,7 +139,7 @@ public final class TrainClassifyOneFile {
 
     }
 
-    private void writeComparisonFile(String experimentalFolderName, Bucket allClassifed) throws IOException, FileNotFoundException, UnsupportedEncodingException {
+    private void writeComparisonFile(final String experimentalFolderName, final Bucket allClassifed) throws IOException {
 
         final String comparisonReportPath = "/Data/" + "MachineLearning" + "/comaprison.txt";
         final File outputPath2 = new File(experimentalFolderName + comparisonReportPath);
@@ -154,7 +152,7 @@ public final class TrainClassifyOneFile {
         comparisonWriter.close();
     }
 
-    private void writeRecords(String experimentalFolderName, Bucket allClassifed) throws IOException {
+    private void writeRecords(final String experimentalFolderName, final Bucket allClassifed) throws IOException {
 
         final String nrsReportPath = "/Data/" + "MachineLearning" + "/NRSData.txt";
         final File outputPath = new File(experimentalFolderName + nrsReportPath);

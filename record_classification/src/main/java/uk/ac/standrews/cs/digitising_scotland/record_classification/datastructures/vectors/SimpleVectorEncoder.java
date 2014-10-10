@@ -1,6 +1,9 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.vectors;
 
-import java.io.*;
+import java.io.DataInputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -19,7 +22,7 @@ import org.slf4j.LoggerFactory;
  */
 public class SimpleVectorEncoder extends AbstractVectorEncoder<String> implements Serializable {
 
-    private static transient final Logger LOGGER = LoggerFactory.getLogger(SimpleVectorEncoder.class);
+    private static final transient Logger LOGGER = LoggerFactory.getLogger(SimpleVectorEncoder.class);
 
     private Map<String, Integer> dictionary;
     private Integer currentMaxTokenIndexValue;
@@ -28,13 +31,15 @@ public class SimpleVectorEncoder extends AbstractVectorEncoder<String> implement
      * Initialises a SimpleVectorEncoder with an empty dictionary.
      */
     public SimpleVectorEncoder() {
+
         initialize();
     }
 
     @Override
-    public Vector encode(Collection<String> strings, Vector vector) {
-        for (String string : strings){
-            addToVector(string,vector);
+    public Vector encode(final Collection<String> strings, final Vector vector) {
+
+        for (String string : strings) {
+            addToVector(string, vector);
         }
         return vector;
     }
@@ -51,7 +56,6 @@ public class SimpleVectorEncoder extends AbstractVectorEncoder<String> implement
         String trimmedToken = token.trim().toLowerCase(); //remove?
         updateVector(trimmedToken, vector);
     }
-
 
     private void updateVector(final String token, final Vector vector) {
 
