@@ -1,9 +1,6 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.vectors;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.StringReader;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -26,7 +23,7 @@ import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearnin
  * Factory that allows us to create vectors from strings.
  * Created by fraserdunlop on 23/04/2014 at 19:34.
  */
-public class VectorFactory {
+public class VectorFactory implements Serializable {
 
     private CodeIndexer index;
     private SimpleVectorEncoder vectorEncoder;
@@ -174,10 +171,10 @@ public class VectorFactory {
      * @param outputStream the out
      * @throws java.io.IOException Signals that an I/O exception has occurred.
      */
-    public void write(final DataOutputStream outputStream) throws IOException {
+    public void write(final ObjectOutputStream outputStream) throws IOException {
 
         vectorEncoder.write(outputStream);
-        index.write(outputStream);
+        outputStream.writeObject(index);
 
     }
 
@@ -187,10 +184,11 @@ public class VectorFactory {
      * @param in the in
      * @throws IOException Signals that an I/O exception has occurred.
      */
-    public void readFields(final DataInputStream in) throws IOException {
+    public void readFields(final DataInputStream in) throws IOException, ClassNotFoundException {
 
         vectorEncoder.readFields(in);
-        index.readFields(in);
+        ObjectInputStream objectInputStream = new ObjectInputStream(in);
+        index = (CodeIndexer) objectInputStream.readObject();
     }
 
     public CodeIndexer getCodeIndexer() {

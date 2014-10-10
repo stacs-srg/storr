@@ -83,6 +83,7 @@ public class OLR implements Serializable {
 
     private volatile AtomicLong numTrained;
 
+
     /**
      * Constructor with default properties.
      */
@@ -449,10 +450,6 @@ public class OLR implements Serializable {
      * @return the vector
      */
     public Vector classifyNoLink(final Vector instance) {
-
-        //must be overridden due to fact that superclass regularizes here
-        //classifyNoLink gets called in gradient so in the original code regularization happens
-        //twice for no reason!
         return beta.times(instance);
     }
 
@@ -546,7 +543,6 @@ public class OLR implements Serializable {
      * Initialise model.
      */
     private void initialiseModel() {
-
         initStepsAndCounts();
         beta = new SerializableDenseMatrix(numCategories - 1, numFeatures);
     }
@@ -557,7 +553,6 @@ public class OLR implements Serializable {
      * @param beta the beta
      */
     private void initialiseModel(final Matrix beta) {
-
         this.beta = new SerializableDenseMatrix(beta);
         numFeatures = beta.numCols();
         numCategories = beta.numRows() + 1;
@@ -565,120 +560,8 @@ public class OLR implements Serializable {
     }
 
     private void initStepsAndCounts() {
-
         updateSteps = new int[numFeatures];
         updateCounts = new int[numFeatures];
     }
 
-    /**
-     * Writes model to file.
-     *
-     * @param filename name of file to write model to
-     * @throws IOException Signals that an I/O exception has occurred.
-     */
-    public void serializeModel(final String filename) throws IOException {
-
-        DataOutputStream dataOutputStream = getDataOutputStream(filename);
-        write(new ObjectOutputStream(dataOutputStream));
-        dataOutputStream.close();
-    }
-
-    /**
-     * Reads model from file.
-     *
-     * @param filename name of file to read model from
-     * @return model in file
-     * @throws IOException if file cannot be read. Indicates IO error
-     */
-    public static OLR deSerializeModel(final String filename) throws IOException, ClassNotFoundException {
-
-        OLR olr;
-        DataInputStream dataInputStream = getDataInputStream(filename);
-        olr = createNewOLR(dataInputStream);
-        return olr;
-    }
-
-    /**
-     * Creates the new olr.
-     *
-     * @param dataInputStream the data input stream
-     * @return the olr
-     * @throws IOException Signals that an I/O exception has occurred.
-     */
-    protected static OLR createNewOLR(final DataInputStream dataInputStream) throws IOException, ClassNotFoundException {
-
-        OLR olr = new OLR();
-        olr.readFields(new ObjectInputStream(dataInputStream));
-        return olr;
-    }
-
-    /**
-     * Gets the data output stream.
-     *
-     * @param filename the filename
-     * @return the data output stream
-     * @throws FileNotFoundException the file not found exception
-     */
-    protected static DataOutputStream getDataOutputStream(final String filename) throws FileNotFoundException {
-
-        FileOutputStream fileOutputStream = new FileOutputStream(filename);
-        return new DataOutputStream(fileOutputStream);
-    }
-
-    /**
-     * Gets the data input stream.
-     *
-     * @param filename the filename
-     * @return the data input stream
-     * @throws FileNotFoundException the file not found exception
-     */
-    protected static DataInputStream getDataInputStream(final String filename) throws FileNotFoundException {
-
-        FileInputStream fileInputStream = new FileInputStream(filename);
-        return new DataInputStream(fileInputStream);
-    }
-
-    /**
-     * Write.
-     *
-     * @param outputStream the out
-     * @throws IOException Signals that an I/O exception has occurred.
-     */
-    protected void write(final ObjectOutputStream outputStream) throws IOException {
-
-        outputStream.writeDouble(mu0);
-        outputStream.writeDouble(decayFactor);
-        outputStream.writeDouble(perTermAnnealingRate);
-        outputStream.writeBoolean(weArePerTermAnnealing);
-        outputStream.writeBoolean(weAreRegularizing);
-        MatrixWritable.writeMatrix(outputStream, beta.getMatrix());
-        outputStream.writeInt(numCategories);
-        outputStream.writeInt(numFeatures);
-        outputStream.writeInt(step);
-        outputStream.writeObject(updateSteps);
-        outputStream.writeObject(updateCounts);
-
-    }
-
-    /**
-     * Read fields.
-     *
-     * @param inputStream the in
-     * @throws IOException Signals that an I/O exception has occurred.
-     */
-    protected void readFields(final ObjectInputStream inputStream) throws IOException, ClassNotFoundException {
-
-        mu0 = inputStream.readDouble();
-        decayFactor = inputStream.readDouble();
-        perTermAnnealingRate = inputStream.readDouble();
-        weArePerTermAnnealing = inputStream.readBoolean();
-        weAreRegularizing = inputStream.readBoolean();
-        beta = new SerializableDenseMatrix(MatrixWritable.readMatrix(inputStream));
-        numCategories = inputStream.readInt();
-        numFeatures = inputStream.readInt();
-        step = inputStream.readInt();
-        updateSteps = (int[]) inputStream.readObject();
-        updateCounts =(int[]) inputStream.readObject();
-        this.prior = new L1();
-    }
 }

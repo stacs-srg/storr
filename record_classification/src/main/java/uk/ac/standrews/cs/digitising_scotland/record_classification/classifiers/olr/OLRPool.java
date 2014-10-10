@@ -1,9 +1,6 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.olr;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -34,20 +31,17 @@ import com.google.common.collect.Lists;
  *
  * @author fraserdunlop
  */
-public class OLRPool implements Runnable {
+public class OLRPool implements Runnable, Serializable {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(OLRPool.class);
-    private final boolean modelTrainable;
+    private static transient final Logger LOGGER = LoggerFactory.getLogger(OLRPool.class);
     private List<OLRShuffled> models = Lists.newArrayList();
-    private Properties properties;
     private int poolSize;
     private int numSurvivors;
-    private List<NamedVector> testingVectorList = Lists.newArrayList();
+    private transient List<NamedVector> testingVectorList = Lists.newArrayList();
     private List<OLRShuffled> survivors;
 
     protected OLRPool() {
 
-        modelTrainable = false;
     }
 
     /**
@@ -59,9 +53,9 @@ public class OLRPool implements Runnable {
      */
     public OLRPool(final Properties properties, final List<NamedVector> internalTrainingVectorList, final List<NamedVector> testingVectorList) {
 
-        this.properties = properties;
         this.testingVectorList = testingVectorList;
-        getConfigOptions();
+        poolSize = Integer.parseInt(properties.getProperty("OLRPoolSize"));
+        numSurvivors = Integer.parseInt(properties.getProperty("OLRPoolNumSurvivors"));
 
         for (int i = 0; i < poolSize; i++) {
             //TODO workout if a clone() is needed here or not
@@ -69,14 +63,13 @@ public class OLRPool implements Runnable {
             OLRShuffled model = new OLRShuffled(properties, trainingVectorList);
             models.add(model);
         }
-        modelTrainable = true;
     }
 
     public OLRPool(final Properties properties, final Matrix betaMatrix, final ArrayList<NamedVector> internalTrainingVectorList, final ArrayList<NamedVector> testingVectorList) {
 
-        this.properties = properties;
         this.testingVectorList = testingVectorList;
-        getConfigOptions();
+        poolSize = Integer.parseInt(properties.getProperty("OLRPoolSize"));
+        numSurvivors = Integer.parseInt(properties.getProperty("OLRPoolNumSurvivors"));
 
         for (int i = 0; i < poolSize; i++) {
             //TODO workout if a clone() is needed here or not
@@ -84,7 +77,6 @@ public class OLRPool implements Runnable {
             OLRShuffled model = new OLRShuffled(properties, betaMatrix, trainingVectorList);
             models.add(model);
         }
-        modelTrainable = true;
     }
 
     /**
@@ -142,7 +134,6 @@ public class OLRPool implements Runnable {
 
     private void trainIfPossible() {
 
-        checkTrainable();
         try {
             this.trainAllModels();
         }
@@ -151,10 +142,6 @@ public class OLRPool implements Runnable {
         }
     }
 
-    private void checkTrainable() {
-
-        if (!modelTrainable) { throw new UnsupportedOperationException("This model has no files to train " + "on and may only be used for classification."); }
-    }
 
     private void trainAllModels() throws InterruptedException {
 
@@ -214,12 +201,6 @@ public class OLRPool implements Runnable {
         return logLikelihood;
     }
 
-    private void getConfigOptions() {
-
-        poolSize = Integer.parseInt(properties.getProperty("OLRPoolSize"));
-        numSurvivors = Integer.parseInt(properties.getProperty("OLRPoolNumSurvivors"));
-
-    }
 
     private double getProportionTestingVectorsCorrectlyClassified(final OLRShuffled model) {
 
@@ -272,23 +253,4 @@ public class OLRPool implements Runnable {
         return numTrained;
     }
 
-    protected void write(final DataOutputStream outputStream) throws IOException {
-
-        outputStream.writeInt(survivors.size());
-        for (OLRShuffled survivor : survivors) {
-            survivor.write(outputStream);
-        }
-    }
-
-    protected void readFields(final DataInputStream inputStream) throws IOException, ClassNotFoundException {
-
-        survivors = new ArrayList<OLRShuffled>();
-        int numModels = inputStream.readInt();
-        for (int i = 0; i < numModels; i++) {
-            OLRShuffled olrShuffled = new OLRShuffled();
-            olrShuffled.readFields(inputStream);
-            survivors.add(olrShuffled);
-
-        }
-    }
 }

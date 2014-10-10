@@ -34,15 +34,13 @@ import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearnin
  *
  * @author fraserdunlop
  */
-public class OLRShuffled implements Runnable {
+public class OLRShuffled implements Runnable, Serializable {
 
     //prevents training of models that have been read from disk as these do not have vectors to train on
-    private boolean modelTrainable;
     private OLR model;
-    private Properties properties = MachineLearningConfiguration.getDefaultProperties();
     //set in config
     private int reps;
-    private List<NamedVector> trainingVectorList = new ArrayList<NamedVector>();
+    private transient List<NamedVector> trainingVectorList = new ArrayList<>();
     private boolean stopped = false;
 
     //----constructors---
@@ -54,11 +52,9 @@ public class OLRShuffled implements Runnable {
      */
     public OLRShuffled(final Properties properties, final List<NamedVector> trainingVectorList2) {
 
-        this.properties = properties;
-        getConfigOptions();
+        reps = Integer.parseInt(properties.getProperty("OLRShuffledReps"));
         this.trainingVectorList = trainingVectorList2;
         this.model = new OLR(properties);
-        modelTrainable = true;
     }
 
     /**
@@ -70,11 +66,9 @@ public class OLRShuffled implements Runnable {
      */
     public OLRShuffled(final Properties properties, final Matrix betaMatrix, final List<NamedVector> trainingVectorList) {
 
-        this.properties = properties;
-        getConfigOptions();
+        reps = Integer.parseInt(properties.getProperty("OLRShuffledReps"));
         this.trainingVectorList = trainingVectorList;
         this.model = new OLR(properties, betaMatrix);
-        modelTrainable = true;
     }
 
     /**
@@ -85,6 +79,10 @@ public class OLRShuffled implements Runnable {
     public OLRShuffled(final ArrayList<NamedVector> trainingVectorList) {
 
         this(MachineLearningConfiguration.getDefaultProperties(), trainingVectorList);
+    }
+
+    public OLRShuffled() {
+
     }
 
     //----------------
@@ -154,33 +152,25 @@ public class OLRShuffled implements Runnable {
 
         return model.logLikelihood(actual, instance);
     }
-
-    /**
-     * Gets the configuration options.
-     *
-     * @return the configuration options
-     */
-    private void getConfigOptions() {
-
-        reps = Integer.parseInt(properties.getProperty("OLRShuffledReps"));
-    }
+//
+//    /**
+//     * Gets the configuration options.
+//     *
+//     * @return the configuration options
+//     */
+//    private void getConfigOptions() {
+//
+//        reps = Integer.parseInt(properties.getProperty("OLRShuffledReps"));
+//    }
 
     /**
      * Checks if the models are trainable and trains the models if possible.
      */
     private void trainIfPossible() {
 
-        checkTrainable();
         this.train();
     }
 
-    /**
-     * Checks if the model is trainable. Models read back in from file are not trainable.
-     */
-    private void checkTrainable() {
-
-        if (!modelTrainable) { throw new UnsupportedOperationException("This model has no files to train " + "on and may only be used for classification."); }
-    }
 
     /**
      * Shuffle and train on all vectors.
@@ -215,64 +205,6 @@ public class OLRShuffled implements Runnable {
     }
 
     /**
-     * Allows serialization of the model to file.
-     *
-     * @param filename name of file to serialize model to
-     * @throws IOException Indicates IO error on writing model
-     */
-    public void serializeModel(final String filename) throws IOException {
-
-        model.serializeModel(filename);
-    }
-
-    /**
-     * Allows de-serialization of a model from a file. The de-serialized model is not trainable.
-     *
-     * @param filename name of file to de-serialize
-     * @return OLRShuffled deserialized model
-     * @throws IOException Indicates IO error on reading model
-     */
-    public static OLRShuffled deSerializeModel(final String filename) throws IOException, ClassNotFoundException {
-
-        OLRShuffled olrShuffled = new OLRShuffled();
-        DataInputStream inputStream = OLR.getDataInputStream(filename);
-        olrShuffled.readFields(inputStream);
-        return olrShuffled;
-    }
-
-    /**
-     * Writes the model to a {@link DataOutputStream}.
-     *
-     * @param outputStream the output stream
-     * @throws IOException Signals that an I/O exception has occurred.
-     */
-    protected void write(final DataOutputStream outputStream) throws IOException {
-
-        model.write(new ObjectOutputStream(outputStream));
-    }
-
-    /**
-     * Reads the fields from an inputStream and creates an OLR model.
-     *
-     * @param inputStream the input stream
-     * @throws IOException Signals that an I/O exception has occurred.
-     */
-    protected void readFields(final DataInputStream inputStream) throws IOException, ClassNotFoundException {
-
-        OLR olr = new OLR();
-        olr.readFields(new ObjectInputStream(inputStream));
-        model = olr;
-    }
-
-    /**
-     * Instantiates a new OLR shuffled.
-     */
-    protected OLRShuffled() {
-
-        modelTrainable = false;
-    }
-
-    /**
      * Gets the number of output categories.
      *
      * @return int the number of categories.
@@ -290,16 +222,6 @@ public class OLRShuffled implements Runnable {
     protected Matrix getBeta() {
 
         return model.getBeta();
-    }
-
-    /**
-     * Sets the beta matrix.
-     *
-     * @param beta the new beta matrix
-     */
-    protected void setBeta(final Matrix beta) {
-
-        model.setBeta(beta);
     }
 
     /**

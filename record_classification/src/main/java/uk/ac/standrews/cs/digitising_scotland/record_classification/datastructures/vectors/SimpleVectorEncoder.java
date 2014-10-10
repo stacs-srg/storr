@@ -1,9 +1,6 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.vectors;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.Serializable;
+import java.io.*;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -20,9 +17,9 @@ import org.slf4j.LoggerFactory;
  * to a unique index.
  * Created by fraserdunlop on 23/04/2014 at 19:37.
  */
-public class SimpleVectorEncoder extends AbstractVectorEncoder<String> {
+public class SimpleVectorEncoder extends AbstractVectorEncoder<String> implements Serializable {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(SimpleVectorEncoder.class);
+    private static transient final Logger LOGGER = LoggerFactory.getLogger(SimpleVectorEncoder.class);
 
     private Map<String, Integer> dictionary;
     private Integer currentMaxTokenIndexValue;
@@ -88,7 +85,7 @@ public class SimpleVectorEncoder extends AbstractVectorEncoder<String> {
      * @param outputStream the out
      * @throws java.io.IOException Signals that an I/O exception has occurred.
      */
-    protected void write(final DataOutputStream outputStream) throws IOException {
+    protected void write(final ObjectOutputStream outputStream) throws IOException {
 
         outputStream.writeInt(currentMaxTokenIndexValue);
         for (String string : dictionary.keySet()) {

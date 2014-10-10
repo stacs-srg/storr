@@ -1,18 +1,16 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.olr;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Properties;
 
 import org.apache.mahout.math.NamedVector;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.olr.serializablematrix.SerializableDenseMatrix;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeDictionary;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeIndexer;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeNotValidException;
@@ -25,16 +23,24 @@ import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearnin
  */
 public class OLRCrossFoldTest {
 
-    /** The properties. */
+    /**
+     * The properties.
+     */
     private Properties properties = MachineLearningConfiguration.getDefaultProperties();
 
-    /** The vector factory. */
+    /**
+     * The vector factory.
+     */
     private VectorFactory vectorFactory;
 
-    /** The training vector list. */
+    /**
+     * The training vector list.
+     */
     private ArrayList<NamedVector> trainingVectorList = new ArrayList<NamedVector>();
 
-    /** The model. */
+    /**
+     * The model.
+     */
     private OLRCrossFold model;
 
     private CodeIndexer index;
@@ -44,8 +50,8 @@ public class OLRCrossFoldTest {
     /**
      * Setup.
      *
-     * @throws IOException Signals that an I/O exception has occurred.
-     * @throws CodeNotValidException 
+     * @throws IOException           Signals that an I/O exception has occurred.
+     * @throws CodeNotValidException
      */
     @Before
     public void setup() throws IOException, CodeNotValidException {
@@ -54,7 +60,9 @@ public class OLRCrossFoldTest {
             System.err.println("Could not clean up all resources.");
         }
 
-        codeDictionary = new CodeDictionary(new File("target/test-classes/CodeFactoryTestFile.txt"));
+        String codeDictionaryFile = getClass().getResource("/CodeFactoryOLRTestFile.txt").getFile();
+
+        codeDictionary = new CodeDictionary(new File(codeDictionaryFile));
         index = new CodeIndexer(codeDictionary);
         vectorFactory = new VectorFactory();
 
@@ -93,8 +101,8 @@ public class OLRCrossFoldTest {
      * Generate training vectors.
      *
      * @return the array list
-     * @throws IOException Signals that an I/O exception has occurred.
-     * @throws CodeNotValidException 
+     * @throws IOException           Signals that an I/O exception has occurred.
+     * @throws CodeNotValidException
      */
     private ArrayList<NamedVector> generateTrainingVectors() throws IOException, CodeNotValidException {
 
@@ -128,8 +136,8 @@ public class OLRCrossFoldTest {
      *
      * @param line the line
      * @return the named vector
-     * @throws IOException 
-     * @throws CodeNotValidException 
+     * @throws IOException
+     * @throws CodeNotValidException
      */
     private NamedVector createTrainingVector(final String line) throws IOException, CodeNotValidException {
 
@@ -159,12 +167,24 @@ public class OLRCrossFoldTest {
      *
      * @throws IOException Signals that an I/O exception has occurred.
      */
-    @Test(expected = UnsupportedOperationException.class)
+    @Test
     public void testTrainingDeSerializedModel() throws IOException, ClassNotFoundException {
+        String filename = "target/testOLRCrossfoldWrite.txt";
+        FileOutputStream fileOutputStream = new FileOutputStream(filename);
+        ObjectOutputStream outputStream = new ObjectOutputStream(fileOutputStream);
+        outputStream.writeObject(model);
+        FileInputStream fileInputStream = new FileInputStream(filename);
+        ObjectInputStream inputStream = new ObjectInputStream(fileInputStream);
 
-        model.serializeModel("target/testOLRCrossfoldWrite.txt");
-        OLRCrossFold olrCrossFold = OLRCrossFold.deSerializeModel("target/testOLRCrossfoldWrite.txt");
-        olrCrossFold.train();
+        OLRCrossFold olrCrossFold = (OLRCrossFold) inputStream.readObject();
+        SerializableDenseMatrix a = new SerializableDenseMatrix(new double[1][1]);
+
+        double[][] modelBetaArray = a.asArray(model.getAverageBetaMatrix());
+        double[][] olrBetaArray = a.asArray(olrCrossFold.getAverageBetaMatrix());
+
+        for(int i = 0 ; i < modelBetaArray.length ; i++)
+            for(int j = 0 ; j < modelBetaArray[0].length ; j++)
+                Assert.assertEquals(modelBetaArray[i][j],olrBetaArray[i][j],0.0001);
+
     }
-
 }
