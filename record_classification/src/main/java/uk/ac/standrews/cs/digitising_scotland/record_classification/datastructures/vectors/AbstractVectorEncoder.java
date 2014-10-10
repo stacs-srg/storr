@@ -2,22 +2,19 @@ package uk.ac.standrews.cs.digitising_scotland.record_classification.datastructu
 
 import org.apache.mahout.math.Vector;
 
+import java.util.Collection;
+
 /**
  * An abstract class outlining what vector encoders should do.
  * Created by fraserdunlop on 28/04/2014 at 10:01.
  */
-public abstract class AbstractVectorEncoder {
+public abstract class AbstractVectorEncoder<Feature> {
 
     /**
      * Should take a (String) token and encode it into a vector.
-     * @param token the token to encode.
+     * @param features the features to encode.
      * @param vector the vector to encode the token into.
      */
-    public abstract void addToVector(final String token, final Vector vector);
-
-    /*
-     * allows resetting of the internal dictionary for testing purposes
-     */
-    protected abstract void reset();
+    public abstract Vector encode(final Collection<Feature> features, final Vector vector);
 
 }

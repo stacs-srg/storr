@@ -3,6 +3,8 @@ package uk.ac.standrews.cs.digitising_scotland.record_classification.datastructu
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.Serializable;
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -18,7 +20,7 @@ import org.slf4j.LoggerFactory;
  * to a unique index.
  * Created by fraserdunlop on 23/04/2014 at 19:37.
  */
-public class SimpleVectorEncoder extends AbstractVectorEncoder {
+public class SimpleVectorEncoder extends AbstractVectorEncoder<String> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SimpleVectorEncoder.class);
 
@@ -29,13 +31,19 @@ public class SimpleVectorEncoder extends AbstractVectorEncoder {
      * Initialises a SimpleVectorEncoder with an empty dictionary.
      */
     public SimpleVectorEncoder() {
-
         initialize();
+    }
+
+    @Override
+    public Vector encode(Collection<String> strings, Vector vector) {
+        for (String string : strings){
+            addToVector(string,vector);
+        }
+        return vector;
     }
 
     /**
      * Token first converted to lower case.
-     * SimpleVectorEncoder's internal dictionary updated if the supplied token is as yet unseen.
      * The value of the vector at the index of the token's unique index value is incremented by 1.
      *
      * @param token  a token (String) to be encoded to the vector.
@@ -43,16 +51,10 @@ public class SimpleVectorEncoder extends AbstractVectorEncoder {
      */
     public void addToVector(final String token, final Vector vector) {
 
-        String trimmedToken = token.trim().toLowerCase();
-        //        updateDictionary(trimmedToken);
+        String trimmedToken = token.trim().toLowerCase(); //remove?
         updateVector(trimmedToken, vector);
     }
 
-    @Override
-    protected void reset() {
-
-        initialize();
-    }
 
     private void updateVector(final String token, final Vector vector) {
 
@@ -103,7 +105,7 @@ public class SimpleVectorEncoder extends AbstractVectorEncoder {
      */
     protected void readFields(final DataInputStream inputStream) throws IOException {
 
-        reset();
+        initialize();
         int currentMaxTokenIndexValue = inputStream.readInt();
         for (int i = 0; i < currentMaxTokenIndexValue; i++) {
             int readint = inputStream.readInt();

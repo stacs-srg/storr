@@ -17,34 +17,24 @@
 
 package uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.olr;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.Properties;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.apache.mahout.classifier.sgd.L1;
-import org.apache.mahout.math.DenseMatrix;
-import org.apache.mahout.math.DenseVector;
-import org.apache.mahout.math.Matrix;
-import org.apache.mahout.math.MatrixWritable;
-import org.apache.mahout.math.NamedVector;
-import org.apache.mahout.math.Vector;
+import org.apache.mahout.math.*;
 import org.apache.mahout.math.Vector.Element;
-import org.apache.mahout.math.VectorWritable;
 import org.apache.mahout.math.function.Functions;
 
+import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.olr.serializablematrix.SerializableDenseMatrix;
 import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearningConfiguration;
 
 /**
  * An online logistic regression model that allows standard SGD or per term annealing with the option of
  * pseudo Bayesian L1 prior regularisation.
  */
-public class OLR {
+public class OLR implements Serializable {
 
     /** The minimum permitted value for the log likelihood. */
     private static final double LOGLIK_MINIMUM = -100.0;
