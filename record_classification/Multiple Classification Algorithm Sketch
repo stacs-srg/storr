@@ -8,15 +8,15 @@ Let’s call our set of n-grams G.
 
 3. Classify each subset in G using a machine learning algorithm.
 
-4. Discard those for which we have a low confidence in the classification being correct.
+4. Discard classifications for which we have a low confidence in
+the classification being correct.
 
 5. Enumerate all valid combinations of these n-gram/code pairs.
 We have two conditions by which we define validity.
 Both have to hold for a set of classifications to be deemed valid.
     - codes must be from distinct hierarchies
     i.e. the codes 952 and 95240 would not be allowed to appear in
-    combination as one is a decendent from the other
-    in the hierarchy
+    combination as one is a decendent of the other in the hierarchy
     - the union of the tokens from the n-grams must be a subset
     of the tokens from the original string
     i.e. a word cannot be used in the prediction of more than one
