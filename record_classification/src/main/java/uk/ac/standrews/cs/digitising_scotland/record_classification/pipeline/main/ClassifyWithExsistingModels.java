@@ -14,6 +14,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.BucketFilter;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.BucketUtils;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.classification.LengthWeightedLossFunction;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeDictionary;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeIndexer;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
@@ -87,21 +88,21 @@ public final class ClassifyWithExsistingModels {
 
         String experimentalFolderName = PipelineUtils.setupExperimentalFolders("Experiments");
 
-        File goldStandard = parseGoldStandard(args);
+        File predictionFile = parsePredictionFile(args);
         String modelLocation = parseModelLocation(args);
         boolean multipleClassifications = parseMultipleClassifications(args);
 
         File codeDictionaryFile = new File(MachineLearningConfiguration.getDefaultProperties().getProperty("codeDictionaryFile"));
         CodeDictionary codeDictionary = new CodeDictionary(codeDictionaryFile);
         BucketGenerator generator = new BucketGenerator(codeDictionary);
-        Bucket allInputRecords = generator.generateTrainingBucket(goldStandard);
+        Bucket allInputRecords = generator.createPredictionBucket(predictionFile);
 
         PipelineUtils.printStatusUpdate();
 
         ClassifierTrainer trainer = PipelineUtils.getExistingModels(modelLocation, allInputRecords, experimentalFolderName);
 
         IPipeline exactMatchPipeline = new ExactMatchPipeline(trainer.getExactMatchClassifier());
-        IPipeline machineLearningClassifier = new ClassifierPipeline(trainer.getOlrClassifier(), allRecords,new LengthWeightedLossFunction(), multipleClassifications,true);
+        IPipeline machineLearningClassifier = new ClassifierPipeline(trainer.getOlrClassifier(), allInputRecords, new LengthWeightedLossFunction(), multipleClassifications, true);
 
         Bucket notExactMatched = exactMatchPipeline.classify(allInputRecords);
         Bucket notMachineLearned = machineLearningClassifier.classify(notExactMatched);
@@ -178,7 +179,7 @@ public final class ClassifyWithExsistingModels {
     private boolean parseMultipleClassifications(final String[] args) {
 
         if (args.length > 3) {
-            System.err.println("usage: $" + ClassifyWithExsistingModels.class.getSimpleName() + "    <goldStandardDataFile>    <trainingRatio(optional)>    <output multiple classificatiosn");
+            System.err.println("usage: $" + ClassifyWithExsistingModelsTest.class.getSimpleName() + "    <goldStandardDataFile>    <trainingRatio(optional)>    <output multiple classificatiosn");
         }
         else {
             if (args[2].equals("1")) { return true; }
@@ -187,11 +188,11 @@ public final class ClassifyWithExsistingModels {
 
     }
 
-    private File parseGoldStandard(final String[] args) {
+    private File parsePredictionFile(final String[] args) {
 
         File goldStandard = null;
         if (args.length > 3) {
-            System.err.println("usage: $" + ClassifyWithExsistingModels.class.getSimpleName() + "    <goldStandardDataFile>    <trainingRatio(optional)>");
+            System.err.println("usage: $" + ClassifyWithExsistingModelsTest.class.getSimpleName() + "    <goldStandardDataFile>    <trainingRatio(optional)>");
         }
         else {
             goldStandard = new File(args[0]);
@@ -205,7 +206,7 @@ public final class ClassifyWithExsistingModels {
 
         String modelLocation = null;
         if (args.length > 3) {
-            System.err.println("usage: $" + ClassifyWithExsistingModels.class.getSimpleName() + "    <goldStandardDataFile>    <trainingRatio(optional)>");
+            System.err.println("usage: $" + ClassifyWithExsistingModelsTest.class.getSimpleName() + "    <goldStandardDataFile>    <trainingRatio(optional)>");
         }
         else {
             modelLocation = args[1];

@@ -9,7 +9,7 @@ import uk.ac.shef.wit.simmetrics.similaritymetrics.AbstractStringMetric;
  */
 public class SimilarityMetricFromSimmetricFactory {
 
-    public SimilarityMetric<String> create(AbstractStringMetric stringMetric) {
+    public SimilarityMetric<String> create(final AbstractStringMetric stringMetric) {
 
         return new StringMetric(stringMetric);
     }
@@ -19,12 +19,17 @@ public class SimilarityMetricFromSimmetricFactory {
         private final AbstractStringMetric stringMetric;
 
         @Override
-        public double getSimilarity(String o1, String o2) {
+        public double getSimilarity(final String o1, final String o2) {
 
-            return stringMetric.getSimilarity(o1, o2);
+            Float sim = stringMetric.getSimilarity(o1, o2);
+            if (sim.isNaN()) {
+                System.out.println("NaN returned by similarity metric :- o1: " + o1 + " o2: " + o2);
+                return 0;
+            }
+            return sim;
         }
 
-        public StringMetric(AbstractStringMetric stringMetric) {
+        public StringMetric(final AbstractStringMetric stringMetric) {
 
             this.stringMetric = stringMetric;
         }

@@ -114,17 +114,24 @@ public final class PIlot {
         boolean multipleClassifications = true;
 
         IPipeline exactMatchPipeline = new ExactMatchPipeline(trainer.getExactMatchClassifier());
-        IPipeline machineLearningClassifier = new ClassifierPipeline(trainer.getOlrClassifier(), trainingBucket,new LengthWeightedLossFunction(), multipleClassifications, true);
+        IPipeline machineLearningClassifier = new ClassifierPipeline(trainer.getOlrClassifier(), trainingBucket, new LengthWeightedLossFunction(), multipleClassifications, true);
 
         Bucket notExactMatched = exactMatchPipeline.classify(predictionBucket);
         Bucket notMachineLearned = machineLearningClassifier.classify(notExactMatched);
         Bucket successfullyClassifiedMachineLearning = machineLearningClassifier.getSuccessfullyClassified();
+        Bucket successfullyExactMatched = exactMatchPipeline.getSuccessfullyClassified();
+        Bucket uniqueRecordsExactMatched = BucketFilter.uniqueRecordsOnly(successfullyExactMatched);
+        Bucket uniqueRecordsMachineLearned = BucketFilter.uniqueRecordsOnly(successfullyClassifiedMachineLearning);
+        Bucket uniqueRecordsNotMatched = BucketFilter.uniqueRecordsOnly(notMachineLearned);
 
-        LOGGER.info("Exact Matched Bucket Size: " + exactMatchPipeline.getSuccessfullyClassified().size());
+        LOGGER.info("Exact Matched Bucket Size: " + successfullyExactMatched.size());
         LOGGER.info("Machine Learned Bucket Size: " + successfullyClassifiedMachineLearning.size());
         LOGGER.info("Not Classifed Bucket Size: " + notMachineLearned.size());
+        LOGGER.info("Unique Exact Matched Bucket Size: " + uniqueRecordsExactMatched.size());
+        LOGGER.info("UniqueMachine Learned Bucket Size: " + uniqueRecordsMachineLearned.size());
+        LOGGER.info("Unique Not Classifed Bucket Size: " + uniqueRecordsNotMatched.size());
 
-        Bucket allClassifed = BucketUtils.getUnion(exactMatchPipeline.getSuccessfullyClassified(), successfullyClassifiedMachineLearning);
+        Bucket allClassifed = BucketUtils.getUnion(successfullyExactMatched, successfullyClassifiedMachineLearning);
         Bucket allRecords = BucketUtils.getUnion(allClassifed, notMachineLearned);
         Assert.assertTrue(allRecords.size() == predictionBucket.size());
 
@@ -134,21 +141,26 @@ public final class PIlot {
 
         LOGGER.info("********** Output Stats **********");
 
-        final Bucket uniqueRecordsOnly = BucketFilter.uniqueRecordsOnly(allClassifed);
-        printAllStats(experimentalFolderName, codeIndex, allClassifed, uniqueRecordsOnly);
-        printAllStats(experimentalFolderName, codeIndex, successfullyClassifiedMachineLearning, BucketFilter.uniqueRecordsOnly(successfullyClassifiedMachineLearning));
+        printAllStats(experimentalFolderName, codeIndex, allRecords, "allRecords");
+        printAllStats(experimentalFolderName, codeIndex, successfullyExactMatched, "exactMatched");
+        printAllStats(experimentalFolderName, codeIndex, successfullyClassifiedMachineLearning, "machineLearned");
+
         timer.stop();
 
         return allRecords;
     }
 
-    private void printAllStats(final String experimentalFolderName, final CodeIndexer codeIndex, final Bucket allClassifed, final Bucket uniqueRecordsOnly) throws IOException {
+    private void printAllStats(final String experimentalFolderName, final CodeIndexer codeIndex, final Bucket bucket, final String identifier) throws IOException {
 
-        CodeMetrics codeMetrics = new CodeMetrics(new StrictConfusionMatrix(allClassifed, codeIndex), codeIndex);
-        ListAccuracyMetrics accuracyMetrics = new ListAccuracyMetrics(allClassifed, codeMetrics);
+        final Bucket uniqueRecordsOnly = BucketFilter.uniqueRecordsOnly(bucket);
+
+        LOGGER.info("All Records");
+        LOGGER.info("All Records Bucket Size: " + bucket.size());
+        CodeMetrics codeMetrics = new CodeMetrics(new StrictConfusionMatrix(bucket, codeIndex), codeIndex);
+        ListAccuracyMetrics accuracyMetrics = new ListAccuracyMetrics(bucket, codeMetrics);
         MetricsWriter metricsWriter = new MetricsWriter(accuracyMetrics, experimentalFolderName, codeIndex);
-        metricsWriter.write("machine learning", "firstBucket");
-        accuracyMetrics.prettyPrint("All Records");
+        metricsWriter.write(identifier, "nonUniqueRecords");
+        accuracyMetrics.prettyPrint("AllRecords");
 
         LOGGER.info("Unique Only");
         LOGGER.info("Unique Only  Bucket Size: " + uniqueRecordsOnly.size());
@@ -157,13 +169,13 @@ public final class PIlot {
         accuracyMetrics = new ListAccuracyMetrics(uniqueRecordsOnly, codeMetrics1);
         accuracyMetrics.prettyPrint("Unique Only");
         metricsWriter = new MetricsWriter(accuracyMetrics, experimentalFolderName, codeIndex);
-        metricsWriter.write("machine learning", "unique records");
-        accuracyMetrics.prettyPrint("Unique Records");
+        metricsWriter.write(identifier, "uniqueRecords");
+        accuracyMetrics.prettyPrint("UniqueRecords");
     }
 
     private void writeComparisonFile(final String experimentalFolderName, final Bucket allClassifed) throws IOException, FileNotFoundException, UnsupportedEncodingException {
 
-        final String comparisonReportPath = "/Data/" + "MachineLearning" + "/comaprison.txt";
+        final String comparisonReportPath = "/Data/" + "Output" + "/comaprison.txt";
         final File outputPath2 = new File(experimentalFolderName + comparisonReportPath);
         Files.createParentDirs(outputPath2);
 
@@ -176,7 +188,7 @@ public final class PIlot {
 
     private void writeRecords(final String experimentalFolderName, final Bucket allClassifed) throws IOException {
 
-        final String nrsReportPath = "/Data/" + "MachineLearning" + "/NRSData.txt";
+        final String nrsReportPath = "/Data/" + "Output" + "/NRSData.txt";
         final File outputPath = new File(experimentalFolderName + nrsReportPath);
         Files.createParentDirs(outputPath);
         final DataClerkingWriter writer = new DataClerkingWriter(outputPath);

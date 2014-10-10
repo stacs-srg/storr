@@ -202,7 +202,7 @@ public final class TrainClassifyOneFile {
     private boolean parseMultipleClassifications(final String[] args) {
 
         if (args.length > 3) {
-            System.err.println("usage: $" + ClassifyWithExsistingModels.class.getSimpleName() + "    <goldStandardDataFile>    <trainingRatio(optional)>    <output multiple classificatiosn");
+            System.err.println("usage: $" + ClassifyWithExsistingModelsTest.class.getSimpleName() + "    <goldStandardDataFile>    <trainingRatio(optional)>    <output multiple classificatiosn");
         }
         else {
             if (args[2].equals("1")) { return true; }
