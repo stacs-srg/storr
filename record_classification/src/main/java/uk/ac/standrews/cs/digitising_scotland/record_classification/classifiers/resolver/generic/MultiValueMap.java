@@ -45,8 +45,11 @@ public class MultiValueMap<K, V> implements Iterable<K>, Serializable, Map<K, Li
         long complexity = 1;
         long overFlowCheck = 1;
         for (K k : this) {
-            if (!map.get(k).isEmpty()) overFlowCheck = complexity * map.get(k).size();
-            if (overFlowCheck < complexity) return Long.MAX_VALUE; //TODO check that this happens, not tested yet!
+            if (!map.get(k).isEmpty()) {
+                overFlowCheck = complexity * map.get(k).size();
+            }
+            if (overFlowCheck < complexity) { return Long.MAX_VALUE; //TODO check that this happens, not tested yet!
+            }
             complexity = overFlowCheck;
         }
         return complexity;
@@ -78,25 +81,25 @@ public class MultiValueMap<K, V> implements Iterable<K>, Serializable, Map<K, Li
     }
 
     @Override
-    public boolean containsKey(Object key) {
+    public boolean containsKey(final Object key) {
 
         return map.containsKey(key);
     }
 
     @Override
-    public boolean containsValue(Object value) {
+    public boolean containsValue(final Object value) {
 
         return map.containsValue(value);
     }
 
     @Override
-    public List<V> get(Object key) {
+    public List<V> get(final Object key) {
 
         return map.get(key);
     }
 
     @Override
-    public List<V> put(K key, List<V> value) {
+    public List<V> put(final K key, final List<V> value) {
 
         return map.put(key, value);
     }
@@ -149,13 +152,13 @@ public class MultiValueMap<K, V> implements Iterable<K>, Serializable, Map<K, Li
     }
 
     @Override
-    public List<V> remove(Object key) {
+    public List<V> remove(final Object key) {
 
         return map.remove(key);
     }
 
     @Override
-    public void putAll(Map<? extends K, ? extends List<V>> m) {
+    public void putAll(final Map<? extends K, ? extends List<V>> m) {
 
         map.putAll(m);
     }
