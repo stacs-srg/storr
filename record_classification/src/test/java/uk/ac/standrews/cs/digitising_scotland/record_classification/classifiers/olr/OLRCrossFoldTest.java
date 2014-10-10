@@ -160,7 +160,7 @@ public class OLRCrossFoldTest {
      * @throws IOException Signals that an I/O exception has occurred.
      */
     @Test(expected = UnsupportedOperationException.class)
-    public void testTrainingDeSerializedModel() throws IOException {
+    public void testTrainingDeSerializedModel() throws IOException, ClassNotFoundException {
 
         model.serializeModel("target/testOLRCrossfoldWrite.txt");
         OLRCrossFold olrCrossFold = OLRCrossFold.deSerializeModel("target/testOLRCrossfoldWrite.txt");

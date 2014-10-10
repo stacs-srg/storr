@@ -20,8 +20,8 @@ public class OLRMatrixEnglargerTest {
         assertSameContentDifferentObject(olr.getBeta(), beta);
         Assert.assertEquals(6, olr.getNumCategories());
         Assert.assertEquals(3, olr.getNumFeatures());
-        Assert.assertEquals(3, olr.getUpdateCounts().size());
-        Assert.assertEquals(3, olr.getUpdateSteps().size());
+        Assert.assertEquals(3, olr.getUpdateCounts().length);
+        Assert.assertEquals(3, olr.getUpdateSteps().length);
 
     }
 

@@ -37,19 +37,16 @@ import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearnin
 public class OLR implements Serializable {
 
     /** The minimum permitted value for the log likelihood. */
-    private static final double LOGLIK_MINIMUM = -100.0;
+    private final double LOGLIK_MINIMUM = -100.0;
 
     /** The model parameters. */
     protected SerializableDenseMatrix beta;
-
-    /** The properties. */
-    private Properties properties;
 
     /** The initial learning rate. */
     private double mu0;
 
     /** The prior function (controls regularization of model parameters). */
-    private L1 prior;
+    private transient L1 prior;
 
     /** The rate of decay in jump size (stochastic gradient descent parameter). */
     private double decayFactor;
@@ -70,10 +67,10 @@ public class OLR implements Serializable {
     private int numCategories;
 
     /** The update steps. */
-    private Vector updateSteps;
+    private int[] updateSteps;
 
     /** The update counts. */
-    private Vector updateCounts;
+    private int[] updateCounts;
 
     /** The step. */
     private int step;
@@ -102,9 +99,8 @@ public class OLR implements Serializable {
     public OLR(final Properties properties) {
 
         resetRunningLogLikelihood();
-        this.properties = properties;
         this.prior = new L1();
-        getConfigOptions();
+        getConfigOptions(properties);
         initialiseModel();
     }
 
@@ -116,9 +112,8 @@ public class OLR implements Serializable {
     public OLR(final Properties properties, final Matrix beta) {
 
         resetRunningLogLikelihood();
-        this.properties = properties;
         this.prior = new L1();
-        getConfigOptions();
+        getConfigOptions(properties);
         initialiseModel(beta.clone());
     }
 
@@ -166,12 +161,12 @@ public class OLR implements Serializable {
         return numFeatures;
     }
 
-    public Vector getUpdateSteps() {
+    public int[] getUpdateSteps() {
 
         return updateSteps;
     }
 
-    public Vector getUpdateCounts() {
+    public int[] getUpdateCounts() {
 
         return updateCounts;
     }
@@ -377,7 +372,7 @@ public class OLR implements Serializable {
      */
     private void regularize(final int category, final int feature) {
 
-        double lastUpdated = updateSteps.get(feature);
+        double lastUpdated = updateSteps[feature];
         double missingUpdates = getStep() - lastUpdated;
         if (missingUpdates > 0) {
             regularizeInProportionToMissingUpdates(category, feature, missingUpdates);
@@ -479,7 +474,7 @@ public class OLR implements Serializable {
      */
     public double perTermLearningRate(final int j) {
 
-        return mu0 * Math.pow(perTermAnnealingRate, updateCounts.get(j));
+        return mu0 * Math.pow(perTermAnnealingRate, updateCounts[j]);
     }
 
     /**
@@ -518,7 +513,7 @@ public class OLR implements Serializable {
      */
     private void updateCounts(final int j) {
 
-        updateCounts.setQuick(j, updateCounts.getQuick(j) + 1);
+        updateCounts[j]++;
     }
 
     /**
@@ -528,7 +523,7 @@ public class OLR implements Serializable {
      */
     private void updateSteps(final int j) {
 
-        updateSteps.setQuick(j, getStep());
+        updateSteps[j] = getStep();
     }
 
     /**
@@ -536,7 +531,7 @@ public class OLR implements Serializable {
      *
      * @return the config options
      */
-    private void getConfigOptions() {
+    private void getConfigOptions(Properties properties) {
 
         weArePerTermAnnealing = Boolean.parseBoolean(properties.getProperty("perTermLearning"));
         weAreRegularizing = Boolean.parseBoolean(properties.getProperty("olrRegularisation"));
@@ -571,8 +566,8 @@ public class OLR implements Serializable {
 
     private void initStepsAndCounts() {
 
-        updateSteps = new DenseVector(numFeatures);
-        updateCounts = new DenseVector(numFeatures);
+        updateSteps = new int[numFeatures];
+        updateCounts = new int[numFeatures];
     }
 
     /**
@@ -584,7 +579,7 @@ public class OLR implements Serializable {
     public void serializeModel(final String filename) throws IOException {
 
         DataOutputStream dataOutputStream = getDataOutputStream(filename);
-        write(dataOutputStream);
+        write(new ObjectOutputStream(dataOutputStream));
         dataOutputStream.close();
     }
 
@@ -595,7 +590,7 @@ public class OLR implements Serializable {
      * @return model in file
      * @throws IOException if file cannot be read. Indicates IO error
      */
-    public static OLR deSerializeModel(final String filename) throws IOException {
+    public static OLR deSerializeModel(final String filename) throws IOException, ClassNotFoundException {
 
         OLR olr;
         DataInputStream dataInputStream = getDataInputStream(filename);
@@ -610,10 +605,10 @@ public class OLR implements Serializable {
      * @return the olr
      * @throws IOException Signals that an I/O exception has occurred.
      */
-    protected static OLR createNewOLR(final DataInputStream dataInputStream) throws IOException {
+    protected static OLR createNewOLR(final DataInputStream dataInputStream) throws IOException, ClassNotFoundException {
 
         OLR olr = new OLR();
-        olr.readFields(dataInputStream);
+        olr.readFields(new ObjectInputStream(dataInputStream));
         return olr;
     }
 
@@ -649,7 +644,7 @@ public class OLR implements Serializable {
      * @param outputStream the out
      * @throws IOException Signals that an I/O exception has occurred.
      */
-    protected void write(final DataOutputStream outputStream) throws IOException {
+    protected void write(final ObjectOutputStream outputStream) throws IOException {
 
         outputStream.writeDouble(mu0);
         outputStream.writeDouble(decayFactor);
@@ -660,8 +655,8 @@ public class OLR implements Serializable {
         outputStream.writeInt(numCategories);
         outputStream.writeInt(numFeatures);
         outputStream.writeInt(step);
-        VectorWritable.writeVector(outputStream, updateSteps);
-        VectorWritable.writeVector(outputStream, updateCounts);
+        outputStream.writeObject(updateSteps);
+        outputStream.writeObject(updateCounts);
 
     }
 
@@ -671,7 +666,7 @@ public class OLR implements Serializable {
      * @param inputStream the in
      * @throws IOException Signals that an I/O exception has occurred.
      */
-    protected void readFields(final DataInputStream inputStream) throws IOException {
+    protected void readFields(final ObjectInputStream inputStream) throws IOException, ClassNotFoundException {
 
         mu0 = inputStream.readDouble();
         decayFactor = inputStream.readDouble();
@@ -682,8 +677,8 @@ public class OLR implements Serializable {
         numCategories = inputStream.readInt();
         numFeatures = inputStream.readInt();
         step = inputStream.readInt();
-        updateSteps = VectorWritable.readVector(inputStream);
-        updateCounts = VectorWritable.readVector(inputStream);
+        updateSteps = (int[]) inputStream.readObject();
+        updateCounts =(int[]) inputStream.readObject();
         this.prior = new L1();
     }
 }

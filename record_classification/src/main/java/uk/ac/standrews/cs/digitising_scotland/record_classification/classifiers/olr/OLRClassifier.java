@@ -170,7 +170,7 @@ public class OLRClassifier implements IClassifier<TokenSet,Classification> {
             olr = deSerializeModel(modelPath);
             model = olr.model;
         }
-        catch (IOException e) {
+        catch (Exception e) {
             LOGGER.error("Could not get model from default location. IOEception has occured.", e.getCause());
         }
         return olr;
@@ -196,7 +196,7 @@ public class OLRClassifier implements IClassifier<TokenSet,Classification> {
         model.write(outputStream);
     }
 
-    private void readFields(final DataInputStream inputStream) throws IOException {
+    private void readFields(final DataInputStream inputStream) throws IOException, ClassNotFoundException {
 
         vectorFactory = new VectorFactory();
         vectorFactory.readFields(inputStream);
@@ -211,7 +211,7 @@ public class OLRClassifier implements IClassifier<TokenSet,Classification> {
      * only be used for classification
      * @throws IOException Signals that an I/O exception has occurred.
      */
-    public OLRClassifier deSerializeModel(final String filename) throws IOException {
+    public OLRClassifier deSerializeModel(final String filename) throws IOException, ClassNotFoundException {
 
         DataInputStream in = OLR.getDataInputStream(filename);
         OLRClassifier olrClassifier = new OLRClassifier();
