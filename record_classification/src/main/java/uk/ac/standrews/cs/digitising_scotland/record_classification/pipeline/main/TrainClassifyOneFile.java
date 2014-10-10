@@ -3,6 +3,7 @@ package uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.ma
 import java.io.File;
 import java.io.IOException;
 
+import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -115,28 +116,59 @@ public final class TrainClassifyOneFile {
 
         Bucket notExactMatched = exactMatchPipeline.classify(predictionBucket);
         Bucket notMachineLearned = machineLearningClassifier.classify(notExactMatched);
-        Bucket successfullyClassifiedExactMatch = exactMatchPipeline.getSuccessfullyClassified();
         Bucket successfullyClassifiedMachineLearning = machineLearningClassifier.getSuccessfullyClassified();
+        Bucket successfullyExactMatched = exactMatchPipeline.getSuccessfullyClassified();
+        Bucket uniqueRecordsExactMatched = BucketFilter.uniqueRecordsOnly(successfullyExactMatched);
+        Bucket uniqueRecordsMachineLearned = BucketFilter.uniqueRecordsOnly(successfullyClassifiedMachineLearning);
+        Bucket uniqueRecordsNotMatched = BucketFilter.uniqueRecordsOnly(notMachineLearned);
 
-        LOGGER.info("Exact Matched Bucket Size: " + successfullyClassifiedExactMatch.size());
+        LOGGER.info("Exact Matched Bucket Size: " + successfullyExactMatched.size());
         LOGGER.info("Machine Learned Bucket Size: " + successfullyClassifiedMachineLearning.size());
         LOGGER.info("Not Classifed Bucket Size: " + notMachineLearned.size());
+        LOGGER.info("Unique Exact Matched Bucket Size: " + uniqueRecordsExactMatched.size());
+        LOGGER.info("UniqueMachine Learned Bucket Size: " + uniqueRecordsMachineLearned.size());
+        LOGGER.info("Unique Not Classifed Bucket Size: " + uniqueRecordsNotMatched.size());
 
-        Bucket allClassifed = BucketUtils.getUnion(successfullyClassifiedExactMatch, successfullyClassifiedMachineLearning);
-        Bucket allOutputRecords = BucketUtils.getUnion(allClassifed, notMachineLearned);
+        Bucket allClassifed = BucketUtils.getUnion(successfullyExactMatched, successfullyClassifiedMachineLearning);
+        Bucket allRecords = BucketUtils.getUnion(allClassifed, notMachineLearned);
+        Assert.assertTrue(allRecords.size() == predictionBucket.size());
 
-        writeRecords(experimentalFolderName, allOutputRecords);
-        writeComparisonFile(experimentalFolderName, allOutputRecords);
+        writeRecords(experimentalFolderName, allRecords);
+
+        writeComparisonFile(experimentalFolderName, allRecords);
 
         LOGGER.info("********** Output Stats **********");
 
-        final Bucket uniqueRecordsOnly = BucketFilter.uniqueRecordsOnly(allClassifed);
-        printAllStats(experimentalFolderName, codeIndex, allClassifed, uniqueRecordsOnly);
-        printAllStats(experimentalFolderName, codeIndex, successfullyClassifiedMachineLearning, BucketFilter.uniqueRecordsOnly(successfullyClassifiedMachineLearning));
+        printAllStats(experimentalFolderName, codeIndex, allRecords, "allRecords");
+        printAllStats(experimentalFolderName, codeIndex, successfullyExactMatched, "exactMatched");
+        printAllStats(experimentalFolderName, codeIndex, successfullyClassifiedMachineLearning, "machineLearned");
+
         timer.stop();
 
-        return allOutputRecords;
+        return allRecords;
+    }
 
+    private void printAllStats(final String experimentalFolderName, final CodeIndexer codeIndex, final Bucket bucket, final String identifier) throws IOException {
+
+        final Bucket uniqueRecordsOnly = BucketFilter.uniqueRecordsOnly(bucket);
+
+        LOGGER.info("All Records");
+        LOGGER.info("All Records Bucket Size: " + bucket.size());
+        CodeMetrics codeMetrics = new CodeMetrics(new StrictConfusionMatrix(bucket, codeIndex), codeIndex);
+        ListAccuracyMetrics accuracyMetrics = new ListAccuracyMetrics(bucket, codeMetrics);
+        MetricsWriter metricsWriter = new MetricsWriter(accuracyMetrics, experimentalFolderName, codeIndex);
+        metricsWriter.write(identifier, "nonUniqueRecords");
+        accuracyMetrics.prettyPrint("AllRecords");
+
+        LOGGER.info("Unique Only");
+        LOGGER.info("Unique Only  Bucket Size: " + uniqueRecordsOnly.size());
+
+        CodeMetrics codeMetrics1 = new CodeMetrics(new StrictConfusionMatrix(uniqueRecordsOnly, codeIndex), codeIndex);
+        accuracyMetrics = new ListAccuracyMetrics(uniqueRecordsOnly, codeMetrics1);
+        accuracyMetrics.prettyPrint("Unique Only");
+        metricsWriter = new MetricsWriter(accuracyMetrics, experimentalFolderName, codeIndex);
+        metricsWriter.write(identifier, "uniqueRecords");
+        accuracyMetrics.prettyPrint("UniqueRecords");
     }
 
     private void writeComparisonFile(final String experimentalFolderName, final Bucket allClassifed) throws IOException {
@@ -162,25 +194,6 @@ public final class TrainClassifyOneFile {
             writer.write(record);
         }
         writer.close();
-    }
-
-    private void printAllStats(final String experimentalFolderName, final CodeIndexer codeIndex, final Bucket allClassifed, final Bucket uniqueRecordsOnly) throws IOException {
-
-        CodeMetrics codeMetrics = new CodeMetrics(new StrictConfusionMatrix(allClassifed, codeIndex), codeIndex);
-        ListAccuracyMetrics accuracyMetrics = new ListAccuracyMetrics(allClassifed, codeMetrics);
-        MetricsWriter metricsWriter = new MetricsWriter(accuracyMetrics, experimentalFolderName, codeIndex);
-        metricsWriter.write("machine learning", "firstBucket");
-        accuracyMetrics.prettyPrint("All Records");
-
-        LOGGER.info("Unique Only");
-        LOGGER.info("Unique Only  Bucket Size: " + uniqueRecordsOnly.size());
-
-        CodeMetrics codeMetrics1 = new CodeMetrics(new StrictConfusionMatrix(uniqueRecordsOnly, codeIndex), codeIndex);
-        accuracyMetrics = new ListAccuracyMetrics(uniqueRecordsOnly, codeMetrics1);
-        accuracyMetrics.prettyPrint("Unique Only");
-        metricsWriter = new MetricsWriter(accuracyMetrics, experimentalFolderName, codeIndex);
-        metricsWriter.write("machine learning", "unique records");
-        accuracyMetrics.prettyPrint("Unique Records");
     }
 
     private static File parseGoldStandFile(final String[] args) {
