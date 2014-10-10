@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.olr;
 
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -132,14 +133,29 @@ public class OLRTest {
 
         trainOLROnTrainingVectors(olr1);
 
-        olr1.serializeModel("target/OLRWriteTest.txt");
-        OLR olr2 = OLR.deSerializeModel("target/OLRWriteTest.txt");
+
+//        olr1.serializeModel("target/OLRWriteTest.txt");
+        FileOutputStream fileOutputStream = new FileOutputStream("target/OLRSerializeTest.ser");
+        ObjectOutputStream outputStream = new ObjectOutputStream(fileOutputStream) ;
+        outputStream.writeObject(olr1);
+
+
+
+//        OLR olr2 = OLR.deSerializeModel("target/OLRWriteTest.txt");
+
+        FileInputStream fileInputStream = new FileInputStream("target/OLRSerializeTest.ser");
+        ObjectInputStream inputStream = new ObjectInputStream(fileInputStream);
+        OLR olr3 = (OLR) inputStream.readObject();
+
+
 
         trainOLROnTrainingVectors(olr1);
-        trainOLROnTrainingVectors(olr2);
+//        trainOLROnTrainingVectors(olr2);
+        trainOLROnTrainingVectors(olr3);
 
         for (Vector vector : vectors) {
-            Assert.assertEquals(olr1.classifyFull(vector), olr2.classifyFull(vector));
+//            Assert.assertEquals(olr1.classifyFull(vector), olr2.classifyFull(vector));
+            Assert.assertEquals(olr1.classifyFull(vector), olr3.classifyFull(vector));
         }
     }
 

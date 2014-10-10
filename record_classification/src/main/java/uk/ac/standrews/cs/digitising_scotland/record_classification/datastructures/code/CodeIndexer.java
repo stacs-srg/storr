@@ -181,7 +181,6 @@ public final class CodeIndexer implements Serializable {
     public void write(final ObjectOutputStream oos) throws IOException {
 
         oos.writeObject(this);
-        oos.close();
     }
 
     public void write(final DataOutputStream outputStream) throws IOException {

@@ -1,9 +1,6 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.olr;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -195,22 +192,22 @@ public class OLRClassifier implements IClassifier<TokenSet, Classification> {
     public void serializeModel(final String filename) throws IOException {
 
         vectorFactory.getCodeIndexer().writeCodeFactory(new File(filename + "CodeFactory"));
-        DataOutputStream out = OLR.getDataOutputStream(filename);
+        ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(filename));
         write(out);
         out.close();
     }
 
-    private void write(final DataOutputStream outputStream) throws IOException {
+    private void write(final ObjectOutputStream outputStream) throws IOException {
 
-        vectorFactory.write(outputStream);
-        model.write(outputStream);
+        outputStream.writeObject(vectorFactory);
+        outputStream.writeObject(model);
     }
 
     private void readFields(final DataInputStream inputStream) throws IOException, ClassNotFoundException {
 
-        vectorFactory = new VectorFactory();
-        vectorFactory.readFields(inputStream);
-        model.readFields(inputStream);
+        ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
+        vectorFactory = (VectorFactory) objectInputStream.readObject();
+        model = (OLRCrossFold) objectInputStream.readObject();
     }
 
     /**
@@ -223,7 +220,7 @@ public class OLRClassifier implements IClassifier<TokenSet, Classification> {
      */
     public OLRClassifier deSerializeModel(final String filename) throws IOException, ClassNotFoundException {
 
-        DataInputStream in = OLR.getDataInputStream(filename);
+        DataInputStream in = new DataInputStream(new FileInputStream(filename));
         OLRClassifier olrClassifier = new OLRClassifier();
         olrClassifier.readFields(in);
 

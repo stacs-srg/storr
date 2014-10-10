@@ -20,6 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
+import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearningConfiguration;
 import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
 
 /**
@@ -28,13 +29,10 @@ import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
  *
  * @author fraserdunlop, jkc25
  */
-public class OLRCrossFold {
+public class OLRCrossFold implements Serializable {
 
     /** The Logger. */
-    private static final Logger LOGGER = LoggerFactory.getLogger(OLRCrossFold.class);
-
-    /** The isModelTrainable flag. */
-    private final boolean modelTrainable;
+    private static transient final Logger LOGGER = LoggerFactory.getLogger(OLRCrossFold.class);
 
     /** The OLRPool models. */
     private List<OLRPool> models = new ArrayList<>();
@@ -42,8 +40,6 @@ public class OLRCrossFold {
     /** The number of cross folds. */
     private int folds;
 
-    /** The properties. */
-    private Properties properties;
 
     /** The classifier. */
     private OLR classifier;
@@ -52,8 +48,6 @@ public class OLRCrossFold {
      * Instantiates a new OLR crossfold model.
      */
     protected OLRCrossFold() {
-
-        modelTrainable = false;
         classifier = new OLR();
     }
 
@@ -70,7 +64,6 @@ public class OLRCrossFold {
             OLRPool model = new OLRPool(properties, trainingVectors[i][0], trainingVectors[i][1]);
             models.add(model);
         }
-        modelTrainable = true;
         classifier = new OLR();
 
     }
@@ -89,15 +82,17 @@ public class OLRCrossFold {
             OLRPool model = new OLRPool(properties, betaMatrix, trainingVectors[i][0], trainingVectors[i][1]);
             models.add(model);
         }
-        modelTrainable = true;
         classifier = new OLR();
 
     }
 
     private ArrayList<NamedVector>[][] init(final List<NamedVector> trainingVectorList, final Properties properties) {
 
-        this.properties = properties;
-        getConfigOptions();
+        folds = Integer.parseInt(properties.getProperty("OLRFolds"));
+        final int foldWarningThreshold = 20;
+        if (folds > foldWarningThreshold) {
+            LOGGER.info("You have selected a large value of OLRfolds. Please check that you meant to do this. It may harm performance");
+        }
         return CrossFoldedDataStructure.make(trainingVectorList, folds);
     }
 
@@ -153,9 +148,12 @@ public class OLRCrossFold {
      * Trains all the OLR models contained in this OLRCrossfold.
      */
     public void train() {
-
-        checkTrainable();
-        trainIfPossible();
+        try {
+            this.trainAllModels();
+        }
+        catch (InterruptedException | ExecutionException e) {
+            LOGGER.error(e.getMessage(), e);
+        }
     }
 
     /**
@@ -192,12 +190,12 @@ public class OLRCrossFold {
 
         List<OLRShuffled> survivors = getSurvivors();
         Matrix classifierMatrix = getClassifierMatrix(survivors);
-        classifier = new OLR(properties, classifierMatrix);
+        classifier = new OLR(MachineLearningConfiguration.getDefaultProperties(),classifierMatrix);
     }
 
     /**
      * Returns the averaged beta matrix for this OLRCrossfold. If the OLRCrossfold has not been trained than an empty matrix will be returned.
-     * 
+     *
      * @return the averaged beta matrix for this OLRCrossfold, or an empty matrix if no training has been done.
      */
     public Matrix getAverageBetaMatrix() {
@@ -240,32 +238,6 @@ public class OLRCrossFold {
     }
 
     /**
-     * Trains all the models if it possible to do so. Models may be untrainable if the have be
-     * read back from file. These models can still be used for classification.
-     */
-    private void trainIfPossible() {
-
-        try {
-            this.trainAllModels();
-        }
-        catch (InterruptedException e) {
-            LOGGER.error(e.getMessage(), e);
-        }
-        catch (ExecutionException e) {
-            LOGGER.error(e.getMessage(), e);
-        }
-    }
-
-    /**
-     * Checks if a model is trainable. Models may be untrainable if the have be
-     * read back from file. These models can still be used for classification.
-     */
-    private void checkTrainable() {
-
-        if (!modelTrainable) { throw new UnsupportedOperationException("This model has no files to train " + "on and may only be used for classification."); }
-    }
-
-    /**
      * Classifies a vector.
      *
      * @param instance vector
@@ -275,6 +247,7 @@ public class OLRCrossFold {
 
         return classifier.classifyFull(instance);
     }
+
 
     /**
      * Gets the log likelihood averaged over the models in the pool.
@@ -288,62 +261,16 @@ public class OLRCrossFold {
     }
 
     /**
-     * Gets the configuration options.
-     *
-     * @return the . Models may be untrainable if the have be
-     * read back from file. These models can still be used for classification. options
-     */
-    private void getConfigOptions() {
-
-        folds = Integer.parseInt(properties.getProperty("OLRFolds"));
-        final int foldWarningThreshold = 20;
-        if (folds > foldWarningThreshold) {
-            LOGGER.info("You have selected a large value of OLRfolds. Please check that you meant to do this. It may harm performance");
-        }
-    }
-
-    /**
-     * Allows serialization of the model to file.
-     *
-     * @param filename name of file to serialize model to
-     * @throws IOException Signals that an I/O exception has occurred.
-     */
-    public void serializeModel(final String filename) throws IOException {
-
-        DataOutputStream out = OLR.getDataOutputStream(filename);
-        write(out);
-        out.close();
-    }
-
-    /**
-     * Allows de-serialization of a model from a file. The de-serialized model is not trainable.
-     *
-     * @param filename name of file to de-serialize
-     * @return the OLR cross fold
-     * @throws IOException Signals that an I/O exception has occurred.
-     */
-    public static OLRCrossFold deSerializeModel(final String filename) throws IOException, ClassNotFoundException {
-
-        DataInputStream in = OLR.getDataInputStream(filename);
-        OLRCrossFold olrCrossFold = new OLRCrossFold();
-        olrCrossFold.readFields(in);
-        in.close();
-        return olrCrossFold;
-    }
-
-    /**
      * Writes each model to a {@link DataOutputStream}.
      *
      * @param outputStream the out
      * @throws IOException Signals that an I/O exception has occurred.
      */
-    protected void write(final DataOutputStream outputStream) throws IOException {
+    protected void write(final ObjectOutputStream outputStream) throws IOException {
 
-        outputStream.writeInt(models.size());
-        for (OLRPool model : models) {
-            model.write(outputStream);
-        }
-        classifier.write(new ObjectOutputStream(outputStream));
+        outputStream.writeObject(models);
+        outputStream.writeObject(folds);
+        outputStream.writeObject(classifier);
     }
 
     /**
@@ -352,20 +279,13 @@ public class OLRCrossFold {
      * @param inputStream the inputStream
      * @throws IOException Signals that an I/O exception has occurred.
      */
-    protected void readFields(final DataInputStream inputStream) throws IOException, ClassNotFoundException {
+    protected void readFields(final ObjectInputStream objectInputStream) throws IOException, ClassNotFoundException {
 
-        int numModels = inputStream.readInt();
-        for (int i = 0; i < numModels; i++) {
-            OLRPool olrPool = new OLRPool();
-            olrPool.readFields(inputStream);
-            models.add(olrPool);
-        }
-        OLR olr = new OLR();
-        olr.readFields(new ObjectInputStream(inputStream));
-        classifier = olr;
+        models = (List<OLRPool>) objectInputStream.readObject();
+        folds = (int) objectInputStream.readObject();
+        classifier = (OLR) objectInputStream.readObject();
 
     }
-
     /**
      * The listener interface for receiving stop events.
      * The class that is interested in processing a stop
@@ -376,6 +296,7 @@ public class OLRCrossFold {
      * method is invoked.
      *
      */
+
     public class StopListener implements Runnable {
 
         /** The process terminated. */

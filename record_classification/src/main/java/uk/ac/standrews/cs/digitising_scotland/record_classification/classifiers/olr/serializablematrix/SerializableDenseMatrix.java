@@ -44,7 +44,9 @@ public class SerializableDenseMatrix implements Serializable {
         outputStream.writeObject(asArray(matrix));
     }
 
-    private double[][] asArray(Matrix matrix) {
+
+    //TODO put this helper method in a sensible place - it's own class perhaps?
+    public double[][] asArray(Matrix matrix) {
         double[][] array = new double[matrix.numRows()][matrix.numCols()];
         for (int i = 0 ; i < matrix.numRows() ; i++)
             for(int j = 0 ; j < matrix.numCols() ; j++)

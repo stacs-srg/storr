@@ -1,10 +1,6 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.olr;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Properties;
 
@@ -103,8 +99,16 @@ public class OLRShuffledTest {
     @Test
     public void testWrite() throws Exception {
 
-        model.serializeModel("target/testOLRShuffledWrite.txt");
-        OLRShuffled olrShuffled = OLRShuffled.deSerializeModel("target/testOLRShuffledWrite.txt");
+        String filename = "target/testOLRShuffledWrite.txt";
+        FileOutputStream fileOutputStream = new FileOutputStream(filename);
+        ObjectOutputStream outputStream = new ObjectOutputStream(fileOutputStream) ;
+        outputStream.writeObject(model);
+
+        ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(filename));
+
+        OLRShuffled olrShuffled = (OLRShuffled) inputStream.readObject();
+
+        //OLRShuffled olrShuffled = OLRShuffled.deSerializeModel(filename);
 
         BufferedReader br = getBufferedReaderOfCodeDictionaryFile();
         String line;
