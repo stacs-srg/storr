@@ -6,7 +6,6 @@ import java.util.Set;
 
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
@@ -20,7 +19,7 @@ import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearnin
  * @author jkc25
  *
  */
-@Ignore("Failing, need to fix")
+//@Ignore("Failing, need to fix")
 public class ClassifyWithExsistingModelsTest {
 
     private ClassifyWithExsistingModels classifier;
@@ -28,9 +27,10 @@ public class ClassifyWithExsistingModelsTest {
     @Before
     public void setUp() throws Exception {
 
-        classifier = new ClassifyWithExsistingModels();
         String codeDictionaryLocation = getClass().getResource("/pilotTestCodeDictionary.txt").getFile();
         MachineLearningConfiguration.getDefaultProperties().setProperty("codeDictionaryFile", codeDictionaryLocation);
+        classifier = new ClassifyWithExsistingModels();
+
     }
 
     @Test

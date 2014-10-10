@@ -26,9 +26,10 @@ public class PIlotTest {
     @Before
     public void setUp() throws Exception {
 
-        pilot = new PIlot();
         String codeDictionaryLocation = getClass().getResource("/pilotTestCodeDictionary.txt").getFile();
         MachineLearningConfiguration.getDefaultProperties().setProperty("codeDictionaryFile", codeDictionaryLocation);
+        pilot = new PIlot();
+
     }
 
     @Test

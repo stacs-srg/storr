@@ -34,7 +34,7 @@ import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearnin
  * @author frjd2, jkc25
  * 
  */
-public class OLRClassifier implements IClassifier<TokenSet,Classification> {
+public class OLRClassifier implements IClassifier<TokenSet, Classification> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(OLRClassifier.class);
     private OLRCrossFold model = null;
@@ -150,7 +150,7 @@ public class OLRClassifier implements IClassifier<TokenSet,Classification> {
         int classificationID = classifyFull.maxValueIndex();
         Code code = vectorFactory.getCodeIndexer().getCode(classificationID);
         double confidence = Math.exp(model.logLikelihood(classificationID, vector));
-        pair = new Classification(code, tokenSet , confidence);
+        pair = new Classification(code, tokenSet, confidence);
         return pair;
     }
 
@@ -163,12 +163,22 @@ public class OLRClassifier implements IClassifier<TokenSet,Classification> {
         OLRClassifier.modelPath = modelPath;
     }
 
+    /**
+     * Returns the {@link VectorFactory} used when training this classifier.
+     * @return vectorFactory  the {@link VectorFactory} used when training this classifier.
+     */
+    public VectorFactory getVectorFactory() {
+
+        return vectorFactory;
+    }
+
     public OLRClassifier getModelFromDefaultLocation() {
 
         OLRClassifier olr = null;
         try {
             olr = deSerializeModel(modelPath);
             model = olr.model;
+            vectorFactory = olr.vectorFactory;
         }
         catch (IOException e) {
             LOGGER.error("Could not get model from default location. IOEception has occured.", e.getCause());
