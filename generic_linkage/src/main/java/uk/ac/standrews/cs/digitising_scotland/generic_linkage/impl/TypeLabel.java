@@ -2,7 +2,7 @@ package uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl;
 
 import org.json.JSONException;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.types.Type;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IBucketTypedOLD;
+import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IBucketLXP;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXP;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ITypeLabel;
 import uk.ac.standrews.cs.digitising_scotland.util.ErrorHandling;
@@ -27,7 +27,7 @@ public class TypeLabel implements ITypeLabel {
         this.labels = labels;
     }
 
-    public static TypeLabel createNewTypeLabel(String json_encoded_type_descriptor_file_name, IBucketTypedOLD types_bucket) {
+    public static TypeLabel createNewTypeLabel(String json_encoded_type_descriptor_file_name, IBucketLXP types_bucket) {
 
         try (BufferedReader reader = Files.newBufferedReader(Paths.get(json_encoded_type_descriptor_file_name), FileManipulation.FILE_CHARSET)) {
 

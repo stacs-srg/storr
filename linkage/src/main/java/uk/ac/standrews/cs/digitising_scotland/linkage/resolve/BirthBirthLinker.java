@@ -2,12 +2,13 @@ package uk.ac.standrews.cs.digitising_scotland.linkage.resolve;
 
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.LXP;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.stream_operators.sharder.AbstractPairwiseLinker;
+import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IInputStream;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXP;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXPInputStreamTypedOld;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXPOutputStreamTypedOLD;
+import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IOutputStream;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IPair;
 import uk.ac.standrews.cs.digitising_scotland.linkage.labels.PersonTypeLabel;
 import uk.ac.standrews.cs.digitising_scotland.linkage.labels.SameAsTypeLabel;
+import uk.ac.standrews.cs.digitising_scotland.linkage.lxp_records.Person;
 
 /**
  * Created by al on 19/06/2014.
@@ -16,15 +17,15 @@ import uk.ac.standrews.cs.digitising_scotland.linkage.labels.SameAsTypeLabel;
  * Attempts to find birth records with the same person in different roles (e.g. mother-baby and father-baby).
  *
  */
-public class BirthBirthLinker extends AbstractPairwiseLinker<ILXP> {
+public class BirthBirthLinker extends AbstractPairwiseLinker<Person> {
 
-    public BirthBirthLinker(final ILXPInputStreamTypedOld input, final ILXPOutputStreamTypedOLD output) {
+    public BirthBirthLinker(final IInputStream<Person> input, final IOutputStream<IPair<Person>> output) {
 
         super(input, output);
     }
 
     @Override
-    public boolean compare(final IPair<ILXP> pair) {
+    public boolean compare(final IPair<Person> pair) {
 
         ILXP first = pair.first();
         ILXP second = pair.second();
@@ -41,7 +42,7 @@ public class BirthBirthLinker extends AbstractPairwiseLinker<ILXP> {
     }
 
     @Override
-    public void addToResults(final IPair pair, final ILXPOutputStreamTypedOLD results) {
+    public void addToResults(final IPair pair, final IOutputStream results) {
 
         ILXP first = pair.first();
         ILXP second = pair.second();

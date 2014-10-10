@@ -13,5 +13,5 @@ public interface IPairWiseLinker<T extends ILXP> {
      * Adds a matched result to a result collection.
      * @param pair
      */
-    void addToResults(final IPair<T> pair, final ILXPOutputStreamTypedOLD<T> results);
+    void addToResults(final IPair<T> pair, final IOutputStream<IPair<T>> results);
 }

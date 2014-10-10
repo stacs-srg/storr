@@ -1,7 +1,9 @@
 package uk.ac.standrews.cs.digitising_scotland.linkage.visualise;
 
+import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.stream_operators.sharder.Pair;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.*;
 import uk.ac.standrews.cs.digitising_scotland.linkage.labels.SameAsTypeLabel;
+import uk.ac.standrews.cs.digitising_scotland.linkage.lxp_records.Person;
 import uk.ac.standrews.cs.nds.persistence.PersistentObjectException;
 
 import java.io.IOException;
@@ -12,26 +14,26 @@ import java.util.Set;
  */
 public class IndexedBucketVisualiser {
 
-    private final IIndexedBucketTypedOLD indexed;
-    private final IBucketTypedOLD people;
+    private final IIndexedBucket indexed;
+    private final IBucket people;
 
-    public IndexedBucketVisualiser(IIndexedBucketTypedOLD bucket, IBucketTypedOLD people) {
+    public IndexedBucketVisualiser(IIndexedBucket bucket, IBucket<Person> people) {
         this.indexed = bucket;
         this.people = people;
     }
 
     public void show() throws IOException, PersistentObjectException {
 
-        IBucketIndexOLD index = indexed.getIndex(SameAsTypeLabel.first);
+        IBucketIndex index = indexed.getIndexT(SameAsTypeLabel.first);
         Set<String> keys = index.keySet();
 
         for (String key : keys) {
             System.out.println("key = " + key);
-            ILXPInputStreamTypedOld<ILXP> stream = index.records(key);
+            IInputStream<Pair<Person>> stream = index.records(key);
 
             boolean first = true;
 
-            for (ILXP next : stream) { // indexed by SameAsLabels.first
+            for (Pair<Person> next : stream) { // indexed by SameAsLabels.first
 
                 if (first) {
                     String first_id_string = next.get(SameAsTypeLabel.first); // id of second person in person table

@@ -1,7 +1,7 @@
 package uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.merger;
 
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXP;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXPInputStreamTypedOld;
+import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IInputStream;
 
 import java.util.Arrays;
 import java.util.Iterator;
@@ -12,11 +12,11 @@ import java.util.NoSuchElementException;
  * Merging is performed end to end - the first record of the second stream follows the last record of the first and so on.
  * Created by al on 02/05/2014.
  */
-public class TailToTailMergedStreamTypedOld implements ILXPInputStreamTypedOld {
+public class TailToTailMergedStreamTypedOld implements IInputStream {
 
-    private ILXPInputStreamTypedOld[] streams;
+    private IInputStream[] streams;
 
-    public TailToTailMergedStreamTypedOld(final ILXPInputStreamTypedOld[] streams) {
+    public TailToTailMergedStreamTypedOld(final IInputStream[] streams) {
 
         this.streams = Arrays.copyOf(streams, streams.length);
     }

@@ -9,7 +9,7 @@ public interface IBlocker<T extends ILXP> {
     /**
      * @return the ILXPInputStream over which blocking is being performed.
      */
-    ILXPInputStreamTypedOld<T> getInput();
+    IInputStream<T> getInput();
 
     /*
      * Applies the blocking method @method determineBlockedBucketNamesForRecord to the input records

@@ -2,7 +2,7 @@ package uk.ac.standrews.cs.digitising_scotland.linkage;
 
 import org.json.JSONException;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.LXP;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IBucketTypedOLD;
+import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IBucket;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXP;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ITypeLabel;
 import uk.ac.standrews.cs.digitising_scotland.linkage.labels.CommonTypeLabel;
@@ -38,7 +38,7 @@ public class EventImporter {
      * @throws RecordFormatException
      * @throws JSONException
      */
-    public static int importDigitisingScotlandRecords(final IBucketTypedOLD b, final String filename, ITypeLabel label) throws IOException, RecordFormatException, JSONException {
+    public static int importDigitisingScotlandRecords(final IBucket b, final String filename, ITypeLabel label) throws IOException, RecordFormatException, JSONException {
 
         int counter = 0;
         try (final BufferedReader reader = Files.newBufferedReader(Paths.get(filename), FileManipulation.FILE_CHARSET)) {

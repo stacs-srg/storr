@@ -1,20 +1,22 @@
 package uk.ac.standrews.cs.digitising_scotland.linkage.record_utilities;
 
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.LXP;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXP;
-import uk.ac.standrews.cs.digitising_scotland.linkage.labels.*;
+import uk.ac.standrews.cs.digitising_scotland.linkage.labels.BirthTypeLabel;
 import uk.ac.standrews.cs.digitising_scotland.linkage.labels.CommonTypeLabel;
+import uk.ac.standrews.cs.digitising_scotland.linkage.labels.MarriageTypeLabel;
 import uk.ac.standrews.cs.digitising_scotland.linkage.labels.PersonTypeLabel;
+import uk.ac.standrews.cs.digitising_scotland.linkage.lxp_records.Birth;
+import uk.ac.standrews.cs.digitising_scotland.linkage.lxp_records.Person;
 
 /**
  * Domain specific views over LXP records
  * Created by al on 13/08/2014.
  */
-public class LXPConstructors {
+public class LXPConstructors { // TODO refactor into factories
 
-    public static ILXP createPerson(String surname, String forename, String sex, String fathers_forename, String fathers_surname, String fathers_occupation, String mothers_forename, String mothers_surname, String mothers_maiden_surname, String changed_surname, String changed_forename, String changed_mothers_maiden_surname, String original_record_id, String original_record_type, String role, String occupation) {
+    public static Person createPerson(String surname, String forename, String sex, String fathers_forename, String fathers_surname, String fathers_occupation, String mothers_forename, String mothers_surname, String mothers_maiden_surname, String changed_surname, String changed_forename, String changed_mothers_maiden_surname, String original_record_id, String original_record_type, String role, String occupation)  {
 
-        ILXP record = new LXP();
+        Person record = new Person();
 
         record.put(CommonTypeLabel.TYPE_LABEL, PersonTypeLabel.TYPE);
 
@@ -38,7 +40,7 @@ public class LXPConstructors {
         return record;
     }
 
-    public static ILXP createPersonFromOwnBirthDeath( ILXP BD_record ) {
+    public static Person createPersonFromOwnBirthDeath( ILXP BD_record ) {
 
         String surname = BD_record.get(BirthTypeLabel.SURNAME);
         String forename = BD_record.get(BirthTypeLabel.FORENAME);
@@ -73,7 +75,7 @@ public class LXPConstructors {
                 changed_surname,  changed_forename,  changed_mothers_maiden_surname, original_record_id, original_record_type,  role, occupation);
     }
 
-    public static ILXP createFatherFromChildsBirthDeath( ILXP child, ILXP BD_record ) {
+    public static Person createFatherFromChildsBirthDeath( Person child, Birth BD_record ) {
 
         if( child.get( PersonTypeLabel.FATHERS_SURNAME ).equals( "" ) ) {
             return null;
@@ -104,7 +106,7 @@ public class LXPConstructors {
                 changed_surname,  changed_forename,  changed_mothers_maiden_surname, original_record_id, original_record_type,  role, occupation);
     }
 
-    public static ILXP createMotherFromChildsBirthDeath(  ILXP child, ILXP BD_record ) {
+    public static Person createMotherFromChildsBirthDeath(  ILXP child, ILXP BD_record ) {
 
         if( child.get( PersonTypeLabel.FATHERS_SURNAME ).equals( "" ) ) {
             return null;
@@ -141,7 +143,7 @@ public class LXPConstructors {
      * @param marriage_record  a record from which to extract person information
      * @return the LXP representing the bride
      */
-    public static ILXP createBrideFromMarriageRecord(ILXP marriage_record) {
+    public static Person createBrideFromMarriageRecord(ILXP marriage_record) {
 
         String surname = marriage_record.get(MarriageTypeLabel.BRIDE_SURNAME);
         String forename = marriage_record.get(MarriageTypeLabel.BRIDE_FORENAME);
@@ -180,7 +182,7 @@ public class LXPConstructors {
      * @param marriage_record  a record from which to extract person information
      * @return the LXP representing the groom
      */
-    public static ILXP createGroomFromMarriageRecord(ILXP marriage_record) {
+    public static Person createGroomFromMarriageRecord(ILXP marriage_record) {
 
         String surname = marriage_record.get(MarriageTypeLabel.GROOM_SURNAME);
         String forename = marriage_record.get(MarriageTypeLabel.GROOM_FORENAME);
@@ -215,7 +217,7 @@ public class LXPConstructors {
 
     }
 
-    public static ILXP createBridesFatherFromMarriageRecord(ILXP bride, ILXP marriage_record) {// TODO write me
+    public static Person createBridesFatherFromMarriageRecord(ILXP bride, ILXP marriage_record) {// TODO write me
 
         String surname = marriage_record.get(MarriageTypeLabel.BRIDE_FATHERS_SURNAME);
         if( surname.equals("0") ) {
@@ -248,7 +250,7 @@ public class LXPConstructors {
 
     }
 
-    public static ILXP createBridesMotherFromMarriageRecord(ILXP bride, ILXP marriage_record) { // TODO write me
+    public static Person createBridesMotherFromMarriageRecord(ILXP bride, ILXP marriage_record) { // TODO write me
 
         String surname = marriage_record.get(MarriageTypeLabel.BRIDE_MOTHERS_MAIDEN_SURNAME);  //<<<<<<<<<<<<< TODO see below
 //        if( surname.equals("0") ) {
@@ -281,7 +283,7 @@ public class LXPConstructors {
 
     }
 
-    public static ILXP createGroomsFatherFromMarriageRecord(ILXP groom, ILXP marriage_record) {// TODO write me
+    public static Person createGroomsFatherFromMarriageRecord(ILXP groom, ILXP marriage_record) {// TODO write me
 
         String surname = marriage_record.get(MarriageTypeLabel.GROOM_FATHERS_SURNAME);
         if( surname.equals("0") ) {
@@ -315,7 +317,7 @@ public class LXPConstructors {
 
     }
 
-    public static ILXP createGroomsMotherFromMarriageRecord(ILXP groom, ILXP marriage_record) {// TODO write me
+    public static Person createGroomsMotherFromMarriageRecord(ILXP groom, ILXP marriage_record) {// TODO write me
 
         String surname = marriage_record.get(MarriageTypeLabel.GROOM_MOTHERS_MAIDEN_SURNAME);  //<<<<<<<<<<<<< TODO see below
 //        if( surname.equals("0") ) {

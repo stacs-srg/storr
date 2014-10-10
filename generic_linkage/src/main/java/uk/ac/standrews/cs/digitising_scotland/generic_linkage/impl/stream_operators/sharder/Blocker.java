@@ -13,23 +13,23 @@ import java.util.Map;
  */
 public abstract class Blocker<T extends ILXP> implements IBlocker<T> {
 
-    private final ILXPInputStreamTypedOld<T> input;
+    private final IInputStream<T> input;
     private final IRepository output_repo;
-    private final Map<String, IBucketTypedOLD> names = new HashMap<>();
+    private final Map<String, IBucket> names = new HashMap<>();
     private ILXPFactory<T> factory;
 
     /**
      * @param input       the stream over which to block
      * @param output_repo - the repository into which results are written
      */
-    public Blocker(final ILXPInputStreamTypedOld<T> input, final IRepository output_repo, ILXPFactory<T> factory ) {
+    public Blocker(final IInputStream<T> input, final IRepository output_repo, ILXPFactory<T> factory ) {
 
         this.input = input;
         this.output_repo = output_repo;
         this.factory = factory;
     }
 
-    public ILXPInputStreamTypedOld getInput() {
+    public IInputStream getInput() {
         return input;
     }
 
@@ -51,25 +51,25 @@ public abstract class Blocker<T extends ILXP> implements IBlocker<T> {
 
         for (String bucket_name : determineBlockedBucketNamesForRecord(record)) {
 
-            IBucketTypedOLD bucket = names.get(bucket_name);
+            IBucket bucket = names.get(bucket_name);
 
             if (bucket == null) { // not seen the field before
                 // Need to create a new bucket
                 if (output_repo.bucketExists(bucket_name)) {
                     try {
-                        output_repo.getBucket(bucket_name, factory).getOutputStream().add(record);
+                         output_repo.getBucket(bucket_name, factory).getOutputStreamT().add(record);
                     } catch (RepositoryException e) {
                         ErrorHandling.exceptionError(e, "RepositoryException obtaining bucket instance");
                     }
                 } else { // need to create it
                     try {
-                        output_repo.makeBucket(bucket_name,factory).getOutputStream().add(record);
+                        output_repo.makeBucket(bucket_name, BucketKind.DIRECTORYBACKED, factory).getOutputStreamT().add(record);
                     } catch (RepositoryException e) {
                         e.printStackTrace();
                     }
                 }
             } else { // we have seen this name before and hence have a cached bucket
-                bucket.getOutputStream().add(record);
+                bucket.getOutputStreamT().add(record);
             }
         }
     }

@@ -1,14 +1,19 @@
 package uk.ac.standrews.cs.digitising_scotland.linkage;
 
-import factory.TypeFactory;
 import org.json.JSONException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.*;
+import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.LXP;
+import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.RepositoryException;
+import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.Store;
+import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.StoreException;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.stream_operators.filter.ExactMatch;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.*;
+import uk.ac.standrews.cs.digitising_scotland.linkage.factory.BirthFactory;
+import uk.ac.standrews.cs.digitising_scotland.linkage.factory.TypeFactory;
 import uk.ac.standrews.cs.digitising_scotland.linkage.labels.BirthTypeLabel;
+import uk.ac.standrews.cs.digitising_scotland.linkage.lxp_records.Birth;
 import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
 
 import java.io.IOException;
@@ -38,7 +43,7 @@ public class InfrastructureTest {
 
     private static IStore store;
     private static IRepository repo;
-    private IBucketTypedOLD types;
+    private IBucketLXP types;
     private ITypeLabel birthlabel;
 
     @Before
@@ -50,11 +55,11 @@ public class InfrastructureTest {
 
         repo = store.makeRepository("repo");
 
-        repo.makeBucket(bucket_name1,LXP.getInstance());
-        repo.makeBucket(bucket_name2,LXP.getInstance());
-        repo.makeBucket(bucket_name3,LXP.getInstance());
-        repo.makeIndexedBucket(bucket_name4,LXP.getInstance());
-        types =  repo.makeBucket(types_name,LXP.getInstance());
+        repo.makeBucket(bucket_name1,BucketKind.DIRECTORYBACKED,LXP.getInstance());
+        repo.makeBucket(bucket_name2,BucketKind.DIRECTORYBACKED,LXP.getInstance());
+        repo.makeBucket(bucket_name3,BucketKind.DIRECTORYBACKED,LXP.getInstance());
+        repo.makeBucket(bucket_name4, BucketKind.INDEXED, LXP.getInstance());
+        types =  repo.makeLXPBucket(types_name, BucketKind.DIRECTORYBACKED);
         birthlabel = TypeFactory.getInstance().createType(BIRTHRECORDTYPETEMPLATE, "BIRTH", types);
     }
 
@@ -83,7 +88,7 @@ public class InfrastructureTest {
     @Test
 //    @Ignore
     public synchronized void testLXPCreation() throws Exception, RepositoryException {
-        IBucketTypedOLD<LXP> b = repo.getBucket(bucket_name1, LXP.getInstance());
+        IBucketLXP b = repo.getLXPBucket(bucket_name1);
         LXP lxp = new LXP();
         lxp.put("age", "42");
         lxp.put("address", "home");
@@ -93,7 +98,7 @@ public class InfrastructureTest {
     @Test
 //    @Ignore
     public synchronized void testLXPOverwrite() throws Exception, RepositoryException {
-        IBucketTypedOLD<LXP> b = repo.getBucket(bucket_name1, LXP.getInstance());
+        IBucketLXP b = repo.getLXPBucket(bucket_name1);
         LXP lxp = new LXP();
         lxp.put("age", "42");
         lxp.put("address", "home");
@@ -111,7 +116,7 @@ public class InfrastructureTest {
     @Test
 //    @Ignore
     public synchronized void testLXPFromFile() throws Exception, RepositoryException {
-        IBucketTypedOLD<LXP> b = repo.getBucket(bucket_name1, LXP.getInstance());
+        IBucketLXP b = repo.getLXPBucket(bucket_name1);
         LXP lxp = new LXP();
         lxp.put("age", "42");
         lxp.put("address", "home");
@@ -128,7 +133,7 @@ public class InfrastructureTest {
     @Test
 //    @Ignore
     public synchronized void testStreams() throws Exception, RepositoryException {
-        IBucketTypedOLD<LXP> b = repo.getBucket(bucket_name1, LXP.getInstance());
+        IBucketLXP b = repo.getLXPBucket(bucket_name1);
         // create a few records
         for (int i = 1; i < 10; i++) {
             LXP lxp = new LXP();
@@ -151,7 +156,7 @@ public class InfrastructureTest {
 //    @Ignore
     public synchronized void testReadingPopulationRecords() throws RepositoryException, RecordFormatException, JSONException, IOException {
 
-        IBucketTypedOLD<LXP> b = repo.getBucket(bucket_name1, LXP.getInstance());
+        IBucket<Birth> b = repo.getBucket(bucket_name1, new BirthFactory(birthlabel.getId()));
 
         EventImporter.importDigitisingScotlandRecords(b, BIRTH_RECORDS_PATH,birthlabel);
     }
@@ -160,12 +165,12 @@ public class InfrastructureTest {
 //    @Ignore
     public synchronized void testSimpleMatchPopulationRecords() throws RepositoryException, RecordFormatException, JSONException, IOException {
 
-        IBucketTypedOLD<LXP> b = repo.getBucket(bucket_name1, LXP.getInstance());
-        IBucketTypedOLD<LXP> b2 = repo.getBucket(bucket_name1, LXP.getInstance());
+        IBucket<Birth> b = repo.getBucket(bucket_name1, new BirthFactory(birthlabel.getId()));
+        IBucket<Birth> b2 = repo.getBucket(bucket_name2,new BirthFactory(birthlabel.getId()));
 
         EventImporter.importDigitisingScotlandRecords(b, BIRTH_RECORDS_PATH,birthlabel);
 
-        ExactMatch filter = new ExactMatch(b.getInputStream(), new BucketBackedOutputStreamOLD(b2), "surname", "GONTHWICK");
+        ExactMatch filter = new ExactMatch(b.getInputStreamT(), b2.getOutputStreamT(), "surname", "GONTHWICK");
         filter.apply();
     }
 
@@ -174,12 +179,12 @@ public class InfrastructureTest {
     @Test
     public synchronized void testIndex() throws Exception, RepositoryException {
 
-        IIndexedBucketTypedOLD b = repo.getIndexedBucket(bucket_name4);
+        IIndexedBucket<Birth> b = (IIndexedBucket<Birth>) repo.getBucket(bucket_name4,new BirthFactory(birthlabel.getId())); // TODO delete BirthTypeLabel and rest
 
         b.addIndex(BirthTypeLabel.SURNAME);
         int counter1 = EventImporter.importDigitisingScotlandRecords(b, BIRTH_RECORDS_PATH,birthlabel);
 
-        IBucketIndexOLD index = b.getIndex(BirthTypeLabel.SURNAME);
+        IBucketIndex index = b.getIndexT(BirthTypeLabel.SURNAME);
 
         Set<String> keys = index.keySet();
         int counter2 = 0;

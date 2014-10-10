@@ -20,18 +20,18 @@ public class StoreIndex implements IStoreIndex {
     }
 
     @Override
-    public IBucketTypedOLD get(int id) {
+    public IBucketLXP get(int id) {
 
         Iterator<IRepository> repo_iterator = store.getIterator();
         while (repo_iterator.hasNext()) {
 
             IRepository repo = repo_iterator.next();
 
-            Iterator<IBucketTypedOLD> bucket_iterator = repo.getIterator();
+            Iterator<IBucketLXP> bucket_iterator = repo.getLXPIterator();
 
             while (bucket_iterator.hasNext()) {
 
-                IBucketTypedOLD bucket = bucket_iterator.next();
+                IBucketLXP bucket = bucket_iterator.next();
 
                 if( ! bucket.kind().equals(BucketKind.INDIRECT ) && bucket.contains(id) ) {  // only look at primary storage
 

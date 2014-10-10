@@ -11,10 +11,10 @@ import java.util.List;
  */
 public abstract class AbstractPairwiseLinker<T extends ILXP> implements IPairWiseLinker<T> {
 
-    private final ILXPInputStreamTypedOld<T> input;
-    private final ILXPOutputStreamTypedOLD<T> output;
+    private final IInputStream<T> input;
+    private final IOutputStream<IPair<T>> output;
 
-    public AbstractPairwiseLinker(final ILXPInputStreamTypedOld<T> input, final ILXPOutputStreamTypedOLD<T> output) {
+    public AbstractPairwiseLinker(final IInputStream<T> input, final IOutputStream<IPair<T>> output) {
         this.input = input;
         this.output = output;
     }
@@ -68,5 +68,5 @@ public abstract class AbstractPairwiseLinker<T extends ILXP> implements IPairWis
      *
      * @param pair
      */
-    public abstract void addToResults(IPair pair, ILXPOutputStreamTypedOLD results);
+    public abstract void addToResults(IPair pair, IOutputStream results);
 }

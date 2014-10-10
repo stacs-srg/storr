@@ -25,11 +25,15 @@ public class LXP implements ILXP {
         this.map = new HashMap<>();
     }
 
-    public LXP(int id, JSONReader reader) throws PersistentObjectException {
-        try {
-            this.id = id;
-            this.map = new HashMap<>();
+    public LXP( int id ) {
 
+        this.id = id;
+        this.map = new HashMap<>();
+    }
+
+    public LXP(int id, JSONReader reader) throws PersistentObjectException {
+        this( id );
+        try {
             reader.nextSymbol();
             reader.object();
 
@@ -49,9 +53,31 @@ public class LXP implements ILXP {
         this( Store.getInstance().getNextFreePID(), reader );
     }
 
+    public LXP(int id, JSONReader reader, int label_id) throws PersistentObjectException {
+        this( id, reader ); // must do this first
+
+            if( ! checkConsistentWith( label_id ) ) {
+                throw new PersistentObjectException("incompatible with label");
+            }
+    }
+
     @Override
-    public LXP create(int id, JSONReader reader) throws PersistentObjectException  {
-        return new LXP(id,reader);
+    public LXP create(int label_id, JSONReader reader) throws PersistentObjectException  {
+        return new LXP(label_id,reader);
+    }
+
+    @Override
+    /*
+     * This is a no-op for this class
+     */
+    public ILXP convert(ILXP base) {
+        return base;
+    }
+
+    @Override
+    public boolean checkConsistentWith(int label_id) {
+        return true; // there is no contract with this class - creates whatever is there.
+        // over-ridden in super classes.
     }
 
     @Override

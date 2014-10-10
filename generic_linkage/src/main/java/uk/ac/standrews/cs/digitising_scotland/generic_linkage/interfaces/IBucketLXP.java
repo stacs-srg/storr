@@ -33,12 +33,12 @@ public interface IBucketLXP {
     /**
      * @return an input Stream containing all the LXP records in this Bucket
      */
-    LXPInputStream getInputStream();
+    ILXPInputStream getInputStream();
 
     /**
      * @return an output Stream which supports the writing of records to this Bucket
      */
-    ILXPOutputStreamUnTypedNEW getOutputStream();
+    ILXPOutputStream getOutputStream();
 
     /**
      * @return the name of the bucket
@@ -52,10 +52,20 @@ public interface IBucketLXP {
     boolean contains(int id);
 
     /**
-    * @return the kind of the bucket
+    * @return the kind of the bucket - see BucketKind class
     */
     BucketKind kind();
 
-    ITypeLabel getBucketContentType();
 
+    void setKind( final BucketKind kind );
+
+    /*
+     * set the type label of this bucket (for homogeneous Buckets).
+     */
+    void setTypeLabelID(int labelID) throws IOException;
+
+    /*
+     * return id of type label or -1 if an error or if no label has been set
+     */
+    int getTypeLabelID();
 }

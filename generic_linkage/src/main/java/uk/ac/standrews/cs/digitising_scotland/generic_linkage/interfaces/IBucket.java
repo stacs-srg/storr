@@ -33,12 +33,12 @@ public interface IBucket<T extends ILXP> {
     /**
      * @return an input Stream containing all the LXP records in this Bucket
      */
-    ILXPInputStreamTypedNew<T> getTypedInputStream();
+    IInputStream<T> getInputStreamT();
 
     /**
      * @return an output Stream which supports the writing of records to this Bucket
      */
-    ILXPOutputStreamTypedNew<T> getTypedOutputStream();
+    IOutputStream<T> getOutputStreamT();
 
     /**
      * @return the name of the bucket
@@ -52,8 +52,15 @@ public interface IBucket<T extends ILXP> {
     boolean contains(int id);
 
     /**
+     * @param kind - the content kind of the bucket to be set
+     */
+    void setKind( BucketKind kind );
+
+    /**
     * @return the kind of the bucket
     */
-    BucketKind kind();
+    BucketKind getKind();
+
+    int getTypeLabelID();
 
 }

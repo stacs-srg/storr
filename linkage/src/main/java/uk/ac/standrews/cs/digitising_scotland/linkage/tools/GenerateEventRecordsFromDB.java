@@ -1,6 +1,6 @@
 package uk.ac.standrews.cs.digitising_scotland.linkage.tools;
 
-import uk.ac.standrews.cs.digitising_scotland.linkage.event_records.RecordGenerator;
+import uk.ac.standrews.cs.digitising_scotland.linkage.source_event_records.SourceRecordGenerator;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.IPopulation;
 import uk.ac.standrews.cs.digitising_scotland.population_model.model.database.DBPopulationAdapter;
 
@@ -15,7 +15,7 @@ public class GenerateEventRecordsFromDB {
     public static void main(final String[] args) throws Exception {
 
         IPopulation population = new DBPopulationAdapter();
-        RecordGenerator generator = new RecordGenerator(population);
+        SourceRecordGenerator generator = new SourceRecordGenerator(population);
         generator.generateEventRecords(args);
     }
 }

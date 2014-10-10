@@ -2,7 +2,7 @@ package uk.ac.standrews.cs.digitising_scotland.linkage.blocking;
 
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.RepositoryException;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.stream_operators.sharder.Blocker;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IBucketTypedOLD;
+import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IBucket;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXP;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXPFactory;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IRepository;
@@ -28,9 +28,9 @@ import java.util.ArrayList;
  */
 public class MultipleBlockerOverPerson<T extends ILXP> extends Blocker<T> {
 
-    public MultipleBlockerOverPerson(final IBucketTypedOLD peopleBucket, final IRepository output_repo, ILXPFactory<T> tFactory) throws RepositoryException {
+    public MultipleBlockerOverPerson(final IBucket peopleBucket, final IRepository output_repo, ILXPFactory<T> tFactory) throws RepositoryException {
 
-        super(peopleBucket.getInputStream(), output_repo, tFactory);
+        super(peopleBucket.getInputStreamT(), output_repo, tFactory);
     }
 
     /**

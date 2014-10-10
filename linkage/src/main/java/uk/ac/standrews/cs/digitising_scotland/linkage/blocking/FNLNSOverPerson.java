@@ -2,7 +2,7 @@ package uk.ac.standrews.cs.digitising_scotland.linkage.blocking;
 
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.RepositoryException;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.stream_operators.sharder.Blocker;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IBucketTypedOLD;
+import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IBucket;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXP;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXPFactory;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IRepository;
@@ -15,9 +15,9 @@ import uk.ac.standrews.cs.nds.util.ErrorHandling;
  */
 public class FNLNSOverPerson<T extends ILXP> extends Blocker<T> {
 
-    public FNLNSOverPerson(final IBucketTypedOLD people, final IRepository output_repo, ILXPFactory<T> tFactory) throws RepositoryException {
+    public FNLNSOverPerson(final IBucket<T> people, final IRepository output_repo, ILXPFactory<T> tFactory) throws RepositoryException {
 
-        super(people.getInputStream(), output_repo, tFactory);
+        super(people.getInputStreamT(), output_repo, tFactory);
     }
 
     @Override

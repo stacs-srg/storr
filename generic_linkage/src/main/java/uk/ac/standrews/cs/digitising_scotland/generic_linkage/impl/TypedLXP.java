@@ -8,6 +8,8 @@ import uk.ac.standrews.cs.digitising_scotland.util.ErrorHandling;
 
 /**
  * Created by al on 20/06/2014.
+ *
+ * TODO consider deleting this class.
  */
 public class TypedLXP extends LXP implements ITypedLXP {
 
@@ -89,7 +91,7 @@ public class TypedLXP extends LXP implements ITypedLXP {
             if (field_type.equals(expected_type)) {
                 return true;
             } else {
-                throw new TypedLXPException("Incompatible types"); // TODO put a better error in here.
+                throw new TypedLXPException("Incompatible types");
             }
 
         } catch (ClassNotFoundException e) { // Can't find class - give up.

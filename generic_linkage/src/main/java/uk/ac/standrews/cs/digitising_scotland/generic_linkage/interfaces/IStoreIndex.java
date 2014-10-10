@@ -10,6 +10,6 @@ public interface IStoreIndex {
      * @param id - a record to be found in the store
      * @return the bucket containing the specified id
      */
-    public IBucketTypedOLD get(int id);
+    public IBucketLXP get(int id);
 
 }

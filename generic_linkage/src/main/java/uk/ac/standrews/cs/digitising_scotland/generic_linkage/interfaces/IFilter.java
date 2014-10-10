@@ -9,12 +9,12 @@ public interface IFilter<T extends ILXP> {
     /**
      * @return the ILXPInputStream over which filtering is being performed.
      */
-    ILXPInputStreamTypedOld<T> getInput();
+    IInputStream<T> getInput();
 
     /**
      * @return the ILXPOutputStream to which selected records are being written
      */
-    ILXPOutputStreamTypedOLD<T> getOutput();
+    IOutputStream<T> getOutput();
 
     /**
      * Determines whether a record from the input stream should be written to the output stream
