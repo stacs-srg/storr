@@ -1,6 +1,6 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.lookup;
 
-import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.lookup.closestmatchmap.SimilarityMetric;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.closestmatchmap.SimilarityMetric;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
 
 /**

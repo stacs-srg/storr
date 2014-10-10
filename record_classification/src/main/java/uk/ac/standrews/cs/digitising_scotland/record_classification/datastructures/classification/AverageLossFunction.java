@@ -3,7 +3,7 @@ package uk.ac.standrews.cs.digitising_scotland.record_classification.datastructu
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.Interfaces.LossFunction;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.resolver.Interfaces.LossFunction;
 
 /**
  * Calculates the loss for a set of CodeTriples.

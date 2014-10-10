@@ -105,9 +105,8 @@ public abstract class RecordFactory {
         int imageQuality = Integer.parseInt(lineSplit[imageQualityPos]);
 
         OriginalData originalData = new CODOrignalData(description, year, ageGroup, sex, imageQuality, inputFile.getPath());
-        Record newRecord = new Record(id, originalData);
 
-        return newRecord;
+        return new Record(id, originalData);
     }
 
     private static List<String> getDescriptionFromFile(final String[] lineSplit, final int descriptionPos) {
@@ -214,10 +213,7 @@ public abstract class RecordFactory {
         BufferedReader br = Utils.createBufferedReader(inputFile);
         String firstLine = br.readLine();
         br.close();
-        if (firstLine == null) { return false; }
-        if (firstLine.split("\\|").length > 4) { return true; }
-
-        return false;
+        return firstLine != null && firstLine.split("\\|").length > 4;
     }
 
     /**

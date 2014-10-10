@@ -7,10 +7,10 @@ import org.slf4j.LoggerFactory;
 
 import uk.ac.shef.wit.simmetrics.similaritymetrics.AbstractStringMetric;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.lookup.ExactMatchClassifier;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.lookup.closestmatchmap.ClosestMatchMap;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.lookup.closestmatchmap.SimilarityMetric;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.lookup.closestmatchmap.SimilarityMetricFromSimmetricFactory;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.lookup.closestmatchmap.StringSimilarityClassifier;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.closestmatchmap.ClosestMatchMap;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.closestmatchmap.SimilarityMetric;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.closestmatchmap.SimilarityMetricFromSimmetricFactory;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.closestmatchmap.StringSimilarityClassifier;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.olr.OLRClassifier;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.classification.Classification;

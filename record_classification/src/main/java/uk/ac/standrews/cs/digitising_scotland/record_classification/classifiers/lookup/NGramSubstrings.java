@@ -16,7 +16,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multiset;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.resolver.Interfaces.SubsetEnumerator;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.resolver.Interfaces.SubsetEnumerator;
 
 /**
  * This class creates and stores the nGrams created from a record and provides
