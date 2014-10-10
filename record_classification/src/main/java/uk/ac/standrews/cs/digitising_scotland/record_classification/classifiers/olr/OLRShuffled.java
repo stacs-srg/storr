@@ -17,9 +17,7 @@
 
 package uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.olr;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -234,7 +232,7 @@ public class OLRShuffled implements Runnable {
      * @return OLRShuffled deserialized model
      * @throws IOException Indicates IO error on reading model
      */
-    public static OLRShuffled deSerializeModel(final String filename) throws IOException {
+    public static OLRShuffled deSerializeModel(final String filename) throws IOException, ClassNotFoundException {
 
         OLRShuffled olrShuffled = new OLRShuffled();
         DataInputStream inputStream = OLR.getDataInputStream(filename);
@@ -250,7 +248,7 @@ public class OLRShuffled implements Runnable {
      */
     protected void write(final DataOutputStream outputStream) throws IOException {
 
-        model.write(outputStream);
+        model.write(new ObjectOutputStream(outputStream));
     }
 
     /**
@@ -259,10 +257,10 @@ public class OLRShuffled implements Runnable {
      * @param inputStream the input stream
      * @throws IOException Signals that an I/O exception has occurred.
      */
-    protected void readFields(final DataInputStream inputStream) throws IOException {
+    protected void readFields(final DataInputStream inputStream) throws IOException, ClassNotFoundException {
 
         OLR olr = new OLR();
-        olr.readFields(inputStream);
+        olr.readFields(new ObjectInputStream(inputStream));
         model = olr;
     }
 

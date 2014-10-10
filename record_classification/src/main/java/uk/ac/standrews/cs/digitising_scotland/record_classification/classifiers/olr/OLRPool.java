@@ -3,6 +3,7 @@ package uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -279,7 +280,7 @@ public class OLRPool implements Runnable {
         }
     }
 
-    protected void readFields(final DataInputStream inputStream) throws IOException {
+    protected void readFields(final DataInputStream inputStream) throws IOException, ClassNotFoundException {
 
         survivors = new ArrayList<OLRShuffled>();
         int numModels = inputStream.readInt();

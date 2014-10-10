@@ -1,10 +1,6 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.olr;
 
-import java.io.BufferedReader;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -326,7 +322,7 @@ public class OLRCrossFold {
      * @return the OLR cross fold
      * @throws IOException Signals that an I/O exception has occurred.
      */
-    public static OLRCrossFold deSerializeModel(final String filename) throws IOException {
+    public static OLRCrossFold deSerializeModel(final String filename) throws IOException, ClassNotFoundException {
 
         DataInputStream in = OLR.getDataInputStream(filename);
         OLRCrossFold olrCrossFold = new OLRCrossFold();
@@ -347,7 +343,7 @@ public class OLRCrossFold {
         for (OLRPool model : models) {
             model.write(outputStream);
         }
-        classifier.write(outputStream);
+        classifier.write(new ObjectOutputStream(outputStream));
     }
 
     /**
@@ -356,7 +352,7 @@ public class OLRCrossFold {
      * @param inputStream the inputStream
      * @throws IOException Signals that an I/O exception has occurred.
      */
-    protected void readFields(final DataInputStream inputStream) throws IOException {
+    protected void readFields(final DataInputStream inputStream) throws IOException, ClassNotFoundException {
 
         int numModels = inputStream.readInt();
         for (int i = 0; i < numModels; i++) {
@@ -365,7 +361,7 @@ public class OLRCrossFold {
             models.add(olrPool);
         }
         OLR olr = new OLR();
-        olr.readFields(inputStream);
+        olr.readFields(new ObjectInputStream(inputStream));
         classifier = olr;
 
     }
