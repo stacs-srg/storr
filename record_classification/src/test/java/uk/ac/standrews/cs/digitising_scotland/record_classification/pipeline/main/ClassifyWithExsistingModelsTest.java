@@ -39,7 +39,7 @@ public class ClassifyWithExsistingModelsTest {
         Iterator<Classification> it;
         Set<String> codesinmap;
         String testData = getClass().getResource("/pilotTest.tsv").getFile();
-        String modelLocation = getClass().getResource("/.").getFile();
+        String modelLocation = getClass().getResource("/Models").getFile();
         String multpleClasifications = "true";
 
         String[] args = {testData, modelLocation, multpleClasifications};
