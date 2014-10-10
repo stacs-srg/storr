@@ -40,7 +40,7 @@ public class OLR implements Serializable {
     private static final double LOGLIK_MINIMUM = -100.0;
 
     /** The model parameters. */
-    protected Matrix beta;
+    protected SerializableDenseMatrix beta;
 
     /** The properties. */
     private Properties properties;
@@ -148,7 +148,7 @@ public class OLR implements Serializable {
      */
     public Matrix getBeta() {
 
-        return beta;
+        return beta.getMatrix();
     }
 
     /**
@@ -158,7 +158,7 @@ public class OLR implements Serializable {
      */
     public void setBeta(final Matrix beta) {
 
-        this.beta = beta;
+        this.beta = new SerializableDenseMatrix(beta);
     }
 
     public int getNumFeatures() {
@@ -553,7 +553,7 @@ public class OLR implements Serializable {
     private void initialiseModel() {
 
         initStepsAndCounts();
-        beta = new DenseMatrix(numCategories - 1, numFeatures);
+        beta = new SerializableDenseMatrix(numCategories - 1, numFeatures);
     }
 
     /**
@@ -563,7 +563,7 @@ public class OLR implements Serializable {
      */
     private void initialiseModel(final Matrix beta) {
 
-        this.beta = beta;
+        this.beta = new SerializableDenseMatrix(beta);
         numFeatures = beta.numCols();
         numCategories = beta.numRows() + 1;
         initStepsAndCounts();
@@ -656,7 +656,7 @@ public class OLR implements Serializable {
         outputStream.writeDouble(perTermAnnealingRate);
         outputStream.writeBoolean(weArePerTermAnnealing);
         outputStream.writeBoolean(weAreRegularizing);
-        MatrixWritable.writeMatrix(outputStream, beta);
+        MatrixWritable.writeMatrix(outputStream, beta.getMatrix());
         outputStream.writeInt(numCategories);
         outputStream.writeInt(numFeatures);
         outputStream.writeInt(step);
@@ -678,7 +678,7 @@ public class OLR implements Serializable {
         perTermAnnealingRate = inputStream.readDouble();
         weArePerTermAnnealing = inputStream.readBoolean();
         weAreRegularizing = inputStream.readBoolean();
-        beta = MatrixWritable.readMatrix(inputStream);
+        beta = new SerializableDenseMatrix(MatrixWritable.readMatrix(inputStream));
         numCategories = inputStream.readInt();
         numFeatures = inputStream.readInt();
         step = inputStream.readInt();

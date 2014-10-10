@@ -3,6 +3,7 @@ package uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers
 
 import org.apache.mahout.math.DenseMatrix;
 import org.apache.mahout.math.Matrix;
+import org.apache.mahout.math.Vector;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -20,6 +21,14 @@ public class SerializableDenseMatrix implements Serializable {
 
     public SerializableDenseMatrix(double[][] values){
         this.matrix = new DenseMatrix(values);
+    }
+
+    public SerializableDenseMatrix(Matrix matrix){
+        this.matrix = new DenseMatrix(asArray(matrix));
+    }
+
+    public SerializableDenseMatrix(int i, int j) {
+        this.matrix = new DenseMatrix(i,j);
     }
 
     public DenseMatrix getMatrix(){
@@ -53,5 +62,21 @@ public class SerializableDenseMatrix implements Serializable {
 
     public double get(int i, int j) {
         return matrix.get(i,j);
+    }
+
+    public double getQuick(int category, int feature) {
+        return matrix.get(category,feature);
+    }
+
+    public void setQuick(int category, int feature, double newValue) {
+        matrix.setQuick(category,feature,newValue);
+    }
+
+    public Vector times(Vector instance) {
+        return matrix.times(instance);
+    }
+
+    public void set(int category, int feature, double newValue) {
+        matrix.set(category,feature,newValue);
     }
 }
