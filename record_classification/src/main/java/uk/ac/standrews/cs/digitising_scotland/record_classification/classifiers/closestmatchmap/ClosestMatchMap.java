@@ -46,7 +46,16 @@ public class ClosestMatchMap<K, V> implements Map<K, V> {
     public K getClosestKey(final K key) {
 
         List<K> keyList = new ArrayList<>(keySet());
-        Collections.sort(keyList, similaritor.getComparator(key));
+        try {
+            Collections.sort(keyList, similaritor.getComparator(key));
+        }
+        catch (IllegalArgumentException iae) {
+            System.err.println(keyList);
+            System.err.println(key);
+            System.err.println(keyList.size());
+            throw new IllegalArgumentException();
+        }
+
         return keyList.get(0);
     }
 

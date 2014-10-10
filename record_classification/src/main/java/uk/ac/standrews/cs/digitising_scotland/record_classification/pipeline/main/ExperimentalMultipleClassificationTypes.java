@@ -1,7 +1,9 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.main;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -15,6 +17,9 @@ import uk.ac.shef.wit.simmetrics.similaritymetrics.AbstractStringMetric;
 import uk.ac.shef.wit.simmetrics.similaritymetrics.ChapmanMatchingSoundex;
 import uk.ac.shef.wit.simmetrics.similaritymetrics.JaccardSimilarity;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Pair;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.analysis_metrics.CodeMetrics;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.analysis_metrics.ListAccuracyMetrics;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.analysis_metrics.StrictConfusionMatrix;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.BucketFilter;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.BucketUtils;
@@ -32,8 +37,13 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.Cla
 import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.ExactMatchPipeline;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.IPipeline;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.PipelineUtils;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.writers.DataClerkingWriter;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.writers.FileComparisonWriter;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.writers.MetricsWriter;
 import uk.ac.standrews.cs.digitising_scotland.tools.Timer;
 import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearningConfiguration;
+
+import com.google.common.io.Files;
 
 /**
  * This class integrates the training of machine learning models and the
@@ -170,19 +180,72 @@ public final class ExperimentalMultipleClassificationTypes {
         trainer.trainStringSimilarityClassifier(map, simMetric);
 
         IPipeline exactMatchPipeline = new ExactMatchPipeline(trainer.getExactMatchClassifier());
-        IPipeline stringSimPipeline = new ClassifierPipeline(trainer.getStringSimClassifier(), trainingBucket,new LengthWeightedLossFunction(), multipleClassifications, true);
+        IPipeline stringSimPipeline = new ClassifierPipeline(trainer.getStringSimClassifier(), trainingBucket, new LengthWeightedLossFunction(), multipleClassifications, true);
 
         Bucket notExactMatched = exactMatchPipeline.classify(predictionBucket);
         Bucket notStringSim = stringSimPipeline.classify(notExactMatched);
-        final Bucket stringSimClassified = stringSimPipeline.getSuccessfullyClassified();
-        final Bucket exactMatchClassified = exactMatchPipeline.getSuccessfullyClassified();
+        Bucket stringSimClassified = stringSimPipeline.getSuccessfullyClassified();
+        Bucket exactMatchClassified = exactMatchPipeline.getSuccessfullyClassified();
+
         Bucket allClassifed = BucketUtils.getUnion(exactMatchClassified, stringSimClassified);
+        Bucket allOutputRecords = BucketUtils.getUnion(exactMatchClassified, notStringSim);
 
         LOGGER.info("Exact Matched Bucket Size: " + exactMatchClassified.size());
         LOGGER.info("Similarity Metric Bucket Size: " + stringSimClassified.size());
 
-        PipelineUtils.writeRecords(allClassifed, experimentalFolderName, identifier);
-        generateAndPrintStatistics(allClassifed, stringSimClassified, codeIndex, experimentalFolderName, identifier);
+        writeRecords(experimentalFolderName, identifier, allOutputRecords);
+
+        writeComparisonFile(experimentalFolderName, identifier, allOutputRecords);
+
+        final Bucket uniqueRecordsOnly = BucketFilter.uniqueRecordsOnly(allOutputRecords);
+        printAllStats(experimentalFolderName, codeIndex, allOutputRecords, uniqueRecordsOnly);
+        printAllStats(experimentalFolderName, codeIndex, stringSimClassified, BucketFilter.uniqueRecordsOnly(stringSimClassified));
+
+    }
+
+    private void printAllStats(final String experimentalFolderName, final CodeIndexer codeIndex, final Bucket allClassifed, final Bucket uniqueRecordsOnly) throws IOException {
+
+        CodeMetrics codeMetrics = new CodeMetrics(new StrictConfusionMatrix(allClassifed, codeIndex), codeIndex);
+        ListAccuracyMetrics accuracyMetrics = new ListAccuracyMetrics(allClassifed, codeMetrics);
+        MetricsWriter metricsWriter = new MetricsWriter(accuracyMetrics, experimentalFolderName, codeIndex);
+        metricsWriter.write("machine learning", "firstBucket");
+        accuracyMetrics.prettyPrint("All Records");
+
+        LOGGER.info("Unique Only");
+        LOGGER.info("Unique Only  Bucket Size: " + uniqueRecordsOnly.size());
+
+        CodeMetrics codeMetrics1 = new CodeMetrics(new StrictConfusionMatrix(uniqueRecordsOnly, codeIndex), codeIndex);
+        accuracyMetrics = new ListAccuracyMetrics(uniqueRecordsOnly, codeMetrics1);
+        accuracyMetrics.prettyPrint("Unique Only");
+        metricsWriter = new MetricsWriter(accuracyMetrics, experimentalFolderName, codeIndex);
+        metricsWriter.write("machine learning", "unique records");
+        accuracyMetrics.prettyPrint("Unique Records");
+    }
+
+    private void writeRecords(final String experimentalFolderName, final String identifier, Bucket allClassifed) throws IOException {
+
+        final String nrsReportPath = "/Data/" + identifier + "/NRSData.txt";
+        final File outputPath = new File(experimentalFolderName + nrsReportPath);
+        Files.createParentDirs(outputPath);
+        final DataClerkingWriter writer = new DataClerkingWriter(outputPath);
+
+        for (final Record record : allClassifed) {
+            writer.write(record);
+        }
+        writer.close();
+    }
+
+    private void writeComparisonFile(final String experimentalFolderName, final String identifier, Bucket allClassifed) throws IOException, FileNotFoundException, UnsupportedEncodingException {
+
+        final String comparisonReportPath = "/Data/" + identifier + "/comaprison.txt";
+        final File outputPath2 = new File(experimentalFolderName + comparisonReportPath);
+        Files.createParentDirs(outputPath2);
+
+        final FileComparisonWriter comparisonWriter = new FileComparisonWriter(outputPath2, "\t");
+        for (final Record record : allClassifed) {
+            comparisonWriter.write(record);
+        }
+        comparisonWriter.close();
     }
 
     private Map<String, Classification> getMap(final Bucket bucket) {
@@ -240,19 +303,6 @@ public final class ExperimentalMultipleClassificationTypes {
             }
         }
         return trainingRatio;
-    }
-
-    private void generateAndPrintStatistics(final Bucket allClassifed, final Bucket stringSim, final CodeIndexer codeIndexer, final String experimentalFolderName, final String identifier) throws IOException {
-
-        LOGGER.info("********** Output Stats **********");
-
-        final Bucket uniqueRecordsOnly = BucketFilter.uniqueRecordsOnly(allClassifed);
-        Bucket uniqueStringSim = BucketFilter.uniqueRecordsOnly(stringSim);
-        // PipelineUtils.generateAndPrintStats(classifier.getAllClassified(), codeIndexer, "All Records", "AllRecords", experimentalFolderName, identifier);
-
-        PipelineUtils.generateAndPrintStats(uniqueRecordsOnly, codeIndexer, "Unique Only", "UniqueOnly", experimentalFolderName, identifier);
-        PipelineUtils.generateAndPrintStats(uniqueStringSim, codeIndexer, "Unique String Sim Only", "UniqueStringSimOnly", experimentalFolderName, identifier);
-
     }
 
     private Bucket[] randomlyAssignToTrainingAndPrediction(final Bucket bucket, final double trainingRatio) {

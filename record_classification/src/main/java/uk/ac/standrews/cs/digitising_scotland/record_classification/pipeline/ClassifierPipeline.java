@@ -6,14 +6,14 @@ import java.util.Map;
 import java.util.Set;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.IClassifier;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.cachedclassifier.CachedClassifier;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.resolver.RecordClassificationResolverPipeline;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.resolver.Interfaces.LossFunction;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.classification.Classification;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.cachedclassifier.CachedClassifier;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenToClassificationMapGenerator;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.resolver.Interfaces.LossFunction;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenToClassificationMapGenerator;
 
 /**
  * This class is produces a set of {@link Classification}s that represent the
@@ -26,7 +26,7 @@ public class ClassifierPipeline implements IPipeline {
 
     /** The Constant CONFIDENCE_CHOP_LEVEL. */
     private static final double CONFIDENCE_CHOP_LEVEL = 0.3;
-    private final RecordClassificationResolverPipeline<? extends LossFunction<Set<Classification>,Double>> resolverPipeline;
+    private final RecordClassificationResolverPipeline<? extends LossFunction<Set<Classification>, Double>> resolverPipeline;
 
     /** The record cache. */
     private Map<String, Set<Classification>> recordCache;
@@ -41,16 +41,12 @@ public class ClassifierPipeline implements IPipeline {
      * @param classifier    {@link uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.IClassifier} used for machine learning classification
      * @param cachePopulationBucket the training bucket
      */
-    public ClassifierPipeline(final IClassifier<TokenSet,Classification> classifier,
-                              final Bucket cachePopulationBucket,
-                              final LossFunction<Set<Classification>,Double> lossFunction,
-                              final boolean multipleClassifications,
-                              final boolean resolveHierarchies) {
+    public ClassifierPipeline(final IClassifier<TokenSet, Classification> classifier, final Bucket cachePopulationBucket, final LossFunction<Set<Classification>, Double> lossFunction, final boolean multipleClassifications, final boolean resolveHierarchies) {
 
         /* The cache. */
         TokenToClassificationMapGenerator populator = new TokenToClassificationMapGenerator();
         recordCache = new HashMap<>();
-        CachedClassifier<TokenSet,Classification> cache = new CachedClassifier<>(classifier, populator.generateMap(cachePopulationBucket));
+        CachedClassifier<TokenSet, Classification> cache = new CachedClassifier<>(classifier, populator.generateMap(cachePopulationBucket));
 
         this.resolverPipeline = new RecordClassificationResolverPipeline<>(cache, lossFunction, CONFIDENCE_CHOP_LEVEL, multipleClassifications, resolveHierarchies);
         this.successfullyClassified = new Bucket();

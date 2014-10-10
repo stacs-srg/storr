@@ -21,9 +21,10 @@ public class Similaritor<K> {
 
     public double getSimilarity(final K o1, final K o2) {
 
-        Double sim =  metric.getSimilarity(o1, o2);
-        if(sim.isNaN()){
-            System.out.println("NaN returned by similarity metric : - o1: " + o1 + " o2: " + o2);
+        Double sim = metric.getSimilarity(o1, o2);
+        if (sim.isNaN()) {
+            if (o1.equals(o2)) return 1.0;
+            System.out.println("NaN returned by similarity metric :- o1: " + o1 + " o2: " + o2);
             return 0;
         }
         return sim;
@@ -53,6 +54,7 @@ public class Similaritor<K> {
 
             double o1Score = metric.getSimilarity(o1, k);
             double o2Score = metric.getSimilarity(o2, k);
+
             if ((Double) o1Score == null || (Double) o2Score == null) { throw new IllegalArgumentException("o1 or o2 score is null. There may be a problem with your similarity metric."); }
 
             if (o1Score < o2Score) {
@@ -64,7 +66,8 @@ public class Similaritor<K> {
             else {
                 return 0;
             }
-        }
 
+        }
     }
+
 }

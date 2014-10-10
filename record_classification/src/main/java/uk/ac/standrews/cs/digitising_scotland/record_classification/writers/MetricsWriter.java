@@ -95,16 +95,8 @@ public class MetricsWriter {
             e.printStackTrace();
         }
     }
-    public void runRscript(final String pathToRScript, final String dataPath, final String reportsPath, final String imageName) throws IOException {
 
-        if (!isRinstalled()) { return; }
-
-        String imageOutputPath = reportsPath + imageName + ".png";
-        String command = "Rscript " + pathToRScript + " " + dataPath + " " + imageOutputPath;
-        LOGGER.info(Utils.executeCommand(command));
-    }
-
-    public boolean isRinstalled() {
+    private static boolean isRinstalled() {
 
         final String pathToScript = Utils.class.getResource("/scripts/checkScript.sh").getFile();
         String checkSystemForR = "sh " + pathToScript + " RScript";
@@ -118,4 +110,14 @@ public class MetricsWriter {
         }
         return true;
     }
+
+    private static void runRscript(final String pathToRScript, final String dataPath, final String reportsPath, final String imageName) throws IOException {
+
+        if (!isRinstalled()) { return; }
+
+        String imageOutputPath = reportsPath + imageName + ".png";
+        String command = "Rscript " + pathToRScript + " " + dataPath + " " + imageOutputPath;
+        LOGGER.info(Utils.executeCommand(command));
+    }
+
 }

@@ -1,7 +1,9 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.main;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,9 +25,13 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.Cla
 import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.ExactMatchPipeline;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.IPipeline;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.PipelineUtils;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.writers.DataClerkingWriter;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.writers.FileComparisonWriter;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.writers.MetricsWriter;
 import uk.ac.standrews.cs.digitising_scotland.tools.Timer;
 import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearningConfiguration;
+
+import com.google.common.io.Files;
 
 /**
  * This class integrates the training of machine learning models and the
@@ -95,19 +101,19 @@ public final class TrainClassifyOneFile {
         CodeDictionary codeDictionary = new CodeDictionary(codeDictionaryFile);
 
         BucketGenerator generator = new BucketGenerator(codeDictionary);
-        Bucket allRecords = generator.generateTrainingBucket(goldStandard);
+        Bucket allInputRecords = generator.generateTrainingBucket(goldStandard);
 
-        Bucket[] trainingPredicition = randomlyAssignToTrainingAndPrediction(allRecords, trainingRatio);
+        Bucket[] trainingPredicition = randomlyAssignToTrainingAndPrediction(allInputRecords, trainingRatio);
         trainingBucket = trainingPredicition[0];
         predictionBucket = trainingPredicition[1];
 
         LOGGER.info("********** Training Classifiers **********");
 
-        CodeIndexer codeIndex = new CodeIndexer(allRecords);
+        CodeIndexer codeIndex = new CodeIndexer(allInputRecords);
         final ClassifierTrainer trainer = PipelineUtils.train(trainingBucket, experimentalFolderName, codeIndex);
 
         IPipeline exactMatchPipeline = new ExactMatchPipeline(trainer.getExactMatchClassifier());
-        IPipeline machineLearningClassifier = new ClassifierPipeline(trainer.getOlrClassifier(), trainingBucket,new LengthWeightedLossFunction(), multipleClassifications, true);
+        IPipeline machineLearningClassifier = new ClassifierPipeline(trainer.getOlrClassifier(), trainingBucket, new LengthWeightedLossFunction(), multipleClassifications, true);
 
         Bucket notExactMatched = exactMatchPipeline.classify(predictionBucket);
         Bucket notMachineLearned = machineLearningClassifier.classify(notExactMatched);
@@ -119,8 +125,10 @@ public final class TrainClassifyOneFile {
         LOGGER.info("Not Classifed Bucket Size: " + notMachineLearned.size());
 
         Bucket allClassifed = BucketUtils.getUnion(successfullyClassifiedExactMatch, successfullyClassifiedMachineLearning);
+        Bucket allOutputRecords = BucketUtils.getUnion(allClassifed, notMachineLearned);
 
-        PipelineUtils.writeRecords(allClassifed, experimentalFolderName, "MachineLearning");
+        writeRecords(experimentalFolderName, allOutputRecords);
+        writeComparisonFile(experimentalFolderName, allOutputRecords);
 
         LOGGER.info("********** Output Stats **********");
 
@@ -129,8 +137,33 @@ public final class TrainClassifyOneFile {
         printAllStats(experimentalFolderName, codeIndex, successfullyClassifiedMachineLearning, BucketFilter.uniqueRecordsOnly(successfullyClassifiedMachineLearning));
         timer.stop();
 
-        return allClassifed;
+        return allOutputRecords;
 
+    }
+
+    private void writeComparisonFile(String experimentalFolderName, Bucket allClassifed) throws IOException, FileNotFoundException, UnsupportedEncodingException {
+
+        final String comparisonReportPath = "/Data/" + "MachineLearning" + "/comaprison.txt";
+        final File outputPath2 = new File(experimentalFolderName + comparisonReportPath);
+        Files.createParentDirs(outputPath2);
+
+        final FileComparisonWriter comparisonWriter = new FileComparisonWriter(outputPath2, "\t");
+        for (final Record record : allClassifed) {
+            comparisonWriter.write(record);
+        }
+        comparisonWriter.close();
+    }
+
+    private void writeRecords(String experimentalFolderName, Bucket allClassifed) throws IOException {
+
+        final String nrsReportPath = "/Data/" + "MachineLearning" + "/NRSData.txt";
+        final File outputPath = new File(experimentalFolderName + nrsReportPath);
+        Files.createParentDirs(outputPath);
+        final DataClerkingWriter writer = new DataClerkingWriter(outputPath);
+        for (final Record record : allClassifed) {
+            writer.write(record);
+        }
+        writer.close();
     }
 
     private void printAllStats(final String experimentalFolderName, final CodeIndexer codeIndex, final Bucket allClassifed, final Bucket uniqueRecordsOnly) throws IOException {
@@ -140,7 +173,6 @@ public final class TrainClassifyOneFile {
         MetricsWriter metricsWriter = new MetricsWriter(accuracyMetrics, experimentalFolderName, codeIndex);
         metricsWriter.write("machine learning", "firstBucket");
         accuracyMetrics.prettyPrint("All Records");
-        printMetrics(experimentalFolderName, codeIndex, allClassifed, codeMetrics, accuracyMetrics);
 
         LOGGER.info("Unique Only");
         LOGGER.info("Unique Only  Bucket Size: " + uniqueRecordsOnly.size());
@@ -151,11 +183,6 @@ public final class TrainClassifyOneFile {
         metricsWriter = new MetricsWriter(accuracyMetrics, experimentalFolderName, codeIndex);
         metricsWriter.write("machine learning", "unique records");
         accuracyMetrics.prettyPrint("Unique Records");
-        printMetrics(experimentalFolderName, codeIndex, allClassifed, codeMetrics, accuracyMetrics);
-    }
-
-    private void printMetrics(final String experimentalFolderName, final CodeIndexer codeIndex, final Bucket allClassifed, final CodeMetrics codeMetrics, final ListAccuracyMetrics accuracyMetrics) throws IOException {
-
     }
 
     private static File parseGoldStandFile(final String[] args) {
@@ -175,7 +202,7 @@ public final class TrainClassifyOneFile {
     private boolean parseMultipleClassifications(final String[] args) {
 
         if (args.length > 3) {
-            System.err.println("usage: $" + ClassifyWithExsistingModels.class.getSimpleName() + "    <goldStandardDataFile>    <trainingRatio(optional)>    <output multiple classificatiosn");
+            System.err.println("usage: $" + TrainClassifyOneFile.class.getSimpleName() + "    <goldStandardDataFile>    <trainingRatio(optional)>    <output multiple classificatiosn");
         }
         else {
             if (args[2].equals("1")) { return true; }
@@ -198,17 +225,6 @@ public final class TrainClassifyOneFile {
             }
         }
         return trainingRatio;
-    }
-
-    private void generateAndPrintStatistics(final Bucket allClassifed, final CodeIndexer codeIndexer, final String experimentalFolderName) throws IOException {
-
-        LOGGER.info("********** Output Stats **********");
-
-        final Bucket uniqueRecordsOnly = BucketFilter.uniqueRecordsOnly(allClassifed);
-
-        PipelineUtils.generateAndPrintStats(allClassifed, codeIndexer, "All Records", "AllRecords", experimentalFolderName, "MachineLearning");
-
-        PipelineUtils.generateAndPrintStats(uniqueRecordsOnly, codeIndexer, "Unique Only", "UniqueOnly", experimentalFolderName, "MachineLearning");
     }
 
     private Bucket[] randomlyAssignToTrainingAndPrediction(final Bucket bucket, final double trainingRatio) {

@@ -37,17 +37,19 @@ public class Record {
     }
 
     public boolean isFullyClassified() {
-        for(String description : originalData.getDescription())
-            if(!descriptionIsClassified(description))
-                return false;
+
+        for (String description : originalData.getDescription())
+            if (!descriptionIsClassified(description)) { return false; }
         return true;
     }
 
-    public boolean descriptionIsClassified(final String description){
+    public boolean descriptionIsClassified(final String description) {
+
         return listOfClassifications.containsKey(description);
     }
 
-    public void addClassificationsToDescription(final String description, final Set<Classification> classifications){
+    public void addClassificationsToDescription(final String description, final Set<Classification> classifications) {
+
         for (Classification codeTriple : classifications) {
             addClassification(description, codeTriple);
         }
@@ -57,13 +59,11 @@ public class Record {
      * Copy the current records original attributes.
      * @param source
      */
-    public Record copyOfOriginalRecord(Record source) {
+    public Record copyOfOriginalRecord(final Record source) {
 
         return new Record(source.id, source.originalData);
 
     }
-
-
 
     /**
      * Gets the original data. Original data is the data supplied on records.

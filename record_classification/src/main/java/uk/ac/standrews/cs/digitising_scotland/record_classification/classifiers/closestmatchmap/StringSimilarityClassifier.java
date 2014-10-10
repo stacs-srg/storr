@@ -4,7 +4,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.classification.Classification;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
 
-public class StringSimilarityClassifier implements IClassifier<TokenSet,Classification> {
+public class StringSimilarityClassifier implements IClassifier<TokenSet, Classification> {
 
     ClosestMatchMap<String, Classification> map;
 
@@ -21,7 +21,7 @@ public class StringSimilarityClassifier implements IClassifier<TokenSet,Classifi
             String s = map.getClosestKey(tokenSet.toString());
             double similarity = map.getSimilarity(tokenSet.toString(), s);
             Classification mostSimilar = map.getClosestMatch(s);
-            return new Classification(mostSimilar.getCode(),mostSimilar.getTokenSet(),similarity);
+            return new Classification(mostSimilar.getCode(), mostSimilar.getTokenSet(), similarity);
         }
         return classification;
     }
