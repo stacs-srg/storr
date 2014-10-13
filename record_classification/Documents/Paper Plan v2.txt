@@ -1,0 +1,68 @@
+Paper Plan
+
+Abstract - OK, might need updated with new results
+
+Introduction - Looks OK
+
+Data Set - OK if we only use Lambert data, will need updated if we use NAPP HISCO data too.
+
+Approaches to Classification - updated to new approach. 3 String similarity techniques - Jaccard, Dice and Levenshtein + NB + SGD. 
+
+Cleaning - OK
+
+Edit Distance Classifier 
+
+Individual Machine Learning Classifiers
+
+Ensemble Approaches 
+
+Feature Selection/Feature Space - Update this and discuss: what are features, size of feature space, space overlap, uniquness etc
+
+New NGram Loss Function Technique - Only if the results are good
+
+Summary
+
+Evaluation
+
+Sequence of Experiements
+
+Accuracy Measures - give results for just unique records
+
+Results
+
+Discussions - Cost effectivnesss of human coders vs automatic techniques
+
+Conclusions
+
+
+
+Stuff that needs written:
+
+Explanation of features and analysis of feature space
+Fraser:
+Todo:	Write code to analysis feature space - Tool to build code/feature/count maps has been built.
+		Decide on which type of analysis we want to do - compare similarity of test/validation sets in terms of codes and features.
+		Write about the results of the analysis
+		
+Jamie:
+Other string similarity metircs
+Todo:	Write pipelines to perform the experiments - Mostly complete
+		Write up the results
+		Write up the algorithms
+
+Anyone:
+Section on nGram classifier technique
+Todo:	Write pipelines to perform experiements - Mostly complete
+		Write about algorithms
+		Write about results
+
+Jamie:
+Add section to results on unique records
+Todo: 	Resvisit old results and calculate measures for unique records
+		If we can't get unique results from old records then we need to re run these experiments
+		
+Anyone:
+Write up section on cost effectiveness
+	Todo: Analysis how many unique records in 30millions
+	how long to code those unique records and calculate the cost/benefit 
+		
