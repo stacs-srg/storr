@@ -664,7 +664,7 @@ public class ListAccuracyMetrics {
 
     public int[][] getOverUnderPredictionMatrix() {
 
-        return overUnderPredictionMatrix;
+        return overUnderPredictionMatrix.clone();
     }
 
     public Bucket getBucket() {

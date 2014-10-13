@@ -110,7 +110,7 @@ public final class PipelineUtils {
         br.close();
         final int expectedLineLength = 38;
         final String[] length = line.split(Utils.getCSVComma());
-        if (line != null && length.length == expectedLineLength) { return true; }
+        if (length.length == expectedLineLength) { return true; }
         return false;
     }
 

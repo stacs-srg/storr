@@ -168,12 +168,12 @@ public class OLR implements Serializable {
 
     public int[] getUpdateSteps() {
 
-        return updateSteps;
+        return updateSteps.clone();
     }
 
     public int[] getUpdateCounts() {
 
-        return updateCounts;
+        return updateCounts.clone();
     }
 
     /**
