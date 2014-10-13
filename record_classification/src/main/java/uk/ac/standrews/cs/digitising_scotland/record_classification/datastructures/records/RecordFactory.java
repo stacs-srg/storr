@@ -97,7 +97,7 @@ public abstract class RecordFactory {
         final int sexPos = 3;
         final int imageQualityPos = 2;
 
-        List<String> description = getDescriptionFromFile(lineSplit, descriptionPos);
+        List<String> description = getCodDescriptionFromFile(lineSplit, descriptionPos);
         int id = Integer.parseInt(lineSplit[idPos]);
         int year = Integer.parseInt(lineSplit[yearPos]);
         int ageGroup = Integer.parseInt(lineSplit[ageGroupPos]);
@@ -109,7 +109,7 @@ public abstract class RecordFactory {
         return new Record(id, originalData);
     }
 
-    private static List<String> getDescriptionFromFile(final String[] lineSplit, final int descriptionPos) {
+    private static List<String> getCodDescriptionFromFile(final String[] lineSplit, final int descriptionPos) {
 
         List<String> description = new ArrayList<>();
 
@@ -129,7 +129,75 @@ public abstract class RecordFactory {
      * @throws InputFormatException the input format exception
      * @throws NumberFormatException 
      */
-    public static List<Record> makeCodedRecordsFromFile(final File inputFile, final CodeDictionary codeDictionary) throws InputFormatException, NumberFormatException, IOException {
+    public static List<Record> makeCodedCodRecordsFromFile(final File inputFile, final CodeDictionary codeDictionary) throws InputFormatException, NumberFormatException, IOException {
+
+        List<Record> recordList = null;
+        if (isCodFile(inputFile)) {
+            recordList = makeCoDRecordsFromFile(inputFile, codeDictionary);
+        }
+        else {
+            recordList = makeOccupationRecordsFromFile(inputFile, codeDictionary);
+
+        }
+
+        return recordList;
+    }
+
+    private static boolean isCodFile(File inputFile) throws IOException {
+
+        //Todo build more comprehensive test
+        BufferedReader br = ReaderWriterFactory.createBufferedReader(inputFile);
+        String line;
+
+        while ((line = br.readLine()) != null) {
+            String[] lineSplit = line.split("\\|");
+            if (lineSplit.length == 7) {
+                return false;
+            }
+            else {
+                return true;
+            }
+        }
+        return true;
+    }
+
+    private static List<Record> makeOccupationRecordsFromFile(final File inputFile, final CodeDictionary codeDictionary) throws IOException, InputFormatException {
+
+        final String delimiter = "\\|";
+        final int idPos = 0;
+        final int yearPos = 4;
+        final int sexPos = 3;
+        final int descriptionPos = 5;
+        final int codePos = 6;
+
+        List<Record> recordList = new ArrayList<Record>();
+        BufferedReader br = ReaderWriterFactory.createBufferedReader(inputFile);
+        String line;
+
+        while ((line = br.readLine()) != null) {
+            String[] lineSplit = line.split(delimiter);
+            int id = Integer.parseInt(lineSplit[idPos]);
+            int year = Integer.parseInt(lineSplit[yearPos]);
+            List<String> description = getOCCDescriptionFromFile(lineSplit, descriptionPos);
+            OriginalData originalData = new OriginalData(description, year, 1, inputFile.getName());
+
+            Code thisCode = getCode(codeDictionary, lineSplit, codePos);
+            Record newRecord = createRecord(id, thisCode, originalData);
+            recordList.add(newRecord);
+
+        }
+        closeReader(br);
+        return recordList;
+    }
+
+    private static List<String> getOCCDescriptionFromFile(String[] lineSplit, int descriptionPos) {
+
+        List<String> descriptionList = new ArrayList<>();
+        descriptionList.add(lineSplit[descriptionPos]);
+        return descriptionList;
+    }
+
+    private static List<Record> makeCoDRecordsFromFile(final File inputFile, final CodeDictionary codeDictionary) throws IOException, InputFormatException {
 
         final int yearPos = 1;
         final int imageQualityPos = 2;
@@ -147,7 +215,7 @@ public abstract class RecordFactory {
             int imageQuality = Integer.parseInt(lineSplit[imageQualityPos]);
             int ageGroup = Integer.parseInt(lineSplit[ageGroupPos]);
             int sex = Integer.parseInt(lineSplit[sexPos]);
-            List<String> description = getDescriptionFromFile(lineSplit, descriptionPos);
+            List<String> description = getCodDescriptionFromFile(lineSplit, descriptionPos);
             OriginalData originalData = new CODOrignalData(description, year, ageGroup, sex, imageQuality, inputFile.getPath());
 
             for (int i = 6; i < lineSplit.length; i++) {
@@ -194,6 +262,22 @@ public abstract class RecordFactory {
 
         final int scaleFactor = 1000;
         int id = (int) Math.rint(Math.random() * scaleFactor);
+        Record record = new Record(id, originalData);
+        Classification goldStandardClassification = new Classification(thisCode, new TokenSet(originalData.getDescription()), 1.0);
+        record.getOriginalData().getGoldStandardClassifications().add(goldStandardClassification);
+        return record;
+    }
+
+    /**
+     * Creates a new Record object.
+     *
+     * @param thisCode the this code
+     * @param originalData the original data
+     * @return the record
+     */
+    private static Record createRecord(final int ID, final Code thisCode, final OriginalData originalData) {
+
+        int id = ID;
         Record record = new Record(id, originalData);
         Classification goldStandardClassification = new Classification(thisCode, new TokenSet(originalData.getDescription()), 1.0);
         record.getOriginalData().getGoldStandardClassifications().add(goldStandardClassification);
