@@ -21,6 +21,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.exceptions.InputFormatException;
+import uk.ac.standrews.cs.digitising_scotland.tools.ReaderWriterFactory;
 import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
 import uk.ac.standrews.cs.digitising_scotland.tools.analysis.UniqueWordCounter;
 
@@ -140,8 +141,8 @@ public abstract class AbstractDataCleaner {
      */
     private void correctTokensInFile(final File file, final File correctedFile) throws IOException {
 
-        BufferedReader br = Utils.createBufferedReader(file);
-        Writer bw = Utils.createBufferedWriter(correctedFile.getAbsoluteFile());
+        BufferedReader br = ReaderWriterFactory.createBufferedReader(file);
+        Writer bw = ReaderWriterFactory.createBufferedWriter(correctedFile.getAbsoluteFile());
         String line;
         while ((line = br.readLine()) != null) {
             String correctedLine = correctLine(line);

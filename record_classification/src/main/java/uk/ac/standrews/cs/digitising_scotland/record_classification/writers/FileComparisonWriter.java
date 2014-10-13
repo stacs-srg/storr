@@ -11,6 +11,7 @@ import java.util.Set;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.classification.Classification;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
+import uk.ac.standrews.cs.digitising_scotland.tools.ReaderWriterFactory;
 import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
 
 /**
@@ -32,7 +33,7 @@ public class FileComparisonWriter extends OutputDataFormatter implements Closeab
      */
     public FileComparisonWriter(final File outputPath, final String delimiter) throws FileNotFoundException, UnsupportedEncodingException {
 
-        writer = (BufferedWriter) Utils.createBufferedWriter(outputPath);
+        writer = (BufferedWriter) ReaderWriterFactory.createBufferedWriter(outputPath);
         setDelimier(delimiter);
     }
 

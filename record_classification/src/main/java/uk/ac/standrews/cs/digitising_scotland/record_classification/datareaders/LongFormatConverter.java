@@ -18,6 +18,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.exceptions.InputFormatException;
+import uk.ac.standrews.cs.digitising_scotland.tools.ReaderWriterFactory;
 import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
 
 /**
@@ -63,7 +64,7 @@ public final class LongFormatConverter extends AbstractFormatConverter {
      */
     public List<Record> convert(final File inputFile, final CodeDictionary codeDictionary) throws IOException, InputFormatException, CodeNotValidException {
 
-        BufferedReader br = Utils.createBufferedReader(inputFile);
+        BufferedReader br = ReaderWriterFactory.createBufferedReader(inputFile);
 
         String line = "";
         List<Record> recordList = new ArrayList<>();

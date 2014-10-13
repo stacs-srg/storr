@@ -11,7 +11,7 @@ import java.util.Set;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.classification.Classification;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
-import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
+import uk.ac.standrews.cs.digitising_scotland.tools.ReaderWriterFactory;
 
 /**
  * The Class HumanReadableWriter formats the fields in a record into a human readable format.
@@ -31,7 +31,7 @@ public class HumanReadableWriter extends OutputDataFormatter implements Closeabl
      */
     public HumanReadableWriter(final File outputPath, final String delimiter) throws FileNotFoundException, UnsupportedEncodingException {
 
-        writer = (BufferedWriter) Utils.createBufferedWriter(outputPath);
+        writer = (BufferedWriter) ReaderWriterFactory.createBufferedWriter(outputPath);
         setDelimier(delimiter);
     }
 

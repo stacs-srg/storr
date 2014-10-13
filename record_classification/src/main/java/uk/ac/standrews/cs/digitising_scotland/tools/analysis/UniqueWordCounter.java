@@ -8,6 +8,7 @@ import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.util.Version;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
+import uk.ac.standrews.cs.digitising_scotland.tools.ReaderWriterFactory;
 import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
 
 import com.google.common.collect.HashMultiset;
@@ -54,7 +55,7 @@ public final class UniqueWordCounter {
     public static int getNumberOfUniqueWords(final File inputFile) throws IOException {
 
         Multiset<String> wordMultiset = HashMultiset.create();
-        BufferedReader br = Utils.createBufferedReader(inputFile);
+        BufferedReader br = ReaderWriterFactory.createBufferedReader(inputFile);
 
         String line = "";
         while ((line = br.readLine()) != null) {

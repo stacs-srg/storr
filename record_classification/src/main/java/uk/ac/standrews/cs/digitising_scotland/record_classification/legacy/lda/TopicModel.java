@@ -20,6 +20,7 @@ import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import uk.ac.standrews.cs.digitising_scotland.tools.ReaderWriterFactory;
 import uk.ac.standrews.cs.digitising_scotland.tools.Timer;
 import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
 import uk.ac.standrews.cs.digitising_scotland.tools.analysis.MemoryMonitor;
@@ -274,7 +275,7 @@ public class TopicModel {
             out.close();
         }
 
-        BufferedReader br = Utils.createBufferedReader(inputFile);
+        BufferedReader br = ReaderWriterFactory.createBufferedReader(inputFile);
 
         String line = "";
         for (int i = 0; i < model.getData().size(); i++) {

@@ -524,39 +524,4 @@ public final class Utils {
         return null;
     }
 
-    /**
-     * Constructs a {@link BufferedReader} with the default File_Charset specified in {@link FileManipulation}.
-     * @param inputFile the file to create the reader for
-     * @return BufferedReader for the specified file
-     */
-    public static BufferedReader createBufferedReader(final File inputFile) {
-
-        BufferedReader br = null;
-        try {
-            br = new BufferedReader(new InputStreamReader(new FileInputStream(inputFile), FileManipulation.FILE_CHARSET));
-        }
-        catch (FileNotFoundException e) {
-            LOGGER.error(e.getMessage(), e);
-        }
-
-        return br;
-
-    }
-
-    /**
-     * Constructs a {@link BufferedWriter} with the default File_Charset specified in {@link FileManipulation}.
-     * @param outputFile the file to create the writer for.
-     * @return a BufferedWriter for the specified file
-     */
-    public static Writer createBufferedWriter(final File outputFile) {
-
-        Writer bw = null;
-        try {
-            bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outputFile), FileManipulation.FILE_CHARSET));
-        }
-        catch (FileNotFoundException e) {
-            LOGGER.error(e.getMessage(), e);
-        }
-        return bw;
-    }
 }

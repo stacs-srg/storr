@@ -12,6 +12,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeIndexer;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.exceptions.FolderCreationException;
+import uk.ac.standrews.cs.digitising_scotland.tools.ReaderWriterFactory;
 import uk.ac.standrews.cs.digitising_scotland.tools.Timer;
 import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
 import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearningConfiguration;
@@ -104,7 +105,7 @@ public final class PipelineUtils {
 
     public static boolean checkFileType(final File inputFile) throws IOException {
 
-        BufferedReader br = Utils.createBufferedReader(inputFile);
+        BufferedReader br = ReaderWriterFactory.createBufferedReader(inputFile);
         String line = br.readLine();
         br.close();
         final int expectedLineLength = 38;

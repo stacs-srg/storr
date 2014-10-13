@@ -6,7 +6,7 @@ import java.io.File;
 import java.io.IOException;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
-import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
+import uk.ac.standrews.cs.digitising_scotland.tools.ReaderWriterFactory;
 
 /**
  * Contains methods for writing {@link Record}s to file in the format specified by NRS.
@@ -25,7 +25,7 @@ public class DataClerkingWriter extends OutputDataFormatter implements Closeable
      */
     public DataClerkingWriter(final File outputPath) throws IOException {
 
-        writer = (BufferedWriter) Utils.createBufferedWriter(outputPath);
+        writer = (BufferedWriter) ReaderWriterFactory.createBufferedWriter(outputPath);
     }
 
     /**

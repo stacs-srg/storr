@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import uk.ac.standrews.cs.digitising_scotland.tools.ReaderWriterFactory;
 import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
 
 /**
@@ -39,7 +40,7 @@ public class OutputClassShuffler {
      */
     public File shuffleAndWriteToFile(final File outputFile) throws IOException {
 
-        BufferedReader br = Utils.createBufferedReader(inputFile);
+        BufferedReader br = ReaderWriterFactory.createBufferedReader(inputFile);
 
         String line = "";
         List<String> cod = new ArrayList<String>();

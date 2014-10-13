@@ -15,7 +15,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
+import uk.ac.standrews.cs.digitising_scotland.tools.ReaderWriterFactory;
 
 /**
  * Reads a file in the NRS data transfer format and converts ICD10 codes to codes described in another file.
@@ -44,7 +44,7 @@ public class ICDCodeConverter {
 
         Map<String, String> map = buildMapping(mappingFile);
 
-        BufferedReader in = Utils.createBufferedReader(inputFile);
+        BufferedReader in = ReaderWriterFactory.createBufferedReader(inputFile);
 
         String str;
         StringBuilder sb = new StringBuilder();

@@ -11,7 +11,7 @@ import java.util.Map.Entry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
+import uk.ac.standrews.cs.digitising_scotland.tools.ReaderWriterFactory;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -51,7 +51,7 @@ public class CodeDictionary {
     private Map<String, Code> initMap(final File correctCodes) throws IOException {
 
         validCodes = new HashMap<>();
-        BufferedReader br = Utils.createBufferedReader(correctCodes);
+        BufferedReader br = ReaderWriterFactory.createBufferedReader(correctCodes);
         String line;
         while ((line = br.readLine()) != null) {
             parseLineAndAddToMap(line);

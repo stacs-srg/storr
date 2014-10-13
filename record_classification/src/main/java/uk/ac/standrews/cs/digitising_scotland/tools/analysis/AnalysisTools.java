@@ -28,6 +28,7 @@ import org.apache.lucene.util.Version;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import uk.ac.standrews.cs.digitising_scotland.tools.ReaderWriterFactory;
 import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
 
 /**
@@ -94,7 +95,7 @@ public class AnalysisTools {
      */
     private void buildMap() throws IOException {
 
-        BufferedReader br = Utils.createBufferedReader(input);
+        BufferedReader br = ReaderWriterFactory.createBufferedReader(input);
 
         int i = 0;
         int noOfLines = getNumberOfLines();
@@ -675,7 +676,7 @@ public class AnalysisTools {
      */
     public Map<String, Integer> getUniqueLines(final File trainingFile) throws IOException {
 
-        BufferedReader br = Utils.createBufferedReader(trainingFile);
+        BufferedReader br = ReaderWriterFactory.createBufferedReader(trainingFile);
         String line = "";
         Map<String, Integer> uniqueLines = new HashMap<String, Integer>();
         while ((line = br.readLine()) != null) {

@@ -17,7 +17,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeNotValidException;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.exceptions.InputFormatException;
-import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
+import uk.ac.standrews.cs.digitising_scotland.tools.ReaderWriterFactory;
 
 /**
  * Creates {@link Record} objects populated with data from file.
@@ -44,7 +44,7 @@ public abstract class RecordFactory {
 
         boolean isCoDFile = isCauseOfDeath(inputFile);
         List<Record> recordList = new ArrayList<Record>();
-        BufferedReader br = Utils.createBufferedReader(inputFile);
+        BufferedReader br = ReaderWriterFactory.createBufferedReader(inputFile);
         String line;
 
         while ((line = br.readLine()) != null) {
@@ -138,7 +138,7 @@ public abstract class RecordFactory {
         final int descriptionPos = 5;
 
         List<Record> recordList = new ArrayList<Record>();
-        BufferedReader br = Utils.createBufferedReader(inputFile);
+        BufferedReader br = ReaderWriterFactory.createBufferedReader(inputFile);
         String line;
 
         while ((line = br.readLine()) != null) {
@@ -210,7 +210,7 @@ public abstract class RecordFactory {
     private static boolean isCauseOfDeath(final File inputFile) throws IOException {
 
         //TODO build more comprehensive check here later
-        BufferedReader br = Utils.createBufferedReader(inputFile);
+        BufferedReader br = ReaderWriterFactory.createBufferedReader(inputFile);
         String firstLine = br.readLine();
         br.close();
         return firstLine != null && firstLine.split("\\|").length > 4;
