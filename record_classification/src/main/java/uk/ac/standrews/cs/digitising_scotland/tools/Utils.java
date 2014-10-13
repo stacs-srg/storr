@@ -24,16 +24,11 @@ import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
-
 import org.apache.commons.io.output.FileWriterWithEncoding;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.classification.Classification;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.writers.DataClerkingWriter;
 import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
 
 import com.google.common.io.Files;
@@ -465,23 +460,6 @@ public final class Utils {
         catch (IOException e) {
             LOGGER.error(e.getMessage(), e);
         }
-    }
-
-    /**
-     * Writes a bucket to a file (target/NRSoutput.txt) in the NRS output format.
-     *
-     * @param bucketToWrite Bucket to write to file
-     * @throws IOException Indicates I/O error
-     */
-    public static void writeBucketToFileNrsFormat(final Bucket bucketToWrite) throws IOException {
-
-        DataClerkingWriter writer = new DataClerkingWriter(new File("target/NRSOutput.txt"));
-
-        for (Record record : bucketToWrite) {
-            writer.write(record);
-        }
-        writer.close();
-        System.out.println(bucketToWrite);
     }
 
     /**

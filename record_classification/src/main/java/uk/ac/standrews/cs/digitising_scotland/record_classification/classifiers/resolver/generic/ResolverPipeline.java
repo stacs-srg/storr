@@ -26,7 +26,7 @@ import com.google.common.collect.Multiset;
  * maximises the loss function.
  * Created by fraserdunlop on 08/10/2014 at 09:50.
  */
-public class ResolverPipeline<Threshold, Code extends AncestorAble<Code>, Classification extends AbstractClassification<Code, Threshold>, P_Comparator extends Comparator<Classification>, FeatureSet, P_ValidityAssessor extends ValidityAssessor<Set<Classification>, FeatureSet>, LossMetric extends Comparable<LossMetric>, P_LossFunction extends LossFunction<Set<Classification>, LossMetric>>
+public class ResolverPipeline<Threshold, Code extends AncestorAble<Code>, Classification extends AbstractClassification<Code, Threshold>, PComparator extends Comparator<Classification>, FeatureSet, PValidityAssessor extends ValidityAssessor<Set<Classification>, FeatureSet>, LossMetric extends Comparable<LossMetric>, PLossFunction extends LossFunction<Set<Classification>, LossMetric>>
                 implements IClassifier<FeatureSet, Set<Classification>> {
 
     private final boolean multipleClassifications;
@@ -35,13 +35,15 @@ public class ResolverPipeline<Threshold, Code extends AncestorAble<Code>, Classi
     private BelowThresholdRemover<Code, Classification, Threshold> bTR;
     private HierarchyResolver<Code, Classification> hR;
     private Flattener<Code, Classification> flattener;
-    private MultiValueMapPruner<Code, Classification, P_Comparator> pruner;
-    private ValidCombinationGetter<Code, Classification, FeatureSet, P_ValidityAssessor> vCG;
-    private LossFunctionApplier<Classification, LossMetric, P_LossFunction> lFA;
+    private MultiValueMapPruner<Code, Classification, PComparator> pruner;
+    private ValidCombinationGetter<Code, Classification, FeatureSet, PValidityAssessor> vCG;
+    private LossFunctionApplier<Classification, LossMetric, PLossFunction> lFA;
     private SubsetEnumerator<FeatureSet> subsetEnumerator;
 
-    public ResolverPipeline(final IClassifier<FeatureSet, Classification> classifier, final boolean multipleClassifications, final P_Comparator classificationComparator, final P_ValidityAssessor classificationSetValidityAssessor, final P_LossFunction lengthWeightedLossFunction,
-                    final SubsetEnumerator<FeatureSet> subsetEnumerator, final Threshold threshold, final boolean resolveHierarchies) {
+    public ResolverPipeline(final IClassifier<FeatureSet, Classification> classifier, final boolean multipleClassifications,
+                    final PComparator classificationComparator, final PValidityAssessor classificationSetValidityAssessor,
+                    final PLossFunction lengthWeightedLossFunction, final SubsetEnumerator<FeatureSet> subsetEnumerator,
+                    final Threshold threshold, final boolean resolveHierarchies) {
 
         this.classifier = classifier;
         this.multipleClassifications = multipleClassifications;
