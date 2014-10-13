@@ -72,6 +72,7 @@ public class PIlotTest {
         Assert.assertEquals(2, classifications.size());
         it = classifications.iterator();
         codesinmap = getCodesInMap(it);
+        System.out.println("codesinmap " + codesinmap);
         Assert.assertTrue(codesinmap.contains("I219"));
         Assert.assertTrue(codesinmap.contains("I515"));
 
