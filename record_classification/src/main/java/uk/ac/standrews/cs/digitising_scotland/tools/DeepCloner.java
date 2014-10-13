@@ -1,6 +1,11 @@
 package uk.ac.standrews.cs.digitising_scotland.tools;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 
 /**
  * TODO test!
@@ -8,9 +13,11 @@ import java.io.*;
  * For Map<K,V> make sure K and V serializable.
  * Created by fraserdunlop on 06/10/2014 at 10:17.
  */
-public class DeepCloner implements Serializable{
+public class DeepCloner implements Serializable {
+
     @SuppressWarnings("unchecked")
     public <T extends Serializable> T deepClone(T o) throws IOException, ClassNotFoundException {
+
         ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
         ObjectOutputStream out = new ObjectOutputStream(byteOut);
         out.writeObject(o);

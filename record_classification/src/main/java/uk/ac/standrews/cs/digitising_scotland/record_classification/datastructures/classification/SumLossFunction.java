@@ -1,6 +1,7 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.classification;
 
 import java.util.Set;
+
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.resolver.Interfaces.LossFunction;
 
 /**
@@ -9,7 +10,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.
  * @author jkc25
  *
  */
-public class SumLossFunction implements LossFunction<Set<Classification>,Double> {
+public class SumLossFunction implements LossFunction<Set<Classification>, Double> {
 
     @Override
     public Double calculate(final Set<Classification> set) {

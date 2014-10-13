@@ -1,6 +1,13 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.olr;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -40,7 +47,6 @@ public class OLRCrossFold implements Serializable {
     /** The number of cross folds. */
     private int folds;
 
-
     /** The classifier. */
     private OLR classifier;
 
@@ -48,6 +54,7 @@ public class OLRCrossFold implements Serializable {
      * Instantiates a new OLR crossfold model.
      */
     protected OLRCrossFold() {
+
         classifier = new OLR();
     }
 
@@ -148,6 +155,7 @@ public class OLRCrossFold implements Serializable {
      * Trains all the OLR models contained in this OLRCrossfold.
      */
     public void train() {
+
         try {
             this.trainAllModels();
         }
@@ -190,7 +198,7 @@ public class OLRCrossFold implements Serializable {
 
         List<OLRShuffled> survivors = getSurvivors();
         Matrix classifierMatrix = getClassifierMatrix(survivors);
-        classifier = new OLR(MachineLearningConfiguration.getDefaultProperties(),classifierMatrix);
+        classifier = new OLR(MachineLearningConfiguration.getDefaultProperties(), classifierMatrix);
     }
 
     /**
@@ -248,7 +256,6 @@ public class OLRCrossFold implements Serializable {
         return classifier.classifyFull(instance);
     }
 
-
     /**
      * Gets the log likelihood averaged over the models in the pool.
      * @param actual the actual classification
@@ -286,6 +293,7 @@ public class OLRCrossFold implements Serializable {
         classifier = (OLR) objectInputStream.readObject();
 
     }
+
     /**
      * The listener interface for receiving stop events.
      * The class that is interested in processing a stop

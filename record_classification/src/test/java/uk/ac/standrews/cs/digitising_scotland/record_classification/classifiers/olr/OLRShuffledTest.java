@@ -1,6 +1,14 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.olr;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Properties;
 
@@ -101,7 +109,7 @@ public class OLRShuffledTest {
 
         String filename = "target/testOLRShuffledWrite.txt";
         FileOutputStream fileOutputStream = new FileOutputStream(filename);
-        ObjectOutputStream outputStream = new ObjectOutputStream(fileOutputStream) ;
+        ObjectOutputStream outputStream = new ObjectOutputStream(fileOutputStream);
         outputStream.writeObject(model);
 
         ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(filename));
@@ -115,6 +123,9 @@ public class OLRShuffledTest {
         while ((line = br.readLine()) != null) {
             testClassifyWithCodeAsDescription(olrShuffled, line);
         }
+
+        outputStream.close();
+        inputStream.close();
     }
 
     //TODO test throwing this error when trying to classify

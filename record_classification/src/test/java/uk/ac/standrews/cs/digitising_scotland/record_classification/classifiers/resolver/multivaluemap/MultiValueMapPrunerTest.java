@@ -1,15 +1,17 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.resolver.multivaluemap;
 
+import java.io.IOException;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.classification.Classification;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeNotValidException;
+
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.resolver.generic.MultiValueMap;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.resolver.generic.MultiValueMapPruner;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.classification.Classification;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.classification.ClassificationComparator;
-import java.io.IOException;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeNotValidException;
 
 /**
  *
@@ -17,12 +19,12 @@ import java.io.IOException;
  */
 public class MultiValueMapPrunerTest {
 
-    private MultiValueMapPruner<Code, Classification,ClassificationComparator> pruner = new MultiValueMapPruner<>(new ClassificationComparator());
+    private MultiValueMapPruner<Code, Classification, ClassificationComparator> pruner = new MultiValueMapPruner<>(new ClassificationComparator());
     private MultiValueMapTestHelper mvmHelper;
-
 
     @Before
     public void setup() throws IOException, CodeNotValidException {
+
         mvmHelper = new MultiValueMapTestHelper();
         mvmHelper.addMockEntryToMatrix("brown dog", "2100", 0.5);
         mvmHelper.addMockEntryToMatrix("white dog", "2100", 0.75);
@@ -47,26 +49,24 @@ public class MultiValueMapPrunerTest {
      */
     @Test
     public void prunerTest() throws IOException, ClassNotFoundException {
+
         MultiValueMap<Code, Classification> map = mvmHelper.getMap();
         //params :-           map, complexityUpperBound,listLengthLowerBound,expectedComplexity,expectedKeySetSize
-        assertPrunedCorrectly(map,                 1000,                   1,               256,                4);
-        assertPrunedCorrectly(map,                  256,                   1,               256,                4);
-        assertPrunedCorrectly(map,                  255,                   1,               192,                4);
-        assertPrunedCorrectly(map,                   16,                   1,                16,                4);
-        assertPrunedCorrectly(map,                    1,                   2,                16,                4);
-        assertPrunedCorrectly(map,                    1,                   4,               256,                4);
-        assertPrunedCorrectly(map,                    1,                  10,               256,                4);
-        assertPrunedCorrectly(map,                    1,                   3,                81,                4);
-        assertPrunedCorrectly(map,                   81,                   1,                81,                4);
-        assertPrunedCorrectly(map,                   70,                   1,                54,                4);
-        assertPrunedCorrectly(map,                   17,                   1,                16,                4);
+        assertPrunedCorrectly(map, 1000, 1, 256, 4);
+        assertPrunedCorrectly(map, 256, 1, 256, 4);
+        assertPrunedCorrectly(map, 255, 1, 192, 4);
+        assertPrunedCorrectly(map, 16, 1, 16, 4);
+        assertPrunedCorrectly(map, 1, 2, 16, 4);
+        assertPrunedCorrectly(map, 1, 4, 256, 4);
+        assertPrunedCorrectly(map, 1, 10, 256, 4);
+        assertPrunedCorrectly(map, 1, 3, 81, 4);
+        assertPrunedCorrectly(map, 81, 1, 81, 4);
+        assertPrunedCorrectly(map, 70, 1, 54, 4);
+        assertPrunedCorrectly(map, 17, 1, 16, 4);
     }
 
-    private void assertPrunedCorrectly(MultiValueMap<Code, Classification> map,
-                                       int complexityUpperBound,
-                                       int listLengthLowerBound,
-                                       int expectedComplexity,
-                                       int expectedKeySetSize) throws IOException, ClassNotFoundException {
+    private void assertPrunedCorrectly(final MultiValueMap<Code, Classification> map, final int complexityUpperBound, final int listLengthLowerBound, final int expectedComplexity, final int expectedKeySetSize) throws IOException, ClassNotFoundException {
+
         pruner.setComplexityUpperBound(complexityUpperBound);
         pruner.setListLengthLowerBound(listLengthLowerBound);
         MultiValueMap<Code, Classification> map4 = pruner.pruneUntilComplexityWithinBound(map);
@@ -75,7 +75,8 @@ public class MultiValueMapPrunerTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testSetListLengthLowerBoundIncorrectly(){
+    public void testSetListLengthLowerBoundIncorrectly() {
+
         pruner.setListLengthLowerBound(-1);
     }
 }

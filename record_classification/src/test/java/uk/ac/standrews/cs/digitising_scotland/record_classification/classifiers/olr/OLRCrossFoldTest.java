@@ -1,6 +1,14 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.olr;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Properties;
 
@@ -169,6 +177,7 @@ public class OLRCrossFoldTest {
      */
     @Test
     public void testTrainingDeSerializedModel() throws IOException, ClassNotFoundException {
+
         String filename = "target/testOLRCrossfoldWrite.txt";
         FileOutputStream fileOutputStream = new FileOutputStream(filename);
         ObjectOutputStream outputStream = new ObjectOutputStream(fileOutputStream);
@@ -182,9 +191,11 @@ public class OLRCrossFoldTest {
         double[][] modelBetaArray = a.asArray(model.getAverageBetaMatrix());
         double[][] olrBetaArray = a.asArray(olrCrossFold.getAverageBetaMatrix());
 
-        for(int i = 0 ; i < modelBetaArray.length ; i++)
-            for(int j = 0 ; j < modelBetaArray[0].length ; j++)
-                Assert.assertEquals(modelBetaArray[i][j],olrBetaArray[i][j],0.0001);
+        for (int i = 0; i < modelBetaArray.length; i++) {
+            for (int j = 0; j < modelBetaArray[0].length; j++) {
+                Assert.assertEquals(modelBetaArray[i][j], olrBetaArray[i][j], 0.0001);
+            }
+        }
 
     }
 }
