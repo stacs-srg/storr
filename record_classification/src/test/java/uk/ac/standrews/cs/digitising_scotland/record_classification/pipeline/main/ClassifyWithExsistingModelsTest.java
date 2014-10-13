@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.main;
 
+import java.io.File;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -11,6 +12,8 @@ import org.junit.Test;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.classification.Classification;
 import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearningConfiguration;
+
+import com.google.common.io.Files;
 
 /**
  * Test class for the {@link PIlot} class. Exact matches and trains an OLR with known input and output.
@@ -29,6 +32,17 @@ public class ClassifyWithExsistingModelsTest {
 
         String codeDictionaryLocation = getClass().getResource("/pilotTestCodeDictionary.txt").getFile();
         MachineLearningConfiguration.getDefaultProperties().setProperty("codeDictionaryFile", codeDictionaryLocation);
+        File lookupTable1 = new File(getClass().getResource("/codModels/lookupTable.ser").getFile());
+        File olrModel1 = new File(getClass().getResource("/codModels/olrModel").getFile());
+        File olrModelCodeFactory1 = new File(getClass().getResource("/codModels/olrModelCodeFactory.ser").getFile());
+        File lookupTable2 = new File(getClass().getResource("/Models/lookupTable.ser").getFile());
+        File olrModel2 = new File(getClass().getResource("/Models/olrModel").getFile());
+        File olrModelCodeFactory2 = new File(getClass().getResource("/Models/olrModelCodeFactory.ser").getFile());
+
+        Files.copy(lookupTable1, lookupTable2);
+        Files.copy(olrModel1, olrModel2);
+        Files.copy(olrModelCodeFactory1, olrModelCodeFactory2);
+
         classifier = new ClassifyWithExsistingModels();
 
     }
