@@ -73,7 +73,7 @@ public class PIlotTest {
         it = classifications.iterator();
         codesinmap = getCodesInMap(it);
         System.out.println("codesinmap " + codesinmap);
-        Assert.assertTrue(codesinmap.contains("I219"));
+        Assert.assertTrue(codesinmap.contains("I219") || codesinmap.contains("I639")); //both valid, depends on training order which cannot be determined
         Assert.assertTrue(codesinmap.contains("I515"));
 
         classifications = allRecords.getRecord(43454).getClassifications();
@@ -81,14 +81,14 @@ public class PIlotTest {
         Assert.assertEquals(1, classifications.size());
         it = classifications.iterator();
         codesinmap = getCodesInMap(it);
-        Assert.assertTrue(codesinmap.contains("I219"));
+        Assert.assertTrue(codesinmap.contains("I219") || codesinmap.contains("I639"));
 
         classifications = allRecords.getRecord(6809).getClassifications();
         System.out.println(classifications);
         Assert.assertEquals(2, classifications.size());
         it = classifications.iterator();
         codesinmap = getCodesInMap(it);
-        Assert.assertTrue(codesinmap.contains("I219"));
+        Assert.assertTrue(codesinmap.contains("I219") || codesinmap.contains("I639"));
         Assert.assertTrue(codesinmap.contains("I515"));
 
         classifications = allRecords.getRecord(9999).getClassifications();

@@ -17,7 +17,7 @@
 
 package uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.olr;
 
-import java.io.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -36,6 +36,7 @@ import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearnin
  */
 public class OLRShuffled implements Runnable, Serializable {
 
+    private static final long serialVersionUID = -4877057661440167819L;
     //prevents training of models that have been read from disk as these do not have vectors to train on
     private OLR model;
     //set in config
@@ -152,16 +153,17 @@ public class OLRShuffled implements Runnable, Serializable {
 
         return model.logLikelihood(actual, instance);
     }
-//
-//    /**
-//     * Gets the configuration options.
-//     *
-//     * @return the configuration options
-//     */
-//    private void getConfigOptions() {
-//
-//        reps = Integer.parseInt(properties.getProperty("OLRShuffledReps"));
-//    }
+
+    //
+    //    /**
+    //     * Gets the configuration options.
+    //     *
+    //     * @return the configuration options
+    //     */
+    //    private void getConfigOptions() {
+    //
+    //        reps = Integer.parseInt(properties.getProperty("OLRShuffledReps"));
+    //    }
 
     /**
      * Checks if the models are trainable and trains the models if possible.
@@ -170,7 +172,6 @@ public class OLRShuffled implements Runnable, Serializable {
 
         this.train();
     }
-
 
     /**
      * Shuffle and train on all vectors.

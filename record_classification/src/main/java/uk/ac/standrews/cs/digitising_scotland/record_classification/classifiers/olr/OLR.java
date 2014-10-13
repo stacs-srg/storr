@@ -17,13 +17,16 @@
 
 package uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.olr;
 
-import java.io.*;
+import java.io.Serializable;
 import java.util.Properties;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.apache.mahout.classifier.sgd.L1;
-import org.apache.mahout.math.*;
+import org.apache.mahout.math.DenseVector;
+import org.apache.mahout.math.Matrix;
+import org.apache.mahout.math.NamedVector;
+import org.apache.mahout.math.Vector;
 import org.apache.mahout.math.Vector.Element;
 import org.apache.mahout.math.function.Functions;
 
@@ -35,6 +38,8 @@ import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearnin
  * pseudo Bayesian L1 prior regularisation.
  */
 public class OLR implements Serializable {
+
+    private static final long serialVersionUID = 4157757308558382483L;
 
     /** The minimum permitted value for the log likelihood. */
     private final double LOGLIK_MINIMUM = -100.0;
@@ -82,7 +87,6 @@ public class OLR implements Serializable {
     private volatile AtomicInteger numLogLikelihoodSumUpdates;
 
     private volatile AtomicLong numTrained;
-
 
     /**
      * Constructor with default properties.
@@ -450,6 +454,7 @@ public class OLR implements Serializable {
      * @return the vector
      */
     public Vector classifyNoLink(final Vector instance) {
+
         return beta.times(instance);
     }
 
@@ -543,6 +548,7 @@ public class OLR implements Serializable {
      * Initialise model.
      */
     private void initialiseModel() {
+
         initStepsAndCounts();
         beta = new SerializableDenseMatrix(numCategories - 1, numFeatures);
     }
@@ -553,6 +559,7 @@ public class OLR implements Serializable {
      * @param beta the beta
      */
     private void initialiseModel(final Matrix beta) {
+
         this.beta = new SerializableDenseMatrix(beta);
         numFeatures = beta.numCols();
         numCategories = beta.numRows() + 1;
@@ -560,6 +567,7 @@ public class OLR implements Serializable {
     }
 
     private void initStepsAndCounts() {
+
         updateSteps = new int[numFeatures];
         updateCounts = new int[numFeatures];
     }

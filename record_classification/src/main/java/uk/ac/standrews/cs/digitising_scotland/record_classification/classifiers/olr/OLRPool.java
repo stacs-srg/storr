@@ -1,6 +1,6 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.olr;
 
-import java.io.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -33,6 +33,7 @@ import com.google.common.collect.Lists;
  */
 public class OLRPool implements Runnable, Serializable {
 
+    private static final long serialVersionUID = -7098039612837520093L;
     private static transient final Logger LOGGER = LoggerFactory.getLogger(OLRPool.class);
     private List<OLRShuffled> models = Lists.newArrayList();
     private int poolSize;
@@ -142,7 +143,6 @@ public class OLRPool implements Runnable, Serializable {
         }
     }
 
-
     private void trainAllModels() throws InterruptedException {
 
         ExecutorService executorService = Executors.newFixedThreadPool(poolSize);
@@ -200,7 +200,6 @@ public class OLRPool implements Runnable, Serializable {
         }
         return logLikelihood;
     }
-
 
     private double getProportionTestingVectorsCorrectlyClassified(final OLRShuffled model) {
 
