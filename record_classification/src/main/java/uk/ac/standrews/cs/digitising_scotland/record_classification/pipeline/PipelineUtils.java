@@ -64,7 +64,7 @@ public final class PipelineUtils {
     //
     //    }
 
-    public static String printCodeMetrics(final Bucket bucket, CodeMetrics codeMetrics, final ListAccuracyMetrics accuracyMetrics, final CodeIndexer codeIndexer, final String strictCodeStatsPath, final String codeStatsPath, final String experimentalFolderName, final String identifier) {
+    public static String printCodeMetrics(final Bucket bucket, final CodeMetrics codeMetrics, final ListAccuracyMetrics accuracyMetrics, final CodeIndexer codeIndexer, final String strictCodeStatsPath, final String codeStatsPath, final String experimentalFolderName, final String identifier) {
 
         LOGGER.info(codeMetrics.getMicroStatsAsString());
         codeMetrics.writeStats(strictCodeStatsPath);
