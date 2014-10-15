@@ -9,7 +9,7 @@ import java.util.Iterator;
  */
 public interface IRepository {
 
-    IBucketLXP makeLXPBucket( String name, BucketKind kind ) throws RepositoryException;
+    IBucket makeBucket(String types_name, BucketKind kind) throws RepositoryException;
 
     <T extends ILXP> IBucket<T> makeBucket(final String name, BucketKind kind, ILXPFactory<T> tFactory) throws RepositoryException;
 
@@ -17,13 +17,15 @@ public interface IRepository {
 
     void deleteBucket(String name) throws RepositoryException;
 
+    IBucket getBucket(final String name) throws RepositoryException;
+
     <T extends ILXP> IBucket<T> getBucket(final String name, ILXPFactory<T> tFactory) throws RepositoryException;
 
-    IBucketLXP getLXPBucket( final String name ) throws RepositoryException;
-
-    Iterator<IBucketLXP> getLXPIterator();
+    Iterator<String> getBucketNameIterator();
 
     <T extends ILXP> Iterator<IBucket<T>> getIterator(ILXPFactory<T> tFactory);
 
     String getRepo_path(); // return the repo path of this repository (not intended for public use).
+
+
 }

@@ -1,8 +1,8 @@
 package uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl;
 
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IBucketIndexLXP;
+import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IBucketIndex;
+import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IInputStream;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXP;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXPInputStream;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,10 +16,10 @@ import static uk.ac.standrews.cs.digitising_scotland.util.FileManipulation.FILE_
 /**
  * Created by al on 23/05/2014.
  */
-public class BucketIndexLXP implements IBucketIndexLXP {
+public class BucketIndex implements IBucketIndex {
 
     private final Path dir;
-    private final DirectoryBackedIndexedBucketLXP indexed_bucket;
+    private final DirectoryBackedIndexedBucket indexed_bucket;
     private final String label;
     private Map<String, List<Integer>> map = null; // a map of values to the record with fields with those values.
 
@@ -32,7 +32,7 @@ public class BucketIndexLXP implements IBucketIndexLXP {
      * @param dir            - the dir holding the index
      * @param indexed_bucket - the bucket being indexed
      */
-    public BucketIndexLXP(final String label, final Path dir, final DirectoryBackedIndexedBucketLXP indexed_bucket) {
+    public BucketIndex(final String label, final Path dir, final DirectoryBackedIndexedBucket indexed_bucket) {
 
         this.label = label; // the label being indexed
         this.dir = dir; // the path to the dir being used to hold the index
@@ -85,7 +85,7 @@ public class BucketIndexLXP implements IBucketIndexLXP {
     }
 
     @Override
-    public ILXPInputStream records(final String value) throws IOException {
+    public IInputStream records(final String value) throws IOException {
 
         onDemandLoadContents();
 
@@ -96,7 +96,7 @@ public class BucketIndexLXP implements IBucketIndexLXP {
             files.add(new File(indexed_bucket.filePath(i)));
         }
 
-        return new IndexedLXPBucketInputStream(indexed_bucket, files.iterator());
+        return new IndexedBucketInputStream(indexed_bucket, files.iterator());
     }
 
     @Override
@@ -104,7 +104,12 @@ public class BucketIndexLXP implements IBucketIndexLXP {
 
         onDemandLoadContents();
 
-        String value = record.get(label); // get the value associated with the label being indexed in this index.
+        String value = null; // get the value associated with the label being indexed in this index.
+        try {
+            value = record.get(label);
+        } catch (KeyNotFoundException e) {
+            throw new IOException("type label not found");
+        }
 
         List<Integer> entry = map.get(value); // look up index for the value associated with this do we have any of these values in the index already
 

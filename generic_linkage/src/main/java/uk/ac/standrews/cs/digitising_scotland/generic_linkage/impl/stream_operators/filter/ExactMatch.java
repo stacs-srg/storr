@@ -1,8 +1,10 @@
 package uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.stream_operators.filter;
 
+import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.KeyNotFoundException;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IInputStream;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXP;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IOutputStream;
+import uk.ac.standrews.cs.digitising_scotland.util.ErrorHandling;
 
 /**
  * Provides exact match filtering of LXP records based on a label and a value.
@@ -22,6 +24,11 @@ public class ExactMatch<T extends ILXP> extends Filter {
 
     public boolean select(final ILXP record) {
 
-        return record.containsKey(label) && record.get(label).equals(value);
+        try {
+            return record.containsKey(label) && record.get(label).equals(value);
+        } catch (KeyNotFoundException e) {
+            ErrorHandling.exceptionError( e, "Key not found: ");
+            return false;
+        }
     }
 }

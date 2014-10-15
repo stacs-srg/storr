@@ -1,26 +1,26 @@
 package uk.ac.standrews.cs.digitising_scotland.linkage.lxp_records;
 
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.LXP;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.Store;
+import uk.ac.standrews.cs.digitising_scotland.linkage.factory.TypeFactory;
 import uk.ac.standrews.cs.nds.persistence.PersistentObjectException;
 import uk.ac.standrews.cs.nds.rpc.stream.JSONReader;
 
 /**
  * Created by al on 03/10/2014.
  */
-public class Person extends LXP {
+public class Person extends AbstractLXP {
+
+    private static final int this_label = TypeFactory.getInstance().typeWithname( "Person" ).getId();
+
 
     public Person() {
         super();
+        required_type_labelID = this_label;
     }
 
-    public Person(int label_id, JSONReader reader) throws PersistentObjectException {
+    public Person(JSONReader reader) throws PersistentObjectException {
 
-        super(Store.getInstance().getNextFreePID(), reader, label_id );
-
+        super(reader );
+        required_type_labelID = this_label;
     }
 
-    public boolean checkConsistentWith(int label_id) {
-        return false; // TODO AL IS HERE
-    }
 }

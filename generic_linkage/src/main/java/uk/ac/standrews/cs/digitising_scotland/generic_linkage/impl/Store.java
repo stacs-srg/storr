@@ -111,7 +111,7 @@ public class Store implements IStore {
     @Override
     public ILXP get(int id) throws IOException, PersistentObjectException {
 
-        IBucketLXP bucket = store_index.get(id);
+        IBucket bucket = store_index.get(id);
         if (bucket == null) {
             return null;
         }

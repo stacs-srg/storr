@@ -11,7 +11,7 @@ import java.util.Iterator;
  *
  * Created by al on 04/07/2014.
  */
-public class StoreIndex implements IStoreIndex {
+public class StoreIndex<T extends ILXP> implements IStoreIndex<T> {
 
     private IStore store;
 
@@ -20,24 +20,27 @@ public class StoreIndex implements IStoreIndex {
     }
 
     @Override
-    public IBucketLXP get(int id) {
+    public IBucket get(int id) {
 
         Iterator<IRepository> repo_iterator = store.getIterator();
         while (repo_iterator.hasNext()) {
 
             IRepository repo = repo_iterator.next();
 
-            Iterator<IBucketLXP> bucket_iterator = repo.getLXPIterator();
+            Iterator<String> bucket_iterator = repo.getBucketNameIterator();
 
             while (bucket_iterator.hasNext()) {
 
-                IBucketLXP bucket = bucket_iterator.next();
+                IBucket bucket = null;
+                try {
+                    bucket = repo.getBucket(bucket_iterator.next());
+                    if( ! bucket.getKind().equals(BucketKind.INDIRECT ) && bucket.contains(id) ) {  // only look at primary storage
 
-                if( ! bucket.kind().equals(BucketKind.INDIRECT ) && bucket.contains(id) ) {  // only look at primary storage
-
-                    return bucket;
+                        return bucket;
+                    }
+                } catch (RepositoryException e) {
+                    e.printStackTrace();
                 }
-
             }
         }
         // we didn't find it

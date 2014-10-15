@@ -9,5 +9,5 @@ public interface IIndexedBucket<T extends ILXP> extends IBucket<T> {
 
     void addIndex(String label) throws IOException;
 
-    IBucketIndex<T> getIndexT(String label);
+    IBucketIndex<T> getIndex(String label);
 }

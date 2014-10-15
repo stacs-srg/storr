@@ -22,11 +22,15 @@ public class TypedLXP extends LXP implements ITypedLXP {
     }
 
     @Override
-    public int getInt(final String key) throws NumberFormatException, TypedLXPException {
+    public int getInt(final String key) throws NumberFormatException, TypedLXPException  {
 
-        if (compatible_field_type(key, Type.INT)) {
+        try {
+            if (compatible_field_type(key, Type.INT)) {
 
-            return Integer.parseInt(super.get(key));
+                return Integer.parseInt(super.get(key));
+            }
+        } catch (KeyNotFoundException e) {
+            throw new TypedLXPException( "key not found" );
         }
         return 0; // not reached
     }
@@ -42,9 +46,13 @@ public class TypedLXP extends LXP implements ITypedLXP {
 
     @Override
     public int getRef(final String key) throws TypedLXPException {
-        if (compatible_field_type(key, Type.REFERENCE)) {
+        try {
+            if (compatible_field_type(key, Type.REFERENCE)) {
 
-            return Integer.parseInt(super.get(key));
+                return Integer.parseInt(super.get(key));
+            }
+        } catch (KeyNotFoundException e) {
+            throw new TypedLXPException( "key not found" );
         }
         return 0; // not reached
     }
@@ -73,18 +81,25 @@ public class TypedLXP extends LXP implements ITypedLXP {
     public float getFloat(final String key) throws TypedLXPException {
         if (compatible_field_type(key, Type.FLOAT)) {
 
-            return Float.parseFloat(super.get(key));
+            try {
+                return Float.parseFloat(super.get(key));
+            } catch (KeyNotFoundException e) {
+                throw new TypedLXPException( "key not found" );
+            }
         }
         return 0.0F; // Not reached
     }
 
     private boolean compatible_field_type(final String key, final Type expected_type) throws TypedLXPException {
-        String class_name = super.get("TYPE"); // TODO consider the depenencies here - this is defined in CommonLabels but need it somewehere generically.
-        if (class_name == null) { // field doesn't exist
-            return false;
-        }
-        // Have found a class string which by convention is a Labels class.
+
+        String class_name = null;
         try {
+            class_name = super.get("TYPE"); // TODO consider the depenencies here - this is defined in CommonLabels but need it somewehere generically.
+            if (class_name == null) { // field doesn't exist
+                return false;
+            }
+            // Have found a class string which by convention is a Labels class.
+
             Class c = Class.forName(class_name);  // get the class associated with the type - by convention TYPE field contains class name of ILabels meta information
             Object o = c.newInstance();
             Type field_type = ((ITypeLabel) o).getFieldType(key); // expect the class to implement the ILabels interface
@@ -103,6 +118,8 @@ public class TypedLXP extends LXP implements ITypedLXP {
         } catch (IllegalAccessException e) {
             ErrorHandling.error("Illegal Access exception for: " + class_name);
             return false;
+        } catch (KeyNotFoundException e) {
+            throw new TypedLXPException( "key not found" );
         }
     }
 }

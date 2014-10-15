@@ -1,8 +1,8 @@
 package uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl;
 
+import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IBucket;
+import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IInputStream;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXP;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IBucketLXP;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXPInputStream;
 import uk.ac.standrews.cs.nds.persistence.PersistentObjectException;
 import uk.ac.standrews.cs.nds.util.ErrorHandling;
 
@@ -10,30 +10,37 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
 
-public class IndexedLXPBucketInputStream implements ILXPInputStream {
+public class BucketBackedInputStream<T extends ILXP> implements IInputStream<T> { // TODO need checking in iterators?
 
-    private final IBucketLXP bucket;
-    private Iterator<File> file_iterator;
+    private final IBucket<T> bucket;
+    private File directory;
 
-    public IndexedLXPBucketInputStream(final IBucketLXP bucket, final Iterator<File> file_iterator) throws IOException {
+    public BucketBackedInputStream(final IBucket<T> bucket, final File directory) throws IOException {
 
         this.bucket = bucket;
-        this.file_iterator = file_iterator;
+        this.directory = directory;
+
     }
 
+    public Iterator<T> iterator() {
 
-    public Iterator<ILXP> iterator() {
-        return new ILXPIterator();
+        return new ILXPIterator(directory);
     }
 
-    private class ILXPIterator implements Iterator<ILXP> {
+    private class ILXPIterator implements Iterator<T> {
+
+        private Iterator<File> file_iterator;
+
+        public ILXPIterator(File directory) {
+            file_iterator = FileIteratorFactory.createFileIterator(directory, true, false);
+        }
 
         public boolean hasNext() {
             return file_iterator.hasNext();
         }
 
         @Override
-        public ILXP next() {
+        public T next() {
 
             try {
                 return bucket.get(Integer.parseInt(file_iterator.next().getName()));

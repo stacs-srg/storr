@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces;
 
+import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.KeyNotFoundException;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.types.Type;
 
 /**
@@ -14,7 +15,7 @@ public interface ITypeLabel {
      */
     java.util.Collection<String> getLabels();
 
-    public Type getFieldType(String label);
+    public Type getFieldType(String label) throws KeyNotFoundException;
 
     public int getId();
 }

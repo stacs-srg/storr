@@ -1,9 +1,9 @@
 package uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl;
 
 import org.json.JSONException;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IBucketLXP;
+import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IBucket;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXP;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXPOutputStream;
+import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IOutputStream;
 import uk.ac.standrews.cs.nds.util.ErrorHandling;
 
 import java.io.IOException;
@@ -11,9 +11,9 @@ import java.io.IOException;
 /**
  * Created by al on 28/04/2014.
  */
-public class BucketBackedLXPOutputStream extends BucketBackedAbstractLXPStream implements ILXPOutputStream {
+public class BucketBackedOutputStream<T> extends BucketBackedAbstractStream implements IOutputStream {
 
-    public BucketBackedLXPOutputStream(final IBucketLXP bucket) {
+    public BucketBackedOutputStream(final IBucket bucket) {
         super(bucket);
     }
 

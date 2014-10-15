@@ -1,7 +1,6 @@
 package uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.stream_operators.sharder;
 
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.*;
-import uk.ac.standrews.cs.nds.util.ErrorHandling;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,10 +24,6 @@ public abstract class AbstractPairwiseLinker<T extends ILXP> implements IPairWis
         List<T> records = new ArrayList<T>();
 
         for (T record : input) {
-
-            if (record.get("TYPE") == null) {
-                ErrorHandling.error("Found record with no type field: " + record);
-            }
             records.add(record);
         }
         linkRecords(records);

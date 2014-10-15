@@ -40,7 +40,30 @@ public class Repository implements IRepository {
         }
     }
 
-    @Override
+
+    public IBucket makeBucket(final String name, BucketKind kind) throws RepositoryException {
+        switch( kind ) {
+            case DIRECTORYBACKED: {
+                IBucket bucket = DirectoryBackedBucket.createBucket(name, this);
+                bucket.setKind( kind );
+                return bucket;
+            }
+            case INDIRECT: {
+                IBucket bucket = DirectoryBackedIndirectBucket.createBucket(name, this);
+                bucket.setKind( kind );
+                return bucket;
+            }
+            case INDEXED: {
+                IBucket bucket = DirectoryBackedIndexedBucket.createBucket(name, this);
+                bucket.setKind( kind );
+                return bucket;
+            }
+            default: {
+                throw new RepositoryException("Bucketkind: " + kind + " not recognized");
+            }
+        }
+    }
+
     public <T extends ILXP> IBucket<T> makeBucket(final String name, BucketKind kind, ILXPFactory<T> tFactory) throws RepositoryException {
         switch( kind ) {
             case DIRECTORYBACKED: {
@@ -64,57 +87,6 @@ public class Repository implements IRepository {
         }
     }
 
-    @Override
-    public IBucketLXP makeLXPBucket(final String name, BucketKind kind  ) throws RepositoryException {
-       switch( kind ) {
-           case DIRECTORYBACKED: {
-               IBucketLXP bucket = DirectoryBackedBucketLXP.createBucket(name, this);
-               bucket.setKind( kind  );
-               return bucket;
-           }
-           case INDIRECT: {
-               IBucketLXP bucket = DirectoryBackedIndirectBucketLXP.createBucket(name, this);
-               bucket.setKind( kind  );
-               return bucket;
-           }
-           case INDEXED: {
-               IBucketLXP bucket = DirectoryBackedIndexedBucketLXP.createBucket(name, this);
-               bucket.setKind( kind  );
-               return bucket;
-           }
-           default: {
-               throw new RepositoryException("Bucketkind: " + kind + " not recognized");
-           }
-       }
-    }
-
-    private <T extends ILXP> void createBucket(final String name, BucketKind kind, ILXPFactory<T> tFactory ) throws RepositoryException {
-
-        if (bucketExists(name)) {
-            throw new RepositoryException("Bucket: " + name + " already exists");
-        }
-
-        try {
-            Path path = getBucketPath(name);
-            FileManipulation.createDirectoryIfDoesNotExist(path);
-            switch( kind ) {
-                case DIRECTORYBACKED: {
-                    DirectoryBackedBucket.createBucket(name, this, tFactory);
-                    return;
-                }
-                case INDIRECT: {
-                    DirectoryBackedIndirectBucket.createBucket(name, this, tFactory);
-                }
-                case INDEXED: {
-                    DirectoryBackedIndexedBucket.createBucket(name, this, tFactory);
-                }
-                default:
-            }
-        } catch (IOException e) {
-            throw new RepositoryException( e.getMessage() );
-        }
-
-    }
 
     private void addBucketType(Path path, ILXPFactory<?> tFactory ) throws IOException {
         // Extract content type of the bucket.
@@ -143,9 +115,6 @@ public class Repository implements IRepository {
         }
     }
 
-
-
-
     @Override
     public boolean bucketExists(final String name) {
 
@@ -173,32 +142,68 @@ public class Repository implements IRepository {
     }
 
     @Override
-    public IBucketLXP getLXPBucket(String name) throws RepositoryException {
-        try {
-            return new DirectoryBackedBucketLXP(name, repo_path);
-        } catch (IOException e) {
-            throw new RepositoryException("IO Exception accessing bucket " + name);
-        }
-    }
-
-    @Override
     public <T extends ILXP> IBucket<T> getBucket(String name, ILXPFactory<T> tFactory) throws RepositoryException {
-        try {
-            return new DirectoryBackedBucket(name, repo_path, tFactory);
-        } catch (IOException e) {
-            throw new RepositoryException("IO Exception accessing bucket " + name);
+        if (bucketExists(name)) {
+            BucketKind kind = DirectoryBackedBucket.getKind(name, repo_path);
+            try {
+                switch( kind ) {
+                    case DIRECTORYBACKED: {
+                        IBucket bucket = new DirectoryBackedBucket(name, repo_path,tFactory);
+                        return bucket;
+                    }
+                    case INDIRECT: {
+                        return new DirectoryBackedIndirectBucket(name,repo_path,tFactory);
+                    }
+                    case INDEXED: {
+                        return new DirectoryBackedIndexedBucket(name, repo_path,tFactory);
+                    }
+                    default: {
+                        throw new RepositoryException("Bucketkind: " + kind + " not recognized");
+                    }
+                }
+            } catch (IOException e) {
+                throw new RepositoryException("IO Exception accessing bucket " + name);
+            }
         }
+        return null;
     }
 
     @Override
-    public BucketIterator getLXPIterator() {
+    public IBucket getBucket(String name) throws RepositoryException {
+        if (bucketExists(name)) {
+            BucketKind kind = DirectoryBackedBucket.getKind(name, repo_path);
+            try {
+                switch( kind ) {
+                    case DIRECTORYBACKED: {
+                        IBucket bucket = new DirectoryBackedBucket(name, repo_path);
+                        return bucket;
+                    }
+                    case INDIRECT: {
+                        return new DirectoryBackedIndirectBucket(name,repo_path);
+                    }
+                    case INDEXED: {
+                        return new DirectoryBackedIndexedBucket(name, repo_path);
+                    }
+                    default: {
+                        throw new RepositoryException("Bucketkind: " + kind + " not recognized");
+                    }
+                }
+            } catch (IOException e) {
+                throw new RepositoryException("IO Exception accessing bucket " + name);
+            }
+        }
+        return null;
+    }
 
-        return new BucketIterator(this, repo_directory);
+    @Override
+    public BucketNamesIterator getBucketNameIterator() {
+
+        return new BucketNamesIterator(this, repo_directory);
     }
 
     @Override
     public <T extends ILXP> Iterator<IBucket<T>> getIterator( ILXPFactory<T> tFactory ) {
-        return new TypedBucketIterator(this, repo_directory,tFactory);
+        return new BucketIterator(this, repo_directory,tFactory);
     }
 
     @Override
@@ -206,13 +211,43 @@ public class Repository implements IRepository {
         return repo_path;
     }
 
-    private static class TypedBucketIterator<T extends ILXP> implements Iterator<IBucket<T>> {
+    private static class BucketNamesIterator implements Iterator<String> {
+
+        private final Iterator<File> file_iterator;
+        private final Repository repository;
+
+        public BucketNamesIterator(final Repository repository, final File repo_directory) {
+
+            this.repository = repository;
+            file_iterator = FileIteratorFactory.createFileIterator(repo_directory, false, true);
+        }
+
+        public boolean hasNext() {
+            return file_iterator.hasNext();
+        }
+
+        @Override
+        public String next() {
+
+            return file_iterator.next().getName();
+
+        }
+
+        @Override
+        public void remove() {
+
+            throw new UnsupportedOperationException("remove called on stream - unsupported");
+        }
+
+    }
+
+    private static class BucketIterator<T extends ILXP> implements Iterator<IBucket<T>> {
 
         private final Iterator<File> file_iterator;
         private final Repository repository;
         private ILXPFactory<T> tFactory;
 
-        public TypedBucketIterator(final Repository repository, final File repo_directory,ILXPFactory<T> tFactory) {
+        public BucketIterator(final Repository repository, final File repo_directory, ILXPFactory<T> tFactory) {
 
             this.repository = repository;
             file_iterator = FileIteratorFactory.createFileIterator(repo_directory, false, true);
@@ -230,43 +265,6 @@ public class Repository implements IRepository {
 
             try {
                 return repository.getBucket(name,tFactory);
-
-            } catch (RepositoryException e) {
-                ErrorHandling.exceptionError(e, "RepositoryException in iterator");
-                return null;
-            }
-        }
-
-        @Override
-        public void remove() {
-
-            throw new UnsupportedOperationException("remove called on stream - unsupported");
-        }
-
-    }
-
-    private static class BucketIterator implements Iterator<IBucketLXP> {
-
-        private final Iterator<File> file_iterator;
-        private final Repository repository;
-
-        public BucketIterator(final Repository repository, final File repo_directory) {
-
-            this.repository = repository;
-            file_iterator = FileIteratorFactory.createFileIterator(repo_directory, false, true);
-        }
-
-        public boolean hasNext() {
-            return file_iterator.hasNext();
-        }
-
-        @Override
-        public IBucketLXP next() {
-
-            String name = file_iterator.next().getName();
-
-            try {
-                return repository.getLXPBucket(name);
 
             } catch (RepositoryException e) {
                 ErrorHandling.exceptionError(e, "RepositoryException in iterator");

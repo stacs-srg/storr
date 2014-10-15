@@ -1,8 +1,8 @@
 package uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl;
 
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IBucketLXP;
+import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IBucket;
+import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IInputStream;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXP;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXPInputStream;
 import uk.ac.standrews.cs.nds.persistence.PersistentObjectException;
 import uk.ac.standrews.cs.nds.util.ErrorHandling;
 
@@ -10,29 +10,23 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
 
-public class BucketBackedLXPInputStream implements ILXPInputStream {
+public class IndexedBucketInputStream implements IInputStream {
 
-    private final IBucketLXP bucket;
-    private File directory;
+    private final IBucket bucket;
+    private Iterator<File> file_iterator;
 
-    public BucketBackedLXPInputStream(final IBucketLXP bucket, final File directory) throws IOException {
+    public IndexedBucketInputStream(final IBucket bucket, final Iterator<File> file_iterator) throws IOException {
 
         this.bucket = bucket;
-        this.directory = directory;
-
+        this.file_iterator = file_iterator;
     }
 
+
     public Iterator<ILXP> iterator() {
-        return new ILXPIterator(directory);
+        return new ILXPIterator();
     }
 
     private class ILXPIterator implements Iterator<ILXP> {
-
-        private Iterator<File> file_iterator;
-
-        public ILXPIterator(File directory) {
-            file_iterator = FileIteratorFactory.createFileIterator(directory, true, false);
-        }
 
         public boolean hasNext() {
             return file_iterator.hasNext();

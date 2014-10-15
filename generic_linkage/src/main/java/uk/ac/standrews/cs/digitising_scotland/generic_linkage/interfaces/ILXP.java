@@ -2,6 +2,7 @@ package uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces;
 
 import org.json.JSONException;
 import org.json.JSONWriter;
+import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.KeyNotFoundException;
 
 /**
  * Interface to the LXP (labeled cross product class).
@@ -23,7 +24,7 @@ public interface ILXP extends ILXPFactory {
      */
     void serializeToJSON(JSONWriter writer) throws JSONException;
 
-    String get(String key);
+    String get(String key) throws KeyNotFoundException;
 
     String put( String key, String value);
 

@@ -1,23 +1,46 @@
-package uk.ac.standrews.cs.digitising_scotland.linkage.factory;
+package uk.ac.standrews.cs.digitising_scotland.linkage.lxp_records;
 
+import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.KeyNotFoundException;
+import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.LXP;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.Store;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.TypeLabel;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXP;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXPFactory;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ITypeLabel;
 import uk.ac.standrews.cs.digitising_scotland.util.ErrorHandling;
 import uk.ac.standrews.cs.nds.persistence.PersistentObjectException;
+import uk.ac.standrews.cs.nds.rpc.stream.JSONReader;
 
 import java.io.IOException;
 import java.util.Collection;
 
 /**
- * Created by al on 03/10/2014.
+ * Created by al on 14/10/2014.
  */
-public abstract class TFactory<T extends ILXP> implements ILXPFactory<T> {
+public abstract class AbstractLXP extends LXP {
 
     protected int required_type_labelID;
 
+    public AbstractLXP() {
+
+        super();
+    }
+
+    public AbstractLXP(int object_id) {
+
+        super(object_id);
+    }
+
+    public AbstractLXP(int object_id, JSONReader reader) throws PersistentObjectException {
+        super( object_id,reader);
+    }
+
+    public AbstractLXP(JSONReader reader) throws PersistentObjectException {
+        super(reader);
+    }
+
+    /*
+     * This says that we can we can create an instance of this type iff the labels supplied in the label_id are present
+     */
     @Override
     public boolean checkConsistentWith(int label_id) {
         // do id check first
@@ -38,12 +61,14 @@ public abstract class TFactory<T extends ILXP> implements ILXPFactory<T> {
             }
             return true;
         } catch (PersistentObjectException e) {
-            ErrorHandling.error( "PersistentObjectException - returning false" );
+            ErrorHandling.error("PersistentObjectException - returning false");
             return false;
         } catch (IOException e) {
             ErrorHandling.error( "PersistentObjectException - returning false" );
             return false;
+        } catch (KeyNotFoundException e) {
+            ErrorHandling.error( "Key not found - returning false" );
+            return false;
         }
     }
-
 }

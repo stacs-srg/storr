@@ -33,12 +33,12 @@ public interface IBucket<T extends ILXP> {
     /**
      * @return an input Stream containing all the LXP records in this Bucket
      */
-    IInputStream<T> getInputStreamT();
+    IInputStream<T> getInputStream() throws IOException;
 
     /**
      * @return an output Stream which supports the writing of records to this Bucket
      */
-    IOutputStream<T> getOutputStreamT();
+    IOutputStream<T> getOutputStream();
 
     /**
      * @return the name of the bucket
@@ -62,5 +62,7 @@ public interface IBucket<T extends ILXP> {
     BucketKind getKind();
 
     int getTypeLabelID();
+
+    void setTypeLabelID( int id ) throws IOException;
 
 }

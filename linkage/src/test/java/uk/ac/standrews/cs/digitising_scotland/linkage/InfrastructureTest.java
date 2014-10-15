@@ -4,10 +4,7 @@ import org.json.JSONException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.LXP;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.RepositoryException;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.Store;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.StoreException;
+import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.*;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.stream_operators.filter.ExactMatch;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.*;
 import uk.ac.standrews.cs.digitising_scotland.linkage.factory.BirthFactory;
@@ -32,10 +29,10 @@ import static org.junit.Assert.assertTrue;
  */
 public class InfrastructureTest {
 
-    private static String bucket_name1 = "BUCKET1";
-    private static String bucket_name2 = "BUCKET2";
-    private static String bucket_name3 = "BLOCKED-BUCKETS";
-    private static String bucket_name4 = "INDEX";
+    private static String birth_bucket_name1 = "BUCKET1";
+    private static String birth_bucket_name2 = "BUCKET2";
+    private static String generic_bucket_name1 = "BLOCKED-BUCKETS";
+    private static String indexed_bucket_name1 = "INDEX";
     private static String types_name = "types";
     private static String store_path = "src/test/resources/STORE";
     private static final String BIRTH_RECORDS_PATH = "src/test/resources/1000_TEST_BIRTH_RECORDS.txt";
@@ -43,7 +40,7 @@ public class InfrastructureTest {
 
     private static IStore store;
     private static IRepository repo;
-    private IBucketLXP types;
+    private IBucket types;
     private ITypeLabel birthlabel;
 
     @Before
@@ -55,12 +52,16 @@ public class InfrastructureTest {
 
         repo = store.makeRepository("repo");
 
-        repo.makeBucket(bucket_name1,BucketKind.DIRECTORYBACKED,LXP.getInstance());
-        repo.makeBucket(bucket_name2,BucketKind.DIRECTORYBACKED,LXP.getInstance());
-        repo.makeBucket(bucket_name3,BucketKind.DIRECTORYBACKED,LXP.getInstance());
-        repo.makeBucket(bucket_name4, BucketKind.INDEXED, LXP.getInstance());
-        types =  repo.makeLXPBucket(types_name, BucketKind.DIRECTORYBACKED);
+        types =  repo.makeBucket(types_name, BucketKind.DIRECTORYBACKED);
         birthlabel = TypeFactory.getInstance().createType(BIRTHRECORDTYPETEMPLATE, "BIRTH", types);
+
+        IBucket<Birth> b1 = repo.makeBucket(birth_bucket_name1,BucketKind.DIRECTORYBACKED);
+        b1.setTypeLabelID( birthlabel.getId() );
+        IBucket<Birth> b2 = repo.makeBucket(birth_bucket_name2,BucketKind.DIRECTORYBACKED);
+        b2.setTypeLabelID( birthlabel.getId() );
+        repo.makeBucket(generic_bucket_name1,BucketKind.DIRECTORYBACKED);
+        IBucket<Birth> b3 = repo.makeBucket(indexed_bucket_name1, BucketKind.INDEXED);
+        b3.setTypeLabelID( birthlabel.getId() );
     }
 
     @After
@@ -88,7 +89,7 @@ public class InfrastructureTest {
     @Test
 //    @Ignore
     public synchronized void testLXPCreation() throws Exception, RepositoryException {
-        IBucketLXP b = repo.getLXPBucket(bucket_name1);
+        IBucket b = repo.getBucket(birth_bucket_name1);
         LXP lxp = new LXP();
         lxp.put("age", "42");
         lxp.put("address", "home");
@@ -98,7 +99,7 @@ public class InfrastructureTest {
     @Test
 //    @Ignore
     public synchronized void testLXPOverwrite() throws Exception, RepositoryException {
-        IBucketLXP b = repo.getLXPBucket(bucket_name1);
+        IBucket b = repo.getBucket(generic_bucket_name1);
         LXP lxp = new LXP();
         lxp.put("age", "42");
         lxp.put("address", "home");
@@ -115,8 +116,8 @@ public class InfrastructureTest {
 
     @Test
 //    @Ignore
-    public synchronized void testLXPFromFile() throws Exception, RepositoryException {
-        IBucketLXP b = repo.getLXPBucket(bucket_name1);
+    public synchronized void testLXPFromFile() throws Exception, RepositoryException, KeyNotFoundException {
+        IBucket b = repo.getBucket(generic_bucket_name1);
         LXP lxp = new LXP();
         lxp.put("age", "42");
         lxp.put("address", "home");
@@ -132,8 +133,8 @@ public class InfrastructureTest {
 
     @Test
 //    @Ignore
-    public synchronized void testStreams() throws Exception, RepositoryException {
-        IBucketLXP b = repo.getLXPBucket(bucket_name1);
+    public synchronized void testStreams() throws Exception, RepositoryException, KeyNotFoundException {
+        IBucket b = repo.getBucket(generic_bucket_name1);
         // create a few records
         for (int i = 1; i < 10; i++) {
             LXP lxp = new LXP();
@@ -142,7 +143,8 @@ public class InfrastructureTest {
             b.put(lxp);
         }
         int count = 1;
-        for( ILXP record : b.getInputStream() ) {
+        for( Object o : b.getInputStream() ) {
+            ILXP record = (ILXP) o;  // TODO dynamic cast - eliminate?
             assertTrue(record.containsKey("age"));
             assertEquals(record.get("age"), "42");
             assertTrue(record.containsKey("address"));
@@ -156,7 +158,7 @@ public class InfrastructureTest {
 //    @Ignore
     public synchronized void testReadingPopulationRecords() throws RepositoryException, RecordFormatException, JSONException, IOException {
 
-        IBucket<Birth> b = repo.getBucket(bucket_name1, new BirthFactory(birthlabel.getId()));
+        IBucket<Birth> b = repo.getBucket(birth_bucket_name1, new BirthFactory(birthlabel.getId()));
 
         EventImporter.importDigitisingScotlandRecords(b, BIRTH_RECORDS_PATH,birthlabel);
     }
@@ -165,12 +167,13 @@ public class InfrastructureTest {
 //    @Ignore
     public synchronized void testSimpleMatchPopulationRecords() throws RepositoryException, RecordFormatException, JSONException, IOException {
 
-        IBucket<Birth> b = repo.getBucket(bucket_name1, new BirthFactory(birthlabel.getId()));
-        IBucket<Birth> b2 = repo.getBucket(bucket_name2,new BirthFactory(birthlabel.getId()));
+
+        IBucket<Birth> b = repo.getBucket(birth_bucket_name1, new BirthFactory(birthlabel.getId()));
+        IBucket<Birth> b2 = repo.getBucket(birth_bucket_name2,new BirthFactory(birthlabel.getId()));
 
         EventImporter.importDigitisingScotlandRecords(b, BIRTH_RECORDS_PATH,birthlabel);
 
-        ExactMatch filter = new ExactMatch(b.getInputStreamT(), b2.getOutputStreamT(), "surname", "GONTHWICK");
+        ExactMatch filter = new ExactMatch(b.getInputStream(), b2.getOutputStream(), "surname", "GONTHWICK");
         filter.apply();
     }
 
@@ -179,12 +182,12 @@ public class InfrastructureTest {
     @Test
     public synchronized void testIndex() throws Exception, RepositoryException {
 
-        IIndexedBucket<Birth> b = (IIndexedBucket<Birth>) repo.getBucket(bucket_name4,new BirthFactory(birthlabel.getId())); // TODO delete BirthTypeLabel and rest
+        IIndexedBucket<Birth> b = (IIndexedBucket<Birth>) repo.getBucket(indexed_bucket_name1,new BirthFactory(birthlabel.getId())); // TODO delete BirthTypeLabel and rest
 
         b.addIndex(BirthTypeLabel.SURNAME);
         int counter1 = EventImporter.importDigitisingScotlandRecords(b, BIRTH_RECORDS_PATH,birthlabel);
 
-        IBucketIndex index = b.getIndexT(BirthTypeLabel.SURNAME);
+        IBucketIndex index = b.getIndex(BirthTypeLabel.SURNAME);
 
         Set<String> keys = index.keySet();
         int counter2 = 0;

@@ -33,6 +33,9 @@ public class Pair<T extends ILXP> implements IPair<T> { //TODO fix up this
     //TODO all bodged below here
 
     @Override
+    public int getLabel() { return -1; }    // TODO write these!
+
+    @Override
     public int getId() {
         return 0;
     }
@@ -69,12 +72,8 @@ public class Pair<T extends ILXP> implements IPair<T> { //TODO fix up this
     }
 
     @Override
-    public ILXP convert(ILXP base) {
-        return null;
-    }
-
-    @Override
     public boolean checkConsistentWith(int label_id) throws IOException, PersistentObjectException {
         return false;
     }
+
 }

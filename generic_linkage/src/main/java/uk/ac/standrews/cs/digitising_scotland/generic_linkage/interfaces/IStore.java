@@ -28,5 +28,5 @@ public interface IStore {
      * @return an LXP record with the specified id, or null if the record cannot be found
      * Mirrors bucket operation of the same name
      */
-    ILXP get(int id) throws IOException, PersistentObjectException;
+    <T extends ILXP> T get(int id) throws IOException, PersistentObjectException;
 }

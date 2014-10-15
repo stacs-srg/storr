@@ -1,38 +1,44 @@
 package uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl;
 
+import org.json.JSONException;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.*;
-import uk.ac.standrews.cs.nds.persistence.PersistentObjectException;
 
+import java.io.File;
 import java.io.IOException;
-import java.util.List;
-import java.util.Set;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.*;
 
 /**
  * Created by al on 03/10/2014.
  */
-public class DirectoryBackedIndexedBucket<T> extends DirectoryBackedIndexedBucketLXP implements IIndexedBucket {
+public class DirectoryBackedIndexedBucket<T extends ILXP> extends DirectoryBackedBucket<T> implements IIndexedBucket<T> {
 
-    private final ILXPFactory tFactory;
+    private Map<String, IBucketIndex> indexes = new HashMap<>();
+
+    private static final String INDEX = "INDEX";
+    private static final String INDEX_DIR_NAME = "INDICES";
+
+    /**
+     * Creates a handle on a bucket.
+     * Assumes that bucket has been created already using a factory - i.e. the directory already exists.
+     *
+     * @param name      the name of the bucket (also used as directory name).
+     * @param base_path the repository path in which the bucket is created.
+     */
+    public DirectoryBackedIndexedBucket(final String name, final String base_path) throws IOException, RepositoryException {
+        super( name, base_path );
+        initIndexes();
+    }
 
     public DirectoryBackedIndexedBucket(final String name, final String base_path, ILXPFactory tFactory) throws IOException, RepositoryException {
-        super( name, base_path );
-        // code below here copied from DirectoryBackedBucket
-        this.tFactory = tFactory;
-        int type_label_id = this.getTypeLabelID();
-        if( type_label_id == -1 ) { // no index
-            throw new RepositoryException("no type label associated with bucket");
-        }
-        try {
-            if (!tFactory.checkConsistentWith(type_label_id)) {
-                throw new RepositoryException("incompatible types");
-            }
-        } catch (PersistentObjectException e) {
-            throw new RepositoryException( e.getMessage() );
-        }
+        super( name, base_path,tFactory );
+        initIndexes();
     }
 
     public static IBucket createBucket(final String name, IRepository repo, ILXPFactory tFactory ) throws RepositoryException  {
-        IBucketLXP base = DirectoryBackedBucketLXP.createBucket(name, repo);
+        DirectoryBackedBucket.createBucket(name, repo,tFactory);
         try {
             return new DirectoryBackedIndexedBucket(name, repo.getRepo_path(),tFactory );
         } catch (IOException e) {
@@ -40,28 +46,64 @@ public class DirectoryBackedIndexedBucket<T> extends DirectoryBackedIndexedBucke
         }
     }
 
+    private void initIndexes() throws IOException {
 
-    @Override
-    public void addIndex(String label) throws IOException {
-        super.addIndex(label);
+        String dirname = dirPath();
+        // Ensure that the index directory exists
+        File index = new File(dirname + File.separator + INDEX_DIR_NAME);
+        if (!index.isDirectory() && !index.mkdir()) {
+            throw new IOException("Index Directory: " + dirname + " does not exist and cannot create");
+        }
 
+        Iterator<File> iterator = FileIteratorFactory.createFileIterator(index, true, false);
+        while (iterator.hasNext()) {
+            File next = iterator.next();
+            indexes.put(next.getName(), new BucketIndex(next.getName(), next.toPath(), this));
+        }
     }
 
     @Override
-    public IBucketIndex getIndexT(String label) {
-        return new TypedBucketIndex( super.getIndex(label) );
+    public void addIndex(final String label) throws IOException {
+
+        Path path = Paths.get(this.filePath(INDEX_DIR_NAME + "/" + INDEX + label));
+
+        if (Files.exists(path)) {
+            throw new IOException("index exists");
+        } else {
+            Files.createDirectory(path); // create a directory to store the index
+            indexes.put(label, new BucketIndex(label, path, this)); // keep the in memory index list up to date
+        }
+    }
+
+    @Override
+    public IBucketIndex getIndex(final String label) {
+        return indexes.get(label);
     }
 
 
-    public IInputStream getInputStreamT() {
-        // We already know that the type is compatible - checked in constructor.
-        return new TypedInputStream( getInputStream(), tFactory );
+    @Override
+    public void put(final T record) throws IOException, JSONException {
+
+        Set<String> keys = indexes.keySet(); // all the keys currently being indexed
+        for (String key : keys) {
+            if (record.containsKey(key)) { // we are indexing this key
+                IBucketIndex index = indexes.get(key); // so get the index
+                index.add(record); // and add this record to the index for that key
+            }
+        }
+        super.put(record);
     }
 
 
-    public IOutputStream getOutputStreamT() {
+    public IInputStream getInputStream() throws IOException {
         // We already know that the type is compatible - checked in constructor.
-        return new TypedOutputStream( getOutputStream() );
+        return new BucketBackedInputStream( this,this.directory );
+    }
+
+
+    public IOutputStream getOutputStream() {
+        // We already know that the type is compatible - checked in constructor.
+        return new BucketBackedOutputStream( this );
     }
 
     @Override
@@ -70,32 +112,5 @@ public class DirectoryBackedIndexedBucket<T> extends DirectoryBackedIndexedBucke
     }
 
 
-    private class TypedBucketIndex implements IBucketIndex {
-        private final IBucketIndexLXP underlying;
 
-        public TypedBucketIndex(IBucketIndexLXP index) {
-             underlying = index;
-        }
-
-        @Override
-        public Set<String> keySet() throws IOException {
-            return underlying.keySet();
-        }
-
-        @Override
-        public IInputStream records(String value) throws IOException {
-            return new TypedInputStream<>( underlying.records(value),tFactory);
-        }
-
-
-        @Override
-        public List<Integer> values(String value) throws IOException {
-            return null;
-        }
-
-        @Override
-        public void add(ILXP record) throws IOException {
-
-        }
-    }
 }

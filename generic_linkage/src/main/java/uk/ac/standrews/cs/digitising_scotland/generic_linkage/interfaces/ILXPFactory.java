@@ -12,15 +12,15 @@ public interface ILXPFactory<T extends ILXP> {
     /*
      * create an instance of a <T extends ILXP> from the reader
      */
-    T create(int label_id, JSONReader reader) throws PersistentObjectException;
+    T create(int persistent_object_id, JSONReader reader) throws PersistentObjectException;
 
     /*
-     * create an instance of a <T extends ILXP> from an ILXP
+     * return true if the factory can create an instance with the specified label and false otherwise
      */
-    T convert( ILXP base );
+     boolean checkConsistentWith( int label_id ) throws IOException, PersistentObjectException;
 
     /*
-     * return true if the factory can create and instance with the specified label and false otherwise
+     * return the label id required by type T
      */
-    boolean checkConsistentWith( int label_id ) throws IOException, PersistentObjectException;
+    int getLabel();
 }

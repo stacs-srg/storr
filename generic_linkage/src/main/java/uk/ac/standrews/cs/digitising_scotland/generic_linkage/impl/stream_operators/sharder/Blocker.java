@@ -57,22 +57,22 @@ public abstract class Blocker<T extends ILXP> implements IBlocker<T> {
                 // Need to create a new bucket
                 if (output_repo.bucketExists(bucket_name)) {
                     try {
-                         output_repo.getBucket(bucket_name, factory).getOutputStreamT().add(record);
+                         output_repo.getBucket(bucket_name, factory).getOutputStream().add(record);
                     } catch (RepositoryException e) {
                         ErrorHandling.exceptionError(e, "RepositoryException obtaining bucket instance");
                     }
                 } else { // need to create it
                     try {
-                        output_repo.makeBucket(bucket_name, BucketKind.DIRECTORYBACKED, factory).getOutputStreamT().add(record);
+                        output_repo.makeBucket(bucket_name, BucketKind.DIRECTORYBACKED, factory).getOutputStream().add(record);
                     } catch (RepositoryException e) {
                         e.printStackTrace();
                     }
                 }
             } else { // we have seen this name before and hence have a cached bucket
-                bucket.getOutputStreamT().add(record);
+                bucket.getOutputStream().add(record);
             }
         }
     }
 
-    public abstract String[] determineBlockedBucketNamesForRecord(ILXP record);
+    public abstract String[] determineBlockedBucketNamesForRecord(T record);
 }

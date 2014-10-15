@@ -2,7 +2,7 @@ package uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl;
 
 import org.json.JSONException;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.types.Type;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IBucketLXP;
+import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IBucket;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXP;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ITypeLabel;
 import uk.ac.standrews.cs.digitising_scotland.util.ErrorHandling;
@@ -21,17 +21,17 @@ import java.util.Collection;
  */
 public class TypeLabel implements ITypeLabel {
 
-    private ILXP labels;
+    private ILXP lxp;
 
     public TypeLabel( ILXP labels ) {
-        this.labels = labels;
+        this.lxp = labels;
     }
 
-    public static TypeLabel createNewTypeLabel(String json_encoded_type_descriptor_file_name, IBucketLXP types_bucket) {
+    public static TypeLabel createNewTypeLabel(String json_encoded_type_descriptor_file_name, IBucket types_bucket) {
 
         try (BufferedReader reader = Files.newBufferedReader(Paths.get(json_encoded_type_descriptor_file_name), FileManipulation.FILE_CHARSET)) {
 
-           ILXP labels = new LXP( new JSONReader(reader) );
+           LXP labels = new LXP( new JSONReader(reader) );
            TypeLabel tl =  new TypeLabel( labels );
            types_bucket.put( labels );
            return tl;
@@ -49,15 +49,19 @@ public class TypeLabel implements ITypeLabel {
 
     @Override
     public Collection<String> getLabels() {
-        return labels.getKeys();
+        return lxp.getKeys();
     }
 
     @Override
-    public Type getFieldType(String label) {
-        return null;
+    public Type getFieldType(String label) throws KeyNotFoundException {
+        if( lxp.containsKey(label) ) {
+            String value = lxp.get(label);
+            return Type.SringToType(value);
+        }
+        else return Type.UNKNOWN;
     }
 
     public int getId() {
-        return labels.getId();
+        return lxp.getId();
     }
 }

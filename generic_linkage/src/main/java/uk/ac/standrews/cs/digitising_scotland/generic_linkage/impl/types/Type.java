@@ -8,4 +8,20 @@ package uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.types;
 public enum Type {
      UNKNOWN, STRING, INT, FLOAT ,REFERENCE;
 
+    public static Type SringToType(String value) {
+        if( STRING.name().equals(value) ) {
+            return STRING;
+        }
+        if( INT.name().equals(value) ) {
+            return INT;
+        }
+        if( FLOAT.name().equals(value) ) {
+            return FLOAT;
+        }
+        if( REFERENCE.name().equals(value) ) {
+            return REFERENCE;
+        }
+        return UNKNOWN;
+    }
+
 }
