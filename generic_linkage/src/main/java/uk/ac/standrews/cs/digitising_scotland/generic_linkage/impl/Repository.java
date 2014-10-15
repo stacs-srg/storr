@@ -6,8 +6,6 @@ import uk.ac.standrews.cs.nds.util.ErrorHandling;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.Writer;
-import java.lang.reflect.Method;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -87,41 +85,13 @@ public class Repository implements IRepository {
         }
     }
 
-
-    private void addBucketType(Path path, ILXPFactory<?> tFactory ) throws IOException {
-        // Extract content type of the bucket.
-
-        Class<? extends ILXPFactory> c = tFactory.getClass();
-
-        Method[] methods = c.getMethods();
-        for (Method m : methods) {
-            if( m.getName().equals("create") ) {   // we are interested in the create method - don't know how to extract it easier due to parameterisation
-                Class type = m.getReturnType();
-                String typeString = type.toString();
-
-                Path metapath = path.resolve("META");
-                FileManipulation.createDirectoryIfDoesNotExist(metapath);   // TODO move the labels in here too.
-
-                Path typepath = metapath.resolve("TYPE");
-                FileManipulation.createFileIfDoesNotExist((typepath));
-
-                // Now write the type into this file
-
-                try (Writer writer = Files.newBufferedWriter(typepath, FileManipulation.FILE_CHARSET)) {
-
-                    writer.write(typeString);
-                }
-            }
-        }
-    }
-
     @Override
     public boolean bucketExists(final String name) {
 
         return Files.exists(getBucketPath(name));
     }
 
-    private Path getBucketPath(final String name) { // TODO this is duplicate code.
+    private Path getBucketPath(final String name) {
 
         return Paths.get(repo_path).resolve(name);
     }

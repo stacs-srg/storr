@@ -166,7 +166,7 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
 
     public void setTypeLabelID(int type_label_id) throws IOException {
         if( this.type_label_id != -1 ) {
-            throw new IOException( "Type label already set"); // TODO consider changing to another exception
+            throw new IOException( "Type label already set");
         }
         this.type_label_id = type_label_id; // cache it and keep a persistent copy of the label.
         Path path = directory.toPath();
@@ -175,7 +175,7 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
 
         Path typepath = metapath.resolve("TYPELABEL");
         if( Files.exists(typepath) ) {
-            throw new IOException( "Type label already set"); // TODO consider changing to another exception
+            throw new IOException( "Type label already set");
         }
         FileManipulation.createFileIfDoesNotExist((typepath));
 
@@ -233,7 +233,7 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
         if( Files.exists( meta_path.resolve( BucketKind.INDIRECT.name() ) ) ) {
             return BucketKind.INDIRECT;
         }
-        return null; // TODO maybe not a good choice! doesn't happen currently!
+        return BucketKind.UNKNOWN;
 
     }
 }

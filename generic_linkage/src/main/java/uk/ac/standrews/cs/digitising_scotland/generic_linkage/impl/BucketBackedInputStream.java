@@ -10,7 +10,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
 
-public class BucketBackedInputStream<T extends ILXP> implements IInputStream<T> { // TODO need checking in iterators?
+public class BucketBackedInputStream<T extends ILXP> implements IInputStream<T> {
 
     private final IBucket<T> bucket;
     private File directory;

@@ -44,16 +44,9 @@ public class LXP implements ILXP {
                 this.put(key, value);
             }
 
-//            if (!checkConsistentWith(Integer.parseInt(get("TYPE")))) {                 // TODO this needs to be declared properly
-//                    throw new PersistentObjectException("incompatible with label");
-//            }
-
         } catch (JSONException e) {
             throw new PersistentObjectException(e);
         }
-//        } catch (KeyNotFoundException e) {
-//            throw new PersistentObjectException("No key found for type label");
-//        }
     }
 
     public LXP(JSONReader reader) throws PersistentObjectException {
