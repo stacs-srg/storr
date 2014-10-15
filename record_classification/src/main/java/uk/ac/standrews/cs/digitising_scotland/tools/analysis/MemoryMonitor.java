@@ -6,6 +6,9 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
 
 /**
@@ -13,6 +16,8 @@ import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
  * Memory usage is then written out to a file called "memoryUsage_" + a unique time.
  */
 public class MemoryMonitor implements Runnable {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(MemoryMonitor.class);
 
     /** The mxbean. */
     private MemoryMXBean mxbean;
@@ -48,7 +53,7 @@ public class MemoryMonitor implements Runnable {
                     Thread.sleep(1000);
                 }
                 catch (InterruptedException e) {
-                    e.printStackTrace();
+                    LOGGER.error(e.getMessage(), e.getCause());
                 }
             }
         }
@@ -63,7 +68,7 @@ public class MemoryMonitor implements Runnable {
         //MemoryMXBean
 
         mxbean = ManagementFactory.getMemoryMXBean();
-        System.out.println(dateFormat.format(cal.getTime()));
+        LOGGER.info(dateFormat.format(cal.getTime()));
     }
 
     /**

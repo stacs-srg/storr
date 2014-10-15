@@ -4,16 +4,14 @@ import java.io.BufferedWriter;
 import java.io.Closeable;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.Set;
 
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.classification.Classification;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeTriple;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
-import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
+import uk.ac.standrews.cs.digitising_scotland.tools.ReaderWriterFactory;
 
 /**
  * The Class HumanReadableWriter formats the fields in a record into a human readable format.
@@ -33,9 +31,7 @@ public class HumanReadableWriter extends OutputDataFormatter implements Closeabl
      */
     public HumanReadableWriter(final File outputPath, final String delimiter) throws FileNotFoundException, UnsupportedEncodingException {
 
-        FileOutputStream fileOutputStream = new FileOutputStream(outputPath);
-        OutputStreamWriter outputStream = new OutputStreamWriter(fileOutputStream, FileManipulation.FILE_CHARSET);
-        writer = new BufferedWriter(outputStream);
+        writer = (BufferedWriter) ReaderWriterFactory.createBufferedWriter(outputPath);
         setDelimier(delimiter);
     }
 
@@ -80,14 +76,14 @@ public class HumanReadableWriter extends OutputDataFormatter implements Closeabl
     public String getCodes(final Record record) {
 
         StringBuilder sb = new StringBuilder();
-        Set<CodeTriple> classifications = record.getCodeTriples();
+        Set<Classification> classifications = record.getClassifications();
 
-        for (CodeTriple codeTriple : classifications) {
+        for (Classification codeTriple : classifications) {
 
             Code code = codeTriple.getCode();
             String codeAsString = code.getCodeAsString();
             String description = getDesciption(record, code);
-            sb.append(codeAsString + getDelimiter() + description + getDelimiter());
+            sb.append(codeAsString).append(getDelimiter()).append(description).append(getDelimiter());
 
         }
 

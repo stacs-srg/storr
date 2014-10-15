@@ -12,11 +12,11 @@ import org.apache.lucene.analysis.standard.StandardTokenizer;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.util.Version;
 
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
 
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multiset;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.resolver.Interfaces.SubsetEnumerator;
 
 /**
  * This class creates and stores the nGrams created from a record and provides
@@ -26,9 +26,18 @@ import com.google.common.collect.Multiset;
  *
  *
  */
-public class NGramSubstrings implements Iterable<TokenSet> {
+public class NGramSubstrings implements Iterable<TokenSet>, SubsetEnumerator<TokenSet> {
+
+    //TODO - refactor this class!
 
     private final List<TokenSet> grams;
+
+    @Override
+    public Multiset<TokenSet> enumerate(TokenSet tokenSet) throws IOException {
+        Multiset<TokenSet> multiset = HashMultiset.create();
+        multiset.addAll(splitIntoNGrams(tokenSet.toString()));
+        return multiset;
+    }
 
     /**
      * Initalises and {@link NGramSubstrings} object with the input string split
@@ -48,29 +57,11 @@ public class NGramSubstrings implements Iterable<TokenSet> {
      * Initalises and {@link NGramSubstrings} object with the input string split
      * into grams.
      *
-     * @param inputTokenSet
      *            the input tokenSet to create Ngrams from.
-     * @throws IOException
      *             IO error
      */
-    public NGramSubstrings(final TokenSet inputTokenSet) throws IOException {
-
-        this.grams = splitIntoNGrams(inputTokenSet.toString());
-    }
-
-    /**
-     * Initalises and {@link NGramSubstrings} object with the original data of
-     * the record split into grams.
-     *
-     * @param record
-     *            the input record to create Ngrams from.
-     * @throws IOException
-     *             IO error
-     */
-    public NGramSubstrings(final Record record) throws IOException {
-
-        String string = record.getDescription();
-        this.grams = splitIntoNGrams(string);
+    public NGramSubstrings() {
+        this.grams = new ArrayList<>();
     }
 
     /**
@@ -207,5 +198,4 @@ public class NGramSubstrings implements Iterable<TokenSet> {
 
         return grams.iterator();
     }
-
 }

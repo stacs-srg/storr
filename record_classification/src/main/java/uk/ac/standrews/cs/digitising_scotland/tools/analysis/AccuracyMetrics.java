@@ -254,10 +254,10 @@ public class AccuracyMetrics {
      */
     public String toString() {
 
-        String details = " True Positive: " + Math.round(getTP() * ONETHOUSAND) / ONETHOUSANDD + " False Positive: " + Math.round(getFP() * ONETHOUSAND) / ONETHOUSANDD + " False Negative: " + Math.round(getFN() * ONETHOUSAND) / ONETHOUSANDD + " True Negative: " + Math.round(getTN() * ONETHOUSAND)
+       return " True Positive: " + Math.round(getTP() * ONETHOUSAND) / ONETHOUSANDD + " False Positive: " + Math.round(getFP() * ONETHOUSAND) / ONETHOUSANDD + " False Negative: " + Math.round(getFN() * ONETHOUSAND) / ONETHOUSANDD + " True Negative: " + Math.round(getTN() * ONETHOUSAND)
                         / ONETHOUSANDD + " Precision: " + Math.round(getPrecision() * ONETHOUSAND) / ONETHOUSANDD + " Recall: " + Math.round(getRecall() * ONETHOUSAND) / ONETHOUSANDD + " Accuracy:  " + Math.round(getAccuracy() * ONETHOUSAND) / ONETHOUSANDD + " F1: "
                         + Math.round(getF1() * ONETHOUSAND) / ONETHOUSANDD + " Error: " + Math.round(getError() * ONETHOUSAND) / ONETHOUSANDD + " Total: " + n;
-        return details;
+       
     }
 
     /**

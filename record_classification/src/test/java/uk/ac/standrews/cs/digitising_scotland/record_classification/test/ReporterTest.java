@@ -20,9 +20,7 @@ public class ReporterTest {
     public void test() {
 
         Reporter r = Reporter.getInstance();
-        System.out.println(r.toString());
         Reporter d = Reporter.getInstance();
-        System.out.println(d.toString());
         assertEquals(r, d);
     }
 

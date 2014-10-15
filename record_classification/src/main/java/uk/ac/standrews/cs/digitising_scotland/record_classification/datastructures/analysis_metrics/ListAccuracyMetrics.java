@@ -1,5 +1,7 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.analysis_metrics;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -8,9 +10,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeTriple;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.classification.Classification;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
-import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
+
+import com.google.common.io.Files;
 
 /**
  * Class representing the statistics about a bucket of Records.
@@ -55,12 +58,12 @@ public class ListAccuracyMetrics {
     /**
      * The micro recall.
      */
-    private double microRecall;
+    private double microRecall = -1;
 
     /**
      * The macro precision.
      */
-    private double macroPrecision;
+    private double macroPrecision = -1;
 
     /**
      * The macro recall.
@@ -88,15 +91,20 @@ public class ListAccuracyMetrics {
     /** The over under predicion matrix. */
     private int[][] overUnderPredictionMatrix;
 
+    private CodeMetrics metrics;
+
+    private Bucket bucket;
+
     /**
      * Instantiates a new list accuracy metrics.
      * 
      * @param listOfRecrods
      *            the list of recrods
      */
-    public ListAccuracyMetrics(final List<Record> listOfRecrods) {
+    public ListAccuracyMetrics(final List<Record> listOfRecrods, final CodeMetrics metrics) {
 
-        this(new Bucket(listOfRecrods));
+        this(new Bucket(listOfRecrods), metrics);
+
     }
 
     /**
@@ -105,8 +113,9 @@ public class ListAccuracyMetrics {
      * @param bucket
      *            the bucket of records
      */
-    public ListAccuracyMetrics(final Bucket bucket) {
+    public ListAccuracyMetrics(final Bucket bucket, final CodeMetrics metrics) {
 
+        this.bucket = bucket;
         recordsInBucket = bucket.size();
         averageConfidence = calculateAverageConfidence(bucket);
         numConfidenceOfOne = calculateNumConfidenceOfOne(bucket);
@@ -116,6 +125,17 @@ public class ListAccuracyMetrics {
         countNumClassifications(bucket);
         int maxCodes = calculateMaxCodes(bucket);
         overUnderPredictionMatrix = calculateOverPredictionMatrix(bucket, maxCodes);
+        if (metrics != null) {
+            this.metrics = metrics;
+            microPrecision = metrics.getMicroPrecision();
+            microRecall = metrics.getMicroRecall();
+        }
+
+    }
+
+    public ListAccuracyMetrics(final Bucket bucket) {
+
+        this(bucket, null);
     }
 
     /**
@@ -132,7 +152,7 @@ public class ListAccuracyMetrics {
         overUnderPredictionMatrix = new int[maxCodes + 1][maxCodes + 1];
         for (Record record : bucket) {
             int goldStandardSize = record.getGoldStandardClassificationSet().size();
-            int actualSize = record.getCodeTriples().size();
+            int actualSize = record.getClassifications().size();
             overUnderPredictionMatrix[actualSize][goldStandardSize]++;
         }
         return overUnderPredictionMatrix;
@@ -153,8 +173,8 @@ public class ListAccuracyMetrics {
             if (record.getGoldStandardClassificationSet().size() > maxCodes) {
                 maxCodes = record.getGoldStandardClassificationSet().size();
             }
-            if (record.getCodeTriples().size() > maxCodes) {
-                maxCodes = record.getCodeTriples().size();
+            if (record.getClassifications().size() > maxCodes) {
+                maxCodes = record.getClassifications().size();
             }
         }
 
@@ -174,14 +194,14 @@ public class ListAccuracyMetrics {
         int exactMatch = 0;
 
         for (Record record : bucket) {
-            final Iterator<CodeTriple> iterator = record.getCodeTriples().iterator();
+            final Iterator<Classification> iterator = record.getClassifications().iterator();
             double totalConfidence = 0;
             while (iterator.hasNext()) {
-                CodeTriple codeTriple = iterator.next();
+                Classification codeTriple = iterator.next();
                 totalConfidence += codeTriple.getConfidence();
             }
 
-            if ((totalConfidence / (double) record.getCodeTriples().size()) % 2 == 0) {
+            if ((totalConfidence / (double) record.getClassifications().size()) % 2 == 0) {
                 exactMatch++;
             }
         }
@@ -280,10 +300,12 @@ public class ListAccuracyMetrics {
      * @param pathToGraph
      *            the path to graph
      */
-    public void generateMarkDownSummary(final String pathToExperiemntFolder, final String pathToGraph) {
+    public String generateMarkDownSummary(final String pathToExperiemntFolder, final String pathToGraph) {
 
         StringBuilder sb = new StringBuilder();
         sb.append("#Classification Report    \n" + "##Summary    \n");
+        sb.append("Micro Precision: ").append(getMicroPrecision()).append("   \n");
+        sb.append("Micro Recall: ").append(getMicroRecall()).append("   \n");
         sb.append("Total records in bucket: ").append(recordsInBucket).append("   \n");
         sb.append("Average confidence: ").append(averageConfidence).append("    \n");
         sb.append("Total number of classifications: ").append(numConfidenceNotOne + numConfidenceOfOne).append("   \n");
@@ -303,10 +325,17 @@ public class ListAccuracyMetrics {
         sb.append("![Graph Matrix][").append(pathToGraph).append("]     \n");
         sb.append("   \n\n");
         sb.append("[").append(pathToGraph).append("]: ").append(pathToGraph).append(".png \"Graph Matrix\"    \n");
-        // sb.append("![Graph](graph.png)");
-        Utils.writeToFile(sb.toString(), pathToExperiemntFolder + "/Reports/summary.md", true);
-        Utils.writeToFile(getMatrixAsString(overUnderPredictionMatrix, ",", false), pathToExperiemntFolder + "/Data/classificationCountMatrix.csv");
+        return sb.toString();
+    }
 
+    private void createFolder(final String fileName) {
+
+        try {
+            Files.createParentDirs(new File(fileName));
+        }
+        catch (IOException e) {
+            LOGGER.error(e.getMessage(), e);
+        }
     }
 
     /**
@@ -322,7 +351,7 @@ public class ListAccuracyMetrics {
         twoClassifications = 0;
         moreThanTwoClassifications = 0;
         for (Record record : bucket) {
-            Set<CodeTriple> setCodeTriples = record.getCodeTriples();
+            Set<Classification> setCodeTriples = record.getClassifications();
             int size = setCodeTriples.size();
             if (size < 1) {
                 unclassified++;
@@ -351,14 +380,14 @@ public class ListAccuracyMetrics {
         double propGoldPredicted = 0.;
 
         for (Record record : bucket) {
-            Set<CodeTriple> setCodeTriples = record.getCodeTriples();
-            Set<CodeTriple> goldStandardTriples = record.getGoldStandardClassificationSet();
+            Set<Classification> setCodeTriples = record.getClassifications();
+            Set<Classification> goldStandardTriples = record.getGoldStandardClassificationSet();
             if (goldStandardTriples.size() < 1) {
                 break;
             }
             int count = 0;
-            for (CodeTriple goldTriple : goldStandardTriples) {
-                for (CodeTriple classification : setCodeTriples) {
+            for (Classification goldTriple : goldStandardTriples) {
+                for (Classification classification : setCodeTriples) {
                     if (goldTriple.getCode() == classification.getCode()) {
                         count++;
                     }
@@ -382,8 +411,8 @@ public class ListAccuracyMetrics {
         int totallookup = 0;
 
         for (Record record : bucket) {
-            Set<CodeTriple> setCodeTriples = record.getCodeTriples();
-            for (CodeTriple classification : setCodeTriples) {
+            Set<Classification> setCodeTriples = record.getClassifications();
+            for (Classification classification : setCodeTriples) {
                 if (classification.getConfidence() == 1) {
                     totallookup++;
                 }
@@ -406,8 +435,8 @@ public class ListAccuracyMetrics {
         int totalMi = 0;
 
         for (Record record : bucket) {
-            Set<CodeTriple> setCodeTriples = record.getCodeTriples();
-            for (CodeTriple classification : setCodeTriples) {
+            Set<Classification> setCodeTriples = record.getClassifications();
+            for (Classification classification : setCodeTriples) {
                 if (classification.getConfidence() != 1) {
                     totalMi++;
                 }
@@ -431,8 +460,8 @@ public class ListAccuracyMetrics {
         double totalMeasurements = 0;
 
         for (Record record : bucket) {
-            Set<CodeTriple> setCodeTriples = record.getCodeTriples();
-            for (CodeTriple codeTriple : setCodeTriples) {
+            Set<Classification> setCodeTriples = record.getClassifications();
+            for (Classification codeTriple : setCodeTriples) {
                 totalConfidence += codeTriple.getConfidence();
                 totalMeasurements++;
 
@@ -626,5 +655,20 @@ public class ListAccuracyMetrics {
     public void setCodedBySubStringMatch(final int codedBySubStringMatch) {
 
         this.codedExactMatch = codedBySubStringMatch;
+    }
+
+    public CodeMetrics getMetrics() {
+
+        return metrics;
+    }
+
+    public int[][] getOverUnderPredictionMatrix() {
+
+        return overUnderPredictionMatrix.clone();
+    }
+
+    public Bucket getBucket() {
+
+        return bucket;
     }
 }

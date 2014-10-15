@@ -16,7 +16,9 @@
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.model;
 
+import org.junit.Ignore;
 import org.junit.Test;
+
 import uk.ac.standrews.cs.digitising_scotland.population_model.organic.OrganicPerson;
 import uk.ac.standrews.cs.digitising_scotland.util.DateManipulation;
 
@@ -425,12 +427,14 @@ public abstract class GeneralPopulationStructureTests {
         if (death_date != null) {
             final List<Integer> partnership_ids = person.getPartnerships();
             if (partnership_ids != null) {
+
                 for (final int partnership_id : partnership_ids) {
 
                     final IPartnership partnership = population.findPartnership(partnership_id);
                     final Date marriage_date = partnership.getMarriageDate();
-
-                    assertTrue(DateManipulation.differenceInDays(marriage_date, death_date) >= 0);
+                    if (marriage_date != null) {
+                        assertTrue(DateManipulation.differenceInDays(marriage_date, death_date) >= 0);
+                    }
                 }
             }
         }

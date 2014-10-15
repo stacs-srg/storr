@@ -112,7 +112,7 @@ public class HiddenMarkovModel {
         LOGGER.info("num of states: " + hmm.numStates());
         LOGGER.info("states are: ");
         for (int j = 0; j < hmm.numStates(); j++) {
-            System.out.println(hmm.getState(j).getName());
+            LOGGER.info(hmm.getState(j).getName());
         }
 
         //   i.addThruPipe(new LineGroupIterator(new BufferedReader(new InputStreamReader(new FileInputStream(testingFilename))), Pattern.compile("^\\s*$"), true));

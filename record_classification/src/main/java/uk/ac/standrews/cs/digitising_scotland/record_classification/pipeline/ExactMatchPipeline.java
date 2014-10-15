@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.lookup.ExactMatchClassifier;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeTriple;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.classification.Classification;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
 
@@ -16,12 +16,14 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
  * The Class ExactMatchPipeline us a holder class for an {@link ExactMatchClassifier}.
  * Provides convenience methods for classifying records and buckets.
  */
-public class ExactMatchPipeline {
+public class ExactMatchPipeline implements IPipeline {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ExactMatchPipeline.class);
 
     /** The exact match classifier. */
     private ExactMatchClassifier classifier;
+
+    private Bucket fullyClassified;
 
     /**
      * Instantiates a new exact match pipeline.
@@ -31,6 +33,7 @@ public class ExactMatchPipeline {
     public ExactMatchPipeline(final ExactMatchClassifier exactMatchClassifier) {
 
         this.classifier = exactMatchClassifier;
+        fullyClassified = new Bucket();
     }
 
     /**
@@ -45,39 +48,57 @@ public class ExactMatchPipeline {
      */
     public Bucket classify(final Bucket bucket) throws IOException {
 
-        Bucket classified = new Bucket();
-        int count = 0;
-        int match = 0;
+        Bucket partialClassified = new Bucket();
+
         for (Record record : bucket) {
-            count++;
-            LOGGER.info("Exact Matching record " + count + " of " + bucket.size());
-            final Set<CodeTriple> result = classify(record);
-            if (result != null) {
-                match++;
-                record.addAllCodeTriples(result);
-                classified.addRecordToBucket(record);
+
+            classifyRecord(record);
+
+            if (record.isFullyClassified()) {
+                fullyClassified.addRecordToBucket(record);
             }
+            else {
+                partialClassified.addRecordToBucket(record);
+            }
+
         }
-        LOGGER.info("Total exact matched = " + match + "/" + bucket.size());
-        return classified;
+
+        LOGGER.info("Size of fully classified bucket = " + fullyClassified.size());
+
+        return partialClassified;
+    }
+
+    protected void classifyRecord(final Record record) throws IOException {
+
+        for (String description : record.getDescription()) {
+            classifyDescription(record, description);
+        }
+    }
+
+    private void classifyDescription(final Record record, final String description) throws IOException {
+
+        final Set<Classification> result = classify(description);
+        if (result != null) {
+            record.addClassificationsToDescription(description, result);
+        }
     }
 
     /**
-     * Returns the classification of a {@link Record} as a Set of
-     * {@link CodeTriple}.
-     * 
-     * @param record
-     *            to classify
-     * @return Set<CodeTriple> the classifications
-     * @throws IOException
-     *             indicates an I/O Error
+     * Classifies a String, which should correspond to a description, to a set of {@link Classification} objects.
+     * @param description String to classify
+     * @return A set of {@link Classification}s that contain the code, confidence and tokens used to produce classification.
+     * @throws IOException I/O Exception
      */
-    public Set<CodeTriple> classify(final Record record) throws IOException {
+    protected Set<Classification> classify(final String description) throws IOException {
 
-        TokenSet cleanedTokenSet = new TokenSet(record.getDescription());
+        return classifier.classifyTokenSetToCodeTripleSet(new TokenSet(description));
 
-        return classifier.classifyTokenSetToCodeTripleSet(cleanedTokenSet);
+    }
 
+    @Override
+    public Bucket getSuccessfullyClassified() {
+
+        return fullyClassified;
     }
 
 }

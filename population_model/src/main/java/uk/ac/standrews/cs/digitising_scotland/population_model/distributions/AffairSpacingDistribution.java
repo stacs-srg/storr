@@ -29,8 +29,8 @@ import uk.ac.standrews.cs.digitising_scotland.population_model.organic.OrganicPa
  * @author Tom Dalton (tsd4@st-andrews.ac.uk)
  */
 public final class AffairSpacingDistribution extends NormalDistribution {
-    
-    private static final int STANDARD_DEVIATION_FACTOR = 4;
+
+    private static final double STANDARD_DEVIATION_FACTOR = 4;
 
     /**
      * Sets up an affair spacing distribution for the given partnership. 
@@ -41,8 +41,8 @@ public final class AffairSpacingDistribution extends NormalDistribution {
      * @return The constructed instance of AffairSpacingDistribution.
      */
     public static AffairSpacingDistribution affairDistributionFactory(final OrganicPartnership partnership, final Random random) {
-        int midPoint = (partnership.getTimeline().getEndDate() - partnership.getTimeline().getStartDay()) / 2;
-        int mean = partnership.getTimeline().getStartDay() + midPoint;
+        int midPoint = (partnership.getEndDate() - partnership.getParntershipDay()) / 2;
+        int mean = partnership.getParntershipDay() + midPoint;
         try {
             return new AffairSpacingDistribution(mean, midPoint / STANDARD_DEVIATION_FACTOR, random);
         } catch (NegativeDeviationException e) {

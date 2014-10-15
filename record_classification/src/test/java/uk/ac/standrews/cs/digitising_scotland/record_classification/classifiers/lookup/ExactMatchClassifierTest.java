@@ -2,16 +2,15 @@ package uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers
 
 import java.io.File;
 import java.util.List;
-import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeTriple;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.RecordFactory;
 
@@ -30,7 +29,6 @@ public class ExactMatchClassifierTest {
 
     /** The exact match classifier. */
     private ExactMatchClassifier exactMatchClassifier;
-
 
     /**
      * Sets the up.
@@ -65,50 +63,6 @@ public class ExactMatchClassifierTest {
         train();
         Assert.assertNotNull(exactMatchClassifier.toString());
 
-    }
-
-    /**
-     * Test classify record.
-     *
-     * @throws Exception the exception
-     */
-    @Test
-    public void testClassifyRecord() throws Exception {
-
-        ExactMatchClassifier exactMatchClassifer = train();
-        for (Record record : testingBucket) {
-            Record classifiedRecord = exactMatchClassifer.classify(record);
-            Set<CodeTriple> codeTriples = classifiedRecord.getCodeTriples();
-            if (!codeTriples.isEmpty()) {
-                for (CodeTriple codeTriple : codeTriples) {
-                    Assert.assertEquals(codeTriple.getConfidence(), 1.0, 0.01);
-
-                }
-            }
-        }
-
-    }
-
-    /**
-     * Test classify bucket.
-     *
-     * @throws Exception the exception
-     */
-    @Test
-    public void testClassifyBucket() throws Exception {
-
-        ExactMatchClassifier exactMatchClassifer = train();
-        Bucket classifiedBucket = exactMatchClassifer.classify(testingBucket);
-
-        for (Record record : classifiedBucket) {
-            Set<CodeTriple> codeTriples = record.getCodeTriples();
-            if (!codeTriples.isEmpty()) {
-                for (CodeTriple codeTriple : codeTriples) {
-                    Assert.assertEquals(codeTriple.getConfidence(), 1.0, 0.01);
-
-                }
-            }
-        }
     }
 
     /**

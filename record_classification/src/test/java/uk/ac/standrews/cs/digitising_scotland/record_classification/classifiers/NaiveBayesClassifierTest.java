@@ -9,18 +9,18 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 
+import uk.ac.standrews.cs.digitising_scotland.record_classification.legacy.naivebayes.NaiveBayesClassifier;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Pair;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeTriple;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.RecordFactory;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.vectors.VectorFactory;
 
 /**
  * The Class NaiveBayesClassifierTest.
  */
+//FIXME
 public class NaiveBayesClassifierTest {
 
     /** The bucket a. */
@@ -32,7 +32,7 @@ public class NaiveBayesClassifierTest {
     /** The list of records. */
     private List<Record> listOfRecords;
 
-    // FIXME  private ClassifierTestingHelper helper = new ClassifierTestingHelper();
+    private ClassifierTestingHelper helper = new ClassifierTestingHelper();
 
     /**
      * Setup. Run before each test.
@@ -81,15 +81,14 @@ public class NaiveBayesClassifierTest {
     }
 
     /**
-     * Trains and returns a {@link NaiveBayesClassifier}.
+     * Trains and returns a {@link uk.ac.standrews.cs.digitising_scotland.record_classification.legacy.naivebayes.NaiveBayesClassifier}.
      *
      * @return the naive bayes classifier
      * @throws Exception the exception
      */
     private NaiveBayesClassifier train() throws Exception {
 
-        VectorFactory vectorFactory = new VectorFactory(bucketB);
-        NaiveBayesClassifier nbc = new NaiveBayesClassifier(vectorFactory);
+        NaiveBayesClassifier nbc = new NaiveBayesClassifier();
         nbc.train(bucketB);
         return nbc;
     }
@@ -105,23 +104,8 @@ public class NaiveBayesClassifierTest {
         File inputFileTraining = new File(getClass().getResource("/occupationTestFormatPipe.txt").getFile());
         List<Record> listOfRecordsTraining = RecordFactory.makeUnCodedRecordsFromFile(inputFileTraining);
         bucketB = new Bucket(listOfRecordsTraining);
-        //FIXME   bucketB = helper.giveBucketTestingOccCodes(bucketB);
-        addVectorsToBucket(bucketB);
+        bucketB = helper.giveBucketTestingOccCodes(bucketB);
         return bucketB;
-    }
-
-    /**
-     * Tests the adding of vectors to records in a bucket.
-     *
-     * @param bucket the bucket
-     * @throws Exception if something goes wrong....
-     */
-    public void addVectorsToBucket(final Bucket bucket) throws Exception {
-
-        //        LevenShteinCleaner.cleanData(bucket);
-
-        System.out.println(bucket.toString());
-
     }
 
     /**
@@ -142,9 +126,6 @@ public class NaiveBayesClassifierTest {
 
         //        LevenShteinCleaner.cleanData(bucketA);
 
-        System.out.println(bucketA.toString());
-        nbc.classify(bucketA);
-        System.out.println(bucketA);
     }
 
     /**
@@ -163,16 +144,10 @@ public class NaiveBayesClassifierTest {
         listOfRecords = RecordFactory.makeUnCodedRecordsFromFile(inputFile);
         bucketA.addCollectionOfRecords(listOfRecords);
 
-        //        LevenShteinCleaner.cleanData(bucketA);
-
-        System.out.println(bucketA.toString());
         for (Record r : bucketA) {
             TokenSet tokenSet = new TokenSet(r.getOriginalData().getDescription());
             Pair<Code, Double> result = nbc.classify(new TokenSet(r.getOriginalData().getDescription()));
-            r.addCodeTriples(new CodeTriple(result.getLeft(), tokenSet, result.getRight()));
         }
-
-        System.out.println(bucketA);
 
     }
 }

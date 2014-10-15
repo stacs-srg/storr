@@ -1,26 +1,27 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.datacleaning;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datareaders.AbstractFormatConverter;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datareaders.LongFormatConverter;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeTriple;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.classification.Classification;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeDictionary;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeNotValidException;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.exceptions.InputFormatException;
+import uk.ac.standrews.cs.digitising_scotland.tools.ReaderWriterFactory;
 import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
 import uk.ac.standrews.cs.digitising_scotland.tools.analysis.UniqueWordCounter;
 
@@ -34,12 +35,14 @@ import com.google.common.collect.Multiset;
  */
 public abstract class AbstractDataCleaner {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractDataCleaner.class);
+
+    private AbstractFormatConverter formatConverter = new LongFormatConverter();
+
     /**
      * The Constant TOKENLIMIT. The default is 4 but this can be changed by calling setTokenLimit.
      */
     private static int tokenLimit = 4;
-
-    AbstractFormatConverter formatConverter = new LongFormatConverter();
 
     /**
      * The word multiset.
@@ -63,13 +66,16 @@ public abstract class AbstractDataCleaner {
      *             states the frequency of occurrence below which we start correcting tokens.
      * @throws IOException Indicates an IO Error
      * @throws InputFormatException Indicates an error with the input file format
+     * @throws CodeNotValidException
      */
-    public void runOnFile(final String... args) throws IOException, InputFormatException {
+    public void runOnFile(final String... args) throws IOException, InputFormatException, CodeNotValidException {
 
         File file = new File(args[0]);
         File correctedFile = new File(args[1]);
         setTokenLimit(args);
-        List<Record> records = formatConverter.convert(file);
+        File codeDictionaryFile = new File(args[3]);
+        CodeDictionary codeDictionary = new CodeDictionary(codeDictionaryFile);
+        List<Record> records = formatConverter.convert(file, codeDictionary);
         Bucket bucket = new Bucket(records);
         buildTokenOccurrenceMap(bucket);
         buildCorrectionMap(bucket);
@@ -85,8 +91,11 @@ public abstract class AbstractDataCleaner {
 
         correctionMap = new HashMap<>();
         for (Record record : bucket) {
-            TokenSet tokenSet = new TokenSet(record.getOriginalData().getDescription());
-            addToCorrectionMap(tokenSet);
+            for (String description : record.getDescription()) {
+                TokenSet tokenSet = new TokenSet(description);
+                addToCorrectionMap(tokenSet);
+            }
+
         }
     }
 
@@ -116,8 +125,8 @@ public abstract class AbstractDataCleaner {
         wordMultiset = HashMultiset.create();
 
         for (Record r : bucket) {
-            Set<CodeTriple> set = r.getGoldStandardClassificationSet();
-            for (CodeTriple codeTriple : set) {
+            Set<Classification> set = r.getGoldStandardClassificationSet();
+            for (Classification codeTriple : set) {
                 UniqueWordCounter.countWordsInLine(wordMultiset, codeTriple.getTokenSet());
             }
         }
@@ -132,8 +141,8 @@ public abstract class AbstractDataCleaner {
      */
     private void correctTokensInFile(final File file, final File correctedFile) throws IOException {
 
-        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"));
-        Writer bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(correctedFile.getAbsoluteFile()), "UTF-8"));
+        BufferedReader br = ReaderWriterFactory.createBufferedReader(file);
+        Writer bw = ReaderWriterFactory.createBufferedWriter(correctedFile.getAbsoluteFile());
         String line;
         while ((line = br.readLine()) != null) {
             String correctedLine = correctLine(line);
@@ -192,10 +201,11 @@ public abstract class AbstractDataCleaner {
 
         try {
             tokenLimit = Integer.parseInt(args[2]);
-            System.out.println("TOKENLIMIT set to " + tokenLimit);
+            LOGGER.info("TOKENLIMIT set to " + tokenLimit);
         }
         catch (ArrayIndexOutOfBoundsException e) {
-            System.out.println("No TOKENLIMIT argument. Default is " + tokenLimit);
+            LOGGER.error("No TOKENLIMIT argument. Default is " + tokenLimit);
+            LOGGER.error(e.toString());
         }
     }
 
@@ -206,7 +216,7 @@ public abstract class AbstractDataCleaner {
     public static void setTokenLimit(final int tokenLimit) {
 
         AbstractDataCleaner.tokenLimit = tokenLimit;
-        System.out.println("TOKENLIMIT set to " + tokenLimit);
+        LOGGER.info("TOKENLIMIT set to " + tokenLimit);
 
     }
 

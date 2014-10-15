@@ -15,12 +15,17 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Adds a spelling mistake to a string by swapping the two 'middle' characters in a randomly string.
  * 
  * @author jkc25
  */
 public class SpellingMistakeFactory {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(SpellingMistakeFactory.class);
 
     static final int ASCIIOFFSET = 97;
 
@@ -65,7 +70,7 @@ public class SpellingMistakeFactory {
         for (int i = 0; i < inputSplit.length; i++) {
             output = output.concat(inputSplit[i] + " ");
         }
-        System.out.println(output.trim());
+        LOGGER.info(output.trim());
         return output.trim();
     }
 
@@ -124,7 +129,7 @@ public class SpellingMistakeFactory {
         for (int i = 0; i < inputSplit.length; i++) {
             output = output.concat(inputSplit[i] + " ");
         }
-        System.out.println(output.trim());
+        LOGGER.info(output.trim());
         return output.trim();
     }
 
@@ -175,7 +180,7 @@ public class SpellingMistakeFactory {
                     if (decisionInt < spellingMistakePct) {
                         String newContent = spf.addMistakeSwap(content);
                         output += feature + "\t" + newContent + "\t" + (docID + i) + "\n";
-                        System.out.println(changed++);
+                        LOGGER.info("Changed: " + changed++);
                     }
                     else {
                         stringBuilder.append(feature + "\t" + content + "\t" + (docID + i) + "\n");
@@ -184,7 +189,7 @@ public class SpellingMistakeFactory {
                 s.close();
             }
             catch (FileNotFoundException e) {
-                e.printStackTrace();
+                LOGGER.error(e.getMessage(), e);
                 return false;
             }
             output = stringBuilder.toString();

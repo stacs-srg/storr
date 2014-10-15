@@ -34,7 +34,7 @@ public class IDFactory {
         try {
             resetId();
         }
-        catch (final Throwable e) {
+        catch (final Exception e) {
             ErrorHandling.exceptionError(e, "Cannot recover persistent id");
         }
     }

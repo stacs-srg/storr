@@ -8,8 +8,12 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
 
@@ -23,7 +27,8 @@ import com.google.common.base.Charsets;
 public class HumanCodingAnalyser {
 
     private File inputFile;
-    private HashMap<String, HashMap<String, Integer>> inputMap;
+    private Map<String, Map<String, Integer>> inputMap;
+    private static final Logger LOGGER = LoggerFactory.getLogger(HumanCodingAnalyser.class);
 
     /**
      * Constructs a {@link HumanCodingAnalyser} class witht the given input file.
@@ -32,7 +37,7 @@ public class HumanCodingAnalyser {
     public HumanCodingAnalyser(final File inputFile) {
 
         this.inputFile = inputFile;
-        this.inputMap = new HashMap<String, HashMap<String, Integer>>();
+        this.inputMap = new HashMap<String, Map<String, Integer>>();
         this.inputMap = populateMap(this.inputFile, this.inputMap);
         // printContents();
 
@@ -42,7 +47,7 @@ public class HumanCodingAnalyser {
      * Returns the inputMap that contains the inputs mapped to the varying output classes.
      * @return input map <input class <outputclass, count>>
      */
-    public HashMap<String, HashMap<String, Integer>> getInputMap() {
+    public Map<String, Map<String, Integer>> getInputMap() {
 
         return inputMap;
     }
@@ -55,7 +60,7 @@ public class HumanCodingAnalyser {
      * @param inputFile file containing the data in the above format.
      * @return a populated hashMap of unique input strings a counts of each output code
      */
-    private HashMap<String, HashMap<String, Integer>> populateMap(final File inputFile, final HashMap<String, HashMap<String, Integer>> inputMap) {
+    private Map<String, Map<String, Integer>> populateMap(final File inputFile, final Map<String, Map<String, Integer>> inputMap) {
 
         BufferedReader reader = null;
 
@@ -76,7 +81,7 @@ public class HumanCodingAnalyser {
                 // if not unique then we need to look up to see if it's been classified to this class before:
                 // if yes the increment class count, if no create new entry.
                 if (inputMap.containsKey(content)) {
-                    HashMap<String, Integer> classMap = inputMap.get(content);
+                    Map<String, Integer> classMap = inputMap.get(content);
 
                     if (classMap.containsKey(classification)) {
                         classMap.put(classification, classMap.get(classification) + 1);
@@ -88,7 +93,7 @@ public class HumanCodingAnalyser {
                 }
                 else {
 
-                    HashMap<String, Integer> newMap = new HashMap<String, Integer>();
+                    Map<String, Integer> newMap = new HashMap<String, Integer>();
                     newMap.put(classification, 1);
                     inputMap.put(content, newMap);
                 }
@@ -96,22 +101,27 @@ public class HumanCodingAnalyser {
 
         }
         catch (FileNotFoundException e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e.getCause());
         }
         catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e.getCause());
         }
         finally {
-            if (reader != null) {
-                try {
-                    reader.close();
-                }
-                catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
+            closeReader(reader);
         }
         return inputMap;
+    }
+
+    private void closeReader(final BufferedReader reader) {
+
+        if (reader != null) {
+            try {
+                reader.close();
+            }
+            catch (IOException e) {
+                LOGGER.error(e.getMessage(), e.getCause());
+            }
+        }
     }
 
     /**
@@ -120,12 +130,12 @@ public class HumanCodingAnalyser {
      */
     public void printContents() {
 
-        Set<Entry<String, HashMap<String, Integer>>> inputSet = inputMap.entrySet();
-        Iterator<Entry<String, HashMap<String, Integer>>> it = inputSet.iterator();
+        Set<Entry<String, Map<String, Integer>>> inputSet = inputMap.entrySet();
+        Iterator<Entry<String, Map<String, Integer>>> it = inputSet.iterator();
         StringBuilder sb = new StringBuilder();
 
         while (it.hasNext()) {
-            Entry<String, HashMap<String, Integer>> element = it.next();
+            Entry<String, Map<String, Integer>> element = it.next();
             sb.append(element.getKey() + "\t ");
 
             Iterator<Entry<String, Integer>> innerIterator = Utils.sortByValueDescending(element.getValue()).entrySet().iterator();

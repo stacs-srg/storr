@@ -2,17 +2,17 @@ package uk.ac.standrews.cs.digitising_scotland.record_classification.datareaders
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.CODOrignalData;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeTriple;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.classification.Classification;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeDictionary;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.exceptions.InputFormatException;
+import uk.ac.standrews.cs.digitising_scotland.tools.ReaderWriterFactory;
 
 /**
  * The Class FormatConverter converts a comma separated text file in the format that is used by the modern cod data
@@ -54,9 +54,9 @@ public final class PilotDataFormatConverter extends AbstractFormatConverter {
      * @throws IOException Signals that an I/O exception has occurred.
      * @throws InputFormatException the input format exception
      */
-    public List<Record> convert(final File inputFile) throws IOException, InputFormatException {
+    public List<Record> convert(final File inputFile, final CodeDictionary codeDictionary) throws IOException, InputFormatException {
 
-        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(inputFile), CHARSET_NAME));
+        BufferedReader br = ReaderWriterFactory.createBufferedReader(inputFile);
 
         String line = "";
         List<Record> recordList = new ArrayList<>();
@@ -70,11 +70,11 @@ public final class PilotDataFormatConverter extends AbstractFormatConverter {
             int imageQuality = parseImageQuality(lineSplit);
             int ageGroup = convertAgeGroup(removeQuotes(lineSplit[AGE_POSITION]));
             int sex = convertSex(removeQuotes(lineSplit[SEX_POSITION]));
-            String description = formDescription(lineSplit, DESC_START, DESC_END);
+            List<String> description = formDescription(lineSplit, DESC_START, DESC_END);
             int year = Integer.parseInt(removeQuotes(lineSplit[YEAR_POSITION]));
 
             CODOrignalData originalData = new CODOrignalData(description, year, ageGroup, sex, imageQuality, inputFile.getName());
-            HashSet<CodeTriple> goldStandard = new HashSet<>();
+            HashSet<Classification> goldStandard = new HashSet<>();
 
             Record r = new Record(id, originalData);
             r.getOriginalData().setGoldStandardClassification(goldStandard);
@@ -87,7 +87,7 @@ public final class PilotDataFormatConverter extends AbstractFormatConverter {
         return recordList;
     }
 
-    private static int parseImageQuality(String[] lineSplit) {
+    private static int parseImageQuality(final String[] lineSplit) {
 
         if (lineSplit[IMAGE_QUALITY_POS].equalsIgnoreCase("null")) {
             return 0;
@@ -105,23 +105,18 @@ public final class PilotDataFormatConverter extends AbstractFormatConverter {
     * @param endPosition the last index to concatenate
     * @return the concatenated string, comma separated
     */
-    private static String formDescription(final String[] stringArray, final int startPosition, final int endPosition) {
+    private static List<String> formDescription(final String[] stringArray, final int startPosition, final int endPosition) {
 
-        String description = "";
+        List<String> descriptionList = new ArrayList<>();
 
         for (int currentPosition = startPosition; currentPosition <= endPosition; currentPosition++) {
             if (stringArray[currentPosition].length() != 0 && !stringArray[currentPosition].equalsIgnoreCase("null")) {
-                if (currentPosition != startPosition) {
-                    description = description + ", " + stringArray[currentPosition].toLowerCase();
-                }
-                else {
-                    description = stringArray[currentPosition].toLowerCase();
-                }
+                descriptionList.add(stringArray[currentPosition].toLowerCase());
+
             }
         }
 
-        return description;
+        return descriptionList;
 
     }
-
 }

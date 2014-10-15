@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeNotValidException;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.exceptions.InputFormatException;
 import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
@@ -39,8 +40,9 @@ public class CustomWordCleaner extends AbstractDataCleaner {
      * @param args the arguments
      * @throws IOException Signals that an I/O exception has occurred.
      * @throws InputFormatException the input format exception
+     * @throws CodeNotValidException 
      */
-    public static void main(final String... args) throws IOException, InputFormatException {
+    public static void main(final String... args) throws IOException, InputFormatException, CodeNotValidException {
 
         AbstractDataCleaner.setTokenLimit(Integer.MAX_VALUE);
         CustomWordCleaner cleaner = new CustomWordCleaner();
@@ -74,9 +76,6 @@ public class CustomWordCleaner extends AbstractDataCleaner {
     @Override
     public String correct(final String token) {
 
-        if (token.equals("disease")) {
-            System.out.println("disease");
-        }
         if (WORD_LIST.contains(token)) {
             printDebugInfo(token);
             return "";

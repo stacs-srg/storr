@@ -14,7 +14,6 @@ import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.TrainAndMultiplyClassify;
 import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
 
 /**
@@ -22,7 +21,7 @@ import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
  */
 public class HMMPreparser {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(TrainAndMultiplyClassify.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(HMMPreparser.class);
 
     /**
      * Prepare file.

@@ -1,15 +1,8 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.datareaders;
 
-import static uk.ac.standrews.cs.digitising_scotland.record_classification.datareaders.AbstractFormatConverter.checkLineLength;
-import static uk.ac.standrews.cs.digitising_scotland.record_classification.datareaders.AbstractFormatConverter.convertAgeGroup;
-import static uk.ac.standrews.cs.digitising_scotland.record_classification.datareaders.AbstractFormatConverter.convertSex;
-import static uk.ac.standrews.cs.digitising_scotland.record_classification.datareaders.AbstractFormatConverter.removeQuotes;
-
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -18,12 +11,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.CODOrignalData;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.classification.Classification;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeFactory;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeTriple;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeDictionary;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeNotValidException;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.exceptions.InputFormatException;
+import uk.ac.standrews.cs.digitising_scotland.tools.ReaderWriterFactory;
 import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
 
 /**
@@ -65,10 +60,11 @@ public final class LongFormatConverter extends AbstractFormatConverter {
      * @return the list of records
      * @throws IOException Signals that an I/O exception has occurred.
      * @throws InputFormatException the input format exception
+     * @throws CodeNotValidException 
      */
-    public List<Record> convert(final File inputFile) throws IOException, InputFormatException {
+    public List<Record> convert(final File inputFile, final CodeDictionary codeDictionary) throws IOException, InputFormatException, CodeNotValidException {
 
-        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(inputFile), CHARSET_NAME));
+        BufferedReader br = ReaderWriterFactory.createBufferedReader(inputFile);
 
         String line = "";
         List<Record> recordList = new ArrayList<>();
@@ -82,12 +78,12 @@ public final class LongFormatConverter extends AbstractFormatConverter {
             int imageQuality = 1;
             int ageGroup = convertAgeGroup(removeQuotes(lineSplit[AGE_POSITION]));
             int sex = convertSex(removeQuotes(lineSplit[SEX_POSITION]));
-            String description = formDescription(lineSplit, DESC_START, DESC_END);
+            List<String> description = formDescription(lineSplit, DESC_START, DESC_END);
             int year = Integer.parseInt(removeQuotes(lineSplit[YEAR_POSITION]));
 
             CODOrignalData originalData = new CODOrignalData(description, year, ageGroup, sex, imageQuality, inputFile.getName());
-            HashSet<CodeTriple> goldStandard = new HashSet<>();
-            populateGoldStandardSet(lineSplit, goldStandard);
+            HashSet<Classification> goldStandard = new HashSet<>();
+            populateGoldStandardSet(codeDictionary, lineSplit, goldStandard);
 
             Record r = new Record(id, originalData);
             r.getOriginalData().setGoldStandardClassification(goldStandard);
@@ -109,8 +105,9 @@ public final class LongFormatConverter extends AbstractFormatConverter {
      *
      * @param lineSplit the line split
      * @param goldStandard the gold standard
+     * @throws CodeNotValidException 
      */
-    private static void populateGoldStandardSet(final String[] lineSplit, final HashSet<CodeTriple> goldStandard) {
+    private static void populateGoldStandardSet(final CodeDictionary codeDictionary, final String[] lineSplit, final HashSet<Classification> goldStandard) throws CodeNotValidException {
 
         final int start_pos = 6;
         final int end_pos = 31;
@@ -121,11 +118,11 @@ public final class LongFormatConverter extends AbstractFormatConverter {
                 int causeIdentifier = Integer.parseInt(lineSplit[i]);
 
                 if (causeIdentifier != start_pos) {
-                    Code code = CodeFactory.getInstance().getCode(removeQuotes(lineSplit[i + 2]));
+                    Code code = codeDictionary.getCode(removeQuotes(lineSplit[i + 2]));
 
                     TokenSet tokenSet = new TokenSet(lineSplit[causeIdentifier]);
 
-                    CodeTriple codeTriple = new CodeTriple(code, tokenSet, 1.0);
+                    Classification codeTriple = new Classification(code, tokenSet, 1.0);
                     goldStandard.add(codeTriple);
                 }
             }
@@ -140,18 +137,13 @@ public final class LongFormatConverter extends AbstractFormatConverter {
      * @param endPosition the last index to concatenate
      * @return the concatenated string, comma separated
      */
-    private static String formDescription(final String[] stringArray, final int startPosition, final int endPosition) {
+    private static List<String> formDescription(final String[] stringArray, final int startPosition, final int endPosition) {
 
-        String description = "";
+        List<String> description = new ArrayList<>();
 
         for (int currentPosition = startPosition; currentPosition <= endPosition; currentPosition++) {
             if (stringArray[currentPosition].length() != 0) {
-                if (currentPosition != startPosition) {
-                    description = description + ", " + stringArray[currentPosition].toLowerCase();
-                }
-                else {
-                    description = stringArray[currentPosition].toLowerCase();
-                }
+                description.add(stringArray[currentPosition].toLowerCase());
             }
         }
 

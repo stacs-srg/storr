@@ -2,6 +2,7 @@ package uk.ac.standrews.cs.digitising_scotland.record_classification.datastructu
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -9,18 +10,21 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.classification.Classification;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeFactory;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeDictionary;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeNotValidException;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeTriple;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.exceptions.InputFormatException;
+
+import com.google.common.collect.HashMultimap;
 
 /**
  * The Class RecordTest tests the creation of Records and their subclasses, parameters etc.
  * 
  */
+//
 public class RecordTest {
 
     /** The record. */
@@ -37,9 +41,13 @@ public class RecordTest {
     @Before
     public void setUp() throws Exception {
 
+        ArrayList<String> descList = new ArrayList<>();
+        final String desc = "A test Description";
+        descList.add(desc);
+
         int id = (int) Math.rint(Math.random() * 1000);
 
-        originalData = new OriginalData("original data test data", 2014, 1, "testFileName");
+        originalData = new OriginalData(descList, 2014, 1, "testFileName");
         record = new Record(id, originalData);
     }
 
@@ -51,7 +59,7 @@ public class RecordTest {
     @Test
     public void testConstructor() throws InputFormatException {
 
-        Assert.assertEquals("original data test data", record.getOriginalData().getDescription());
+        Assert.assertEquals("A test Description", record.getOriginalData().getDescription().get(0));
     }
 
     /**
@@ -64,18 +72,17 @@ public class RecordTest {
     public void testAddCodeTriples() throws IOException, CodeNotValidException {
 
         File codeFile = new File(getClass().getResource("/CodeFactoryTestFile.txt").getFile());
-        CodeFactory.getInstance().loadDictionary(codeFile);
-        Set<CodeTriple> codeTripleSet = new HashSet<>();
+        CodeDictionary codeDictionary = new CodeDictionary(codeFile);
+        Set<Classification> classificationSet = new HashSet<>();
+        Code codeTest = codeDictionary.getCode("2100");
 
-        Code codeTest = CodeFactory.getInstance().getCode("2100");
+        Classification classification = new Classification(codeTest, new TokenSet("test String"), 1.0);
+        classificationSet.add(classification);
+        record.addClassification(classification.getTokenSet().toString(), classification);
 
-        CodeTriple codeTriple = new CodeTriple(codeTest, new TokenSet("test String"), 1.0);
-        codeTripleSet.add(codeTriple);
-        record.addAllCodeTriples(codeTripleSet);
+        HashMultimap<String, Classification> classificationsFromRecord = record.getListOfClassifications();
 
-        Set<CodeTriple> classificationsFromRecord = record.getCodeTriples();
-
-        CodeTriple clssfication = classificationsFromRecord.iterator().next();
+        Classification clssfication = classificationsFromRecord.entries().iterator().next().getValue();
         Assert.assertEquals("2100", clssfication.getCode().getCodeAsString());
         Assert.assertEquals("test string", clssfication.getTokenSet().toString());
 
@@ -89,11 +96,14 @@ public class RecordTest {
     @Test
     public void testIsCodMethod() throws InputFormatException {
 
+        ArrayList<String> descList = new ArrayList();
+        final String desc = "A test Description";
+        descList.add(desc);
         int id = (int) Math.rint(Math.random() * 1000);
 
         Record c = new Record(id, originalData);
         Assert.assertFalse(c.isCoDRecord());
-        OriginalData codOriginalData = new CODOrignalData("original data test data", 2014, 1, 0, 0, "testFileName");
+        OriginalData codOriginalData = new CODOrignalData(descList, 2014, 1, 0, 0, "testFileName");
         c = new Record(id, codOriginalData);
 
         Assert.assertTrue(c.isCoDRecord());
@@ -121,8 +131,8 @@ public class RecordTest {
         int id = (int) Math.rint(Math.random() * 1000);
         Record x = new Record(id, originalData);
         Record y = new Record(id, originalData);
-        CodeTriple codeTriple = null;
-        x.addCodeTriples(codeTriple);
+        Classification codeTriple = null;
+
         assertTheSame(x, y);
     }
 

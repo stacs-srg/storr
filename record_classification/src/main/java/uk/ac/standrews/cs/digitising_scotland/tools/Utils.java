@@ -8,6 +8,7 @@ import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
@@ -15,17 +16,16 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.output.FileWriterWithEncoding;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.classification.Classification;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeTriple;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.writers.DataClerkingWriter;
 import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
 
 import com.google.common.io.Files;
@@ -44,6 +44,27 @@ public final class Utils {
     private Utils() {
 
         // private constructor for utility class.
+    }
+
+    /**
+     * Handles and exceptions or throwables thrown from threads that are handles by a {@link Future} or {@link ExecutorService}.
+     * @param futures Collection of executing futures to handle possible exceptions from.
+     * @throws InterruptedException if thread is interrupted
+     */
+    public static void handlePotentialErrors(final Collection<Future<?>> futures) throws InterruptedException {
+
+        for (Future<?> future : futures) {
+            try {
+                future.get();
+            }
+            catch (ExecutionException e) {
+                Throwable rootException = e.getCause();
+                if (rootException != null) {
+                    LOGGER.error(rootException.toString(), rootException);
+                }
+
+            }
+        }
     }
 
     /**
@@ -138,7 +159,7 @@ public final class Utils {
             if (toMove[i].exists() && toMove[i].isDirectory()) {
                 File newFolder = new File(toHere + "/" + toMove[i].getName());
                 if (!newFolder.exists() && !newFolder.mkdirs()) {
-                    System.out.println("Error creating " + newFolder.getName());
+                    LOGGER.error("Error creating " + newFolder.getName());
                 }
                 moveFiles(toMove[i].listFiles(), newFolder);
             }
@@ -148,35 +169,6 @@ public final class Utils {
             }
         }
 
-    }
-
-    /**
-     * Moves files in the toMove array to the toHere location using the Apache FileUtils library.
-     *
-     * @param toMove Move these files
-     * @param toHere to this location
-     */
-    public static void moveFilesApache(final File[] toMove, final File toHere) {
-
-        for (int i = 0; i < toMove.length; i++) {
-            if (toMove[i].isFile()) {
-                try {
-                    FileUtils.moveFile(toMove[i], toHere);
-                }
-                catch (IOException e) {
-
-                    e.printStackTrace();
-                }
-            }
-            else {
-                try {
-                    FileUtils.moveDirectory(toMove[i], toHere);
-                }
-                catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
     }
 
     /**
@@ -199,11 +191,11 @@ public final class Utils {
         });
 
         if (!storage.exists()) {
-            System.err.println("folder already exists: " + storage.getAbsolutePath());
+            LOGGER.error("folder already exists: " + storage.getAbsolutePath());
         }
 
         if (!storage.mkdirs()) {
-            System.err.println("Problem creating folder " + storage.getAbsolutePath());
+            LOGGER.error("Problem creating folder " + storage.getAbsolutePath());
         }
 
         File[] toMove = new File[listOfFilesToMove.length];
@@ -256,7 +248,7 @@ public final class Utils {
             out.close();
         }
         catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e);
         }
     }
 
@@ -270,6 +262,7 @@ public final class Utils {
 
         FileWriterWithEncoding fstream;
         try {
+            Files.createParentDirs(new File(filename));
             fstream = new FileWriterWithEncoding(filename, Charset.forName("UTF-8"));
             BufferedWriter out = new BufferedWriter(fstream);
             out.write(lloutput);
@@ -278,7 +271,7 @@ public final class Utils {
             out.close();
         }
         catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e);
         }
 
     }
@@ -309,7 +302,7 @@ public final class Utils {
         }
         catch (IOException e) {
 
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e);
         }
     }
 
@@ -462,25 +455,8 @@ public final class Utils {
             }
         }
         catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e);
         }
-    }
-
-    /**
-     * Writes a bucket to a file (target/NRSoutput.txt) in the NRS output format.
-     *
-     * @param bucketToWrite Bucket to write to file
-     * @throws IOException Indicates I/O error
-     */
-    public static void writeBucketToFileNrsFormat(final Bucket bucketToWrite) throws IOException {
-
-        DataClerkingWriter writer = new DataClerkingWriter(new File("target/NRSOutput.txt"));
-
-        for (Record record : bucketToWrite) {
-            writer.write(record);
-        }
-        writer.close();
-        System.out.println(bucketToWrite);
     }
 
     /**
@@ -507,11 +483,11 @@ public final class Utils {
             }
 
             if (exitVal != 0) {
-                System.out.println("ExitValue: " + exitVal);
+                LOGGER.error("ExitValue: " + exitVal);
             }
         }
         catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e.getCause());
         }
 
         return output.toString();
@@ -523,9 +499,9 @@ public final class Utils {
      * @param setCodeTriples to check in
      * @return true if code is a member of the set
      */
-    public static boolean contains(final Code code, final Set<CodeTriple> setCodeTriples) {
+    public static boolean contains(final Code code, final Set<Classification> setCodeTriples) {
 
-        for (CodeTriple codeTriple : setCodeTriples) {
+        for (Classification codeTriple : setCodeTriples) {
             if (codeTriple.getCode() == code) { return true; }
         }
         return false;
@@ -537,11 +513,12 @@ public final class Utils {
      * @param setCodeTriples to check in
      * @return true if code is a member of the set
      */
-    public static CodeTriple getCodeTripleWithCode(final Code code, final Set<CodeTriple> setCodeTriples) {
+    public static Classification getCodeTripleWithCode(final Code code, final Set<Classification> setCodeTriples) {
 
-        for (CodeTriple codeTriple : setCodeTriples) {
+        for (Classification codeTriple : setCodeTriples) {
             if (codeTriple.getCode() == code) { return codeTriple; }
         }
         return null;
     }
+
 }

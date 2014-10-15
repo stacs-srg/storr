@@ -1,6 +1,6 @@
-4111	acute bronchitis	1855	1	F	(0) 0 - 1	R99	R99 fistula	
-4159	acute bron	1855	1	M	(1) 2 - 5	R99	R99 fistula	
-4160	acute bron	1855	1	M	(2) 6 - 10	R99	R99 fistula	
-4157	"acute bron, heart disease"	1855	1	M	(3) 11 - 15	R99	R99 fistula	
-4158	"acute bron, heart disease"	1855	1	M	(4) 16 - 45	R99	R99 fistula	
-4112	"acute hydrocephalus, fever"	1855	1	M	(5) 56+	R99	R99 fistula	
+4157	["acute bron", "heart disease"]	1855	1	M	(3) 11 - 15	R99	R99 other causes	
+4112	["acute hydrocephalus", "fever"]	1855	1	M	(5) 56+	R99	R99 other causes	
+4111	[acute bronchitis]	1855	1	F	(0) 0 - 1	R99	R99 other causes	
+4159	[acute bron]	1855	1	M	(1) 2 - 5	R99	R99 other causes	
+4160	[acute bron]	1855	1	M	(2) 6 - 10	R99	R99 other causes	
+4158	["acute bron, heart disease"]	1855	1	M	(4) 16 - 45	R99	R99 other causes	

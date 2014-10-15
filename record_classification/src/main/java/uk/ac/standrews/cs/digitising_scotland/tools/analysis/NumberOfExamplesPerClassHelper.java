@@ -21,8 +21,12 @@ import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.util.Version;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class NumberOfExamplesPerClassHelper {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(NumberOfExamplesPerClassHelper.class);
 
     /**
      * @param args
@@ -35,29 +39,27 @@ public class NumberOfExamplesPerClassHelper {
 
         NumberOfExamplesPerClassHelper n = new NumberOfExamplesPerClassHelper();
 
-        HashMap<String, Integer> testingMap = n.getClassCount(new File(splitOutputTesting));
-        System.out.println("/////");
-        HashMap<String, Integer> trainingMap = n.getClassCount(new File(splitOutputTraining));
+        Map<String, Integer> testingMap = n.getClassCount(new File(splitOutputTesting));
+        LOGGER.info("/////");
+        Map<String, Integer> trainingMap = n.getClassCount(new File(splitOutputTraining));
 
         getComparison(testingMap, trainingMap);
 
         testingMap = n.getWordCount(new File(splitOutputTesting));
-        // n.printMap(testingMap);
-        System.out.println("/////");
+        LOGGER.info("/////");
         trainingMap = n.getWordCount(new File(splitOutputTraining));
-        // n.printMap(trainingMap);
-        System.out.println("/////");
+        LOGGER.info("/////");
 
         getComparison(testingMap, trainingMap);
 
     }
 
-    private static void getComparison(final HashMap<String, Integer> testingMap, final HashMap<String, Integer> trainingMap) {
+    private static void getComparison(final Map<String, Integer> testingMap, final Map<String, Integer> trainingMap) {
 
         Iterator<Entry<String, Integer>> it = testingMap.entrySet().iterator();
         while (it.hasNext()) {
             Entry<String, Integer> pairs = it.next();
-            System.out.println(pairs.getKey() + " = " + pairs.getValue() + " / " + trainingMap.get(pairs.getKey()));
+            LOGGER.info(pairs.getKey() + " = " + pairs.getValue() + " / " + trainingMap.get(pairs.getKey()));
         }
 
     }
@@ -69,10 +71,10 @@ public class NumberOfExamplesPerClassHelper {
      * @param input input file, either a splitTesting or splitTraining file
      * @return Map<String, Integer> Class name with number of files
      */
-    public HashMap<String, Integer> getClassCount(final File input) {
+    public Map<String, Integer> getClassCount(final File input) {
 
         BufferedReader reader = null;
-        HashMap<String, Integer> countMapping = new HashMap<String, Integer>();
+        Map<String, Integer> countMapping = new HashMap<String, Integer>();
 
         ClassCounter classCounter = new ClassCounter(input);
         classCounter.count();
@@ -94,13 +96,13 @@ public class NumberOfExamplesPerClassHelper {
             }
         }
         catch (FileNotFoundException e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e.getCause());
         }
         catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e.getCause());
         }
         catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e.getCause());
         }
         finally {
             closeReader(reader);
@@ -117,7 +119,7 @@ public class NumberOfExamplesPerClassHelper {
             }
         }
         catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e.getCause());
         }
     }
 
@@ -130,8 +132,7 @@ public class NumberOfExamplesPerClassHelper {
         Iterator<?> it = mapToPrint.entrySet().iterator();
         while (it.hasNext()) {
             Map.Entry pairs = (Map.Entry) it.next();
-            System.out.println(pairs.getKey() + " = " + pairs.getValue());
-            // it.remove(); // avoids a ConcurrentModificationException
+            LOGGER.info(pairs.getKey() + " = " + pairs.getValue());
         }
     }
 
@@ -142,9 +143,9 @@ public class NumberOfExamplesPerClassHelper {
      * @param input input file, either a splitTesting or splitTraining file
      * @return Map<String, Integer> Class name with number of files
      */
-    public HashMap<String, Integer> getWordCount(final File input) {
+    public Map<String, Integer> getWordCount(final File input) {
 
-        HashMap<String, Integer> countMapping = new HashMap<String, Integer>();
+        Map<String, Integer> countMapping = new HashMap<String, Integer>();
         BufferedReader br = null;
         try {
             br = new BufferedReader(new InputStreamReader(new FileInputStream(input), "UTF8"));
@@ -172,10 +173,10 @@ public class NumberOfExamplesPerClassHelper {
             }
         }
         catch (FileNotFoundException e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e.getCause());
         }
         catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e.getCause());
         }
         finally {
             closeReader(br);

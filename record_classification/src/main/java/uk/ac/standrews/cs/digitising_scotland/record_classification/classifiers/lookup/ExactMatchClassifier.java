@@ -13,11 +13,13 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.AbstractClassifier;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Pair;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.classification.Classification;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeTriple;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
 
@@ -26,9 +28,10 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
  * @author frjd2, jkc25
  *
  */
-public class ExactMatchClassifier extends AbstractClassifier {
+public class ExactMatchClassifier {
 
-    private Map<TokenSet, Set<CodeTriple>> lookupTable;
+    private static final Logger LOGGER = LoggerFactory.getLogger(ExactMatchClassifier.class);
+    private Map<TokenSet, Set<Classification>> lookupTable;
     private String modelFileName = "target/lookupTable";
 
     /**
@@ -63,10 +66,6 @@ public class ExactMatchClassifier extends AbstractClassifier {
 
     }
 
-    /* (non-Javadoc)
-     * @see uk.ac.standrews.cs.digitising_scotland.parser.classifiers.AbstractClassifier#train(uk.ac.standrews.cs.digitising_scotland.parser.datastructures.Bucket)
-     */
-    @Override
     public void train(final Bucket bucket) throws Exception {
 
         fillLookupTable(bucket);
@@ -74,48 +73,25 @@ public class ExactMatchClassifier extends AbstractClassifier {
 
     }
 
-    /* (non-Javadoc)
-     * @see uk.ac.standrews.cs.digitising_scotland.parser.classifiers.AbstractClassifier#classify(uk.ac.standrews.cs.digitising_scotland.parser.datastructures.Record)
-     */
-    @Override
-    public Record classify(final Record record) throws IOException {
-
-        Set<CodeTriple> result = lookupTable.get(new TokenSet(record.getDescription()));
-        if (result == null) {
-            return record;
-        }
-        else {
-            record.addAllCodeTriples(result);
-            return record;
-
-        }
-
-    }
-
     /**
-     * Classifies all the records in a {@link Bucket}.
-     *
-     * @param bucket Bucket to classify
-     * @return the bucket with classified records.
-     * @throws IOException Signals that an I/O exception has occurred.
-     */
-    public Bucket classify(final Bucket bucket) throws IOException {
-
-        Bucket classifiedBucket = new Bucket();
-        for (Record record : bucket) {
-            classifiedBucket.addRecordToBucket(classify(record));
-        }
-
-        return classifiedBucket;
-    }
-
-    /**
-     * Adds each gold standard {@link CodeTriple} in the records to the lookupTable.
+     * Adds each gold standard {@link Classification} in the records to the lookupTable.
      * @param record to add
      */
     private void addRecordToLookupTable(final Record record) {
 
-        lookupTable.put(new TokenSet(record.getDescription()), record.getOriginalData().getGoldStandardCodeTriples());
+        final Set<Classification> goldStandardCodes = record.getOriginalData().getGoldStandardClassifications();
+        for (Classification t : goldStandardCodes) {
+            final TokenSet description = new TokenSet(t.getTokenSet());
+            Set<Classification> st = new HashSet<Classification>();
+            st.add(t);
+            if (lookupTable.containsKey(description)) {
+                lookupTable.get(description).addAll(st);
+            }
+            else {
+                lookupTable.put(description, st);
+
+            }
+        }
 
     }
 
@@ -139,22 +115,23 @@ public class ExactMatchClassifier extends AbstractClassifier {
         write(oos);
     }
 
-    protected void readModel(final String fileName) throws ClassNotFoundException, IOException {
+    protected ExactMatchClassifier readModel(final String fileName) throws ClassNotFoundException, IOException {
 
         //deserialize the .ser file
         InputStream file = new FileInputStream(fileName + ".ser");
         InputStream buffer = new BufferedInputStream(file);
         ObjectInput input = new ObjectInputStream(buffer);
-
         try {
 
-            Map<TokenSet, Set<CodeTriple>> recoveredMap = (Map<TokenSet, Set<CodeTriple>>) input.readObject();
+            Map<TokenSet, Set<Classification>> recoveredMap = (Map<TokenSet, Set<Classification>>) input.readObject();
             lookupTable = recoveredMap;
+
         }
         finally {
             closeStreams(file, input);
 
         }
+        return this;
     }
 
     private void closeStreams(final InputStream file, final ObjectInput input) throws IOException {
@@ -171,17 +148,62 @@ public class ExactMatchClassifier extends AbstractClassifier {
         oos.close();
     }
 
-    @Override
-    public void getModelFromDefaultLocation() {
+    public ExactMatchClassifier getModelFromDefaultLocation() {
 
+        ExactMatchClassifier classifier = null;
         try {
-            readModel(modelFileName);
+            classifier = readModel(modelFileName);
         }
         catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            LOGGER.error("Could not get model from default location. Class not found exception.", e.getException());
         }
         catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error("Could not get model from default location. IOException.", e.getCause());
+        }
+        return classifier;
+    }
+
+    /**
+     * Classifies a {@link TokenSet} to a set of {@link Classification}s using the classifiers lookup table.
+     * @param tokenSet to classify
+     * @return Set<CodeTripe> code triples from lookup table
+     * @throws IOException Indicates an I/O error
+     */
+    public Set<Classification> classifyTokenSetToCodeTripleSet(final TokenSet tokenSet) throws IOException {
+
+        Set<Classification> result = lookupTable.get(tokenSet);
+
+        if (result != null) {
+            result = setConfidenceLevels(result, 2.0);
+            return result;
+
+        }
+        else {
+            return null;
+        }
+    }
+
+    private Set<Classification> setConfidenceLevels(final Set<Classification> result, final double i) {
+
+        Set<Classification> newResults = new HashSet<Classification>();
+        for (Classification codeTriple : result) {
+            Classification newCodeT = new Classification(codeTriple.getCode(), codeTriple.getTokenSet(), i);
+            newResults.add(newCodeT);
+        }
+        return newResults;
+    }
+
+    public Pair<Code, Double> classify(final TokenSet tokenSet) throws IOException {
+
+        Set<Classification> result = lookupTable.get(tokenSet);
+
+        if (result != null) {
+            Classification current = result.iterator().next();
+            return new Pair<Code, Double>(current.getCode(), current.getConfidence());
+
+        }
+        else {
+            return null;
         }
     }
 
@@ -195,61 +217,17 @@ public class ExactMatchClassifier extends AbstractClassifier {
     }
 
     @Override
-    public boolean equals(final Object obj) {
+    public boolean equals(Object obj) {
 
-        if (this == obj) { return true; }
-        if (obj == null) { return false; }
-        if (getClass() != obj.getClass()) { return false; }
+        if (this == obj) return true;
+        if (obj == null) return false;
+        if (getClass() != obj.getClass()) return false;
         ExactMatchClassifier other = (ExactMatchClassifier) obj;
         if (lookupTable == null) {
-            if (other.lookupTable != null) { return false; }
+            if (other.lookupTable != null) return false;
         }
-        else if (!lookupTable.equals(other.lookupTable)) { return false; }
+        else if (!lookupTable.equals(other.lookupTable)) return false;
         return true;
     }
 
-    /**
-     * Classifies a {@link TokenSet} to a set of {@link CodeTriple}s using the classifiers lookup table.
-     * @param tokenSet to classify
-     * @return Set<CodeTripe> code triples from lookup table
-     * @throws IOException Indicates an I/O error
-     */
-    public Set<CodeTriple> classifyTokenSetToCodeTripleSet(final TokenSet tokenSet) throws IOException {
-
-        Set<CodeTriple> result = lookupTable.get(tokenSet);
-
-        if (result != null) {
-            result = setConfidenceLevels(result, 2.0);
-            return result;
-
-        }
-        else {
-            return null;
-        }
-    }
-
-    private Set<CodeTriple> setConfidenceLevels(final Set<CodeTriple> result, final double i) {
-
-        Set<CodeTriple> newResults = new HashSet<CodeTriple>();
-        for (CodeTriple codeTriple : result) {
-            CodeTriple newCodeT = new CodeTriple(codeTriple.getCode(), codeTriple.getTokenSet(), i);
-            newResults.add(newCodeT);
-        }
-        return newResults;
-    }
-
-    @Override
-    public Pair<Code, Double> classify(final TokenSet tokenSet) throws IOException {
-
-        Set<CodeTriple> result = lookupTable.get(tokenSet);
-
-        if (result != null) {
-            CodeTriple current = result.iterator().next();
-            return new Pair<Code, Double>(current.getCode(), current.getConfidence());
-
-        }
-        else {
-            return null;
-        }
-    }
 }

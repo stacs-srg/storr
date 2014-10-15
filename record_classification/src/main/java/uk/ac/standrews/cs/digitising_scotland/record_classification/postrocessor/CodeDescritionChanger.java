@@ -7,6 +7,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
 
 import com.google.common.base.Charsets;
@@ -19,6 +22,7 @@ public class CodeDescritionChanger {
 
     /** The code mapping. */
     private HashMap<String, String> codeMapping;
+    private static final Logger LOGGER = LoggerFactory.getLogger(CodeDescritionChanger.class);
 
     /**
      * Main method. Runs the code description changer on file "outputFile.csv".
@@ -32,7 +36,7 @@ public class CodeDescritionChanger {
             cdc.changeDescriptionToCode(new File("outputFile.csv"), new File(""));
         }
         catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e.getCause());
         }
 
     }
@@ -69,7 +73,7 @@ public class CodeDescritionChanger {
         }
 
         reader.close();
-        System.out.println("Writing to file: " + outputFile.getAbsolutePath());
+        LOGGER.info("Writing to file: " + outputFile.getAbsolutePath());
         Utils.writeToFile(sb.toString(), outputFile.getAbsolutePath());
 
         return outputFile;
@@ -89,7 +93,7 @@ public class CodeDescritionChanger {
 
         while ((line = reader.readLine()) != null) {
             if (line.contains("Shipsï¿½ï¿½_ Deck Ratings, Barge Crews and Boatmen")) {
-                System.out.println("problem here");
+                LOGGER.info("problem here");
             }
             String[] lineSplit = line.split("\t");
             codeMapping.put(lineSplit[1], lineSplit[0]);

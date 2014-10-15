@@ -49,6 +49,7 @@ public class MachineLearningConfigurationTest {
     @Test
     public void testGetPropertyWithChangedFromDefault() {
 
+        properties.setProperty("olrRegularisation", "false");
         Assert.assertEquals("false", properties.getProperty("olrRegularisation"));
 
     }

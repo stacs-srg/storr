@@ -14,6 +14,7 @@ import uk.ac.shef.wit.simmetrics.similaritymetrics.AbstractStringMetric;
 import uk.ac.shef.wit.simmetrics.similaritymetrics.Levenshtein;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Pair;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeNotValidException;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.exceptions.InputFormatException;
 
@@ -44,8 +45,9 @@ public class LevenshteinCleaner extends AbstractDataCleaner {
      * @param args the arguments
      * @throws IOException Signals that an I/O exception has occurred.
      * @throws InputFormatException the input format exception
+     * @throws CodeNotValidException 
      */
-    public static void main(final String... args) throws IOException, InputFormatException {
+    public static void main(final String... args) throws IOException, InputFormatException, CodeNotValidException {
 
         LevenshteinCleaner cleaner = new LevenshteinCleaner();
         cleaner.setSimilarity(args);

@@ -17,6 +17,7 @@
 package uk.ac.standrews.cs.digitising_scotland.population_model.distributions.general;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The restricted distribution class provided the ability for the return value of the distribution when sampled to be set to fall with a given range.
@@ -28,27 +29,41 @@ import java.util.ArrayList;
 public abstract class RestrictedDistribution<Value> implements Distribution<Value> {
 
     // Restricted Distribution Helper Values
-    protected Double minimumReturnValue = (Double) null;
-    protected Double maximumReturnValue = (Double) null;
+    protected Double minimumSpecifiedValue = null;
+    protected Double maximumSpecifiedValue = null;
 
-    protected ArrayList<Double> unusedSampleValues = new ArrayList<Double>();
+    protected List<Double> unusedSampleValues = new ArrayList<>();
     protected int zeroCount = -1;
+    protected double zeroCap;
 
-    public abstract Value getSample(double earliestReturnValue, double latestReturnValue) throws NoPermissableValueException, NotSetUpAtClassInitilisationException;
+    public abstract int[] getWeights();
+    
+    /**
+     * Samples distribution and returns a value that falls between the two given values.
+     * 
+     * @param smallestPermissableReturnValue The smallest value that the caller wishes for the distribution to return on this sample.
+     * @param largestPermissableReturnValue The largest value that the caller wishes for the distribution to return on this sample.
+     * @return The Value sampled from the distribution.
+     * @throws NoPermissableValueException Thrown when no value in the distribution can satisfy the given range.
+     * @throws NotSetUpAtClassInitilisationException Thrown if the distribution wasn't correctly set up at initialisation.
+     */
+    public abstract Value getSample(double smallestPermissableReturnValue, double largestPermissableReturnValue) throws NoPermissableValueException, NotSetUpAtClassInitilisationException;
 
     /**
-     * Check if the given double d falls between the two given values.
+     * Returns the minimum possible return value from the distribution as defined by the values in the user provided data.
      * 
-     * @param d The double to be considered.
-     * @param earliestReturnValue The smaller value.
-     * @param latestReturnValue The larger value.
-     * @return Boolean value of true if d falls inbetween the two given values else false.
+     * @return The minimum possible return value of the distribution.
      */
-    protected static boolean inRange(final double d, final double earliestReturnValue, final double latestReturnValue) {
-        if (earliestReturnValue <= d && d <= latestReturnValue) {
-            return true;
-        } else {
-            return false;
-        }
+    public Double getMinimumReturnValue() {
+        return minimumSpecifiedValue;
+    }
+
+    /**
+     * Returns the maximum possible return value from the distribution as defined by the values in the user provided data.
+     * 
+     * @return The maximum possible return value of the distribution.
+     */
+    public Double getMaximumReturnValue() {
+        return maximumSpecifiedValue;
     }
 }

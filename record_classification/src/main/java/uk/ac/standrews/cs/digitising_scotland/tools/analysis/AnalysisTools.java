@@ -2,10 +2,8 @@ package uk.ac.standrews.cs.digitising_scotland.tools.analysis;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringReader;
 import java.util.ArrayList;
@@ -27,7 +25,10 @@ import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.util.Version;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import uk.ac.standrews.cs.digitising_scotland.tools.ReaderWriterFactory;
 import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
 
 /**
@@ -38,6 +39,8 @@ import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
  * 
  */
 public class AnalysisTools {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(AnalysisTools.class);
 
     /** The Constant LUCENE_VERSION. */
     private static final Version LUCENE_VERSION = Version.LUCENE_36;
@@ -81,7 +84,7 @@ public class AnalysisTools {
             calculateTN();
         }
         catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e.getCause());
         }
     }
 
@@ -92,7 +95,7 @@ public class AnalysisTools {
      */
     private void buildMap() throws IOException {
 
-        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(input), "UTF8"));
+        BufferedReader br = ReaderWriterFactory.createBufferedReader(input);
 
         int i = 0;
         int noOfLines = getNumberOfLines();
@@ -111,7 +114,7 @@ public class AnalysisTools {
             }
         }
         catch (FileNotFoundException e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e.getCause());
         }
         finally {
             br.close();
@@ -229,19 +232,24 @@ public class AnalysisTools {
         if (classificationMap.get(classification) != null) {
             classificationMap.get(classification).setFN(totalNumberActuallyInClass - numberOfCorrectItems);
             getPrecision(classification);
-            try {
-                int nl = getNumberOfLines();
-                double tp = classificationMap.get(classification).getTP();
-                double fn = classificationMap.get(classification).getFN();
-                double fp = classificationMap.get(classification).getFP();
-
-                classificationMap.get(classification).setTN(nl - tp - fn - fp);
-            }
-            catch (IOException e) {
-                e.printStackTrace();
-            }
+            setTN(classification);
         }
         return (double) numberOfCorrectItems / (double) totalNumberActuallyInClass;
+    }
+
+    private void setTN(final String classification) {
+
+        try {
+            int nl = getNumberOfLines();
+            double tp = classificationMap.get(classification).getTP();
+            double fn = classificationMap.get(classification).getFN();
+            double fp = classificationMap.get(classification).getFP();
+
+            classificationMap.get(classification).setTN(nl - tp - fn - fp);
+        }
+        catch (IOException e) {
+            LOGGER.error(e.getMessage(), e.getCause());
+        }
     }
 
     /**
@@ -259,17 +267,7 @@ public class AnalysisTools {
             int numberOfCorrectItems = buildPrecisionMap().get(classification);
             classificationMap.get(classification).setFN(totalNumberActuallyInClass - numberOfCorrectItems);
             getPrecision(classification);
-            try {
-                int nl = getNumberOfLines();
-                double tp = classificationMap.get(classification).getTP();
-                double fn = classificationMap.get(classification).getFN();
-                double fp = classificationMap.get(classification).getFP();
-
-                classificationMap.get(classification).setTN(nl - tp - fn - fp);
-            }
-            catch (IOException e) {
-                e.printStackTrace();
-            }
+            setTN(classification);
         }
 
     }
@@ -346,7 +344,7 @@ public class AnalysisTools {
      */
     public int countUniqueWords() {
 
-        HashMap<String, Integer> words = buildMapping();
+        Map<String, Integer> words = buildMapping();
         return words.size();
     }
 
@@ -360,7 +358,7 @@ public class AnalysisTools {
      */
     public int getWordTotal(final String word) {
 
-        HashMap<String, Integer> words = buildMapping();
+        Map<String, Integer> words = buildMapping();
 
         return words.get(word);
     }
@@ -372,7 +370,7 @@ public class AnalysisTools {
      */
     public final int totalNumberOfClasses() {
 
-        HashMap<String, Integer> words = new HashMap<String, Integer>();
+        Map<String, Integer> words = new HashMap<String, Integer>();
         for (int i = 0; i < stringInput.length; i++) {
             String classification = stringInput[i][1];
 
@@ -392,9 +390,9 @@ public class AnalysisTools {
      * 
      * @return a map of classes and precision values.
      */
-    public HashMap<String, Integer> buildPrecisionMap() {
+    public Map<String, Integer> buildPrecisionMap() {
 
-        HashMap<String, Integer> words = new HashMap<String, Integer>();
+        Map<String, Integer> words = new HashMap<String, Integer>();
 
         for (int i = 0; i < stringInput.length; i++) {
             String classification = stringInput[i][1];
@@ -423,7 +421,7 @@ public class AnalysisTools {
      */
     public int buildrecallMap() {
 
-        HashMap<String, Integer> words = new HashMap<String, Integer>();
+        Map<String, Integer> words = new HashMap<String, Integer>();
         for (int i = 0; i < stringInput.length; i++) {
             String classification = stringInput[i][1];
 
@@ -446,7 +444,7 @@ public class AnalysisTools {
      */
     public int totalNumberInEachClass(final String classToLookFor) {
 
-        HashMap<String, Integer> words = new HashMap<String, Integer>();
+        Map<String, Integer> words = new HashMap<String, Integer>();
         for (int i = 0; i < stringInput.length; i++) {
             String classification = stringInput[i][1];
 
@@ -469,7 +467,7 @@ public class AnalysisTools {
      */
     public int totalNumberInEachPrediction(final String classToLookFor) {
 
-        HashMap<String, Integer> words = new HashMap<String, Integer>();
+        Map<String, Integer> words = new HashMap<String, Integer>();
         for (int i = 0; i < stringInput.length; i++) {
             String classification = stringInput[i][2];
 
@@ -494,17 +492,17 @@ public class AnalysisTools {
      * 
      * @return map of input words ordered by frequency.
      */
-    public HashMap<String, Integer> listWordsOrderedByFrequency() {
+    public Map<String, Integer> listWordsOrderedByFrequency() {
 
-        HashMap<String, Integer> words = buildMapping();
+        Map<String, Integer> words = buildMapping();
         words.values();
-        HashMap<String, Integer> sortedWords = (HashMap<String, Integer>) sortByValue(words);
+        Map<String, Integer> sortedWords = (HashMap<String, Integer>) sortByValue(words);
         Set<String> k = sortedWords.keySet();
         Object[] ka = k.toArray();
         Collection<Integer> v = sortedWords.values();
         Object[] va = v.toArray();
         for (int i = 0; i < ka.length; i++) {
-            System.out.println(ka[i] + "\t" + va[i]);
+            LOGGER.info(ka[i] + "\t" + va[i]);
         }
         return sortedWords;
     }
@@ -527,7 +525,6 @@ public class AnalysisTools {
             }
         };
         SortedSet<Map.Entry<String, Integer>> sortedSet = new TreeSet<Entry<String, Integer>>(comparator);
-        //   sortedSet.addAll(entry); //dont use this
 
         for (Entry<String, Integer> entry2 : entry) {
             sortedSet.add(entry2);
@@ -537,7 +534,7 @@ public class AnalysisTools {
         for (Map.Entry<String, Integer> entry1 : sortedSet) {
             sortedMap.put(entry1.getKey(), entry1.getValue());
         }
-        System.out.println(sortedMap);
+        LOGGER.info(sortedMap.toString());
 
         return sortedMap;
     }
@@ -547,9 +544,9 @@ public class AnalysisTools {
      *
      * @return the hash map
      */
-    private HashMap<String, Integer> buildMapping() {
+    private Map<String, Integer> buildMapping() {
 
-        HashMap<String, Integer> words = new HashMap<String, Integer>();
+        Map<String, Integer> words = new HashMap<String, Integer>();
         for (int i = 0; i < stringInput.length; i++) {
             String[] lineWords = stringInput[i][0].split("\\s");
 
@@ -586,7 +583,7 @@ public class AnalysisTools {
         });
 
         for (AccuracyMetrics p : classbyRecall) {
-            System.out.println("Recall of " + p.getClassification() + "\t" + p.getRecall());
+            LOGGER.info("Recall of " + p.getClassification() + "\t" + p.getRecall());
         }
 
         return classbyRecall;
@@ -612,7 +609,7 @@ public class AnalysisTools {
         });
 
         for (AccuracyMetrics p : classbyPrecision) {
-            System.out.println("Precision of " + p.getClassification() + "\t" + p.getPrecision());
+            LOGGER.info("Precision of " + p.getClassification() + "\t" + p.getPrecision());
         }
 
         return classbyPrecision;
@@ -638,7 +635,7 @@ public class AnalysisTools {
         });
 
         for (AccuracyMetrics p : classbyAccuracy) {
-            System.out.println("Accuracy of " + p.getClassification() + "\t" + p.getAccuracy());
+            LOGGER.info("Accuracy of " + p.getClassification() + "\t" + p.getAccuracy());
         }
         return classbyAccuracy;
     }
@@ -663,8 +660,8 @@ public class AnalysisTools {
                 uniqueTestingLines++;
             }
         }
-        System.out.println("uniqueTestingLines " + uniqueTestingLines);
-        System.out.println("uniqueLinesTraining " + uniqueLinesTraining.size());
+        LOGGER.info("uniqueTestingLines " + uniqueTestingLines);
+        LOGGER.info("uniqueLinesTraining " + uniqueLinesTraining.size());
         ratio = uniqueTestingLines / (double) uniqueLinesTraining.size();
         return ratio;
     }
@@ -677,11 +674,11 @@ public class AnalysisTools {
      * @return the unique lines
      * @throws IOException Signals that an I/O exception has occurred.
      */
-    public HashMap<String, Integer> getUniqueLines(final File trainingFile) throws IOException {
+    public Map<String, Integer> getUniqueLines(final File trainingFile) throws IOException {
 
-        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(trainingFile), "UTF8"));
+        BufferedReader br = ReaderWriterFactory.createBufferedReader(trainingFile);
         String line = "";
-        HashMap<String, Integer> uniqueLines = new HashMap<String, Integer>();
+        Map<String, Integer> uniqueLines = new HashMap<String, Integer>();
         while ((line = br.readLine()) != null) {
             line = line.split("\\t")[0].trim();
             line = standardise(line);

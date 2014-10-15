@@ -8,10 +8,10 @@ import java.util.List;
 import java.util.Set;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.classification.Classification;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeFactory;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeDictionary;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeNotValidException;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeTriple;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.RecordFactory;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
@@ -23,6 +23,8 @@ public class ClassifierTestingHelper {
 
     /** The testing bucket. */
     private Bucket testingBucket;
+
+    private CodeDictionary codeDictionary;
 
     /**
      * Instantiates a new classifier testing helper.
@@ -43,9 +45,19 @@ public class ClassifierTestingHelper {
      */
     public Bucket giveBucketTestingOccCodes(final Bucket bucket) throws IOException, CodeNotValidException, URISyntaxException {
 
+        loadDictionary("/CodeFactoryTestFile.txt");
+        int c = 0;
+        int size = bucket.size();
         for (Record record : bucket) {
-            loadDictionary("/CodeFactoryTestFile.txt");
-            record = addGoldStandardCodeToRecord(record, "2200");
+            if (c < (size / 2.0)) {
+                record = addGoldStandardCodeToRecord(record, "2200");
+            }
+            else {
+                record = addGoldStandardCodeToRecord(record, "2100");
+
+            }
+            c++;
+
         }
 
         return bucket;
@@ -78,14 +90,13 @@ public class ClassifierTestingHelper {
      * @param bucket the bucket
      * @return the bucket
      * @throws URISyntaxException the URI syntax exception
+     * @throws IOException
      */
-    public Bucket giveBucketTestingCODCodes(final Bucket bucket) throws URISyntaxException {
+    public Bucket giveBucketTestingCODCodes(final Bucket bucket) throws URISyntaxException, IOException {
 
         for (Record record : bucket) {
-            Set<CodeTriple> codeTriples = new HashSet<CodeTriple>();
             loadDictionary("/CodeFactoryCoDFile.txt");
             addCodeTriplesStandardCodeToRecord(record, "R99");
-            record.addAllCodeTriples(codeTriples);
         }
 
         return bucket;
@@ -98,14 +109,13 @@ public class ClassifierTestingHelper {
      * @param code the code to give to the records in the bucket
      * @return the bucket
      * @throws URISyntaxException the URI syntax exception
+     * @throws IOException
      */
-    public Bucket giveBucketTestingHICODCodes(final Bucket bucket, final String code) throws URISyntaxException {
+    public Bucket giveBucketTestingHICODCodes(final Bucket bucket, final String code) throws URISyntaxException, IOException {
 
         for (Record record : bucket) {
-            Set<CodeTriple> codeTriples = new HashSet<CodeTriple>();
             loadDictionary("/CodeFactoryCoDFile.txt");
             addCodeTriplesStandardCodeToRecord(record, code);
-            record.addAllCodeTriples(codeTriples);
         }
 
         return bucket;
@@ -118,11 +128,12 @@ public class ClassifierTestingHelper {
      *
      * @param codeDictionaryFile the code dictionary file
      * @throws URISyntaxException the URI syntax exception
+    s
      */
-    private void loadDictionary(final String codeDictionaryFile) throws URISyntaxException {
+    private void loadDictionary(final String codeDictionaryFile) throws URISyntaxException, IOException {
 
         File file = new File(this.getClass().getResource(codeDictionaryFile).toURI());
-        CodeFactory.getInstance().loadDictionary(file);
+        codeDictionary = new CodeDictionary(file);
     }
 
     /**
@@ -134,9 +145,16 @@ public class ClassifierTestingHelper {
      */
     private Record addGoldStandardCodeToRecord(final Record record, final String goldStandardCode) {
 
-        Code code = CodeFactory.getInstance().getCode(goldStandardCode);
-        CodeTriple c = new CodeTriple(code, new TokenSet(record.getOriginalData().getDescription()), 1.0);
-        Set<CodeTriple> set = new HashSet<>();
+        Code code = null;
+        try {
+            code = codeDictionary.getCode(goldStandardCode);
+        }
+        catch (CodeNotValidException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        Classification c = new Classification(code, new TokenSet(record.getOriginalData().getDescription()), 1.0);
+        Set<Classification> set = new HashSet<>();
         set.add(c);
         record.getOriginalData().setGoldStandardClassification(set);
         return record;
@@ -151,11 +169,18 @@ public class ClassifierTestingHelper {
      */
     private Record addCodeTriplesStandardCodeToRecord(final Record record, final String codeAsString) {
 
-        Code code = CodeFactory.getInstance().getCode(codeAsString);
-        CodeTriple c = new CodeTriple(code, new TokenSet(record.getOriginalData().getDescription()), 1.0);
-        Set<CodeTriple> set = new HashSet<>();
+        Code code = null;
+        try {
+            code = codeDictionary.getCode(codeAsString);
+        }
+        catch (CodeNotValidException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        Classification c = new Classification(code, new TokenSet(record.getOriginalData().getDescription()), 1.0);
+        Set<Classification> set = new HashSet<>();
         set.add(c);
-        record.addCodeTriples(c);
+        record.addClassification(record.getOriginalData().getDescription().get(0), c);
         return record;
     }
 

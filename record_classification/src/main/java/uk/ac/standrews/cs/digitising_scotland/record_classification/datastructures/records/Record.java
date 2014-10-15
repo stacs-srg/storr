@@ -1,11 +1,13 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records;
 
-import java.util.Collection;
-import java.util.LinkedHashSet;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.OriginalData;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeTriple;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.classification.Classification;
+
+import com.google.common.collect.HashMultimap;
 
 /**
  * The Class Record. Represents a Record and all associated data, including that which is supplied by NRS.
@@ -19,7 +21,7 @@ public class Record {
     private OriginalData originalData;
 
     /** The code triples. */
-    private Set<CodeTriple> codeTriples;
+    private HashMultimap<String, Classification> listOfClassifications;
 
     /**
      * Instantiates a new record.
@@ -30,7 +32,37 @@ public class Record {
 
         this.id = id;
         this.originalData = originalData;
-        this.codeTriples = new LinkedHashSet<>();
+        listOfClassifications = HashMultimap.create();
+
+    }
+
+    public boolean isFullyClassified() {
+
+        for (String description : originalData.getDescription())
+            if (!descriptionIsClassified(description)) { return false; }
+        return true;
+    }
+
+    public boolean descriptionIsClassified(final String description) {
+
+        return listOfClassifications.containsKey(description);
+    }
+
+    public void addClassificationsToDescription(final String description, final Set<Classification> classifications) {
+
+        for (Classification codeTriple : classifications) {
+            addClassification(description, codeTriple);
+        }
+    }
+
+    /**
+     * Copy the current records original attributes.
+     * @param source
+     */
+    public Record copyOfOriginalRecord(final Record source) {
+
+        return new Record(source.id, source.originalData);
+
     }
 
     /**
@@ -44,13 +76,31 @@ public class Record {
     }
 
     /**
-     * Gets the cleaned description.The cleaned description is the original description with punctuation etc removed.
+     * Gets the description from the record's original data object.
      *
      * @return the cleaned description
      */
-    public String getDescription() {
+    public List<String> getDescription() {
 
         return originalData.getDescription();
+    }
+
+    /**
+     * Updates a specific line of the description to a new value.
+     * @param oldDescription line to update
+     * @param newDescription new value
+     * @return true if replacement successful
+     */
+    public boolean updateDescription(final String oldDescription, final String newDescription) {
+
+        int index = originalData.getDescription().indexOf(oldDescription);
+        if (index != -1) {
+            originalData.getDescription().set(index, newDescription);
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 
     /**
@@ -64,14 +114,14 @@ public class Record {
     }
 
     /**
-     * Returns the gold standard set of {@link CodeTriple} for this Record.
-     * If no gold standard set exists then an empty {@link CodeTriple} will be returned.
+     * Returns the gold standard set of {@link Classification} for this Record.
+     * If no gold standard set exists then an empty {@link Classification} will be returned.
      *
      * @return the gold standard classification set
      */
-    public Set<CodeTriple> getGoldStandardClassificationSet() {
+    public Set<Classification> getGoldStandardClassificationSet() {
 
-        return originalData.getGoldStandardCodeTriples();
+        return originalData.getGoldStandardClassifications();
     }
 
     /**
@@ -88,28 +138,57 @@ public class Record {
         return false;
     }
 
-    @Override
-    public String toString() {
+    /**
+     * Adds a {@link Classification} to the list of classifications that this record has. The classification's tokenSet is used as the key.
+     * @param classification to add.
+     * @return true if the method increased the size of the multimap, or false if the multimap already contained the key-value pair
+     */
+    public boolean addClassification(final Classification classification) {
 
-        return "Record [id=" + id + ", goldStandardTriples=" + originalData.getGoldStandardCodeTriples() + ", codeTriples=" + codeTriples + "]";
+        return listOfClassifications.put(classification.getTokenSet().toString(), classification);
     }
 
-    /* (non-Javadoc)
-     * @see java.lang.Object#hashCode()
+    /**
+     * Adds a {@link Classification} to the list of classifications that this record has. The description given is used as the key.
+     * @param classification to add.
+     * @return true if the method increased the size of the multimap, or false if the multimap already contained the key-value pair
      */
+    public boolean addClassification(final String description, final Classification classification) {
+
+        return listOfClassifications.put(description, classification);
+    }
+
+    /**
+     * Gets the Set of {@link Classification}s contained in this record.
+     *
+     * @return the Set of CodeTriples.
+     */
+    public Set<Classification> getClassifications() {
+
+        return new HashSet<>(listOfClassifications.values());
+    }
+
+    public HashMultimap<String, Classification> getListOfClassifications() {
+
+        return listOfClassifications;
+    }
+
+    public void setListOfClassifications(final HashMultimap<String, Classification> listOfClassifications) {
+
+        this.listOfClassifications = listOfClassifications;
+    }
+
     @Override
     public int hashCode() {
 
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((codeTriples == null) ? 0 : codeTriples.hashCode());
+        result = prime * result + id;
+        result = prime * result + ((listOfClassifications == null) ? 0 : listOfClassifications.hashCode());
         result = prime * result + ((originalData == null) ? 0 : originalData.hashCode());
         return result;
     }
 
-    /* (non-Javadoc)
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
     @Override
     public boolean equals(final Object obj) {
 
@@ -117,10 +196,11 @@ public class Record {
         if (obj == null) { return false; }
         if (getClass() != obj.getClass()) { return false; }
         Record other = (Record) obj;
-        if (codeTriples == null) {
-            if (other.codeTriples != null) { return false; }
+        if (id != other.id) { return false; }
+        if (listOfClassifications == null) {
+            if (other.listOfClassifications != null) { return false; }
         }
-        else if (!codeTriples.equals(other.codeTriples)) { return false; }
+        else if (!listOfClassifications.equals(other.listOfClassifications)) { return false; }
         if (originalData == null) {
             if (other.originalData != null) { return false; }
         }
@@ -128,39 +208,10 @@ public class Record {
         return true;
     }
 
-    /**
-     * Gets the Set of {@link CodeTriple}s contained in this record.
-     *
-     * @return the Set of CodeTriples.
-     */
-    public Set<CodeTriple> getCodeTriples() {
+    @Override
+    public String toString() {
 
-        return codeTriples;
+        return "Record [id=" + id + ", originalData=" + originalData + ", listOfClassifications=" + listOfClassifications + "]";
     }
 
-    /**
-     * Adds a code triple to the set of {@link CodeTriple}s maintained by this record.
-     * The CodeTriple is only added if it is non null.
-     *
-     * @param codeTriples the code triple to add
-     */
-    public void addCodeTriples(final CodeTriple codeTriples) {
-
-        if (codeTriples != null) {
-            this.codeTriples.add(codeTriples);
-        }
-    }
-
-    /**
-     * Adds all the code triples in the collection.
-     * Null CodeTriples are not added.
-     * 
-     * @param codeTriples the  collection of code triples to add.
-     */
-    public void addAllCodeTriples(final Collection<CodeTriple> codeTriples) {
-
-        for (CodeTriple codeTriple : codeTriples) {
-            addCodeTriples(codeTriple);
-        }
-    }
 }

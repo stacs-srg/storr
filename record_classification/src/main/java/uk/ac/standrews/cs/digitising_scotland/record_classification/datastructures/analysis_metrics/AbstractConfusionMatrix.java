@@ -3,8 +3,8 @@ package uk.ac.standrews.cs.digitising_scotland.record_classification.datastructu
 import java.util.Set;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeFactory;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeTriple;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.classification.Classification;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeIndexer;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 
 /**
@@ -29,14 +29,19 @@ public abstract class AbstractConfusionMatrix {
     /** The true positive. */
     protected double[] truePositive;
 
+    protected CodeIndexer index;
+
     /**
      * Instantiates a new abstract confusion matrix and populated the variables.
      *
      * @param bucket the bucket of classified records.
-     */
-    public AbstractConfusionMatrix(final Bucket bucket) {
+     * @param codeIndex the {@link CodeIndexer} that contains the mapping of codes to ID's for these classifications.
 
-        int numberOfOutputClasses = CodeFactory.getInstance().getNumberOfOutputClasses();
+     */
+    public AbstractConfusionMatrix(final Bucket bucket, final CodeIndexer codeIndex) {
+
+        this.index = codeIndex;
+        int numberOfOutputClasses = index.getNumberOfOutputClasses();
         totalPredictions = new double[numberOfOutputClasses];
         falsePositive = new double[numberOfOutputClasses];
         trueNegative = new double[numberOfOutputClasses];
@@ -52,7 +57,7 @@ public abstract class AbstractConfusionMatrix {
      * @param setCodeTriples the set of code triples
      * @param goldStandardTriples the set of gold standard triples
      */
-    protected abstract void truePosAndFalseNeg(final Set<CodeTriple> setCodeTriples, final Set<CodeTriple> goldStandardTriples);
+    protected abstract void truePosAndFalseNeg(final Set<Classification> setCodeTriples, final Set<Classification> goldStandardTriples);
 
     /**
      * Calculates the total number of predictions and false positive count.
@@ -60,7 +65,7 @@ public abstract class AbstractConfusionMatrix {
      * @param setCodeTriples the set code triples
      * @param goldStandardTriples the gold standard triples
      */
-    protected abstract void totalAndFalsePos(final Set<CodeTriple> setCodeTriples, final Set<CodeTriple> goldStandardTriples);
+    protected abstract void totalAndFalsePos(final Set<Classification> setCodeTriples, final Set<Classification> goldStandardTriples);
 
     /**
      * Calculates the true/false positive/negative counts for the bucket.
@@ -71,8 +76,8 @@ public abstract class AbstractConfusionMatrix {
     private void countStats(final Bucket bucket) {
 
         for (Record record : bucket) {
-            Set<CodeTriple> setCodeTriples = record.getCodeTriples();
-            Set<CodeTriple> goldStandardTriples = record.getGoldStandardClassificationSet();
+            Set<Classification> setCodeTriples = record.getClassifications();
+            Set<Classification> goldStandardTriples = record.getGoldStandardClassificationSet();
             totalAndFalsePos(setCodeTriples, goldStandardTriples);
             truePosAndFalseNeg(setCodeTriples, goldStandardTriples);
         }

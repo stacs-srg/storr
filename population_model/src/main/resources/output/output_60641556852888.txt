@@ -1,0 +1,769 @@
+Test Population
+1683
+Population: 915
+1684
+Population: 917
+1684
+Population: 917
+1685
+Population: 918
+1686
+Population: 921
+1686
+Population: 921
+1687
+Population: 923
+1688
+Population: 925
+1688
+Population: 925
+1689
+Population: 928
+1690
+Population: 930
+1691
+Population: 940
+1692
+Population: 949
+1693
+Population: 958
+1694
+Population: 965
+1695
+Population: 980
+1696
+Population: 996
+1697
+Population: 1015
+1698
+Population: 1034
+1699
+Population: 1060
+1700
+Population: 1099
+1701
+Population: 1137
+1702
+Population: 1174
+1703
+Population: 1227
+1704
+Population: 1285
+1705
+Population: 1331
+1706
+Population: 1393
+1707
+Population: 1465
+1708
+Population: 1531
+1709
+Population: 1599
+1710
+Population: 1659
+1711
+Population: 1732
+1712
+Population: 1811
+1713
+Population: 1887
+1714
+Population: 1974
+1715
+Population: 2056
+1716
+Population: 2134
+1717
+Population: 2252
+1718
+Population: 2355
+1719
+Population: 2464
+1720
+Population: 2562
+1721
+Population: 2673
+1722
+Population: 2778
+1723
+Population: 2865
+1724
+Population: 2965
+1725
+Population: 3107
+1726
+Population: 3252
+1727
+Population: 3371
+1728
+Population: 3502
+1729
+Population: 3646
+1730
+Population: 3809
+1731
+Population: 3944
+1732
+Population: 4098
+1733
+Population: 4241
+1734
+Population: 4385
+1735
+Population: 4569
+1736
+Population: 4743
+1737
+Population: 4901
+1738
+Population: 5089
+1739
+Population: 5272
+1740
+Population: 5468
+1741
+Population: 5665
+1742
+Population: 5893
+1743
+Population: 6082
+1744
+Population: 6281
+1745
+Population: 6499
+1746
+Population: 6726
+1747
+Population: 6954
+1748
+Population: 7188
+1749
+Population: 7415
+1750
+Population: 7643
+1751
+Population: 7891
+1752
+Population: 8154
+1753
+Population: 8398
+1754
+Population: 8642
+1755
+Population: 8882
+1756
+Population: 9125
+1757
+Population: 9397
+1758
+Population: 9658
+1759
+Population: 9904
+1760
+Population: 10148
+1761
+Population: 10447
+1762
+Population: 10739
+1763
+Population: 11012
+1764
+Population: 11306
+1765
+Population: 11580
+1766
+Population: 11867
+1767
+Population: 12175
+1768
+Population: 12478
+1769
+Population: 12762
+1770
+Population: 13047
+1771
+Population: 13337
+1772
+Population: 13652
+1773
+Population: 13975
+1774
+Population: 14252
+1775
+Population: 14552
+1776
+Population: 14865
+1777
+Population: 15143
+1778
+Population: 15476
+1779
+Population: 15807
+1780
+Population: 16151
+1781
+Population: 16380
+1782
+Population: 16586
+1783
+Population: 16790
+1784
+Population: 16974
+1785
+Population: 17141
+1786
+Population: 17323
+1787
+Population: 17449
+1788
+Population: 17541
+1789
+Population: 17670
+1790
+Population: 17711
+1791
+Population: 17772
+1792
+Population: 17814
+1793
+Population: 17854
+1794
+Population: 17880
+1795
+Population: 17889
+1796
+Population: 17890
+1797
+Population: 17842
+1798
+Population: 17803
+1799
+Population: 17776
+1800
+Population: 17701
+1801
+Population: 17635
+1802
+Population: 17582
+1803
+Population: 17468
+1804
+Population: 17383
+1805
+Population: 17296
+1806
+Population: 17188
+1807
+Population: 17073
+1808
+Population: 16974
+1809
+Population: 16852
+1810
+Population: 16706
+1811
+Population: 16579
+1812
+Population: 16460
+1813
+Population: 16312
+1814
+Population: 16217
+1815
+Population: 16105
+1816
+Population: 16033
+1817
+Population: 15985
+1818
+Population: 15943
+1819
+Population: 15890
+1820
+Population: 15840
+1821
+Population: 15842
+1822
+Population: 15885
+1823
+Population: 15929
+1824
+Population: 15980
+1825
+Population: 15989
+1826
+Population: 16004
+1827
+Population: 16047
+1828
+Population: 16086
+1829
+Population: 16094
+1830
+Population: 16057
+1831
+Population: 15989
+1832
+Population: 15943
+1833
+Population: 15872
+1834
+Population: 15772
+1835
+Population: 15670
+1836
+Population: 15535
+1837
+Population: 15426
+1838
+Population: 15289
+1839
+Population: 15165
+1840
+Population: 15069
+1841
+Population: 14898
+1842
+Population: 14712
+1843
+Population: 14539
+1844
+Population: 14369
+1845
+Population: 14206
+1846
+Population: 14037
+1847
+Population: 13868
+1848
+Population: 13712
+1849
+Population: 13575
+1850
+Population: 13435
+1851
+Population: 13331
+1852
+Population: 13211
+1853
+Population: 13081
+1854
+Population: 12994
+1855
+Population: 12892
+1856
+Population: 12805
+1857
+Population: 12697
+1858
+Population: 12647
+1859
+Population: 12563
+1860
+Population: 12505
+1861
+Population: 12451
+1862
+Population: 12450
+1863
+Population: 12441
+1864
+Population: 12469
+1865
+Population: 12472
+1866
+Population: 12499
+1867
+Population: 12522
+1868
+Population: 12560
+1869
+Population: 12594
+1870
+Population: 12682
+1871
+Population: 12724
+1872
+Population: 12804
+1873
+Population: 12889
+1874
+Population: 12966
+1875
+Population: 13023
+1876
+Population: 13076
+1877
+Population: 13118
+1878
+Population: 13174
+1879
+Population: 13194
+1880
+Population: 13221
+1881
+Population: 13246
+1882
+Population: 13284
+1883
+Population: 13335
+1884
+Population: 13363
+1885
+Population: 13379
+1886
+Population: 13391
+1887
+Population: 13388
+1888
+Population: 13377
+1889
+Population: 13397
+1890
+Population: 13406
+1891
+Population: 13387
+1892
+Population: 13364
+1893
+Population: 13379
+1894
+Population: 13342
+1895
+Population: 13277
+1896
+Population: 13234
+1897
+Population: 13206
+1898
+Population: 13177
+1899
+Population: 13126
+1900
+Population: 13103
+1901
+Population: 13071
+1902
+Population: 13082
+1903
+Population: 13131
+1904
+Population: 13150
+1905
+Population: 13173
+1906
+Population: 13180
+1907
+Population: 13229
+1908
+Population: 13253
+1909
+Population: 13246
+1910
+Population: 13267
+1911
+Population: 13305
+1912
+Population: 13343
+1913
+Population: 13354
+1914
+Population: 13403
+1915
+Population: 13396
+1916
+Population: 13409
+1917
+Population: 13398
+1918
+Population: 13438
+1919
+Population: 13470
+1920
+Population: 13467
+1921
+Population: 13468
+1922
+Population: 13488
+1923
+Population: 13510
+1924
+Population: 13520
+1925
+Population: 13528
+1926
+Population: 13504
+1927
+Population: 13517
+1928
+Population: 13507
+1929
+Population: 13492
+1930
+Population: 13470
+1931
+Population: 13483
+1932
+Population: 13460
+1933
+Population: 13452
+1934
+Population: 13436
+1935
+Population: 13411
+1936
+Population: 13439
+1937
+Population: 13428
+1938
+Population: 13428
+1939
+Population: 13420
+1940
+Population: 13390
+1941
+Population: 13377
+1942
+Population: 13411
+1943
+Population: 13429
+1944
+Population: 13399
+1945
+Population: 13396
+1946
+Population: 13388
+1947
+Population: 13439
+1948
+Population: 13461
+1949
+Population: 13467
+1950
+Population: 13480
+1951
+Population: 13450
+1952
+Population: 13436
+1953
+Population: 13435
+1954
+Population: 13434
+1955
+Population: 13460
+1956
+Population: 13486
+1957
+Population: 13506
+1958
+Population: 13520
+1959
+Population: 13552
+1960
+Population: 13564
+1961
+Population: 13576
+1962
+Population: 13571
+1963
+Population: 13567
+1964
+Population: 13561
+1965
+Population: 13558
+1966
+Population: 13588
+1967
+Population: 13590
+1968
+Population: 13590
+1969
+Population: 13558
+1970
+Population: 13585
+1971
+Population: 13593
+1972
+Population: 13596
+1973
+Population: 13581
+1974
+Population: 13584
+1975
+Population: 13571
+1976
+Population: 13578
+1977
+Population: 13566
+1978
+Population: 13566
+1979
+Population: 13563
+1980
+Population: 13546
+1981
+Population: 13547
+1982
+Population: 13550
+1983
+Population: 13548
+1984
+Population: 13520
+1985
+Population: 13546
+1986
+Population: 13521
+1987
+Population: 13517
+1988
+Population: 13523
+1989
+Population: 13531
+1990
+Population: 13510
+1991
+Population: 13499
+1992
+Population: 13503
+1993
+Population: 13510
+1994
+Population: 13508
+1995
+Population: 13524
+1996
+Population: 13537
+1997
+Population: 13567
+1998
+Population: 13549
+1999
+Population: 13527
+2000
+Population: 13513
+2001
+Population: 13528
+2002
+Population: 13523
+2003
+Population: 13530
+2004
+Population: 13531
+2005
+Population: 13530
+2006
+Population: 13553
+2007
+Population: 13554
+2008
+Population: 13573
+2009
+Population: 13580
+2010
+Population: 13570
+2011
+Population: 13584
+2012
+Population: 13569
+
+-------Population Logger-------
+
+MALE AGE AT MARRIAGE GRAPH
+1879|                        @                                                                           
+    |                      @@@                                                                           
+    |                     @@@@@                                                                          
+    |                    @@@@@@@                                                                         
+    |                    @@@@@@@@                                                                        
+    |                   @@@@@@@@@@                                                                       
+    |                  @@@@@@@@@@@@                                                                      
+    |                @@@@@@@@@@@@@@@@                                                                    
+    |                @@@@@@@@@@@@@@@@@@@                                                                 
+   0|               @@@@@@@@@@@@@@@@@@@@@@@                                                              
+    0‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾100
+
+FEMALE AGE AT MARRIAGE GRAPH
+1722|                     @                                                                              
+    |                 @@@@@@@                                                                            
+    |                @@@@@@@@@                                                                           
+    |                @@@@@@@@@                                                                           
+    |                @@@@@@@@@@                                                                          
+    |               @@@@@@@@@@@@                                                                         
+    |               @@@@@@@@@@@@@@                                                                       
+    |               @@@@@@@@@@@@@@@                                                                      
+    |               @@@@@@@@@@@@@@@@                                                                     
+   0|               @@@@@@@@@@@@@@@@@@@@@@                                                               
+    0‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾100
+
+AGE DIFFERENCE AT MARRIAGE GRAPH
+2350|@                                                                                                    
+    |@@@                                                                                                  
+    |@@@@                                                                                                 
+    |@@@@@@                                                                                               
+    |@@@@@@@                                                                                              
+    |@@@@@@@@                                                                                             
+    |@@@@@@@@@@                                                                                           
+    |@@@@@@@@@@@                                                                                          
+    |@@@@@@@@@@@@@                                                                                        
+   0|@@@@@@@@@@@@@@@@@@                                                                                   
+    0‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾101
+
+NUMBER OF CHILDREN IN MARRIAGE GRAPH
+7026|@              
+    |@              
+    |@              
+    |@              
+    |@              
+    |@  @@          
+    |@  @@          
+    |@  @@          
+    |@ @@@          
+   0|@@@@@@         
+    0‾‾‾‾‾‾‾‾‾‾‾‾‾15
+
+POPULATION GRAPH
+17890|                                                                                                                @@@                                                                                                                                                                                                                         
+     |                                                                                                        @@@@@@@@   @@@@@@@@@                                                                                                                                                                                                                
+     |                                                                                                     @@@                    @@@@@                                                                                                                                                                                                           
+     |                                                                                                  @@@                            @@@@@             @                                                                                                                                                                                        
+     |                                                                                                 @                                    @@@@@@@@@@@@@ @@@@@@@                                                                                                                                                                                 
+     |                                                                                               @@                                                          @@@@                                                                                                                                                                             
+     |                                                                                             @@                                                                @@@@                                                                                                                                                                         
+     |                                                                                           @@                                                                      @@@@                                                                                                                                                                     
+     |                                                                                         @@                                                                            @@@@                        @@@@@@@@@@@@@@@@@@@@@@@   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ 
+     |                                                                                       @@                                                                                  @@@@@@@       @@@@@@@@@@                       @@@                                                                                                               
+     |                                                                                     @@                                                                                           @@@@@@@                                                                                                                                                   
+     |                                                                                   @@                                                                                                                                                                                                                                                       
+     |                                                                                @@@                                                                                                                                                                                                                                                         
+     |                                                                              @@                                                                                                                                                                                                                                                            
+     |                                                                            @@                                                                                                                                                                                                                                                              
+     |                                                                          @@                                                                                                                                                                                                                                                                
+     |                                                                       @@@                                                                                                                                                                                                                                                                  
+     |                                                                     @@                                                                                                                                                                                                                                                                     
+     |                                                                  @@@                                                                                                                                                                                                                                                                       
+     |                                                                @@                                                                                                                                                                                                                                                                          
+     |                                                             @@@                                                                                                                                                                                                                                                                            
+     |                                                          @@@                                                                                                                                                                                                                                                                               
+     |                                                       @@@                                                                                                                                                                                                                                                                                  
+     |                                                   @@@@                                                                                                                                                                                                                                                                                     
+     |                                               @@@@                                                                                                                                                                                                                                                                                         
+     |                                           @@@@                                                                                                                                                                                                                                                                                             
+     |                                     @@@@@@                                                                                                                                                                                                                                                                                                 
+     |                              @@@@@@@                                                                                                                                                                                                                                                                                                       
+     |                     @@@@@@@@@                                                                                                                                                                                                                                                                                                              
+    0| @@@@@@@@@@@@@@@@@@@@                                                                                                                                                                                                                                                                                                                       
+     1682‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾2014
+
+
+Population: 13565
+
+Marriages: 22421
+Divorces: 335
+Remarriages: 0
+Never Married: 16339 - 27.28%
+
+Births: 59892
+Children Per Family: 2.63
+
+Kids killed by early stop: 0
+
+Run time 39702ms

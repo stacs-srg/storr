@@ -96,6 +96,17 @@ public class Bucket implements Iterable<Record> {
     }
 
     /**
+     * Checks if a bucket is empty or not.
+     *
+     * @return true is there are no records in the bucket, false if not.
+     */
+    public boolean isEmpty() {
+
+        if (records.size() == 0) { return true; }
+        return false;
+    }
+
+    /**
      * Iterator A {@link Record} itereator that allows iteration though all the records in
      * the bucket.
      *

@@ -22,24 +22,39 @@ import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.gen
 import uk.ac.standrews.cs.digitising_scotland.population_model.distributions.general.NotSetUpAtClassInitilisationException;
 import uk.ac.standrews.cs.digitising_scotland.population_model.organic.OrganicPopulation;
 
+/**
+ * Provides an Integer based temporal distribution class.
+ * @see TemporalDistribution
+ * 
+ * @author Tom Dalton (tsd4@st-andrews.ac.uk)
+ */
 public class TemporalIntegerDistribution extends TemporalDistribution<Integer> {
 
-	public TemporalIntegerDistribution(OrganicPopulation population, String distributionKey, Random random, boolean handleNoPermissableValueAsZero) {
-		super(population, distributionKey, random, handleNoPermissableValueAsZero);
-	}
-
-	@Override
-	public Integer getSample(int date) {
-		return getIntSample(date);
-	}
-
-	@Override
-	public Integer getSample() {
-		return getSample(0);
-	}
+    /**
+     * Constructs an Integer based TemporalDistribution. 
+     * 
+     * @param population The instance of the population which the distribution pertains to.
+     * @param distributionKey The key specified in the config file as the location of the relevant file.
+     * @param random The random to be used.
+     * @param handleNoPermissibleValueAsZero Indicates if the distribution is to treat the returning of NoPermissibleValueExceptions as returning a zero value.
+     * @see TemporalDistribution
+     */
+    public TemporalIntegerDistribution(final OrganicPopulation population, final String distributionKey, final Random random, final boolean handleNoPermissableValueAsZero) {
+        super(population, distributionKey, random, handleNoPermissableValueAsZero);
+    }
 
     @Override
-    public Integer getSample(int date, int earliestValue, int latestValue) throws NoPermissableValueException, NotSetUpAtClassInitilisationException {
+    public Integer getSample(final int date) {
+        return getIntSample(date);
+    }
+
+    @Override
+    public Integer getSample() {
+        return getSample(0);
+    }
+
+    @Override
+    public Integer getSample(final int date, final int earliestValue, final int latestValue) throws NoPermissableValueException, NotSetUpAtClassInitilisationException {
         return getIntSample(date, earliestValue, latestValue);
     }
 

@@ -1,5 +1,7 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code;
 
+import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.resolver.Interfaces.AncestorAble;
+
 /**
  * Represents either a HICOD or HISCO code.
  * As isValid will be a different check for each type o code, only CoDCode and OccCode can
@@ -7,10 +9,9 @@ package uk.ac.standrews.cs.digitising_scotland.record_classification.datastructu
  * @author jkc25, frjd2
  *
  */
-public abstract class Code implements java.io.Serializable {
+public class Code implements java.io.Serializable, AncestorAble<Code> {
 
     private static final long serialVersionUID = 2214478914861326040L;
-    private int id;
     private String code;
     private String description;
 
@@ -20,26 +21,11 @@ public abstract class Code implements java.io.Serializable {
      * @param description description of code
      * @throws CodeNotValidException is code is not a valid
      */
-    protected Code(final String code, final String description, final int id) throws CodeNotValidException {
+    protected Code(final String code, final String description) {
 
-        this();
-        this.id = id;
         this.code = code;
         this.description = description;
-        checkValid();
     }
-
-    protected Code() {
-
-    }
-
-    /**
-     * Checks if the code is a valid for the given type.
-     *
-     * @return true, if the code is valid
-     * @throws CodeNotValidException is code is not a valid code
-     */
-    protected abstract boolean checkValid() throws CodeNotValidException;
 
     /**
      Checks if this is a ancestor of the supplied {@link Code}.
@@ -101,13 +87,10 @@ public abstract class Code implements java.io.Serializable {
         return code.length();
     }
 
-    /**
-     * Gets the code ID.
-     * @return the ID
-     */
-    public int getID() {
+    @Override
+    public String toString() {
 
-        return id;
+        return "Code [code=" + code + ", description=" + description + "]";
     }
 
     @Override
@@ -116,7 +99,6 @@ public abstract class Code implements java.io.Serializable {
         final int prime = 31;
         int result = 1;
         result = prime * result + ((code == null) ? 0 : code.hashCode());
-        result = prime * result + ((description == null) ? 0 : description.hashCode());
         return result;
     }
 
@@ -131,17 +113,7 @@ public abstract class Code implements java.io.Serializable {
             if (other.code != null) { return false; }
         }
         else if (!code.equals(other.code)) { return false; }
-        if (description == null) {
-            if (other.description != null) { return false; }
-        }
-        else if (!description.equals(other.description)) { return false; }
         return true;
-    }
-
-    @Override
-    public String toString() {
-
-        return "Code [code=" + code + ", description=" + description + "]";
     }
 
 }

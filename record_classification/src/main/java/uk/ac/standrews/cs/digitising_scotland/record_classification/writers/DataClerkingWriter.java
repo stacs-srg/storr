@@ -3,12 +3,10 @@ package uk.ac.standrews.cs.digitising_scotland.record_classification.writers;
 import java.io.BufferedWriter;
 import java.io.Closeable;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
-import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
+import uk.ac.standrews.cs.digitising_scotland.tools.ReaderWriterFactory;
 
 /**
  * Contains methods for writing {@link Record}s to file in the format specified by NRS.
@@ -27,9 +25,7 @@ public class DataClerkingWriter extends OutputDataFormatter implements Closeable
      */
     public DataClerkingWriter(final File outputPath) throws IOException {
 
-        FileOutputStream fileOutputStream = new FileOutputStream(outputPath);
-        OutputStreamWriter outputStream = new OutputStreamWriter(fileOutputStream, FileManipulation.FILE_CHARSET);
-        writer = new BufferedWriter(outputStream);
+        writer = (BufferedWriter) ReaderWriterFactory.createBufferedWriter(outputPath);
     }
 
     /**
@@ -62,14 +58,16 @@ public class DataClerkingWriter extends OutputDataFormatter implements Closeable
      */
     private String formatRecord(final Record record) {
 
-        String description = getDescription(record);
-        String year = getYear(record);
-        String imageQuality = getImageQuality(record);
-        String sex = getSex(record);
-        String ageGroup = getAgeGroup(record);
-        String codes = getCodes(record);
+        StringBuilder sb = new StringBuilder();
+        char fieldID = 'a';
+        for (String description : record.getDescription()) {
+            int id = record.getid();
+            String year = getYear(record);
+            String codes = getCodes(record, description);
+            sb.append(year + id + "|" + fieldID + "|" + description + "|" + codes + "\n");
+            fieldID++;
+        }
 
-        return description + year + imageQuality + sex + ageGroup + codes + "\n";
+        return sb.toString();
     }
-
 }

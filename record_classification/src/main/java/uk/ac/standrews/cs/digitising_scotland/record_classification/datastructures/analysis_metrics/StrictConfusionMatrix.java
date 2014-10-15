@@ -3,8 +3,9 @@ package uk.ac.standrews.cs.digitising_scotland.record_classification.datastructu
 import java.util.Set;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.classification.Classification;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeTriple;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeIndexer;
 import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
 
 /**
@@ -19,9 +20,9 @@ public class StrictConfusionMatrix extends AbstractConfusionMatrix {
      *
      * @param bucket the bucket
      */
-    public StrictConfusionMatrix(final Bucket bucket) {
+    public StrictConfusionMatrix(final Bucket bucket, final CodeIndexer index) {
 
-        super(bucket);
+        super(bucket, index);
     }
 
     /**
@@ -30,15 +31,16 @@ public class StrictConfusionMatrix extends AbstractConfusionMatrix {
      * @param setCodeTriples the set code triples
      * @param goldStandardTriples the gold standard triples
      */
-    protected void truePosAndFalseNeg(final Set<CodeTriple> setCodeTriples, final Set<CodeTriple> goldStandardTriples) {
+    protected void truePosAndFalseNeg(final Set<Classification> setCodeTriples, final Set<Classification> goldStandardTriples) {
 
-        for (CodeTriple goldStandardCode : goldStandardTriples) {
+        for (Classification goldStandardCode : goldStandardTriples) {
             final Code code = goldStandardCode.getCode();
+            int codeID = index.getID(code);
             if (contains(code, setCodeTriples)) {
-                truePositive[code.getID()]++;
+                truePositive[codeID]++;
             }
             else {
-                falseNegative[code.getID()]++;
+                falseNegative[codeID]++;
             }
         }
 
@@ -50,13 +52,14 @@ public class StrictConfusionMatrix extends AbstractConfusionMatrix {
      * @param setCodeTriples the set code triples
      * @param goldStandardTriples the gold standard triples
      */
-    protected void totalAndFalsePos(final Set<CodeTriple> setCodeTriples, final Set<CodeTriple> goldStandardTriples) {
+    protected void totalAndFalsePos(final Set<Classification> setCodeTriples, final Set<Classification> goldStandardTriples) {
 
-        for (CodeTriple predictedCode : setCodeTriples) {
+        for (Classification predictedCode : setCodeTriples) {
             final Code code = predictedCode.getCode();
-            totalPredictions[code.getID()]++;
+            int codeID = index.getID(code);
+            totalPredictions[codeID]++;
             if (!contains(code, goldStandardTriples)) {
-                falsePositive[code.getID()]++;
+                falsePositive[codeID]++;
             }
         }
     }
@@ -67,7 +70,7 @@ public class StrictConfusionMatrix extends AbstractConfusionMatrix {
      * @param setCodeTriples set to check in
      * @return true if present
      */
-    public boolean contains(final Code code, final Set<CodeTriple> setCodeTriples) {
+    public boolean contains(final Code code, final Set<Classification> setCodeTriples) {
 
         return Utils.contains(code, setCodeTriples);
     }

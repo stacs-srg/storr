@@ -16,6 +16,7 @@
  */
 package uk.ac.standrews.cs.digitising_scotland.population_model.distributions.general;
 
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -29,6 +30,7 @@ public class WeightedDistribution extends RestrictedDistribution<Double> {
     private final Random random;
     private final double[] cumulative_probabilities;
     private final double bucket_size;
+    private final int[] weights;
 
     /**
      * This distribution provides samples from the range 0.0-1.0, selected from a number of equally sized buckets with various weightings.
@@ -44,10 +46,11 @@ public class WeightedDistribution extends RestrictedDistribution<Double> {
      */
     public WeightedDistribution(final int[] weights, final Random random) throws NegativeWeightException {
         this.random = random;
+        this.weights = weights.clone();
         bucket_size = 1.0 / weights.length;
         cumulative_probabilities = generateCumulativeProbabilities(weights);
-        minimumReturnValue = getMinimumReturnValue();
-        maximumReturnValue = getMaximumReturnValue();
+        minimumSpecifiedValue = calculateMinimumReturnValue();
+        maximumSpecifiedValue = calculateMaximumReturnValue();
     }
 
     /**
@@ -65,6 +68,7 @@ public class WeightedDistribution extends RestrictedDistribution<Double> {
         this(weights, random);
         if (handleNoPermissableValueAsZero) {
             zeroCount = 0;
+            zeroCap = 1 / (maximumSpecifiedValue - minimumSpecifiedValue);
         }
     }
 
@@ -90,26 +94,40 @@ public class WeightedDistribution extends RestrictedDistribution<Double> {
     }
 
     @Override
-    public Double getSample(final double earliestReturnValue, final double latestReturnValue) throws NoPermissableValueException {
-        int i;
-        if (earliestReturnValue >= maximumReturnValue || latestReturnValue <= minimumReturnValue) {
+    public Double getSample(final double smallestPermissableReturnValue, final double largestPermissableReturnValue) throws NoPermissableValueException {
+
+        // Checks if the distribution can provide a value that falls in the permissible return range, if not throws a NoPermissablevalueException
+        if (smallestPermissableReturnValue >= maximumSpecifiedValue || largestPermissableReturnValue <= minimumSpecifiedValue) {
+            // If at initialisation it has been detailed that the distribution should treat returning a non permissible value as if it has returned zero.
             if (zeroCount != -1) {
-                if (unusedSampleValues.size() != 0 && (i = unusedSampleValues.indexOf(0)) != -1) {
+                int i;
+                //  then it should remove the first 0 from the unusedSamplesValues list to simulate a returned zero value.
+                if (unusedSampleValues.size() != 0 && (i = getIndexOfFirstZero(unusedSampleValues)) != -1) {
                     unusedSampleValues.remove(i);
-                } else {
+                }
+                // Else if no zero value is found then increment zero count to allow for the next zero return value to be prevented. 
+                else {
                     zeroCount++;
                 }
             }
             throw new NoPermissableValueException();
-        } else {
+        }
+        // Else if distribution can return a value in the permissible range
+        else {
+            // If unused sample values exist
             if (unusedSampleValues.size() != 0) {
+                // then for each unused sample value
                 int j = 0;
-                for (double d : unusedSampleValues) {
-                    if (zeroCount > 0 && d == 0) {
+                for (Double d : unusedSampleValues) {
+                    // If treatment of NoPermissableValues as zero and the zero count is non zero and the considered unused value is of a zero value. 
+                    if (zeroCount > 0 && d.compareTo(zeroCap) <= 0) {
+                        // then remove unused value and decrement zero count.
                         unusedSampleValues.remove(j);
                         zeroCount--;
                     }
-                    if (inRange(d, earliestReturnValue, latestReturnValue)) {
+                    // Else if the given d is in range
+                    else if (inRange(d, smallestPermissableReturnValue, largestPermissableReturnValue)) {
+                        // then remove from unused values list and return as sample value.
                         unusedSampleValues.remove(j);
                         return d;
                     }
@@ -117,26 +135,62 @@ public class WeightedDistribution extends RestrictedDistribution<Double> {
                 }
             }
         }
-        double v = getSample();
-        if (zeroCount > 0 && v == 0) {
+        // On reaching here all unused values have been deemed unsuitable.
+        // Samples for new value.
+        Double v = getSample();
+
+        // If value is a zero value where there is a positive zeroCount and NoPermissableValues are treated as zero.
+        if (zeroCount > 0 && v.compareTo(zeroCap) <= 0) {
+            // Then decrement zero count and take a new sample.
             zeroCount--;
             v = getSample();
         }
-        while (!inRange(v, earliestReturnValue, latestReturnValue)) {
-            if (zeroCount > 0 && v == 0) {
+        // Tests if value is in range.
+        while (!inRange(v, smallestPermissableReturnValue, largestPermissableReturnValue)) {
+            // If value is a zero value where there is a positive zeroCount and NoPermissableValues are treated as zero.  
+            if (zeroCount > 0 && v.compareTo(zeroCap) <= 0) {
+                // Then decrement zero count and take a new sample.
                 zeroCount--;
                 v = getSample();
             } else {
-                unusedSampleValues.add(v);
+                // If not in range then adds to unused sample values list.
+                if (unusedSampleValues.size() < 10000000) {
+                    unusedSampleValues.add(v);
+                }
             }
+            // Takes a new sample.
             v = getSample();
         }
+        // When a suitable value has been reached exits from while loop and returns value.
+
         return v;
     }
 
     // -------------------------------------------------------------------------------------------------------
 
-    private double getMinimumReturnValue() {
+    /**
+     * Returns the weights used by the distribution for graph plotting comparisons.
+     */
+    public int[] getWeights() {
+        return weights.clone();
+    }
+    
+    private int getIndexOfFirstZero(final List<Double> list) {
+        int i = 0;
+        for (Double d : list) {
+            if (d.compareTo(zeroCap) <= 0) {
+                return i;
+            }
+            i++;
+        }
+        return -1;
+    }
+
+    private static boolean inRange(final double d, final double earliestReturnValue, final double latestReturnValue) {
+        return earliestReturnValue <= d && d <= latestReturnValue;
+    }
+
+    private double calculateMinimumReturnValue() {
         int count = 0;
         for (double d : cumulative_probabilities) {
             if (d == 0) {
@@ -148,7 +202,7 @@ public class WeightedDistribution extends RestrictedDistribution<Double> {
         return count * bucket_size;
     }
 
-    private double getMaximumReturnValue() {
+    private double calculateMaximumReturnValue() {
         int count = 0;
         for (int i = cumulative_probabilities.length - 1; i >= 0; i--) {
             if (cumulative_probabilities[i] == 1) {

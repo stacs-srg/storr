@@ -208,8 +208,9 @@ public class HumanReadableWriterTest {
      * @param bucket the bucket
      * @return the bucket
      * @throws URISyntaxException the URI syntax exception
+     * @throws IOException 
      */
-    private Bucket addCODCodes(final Bucket bucket) throws URISyntaxException {
+    private Bucket addCODCodes(final Bucket bucket) throws URISyntaxException, IOException {
 
         return helper.giveBucketTestingCODCodes(bucket);
     }
@@ -220,8 +221,9 @@ public class HumanReadableWriterTest {
      * @param bucket the bucket
      * @return the bucket
      * @throws URISyntaxException the URI syntax exception
+     * @throws IOException 
      */
-    private Bucket addHICODCodes(final Bucket bucket) throws URISyntaxException {
+    private Bucket addHICODCodes(final Bucket bucket) throws URISyntaxException, IOException {
 
         return helper.giveBucketTestingHICODCodes(bucket, "I6191");
     }
@@ -232,8 +234,9 @@ public class HumanReadableWriterTest {
      * @param bucket the bucket
      * @return the bucket
      * @throws URISyntaxException the URI syntax exception
+     * @throws IOException 
      */
-    private Bucket addMultipleCODCodes(final Bucket bucket) throws URISyntaxException {
+    private Bucket addMultipleCODCodes(final Bucket bucket) throws URISyntaxException, IOException {
 
         String code = "R99";
         helper.giveBucketTestingHICODCodes(bucket, code);

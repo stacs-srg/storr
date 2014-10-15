@@ -6,6 +6,9 @@ import java.io.FileOutputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
 
 /**
@@ -16,20 +19,23 @@ import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
  */
 public class ZipUsingJavaUtil {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(ZipUsingJavaUtil.class);
+
     /**
      * Zip function zip all files and folders.
-     * @param args not used.
+     * @param args String[] argument 0 is file to folder or file, argument 1 is output file.
      */
     public static void main(final String[] args) {
 
         ZipUsingJavaUtil zip = new ZipUsingJavaUtil();
+
         try {
-            if (zip.zipFiles("ModernDataRun1/parsedData91a", "parsed91JAavaTesta.zip")) {
+            if (zip.zipFiles(args[0], args[1])) {
                 Utils.deleteDirectory(new File("ModernDataRun1/parsedData91a"));
             }
         }
         catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e);
         }
     }
 
@@ -43,18 +49,14 @@ public class ZipUsingJavaUtil {
 
         boolean result = false;
         try {
-            System.out.println("Program Start zipping the given files: " + srcFolder);
-            /*
-             * send to the zip procedure
-             */
+            LOGGER.info("Program Start zipping the given files: " + srcFolder);
             zipFolder(srcFolder, destZipFile);
             result = true;
-            System.out.println("Given files are successfully zipped");
+            LOGGER.info("Given files are successfully zipped");
         }
         catch (Exception e) {
-            System.out.println("Some Errors happned during the zip process");
-            System.out.println(e);
-            e.printStackTrace();
+            LOGGER.info("Some Errors happned during the zip process");
+            LOGGER.error(e.getMessage(), e);
         }
         return result;
 
@@ -67,18 +69,12 @@ public class ZipUsingJavaUtil {
 
         ZipOutputStream zip = null;
         FileOutputStream fileWriter = null;
-        /*
-         * create the output stream to zip file result
-         */
+        // create the output stream to zip file result
         fileWriter = new FileOutputStream(destZipFile);
         zip = new ZipOutputStream(fileWriter);
-        /*
-         * add the folder to the zip
-         */
+        // add the folder to the zip
         addFolderToZip("", srcFolder, zip);
-        /*
-         * close the zip objects
-         */
+        // close the zip objects
         zip.flush();
         zip.close();
         fileWriter.flush();
@@ -116,16 +112,15 @@ public class ZipUsingJavaUtil {
                 /*
                  * write the file to the output
                  */
-                byte[] buf = new byte[1024];
+                final int bufferSize = 1024;
+                byte[] buf = new byte[bufferSize];
                 int len;
                 FileInputStream in = new FileInputStream(srcFile);
                 zip.putNextEntry(new ZipEntry(path + "/" + folder.getName()));
                 while ((len = in.read(buf)) > 0) {
-                    /*
-                     * Write the Result
-                     */
                     zip.write(buf, 0, len);
                 }
+
                 in.close();
             }
         }
@@ -138,11 +133,9 @@ public class ZipUsingJavaUtil {
 
         File folder = new File(srcFolder);
 
-        /*
-         * check the empty folder
-         */
+        //  check the empty folder
         if (folder.list().length == 0) {
-            System.out.println(folder.getName());
+            LOGGER.info(folder.getName());
             addFileToZip(path, srcFolder, zip, true);
         }
         else {
@@ -150,7 +143,7 @@ public class ZipUsingJavaUtil {
              * list the files in the folder
              */
             for (String fileName : folder.list()) {
-                if (path.equals("")) {
+                if ("".equals(path)) {
                     addFileToZip(folder.getName(), srcFolder + "/" + fileName, zip, false);
                 }
                 else {

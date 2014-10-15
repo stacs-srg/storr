@@ -77,7 +77,8 @@ public final class BucketUtils {
      */
     public static boolean isDisjoint(final Bucket bucketA, final Bucket bucketB) {
 
-        return getIntersection(bucketA, bucketB).size() == 0;
+        final Bucket intersection = getIntersection(bucketA, bucketB);
+        return intersection.isEmpty();
     }
 
     /**

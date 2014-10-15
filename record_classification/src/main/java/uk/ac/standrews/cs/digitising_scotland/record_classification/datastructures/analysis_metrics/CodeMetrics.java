@@ -1,7 +1,7 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.analysis_metrics;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeFactory;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeIndexer;
 import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
 
 /**
@@ -11,6 +11,8 @@ import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
  * F1 score and Mathews' correlation coefficient.
  */
 public class CodeMetrics {
+
+    private CodeIndexer index;
 
     /** The false positive. */
     private double[] falsePositive;
@@ -65,15 +67,16 @@ public class CodeMetrics {
      *
      * @param confusionMatrix the confusion matrix
      */
-    public CodeMetrics(final AbstractConfusionMatrix confusionMatrix) {
+    public CodeMetrics(final AbstractConfusionMatrix confusionMatrix, final CodeIndexer codeIndex) {
 
+        this.index = codeIndex;
         this.confusionMatrix = confusionMatrix;
         falsePositive = confusionMatrix.getFalsePositive();
         trueNegative = confusionMatrix.getTrueNegative();
         falseNegative = confusionMatrix.getFalseNegative();
         truePositive = confusionMatrix.getTruePositive();
 
-        numberOfOutputClasses = CodeFactory.getInstance().getNumberOfOutputClasses();
+        numberOfOutputClasses = index.getNumberOfOutputClasses();
         precision = new double[numberOfOutputClasses];
         recall = new double[numberOfOutputClasses];
         specificity = new double[numberOfOutputClasses];
@@ -248,13 +251,18 @@ public class CodeMetrics {
      */
     private double[] add(final double[] array1, final double[] array2) {
 
-        if (array1.length != array2.length) { throw new RuntimeException("Cannot add arrays of different length, array1 length: " + array1.length + " array2 length: " + array2.length); }
+        checkArraysAreEqual(array1, array2);
         double[] sum = new double[array1.length];
 
         for (int i = 0; i < sum.length; i++) {
             sum[i] = array1[i] + array2[i];
         }
         return sum;
+    }
+
+    private void checkArraysAreEqual(final double[] array1, final double[] array2) {
+
+        if (array1.length != array2.length) { throw new RuntimeException("Cannot add arrays of different length, array1 length: " + array1.length + " array2 length: " + array2.length); }
     }
 
     /**
@@ -266,7 +274,7 @@ public class CodeMetrics {
      */
     private double[] subtract(final double[] array1, final double[] array2) {
 
-        if (array1.length != array2.length) { throw new RuntimeException("Cannot add arrays of different length, array1 length: " + array1.length + " array2 length: " + array2.length); }
+        checkArraysAreEqual(array1, array2);
         double[] sum = new double[array1.length];
 
         for (int i = 0; i < sum.length; i++) {
@@ -284,7 +292,7 @@ public class CodeMetrics {
      */
     private double[] division(final double[] numerator, final double[] denominator) {
 
-        if (numerator.length != denominator.length) { throw new RuntimeException("Cannot add arrays of different length, array1 length: " + numerator.length + " array2 length: " + denominator.length); }
+        checkArraysAreEqual(numerator, denominator);
 
         double[] divisionResult = new double[numerator.length];
         for (int i = 0; i < divisionResult.length; i++) {
@@ -309,7 +317,7 @@ public class CodeMetrics {
      */
     private double[] multiply(final double[] array1, final double[] array2) {
 
-        if (array1.length != array2.length) { throw new RuntimeException("Cannot add arrays of different length, array1 length: " + array1.length + " array2 length: " + array2.length); }
+        checkArraysAreEqual(array1, array2);
         double[] result = new double[array1.length];
 
         for (int i = 0; i < result.length; i++) {
@@ -343,7 +351,7 @@ public class CodeMetrics {
      */
     public String getStatsPerCode(final Code code) {
 
-        return getStatsPerCode(code.getID());
+        return getStatsPerCode(index.getID(code));
     }
 
     /**
@@ -355,7 +363,7 @@ public class CodeMetrics {
     public String getStatsPerCode(final int id) {
 
         StringBuilder sb = new StringBuilder();
-        sb.append(CodeFactory.getInstance().getCode(id).getCodeAsString()).append(", ");
+        sb.append(index.getCode(id).getCodeAsString()).append(", ");
         sb.append(truePositive[id]).append(", ");
         sb.append(trueNegative[id]).append(", ");
         sb.append(falsePositive[id]).append(", ");

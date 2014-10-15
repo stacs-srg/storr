@@ -1,11 +1,16 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.datacleaning;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * 
  * http://stackoverflow.com/questions/955110/similarity-string-comparison-in-java.
  *
  */
 public final class LevenshteinDistance {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(LevenshteinCleaner.class);
 
     /**
      * Instantiates a new levenshtein distance.
@@ -25,13 +30,13 @@ public final class LevenshteinDistance {
      */
     public static double similarity(String s1, String s2) {
 
-        if (s1.length() < s2.length()) { // s1 should always be bigger
+        if (s1.length() < s2.length()) {
             String swap = s1;
             s1 = s2;
             s2 = swap;
         }
         int bigLen = s1.length();
-        if (bigLen == 0) { return 1.0; /* both strings are zero length */}
+        if (bigLen == 0) { return 1.0; }
         return (bigLen - computeEditDistance(s1, s2)) / (double) bigLen;
     }
 
@@ -45,8 +50,8 @@ public final class LevenshteinDistance {
 
         String s1 = string1.toLowerCase();
         String s2 = string2.toLowerCase();
-
         int[] costs = new int[s2.length() + 1];
+
         for (int i = 0; i <= s1.length(); i++) {
             int lastValue = i;
             for (int j = 0; j <= s2.length(); j++) {
@@ -78,7 +83,7 @@ public final class LevenshteinDistance {
      */
     public static void printDistance(final String s1, final String s2) {
 
-        System.out.println(s1 + "-->" + s2 + ": " + computeEditDistance(s1, s2) + " (" + similarity(s1, s2) + ")");
+        LOGGER.info(s1 + "-->" + s2 + ": " + computeEditDistance(s1, s2) + " (" + similarity(s1, s2) + ")");
     }
 
     /**

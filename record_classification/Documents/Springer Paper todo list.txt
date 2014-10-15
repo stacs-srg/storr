@@ -1,0 +1,33 @@
+Springer Paper Todo
+
+
+
+Works on comments from Kayes: High Importance
+	Correctness measures when using only unique records
+	How much data can be classified using exact match only
+	Cost Benefit analysis for automatic coding in terms of cost and time.
+	Time estimations for both human and ml etc
+
+
+Give figures for micro/macro precision and recall. 
+Possible more advanced string techniques?
+
+
+Figures for:
+	 Exact match only
+	 Unique only
+	 ML results on only non exact matched unique.
+	 
+
+Feedback from conference comittee:
+	Discuss exact nature of features
+	Distribution of features across training and test sets, analysis of overlap
+	Possible visualization of the classification result or the feature space, a frequency table of description terms, etc. could provide some insight in the nature of 	this task in terms of feature and cluster separation.
+	Possible analysis of other string based approaches such as overlapping terms, overlapping hgh-entropy terms, bag-of-words Jaccard index, ontology-based graph distance 	of terms of corpus descriptions to terms in HISCO descriptions, etc. etc.
+	
+Possible further analysis of best technique, improvements for it in the scope of this problem
+
+
+
+
+Section on what the system looks like now, possible trailer for next paper on mulitple classification, preview different techniques etc

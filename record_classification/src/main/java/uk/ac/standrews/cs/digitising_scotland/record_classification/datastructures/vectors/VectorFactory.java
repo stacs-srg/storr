@@ -1,10 +1,13 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.vectors;
 
 import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -15,46 +18,72 @@ import org.apache.mahout.math.RandomAccessSparseVector;
 import org.apache.mahout.math.Vector;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeTriple;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.classification.Classification;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeIndexer;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.machinelearning.tokenizing.StandardTokenizerIterable;
 import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearningConfiguration;
 
+// TODO: Auto-generated Javadoc
 /**
  * Factory that allows us to create vectors from strings.
  * Created by fraserdunlop on 23/04/2014 at 19:34.
  */
-public class VectorFactory {
+public class VectorFactory implements Serializable {
 
+    /** The Constant serialVersionUID. */
+    private static final long serialVersionUID = 5369887941319861994L;
+
+    /** The index. */
+    private CodeIndexer index;
+
+    /** The vector encoder. */
     private SimpleVectorEncoder vectorEncoder;
-    private int numFeatures;
 
     /**
      * Constructs an empty {@link VectorFactory} with number of features set to 0 and a new vectorEncoder.
      */
     public VectorFactory() {
 
+        index = new CodeIndexer();
         vectorEncoder = new SimpleVectorEncoder();
-        numFeatures = 0;
     }
 
     /**
      * Constructs a new {@link VectorFactory} from the specified {@link Bucket}.
      *
      * @param bucket bucket
+     * @param index the index
      */
-    public VectorFactory(final Bucket bucket) {
+    public VectorFactory(final Bucket bucket, final CodeIndexer index) {
 
+        this.index = index;
         vectorEncoder = new SimpleVectorEncoder();
-        for (Record record : bucket) {
-            updateDictionary(record.getDescription());
-        }
-        setNumFeatures();
+        updateDictionary(bucket);
     }
 
+    /**
+     * Updates the dictionary with the tokens for all the records in the given bucket.
+     *
+     * @param bucket the bucket
+     */
+    public void updateDictionary(final Bucket bucket) {
+
+        for (Record record : bucket) {
+            for (Classification c : record.getGoldStandardClassificationSet()) {
+                updateDictionary(c.getTokenSet().toString());
+            }
+        }
+        setNumFeatures();
+
+    }
+
+    /**
+     * Sets the num features.
+     */
     private void setNumFeatures() {
 
-        numFeatures = vectorEncoder.getDictionarySize();
+        int numFeatures = vectorEncoder.getDictionarySize();
         MachineLearningConfiguration.getDefaultProperties().setProperty("numFeatures", String.valueOf(numFeatures));
     }
 
@@ -69,24 +98,48 @@ public class VectorFactory {
     public List<NamedVector> generateVectorsFromRecord(final Record record) {
 
         List<NamedVector> vectors = new ArrayList<>();
-        Set<CodeTriple> goldStandardClassificationSet = record.getGoldStandardClassificationSet();
+        Set<Classification> goldStandardClassificationSet = record.getGoldStandardClassificationSet();
 
         if (!goldStandardClassificationSet.isEmpty()) {
             vectors.addAll(createNamedVectorsWithGoldStandardCodes(record));
         }
         else {
-            vectors.add(createNamedVectorFromString(record.getDescription(), "noGoldStandard"));
+            vectors.addAll(createUnNamedVectorsFromDescriptopn(record.getDescription()));
         }
         return vectors;
     }
 
+    /**
+     * Creates a new Vector object.
+     *
+     * @param description the description
+     * @return the collection<? extends named vector>
+     */
+    private Collection<? extends NamedVector> createUnNamedVectorsFromDescriptopn(final List<String> description) {
+
+        List<NamedVector> vectorList = new ArrayList<>();
+
+        for (String string : description) {
+            Vector v = createVectorFromString(string);
+            vectorList.add(new NamedVector(v, "noGoldStandard"));
+        }
+
+        return vectorList;
+    }
+
+    /**
+     * Creates a new Vector object.
+     *
+     * @param record the record
+     * @return the list< named vector>
+     */
     private List<NamedVector> createNamedVectorsWithGoldStandardCodes(final Record record) {
 
         List<NamedVector> vectors = new ArrayList<>();
-        Set<CodeTriple> goldStandardCodeTriple = record.getGoldStandardClassificationSet();
+        Set<Classification> goldStandardCodeTriple = record.getGoldStandardClassificationSet();
 
-        for (CodeTriple codeTriple : goldStandardCodeTriple) {
-            Integer id = codeTriple.getCode().getID();
+        for (Classification codeTriple : goldStandardCodeTriple) {
+            Integer id = index.getID(codeTriple.getCode());
             vectors.add(createNamedVectorFromString(codeTriple.getTokenSet().toString(), id.toString()));
         }
 
@@ -103,7 +156,7 @@ public class VectorFactory {
      */
     public Vector createVectorFromString(final String description) {
 
-        Vector vector = new RandomAccessSparseVector(numFeatures);
+        Vector vector = new RandomAccessSparseVector(getNumberOfFeatures());
         addFeaturesToVector(vector, description);
         return vector;
     }
@@ -123,6 +176,12 @@ public class VectorFactory {
         return new NamedVector(vector, name);
     }
 
+    /**
+     * Adds the features to vector.
+     *
+     * @param vector the vector
+     * @param description the description
+     */
     private void addFeaturesToVector(final Vector vector, final String description) {
 
         StandardTokenizerIterable tokenStream = new StandardTokenizerIterable(Version.LUCENE_36, new StringReader(description));
@@ -148,13 +207,14 @@ public class VectorFactory {
     /**
      * Write.
      *
-     * @param out the out
-     * @throws java.io.IOException Signals that an I/O exception has occurred.
+     * @param outputStream the out
+     * @throws IOException Signals that an I/O exception has occurred.
      */
-    public void write(final DataOutputStream out) throws IOException {
+    public void write(final ObjectOutputStream outputStream) throws IOException {
 
-        out.writeInt(numFeatures);
-        vectorEncoder.write(out);
+        vectorEncoder.write(outputStream);
+        outputStream.writeObject(index);
+
     }
 
     /**
@@ -162,10 +222,32 @@ public class VectorFactory {
      *
      * @param in the in
      * @throws IOException Signals that an I/O exception has occurred.
+     * @throws ClassNotFoundException the class not found exception
      */
-    public void readFields(final DataInputStream in) throws IOException {
+    public void readFields(final DataInputStream in) throws IOException, ClassNotFoundException {
 
-        numFeatures = in.readInt();
         vectorEncoder.readFields(in);
+        ObjectInputStream objectInputStream = new ObjectInputStream(in);
+        index = (CodeIndexer) objectInputStream.readObject();
+    }
+
+    /**
+     * Gets the code indexer that was used to construct this vector factory.
+     *
+     * @return the code indexer
+     */
+    public CodeIndexer getCodeIndexer() {
+
+        return index;
+    }
+
+    /**
+     * Gets the number of features.
+     *
+     * @return the number of features
+     */
+    public int getNumberOfFeatures() {
+
+        return vectorEncoder.getDictionarySize();
     }
 }

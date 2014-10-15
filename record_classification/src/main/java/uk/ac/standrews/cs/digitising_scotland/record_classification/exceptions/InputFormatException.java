@@ -1,5 +1,8 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.exceptions;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * InputFormatException is called in the instance of an input being malformed or of the wrong type.
  */
@@ -12,12 +15,17 @@ public class InputFormatException extends Exception {
      * Instantiates a new input format exception.
      *
      * @param errorMessage the error message
+     * @param parent parent class name to enable logging of where error originated
      */
-    public InputFormatException(final String errorMessage) {
+    public InputFormatException(final String errorMessage, final Class parent) {
 
         super(errorMessage);
-        System.err.println(errorMessage);
+        Logger logger = LoggerFactory.getLogger(parent);
+        logger.error(this.toString());
+        for (StackTraceElement trace : this.getStackTrace()) {
+            logger.error(trace.toString());
 
+        }
     }
 
 }

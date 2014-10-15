@@ -7,12 +7,14 @@ import java.nio.file.Files;
 
 import org.junit.AfterClass;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.ClassifierTestingHelper;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeNotValidException;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.RecordFactory;
 
 /**
  * The Class DataClerkingWriterTest.
@@ -37,20 +39,27 @@ public class DataClerkingWriterTest {
     /** The Constant MULTICODBUCKET. */
     private static final String MULTICODBUCKET = "target/MultipleCODRecordWriteTest.txt";
 
+    @Before
+    public void setUp() {
+
+        RecordFactory.resetIdCount();
+
+    }
+
     /**
      * Clean up.
      */
     @AfterClass
     public static void cleanUp() {
 
-        File file = new File(OCCBUCKET);
-        Assert.assertTrue(file.delete());
-        file = new File(CODBUCKET);
-        Assert.assertTrue(file.delete());
-        file = new File(HICODBUCKET);
-        Assert.assertTrue(file.delete());
-        file = new File(MULTICODBUCKET);
-        Assert.assertTrue(file.delete());
+                File file = new File(OCCBUCKET);
+                Assert.assertTrue(file.delete());
+                file = new File(CODBUCKET);
+                Assert.assertTrue(file.delete());
+                file = new File(HICODBUCKET);
+                Assert.assertTrue(file.delete());
+                file = new File(MULTICODBUCKET);
+                Assert.assertTrue(file.delete());
     }
 
     /**
@@ -218,8 +227,9 @@ public class DataClerkingWriterTest {
      * @param bucket the bucket
      * @return the bucket
      * @throws URISyntaxException the URI syntax exception
+     * @throws IOException 
      */
-    private Bucket addCODCodes(final Bucket bucket) throws URISyntaxException {
+    private Bucket addCODCodes(final Bucket bucket) throws URISyntaxException, IOException {
 
         return helper.giveBucketTestingCODCodes(bucket);
     }
@@ -230,8 +240,9 @@ public class DataClerkingWriterTest {
      * @param bucket the bucket
      * @return the bucket
      * @throws URISyntaxException the URI syntax exception
+     * @throws IOException 
      */
-    private Bucket addHICODCodes(final Bucket bucket) throws URISyntaxException {
+    private Bucket addHICODCodes(final Bucket bucket) throws URISyntaxException, IOException {
 
         return helper.giveBucketTestingHICODCodes(bucket, "I6191");
     }
@@ -242,8 +253,9 @@ public class DataClerkingWriterTest {
      * @param bucket the bucket
      * @return the bucket
      * @throws URISyntaxException the URI syntax exception
+     * @throws IOException 
      */
-    private Bucket addMultipleCODCodes(final Bucket bucket) throws URISyntaxException {
+    private Bucket addMultipleCODCodes(final Bucket bucket) throws URISyntaxException, IOException {
 
         String code = "R99";
         helper.giveBucketTestingHICODCodes(bucket, code);

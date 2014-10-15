@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Machine learning parameters are held in this class.
  * The default machine learning properties file is held in target/classes/machineLearning.default.properties
@@ -11,6 +14,8 @@ import java.util.Properties;
  *
  */
 public class MachineLearningConfiguration {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(MachineLearningConfiguration.class);
 
     private static Properties defaultProperties = populateDefaults();
 
@@ -39,7 +44,7 @@ public class MachineLearningConfiguration {
             machineLearningProperties.load(resourceAsStream);
         }
         catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e);
         }
 
         return machineLearningProperties;
@@ -59,8 +64,8 @@ public class MachineLearningConfiguration {
             InputStream resourceAsStream = classLoader.getResourceAsStream(machineLearningDefault);
             defaultProperties.load(resourceAsStream);
         }
-        catch (IOException e1) {
-            e1.printStackTrace();
+        catch (IOException e) {
+            LOGGER.error(e.getMessage(), e);
         }
         return defaultProperties;
     }

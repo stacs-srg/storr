@@ -2,89 +2,70 @@ package uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.HashMap;
-import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.analysis_metrics.AbstractConfusionMatrix;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.analysis_metrics.CodeMetrics;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.analysis_metrics.InvertedSoftConfusionMatrix;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.analysis_metrics.ListAccuracyMetrics;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.analysis_metrics.StrictConfusionMatrix;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeFactory;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeTriple;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.writers.DataClerkingWriter;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.writers.FileComparisonWriter;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeIndexer;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.exceptions.FolderCreationException;
+import uk.ac.standrews.cs.digitising_scotland.tools.ReaderWriterFactory;
+import uk.ac.standrews.cs.digitising_scotland.tools.Timer;
 import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
+import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearningConfiguration;
 
-public class PipelineUtils {
+/**
+ * Utility class containing methods to help with the creation and use of the exact match and machine learning pipelines.
+ * @author jkc25
+ *
+ */
+public final class PipelineUtils {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PipelineUtils.class);
 
-    protected static void generateActualCodeMappings(final Bucket bucket) {
-
-        HashMap<String, Integer> codeMapping = new HashMap<>();
-        for (Record record : bucket) {
-            for (CodeTriple currentCodeTriple : record.getGoldStandardClassificationSet()) {
-                codeMapping.put(currentCodeTriple.getCode().getCodeAsString(), 1);
-            }
-        }
-
-        StringBuilder sb = new StringBuilder();
-        Set<String> keySet = codeMapping.keySet();
-
-        for (String key : keySet) {
-            sb.append(key + "\t" + key + "\n");
-        }
-        //    sb.append("\n");
-        File codeFile = new File("target/customCodeMap.txt");
-        Utils.writeToFile(sb.toString(), codeFile.getAbsolutePath());
-        CodeFactory.getInstance().loadDictionary(codeFile);
-    }
-
-    protected static void generateAndPrintStats(final Bucket classifiedBucket, final String header, final String experimentalFolderName) throws IOException {
-
-        LOGGER.info(header);
-        ListAccuracyMetrics accuracyMetrics = new ListAccuracyMetrics(classifiedBucket);
-        accuracyMetrics.prettyPrint(header);
-        generateStats(classifiedBucket, accuracyMetrics, experimentalFolderName);
-    }
-
-    protected static void generateStats(final Bucket bucket, final ListAccuracyMetrics accuracyMetrics, final String experimentalFolderName) throws IOException {
-
-        final String matrixDataPath = experimentalFolderName + "/Data/classificationCountMatrix.csv";
-        final String matrixImagePath = "classificationMatrix";
-        final String reportspath = experimentalFolderName + "/Reports/";
-
-        final String strictCodeStatsPath = experimentalFolderName + "/Data/strictCodeStats.csv";
-        final String strictCodePath = "strictCodeStats";
-        printCodeMetrics(bucket, accuracyMetrics, strictCodeStatsPath, strictCodePath, experimentalFolderName);
-
-        final String softCodeStatsPath = experimentalFolderName + "/Data/softCodeStats.csv";
-        final String softCodePath = "softCodeStats";
-        printCodeMetrics(bucket, accuracyMetrics, softCodeStatsPath, softCodePath, experimentalFolderName);
-
-        AbstractConfusionMatrix invertedConfusionMatrix = new InvertedSoftConfusionMatrix(bucket);
-        double totalCorrectlyPredicted = invertedConfusionMatrix.getTotalCorrectlyPredicted();
-        LOGGER.info("Number of predictions too specific: " + totalCorrectlyPredicted);
-        LOGGER.info("Proportion of predictions too specific: " + totalCorrectlyPredicted / invertedConfusionMatrix.getTotalPredicted());
-
-        runRscript("src/R/CodeStatsPlotter.R", strictCodeStatsPath, reportspath, strictCodePath);
-        runRscript("src/R/CodeStatsPlotter.R", softCodeStatsPath, reportspath, softCodePath);
-        runRscript("src/R/HeatMapPlotter.R", matrixDataPath, reportspath, matrixImagePath);
+    private PipelineUtils() {
 
     }
 
-    protected static String printCodeMetrics(final Bucket bucket, final ListAccuracyMetrics accuracyMetrics, final String strictCodeStatsPath, final String codeStatsPath, final String experimentalFolderName) {
+    //    public static void generateAndPrintStats(final Bucket classifiedBucket, final CodeIndexer codeIndexer, final String header, final String bucketIdentifier, final String experimentalFolderName, final String identifier) throws IOException {
+    //
+    //        LOGGER.info(header);
+    //        CodeMetrics codeMetrics = new CodeMetrics(new StrictConfusionMatrix(classifiedBucket, codeIndexer), codeIndexer);
+    //        ListAccuracyMetrics accuracyMetrics = new ListAccuracyMetrics(classifiedBucket, codeMetrics);
+    //        accuracyMetrics.prettyPrint(header);
+    //        generateStats(classifiedBucket, codeMetrics, accuracyMetrics, codeIndexer, experimentalFolderName, bucketIdentifier, identifier);
+    //    }
 
-        CodeMetrics codeMetrics = new CodeMetrics(new StrictConfusionMatrix(bucket));
+    //    public static void generateStats(final Bucket bucket, CodeMetrics codeMetrics, final ListAccuracyMetrics accuracyMetrics, final CodeIndexer codeIndexer, final String experimentalFolderName, final String bucketIdentifier, final String identifier) throws IOException {
+    //
+    //        final String matrixDataPath = experimentalFolderName + "/Data/" + identifier + "/classificationCountMatrix.csv";
+    //        final String matrixImagePath = "classificationMatrix";
+    //        final String reportspath = experimentalFolderName + "/Reports/";
+    //
+    //        final String strictCodeStatsPath = experimentalFolderName + "/Data/" + identifier + "/strictCodeStats" + bucketIdentifier + ".csv";
+    //        final String strictCodePath = "strictCodeStats" + bucketIdentifier;
+    //        printCodeMetrics(bucket, codeMetrics, accuracyMetrics, codeIndexer, strictCodeStatsPath, strictCodePath, experimentalFolderName, identifier);
+    //
+    //        final String softCodeStatsPath = experimentalFolderName + "/Data/" + identifier + "/softCodeStats" + bucketIdentifier + ".csv";
+    //        final String softCodePath = "softCodeStats" + bucketIdentifier;
+    //        printCodeMetrics(bucket, codeMetrics, accuracyMetrics, codeIndexer, softCodeStatsPath, softCodePath, experimentalFolderName, identifier);
+    //
+    //        AbstractConfusionMatrix invertedConfusionMatrix = new InvertedSoftConfusionMatrix(bucket, codeIndexer);
+    //        double totalCorrectlyPredicted = invertedConfusionMatrix.getTotalCorrectlyPredicted();
+    //        LOGGER.info("Number of predictions too specific: " + totalCorrectlyPredicted);
+    //        LOGGER.info("Proportion of predictions too specific: " + totalCorrectlyPredicted / invertedConfusionMatrix.getTotalPredicted());
+    //
+    //        runRscript("src/main/R/CodeStatsPlotter.R", strictCodeStatsPath, reportspath, strictCodePath);
+    //        runRscript("src/main/R/CodeStatsPlotter.R", softCodeStatsPath, reportspath, softCodePath);
+    //        runRscript("src/main/R/HeatMapPlotter.R", matrixDataPath, reportspath, matrixImagePath);
+    //
+    //    }
+
+    public static String printCodeMetrics(final Bucket bucket, final CodeMetrics codeMetrics, final ListAccuracyMetrics accuracyMetrics, final CodeIndexer codeIndexer, final String strictCodeStatsPath, final String codeStatsPath, final String experimentalFolderName, final String identifier) {
+
         LOGGER.info(codeMetrics.getMicroStatsAsString());
         codeMetrics.writeStats(strictCodeStatsPath);
         LOGGER.info(strictCodeStatsPath + ": " + codeMetrics.getTotalCorrectlyPredicted());
@@ -92,57 +73,65 @@ public class PipelineUtils {
         return strictCodeStatsPath;
     }
 
-    protected static void runRscript(final String pathToRScript, final String dataPath, final String reportsPath, final String imageName) throws IOException {
+    public static Timer initAndStartTimer() {
 
-        // TODO this doesn't look too portable!
-
-        if (!isRinstalled()) { return; }
-
-        String imageOutputPath = reportsPath + imageName + ".png";
-        String command = "Rscript " + pathToRScript + " " + dataPath + " " + imageOutputPath;
-        LOGGER.info(Utils.executeCommand(command));
+        Timer timer = new Timer();
+        timer.start();
+        return timer;
     }
 
-    protected static boolean isRinstalled() {
+    public static ClassifierTrainer train(final Bucket trainingBucket, final String experimentalFolderName, final CodeIndexer codeIndex) throws Exception {
 
-        final String pathToScript = Utils.class.getResource("/scripts/checkScript.sh").getFile();
-        String checkSystemForR = "sh " + pathToScript + " RScript";
-        final String executeCommand = Utils.executeCommand(checkSystemForR);
-        LOGGER.info(executeCommand);
-
-        if (executeCommand.equals("RScript required but it's not installed.  Aborting.\n")) {
-            LOGGER.error("Stats not generated. R or RScript is not installed.");
-            System.exit(2);
-            return false;
-        }
-        return true;
+        ClassifierTrainer trainer = new ClassifierTrainer(trainingBucket, experimentalFolderName, codeIndex);
+        trainer.trainExactMatchClassifier();
+        trainer.trainOLRClassifier();
+        return trainer;
     }
 
-    protected static boolean checkFileType(final File inputFile) throws IOException {
+    public static ClassifierTrainer getExistingModels(final String modelLocations, final Bucket trainingBucket, final String experimentalFolderName) {
 
-        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(inputFile), "UTF8"));
+        ClassifierTrainer trainer = new ClassifierTrainer(trainingBucket, experimentalFolderName, null);
+        trainer.getExistingsModels(modelLocations);
+
+        return trainer;
+    }
+
+    public static void printStatusUpdate() {
+
+        LOGGER.info("********** Training Classifiers **********");
+        LOGGER.info("Training with a dictionary size of: " + MachineLearningConfiguration.getDefaultProperties().getProperty("numFeatures"));
+        LOGGER.info("Training with this number of output classes: " + MachineLearningConfiguration.getDefaultProperties().getProperty("numCategories"));
+    }
+
+    public static boolean checkFileType(final File inputFile) throws IOException {
+
+        BufferedReader br = ReaderWriterFactory.createBufferedReader(inputFile);
         String line = br.readLine();
         br.close();
         final int expectedLineLength = 38;
-        if (line != null && line.split(Utils.getCSVComma()).length == expectedLineLength) { return true; }
+        final String[] length = line.split(Utils.getCSVComma());
+        if (length.length == expectedLineLength) { return true; }
         return false;
     }
 
-    protected static void writeRecords(final Bucket classifiedBucket, final String experimentalFolderName) throws IOException {
+    public static String setupExperimentalFolders(final String baseFolder) {
 
-        final String nrsReportPath = "/Data/NRSData.txt";
-        final DataClerkingWriter writer = new DataClerkingWriter(new File(experimentalFolderName + nrsReportPath));
-        for (final Record record : classifiedBucket) {
-            writer.write(record);
-        }
-        writer.close();
+        final String experimentalFolderName = Utils.getExperimentalFolderName(baseFolder, "Experiment");
 
-        final String comparisonReportPath = "/Data/comaprison.txt";
-        final FileComparisonWriter comparisonWriter = new FileComparisonWriter(new File(experimentalFolderName + comparisonReportPath), "\t");
-        for (final Record record : classifiedBucket) {
-            comparisonWriter.write(record);
+        if (!(new File(experimentalFolderName).mkdirs() && new File(experimentalFolderName + "/Reports").mkdirs() && new File(experimentalFolderName + "/Data").mkdirs() && new File(experimentalFolderName + "/Models").mkdirs())) { throw new FolderCreationException(
+                        "couldn't create experimental folder"); }
+
+        return experimentalFolderName;
+    }
+
+    public static void exitIfDoesNotExist(final File file) {
+
+        if (!file.exists()) {
+            LOGGER.error(file.getAbsolutePath() + " does not exist. Exiting");
+            throw new RuntimeException();
+            // System.exit(2);
         }
-        comparisonWriter.close();
+
     }
 
 }

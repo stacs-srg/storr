@@ -4,7 +4,7 @@ import java.util.Set;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.CODOrignalData;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeTriple;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.classification.Classification;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 
 /**
@@ -54,22 +54,21 @@ public class OutputDataFormatter {
 
     /**
      * Gets the codes and appends each one with the delimiter.
-     *
+     * @param description The description to get the codes for
      * @param record the record
      * @return the codes
      */
-    public String getCodes(final Record record) {
+    public String getCodes(final Record record, final String description) {
 
         StringBuilder sb = new StringBuilder();
-        Set<CodeTriple> classifications = record.getCodeTriples();
 
-        for (CodeTriple codeTriple : classifications) {
+        Set<Classification> ct = record.getListOfClassifications().get(description);
+        for (Classification codeTriple : ct) {
 
             Code code = codeTriple.getCode();
             String codeAsString = code.getCodeAsString();
-            String description = getDesciption(record, code);
-            String explanation = getExplanation(codeAsString);
-            sb.append(codeAsString + delimiter + description + delimiter + explanation + delimiter);
+            String tokenSet = codeTriple.getTokenSet().toString();
+            sb.append(tokenSet + delimiter + codeAsString + delimiter);
 
         }
 
