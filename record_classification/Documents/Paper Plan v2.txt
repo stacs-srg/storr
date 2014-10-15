@@ -23,11 +23,20 @@ Add section to results on unique records
 Todo: 	Resvisit old results and calculate measures for unique records
 		If we can't get unique results from old records then we need to re run these experiments
 		
-Anyone:
+Graham:
 Write up section on cost effectiveness
 	Todo: Analysis how many unique records in 30millions
 	how long to code those unique records and calculate the cost/benefit 
-		
+	
+	
+15th	 - Jamie 	- 1 day best case, 1 week worst case - calculate stats for previous experiments or start repeating experiments
+		 - Fraser 	- 2-3 days - finish building framework for feature space analysis and run experiements
+
+20th 	 - Graham 	- 1-2 days -  Write section on cost effectiveness	
+
+21st 	 - Jamie 	- 2 days - Run experiements on string similarity
+
+24th	 - Jamie	- 7 days worst case - Run experiments with ngram pipeline.
 
 
 Paper Plan
