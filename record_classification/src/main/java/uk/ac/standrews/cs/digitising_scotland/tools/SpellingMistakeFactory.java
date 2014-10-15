@@ -70,7 +70,7 @@ public class SpellingMistakeFactory {
         for (int i = 0; i < inputSplit.length; i++) {
             output = output.concat(inputSplit[i] + " ");
         }
-        System.out.println(output.trim());
+        LOGGER.info(output.trim());
         return output.trim();
     }
 
@@ -129,7 +129,7 @@ public class SpellingMistakeFactory {
         for (int i = 0; i < inputSplit.length; i++) {
             output = output.concat(inputSplit[i] + " ");
         }
-        System.out.println(output.trim());
+        LOGGER.info(output.trim());
         return output.trim();
     }
 
@@ -180,7 +180,7 @@ public class SpellingMistakeFactory {
                     if (decisionInt < spellingMistakePct) {
                         String newContent = spf.addMistakeSwap(content);
                         output += feature + "\t" + newContent + "\t" + (docID + i) + "\n";
-                        System.out.println(changed++);
+                        LOGGER.info("Changed: " + changed++);
                     }
                     else {
                         stringBuilder.append(feature + "\t" + content + "\t" + (docID + i) + "\n");

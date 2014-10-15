@@ -28,7 +28,8 @@ Write up section on cost effectiveness
 	Todo: Analysis how many unique records in 30millions
 	how long to code those unique records and calculate the cost/benefit 
 	
-	
+
+Timeline:	
 15th	 - Jamie 	- 1 day best case, 1 week worst case - calculate stats for previous experiments or start repeating experiments
 		 - Fraser 	- 2-3 days - finish building framework for feature space analysis and run experiements
 

@@ -50,6 +50,7 @@ import cc.mallet.types.LabelSequence;
 public class TopicModel {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TopicModel.class);
+
     static final int ROWS = 4;
     static final int COLS = 10;
 
@@ -96,16 +97,18 @@ public class TopicModel {
 
         LOGGER.info("LDA with Topics set to " + Integer.parseInt(MachineLearningConfiguration.getDefaultProperties().getProperty("lda.numTopics")));
         LOGGER.info("lda \t 1 \t 2 \t 3 \t 4 \t 5 \t 6 \t 7 \t8 \t 9 \t 10");
+        StringBuilder sb = new StringBuilder();
 
         for (int i = 0; i < resultsMatrix.length; i++) {
             for (int j = 0; j < resultsMatrix[i].length; j++) {
                 if (j == 0) {
-                    System.out.print((i + 1) + "\t");
+                    sb.append((i + 1) + "\t");
                 }
-                System.out.print(resultsMatrix[i][j] + "\t");
+                sb.append(resultsMatrix[i][j] + "\t");
             }
-            System.out.print("\n");
+            sb.append("\n");
         }
+        LOGGER.info("\n" + sb.toString());
     }
 
     private File modelTopics(final File input, final File output) {

@@ -3,3 +3,5 @@
 3,"Cerebral Infarction","Atrial Fibrillation",,,"Extreme Old Age; Aortic Stenosis",1,1,"I639",2,1,"I48",6,1,"J189",6,2,"I350",,,,,,,,,,,,,,,,"I350","8","M","10","2014"
 4,"Myocardial Degeneration","Ischaemic Heart Disease",,,"Community Acquired Pneumonia",1,1,"I515",2,1,"I259",6,1,"R54",,,,,,,,,,,,,,,,,,,"I259","10","F","10","2014"
 5,"Myocardiac Infarction","Ischaemic Heart Disease",,,"Heart Disease",1,1,"I219",2,1,"I259",6,1,"G122",,,,,,,,,,,,,,,,,,,"I219","9","M","10","2014"
+5,"Myocardiac Infarction","Ischaemic Heart Disease",,,"Heart Disease",1,1,"I219",2,1,"I259",6,1,"G122",,,,,,,,,,,,,,,,,,,"I219","9","M","10","2014"
+6,Aspiration of blood,Severe Facial Injury,Car Accident,,,1,1,T179,1,2,W80,2,1,S099,3,1,V476,,,,,,,,,,,,,,,,V476,8,M,10,2014

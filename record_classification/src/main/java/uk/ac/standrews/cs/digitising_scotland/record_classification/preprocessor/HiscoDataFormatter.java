@@ -106,7 +106,7 @@ public class HiscoDataFormatter {
             }
 
         }
-        System.out.println(sb.toString());
+        LOGGER.info(sb.toString());
 
         Utils.writeToFile(sb.toString(), "hiscoNoClassVariance.txt");
         return sortedMap;

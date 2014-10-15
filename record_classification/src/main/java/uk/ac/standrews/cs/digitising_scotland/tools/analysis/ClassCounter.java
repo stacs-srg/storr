@@ -34,7 +34,7 @@ public class ClassCounter {
     public static void main(final String[] args) {
 
         ClassCounter c = new ClassCounter(new File("kilm8000.txt"));
-        System.out.println(c.count());
+        LOGGER.info("Classes in file: " + Integer.valueOf(c.count()));
 
     }
 
@@ -101,7 +101,7 @@ public class ClassCounter {
             }
         }
         catch (ArrayIndexOutOfBoundsException e) {
-            System.out.println("There is a problem with your input file. \n " + "Please ensure it is either tab serperated or a csv file \n" + "and that you have supplied the correct coloumn for your class");
+            LOGGER.error("There is a problem with your input file. \n " + "Please ensure it is either tab serperated or a csv file \n" + "and that you have supplied the correct coloumn for your class");
 
             LOGGER.error(e.getMessage(), e.getCause());
 

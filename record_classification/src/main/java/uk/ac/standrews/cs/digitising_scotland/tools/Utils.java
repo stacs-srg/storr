@@ -3,13 +3,8 @@ package uk.ac.standrews.cs.digitising_scotland.tools;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
 import java.nio.charset.Charset;
 import java.nio.file.Paths;
 import java.util.Arrays;
@@ -24,9 +19,11 @@ import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
+
 import org.apache.commons.io.output.FileWriterWithEncoding;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.classification.Classification;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
 import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
@@ -162,7 +159,7 @@ public final class Utils {
             if (toMove[i].exists() && toMove[i].isDirectory()) {
                 File newFolder = new File(toHere + "/" + toMove[i].getName());
                 if (!newFolder.exists() && !newFolder.mkdirs()) {
-                    System.out.println("Error creating " + newFolder.getName());
+                    LOGGER.error("Error creating " + newFolder.getName());
                 }
                 moveFiles(toMove[i].listFiles(), newFolder);
             }
@@ -486,7 +483,7 @@ public final class Utils {
             }
 
             if (exitVal != 0) {
-                System.out.println("ExitValue: " + exitVal);
+                LOGGER.error("ExitValue: " + exitVal);
             }
         }
         catch (Exception e) {

@@ -31,7 +31,7 @@ import uk.ac.shef.wit.simmetrics.similaritymetrics.JaroWinkler;
 @RunWith(Parameterized.class)
 public class ParameterisedSimmetricsClosestMatchTest {
 
-    Map<String, String> map;
+    private Map<String, String> map;
     private SimilarityMetric<String> metric;
     private int randomStringLengthUpperBound;
     private int numTests;
