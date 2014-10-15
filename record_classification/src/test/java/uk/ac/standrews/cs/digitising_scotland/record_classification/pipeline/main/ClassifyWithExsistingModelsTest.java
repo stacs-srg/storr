@@ -67,8 +67,8 @@ public class ClassifyWithExsistingModelsTest {
 
         Bucket allRecords = classifier.run(args);
 
-        final int numberOfRecords = 7;
-        Assert.assertTrue(allRecords.size() == numberOfRecords);
+        final int numberOfRecords = 8;
+        Assert.assertEquals(numberOfRecords, allRecords.size());
 
         Set<Classification> classifications = allRecords.getRecord(46999).getClassifications();
         System.out.println(classifications);

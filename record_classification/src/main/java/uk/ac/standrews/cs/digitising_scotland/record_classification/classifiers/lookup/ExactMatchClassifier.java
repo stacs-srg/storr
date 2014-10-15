@@ -84,7 +84,13 @@ public class ExactMatchClassifier {
             final TokenSet description = new TokenSet(t.getTokenSet());
             Set<Classification> st = new HashSet<Classification>();
             st.add(t);
-            lookupTable.put(description, st);
+            if (lookupTable.containsKey(description)) {
+                lookupTable.get(description).addAll(st);
+            }
+            else {
+                lookupTable.put(description, st);
+
+            }
         }
 
     }

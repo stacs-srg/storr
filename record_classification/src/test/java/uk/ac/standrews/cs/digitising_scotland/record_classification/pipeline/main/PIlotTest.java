@@ -10,6 +10,7 @@ import org.junit.Test;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.classification.Classification;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearningConfiguration;
 
 /**
@@ -42,7 +43,7 @@ public class PIlotTest {
 
         Bucket allRecords = pilot.run(args);
 
-        final int numberOfRecords = 7;
+        final int numberOfRecords = 8;
         Assert.assertTrue(allRecords.size() == numberOfRecords);
 
         Set<Classification> classifications = allRecords.getRecord(46999).getClassifications();
@@ -109,6 +110,19 @@ public class PIlotTest {
         final Set<Classification> failureSet = allRecords.getRecord(1234).getListOfClassifications().get("failure of the right ventricular");
         Assert.assertEquals(1, failureSet.size());
         Assert.assertTrue(failureSet.iterator().next().getConfidence() > 1);
+
+        final Record record = allRecords.getRecord(999);
+        classifications = record.getClassifications();
+        System.out.println(classifications);
+        Assert.assertEquals(2, classifications.size());
+        it = classifications.iterator();
+        codesinmap = getCodesInMap(it);
+        Assert.assertTrue(codesinmap.contains("T179"));
+        Assert.assertTrue(codesinmap.contains("W80"));
+
+        final Set<Classification> set = record.getListOfClassifications().get("aspiration of blood");
+        Assert.assertEquals(2, set.size());
+        Assert.assertTrue(set.iterator().next().getConfidence() > 1);
 
     }
 
