@@ -1,9 +1,8 @@
 package uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl;
 
 import org.json.JSONException;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.BucketKind;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IBucket;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXP;
+import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.*;
+import uk.ac.standrews.cs.digitising_scotland.util.ErrorHandling;
 import uk.ac.standrews.cs.nds.persistence.PersistentObjectException;
 
 import java.io.IOException;
@@ -14,43 +13,32 @@ import java.nio.file.Paths;
 import static java.nio.file.LinkOption.NOFOLLOW_LINKS;
 
 /**
- * Created by al on 01/08/2014.
- *
- * This class maintains a directory of files containing indexes of LXP records held in other buckets
- * Each filename is the id of a record held elsewhere
- * The files are currently empty!
- *
- * Consider making into a sym link in future - but wouldn't work in windows.
- *
+ * Created by al on 03/10/2014.
  */
-public class DirectoryBackedIndirectBucket extends DirectoryBackedBucket implements IBucket {
+public class DirectoryBackedIndirectBucket<T extends ILXP> extends DirectoryBackedBucket<T> {
 
-
-    /**
-     * Creates a handle on a bucket.
-     * Assumes that bucket has been created already using a factory - i.e. the directory already exists.
-     *
-     * @param name      the name of the bucket (also used as directory name)
-     * @param base_path the path of the parent directory
-     */
-    public DirectoryBackedIndirectBucket(String name, String base_path) throws IOException {
+    public DirectoryBackedIndirectBucket(String name, String base_path) throws IOException, RepositoryException {
         super(name, base_path);
     }
 
-    @Override
-    public ILXP get(final int id) throws PersistentObjectException, IOException {
+    public DirectoryBackedIndirectBucket(String name, String base_path, ILXPFactory<T> tFactory) throws IOException, RepositoryException {
+        super(name, base_path, tFactory);
+    }
 
-        if( Files.exists(Paths.get(filePath(id)), NOFOLLOW_LINKS) ) {
+    public static <T extends ILXP> IBucket<T> createBucket(String name, Repository repository, ILXPFactory<T> tFactory) throws RepositoryException {
 
-            return Store.getInstance().get(id); // go find the record where ever it is (TODO optimise later - could build a real index to buckets each time a record is added to bucket)
+        try {
+            DirectoryBackedBucket.createBucket(name, repository, tFactory);
+            return new DirectoryBackedIndirectBucket(name, repository.getRepo_path(), tFactory);
+        } catch (IOException e) {
 
-        } else {
-            throw new PersistentObjectException( "Record does not exist in indexed bucket");
+            ErrorHandling.error("I/O Exception creating bucket");
+            return null;
         }
     }
 
     @Override
-    public void put(final ILXP record) throws IOException, JSONException {
+    public void put(final T record) throws IOException, JSONException {
 
         Path path = Paths.get(filePath(record.getId()));
 
@@ -60,15 +48,40 @@ public class DirectoryBackedIndirectBucket extends DirectoryBackedBucket impleme
 
         // create a file containing nothing whose name is the id of the record
 
-        Path p = Files.createFile(Paths.get(filePath(record.getId())),null);
+        Path p = Files.createFile(Paths.get(filePath(record.getId())), null);
 
         // Sym link could be created by finding the original at this point and putting it in - but may not work on all platforms?
 
     }
 
     @Override
-    public BucketKind kind() {
+    public T get(final int id) throws PersistentObjectException, IOException {
+
+        if (Files.exists(Paths.get(filePath(id)), NOFOLLOW_LINKS)) {
+
+            return Store.getInstance().get(id); // go find the record where ever it is ( TODO optimise later - could build a real index to buckets each time a record is added to bucket)
+
+        } else {
+            throw new PersistentObjectException("Record does not exist in indexed bucket");
+        }
+    }
+
+
+    @Override
+    public IInputStream<T> getInputStream() throws IOException {
+        return new BucketBackedInputStream(this,directory);
+    }
+
+
+    @Override
+    public IOutputStream<T> getOutputStream() {
+        return new BucketBackedOutputStream(this);
+    }
+
+    @Override
+    public BucketKind getKind() {
         return BucketKind.INDIRECT;
     }
+
 
 }

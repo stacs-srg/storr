@@ -1,52 +1,45 @@
 package uk.ac.standrews.cs.digitising_scotland.linkage.blocking;
 
+import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.KeyNotFoundException;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.RepositoryException;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.merger.TailToTailMergedStream;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.stream_operators.sharder.Blocker;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IBucket;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXP;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXPInputStream;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IRepository;
-import uk.ac.standrews.cs.digitising_scotland.linkage.labels.BirthLabels;
-import uk.ac.standrews.cs.digitising_scotland.linkage.labels.CommonLabels;
-import uk.ac.standrews.cs.digitising_scotland.linkage.labels.DeathLabels;
-import uk.ac.standrews.cs.nds.util.ErrorHandling;
+import uk.ac.standrews.cs.digitising_scotland.linkage.factory.BirthFactory;
+import uk.ac.standrews.cs.digitising_scotland.linkage.factory.TypeFactory;
+import uk.ac.standrews.cs.digitising_scotland.linkage.labels.BirthTypeLabel;
+import uk.ac.standrews.cs.digitising_scotland.linkage.lxp_records.Birth;
+
+import java.io.IOException;
 
 /**
  * This class blocks based on persons' first name, last name and first name of parents over streams of Birth records
  * Created by al on 02/05/2014. x
  */
-public class FNLFFMFOverBirths extends Blocker {
+public class FNLFFMFOverBirths extends Blocker<Birth> {
 
-    public FNLFFMFOverBirths(final IBucket birthsBucket, final IBucket deathsBucket, final IRepository output_repo) throws RepositoryException {
+    public FNLFFMFOverBirths(final IBucket<Birth> birthsBucket,
+                             final IRepository output_repo) throws RepositoryException, IOException {
 
-        super(new TailToTailMergedStream(new ILXPInputStream[]{birthsBucket.getInputStream(), deathsBucket.getInputStream()}), output_repo);
+        super( birthsBucket.getInputStream(), output_repo, new BirthFactory(TypeFactory.getInstance().typeWithname("Birth").getId()));
     }
 
     @Override
-    public String[] determineBlockedBucketNamesForRecord(final ILXP record) {
+    public String[] determineBlockedBucketNamesForRecord(final Birth record) {
 
-        if (record.containsKey(CommonLabels.TYPE_LABEL)) {
-            if (record.get(CommonLabels.TYPE_LABEL).equals(BirthLabels.TYPE) ||
-                    record.get(CommonLabels.TYPE_LABEL).equals(DeathLabels.TYPE)) {
+        // Note will concat nulls into key if any fields are null - working hypothesis - this doesn't matter.
 
-                // Note will concat nulls into key if any fields are null - working hypothesis - this doesn't matter.
+        StringBuilder builder = new StringBuilder();
 
-                StringBuilder builder = new StringBuilder();
+        try {
+            builder.append(record.get(BirthTypeLabel.FORENAME));            // TODO this is still not good enough
+            builder.append(record.get(BirthTypeLabel.SURNAME));
+            builder.append(record.get(BirthTypeLabel.FATHERS_FORENAME));
+            builder.append(record.get(BirthTypeLabel.MOTHERS_FORENAME));
+            return new String[]{removeNasties(builder.toString())};
 
-                builder.append(record.get(BirthLabels.FORENAME));
-                builder.append(record.get(BirthLabels.SURNAME));
-                builder.append(record.get(BirthLabels.FATHERS_FORENAME));
-                builder.append(record.get(BirthLabels.MOTHERS_FORENAME));
-
-                return new String[]{removeNasties(builder.toString())};
-            } else {
-                ErrorHandling.error("Record with unknown type in input Stream: " + record.get(CommonLabels.TYPE_LABEL) + " - ignoring");
-                return new String[]{};
-            }
-
-        } else {
-            ErrorHandling.error("Record with no specified type in input Stream - ignoring");
+        } catch (KeyNotFoundException e) {
+            e.printStackTrace(); // TODO fix
             return new String[]{};
         }
     }
@@ -58,5 +51,6 @@ public class FNLFFMFOverBirths extends Blocker {
     private String removeNasties(final String key) {
         return key.replace("/", "");
     }
+
 }
 

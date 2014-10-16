@@ -7,13 +7,13 @@ import java.util.Set;
 /**
  * Created by al on 23/05/2014.
  */
-public interface IBucketIndex {
+public interface IBucketIndex<T extends ILXP> {
 
     Set<String> keySet() throws IOException;
 
-    ILXPInputStream records(String value) throws IOException;
+    IInputStream<T> records(String value) throws IOException;
 
     List<Integer> values(String value) throws IOException;
 
-    void add(ILXP record) throws IOException;
+    void add(T record) throws IOException;
 }

@@ -1,27 +1,19 @@
 package uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl;
 
 import org.json.JSONException;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.BucketKind;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IBucketIndex;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IIndexedBucket;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXP;
+import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.*;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
- * Created by al on 23/05/2014.
- * <p/>
- * Provides an index over the Records stored in the Bucket
+ * Created by al on 03/10/2014.
  */
-public class DirectoryBackedIndexedBucket extends DirectoryBackedBucket implements IIndexedBucket {
+public class DirectoryBackedIndexedBucket<T extends ILXP> extends DirectoryBackedBucket<T> implements IIndexedBucket<T> {
 
     private Map<String, IBucketIndex> indexes = new HashMap<>();
 
@@ -35,10 +27,23 @@ public class DirectoryBackedIndexedBucket extends DirectoryBackedBucket implemen
      * @param name      the name of the bucket (also used as directory name).
      * @param base_path the repository path in which the bucket is created.
      */
-    public DirectoryBackedIndexedBucket(final String name, final String base_path) throws IOException {
-
-        super(name, base_path);
+    public DirectoryBackedIndexedBucket(final String name, final String base_path) throws IOException, RepositoryException {
+        super( name, base_path );
         initIndexes();
+    }
+
+    public DirectoryBackedIndexedBucket(final String name, final String base_path, ILXPFactory tFactory) throws IOException, RepositoryException {
+        super( name, base_path,tFactory );
+        initIndexes();
+    }
+
+    public static IBucket createBucket(final String name, IRepository repo, ILXPFactory tFactory ) throws RepositoryException  {
+        DirectoryBackedBucket.createBucket(name, repo,tFactory);
+        try {
+            return new DirectoryBackedIndexedBucket(name, repo.getRepo_path(),tFactory );
+        } catch (IOException e) {
+            throw new RepositoryException(e.getMessage());
+        }
     }
 
     private void initIndexes() throws IOException {
@@ -75,8 +80,9 @@ public class DirectoryBackedIndexedBucket extends DirectoryBackedBucket implemen
         return indexes.get(label);
     }
 
+
     @Override
-    public void put(final ILXP record) throws IOException, JSONException {
+    public void put(final T record) throws IOException, JSONException {
 
         Set<String> keys = indexes.keySet(); // all the keys currently being indexed
         for (String key : keys) {
@@ -88,16 +94,23 @@ public class DirectoryBackedIndexedBucket extends DirectoryBackedBucket implemen
         super.put(record);
     }
 
-    /**
-     * @return a file iterator which filters out the index files
-     */
-    private Iterator<File> createFileIterator() {
 
-        return FileIteratorFactory.createFileIterator(directory, true, false);
+    public IInputStream getInputStream() throws IOException {
+        // We already know that the type is compatible - checked in constructor.
+        return new BucketBackedInputStream( this,this.directory );
+    }
+
+
+    public IOutputStream getOutputStream() {
+        // We already know that the type is compatible - checked in constructor.
+        return new BucketBackedOutputStream( this );
     }
 
     @Override
-    public BucketKind kind() {
+    public BucketKind getKind() {
         return BucketKind.INDEXED;
     }
+
+
+
 }

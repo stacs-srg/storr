@@ -6,10 +6,11 @@ import org.junit.Test;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.RepositoryException;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.Store;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.StoreException;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IBucket;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IRepository;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IStore;
+import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.*;
 import uk.ac.standrews.cs.digitising_scotland.linkage.blocking.FNLFFMFOverBirths;
+import uk.ac.standrews.cs.digitising_scotland.linkage.factory.BirthFactory;
+import uk.ac.standrews.cs.digitising_scotland.linkage.factory.TypeFactory;
+import uk.ac.standrews.cs.digitising_scotland.linkage.lxp_records.Birth;
 import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
 
 import java.io.IOException;
@@ -26,31 +27,36 @@ public class BlockingTest {
     private static final String births_name = "birth_records";
     private static final String deaths_name = "death_records";
     private static final String marriages_name = "marriage_records";
+    private static final String types_name = "types";
     private static final String births_source_path = source_base_path + "/" + births_name + ".txt";
     private static final String deaths_source_path = source_base_path + "/" + deaths_name + ".txt";
     private static final String marriages_source_path = source_base_path + "/" + marriages_name + ".txt";
 
     private static String store_path = "src/test/resources/STORE";
 
+    private static final String BIRTHRECORDTYPETEMPLATE = "src/test/resources/BirthRecord.jsn";
+
     private static IStore store;
-    private static IBucket births;
-    private static IBucket deaths;
-    private static IBucket marriages;
+    private static IBucket<Birth> births;
+    private static IBucket types;
 
     private IRepository repo;
+    private ITypeLabel birthlabel;
+    private ITypeLabel deathlabel;
+    private ITypeLabel marriagelabel;
 
 
     @Before
     public void setUpEachTest() throws RepositoryException, StoreException, IOException {
 
         store = new Store(store_path);
-
         repo = store.makeRepository(repo_path);
-
-        births = repo.makeBucket(births_name);
-        deaths = repo.makeBucket(deaths_name);
-        marriages = repo.makeBucket(marriages_name);
+        types =  repo.makeBucket(types_name, BucketKind.DIRECTORYBACKED);
+        TypeFactory tf = TypeFactory.getInstance();
+        birthlabel = tf.createType(BIRTHRECORDTYPETEMPLATE, "Birth", types);
+        births = repo.makeBucket(births_name, BucketKind.DIRECTORYBACKED, new BirthFactory(birthlabel.getId()));
     }
+
 
     @After
     public void afterEachTest() throws IOException {
@@ -63,14 +69,10 @@ public class BlockingTest {
     @Test
     public synchronized void testPFPLMFFF() throws Exception, RepositoryException {
 
-        EventImporter importer = new EventImporter();
-
-        importer.importBirths(births, births_source_path);
-        importer.importDeaths(deaths, deaths_source_path);
-        importer.importMarriages(marriages, marriages_source_path);
-
-        FNLFFMFOverBirths blocker = new FNLFFMFOverBirths( births, deaths, repo);
+        EventImporter.importDigitisingScotlandRecords(births, births_source_path,birthlabel);
+        FNLFFMFOverBirths blocker = new FNLFFMFOverBirths( births, repo );
 
         blocker.apply();
     }
 }
+

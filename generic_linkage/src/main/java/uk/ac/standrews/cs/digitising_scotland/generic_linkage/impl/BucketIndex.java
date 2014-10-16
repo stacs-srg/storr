@@ -1,20 +1,15 @@
 package uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl;
 
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IBucketIndex;
+import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IInputStream;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXP;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXPInputStream;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static uk.ac.standrews.cs.digitising_scotland.util.FileManipulation.FILE_CHARSET;
 
@@ -90,7 +85,7 @@ public class BucketIndex implements IBucketIndex {
     }
 
     @Override
-    public ILXPInputStream records(final String value) throws IOException {
+    public IInputStream records(final String value) throws IOException {
 
         onDemandLoadContents();
 
@@ -109,7 +104,12 @@ public class BucketIndex implements IBucketIndex {
 
         onDemandLoadContents();
 
-        String value = record.get(label); // get the value associated with the label being indexed in this index.
+        String value = null; // get the value associated with the label being indexed in this index.
+        try {
+            value = record.get(label);
+        } catch (KeyNotFoundException e) {
+            throw new IOException("type label not found");
+        }
 
         List<Integer> entry = map.get(value); // look up index for the value associated with this do we have any of these values in the index already
 

@@ -9,20 +9,23 @@ import java.util.Iterator;
  */
 public interface IRepository {
 
-    IBucket makeBucket(String name) throws RepositoryException;
+    IBucket makeBucket(String types_name, BucketKind kind) throws RepositoryException;
 
-    IBucket makeIndirectBucket(String name) throws RepositoryException;
-
-    IIndexedBucket makeIndexedBucket(String name) throws RepositoryException;
+    <T extends ILXP> IBucket<T> makeBucket(final String name, BucketKind kind, ILXPFactory<T> tFactory) throws RepositoryException;
 
     boolean bucketExists(String name);
 
     void deleteBucket(String name) throws RepositoryException;
 
-    IBucket getBucket(String name) throws RepositoryException;
+    IBucket getBucket(final String name) throws RepositoryException;
 
-    IIndexedBucket getIndexedBucket(String name) throws RepositoryException;
+    <T extends ILXP> IBucket<T> getBucket(final String name, ILXPFactory<T> tFactory) throws RepositoryException;
 
-    Iterator<IBucket> getIterator();
+    Iterator<String> getBucketNameIterator();
+
+    <T extends ILXP> Iterator<IBucket<T>> getIterator(ILXPFactory<T> tFactory);
+
+    String getRepo_path(); // return the repo path of this repository (not intended for public use).
+
 
 }
