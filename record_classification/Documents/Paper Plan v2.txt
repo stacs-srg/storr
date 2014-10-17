@@ -39,6 +39,9 @@ Timeline:
 
 24th	 - Jamie	- 7 days worst case - Run experiments with ngram pipeline.
 
+Extra idea:
+Compare quality of exact match look up with best performing machine learning classifier to highlight variations in human coding.
+Easiest fix for valid comparison is keeping all the variables the same.
 
 Paper Plan
 

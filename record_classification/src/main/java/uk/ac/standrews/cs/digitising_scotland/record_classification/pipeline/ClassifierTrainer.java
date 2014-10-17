@@ -72,39 +72,6 @@ public class ClassifierTrainer {
     }
 
     /**
-     * Trains an exact match classifier with data from the training bucket. The model is written to the experimental folder name
-     * /Models/lookupTable.
-     *
-     * @return the exact match classifier with a build lookup table/model
-     * @throws Exception the exception
-     */
-    public ExactMatchClassifier trainExactMatchClassifier() throws Exception {
-
-        LOGGER.info("********** Creating Lookup Tables **********");
-
-        exactMatchClassifier = new ExactMatchClassifier();
-        exactMatchClassifier.setModelFileName(experimentalFolderName + "/Models/lookupTable");
-        exactMatchClassifier.train(trainingBucket);
-        return exactMatchClassifier;
-    }
-
-    /**
-     * Trains an online logistic regression (OLR) classifier. The model is written to the experimental folder
-     * + "/Models/olrModel".
-     *
-     * @return the olrClassifier classifier after training
-     * @throws Exception the exception
-     */
-    public OLRClassifier trainOLRClassifier() throws Exception {
-
-        LOGGER.info("********** Training OLR Classifiers **********");
-        olrClassifier = new OLRClassifier();
-        OLRClassifier.setModelPath(experimentalFolderName + "/Models/olrModel");
-        olrClassifier.train(trainingBucket);
-        return olrClassifier;
-    }
-
-    /**
      * Instansiates an {@link ExactMatchClassifier} and a {@link OLRClassifier} from models stored on disk.
      * The model locations should be in "/lookupTable" and "/olrModel" from modelLocations path.
      *

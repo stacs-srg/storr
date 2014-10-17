@@ -80,14 +80,6 @@ public final class PipelineUtils {
         return timer;
     }
 
-    public static ClassifierTrainer train(final Bucket trainingBucket, final String experimentalFolderName, final CodeIndexer codeIndex) throws Exception {
-
-        ClassifierTrainer trainer = new ClassifierTrainer(trainingBucket, experimentalFolderName, codeIndex);
-        trainer.trainExactMatchClassifier();
-        trainer.trainOLRClassifier();
-        return trainer;
-    }
-
     public static ClassifierTrainer getExistingModels(final String modelLocations, final Bucket trainingBucket, final String experimentalFolderName) {
 
         ClassifierTrainer trainer = new ClassifierTrainer(trainingBucket, experimentalFolderName, null);
