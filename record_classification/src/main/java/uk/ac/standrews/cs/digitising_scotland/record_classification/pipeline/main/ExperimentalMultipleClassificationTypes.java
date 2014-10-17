@@ -26,6 +26,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.closestmatchmap.SimilarityMetricFromSimmetricFactory;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.closestmatchmap.StringSimilarityClassifier;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.lookup.ExactMatchClassifier;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.resolver.LengthWeightedLossFunction;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Pair;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.analysis_metrics.CodeMetrics;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.analysis_metrics.ListAccuracyMetrics;
@@ -34,12 +35,11 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.BucketFilter;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.BucketUtils;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.classification.Classification;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.resolver.LengthWeightedLossFunction;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeDictionary;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.vectors.CodeIndexer;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.vectors.CodeIndexer;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.vectors.VectorFactory;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.BucketGenerator;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.ClassifierPipeline;
@@ -208,8 +208,8 @@ public final class ExperimentalMultipleClassificationTypes {
         writeComparisonFile(experimentalFolderName, identifier, allOutputRecords);
 
         final Bucket uniqueRecordsOnly = BucketFilter.uniqueRecordsOnly(allOutputRecords);
-        printAllStats(experimentalFolderName, codeIndex, allOutputRecords, uniqueRecordsOnly);
-        printAllStats(experimentalFolderName, codeIndex, stringSimClassified, BucketFilter.uniqueRecordsOnly(stringSimClassified));
+        printAllStats(experimentalFolderName, identifier, codeIndex, allOutputRecords, uniqueRecordsOnly);
+        printAllStats(experimentalFolderName, identifier, codeIndex, stringSimClassified, BucketFilter.uniqueRecordsOnly(stringSimClassified));
 
     }
 
@@ -221,12 +221,12 @@ public final class ExperimentalMultipleClassificationTypes {
         return new StringSimilarityClassifier(closestMatchMap);
     }
 
-    private void printAllStats(final String experimentalFolderName, final CodeIndexer codeIndex, final Bucket allClassifed, final Bucket uniqueRecordsOnly) throws IOException {
+    private void printAllStats(final String experimentalFolderName, String identifier, final CodeIndexer codeIndex, final Bucket allClassifed, final Bucket uniqueRecordsOnly) throws IOException {
 
         CodeMetrics codeMetrics = new CodeMetrics(new StrictConfusionMatrix(allClassifed, codeIndex), codeIndex);
         ListAccuracyMetrics accuracyMetrics = new ListAccuracyMetrics(allClassifed, codeMetrics);
         MetricsWriter metricsWriter = new MetricsWriter(accuracyMetrics, experimentalFolderName, codeIndex);
-        metricsWriter.write("machine learning", "firstBucket");
+        metricsWriter.write(identifier, "allClassified");
         accuracyMetrics.prettyPrint("All Records");
 
         LOGGER.info("Unique Only");
@@ -236,7 +236,7 @@ public final class ExperimentalMultipleClassificationTypes {
         accuracyMetrics = new ListAccuracyMetrics(uniqueRecordsOnly, codeMetrics1);
         accuracyMetrics.prettyPrint("Unique Only");
         metricsWriter = new MetricsWriter(accuracyMetrics, experimentalFolderName, codeIndex);
-        metricsWriter.write("machine learning", "unique records");
+        metricsWriter.write(identifier, "unique records");
         accuracyMetrics.prettyPrint("Unique Records");
     }
 
