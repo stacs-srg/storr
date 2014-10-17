@@ -1,12 +1,13 @@
-package uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.classification;
+package uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.resolver;
 
 import java.util.Set;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.resolver.Interfaces.LossFunction;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.classification.Classification;
 
 /**
  * Calculates the loss for a set of CodeTriples.
- * The loss function is defined as the sum of all the confidences in the {@link Classification} set.
+ * The loss function is defined as the sum of all the confidences in the {@link uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.classification.Classification} set.
  * @author jkc25
  *
  */

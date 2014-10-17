@@ -58,8 +58,7 @@ public class OLRPool implements Runnable, Serializable {
         numSurvivors = Integer.parseInt(properties.getProperty("OLRPoolNumSurvivors"));
 
         for (int i = 0; i < poolSize; i++) {
-            //TODO workout if a clone() is needed here or not
-            final List<NamedVector> trainingVectorList = new ArrayList<NamedVector>(internalTrainingVectorList);
+            final List<NamedVector> trainingVectorList = new ArrayList<>(internalTrainingVectorList);
             OLRShuffled model = new OLRShuffled(properties, trainingVectorList);
             models.add(model);
         }
@@ -72,8 +71,7 @@ public class OLRPool implements Runnable, Serializable {
         numSurvivors = Integer.parseInt(properties.getProperty("OLRPoolNumSurvivors"));
 
         for (int i = 0; i < poolSize; i++) {
-            //TODO workout if a clone() is needed here or not
-            final List<NamedVector> trainingVectorList = new ArrayList<NamedVector>(internalTrainingVectorList);
+            final List<NamedVector> trainingVectorList = new ArrayList<>(internalTrainingVectorList);
             OLRShuffled model = new OLRShuffled(properties, betaMatrix, trainingVectorList);
             models.add(model);
         }
@@ -96,16 +94,6 @@ public class OLRPool implements Runnable, Serializable {
         for (OLRShuffled model : models) {
             model.stop();
         }
-    }
-
-    private List<NamedVector> copyVectorList(final ArrayList<NamedVector> internalTrainingVectorList) {
-
-        List<NamedVector> newList = new ArrayList<>();
-        for (NamedVector namedVector : internalTrainingVectorList) {
-            newList.add(namedVector.clone());
-        }
-
-        return newList;
     }
 
     /**
@@ -146,7 +134,7 @@ public class OLRPool implements Runnable, Serializable {
     private void trainAllModels() throws InterruptedException {
 
         ExecutorService executorService = Executors.newFixedThreadPool(poolSize);
-        Collection<Future<?>> futures = new LinkedList<Future<?>>();
+        Collection<Future<?>> futures = new LinkedList<>();
 
         for (OLRShuffled model : models) {
             futures.add(executorService.submit(model));
@@ -217,7 +205,7 @@ public class OLRPool implements Runnable, Serializable {
 
     private ArrayList<ModelDoublePair> testAndPackageModels() {
 
-        ArrayList<ModelDoublePair> modelPairs = new ArrayList<ModelDoublePair>();
+        ArrayList<ModelDoublePair> modelPairs = new ArrayList<>();
         for (OLRShuffled model : models) {
             double proportionCorrect = getProportionTestingVectorsCorrectlyClassified(model);
             modelPairs.add(new ModelDoublePair(model, proportionCorrect));
@@ -232,7 +220,7 @@ public class OLRPool implements Runnable, Serializable {
 
     private List<OLRShuffled> getSurvivors(final List<ModelDoublePair> modelPairs) {
 
-        ArrayList<OLRShuffled> survivors = new ArrayList<OLRShuffled>();
+        ArrayList<OLRShuffled> survivors = new ArrayList<>();
         Collections.sort(modelPairs);
         for (int i = modelPairs.size() - 1; i >= modelPairs.size() - numSurvivors; i--) {
             survivors.add(modelPairs.get(i).getModel());

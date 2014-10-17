@@ -13,7 +13,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
-import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.olr.serializablematrix.SerializableDenseMatrix;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.olr.SerializableDenseMatrix;
 
 /**
  *

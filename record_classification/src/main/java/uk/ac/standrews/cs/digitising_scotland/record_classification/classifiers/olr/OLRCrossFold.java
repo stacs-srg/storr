@@ -1,12 +1,7 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.olr;
 
 import java.io.BufferedReader;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -55,7 +50,6 @@ public class OLRCrossFold implements Serializable {
      */
     protected OLRCrossFold() {
 
-        classifier = new OLR();
     }
 
     /**
@@ -71,7 +65,6 @@ public class OLRCrossFold implements Serializable {
             OLRPool model = new OLRPool(properties, trainingVectors[i][0], trainingVectors[i][1]);
             models.add(model);
         }
-        classifier = new OLR();
 
     }
 
@@ -89,8 +82,6 @@ public class OLRCrossFold implements Serializable {
             OLRPool model = new OLRPool(properties, betaMatrix, trainingVectors[i][0], trainingVectors[i][1]);
             models.add(model);
         }
-        classifier = new OLR();
-
     }
 
     private ArrayList<NamedVector>[][] init(final List<NamedVector> trainingVectorList, final Properties properties) {
@@ -100,7 +91,7 @@ public class OLRCrossFold implements Serializable {
         if (folds > foldWarningThreshold) {
             LOGGER.info("You have selected a large value of OLRfolds. Please check that you meant to do this. It may harm performance");
         }
-        return CrossFoldedDataStructure.make(trainingVectorList, folds);
+        return CrossFoldFactory.make(trainingVectorList, folds);
     }
 
     /**
@@ -175,7 +166,7 @@ public class OLRCrossFold implements Serializable {
         StopListener stopListener = new StopListener();
         ExecutorService stopService = Executors.newFixedThreadPool(1);
         ExecutorService executorService = Executors.newFixedThreadPool(folds);
-        Collection<Future<?>> futures = new LinkedList<Future<?>>();
+        Collection<Future<?>> futures = new LinkedList<>();
         stopService.submit(stopListener);
 
         for (OLRPool model : models) {
@@ -265,33 +256,6 @@ public class OLRCrossFold implements Serializable {
     public double logLikelihood(final int actual, final Vector instance) {
 
         return classifier.logLikelihood(actual, instance);
-    }
-
-    /**
-     * Writes each model to a {@link DataOutputStream}.
-     *
-     * @param outputStream the out
-     * @throws IOException Signals that an I/O exception has occurred.
-     */
-    protected void write(final ObjectOutputStream outputStream) throws IOException {
-
-        outputStream.writeObject(models);
-        outputStream.writeObject(folds);
-        outputStream.writeObject(classifier);
-    }
-
-    /**
-     * Read fields from a {@link DataInputStream}.
-     *
-     * @param inputStream the inputStream
-     * @throws IOException Signals that an I/O exception has occurred.
-     */
-    protected void readFields(final ObjectInputStream objectInputStream) throws IOException, ClassNotFoundException {
-
-        models = (List<OLRPool>) objectInputStream.readObject();
-        folds = (int) objectInputStream.readObject();
-        classifier = (OLR) objectInputStream.readObject();
-
     }
 
     /**

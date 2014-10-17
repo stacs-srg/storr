@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.olr.serializablematrix;
+package uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.olr;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;

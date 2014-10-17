@@ -10,7 +10,7 @@ import org.apache.mahout.math.NamedVector;
  * Abstract class for the creation of cross folded data structures.
  * @author frjd2
  */
-public abstract class CrossFoldedDataStructure {
+public abstract class CrossFoldFactory {
 
     /**
      * Creates a cross folded data structure.
@@ -45,7 +45,7 @@ public abstract class CrossFoldedDataStructure {
 
         for (int i = 0; i < folds + 1; i++) {
             for (int j = 0; j < 2; j++) {
-                crossFoldedData[i][j] = new ArrayList<NamedVector>();
+                crossFoldedData[i][j] = new ArrayList<>();
             }
         }
         return crossFoldedData;
