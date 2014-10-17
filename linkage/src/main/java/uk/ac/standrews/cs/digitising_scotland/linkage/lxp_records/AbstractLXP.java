@@ -1,18 +1,10 @@
 package uk.ac.standrews.cs.digitising_scotland.linkage.lxp_records;
 
 
-import uk.ac.standrews.cs.digitising_scotland.jstore.impl.KeyNotFoundException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.LXP;
-import uk.ac.standrews.cs.digitising_scotland.jstore.impl.Store;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.TypeLabel;
-import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.ILXP;
-import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.ITypeLabel;
-import uk.ac.standrews.cs.digitising_scotland.util.ErrorHandling;
 import uk.ac.standrews.cs.nds.persistence.PersistentObjectException;
 import uk.ac.standrews.cs.nds.rpc.stream.JSONReader;
-
-import java.io.IOException;
-import java.util.Collection;
 
 /**
  * Created by al on 14/10/2014.
@@ -44,32 +36,8 @@ public abstract class AbstractLXP extends LXP {
      */
     @Override
     public boolean checkConsistentWith(int label_id) {
-        // do id check first
-        if( required_type_labelID == label_id ) {
-            return true;
-        }
-        // if that doesn't work do structural check
-        try {
-            ILXP record = Store.getInstance().get( label_id );
-            ITypeLabel stored_label = new TypeLabel( record  );
-            ILXP required_type_label_lxp = Store.getInstance().get( label_id );
-            ITypeLabel required_label = new TypeLabel( required_type_label_lxp  );
-            Collection<String> required = required_label.getLabels();
-            for( String label : required ) {
-                if( required_label.getFieldType(label) != stored_label.getFieldType(label)) {
-                    return false;
-                }
-            }
-            return true;
-        } catch (PersistentObjectException e) {
-            ErrorHandling.error("PersistentObjectException - returning false");
-            return false;
-        } catch (IOException e) {
-            ErrorHandling.error( "PersistentObjectException - returning false" );
-            return false;
-        } catch (KeyNotFoundException e) {
-            ErrorHandling.error( "Key not found - returning false" );
-            return false;
-        }
+
+        return TypeLabel.checkConsistentWith( label_id,required_type_labelID );
+
     }
 }

@@ -6,7 +6,7 @@ import uk.ac.standrews.cs.digitising_scotland.jstore.impl.RepositoryException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.IBucket;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.IRepository;
 import uk.ac.standrews.cs.digitising_scotland.linkage.factory.BirthFactory;
-import uk.ac.standrews.cs.digitising_scotland.linkage.factory.TypeFactory;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.factory.TypeFactory;
 import uk.ac.standrews.cs.digitising_scotland.linkage.labels.BirthTypeLabel;
 import uk.ac.standrews.cs.digitising_scotland.linkage.lxp_records.Birth;
 import uk.ac.standrews.cs.digitising_scotland.linkage.stream_operators.sharder.Blocker;

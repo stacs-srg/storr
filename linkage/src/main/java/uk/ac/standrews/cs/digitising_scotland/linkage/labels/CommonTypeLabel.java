@@ -2,7 +2,7 @@ package uk.ac.standrews.cs.digitising_scotland.linkage.labels;
 
 
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.ITypeLabel;
-import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.Type;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.Type;
 
 import java.util.Arrays;
 import java.util.List;
@@ -12,7 +12,7 @@ import java.util.List;
  */
 public abstract class CommonTypeLabel implements ITypeLabel {
 
-    public static final String TYPE_LABEL = "TYPE"; // note that this does not encode type - it is the label for types.
+    public static final String LABEL = "$LABEL$"; // note that this does not encode type - it is the label for types.
 
     public static final String ID = "id";
     public static final String SURNAME = "surname";

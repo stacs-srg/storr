@@ -4,6 +4,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.*;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.factory.TypeFactory;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.*;
 import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
 
@@ -21,19 +22,15 @@ import static org.junit.Assert.assertTrue;
  */
 public class InfrastructureTest {
 
-    private static String birth_bucket_name1 = "BUCKET1";
-    private static String birth_bucket_name2 = "BUCKET2";
     private static String generic_bucket_name1 = "BLOCKED-BUCKETS";
-    private static String indexed_bucket_name1 = "INDEX";
     private static String types_name = "types";
     private static String store_path = "src/test/resources/STORE";
-    private static final String BIRTH_RECORDS_PATH = "src/test/resources/1000_TEST_BIRTH_RECORDS.txt";
-    private static final String BIRTHRECORDTYPETEMPLATE = "src/test/resources/BirthRecord.jsn";
+    private static final String PERSONRECORDTYPETEMPLATE = "src/test/resources/PersonRecord.jsn";
 
     private static IStore store;
     private static IRepository repo;
     private IBucket types;
-    private ITypeLabel birthlabel;
+    private ITypeLabel personlabel;
 
     @Before
     public void setUpEachTest() throws RepositoryException, IOException, StoreException {
@@ -47,12 +44,14 @@ public class InfrastructureTest {
         types =  repo.makeBucket(types_name, BucketKind.DIRECTORYBACKED);
         repo.makeBucket(generic_bucket_name1,BucketKind.DIRECTORYBACKED);
 
+        personlabel = TypeFactory.getInstance().createType(PERSONRECORDTYPETEMPLATE, "Person", types);
+
     }
 
     @After
     public void tearDown() throws IOException {
 
-      //  deleteStore();
+        deleteStore();
     }
 
 
@@ -72,7 +71,6 @@ public class InfrastructureTest {
     }
 
     @Test
-//    @Ignore
     public synchronized void testLXPCreation() throws Exception, RepositoryException {
         IBucket b = repo.getBucket(generic_bucket_name1);
         LXP lxp = new LXP();
@@ -82,7 +80,6 @@ public class InfrastructureTest {
     }
 
     @Test
-//    @Ignore
     public synchronized void testLXPOverwrite() throws Exception, RepositoryException {
         IBucket b = repo.getBucket(generic_bucket_name1);
         LXP lxp = new LXP();
@@ -100,7 +97,27 @@ public class InfrastructureTest {
     }
 
     @Test
-//    @Ignore
+    public synchronized void testLabelledLXP() throws Exception, RepositoryException {
+        IBucket b = repo.getBucket(generic_bucket_name1);
+        b.setTypeLabelID(personlabel.getId());
+
+        try {
+            LXP lxp = new LXP();
+            lxp.put("age", "42");
+            lxp.put("address", "home");
+            b.put(lxp);
+        } catch( IOException e ) {
+            System.out.println("IO exception caught");
+            return;
+        } catch( Exception e ) {
+            // should get an exception due to wrong type;
+            System.out.println("Type exception caught");
+            return;
+        }
+        fail("Type violation not detected");
+    }
+
+    @Test
     public synchronized void testLXPFromFile() throws Exception, RepositoryException, KeyNotFoundException {
         IBucket b = repo.getBucket(generic_bucket_name1);
         LXP lxp = new LXP();
@@ -117,7 +134,6 @@ public class InfrastructureTest {
     }
 
     @Test
-//    @Ignore
     public synchronized void testStreams() throws Exception, RepositoryException, KeyNotFoundException {
         IBucket b = repo.getBucket(generic_bucket_name1);
         // create a few records
