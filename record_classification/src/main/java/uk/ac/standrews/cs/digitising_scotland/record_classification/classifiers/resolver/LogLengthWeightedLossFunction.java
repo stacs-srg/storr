@@ -6,7 +6,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import java.util.Set;
 
 /**
- *
+ * Created to make length a less the dominating factor in the LengthWeightedLossFunction
  * Created by fraserdunlop on 17/10/2014 at 11:44.
  */
 public class LogLengthWeightedLossFunction  implements LossFunction<Set<Classification>, Double> {
