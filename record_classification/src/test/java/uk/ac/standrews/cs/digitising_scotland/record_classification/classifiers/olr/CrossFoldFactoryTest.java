@@ -8,9 +8,7 @@ import org.apache.mahout.math.RandomAccessSparseVector;
 import org.junit.Assert;
 import org.junit.Test;
 
-import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.olr.CrossFoldedDataStructure;
-
-public class CrossFoldedDataStructureTest {
+public class CrossFoldFactoryTest {
 
     @Test(expected = NumberIsTooSmallException.class)
     public void testCalculateSplitPoints() {
@@ -18,7 +16,7 @@ public class CrossFoldedDataStructureTest {
         int folds = 0;
         int size = 1;
 
-        CrossFoldedDataStructure.calculateSplitPoints(folds, size);
+        CrossFoldFactory.calculateSplitPoints(folds, size);
 
     }
 
@@ -28,7 +26,7 @@ public class CrossFoldedDataStructureTest {
         int folds = 1;
         int size = 0;
 
-        CrossFoldedDataStructure.calculateSplitPoints(folds, size);
+        CrossFoldFactory.calculateSplitPoints(folds, size);
 
     }
 
@@ -38,7 +36,7 @@ public class CrossFoldedDataStructureTest {
         int folds = 1;
         int size = 1;
 
-        CrossFoldedDataStructure.calculateSplitPoints(folds, size);
+        CrossFoldFactory.calculateSplitPoints(folds, size);
 
     }
 
@@ -53,7 +51,7 @@ public class CrossFoldedDataStructureTest {
 
     private void testResultSize(final int folds, final int size) {
 
-        int[] result = CrossFoldedDataStructure.calculateSplitPoints(folds, size);
+        int[] result = CrossFoldFactory.calculateSplitPoints(folds, size);
         Assert.assertEquals(folds + 2, result.length);
     }
 
@@ -68,7 +66,7 @@ public class CrossFoldedDataStructureTest {
 
     private void checkFirstLast(final int fold, final int size) {
 
-        int[] result = CrossFoldedDataStructure.calculateSplitPoints(fold, size);
+        int[] result = CrossFoldFactory.calculateSplitPoints(fold, size);
         Assert.assertEquals(0, result[0]);
         Assert.assertEquals(size, result[result.length - 1]);
     }
@@ -84,7 +82,7 @@ public class CrossFoldedDataStructureTest {
 
     private void checkIntervals(final int folds, final int size) {
 
-        int[] result = CrossFoldedDataStructure.calculateSplitPoints(folds, size);
+        int[] result = CrossFoldFactory.calculateSplitPoints(folds, size);
 
         for (int i = 0; i < result.length - 1; i++) {
             Assert.assertEquals((double) size / (folds + 1), (double) result[i + 1] - result[i], 2.0);
@@ -94,7 +92,7 @@ public class CrossFoldedDataStructureTest {
     @Test(expected = NumberIsTooSmallException.class)
     public void testInitalizeroFolds() {
 
-        CrossFoldedDataStructure.initialize(0);
+        CrossFoldFactory.initialize(0);
 
     }
 
@@ -109,7 +107,7 @@ public class CrossFoldedDataStructureTest {
 
     private void checkInit(final int folds) {
 
-        ArrayList<NamedVector>[][] arr = CrossFoldedDataStructure.initialize(folds);
+        ArrayList<NamedVector>[][] arr = CrossFoldFactory.initialize(folds);
         Assert.assertEquals(2, arr[0].length);
         Assert.assertEquals(folds + 1, arr.length);
     }
@@ -119,7 +117,7 @@ public class CrossFoldedDataStructureTest {
 
         ArrayList<NamedVector> trainingVectorList = new ArrayList<>();
         int folds = 0;
-        ArrayList<NamedVector>[][] arr = CrossFoldedDataStructure.make(trainingVectorList, folds);
+        ArrayList<NamedVector>[][] arr = CrossFoldFactory.make(trainingVectorList, folds);
 
     }
 
@@ -134,7 +132,7 @@ public class CrossFoldedDataStructureTest {
 
     private void checkMake(final int folds, final ArrayList<NamedVector> trainingVectorList) {
 
-        ArrayList<NamedVector>[][] arr = CrossFoldedDataStructure.make(trainingVectorList, folds);
+        ArrayList<NamedVector>[][] arr = CrossFoldFactory.make(trainingVectorList, folds);
         Assert.assertEquals(2, arr[0].length);
         Assert.assertEquals(folds + 1, arr.length);
     }

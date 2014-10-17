@@ -1,7 +1,6 @@
-package uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code;
+package uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.vectors;
 
 import java.io.BufferedInputStream;
-import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -16,12 +15,11 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.classification.Classification;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeDictionary;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearningConfiguration;
 
@@ -58,16 +56,16 @@ public final class CodeIndexer implements Serializable {
 
     /**
      * Instantiates a new CodeIndexer with all the codes from the supplied bucket added to the index.
-     * @param bucket The bucket to add the codes from
+     * @param records The bucket to add the codes from
      */
-    public CodeIndexer(final Bucket bucket) {
+    public CodeIndexer(final Iterable<Record> records) {
 
-        addGoldStandardCodes(bucket);
+        addGoldStandardCodes(records);
 
     }
 
     /**
-     * Instantiates a new CodeIndexer with all the codes from the {@link CodeDictionary} in the index.
+     * Instantiates a new CodeIndexer with all the codes from the {@link uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeDictionary} in the index.
      * @param dictionary The dictionary to add the codes from
      */
     public CodeIndexer(final CodeDictionary dictionary) {
@@ -93,11 +91,11 @@ public final class CodeIndexer implements Serializable {
 
     /**
      * Adds gold standard codes from each record to the {@link CodeIndexer}.
-     * @param bucket bucket with gold standard codes
+     * @param records records with gold standard codes
      */
-    public void addGoldStandardCodes(final Bucket bucket) {
+    public void addGoldStandardCodes(final Iterable<Record> records) {
 
-        for (Record record : bucket) {
+        for (Record record : records) {
             for (Classification classification : record.getOriginalData().getGoldStandardClassifications()) {
                 putCodeInMap(classification.getCode());
             }
@@ -139,7 +137,7 @@ public final class CodeIndexer implements Serializable {
      * Puts a code in the map after checking that it's valid by using the {@link CodeDictionary}.
      *
      * @param code the code to add to the map
-     * @throws CodeNotValidException the code not valid exception, thrown if a code is not in the {@link CodeDictionary}
+     * @throws uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeNotValidException the code not valid exception, thrown if a code is not in the {@link CodeDictionary}
      */
     private void putCodeInMap(final Code code) {
 
@@ -202,31 +200,6 @@ public final class CodeIndexer implements Serializable {
             outputStream.writeUTF(code.getCodeAsString());
             outputStream.writeUTF(code.getDescription());
         }
-    }
-
-    /**
-     * Read fields.
-     *
-     * @param inputStream the in
-     * @throws IOException Signals that an I/O exception has occurred.
-     */
-    public void readFields(final DataInputStream inputStream) throws IOException {
-
-        int currentMaxTokenIndexValue = inputStream.readInt();
-
-        for (int i = 0; i < currentMaxTokenIndexValue; i++) {
-
-            int readint = inputStream.readInt();
-
-            if (i != readint) {
-                LOGGER.error("error reading CodeIndexer");
-                throw new RuntimeException("error reading SimpleVectorEncoder dictionary");
-            }
-            Code c = new Code(inputStream.readUTF(), inputStream.readUTF());
-            putCodeInMap(c);
-        }
-        MachineLearningConfiguration.getDefaultProperties().setProperty("numCategories", String.valueOf(idToCodeMap.size()));
-
     }
 
     @Override

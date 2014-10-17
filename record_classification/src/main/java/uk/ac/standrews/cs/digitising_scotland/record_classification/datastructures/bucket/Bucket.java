@@ -5,7 +5,6 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 
 /**
@@ -24,7 +23,7 @@ public class Bucket implements Iterable<Record> {
      */
     public Bucket() {
 
-        records = new LinkedHashMap<Integer, Record>();
+        records = new LinkedHashMap<>();
     }
 
     /**
