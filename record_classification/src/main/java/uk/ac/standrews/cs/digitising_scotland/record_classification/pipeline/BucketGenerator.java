@@ -45,7 +45,7 @@ public class BucketGenerator {
      * @return the bucket that will be populated
      * @throws IOException Signals that an I/O exception has occurred.
      * @throws InputFormatException the input format exception
-     * @throws CodeNotValidException 
+     * @throws CodeNotValidException
      */
     public Bucket generateTrainingBucket(final File trainingFile) throws IOException, InputFormatException, CodeNotValidException {
 

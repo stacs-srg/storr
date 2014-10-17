@@ -22,7 +22,6 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.vectors.VectorFactory;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.BucketGenerator;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.ClassifierPipeline;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.ClassifierTrainer;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.ExactMatchPipeline;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.IPipeline;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.PipelineUtils;
@@ -111,7 +110,6 @@ public final class TrainClassifyOneFile {
         LOGGER.info("********** Training Classifiers **********");
 
         CodeIndexer codeIndex = new CodeIndexer(allInputRecords);
-        ClassifierTrainer trainer1 = new ClassifierTrainer(trainingBucket, experimentalFolderName, codeIndex);
 
         ExactMatchClassifier exactMatchClassifier = new ExactMatchClassifier();
         exactMatchClassifier.setModelFileName(experimentalFolderName + "/Models/lookupTable");

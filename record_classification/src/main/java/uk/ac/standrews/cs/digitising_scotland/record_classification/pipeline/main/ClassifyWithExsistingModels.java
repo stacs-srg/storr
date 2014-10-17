@@ -8,6 +8,8 @@ import java.io.UnsupportedEncodingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.lookup.ExactMatchClassifier;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.olr.OLRClassifier;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.analysis_metrics.CodeMetrics;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.analysis_metrics.ListAccuracyMetrics;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.analysis_metrics.StrictConfusionMatrix;
@@ -21,7 +23,6 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.vectors.VectorFactory;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.BucketGenerator;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.ClassifierPipeline;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.ClassifierTrainer;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.ExactMatchPipeline;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.IPipeline;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.PipelineUtils;
@@ -103,10 +104,11 @@ public final class ClassifyWithExsistingModels {
 
         PipelineUtils.printStatusUpdate();
 
-        ClassifierTrainer trainer = PipelineUtils.getExistingModels(modelLocation, allInputRecords, experimentalFolderName);
+        final ExactMatchClassifier existingExactMatchClassifier = PipelineUtils.getExistingExactMatchClassifier(modelLocation);
+        final OLRClassifier existingOLRModel = PipelineUtils.getExistingOLRModel(modelLocation);
 
-        IPipeline exactMatchPipeline = new ExactMatchPipeline(trainer.getExactMatchClassifier());
-        IPipeline machineLearningClassifier = new ClassifierPipeline(trainer.getOlrClassifier(), allInputRecords, new LengthWeightedLossFunction(), multipleClassifications, true);
+        IPipeline exactMatchPipeline = new ExactMatchPipeline(existingExactMatchClassifier);
+        IPipeline machineLearningClassifier = new ClassifierPipeline(existingOLRModel, allInputRecords, new LengthWeightedLossFunction(), multipleClassifications, true);
 
         Bucket notExactMatched = exactMatchPipeline.classify(allInputRecords);
         Bucket notMachineLearned = machineLearningClassifier.classify(notExactMatched);
@@ -123,7 +125,7 @@ public final class ClassifyWithExsistingModels {
 
         writeComparisons(experimentalFolderName, allOutputRecords);
 
-        CodeIndexer codeIndexer = trainer.getVectorFactory().getCodeIndexer();
+        CodeIndexer codeIndexer = existingOLRModel.getVectorFactory().getCodeIndexer();
 
         LOGGER.info("********** Output Stats **********");
 
