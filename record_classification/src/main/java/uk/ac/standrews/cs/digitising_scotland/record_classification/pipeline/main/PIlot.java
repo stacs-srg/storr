@@ -9,6 +9,8 @@ import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.lookup.ExactMatchClassifier;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.olr.OLRClassifier;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.analysis_metrics.CodeMetrics;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.analysis_metrics.ListAccuracyMetrics;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.analysis_metrics.StrictConfusionMatrix;
@@ -22,7 +24,6 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.vectors.VectorFactory;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.BucketGenerator;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.ClassifierPipeline;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.ClassifierTrainer;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.ExactMatchPipeline;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.IPipeline;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.PipelineUtils;
@@ -109,12 +110,17 @@ public final class PIlot {
         LOGGER.info("Prediction bucket contains " + predictionBucket.size() + " records");
 
         PipelineUtils.printStatusUpdate();
+        ExactMatchClassifier exactMatchClassifier = new ExactMatchClassifier();
+        exactMatchClassifier.setModelFileName(experimentalFolderName + "/Models/lookupTable");
+        exactMatchClassifier.train(trainingBucket);
+        OLRClassifier olrClassifier = new OLRClassifier();
+        OLRClassifier.setModelPath(experimentalFolderName + "/Models/olrModel");
+        olrClassifier.train(trainingBucket);
 
-        ClassifierTrainer trainer = PipelineUtils.train(trainingBucket, experimentalFolderName, codeIndex);
         boolean multipleClassifications = true;
 
-        IPipeline exactMatchPipeline = new ExactMatchPipeline(trainer.getExactMatchClassifier());
-        IPipeline machineLearningClassifier = new ClassifierPipeline(trainer.getOlrClassifier(), trainingBucket, new LengthWeightedLossFunction(), multipleClassifications, true);
+        IPipeline exactMatchPipeline = new ExactMatchPipeline(exactMatchClassifier);
+        IPipeline machineLearningClassifier = new ClassifierPipeline(olrClassifier, trainingBucket, new LengthWeightedLossFunction(), multipleClassifications, true);
 
         Bucket notExactMatched = exactMatchPipeline.classify(predictionBucket);
         Bucket notMachineLearned = machineLearningClassifier.classify(notExactMatched);

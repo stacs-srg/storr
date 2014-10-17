@@ -2,9 +2,10 @@ package uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.ma
 
 import java.io.File;
 
+import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.lookup.ExactMatchClassifier;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.olr.OLRClassifier;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeDictionary;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.vectors.CodeIndexer;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.BucketGenerator;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.PipelineUtils;
 import uk.ac.standrews.cs.digitising_scotland.tools.Timer;
@@ -49,9 +50,13 @@ public class TrainModels {
 
         PipelineUtils.printStatusUpdate();
 
-        CodeIndexer codeIndex = new CodeIndexer(allRecords);
-        PipelineUtils.train(allRecords, experimentalFolderName, codeIndex);
+        ExactMatchClassifier exactMatchClassifier = new ExactMatchClassifier();
+        exactMatchClassifier.setModelFileName(experimentalFolderName + "/Models/lookupTable");
+        exactMatchClassifier.train(allRecords);
 
+        OLRClassifier.setModelPath(experimentalFolderName + "/Models/olrModel");
+        OLRClassifier olrClassifier = new OLRClassifier();
+        olrClassifier.train(allRecords);
         timer.stop();
     }
 

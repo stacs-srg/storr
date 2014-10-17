@@ -7,6 +7,8 @@ import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.lookup.ExactMatchClassifier;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.olr.OLRClassifier;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.analysis_metrics.CodeMetrics;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.analysis_metrics.ListAccuracyMetrics;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
@@ -80,20 +82,19 @@ public final class PipelineUtils {
         return timer;
     }
 
-    public static ClassifierTrainer train(final Bucket trainingBucket, final String experimentalFolderName, final CodeIndexer codeIndex) throws Exception {
+    public static OLRClassifier getExistingOLRModel(final String modelLocations) {
 
-        ClassifierTrainer trainer = new ClassifierTrainer(trainingBucket, experimentalFolderName, codeIndex);
-        trainer.trainExactMatchClassifier();
-        trainer.trainOLRClassifier();
-        return trainer;
+        OLRClassifier olrClassifier = new OLRClassifier();
+        OLRClassifier.setModelPath(modelLocations + "/olrModel");
+        olrClassifier = olrClassifier.getModelFromDefaultLocation();
+        return olrClassifier;
     }
 
-    public static ClassifierTrainer getExistingModels(final String modelLocations, final Bucket trainingBucket, final String experimentalFolderName) {
+    public static ExactMatchClassifier getExistingExactMatchClassifier(final String modelLocations) {
 
-        ClassifierTrainer trainer = new ClassifierTrainer(trainingBucket, experimentalFolderName, null);
-        trainer.getExistingsModels(modelLocations);
-
-        return trainer;
+        ExactMatchClassifier exactMatchClassifier = new ExactMatchClassifier();
+        exactMatchClassifier.setModelFileName(modelLocations + "/lookupTable");
+        return exactMatchClassifier.getModelFromDefaultLocation();
     }
 
     public static void printStatusUpdate() {
