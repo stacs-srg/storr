@@ -1,7 +1,8 @@
 package uk.ac.standrews.cs.digitising_scotland.linkage.labels;
 
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.types.Type;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ITypeLabel;
+
+import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.Type;
+import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.ITypeLabel;
 
 import java.util.Arrays;
 import java.util.List;

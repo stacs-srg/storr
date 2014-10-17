@@ -1,14 +1,15 @@
 package uk.ac.standrews.cs.digitising_scotland.linkage.resolve;
 
 import org.json.JSONException;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.*;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.*;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.*;
+import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.*;
 import uk.ac.standrews.cs.digitising_scotland.linkage.EventImporter;
 import uk.ac.standrews.cs.digitising_scotland.linkage.RecordFormatException;
 import uk.ac.standrews.cs.digitising_scotland.linkage.blocking.MultipleBlockerOverPerson;
 import uk.ac.standrews.cs.digitising_scotland.linkage.factory.BirthFactory;
 import uk.ac.standrews.cs.digitising_scotland.linkage.factory.PersonFactory;
 import uk.ac.standrews.cs.digitising_scotland.linkage.factory.TypeFactory;
+import uk.ac.standrews.cs.digitising_scotland.linkage.interfaces.IPair;
 import uk.ac.standrews.cs.digitising_scotland.linkage.labels.FatherOfTypeLabel;
 import uk.ac.standrews.cs.digitising_scotland.linkage.labels.MotherOfTypeLabel;
 import uk.ac.standrews.cs.digitising_scotland.linkage.labels.SameAsTypeLabel;
@@ -106,7 +107,7 @@ public class AlLinker {
 
         initialiseFactories();
 
-        births = input_repo.makeBucket(births_name,BucketKind.DIRECTORYBACKED,LXP.getInstance());   // TODO make these type specific
+        births = input_repo.makeBucket(births_name,BucketKind.DIRECTORYBACKED, LXP.getInstance());   // TODO make these type specific
         deaths = input_repo.makeBucket(deaths_name,BucketKind.DIRECTORYBACKED,LXP.getInstance());   // TODO look for all occurances and change them to typed or generic
 
         marriages = input_repo.makeBucket(marriages_name, BucketKind.DIRECTORYBACKED, LXP.getInstance());

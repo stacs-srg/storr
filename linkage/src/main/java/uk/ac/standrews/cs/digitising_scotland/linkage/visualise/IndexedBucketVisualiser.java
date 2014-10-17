@@ -1,9 +1,10 @@
 package uk.ac.standrews.cs.digitising_scotland.linkage.visualise;
 
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.stream_operators.sharder.Pair;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.*;
+
+import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.*;
 import uk.ac.standrews.cs.digitising_scotland.linkage.labels.SameAsTypeLabel;
 import uk.ac.standrews.cs.digitising_scotland.linkage.lxp_records.Person;
+import uk.ac.standrews.cs.digitising_scotland.linkage.stream_operators.sharder.Pair;
 import uk.ac.standrews.cs.nds.persistence.PersistentObjectException;
 
 import java.io.IOException;

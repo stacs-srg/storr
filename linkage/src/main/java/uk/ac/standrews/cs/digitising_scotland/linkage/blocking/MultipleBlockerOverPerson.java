@@ -1,13 +1,14 @@
 package uk.ac.standrews.cs.digitising_scotland.linkage.blocking;
 
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.KeyNotFoundException;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.RepositoryException;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.stream_operators.sharder.Blocker;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IBucket;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXP;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXPFactory;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IRepository;
+
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.KeyNotFoundException;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.RepositoryException;
+import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.IBucket;
+import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.ILXP;
+import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.ILXPFactory;
+import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.IRepository;
 import uk.ac.standrews.cs.digitising_scotland.linkage.labels.PersonTypeLabel;
+import uk.ac.standrews.cs.digitising_scotland.linkage.stream_operators.sharder.Blocker;
 import uk.ac.standrews.cs.nds.util.ErrorHandling;
 
 import java.io.IOException;

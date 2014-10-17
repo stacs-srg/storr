@@ -1,8 +1,9 @@
 package uk.ac.standrews.cs.digitising_scotland.linkage.factory;
 
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.TypeLabel;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IBucket;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ITypeLabel;
+
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.TypeLabel;
+import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.IBucket;
+import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.ITypeLabel;
 
 import java.util.HashMap;
 
@@ -19,7 +20,7 @@ public class TypeFactory {
     }
 
     public ITypeLabel createType(String json_encoded_type_descriptor_file_name, String type_name, IBucket types) {
-        ITypeLabel newtype = TypeLabel.createNewTypeLabel( json_encoded_type_descriptor_file_name,types );
+        ITypeLabel newtype = TypeLabel.createNewTypeLabel(json_encoded_type_descriptor_file_name, types);
         types_map.put(type_name, newtype);
         return newtype;
     }

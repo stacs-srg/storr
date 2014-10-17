@@ -162,7 +162,7 @@
     </contributors>
 
     <modules>
-        <module>generic_linkage</module>
+        <module>jstore</module>
         <module>linkage</module>
         <module>population_model</module>
         <module>util</module>

@@ -1,10 +1,10 @@
 package uk.ac.standrews.cs.digitising_scotland.linkage;
 
 import org.json.JSONException;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.LXP;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IBucket;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXP;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ITypeLabel;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.LXP;
+import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.IBucket;
+import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.ILXP;
+import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.ITypeLabel;
 import uk.ac.standrews.cs.digitising_scotland.linkage.labels.CommonTypeLabel;
 import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
 

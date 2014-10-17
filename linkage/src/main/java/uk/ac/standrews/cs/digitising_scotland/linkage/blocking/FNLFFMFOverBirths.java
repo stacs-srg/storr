@@ -1,14 +1,15 @@
 package uk.ac.standrews.cs.digitising_scotland.linkage.blocking;
 
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.KeyNotFoundException;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.RepositoryException;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.stream_operators.sharder.Blocker;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IBucket;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IRepository;
+
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.KeyNotFoundException;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.RepositoryException;
+import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.IBucket;
+import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.IRepository;
 import uk.ac.standrews.cs.digitising_scotland.linkage.factory.BirthFactory;
 import uk.ac.standrews.cs.digitising_scotland.linkage.factory.TypeFactory;
 import uk.ac.standrews.cs.digitising_scotland.linkage.labels.BirthTypeLabel;
 import uk.ac.standrews.cs.digitising_scotland.linkage.lxp_records.Birth;
+import uk.ac.standrews.cs.digitising_scotland.linkage.stream_operators.sharder.Blocker;
 
 import java.io.IOException;
 

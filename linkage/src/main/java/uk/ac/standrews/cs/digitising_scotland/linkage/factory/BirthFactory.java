@@ -1,6 +1,7 @@
 package uk.ac.standrews.cs.digitising_scotland.linkage.factory;
 
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXPFactory;
+
+import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.ILXPFactory;
 import uk.ac.standrews.cs.digitising_scotland.linkage.lxp_records.Birth;
 import uk.ac.standrews.cs.nds.persistence.PersistentObjectException;
 import uk.ac.standrews.cs.nds.rpc.stream.JSONReader;

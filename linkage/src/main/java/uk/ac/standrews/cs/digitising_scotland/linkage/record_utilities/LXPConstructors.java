@@ -1,7 +1,8 @@
 package uk.ac.standrews.cs.digitising_scotland.linkage.record_utilities;
 
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.KeyNotFoundException;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXP;
+
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.KeyNotFoundException;
+import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.ILXP;
 import uk.ac.standrews.cs.digitising_scotland.linkage.labels.BirthTypeLabel;
 import uk.ac.standrews.cs.digitising_scotland.linkage.labels.CommonTypeLabel;
 import uk.ac.standrews.cs.digitising_scotland.linkage.labels.MarriageTypeLabel;
