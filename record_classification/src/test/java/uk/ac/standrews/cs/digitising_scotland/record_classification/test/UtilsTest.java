@@ -1,13 +1,13 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.test;
 
-import org.junit.Test;
-import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
-import uk.ac.standrews.cs.digitising_scotland.tools.fileutils.DSStoreRemover;
+import static org.junit.Assert.assertEquals;
 
 import java.io.File;
 import java.io.IOException;
 
-import static org.junit.Assert.assertEquals;
+import org.junit.Test;
+
+import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
 
 /**
  * The Class UtilsTest.
@@ -61,16 +61,4 @@ public class UtilsTest {
         assertEquals(2, Utils.getNumberOfLines(testNumberOfLines));
     }
 
-    /**
-     * Test counting number of files recursively.
-     */
-    @Test
-    public void testCountFiles() {
-
-        String testFolder = getClass().getResource("/TestDistributionFolder").getFile();
-        int count = 0;
-        DSStoreRemover dsr = new DSStoreRemover();
-        dsr.remove(new File(testFolder));
-        assertEquals(108, Utils.countFiles(testFolder, count));
-    }
 }

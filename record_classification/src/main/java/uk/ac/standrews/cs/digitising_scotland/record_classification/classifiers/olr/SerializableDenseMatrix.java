@@ -15,6 +15,8 @@ import org.apache.mahout.math.Vector;
  */
 public class SerializableDenseMatrix implements Serializable {
 
+    private static final long serialVersionUID = -7738028674358816065L;
+
     private DenseMatrix matrix;
 
     public SerializableDenseMatrix(final double[][] values) {

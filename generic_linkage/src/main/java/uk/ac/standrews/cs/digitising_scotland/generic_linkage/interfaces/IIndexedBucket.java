@@ -5,9 +5,9 @@ import java.io.IOException;
 /**
  * Created by al on 27/05/2014.
  */
-public interface IIndexedBucket extends IBucket {
+public interface IIndexedBucket<T extends ILXP> extends IBucket<T> {
 
     void addIndex(String label) throws IOException;
 
-    IBucketIndex getIndex(String label);
+    IBucketIndex<T> getIndex(String label);
 }

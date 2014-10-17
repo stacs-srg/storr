@@ -2,6 +2,9 @@ package uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers
 
 import java.util.Comparator;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Similaritor is a factory which creates Comparators
  * which compare the similarity of objects to a reference object k.
@@ -11,6 +14,8 @@ import java.util.Comparator;
  * Created by fraserdunlop on 01/10/2014 at 16:23.
  */
 public class Similaritor<K> {
+
+    private static final transient Logger LOGGER = LoggerFactory.getLogger(Similaritor.class);
 
     private final SimilarityMetric<K> metric;
 
@@ -23,8 +28,8 @@ public class Similaritor<K> {
 
         Double sim = metric.getSimilarity(o1, o2);
         if (sim.isNaN()) {
-            if (o1.equals(o2)) return 1.0;
-            System.out.println("NaN returned by similarity metric :- o1: " + o1 + " o2: " + o2);
+            if (o1.equals(o2)) { return 1.0; }
+            //   LOGGER.debug("NaN returned by similarity metric :- o1: " + o1 + " o2: " + o2);
             return 0;
         }
         return sim;

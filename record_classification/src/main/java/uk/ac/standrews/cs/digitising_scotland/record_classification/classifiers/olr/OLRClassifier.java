@@ -1,6 +1,12 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.olr;
 
-import java.io.*;
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -178,7 +184,7 @@ public class OLRClassifier implements IClassifier<TokenSet, Classification> {
             vectorFactory = olr.vectorFactory;
         }
         catch (Exception e) {
-            LOGGER.error("Could not get model from default location. IOEception has occured.", e.getCause());
+            LOGGER.error("Could not get model from default location (" + modelPath + "). IOEception has occured.", e);
         }
         return olr;
     }

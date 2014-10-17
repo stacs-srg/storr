@@ -1,8 +1,8 @@
 package uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl;
 
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IBucket;
+import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IInputStream;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXP;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXPInputStream;
 import uk.ac.standrews.cs.nds.persistence.PersistentObjectException;
 import uk.ac.standrews.cs.nds.util.ErrorHandling;
 
@@ -10,23 +10,24 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
 
-public class BucketBackedInputStream implements ILXPInputStream {
+public class BucketBackedInputStream<T extends ILXP> implements IInputStream<T> {
 
-    private final IBucket bucket;
+    private final IBucket<T> bucket;
     private File directory;
 
-    public BucketBackedInputStream(final IBucket bucket, final File directory) throws IOException {
+    public BucketBackedInputStream(final IBucket<T> bucket, final File directory) throws IOException {
 
         this.bucket = bucket;
         this.directory = directory;
 
     }
 
-    public Iterator<ILXP> iterator() {
+    public Iterator<T> iterator() {
+
         return new ILXPIterator(directory);
     }
 
-    private class ILXPIterator implements Iterator<ILXP> {
+    private class ILXPIterator implements Iterator<T> {
 
         private Iterator<File> file_iterator;
 
@@ -39,7 +40,7 @@ public class BucketBackedInputStream implements ILXPInputStream {
         }
 
         @Override
-        public ILXP next() {
+        public T next() {
 
             try {
                 return bucket.get(Integer.parseInt(file_iterator.next().getName()));

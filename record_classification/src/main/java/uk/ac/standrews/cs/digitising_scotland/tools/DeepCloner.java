@@ -15,6 +15,8 @@ import java.io.Serializable;
  */
 public class DeepCloner implements Serializable {
 
+    private static final long serialVersionUID = -4032261564411575642L;
+
     @SuppressWarnings("unchecked")
     public <T extends Serializable> T deepClone(T o) throws IOException, ClassNotFoundException {
 

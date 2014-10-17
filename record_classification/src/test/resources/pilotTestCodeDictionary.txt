@@ -9,3 +9,7 @@ I350	Atrial Fibrillation
 J189	Aortic Stenosis
 I259	Community Acquired Pneumonia
 G122	Heart Disease
+T179	Foreign body in respiratory tract, part unspecified
+W80	Inhalation and ingestion of other objects causing obstruction of respiratory tract
+S099	Unspecified injury of head
+V476	Vehicle Injury

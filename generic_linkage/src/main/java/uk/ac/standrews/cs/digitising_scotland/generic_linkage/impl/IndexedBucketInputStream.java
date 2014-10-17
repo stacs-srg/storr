@@ -1,8 +1,8 @@
 package uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl;
 
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IBucket;
+import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IInputStream;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXP;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXPInputStream;
 import uk.ac.standrews.cs.nds.persistence.PersistentObjectException;
 import uk.ac.standrews.cs.nds.util.ErrorHandling;
 
@@ -10,12 +10,12 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
 
-public class IndexedBucketInputStream implements ILXPInputStream {
+public class IndexedBucketInputStream implements IInputStream {
 
     private final IBucket bucket;
     private Iterator<File> file_iterator;
 
-    public IndexedBucketInputStream(final IBucket bucket,  final Iterator<File> file_iterator) throws IOException {
+    public IndexedBucketInputStream(final IBucket bucket, final Iterator<File> file_iterator) throws IOException {
 
         this.bucket = bucket;
         this.file_iterator = file_iterator;

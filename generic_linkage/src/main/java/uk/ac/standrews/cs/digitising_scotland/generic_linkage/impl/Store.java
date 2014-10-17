@@ -1,11 +1,7 @@
 package uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IBucket;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXP;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IRepository;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IStore;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IStoreIndex;
+import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.*;
 import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
 import uk.ac.standrews.cs.nds.persistence.PersistentObjectException;
 import uk.ac.standrews.cs.nds.util.ErrorHandling;

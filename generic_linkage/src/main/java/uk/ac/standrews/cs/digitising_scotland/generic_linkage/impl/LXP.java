@@ -3,26 +3,37 @@ package uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl;
 import org.json.JSONException;
 import org.json.JSONWriter;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXP;
+import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXPFactory;
+import uk.ac.standrews.cs.digitising_scotland.util.ErrorHandling;
 import uk.ac.standrews.cs.nds.persistence.PersistentObjectException;
 import uk.ac.standrews.cs.nds.rpc.stream.JSONReader;
-import uk.ac.standrews.cs.nds.util.ErrorHandling;
 
 import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
-public class LXP extends HashMap<String, String> implements ILXP {
+public class LXP implements ILXP {
 
     private int id;
+    private HashMap<String, String> map;
+    private final static LXP instance = new LXP();
 
     public LXP() {
+
         this.id = Store.getInstance().getNextFreePID();
+        this.map = new HashMap<>();
     }
 
-    public LXP(int id, JSONReader reader) throws PersistentObjectException {
-        try {
-            this.id = id;
+    public LXP( int object_id ) {
 
+        this.id = object_id;
+        this.map = new HashMap<>();
+    }
+
+    public LXP(int object_id, JSONReader reader) throws PersistentObjectException {
+        this( object_id );
+        try {
             reader.nextSymbol();
             reader.object();
 
@@ -36,6 +47,27 @@ public class LXP extends HashMap<String, String> implements ILXP {
         } catch (JSONException e) {
             throw new PersistentObjectException(e);
         }
+    }
+
+    public LXP(JSONReader reader) throws PersistentObjectException {
+        this( Store.getInstance().getNextFreePID(), reader );
+    }
+
+    @Override
+    public ILXP create(int persistent_object_id, JSONReader reader) throws PersistentObjectException {
+        return new LXP( persistent_object_id, reader );
+    }
+
+
+    @Override
+    public boolean checkConsistentWith(int label_id) {
+        return true; // there is no contract with this class - creates whatever is there.
+        // over-ridden in super classes.
+    }
+
+    @Override
+    public int getLabel() {
+        return -1;
     }
 
     @Override
@@ -57,18 +89,31 @@ public class LXP extends HashMap<String, String> implements ILXP {
     }
 
     @Override
-    public String get(String key) {
-        return super.get(key);       // TOD) throw key not found exception
+    public String get(String key) throws KeyNotFoundException {
+        if( containsKey(key ) ) {
+            return map.get(key);
+        }
+        throw new KeyNotFoundException( key );
+    }
+
+    @Override
+    public String put(String key, String value) {
+        return map.put(key,value);
     }
 
     @Override
     public boolean containsKey(String key) {
-        return super.containsKey(key);
+        return map.containsKey(key);
+    }
+
+    @Override
+    public Set<String> getKeys() {
+        return map.keySet();
     }
 
     public void serializeFieldsToJSON(JSONWriter writer) throws JSONException {
 
-        for (Map.Entry<String, String> entry : entrySet()) {
+        for (Map.Entry<String, String> entry : map.entrySet()) {
             String key = entry.getKey();
             writer.key(key);
             String value = entry.getValue();
@@ -85,5 +130,9 @@ public class LXP extends HashMap<String, String> implements ILXP {
             ErrorHandling.error("in LXP.toString()");
         }
         return sw.toString();
+    }
+
+    public static ILXPFactory getInstance() {
+        return instance;
     }
 }

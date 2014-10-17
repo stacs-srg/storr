@@ -22,6 +22,8 @@ import org.slf4j.LoggerFactory;
  */
 public class SimpleVectorEncoder extends AbstractVectorEncoder<String> implements Serializable {
 
+    private static final long serialVersionUID = 6907477522599743250L;
+
     private static final transient Logger LOGGER = LoggerFactory.getLogger(SimpleVectorEncoder.class);
 
     private Map<String, Integer> dictionary;

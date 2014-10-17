@@ -24,7 +24,10 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearningConfiguration;
 
 /**
- * FIXME rewrite this
+ * This class represents all the outputs codes that are being used in the OLR models. 
+ * As the size of the OLR models depend on the number of output classes it was deemed undesirable to consturct models
+ * that contained codes that are never seen in the training data. To avoid this, this class should hold all the output classes
+ * that are actually used. 
  *
  * @author jkc25, frjd2
  */

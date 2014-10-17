@@ -1,51 +1,60 @@
 package uk.ac.standrews.cs.digitising_scotland.linkage.blocking;
 
+import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.KeyNotFoundException;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.RepositoryException;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.stream_operators.sharder.Blocker;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IBucket;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXP;
+import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXPFactory;
 import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IRepository;
-import uk.ac.standrews.cs.digitising_scotland.linkage.labels.PersonLabels;
+import uk.ac.standrews.cs.digitising_scotland.linkage.labels.PersonTypeLabel;
 import uk.ac.standrews.cs.nds.util.ErrorHandling;
+
+import java.io.IOException;
 
 /**
  * This class blocks based on persons' first name, last name over person records
  * Created by al on 03/06/2014. x
  */
-public class FNLNSOverPerson extends Blocker {
+public class FNLNSOverPerson<T extends ILXP> extends Blocker<T> {
 
-    public FNLNSOverPerson(final IBucket people, final IRepository output_repo) throws RepositoryException {
+    public FNLNSOverPerson(final IBucket<T> people, final IRepository output_repo, ILXPFactory<T> tFactory) throws RepositoryException, IOException {
 
-        super(people.getInputStream(), output_repo);
+        super(people.getInputStream(), output_repo, tFactory);
     }
 
     @Override
     public String[] determineBlockedBucketNamesForRecord(final ILXP record) {
 
-        if (record.containsKey("TYPE") && record.get("TYPE").equals(PersonLabels.TYPE)) {
+        try {
+            if (record.containsKey("TYPE") && record.get("TYPE").equals(PersonTypeLabel.TYPE)) {
 
-            // Note will concat nulls into key if any fields are null - working hypothesis - this doesn't matter.
+                // Note will concat nulls into key if any fields are null - working hypothesis - this doesn't matter.
 
-            String forename = record.get(PersonLabels.FORENAME);
-            String surname = record.get(PersonLabels.SURNAME);
-            String mmsurname = record.get(PersonLabels.MOTHERS_MAIDEN_SURNAME);
-            String sex = record.get(PersonLabels.SEX);
+                String forename = record.get(PersonTypeLabel.FORENAME);
+                String surname = record.get(PersonTypeLabel.SURNAME);
+                String mmsurname = record.get(PersonTypeLabel.MOTHERS_MAIDEN_SURNAME);
+                String sex = record.get(PersonTypeLabel.SEX);
 
-            StringBuilder builder = new StringBuilder();
+                StringBuilder builder = new StringBuilder();
 
-            builder.append(forename);
+                builder.append(forename);
 
-            if (sex.equals("F") && mmsurname != null && !mmsurname.equals("")) {
-                builder.append(mmsurname);
+                if (sex.equals("F") && mmsurname != null && !mmsurname.equals("")) {
+                    builder.append(mmsurname);
+                } else {
+                    builder.append(surname);
+                }
+                builder.append(sex);
+
+                return new String[]{removeNasties(builder.toString())};
+
             } else {
-                builder.append(surname);
+                ErrorHandling.error("Record with unknown type in input Stream - ignoring");
+                return new String[]{};
             }
-            builder.append(sex);
-
-            return new String[]{removeNasties(builder.toString())};
-
-        } else {
-            ErrorHandling.error("Record with unknown type in input Stream - ignoring");
+        } catch (KeyNotFoundException e) {
+            ErrorHandling.error("Record found with unknown key" );
             return new String[]{};
         }
     }

@@ -77,7 +77,7 @@ public class BucketGenerator {
             records = formatConverter.convert(training, codeDictionary);
         }
         else {
-            records = RecordFactory.makeCodedRecordsFromFile(training, codeDictionary);
+            records = RecordFactory.makeCodedCodRecordsFromFile(training, codeDictionary);
         }
 
         bucket.addCollectionOfRecords(records);

@@ -1,6 +1,11 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.vectors;
 
-import java.io.*;
+import java.io.DataInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -18,13 +23,20 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.machinelearning.tokenizing.StandardTokenizerIterable;
 import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearningConfiguration;
 
+// TODO: Auto-generated Javadoc
 /**
  * Factory that allows us to create vectors from strings.
  * Created by fraserdunlop on 23/04/2014 at 19:34.
  */
 public class VectorFactory implements Serializable {
 
+    /** The Constant serialVersionUID. */
+    private static final long serialVersionUID = 5369887941319861994L;
+
+    /** The index. */
     private CodeIndexer index;
+
+    /** The vector encoder. */
     private SimpleVectorEncoder vectorEncoder;
 
     /**
@@ -40,6 +52,7 @@ public class VectorFactory implements Serializable {
      * Constructs a new {@link VectorFactory} from the specified {@link Bucket}.
      *
      * @param bucket bucket
+     * @param index the index
      */
     public VectorFactory(final Bucket bucket, final CodeIndexer index) {
 
@@ -48,6 +61,11 @@ public class VectorFactory implements Serializable {
         updateDictionary(bucket);
     }
 
+    /**
+     * Updates the dictionary with the tokens for all the records in the given bucket.
+     *
+     * @param bucket the bucket
+     */
     public void updateDictionary(final Bucket bucket) {
 
         for (Record record : bucket) {
@@ -59,6 +77,9 @@ public class VectorFactory implements Serializable {
 
     }
 
+    /**
+     * Sets the num features.
+     */
     private void setNumFeatures() {
 
         int numFeatures = vectorEncoder.getDictionarySize();
@@ -87,6 +108,12 @@ public class VectorFactory implements Serializable {
         return vectors;
     }
 
+    /**
+     * Creates a new Vector object.
+     *
+     * @param description the description
+     * @return the collection<? extends named vector>
+     */
     private Collection<? extends NamedVector> createUnNamedVectorsFromDescriptopn(final List<String> description) {
 
         List<NamedVector> vectorList = new ArrayList<>();
@@ -99,6 +126,12 @@ public class VectorFactory implements Serializable {
         return vectorList;
     }
 
+    /**
+     * Creates a new Vector object.
+     *
+     * @param record the record
+     * @return the list< named vector>
+     */
     private List<NamedVector> createNamedVectorsWithGoldStandardCodes(final Record record) {
 
         List<NamedVector> vectors = new ArrayList<>();
@@ -142,6 +175,12 @@ public class VectorFactory implements Serializable {
         return new NamedVector(vector, name);
     }
 
+    /**
+     * Adds the features to vector.
+     *
+     * @param vector the vector
+     * @param description the description
+     */
     private void addFeaturesToVector(final Vector vector, final String description) {
 
         StandardTokenizerIterable tokenStream = new StandardTokenizerIterable(Version.LUCENE_36, new StringReader(description));
@@ -168,7 +207,7 @@ public class VectorFactory implements Serializable {
      * Write.
      *
      * @param outputStream the out
-     * @throws java.io.IOException Signals that an I/O exception has occurred.
+     * @throws IOException Signals that an I/O exception has occurred.
      */
     public void write(final ObjectOutputStream outputStream) throws IOException {
 
@@ -182,6 +221,7 @@ public class VectorFactory implements Serializable {
      *
      * @param in the in
      * @throws IOException Signals that an I/O exception has occurred.
+     * @throws ClassNotFoundException the class not found exception
      */
     public void readFields(final DataInputStream in) throws IOException, ClassNotFoundException {
 
@@ -190,11 +230,21 @@ public class VectorFactory implements Serializable {
         index = (CodeIndexer) objectInputStream.readObject();
     }
 
+    /**
+     * Gets the code indexer that was used to construct this vector factory.
+     *
+     * @return the code indexer
+     */
     public CodeIndexer getCodeIndexer() {
 
         return index;
     }
 
+    /**
+     * Gets the number of features.
+     *
+     * @return the number of features
+     */
     public int getNumberOfFeatures() {
 
         return vectorEncoder.getDictionarySize();

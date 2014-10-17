@@ -64,7 +64,7 @@ public final class PipelineUtils {
     //
     //    }
 
-    public static String printCodeMetrics(final Bucket bucket, CodeMetrics codeMetrics, final ListAccuracyMetrics accuracyMetrics, final CodeIndexer codeIndexer, final String strictCodeStatsPath, final String codeStatsPath, final String experimentalFolderName, final String identifier) {
+    public static String printCodeMetrics(final Bucket bucket, final CodeMetrics codeMetrics, final ListAccuracyMetrics accuracyMetrics, final CodeIndexer codeIndexer, final String strictCodeStatsPath, final String codeStatsPath, final String experimentalFolderName, final String identifier) {
 
         LOGGER.info(codeMetrics.getMicroStatsAsString());
         codeMetrics.writeStats(strictCodeStatsPath);
@@ -109,7 +109,8 @@ public final class PipelineUtils {
         String line = br.readLine();
         br.close();
         final int expectedLineLength = 38;
-        if (line != null && line.split(Utils.getCSVComma()).length == expectedLineLength) { return true; }
+        final String[] length = line.split(Utils.getCSVComma());
+        if (length.length == expectedLineLength) { return true; }
         return false;
     }
 

@@ -33,6 +33,8 @@ import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
  */
 public class OLRCrossFold implements Serializable {
 
+    private static final long serialVersionUID = -749333540672669562L;
+
     /** The Logger. */
     private static transient final Logger LOGGER = LoggerFactory.getLogger(OLRCrossFold.class);
 
