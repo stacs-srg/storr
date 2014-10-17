@@ -8,10 +8,10 @@ import org.junit.Before;
 import org.junit.Test;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.resolver.Interfaces.LossFunction;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.classification.AverageLossFunction;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.resolver.AverageLossFunction;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.classification.Classification;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.classification.LengthWeightedLossFunction;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.classification.SumLossFunction;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.resolver.LengthWeightedLossFunction;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.resolver.SumLossFunction;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
 
 /**

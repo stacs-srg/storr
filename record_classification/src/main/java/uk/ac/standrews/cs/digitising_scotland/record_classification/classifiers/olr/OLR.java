@@ -30,7 +30,6 @@ import org.apache.mahout.math.Vector;
 import org.apache.mahout.math.Vector.Element;
 import org.apache.mahout.math.function.Functions;
 
-import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.olr.serializablematrix.SerializableDenseMatrix;
 import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearningConfiguration;
 
 /**
@@ -149,16 +148,6 @@ public class OLR implements Serializable {
     public Matrix getBeta() {
 
         return beta.getMatrix();
-    }
-
-    /**
-     * Sets the beta matrix.
-     *
-     * @param beta the new beta
-     */
-    public void setBeta(final Matrix beta) {
-
-        this.beta = new SerializableDenseMatrix(beta);
     }
 
     public int getNumFeatures() {
@@ -530,8 +519,6 @@ public class OLR implements Serializable {
 
     /**
      * Gets the config options.
-     *
-     * @return the config options
      */
     private void getConfigOptions(Properties properties) {
 
