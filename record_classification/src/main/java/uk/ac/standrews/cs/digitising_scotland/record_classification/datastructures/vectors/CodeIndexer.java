@@ -1,22 +1,14 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.vectors;
 
-import java.io.BufferedInputStream;
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.ObjectInput;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.classification.Classification;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeDictionary;
@@ -24,16 +16,16 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearningConfiguration;
 
 /**
- * This class represents all the outputs codes that are being used in the OLR models. 
+ * This class represents all the outputs codes that are being used in the OLR models.
  * As the size of the OLR models depend on the number of output classes it was deemed undesirable to consturct models
  * that contained codes that are never seen in the training data. To avoid this, this class should hold all the output classes
- * that are actually used. 
+ * that are actually used.
  *
  * @author jkc25, frjd2
  */
 public final class CodeIndexer implements Serializable {
 
-    private static final long serialVersionUID = 3721498072294663528L;
+    private static final long serialVersionUID = 3073583599428985116L;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CodeIndexer.class);
 
@@ -153,54 +145,73 @@ public final class CodeIndexer implements Serializable {
         currentMaxID++;
     }
 
-    public void writeCodeFactory(final File path) throws IOException {
+    //    public void writeCodeFactory(final File path) throws IOException {
+    //
+    //        FileOutputStream fos = new FileOutputStream(path.getAbsoluteFile() + ".ser");
+    //        ObjectOutputStream oos = new ObjectOutputStream(fos);
+    //        write(oos);
+    //    }
 
-        FileOutputStream fos = new FileOutputStream(path.getAbsoluteFile() + ".ser");
-        ObjectOutputStream oos = new ObjectOutputStream(fos);
-        write(oos);
-    }
+    //    public CodeIndexer read(final File path) throws IOException, ClassNotFoundException {
+    //
+    //        InputStream file = new FileInputStream(path.getAbsoluteFile() + ".ser");
+    //        InputStream buffer = new BufferedInputStream(file);
+    //        ObjectInput input = new ObjectInputStream(buffer);
+    //        CodeIndexer recoveredFactory = null;
+    //        try {
+    //            recoveredFactory = (CodeIndexer) input.readObject();
+    //            idToCodeMap = recoveredFactory.idToCodeMap;
+    //            codeToIDMap = recoveredFactory.codeToIDMap;
+    //            currentMaxID = recoveredFactory.currentMaxID;
+    //
+    //        }
+    //        finally {
+    //            input.close();
+    //        }
+    //        return recoveredFactory;
+    //    }
 
-    public CodeIndexer read(final File path) throws IOException, ClassNotFoundException {
-
-        InputStream file = new FileInputStream(path.getAbsoluteFile() + ".ser");
-        InputStream buffer = new BufferedInputStream(file);
-        ObjectInput input = new ObjectInputStream(buffer);
-        CodeIndexer recoveredFactory = null;
-        try {
-            recoveredFactory = (CodeIndexer) input.readObject();
-            idToCodeMap = recoveredFactory.idToCodeMap;
-            codeToIDMap = recoveredFactory.codeToIDMap;
-            currentMaxID = recoveredFactory.currentMaxID;
-
-        }
-        finally {
-            input.close();
-        }
-        return recoveredFactory;
-    }
-
-    public void write(final ObjectOutputStream oos) throws IOException {
-
-        oos.writeObject(this);
-    }
-
-    public void write(final DataOutputStream outputStream) throws IOException {
-
-        outputStream.writeInt(currentMaxID);
-        writeIDMap(outputStream, idToCodeMap);
-        //   writeCodeMap(outputStream, idToCodeMap);
-
-    }
-
-    private void writeIDMap(final DataOutputStream outputStream, Map<Integer, Code> map) throws IOException {
-
-        for (Entry<Integer, Code> entry : map.entrySet()) {
-            outputStream.writeInt(entry.getKey());
-            final Code code = entry.getValue();
-            outputStream.writeUTF(code.getCodeAsString());
-            outputStream.writeUTF(code.getDescription());
-        }
-    }
+    //    public void write(final ObjectOutputStream oos) throws IOException {
+    //
+    //        oos.writeObject(this);
+    //    }
+    //
+    //    public void write(final DataOutputStream outputStream) throws IOException {
+    //
+    //        outputStream.writeInt(currentMaxID);
+    //        writeIDMap(outputStream, idToCodeMap);
+    //        //   writeCodeMap(outputStream, idToCodeMap);
+    //
+    //    }
+    //
+    //    private void writeObject(java.io.ObjectOutputStream stream) throws IOException {
+    //
+    //        stream.writeObject(idToCodeMap);
+    //        stream.writeObject(codeToIDMap);
+    //        stream.writeInt(currentMaxID);
+    //
+    //    }
+    //
+    //    private void readObject(java.io.ObjectInputStream stream) throws IOException, ClassNotFoundException {
+    //
+    //        idToCodeMap = (Map<Integer, Code>) stream.readObject();
+    //        codeToIDMap = (Map<Code, Integer>) stream.readObject();
+    //        currentMaxID = stream.readInt();
+    //    }
+    //
+    //    private void readObjectNoData() throws ObjectStreamException {
+    //
+    //    }
+    //
+    //    private void writeIDMap(final DataOutputStream outputStream, Map<Integer, Code> map) throws IOException {
+    //
+    //        for (Entry<Integer, Code> entry : map.entrySet()) {
+    //            outputStream.writeInt(entry.getKey());
+    //            final Code code = entry.getValue();
+    //            outputStream.writeUTF(code.getCodeAsString());
+    //            outputStream.writeUTF(code.getDescription());
+    //        }
+    //    }
 
     @Override
     public String toString() {
