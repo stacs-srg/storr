@@ -14,13 +14,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import uk.ac.shef.wit.simmetrics.similaritymetrics.AbstractStringMetric;
-import uk.ac.shef.wit.simmetrics.similaritymetrics.ChapmanMatchingSoundex;
 import uk.ac.shef.wit.simmetrics.similaritymetrics.DiceSimilarity;
 import uk.ac.shef.wit.simmetrics.similaritymetrics.JaccardSimilarity;
-import uk.ac.shef.wit.simmetrics.similaritymetrics.JaroWinkler;
 import uk.ac.shef.wit.simmetrics.similaritymetrics.Levenshtein;
-import uk.ac.shef.wit.simmetrics.similaritymetrics.NeedlemanWunch;
-import uk.ac.shef.wit.simmetrics.similaritymetrics.SmithWaterman;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.closestmatchmap.ClosestMatchMap;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.closestmatchmap.SimilarityMetric;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.closestmatchmap.SimilarityMetricFromSimmetricFactory;
@@ -103,7 +99,7 @@ public final class ExperimentalMultipleClassificationTypes {
         instance.run(args);
     }
 
-    public void run(final String[] args) throws Exception {
+    public Bucket run(final String[] args) throws Exception {
 
         String experimentalFolderName;
         File goldStandard;
@@ -138,10 +134,10 @@ public final class ExperimentalMultipleClassificationTypes {
         predictionBucket1 = trainingPredicition[1];
         classifyAndWrite(experimentalFolderName, trainingBucket, predictionBucket1, multipleClassifications, allRecords, codeIndex, map, simMetric, identifier);
 
-        simMetric = new JaroWinkler();
-        identifier = "JaroWinkler";
-        Bucket predictionBucket2 = copyOf(trainingPredicition[1]);
-        classifyAndWrite(experimentalFolderName, trainingBucket, predictionBucket2, multipleClassifications, allRecords, codeIndex, map, simMetric, identifier);
+        //        simMetric = new JaroWinkler();
+        //        identifier = "JaroWinkler";
+        //        Bucket predictionBucket2 = copyOf(trainingPredicition[1]);
+        //        classifyAndWrite(experimentalFolderName, trainingBucket, predictionBucket2, multipleClassifications, allRecords, codeIndex, map, simMetric, identifier);
 
         simMetric = new DiceSimilarity();
         identifier = "DiceSimilarity";
@@ -153,22 +149,24 @@ public final class ExperimentalMultipleClassificationTypes {
         Bucket predictionBucket4 = copyOf(trainingPredicition[1]);
         classifyAndWrite(experimentalFolderName, trainingBucket, predictionBucket4, multipleClassifications, allRecords, codeIndex, map, simMetric, identifier);
 
-        simMetric = new NeedlemanWunch();
-        identifier = "NeedlemanWunch";
-        Bucket predictionBucket5 = copyOf(trainingPredicition[1]);
-        classifyAndWrite(experimentalFolderName, trainingBucket, predictionBucket5, multipleClassifications, allRecords, codeIndex, map, simMetric, identifier);
-
-        simMetric = new SmithWaterman();
-        identifier = "SmithWaterman";
-        Bucket predictionBucket6 = copyOf(trainingPredicition[1]);
-        classifyAndWrite(experimentalFolderName, trainingBucket, predictionBucket6, multipleClassifications, allRecords, codeIndex, map, simMetric, identifier);
-
-        simMetric = new ChapmanMatchingSoundex();
-        identifier = "ChapmanMatchingSoundex";
-        Bucket predictionBucket7 = copyOf(trainingPredicition[1]);
-        classifyAndWrite(experimentalFolderName, trainingBucket, predictionBucket7, multipleClassifications, allRecords, codeIndex, map, simMetric, identifier);
+        //        simMetric = new NeedlemanWunch();
+        //        identifier = "NeedlemanWunch";
+        //        Bucket predictionBucket5 = copyOf(trainingPredicition[1]);
+        //        classifyAndWrite(experimentalFolderName, trainingBucket, predictionBucket5, multipleClassifications, allRecords, codeIndex, map, simMetric, identifier);
+        //
+        //        simMetric = new SmithWaterman();
+        //        identifier = "SmithWaterman";
+        //        Bucket predictionBucket6 = copyOf(trainingPredicition[1]);
+        //        classifyAndWrite(experimentalFolderName, trainingBucket, predictionBucket6, multipleClassifications, allRecords, codeIndex, map, simMetric, identifier);
+        //
+        //        simMetric = new ChapmanMatchingSoundex();
+        //        identifier = "ChapmanMatchingSoundex";
+        //        Bucket predictionBucket7 = copyOf(trainingPredicition[1]);
+        //        classifyAndWrite(experimentalFolderName, trainingBucket, predictionBucket7, multipleClassifications, allRecords, codeIndex, map, simMetric, identifier);
 
         timer.stop();
+
+        return new Bucket();
 
     }
 
