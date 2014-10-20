@@ -20,7 +20,7 @@ public class LXPConstructors { // TODO refactor all into factories
 
         Person record = new Person();
 
-        record.put(CommonTypeLabel.TYPE_LABEL, PersonTypeLabel.TYPE);
+        record.put(CommonTypeLabel.LABEL, PersonTypeLabel.TYPE);
 
         record.put(PersonTypeLabel.SURNAME, surname );
         record.put(PersonTypeLabel.FORENAME, forename );
@@ -68,7 +68,7 @@ public class LXPConstructors { // TODO refactor all into factories
         String changed_mothers_maiden_surname = BD_record.get(BirthTypeLabel.CHANGED_MOTHERS_MAIDEN_SURNAME);
 
         String original_record_id = Integer.toString(BD_record.getId());
-        String original_record_type = BD_record.get(BirthTypeLabel.TYPE_LABEL);
+        String original_record_type = BD_record.get(BirthTypeLabel.LABEL);
         String role = "baby";
         String occupation = "";
 
@@ -99,7 +99,7 @@ public class LXPConstructors { // TODO refactor all into factories
         String changed_mothers_maiden_surname = ""; // unknown
 
         String original_record_id = Integer.toString(BD_record.getId());
-        String original_record_type = BD_record.get(BirthTypeLabel.TYPE_LABEL);
+        String original_record_type = BD_record.get(BirthTypeLabel.LABEL);
         String role = "father";
         String occupation = child.get(PersonTypeLabel.FATHERS_OCCUPATION);
 
@@ -130,7 +130,7 @@ public class LXPConstructors { // TODO refactor all into factories
         String changed_mothers_maiden_surname = ""; // unknown
 
         String original_record_id = Integer.toString(BD_record.getId());
-        String original_record_type = BD_record.get(BirthTypeLabel.TYPE_LABEL);
+        String original_record_type = BD_record.get(BirthTypeLabel.LABEL);
         String role = "mother";
         String occupation = child.get(PersonTypeLabel.FATHERS_OCCUPATION);
 
@@ -170,7 +170,7 @@ public class LXPConstructors { // TODO refactor all into factories
         String changed_mothers_maiden_surname = ""; // unknown
 
         String original_record_id = Integer.toString(marriage_record.getId());
-        String original_record_type = marriage_record.get(MarriageTypeLabel.TYPE_LABEL);
+        String original_record_type = marriage_record.get(MarriageTypeLabel.LABEL);
         String role = "bride";
         String occupation = "";
 
@@ -209,7 +209,7 @@ public class LXPConstructors { // TODO refactor all into factories
         String changed_mothers_maiden_surname = ""; // unknown
 
         String original_record_id = Integer.toString(marriage_record.getId());
-        String original_record_type = marriage_record.get(MarriageTypeLabel.TYPE_LABEL);
+        String original_record_type = marriage_record.get(MarriageTypeLabel.LABEL);
         String role = "bride";
         String occupation = "";
 
@@ -242,7 +242,7 @@ public class LXPConstructors { // TODO refactor all into factories
         String changed_mothers_maiden_surname = ""; // unknown
 
         String original_record_id = Integer.toString(marriage_record.getId());
-        String original_record_type = marriage_record.get(MarriageTypeLabel.TYPE_LABEL);
+        String original_record_type = marriage_record.get(MarriageTypeLabel.LABEL);
         String role = "brides_father";
         String occupation = marriage_record.get(MarriageTypeLabel.BRIDE_FATHER_OCCUPATION);
 
@@ -275,7 +275,7 @@ public class LXPConstructors { // TODO refactor all into factories
         String changed_mothers_maiden_surname = ""; // unknown
 
         String original_record_id = Integer.toString(marriage_record.getId());
-        String original_record_type = marriage_record.get(MarriageTypeLabel.TYPE_LABEL);
+        String original_record_type = marriage_record.get(MarriageTypeLabel.LABEL);
         String role = "brides_mother";
         String occupation = ""; // unknown
 
@@ -308,7 +308,7 @@ public class LXPConstructors { // TODO refactor all into factories
         String changed_mothers_maiden_surname = ""; // unknown
 
         String original_record_id = Integer.toString(marriage_record.getId());
-        String original_record_type = marriage_record.get(MarriageTypeLabel.TYPE_LABEL);
+        String original_record_type = marriage_record.get(MarriageTypeLabel.LABEL);
         String role = "grooms_father";
         String occupation = marriage_record.get(MarriageTypeLabel.GROOM_FATHERS_OCCUPATION);
 
@@ -342,7 +342,7 @@ public class LXPConstructors { // TODO refactor all into factories
         String changed_mothers_maiden_surname = ""; // unknown
 
         String original_record_id = Integer.toString(marriage_record.getId());
-        String original_record_type = marriage_record.get(MarriageTypeLabel.TYPE_LABEL);
+        String original_record_type = marriage_record.get(MarriageTypeLabel.LABEL);
         String role = "grooms_mother";
         String occupation = ""; // unknown
 

@@ -8,7 +8,7 @@ import uk.ac.standrews.cs.digitising_scotland.linkage.RecordFormatException;
 import uk.ac.standrews.cs.digitising_scotland.linkage.blocking.MultipleBlockerOverPerson;
 import uk.ac.standrews.cs.digitising_scotland.linkage.factory.BirthFactory;
 import uk.ac.standrews.cs.digitising_scotland.linkage.factory.PersonFactory;
-import uk.ac.standrews.cs.digitising_scotland.linkage.factory.TypeFactory;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.factory.TypeFactory;
 import uk.ac.standrews.cs.digitising_scotland.linkage.interfaces.IPair;
 import uk.ac.standrews.cs.digitising_scotland.linkage.labels.FatherOfTypeLabel;
 import uk.ac.standrews.cs.digitising_scotland.linkage.labels.MotherOfTypeLabel;

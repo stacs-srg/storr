@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.digitising_scotland.linkage.factory;
+package uk.ac.standrews.cs.digitising_scotland.jstore.impl.factory;
 
 
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.TypeLabel;

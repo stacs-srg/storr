@@ -69,7 +69,7 @@ public class EventImporter {
         try {
             LXP record = new LXP();
 
-            record.put(CommonTypeLabel.TYPE_LABEL, Integer.toString(record_type));
+            record.put(CommonTypeLabel.LABEL, Integer.toString(record_type));
 
             Iterable<String> field_values = Arrays.asList(line.split(SEPARATOR, -1));
             addFields(field_names, field_values, record);

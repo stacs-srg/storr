@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.digitising_scotland.jstore.interfaces;
+package uk.ac.standrews.cs.digitising_scotland.jstore.impl;
 
 /**
  * Created by al on 20/06/2014.

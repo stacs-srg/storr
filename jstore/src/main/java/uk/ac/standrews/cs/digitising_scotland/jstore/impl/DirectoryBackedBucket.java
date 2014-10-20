@@ -100,6 +100,21 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
             throw new IOException("File already exists - LXP records in buckets may not be overwritten");
         }
 
+        if( type_label_id != -1 ) { // we have set a type label in this bucket there must check for consistency
+            if( record.containsKey( TypeLabel.LABEL ) ) {
+
+                try {
+                    if( ! TypeLabel.checkConsistentWith( Integer.parseInt( record.get(TypeLabel.LABEL) ),type_label_id) ) {
+                        throw new IOException( "Inconsistent labels" );
+                    }
+                } catch (KeyNotFoundException e) {
+                    throw new IOException( "Label key not found" ); // TODO change to some other exception?
+                }
+            } else { // no label in type so that is a failure too
+                throw new IOException( "No label" );
+            }
+        }
+
         try (Writer writer = Files.newBufferedWriter(path, FileManipulation.FILE_CHARSET)) {
 
             record.serializeToJSON(new JSONWriter(writer));

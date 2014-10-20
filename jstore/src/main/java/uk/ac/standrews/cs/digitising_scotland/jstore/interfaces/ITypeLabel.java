@@ -1,6 +1,7 @@
 package uk.ac.standrews.cs.digitising_scotland.jstore.interfaces;
 
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.KeyNotFoundException;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.Type;
 
 
 /**
