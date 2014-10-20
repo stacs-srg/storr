@@ -86,7 +86,17 @@ public final class PipelineUtils {
 
         OLRClassifier olrClassifier = new OLRClassifier();
         OLRClassifier.setModelPath(modelLocations + "/olrModel");
-        olrClassifier = olrClassifier.getModelFromDefaultLocation();
+        try {
+            olrClassifier = olrClassifier.deSerializeModel(modelLocations + "/olrModel");
+        }
+        catch (ClassNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
         return olrClassifier;
     }
 
