@@ -197,24 +197,10 @@ public class OLRClassifier implements IClassifier<TokenSet, Classification>, Ser
      */
     public void serializeModel(final String filename) throws IOException {
 
-        // vectorFactory.getCodeIndexer().writeCodeFactory(new File(filename + "CodeFactory"));
         ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(filename));
         out.writeObject(this);
         out.close();
     }
-
-    //    private void write(final ObjectOutputStream outputStream) throws IOException {
-    //
-    //        outputStream.writeObject(vectorFactory);
-    //        outputStream.writeObject(model);
-    //    }
-
-    //    private void readFields(final DataInputStream inputStream) throws IOException, ClassNotFoundException {
-    //
-    //        ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
-    //        vectorFactory = (VectorFactory) objectInputStream.readObject();
-    //        model = (OLRCrossFold) objectInputStream.readObject();
-    //    }
 
     /**
      * Allows de-serialization of a model from a file. The de-serialized model is not trainable.

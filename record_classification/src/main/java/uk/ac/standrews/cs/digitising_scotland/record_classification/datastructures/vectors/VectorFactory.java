@@ -198,35 +198,6 @@ public class VectorFactory implements Serializable {
         setNumFeatures();
     }
 
-    //
-    //    /**
-    //     * Write.
-    //     *
-    //     * @param outputStream the out
-    //     * @throws IOException Signals that an I/O exception has occurred.
-    //     */
-    //    public void write(final ObjectOutputStream outputStream) throws IOException {
-    //
-    //        // vectorEncoder.write(outputStream);
-    //        outputStream.writeObject(vectorEncoder);
-    //        outputStream.writeObject(index);
-    //
-    //    }
-
-    //    /**
-    //     * Read fields.
-    //     *
-    //     * @param in the in
-    //     * @throws IOException Signals that an I/O exception has occurred.
-    //     * @throws ClassNotFoundException the class not found exception
-    //     */
-    //    public void readFields(final DataInputStream in) throws IOException, ClassNotFoundException {
-    //
-    //        vectorEncoder.readFields(in);
-    //        ObjectInputStream objectInputStream = new ObjectInputStream(in);
-    //        index = (CodeIndexer) objectInputStream.readObject();
-    //    }
-
     /**
      * Gets the code indexer that was used to construct this vector factory.
      *
