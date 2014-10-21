@@ -2,6 +2,7 @@ package uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers
 
 import java.util.Set;
 
+import com.google.common.collect.Multiset;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.IClassifier;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.lookup.NGramSubstrings;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.resolver.Interfaces.LossFunction;
@@ -16,7 +17,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
  *
  * Created by fraserdunlop on 09/10/2014 at 12:14.
  */
-public class RecordClassificationResolverPipeline<P_LossFunction extends LossFunction<Set<Classification>, Double>> extends ResolverPipeline<Double, Code, Classification, ClassificationComparator, TokenSet, ClassificationSetValidityAssessor, Double, P_LossFunction> {
+public class RecordClassificationResolverPipeline<P_LossFunction extends LossFunction<Multiset<Classification>, Double>> extends ResolverPipeline<Double, Code, Classification, ClassificationComparator, TokenSet, ClassificationSetValidityAssessor, Double, P_LossFunction> {
 
     public RecordClassificationResolverPipeline(final IClassifier<TokenSet, Classification> classifier, final P_LossFunction lengthWeightedLossFunction, final Double confidenceThreshold, final boolean multipleClassifications, final boolean resolveHierarchies) {
 

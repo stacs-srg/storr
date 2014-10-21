@@ -1,11 +1,10 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.resolver.generic;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
-
+import com.google.common.collect.HashMultiset;
+import com.google.common.collect.Multiset;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.resolver.Interfaces.ValidityAssessor;
 
 /**
@@ -13,7 +12,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.
  * given a ValidityCriterion. Values associated with the same key are not considered allowable combinations.
  * Created by fraserdunlop on 06/10/2014 at 09:45.
  */
-public class ValidCombinationGetter<K, V, ValidityCriterion, P_ValidityAssessor extends ValidityAssessor<Set<V>, ValidityCriterion>> {
+public class ValidCombinationGetter<K, V, ValidityCriterion, P_ValidityAssessor extends ValidityAssessor<Multiset<V>, ValidityCriterion>> {
 
     private final P_ValidityAssessor validityAssessor;
 
@@ -30,9 +29,9 @@ public class ValidCombinationGetter<K, V, ValidityCriterion, P_ValidityAssessor 
      * @param validityCriterion a validity criterion for assessing the validity of a combination given a condition
      * @return a list of all valid sets of values from the MultiValueMap
      */
-    public List<Set<V>> getValidSets(final MultiValueMap<K, V> map, final ValidityCriterion validityCriterion) throws Exception {
+    public List<Multiset<V>> getValidSets(final MultiValueMap<K, V> map, final ValidityCriterion validityCriterion) throws Exception {
 
-        List<Set<V>> validSets;
+        List<Multiset<V>> validSets;
         validSets = calculateValidSets(map, validityCriterion);
         return validSets;
     }
@@ -43,9 +42,9 @@ public class ValidCombinationGetter<K, V, ValidityCriterion, P_ValidityAssessor 
      * @param validityCriterion a validity criterion for assessing the validity of a combination given a condition
      * @return a list of all valid sets of values from the MultiValueMap
      */
-    private List<Set<V>> calculateValidSets(final MultiValueMap<K, V> map, final ValidityCriterion validityCriterion) {
+    private List<Multiset<V>> calculateValidSets(final MultiValueMap<K, V> map, final ValidityCriterion validityCriterion) {
 
-        List<Set<V>> validSets = new ArrayList<>();
+        List<Multiset<V>> validSets = new ArrayList<>();
         validSets.add(null);
         validSets = recursiveMerge(validSets, map, map.iterator(), validityCriterion);
         validSets.remove(null);
@@ -60,7 +59,7 @@ public class ValidCombinationGetter<K, V, ValidityCriterion, P_ValidityAssessor 
      * @param validityCriterion a validity criterion for assessing the validity of a combination given a condition
      * @return a list of all valid sets of values from the MultiValueMap
      */
-    private List<Set<V>> recursiveMerge(final List<Set<V>> validSets, final MultiValueMap<K, V> map, final Iterator<K> iterator, final ValidityCriterion validityCriterion) {
+    private List<Multiset<V>> recursiveMerge(final List<Multiset<V>> validSets, final MultiValueMap<K, V> map, final Iterator<K> iterator, final ValidityCriterion validityCriterion) {
 
         if (iterator.hasNext()) {
             K k = iterator.next();
@@ -79,13 +78,13 @@ public class ValidCombinationGetter<K, V, ValidityCriterion, P_ValidityAssessor 
      * @param validityCriterion a validity criterion for assessing the validity of a combination given a condition
      * @param k the key whose values are being 'merged' into the sets of validSets
      */
-    private void mergeStep(final List<Set<V>> validSets, final MultiValueMap<K, V> map, final ValidityCriterion validityCriterion, final K k) {
+    private void mergeStep(final List<Multiset<V>> validSets, final MultiValueMap<K, V> map, final ValidityCriterion validityCriterion, final K k) {
 
         List<V> kValues = map.get(k);
-        List<Set<V>> tempList = new ArrayList<>();
-        for (Set<V> set : validSets) {
+        List<Multiset<V>> tempList = new ArrayList<>();
+        for (Multiset<V> set : validSets) {
             for (V kValue : kValues) {
-                Set<V> tempSet = copyOfUnion(set, kValue);
+                Multiset<V> tempSet = copyOfUnion(set, kValue);
                 if (tempSetIsValid(validityCriterion, tempSet)) {
                     tempList.add(tempSet);
                 }
@@ -97,7 +96,7 @@ public class ValidCombinationGetter<K, V, ValidityCriterion, P_ValidityAssessor 
     /**
      * Purely for readability of mergeStep method.
      */
-    private boolean tempSetIsValid(final ValidityCriterion validityCriterion, final Set<V> tempSet) {
+    private boolean tempSetIsValid(final ValidityCriterion validityCriterion, final Multiset<V> tempSet) {
 
         return validityAssessor.assess(tempSet, validityCriterion);
     }
@@ -108,9 +107,9 @@ public class ValidCombinationGetter<K, V, ValidityCriterion, P_ValidityAssessor 
      * @param v value
      * @return new set - union of set and v
      */
-    private Set<V> copyOfUnion(final Set<V> set, final V v) {
+    private Multiset<V> copyOfUnion(final Multiset<V> set, final V v) {
 
-        Set<V> tempSet = new HashSet<>();
+        Multiset<V> tempSet = HashMultiset.create();
         if (set != null) {
             tempSet.addAll(set);
         }

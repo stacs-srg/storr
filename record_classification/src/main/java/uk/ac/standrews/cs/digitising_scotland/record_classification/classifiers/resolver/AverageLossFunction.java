@@ -2,8 +2,8 @@ package uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
+import com.google.common.collect.Multiset;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.resolver.Interfaces.LossFunction;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.classification.Classification;
 
@@ -13,10 +13,10 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
  * @author jkc25
  *
  */
-public class AverageLossFunction implements LossFunction<Set<Classification>, Double> {
+public class AverageLossFunction implements LossFunction<Multiset<Classification>, Double> {
 
     @Override
-    public Double calculate(final Set<Classification> set) {
+    public Double calculate(final Multiset<Classification> set) {
 
         List<Double> confidences = new ArrayList<>();
         for (Classification triple : set) {

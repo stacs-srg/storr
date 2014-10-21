@@ -26,7 +26,7 @@ import com.google.common.collect.Multiset;
  * maximises the loss function.
  * Created by fraserdunlop on 08/10/2014 at 09:50.
  */
-public class ResolverPipeline<Threshold, Code extends AncestorAble<Code>, Classification extends AbstractClassification<Code, Threshold>, PComparator extends Comparator<Classification>, FeatureSet, PValidityAssessor extends ValidityAssessor<Set<Classification>, FeatureSet>, LossMetric extends Comparable<LossMetric>, PLossFunction extends LossFunction<Set<Classification>, LossMetric>>
+public class ResolverPipeline<Threshold, Code extends AncestorAble<Code>, Classification extends AbstractClassification<Code, Threshold>, PComparator extends Comparator<Classification>, FeatureSet, PValidityAssessor extends ValidityAssessor<Multiset<Classification>, FeatureSet>, LossMetric extends Comparable<LossMetric>, PLossFunction extends LossFunction<Multiset<Classification>, LossMetric>>
                 implements IClassifier<FeatureSet, Set<Classification>> {
 
     private final boolean multipleClassifications;
@@ -80,7 +80,7 @@ public class ResolverPipeline<Threshold, Code extends AncestorAble<Code>, Classi
             multiValueMap = flattener.moveAllIntoKey(multiValueMap, multiValueMap.iterator().next());
         }
         multiValueMap = pruner.pruneUntilComplexityWithinBound(multiValueMap);
-        List<Set<Classification>> validSets = vCG.getValidSets(multiValueMap, featureSet);
+        List<Multiset<Classification>> validSets = vCG.getValidSets(multiValueMap, featureSet);
         return lFA.getBest(validSets);
     }
 

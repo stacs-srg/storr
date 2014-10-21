@@ -1,7 +1,7 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.resolver;
 
-import java.util.Set;
 
+import com.google.common.collect.Multiset;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.resolver.Interfaces.LossFunction;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.classification.Classification;
 
@@ -11,10 +11,10 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
  * @author jkc25
  *
  */
-public class SumLossFunction implements LossFunction<Set<Classification>, Double> {
+public class SumLossFunction implements LossFunction<Multiset<Classification>, Double> {
 
     @Override
-    public Double calculate(final Set<Classification> set) {
+    public Double calculate(final Multiset<Classification> set) {
 
         double confidenceSum = 0;
 

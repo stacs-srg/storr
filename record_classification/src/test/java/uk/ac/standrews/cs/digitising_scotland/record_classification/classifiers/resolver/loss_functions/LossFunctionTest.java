@@ -3,12 +3,15 @@ package uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers
 import java.util.HashSet;
 import java.util.Set;
 
+import com.google.common.collect.HashMultiset;
+import com.google.common.collect.Multiset;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.resolver.Interfaces.LossFunction;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.resolver.AverageLossFunction;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.resolver.LogLengthWeightedLossFunction;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.classification.Classification;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.resolver.LengthWeightedLossFunction;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.resolver.SumLossFunction;
@@ -21,10 +24,11 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
  */
 public class LossFunctionTest {
 
-    private LossFunction<Set<Classification>, Double> sumLoss;
-    private LossFunction<Set<Classification>, Double> averageLoss;
-    private LossFunction<Set<Classification>, Double> lengthWeighted;
-    private Set<Classification> classifications;
+    private LossFunction<Multiset<Classification>, Double> sumLoss;
+    private LossFunction<Multiset<Classification>, Double> averageLoss;
+    private LossFunction<Multiset<Classification>, Double> lengthWeighted;
+    private LossFunction<Multiset<Classification>, Double> logLengthWeighted;
+    private Multiset<Classification> classifications;
 
     @Before
     public void setUp() throws Exception {
@@ -32,13 +36,14 @@ public class LossFunctionTest {
         sumLoss = new SumLossFunction();
         averageLoss = new AverageLossFunction();
         lengthWeighted = new LengthWeightedLossFunction();
+        logLengthWeighted = new LogLengthWeightedLossFunction();
         classifications = createClassificationSet();
 
     }
 
-    private Set<Classification> createClassificationSet() {
+    private Multiset<Classification> createClassificationSet() {
 
-        Set<Classification> set = new HashSet<Classification>();
+        Multiset<Classification> set = HashMultiset.create();
 
         Classification c0 = new Classification(null, new TokenSet("Foo"), 1.0);
         Classification c1 = new Classification(null, new TokenSet("Foo"), 0.5);
@@ -70,5 +75,10 @@ public class LossFunctionTest {
     public void testLengthLoss() {
 
         Assert.assertEquals(3.9, lengthWeighted.calculate(classifications), 0.001);
+    }
+
+    @Test
+    public void testLogLengthLoss(){
+        Assert.assertEquals(2.195,logLengthWeighted.calculate(classifications),0.001);
     }
 }
