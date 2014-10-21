@@ -26,7 +26,7 @@ import com.google.common.collect.Multiset;
  * maximises the loss function.
  * Created by fraserdunlop on 08/10/2014 at 09:50.
  */
-public class ResolverPipeline<Threshold, Code extends AncestorAble<Code>, Classification extends AbstractClassification<Code, Threshold>, PComparator extends Comparator<Classification>, FeatureSet, PValidityAssessor extends ValidityAssessor<Set<Classification>, FeatureSet>, LossMetric extends Comparable<LossMetric>, PLossFunction extends LossFunction<Set<Classification>, LossMetric>>
+public class ResolverPipeline<Threshold, Code extends AncestorAble<Code>, Classification extends AbstractClassification<Code, Threshold>, PComparator extends Comparator<Classification>, FeatureSet, PValidityAssessor extends ValidityAssessor<Multiset<Classification>, FeatureSet>, LossMetric extends Comparable<LossMetric>, PLossFunction extends LossFunction<Multiset<Classification>, LossMetric>>
                 implements IClassifier<FeatureSet, Set<Classification>> {
 
     private final boolean multipleClassifications;
@@ -40,10 +40,8 @@ public class ResolverPipeline<Threshold, Code extends AncestorAble<Code>, Classi
     private LossFunctionApplier<Classification, LossMetric, PLossFunction> lossFunctionApplier;
     private SubsetEnumerator<FeatureSet> subsetEnumerator;
 
-    public ResolverPipeline(final IClassifier<FeatureSet, Classification> classifier, final boolean multipleClassifications,
-                    final PComparator classificationComparator, final PValidityAssessor classificationSetValidityAssessor,
-                    final PLossFunction lengthWeightedLossFunction, final SubsetEnumerator<FeatureSet> subsetEnumerator,
-                    final Threshold threshold, final boolean resolveHierarchies) {
+    public ResolverPipeline(final IClassifier<FeatureSet, Classification> classifier, final boolean multipleClassifications, final PComparator classificationComparator, final PValidityAssessor classificationSetValidityAssessor, final PLossFunction lengthWeightedLossFunction,
+                    final SubsetEnumerator<FeatureSet> subsetEnumerator, final Threshold threshold, final boolean resolveHierarchies) {
 
         this.classifier = classifier;
         this.multipleClassifications = multipleClassifications;
