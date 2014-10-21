@@ -1,6 +1,7 @@
 package uk.ac.standrews.cs.digitising_scotland.linkage.lxp_records;
 
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.Store;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.Store;
+
 import uk.ac.standrews.cs.nds.persistence.PersistentObjectException;
 import uk.ac.standrews.cs.nds.rpc.stream.JSONReader;
 

@@ -44,14 +44,11 @@ public class ClassifyWithExsistingModelsTest {
 
         File lookupTable1 = new File(getClass().getResource("/codModels/lookupTable.ser").getFile());
         File olrModel1 = new File(getClass().getResource("/codModels/olrModel").getFile());
-        File olrModelCodeFactory1 = new File(getClass().getResource("/codModels/olrModelCodeFactory.ser").getFile());
         File lookupTable2 = new File(getClass().getResource(expectedModelLocation + "/lookupTable.ser").getFile());
         File olrModel2 = new File(getClass().getResource(expectedModelLocation + "/olrModel").getFile());
-        File olrModelCodeFactory2 = new File(getClass().getResource(expectedModelLocation + "/olrModelCodeFactory.ser").getFile());
 
         Files.copy(lookupTable1, lookupTable2);
         Files.copy(olrModel1, olrModel2);
-        Files.copy(olrModelCodeFactory1, olrModelCodeFactory2);
     }
 
     @Test

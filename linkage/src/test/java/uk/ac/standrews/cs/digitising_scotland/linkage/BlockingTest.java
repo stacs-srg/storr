@@ -3,13 +3,13 @@ package uk.ac.standrews.cs.digitising_scotland.linkage;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.RepositoryException;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.Store;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.StoreException;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.*;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.RepositoryException;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.Store;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.StoreException;
+import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.*;
 import uk.ac.standrews.cs.digitising_scotland.linkage.blocking.FNLFFMFOverBirths;
 import uk.ac.standrews.cs.digitising_scotland.linkage.factory.BirthFactory;
-import uk.ac.standrews.cs.digitising_scotland.linkage.factory.TypeFactory;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.factory.TypeFactory;
 import uk.ac.standrews.cs.digitising_scotland.linkage.lxp_records.Birth;
 import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
 

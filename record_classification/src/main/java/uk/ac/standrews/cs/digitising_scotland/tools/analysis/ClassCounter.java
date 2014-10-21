@@ -21,22 +21,11 @@ import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
  */
 public class ClassCounter {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(ClassCounter.class);
+
     private File input;
     private int classColumn = 0;
     private HashMap<String, String> outputClasses;
-    private static final Logger LOGGER = LoggerFactory.getLogger(ClassCounter.class);
-
-    /**
-     * The main method.
-     *
-     * @param args the arguments
-     */
-    public static void main(final String[] args) {
-
-        ClassCounter c = new ClassCounter(new File("kilm8000.txt"));
-        LOGGER.info("Classes in file: " + Integer.valueOf(c.count()));
-
-    }
 
     /**
      * Constructs a ClassCounter class with the input file and the column containing the classes you want to count.
@@ -64,10 +53,10 @@ public class ClassCounter {
     }
 
     /**
-     * Counts the number of different output classes in the file.
-     * 
-     * @return Number of output classes.
-     */
+      * Counts the number of different output classes in the file.
+      * 
+      * @return Number of output classes.
+      */
     public int count() {
 
         int numberOfClasses = 0;
@@ -143,6 +132,18 @@ public class ClassCounter {
         if (fileName.substring(fileName.length() - extensionLength, fileName.length()).equalsIgnoreCase("csv")) { return "csv"; }
 
         return "unknown";
+    }
+
+    /**
+     * The main method.
+     *
+     * @param args the arguments
+     */
+    public static void main(final String[] args) {
+
+        ClassCounter c = new ClassCounter(new File("kilm8000.txt"));
+        LOGGER.info("Classes in file: " + Integer.valueOf(c.count()));
+
     }
 
 }

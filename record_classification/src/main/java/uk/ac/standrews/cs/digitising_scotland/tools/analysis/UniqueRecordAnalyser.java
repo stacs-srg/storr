@@ -21,12 +21,12 @@ import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
  */
 public class UniqueRecordAnalyser {
 
-    static Logger LOGGER = LoggerFactory.getLogger(UniqueRecordAnalyser.class);
-    static int descriptionPos;
-    static int correctPos;
-    static int nbPos;
-    static int sgdPos;
-    static int stringSimPos;
+    private static Logger LOGGER = LoggerFactory.getLogger(UniqueRecordAnalyser.class);
+    private static int descriptionPos;
+    private static int correctPos;
+    private static int nbPos;
+    private static int sgdPos;
+    private static int stringSimPos;
 
     public static void main(final String[] args) throws IOException {
 

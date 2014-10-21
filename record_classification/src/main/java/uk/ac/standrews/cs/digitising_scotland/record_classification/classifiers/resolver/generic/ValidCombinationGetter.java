@@ -102,7 +102,7 @@ public class ValidCombinationGetter<K, V, ValidityCriterion, P_ValidityAssessor 
     }
 
     /**
-     * Returns a new Set<V> containing union of set and v
+     * Returns a new Set<V> containing union of set and v.
      * @param set set
      * @param v value
      * @return new set - union of set and v

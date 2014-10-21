@@ -1,15 +1,16 @@
 package uk.ac.standrews.cs.digitising_scotland.linkage.resolve;
 
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.KeyNotFoundException;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.LXP;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.stream_operators.sharder.AbstractPairwiseLinker;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IInputStream;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXP;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IOutputStream;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IPair;
+
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.KeyNotFoundException;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.LXP;
+import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.IInputStream;
+import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.ILXP;
+import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.IOutputStream;
+import uk.ac.standrews.cs.digitising_scotland.linkage.interfaces.IPair;
 import uk.ac.standrews.cs.digitising_scotland.linkage.labels.PersonTypeLabel;
 import uk.ac.standrews.cs.digitising_scotland.linkage.labels.SameAsTypeLabel;
 import uk.ac.standrews.cs.digitising_scotland.linkage.lxp_records.Person;
+import uk.ac.standrews.cs.digitising_scotland.linkage.stream_operators.sharder.AbstractPairwiseLinker;
 import uk.ac.standrews.cs.digitising_scotland.util.ErrorHandling;
 
 /**

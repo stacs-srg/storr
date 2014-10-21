@@ -1,12 +1,11 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.olr;
 
-import java.io.DataInputStream;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -37,8 +36,9 @@ import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearnin
  * @author frjd2, jkc25
  * 
  */
-public class OLRClassifier implements IClassifier<TokenSet, Classification> {
+public class OLRClassifier implements IClassifier<TokenSet, Classification>, Serializable {
 
+    private static final long serialVersionUID = -2561454096763303789L;
     private static final Logger LOGGER = LoggerFactory.getLogger(OLRClassifier.class);
     private OLRCrossFold model = null;
     private final Properties properties;
@@ -197,23 +197,9 @@ public class OLRClassifier implements IClassifier<TokenSet, Classification> {
      */
     public void serializeModel(final String filename) throws IOException {
 
-        vectorFactory.getCodeIndexer().writeCodeFactory(new File(filename + "CodeFactory"));
         ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(filename));
-        write(out);
+        out.writeObject(this);
         out.close();
-    }
-
-    private void write(final ObjectOutputStream outputStream) throws IOException {
-
-        outputStream.writeObject(vectorFactory);
-        outputStream.writeObject(model);
-    }
-
-    private void readFields(final DataInputStream inputStream) throws IOException, ClassNotFoundException {
-
-        ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
-        vectorFactory = (VectorFactory) objectInputStream.readObject();
-        model = (OLRCrossFold) objectInputStream.readObject();
     }
 
     /**
@@ -226,10 +212,10 @@ public class OLRClassifier implements IClassifier<TokenSet, Classification> {
      */
     public OLRClassifier deSerializeModel(final String filename) throws IOException, ClassNotFoundException {
 
-        DataInputStream in = new DataInputStream(new FileInputStream(filename));
-        OLRClassifier olrClassifier = new OLRClassifier();
-        olrClassifier.readFields(in);
-
+        FileInputStream fis = new FileInputStream(filename);
+        ObjectInputStream ois = new ObjectInputStream(fis);
+        OLRClassifier olrClassifier = (OLRClassifier) ois.readObject();
+        ois.close();
         return olrClassifier;
     }
 

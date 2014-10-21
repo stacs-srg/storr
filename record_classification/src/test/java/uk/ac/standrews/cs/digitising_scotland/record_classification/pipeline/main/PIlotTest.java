@@ -33,7 +33,7 @@ public class PIlotTest {
     }
 
     @Test
-    public void test() throws Exception {
+    public void pilotTest() throws Exception {
 
         Iterator<Classification> it;
         Set<String> codesinmap;

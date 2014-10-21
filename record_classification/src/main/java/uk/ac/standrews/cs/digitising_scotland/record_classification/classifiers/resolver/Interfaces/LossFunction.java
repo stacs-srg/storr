@@ -12,6 +12,6 @@ public interface LossFunction<O, LossMetric extends Comparable<LossMetric>> {
      * @param o the object to evaluate
      * @return the double loss value
      */
-    public abstract LossMetric calculate(final O o);
+    abstract LossMetric calculate(final O o);
 
 }

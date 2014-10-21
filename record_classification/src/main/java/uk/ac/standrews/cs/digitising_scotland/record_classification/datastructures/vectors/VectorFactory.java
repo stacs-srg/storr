@@ -1,9 +1,5 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.vectors;
 
-import java.io.DataInputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.io.StringReader;
 import java.util.ArrayList;
@@ -23,7 +19,6 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.machinelearning.tokenizing.StandardTokenizerIterable;
 import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearningConfiguration;
 
-// TODO: Auto-generated Javadoc
 /**
  * Factory that allows us to create vectors from strings.
  * Created by fraserdunlop on 23/04/2014 at 19:34.
@@ -201,33 +196,6 @@ public class VectorFactory implements Serializable {
             vectorEncoder.updateDictionary(attribute.toString());
         }
         setNumFeatures();
-    }
-
-    /**
-     * Write.
-     *
-     * @param outputStream the out
-     * @throws IOException Signals that an I/O exception has occurred.
-     */
-    public void write(final ObjectOutputStream outputStream) throws IOException {
-
-        vectorEncoder.write(outputStream);
-        outputStream.writeObject(index);
-
-    }
-
-    /**
-     * Read fields.
-     *
-     * @param in the in
-     * @throws IOException Signals that an I/O exception has occurred.
-     * @throws ClassNotFoundException the class not found exception
-     */
-    public void readFields(final DataInputStream in) throws IOException, ClassNotFoundException {
-
-        vectorEncoder.readFields(in);
-        ObjectInputStream objectInputStream = new ObjectInputStream(in);
-        index = (CodeIndexer) objectInputStream.readObject();
     }
 
     /**

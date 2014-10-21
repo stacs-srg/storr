@@ -1,10 +1,10 @@
 package uk.ac.standrews.cs.digitising_scotland.linkage;
 
 import org.json.JSONException;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.impl.LXP;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.IBucket;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ILXP;
-import uk.ac.standrews.cs.digitising_scotland.generic_linkage.interfaces.ITypeLabel;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.LXP;
+import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.IBucket;
+import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.ILXP;
+import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.ITypeLabel;
 import uk.ac.standrews.cs.digitising_scotland.linkage.labels.CommonTypeLabel;
 import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
 
@@ -69,7 +69,7 @@ public class EventImporter {
         try {
             LXP record = new LXP();
 
-            record.put(CommonTypeLabel.TYPE_LABEL, Integer.toString(record_type));
+            record.put(CommonTypeLabel.LABEL, Integer.toString(record_type));
 
             Iterable<String> field_values = Arrays.asList(line.split(SEPARATOR, -1));
             addFields(field_names, field_values, record);
