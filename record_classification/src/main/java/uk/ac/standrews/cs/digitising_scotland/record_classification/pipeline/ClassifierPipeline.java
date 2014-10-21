@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import com.google.common.collect.Multiset;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.IClassifier;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.cachedclassifier.CachedClassifier;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.resolver.RecordClassificationResolverPipeline;
@@ -26,7 +27,7 @@ public class ClassifierPipeline implements IPipeline {
 
     /** The Constant CONFIDENCE_CHOP_LEVEL. */
     private static final double CONFIDENCE_CHOP_LEVEL = 0.3;
-    private final RecordClassificationResolverPipeline<? extends LossFunction<Set<Classification>, Double>> resolverPipeline;
+    private final RecordClassificationResolverPipeline<? extends LossFunction<Multiset<Classification>, Double>> resolverPipeline;
 
     /** The record cache. */
     private Map<String, Set<Classification>> recordCache;
@@ -41,7 +42,7 @@ public class ClassifierPipeline implements IPipeline {
      * @param classifier    {@link uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.IClassifier} used for machine learning classification
      * @param cachePopulationBucket the training bucket
      */
-    public ClassifierPipeline(final IClassifier<TokenSet, Classification> classifier, final Bucket cachePopulationBucket, final LossFunction<Set<Classification>, Double> lossFunction, final boolean multipleClassifications, final boolean resolveHierarchies) {
+    public ClassifierPipeline(final IClassifier<TokenSet, Classification> classifier, final Bucket cachePopulationBucket, final LossFunction<Multiset<Classification>, Double> lossFunction, final boolean multipleClassifications, final boolean resolveHierarchies) {
 
         /* The cache. */
         TokenToClassificationMapGenerator populator = new TokenToClassificationMapGenerator(cachePopulationBucket);

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import com.google.common.collect.Multiset;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -27,7 +28,7 @@ public class ValidCombinationGetterTest {
 
     private ValidCombinationGetter<Code, Classification, TokenSet, ClassificationSetValidityAssessor> vCG = new ValidCombinationGetter<>(new ClassificationSetValidityAssessor());
     private MultiValueMapTestHelper mvmHelper;
-    private LossFunction<Set<Classification>, Double> lengthWeighted = new LengthWeightedLossFunction();
+    private LossFunction<Multiset<Classification>, Double> lengthWeighted = new LengthWeightedLossFunction();
     private LossFunctionApplier<Classification, Double, LengthWeightedLossFunction> lossFunctionApplier = new LossFunctionApplier<>(new LengthWeightedLossFunction());
 
     @Before
@@ -48,13 +49,13 @@ public class ValidCombinationGetterTest {
     public void getValidCodeTriplesTest() throws Exception {
 
         TokenSet originalSet = new TokenSet("brown white");
-        List<Set<Classification>> validTriples = vCG.getValidSets(mvmHelper.getMap(), originalSet);
+        List<Multiset<Classification>> validTriples = vCG.getValidSets(mvmHelper.getMap(), originalSet);
         Assert.assertEquals(20, validTriples.size());
         mvmHelper.addMockEntryToMatrix("blue", "3000", 0.83);
         TokenSet originalSet1 = new TokenSet("brown white blue");
         validTriples = vCG.getValidSets(mvmHelper.getMap(), originalSet1);
         Assert.assertEquals(41, validTriples.size());
-        for (Set<Classification> set : validTriples) {
+        for (Multiset<Classification> set : validTriples) {
             Assert.assertEquals(1.5, lengthWeighted.calculate(set), 1.5);
         }
         Set<Classification> best = lossFunctionApplier.getBest(validTriples);
@@ -68,7 +69,7 @@ public class ValidCombinationGetterTest {
     @Test
     public void testLossFunctionApplierReturnsEmptySetWithEmptyGetBestArg() {
 
-        List<Set<Classification>> classifications = new ArrayList<>();
+        List<Multiset<Classification>> classifications = new ArrayList<>();
         Assert.assertTrue(lossFunctionApplier.getBest(classifications).isEmpty());
     }
 }

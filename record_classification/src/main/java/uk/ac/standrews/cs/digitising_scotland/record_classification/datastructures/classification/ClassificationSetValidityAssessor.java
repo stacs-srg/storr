@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.classification;
 
+import java.util.ArrayList;
 import java.util.Set;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.resolver.Interfaces.ValidityAssessor;
@@ -14,7 +15,7 @@ import com.google.common.collect.Multiset;
  * Classifications is a member of the power set of the TokenSet.
  * Created by fraserdunlop on 06/10/2014 at 16:37.
  */
-public class ClassificationSetValidityAssessor implements ValidityAssessor<Set<Classification>, TokenSet> {
+public class ClassificationSetValidityAssessor implements ValidityAssessor<Multiset<Classification>, TokenSet> {
 
     /**
      * Assesses if the union of the token sets  of the set of
@@ -24,7 +25,7 @@ public class ClassificationSetValidityAssessor implements ValidityAssessor<Set<C
      * @return boolean.
      */
     @Override
-    public boolean assess(Set<Classification> classifications, TokenSet tokenSet) {
+    public boolean assess(Multiset<Classification> classifications, TokenSet tokenSet) {
 
         Multiset<TokenSet> tokenSetsFromClassifications = getTokenSetsFromClassifications(classifications);
         TokenSet unionOfTokenSets = getUnionOfTokenSets(tokenSetsFromClassifications);
@@ -52,7 +53,7 @@ public class ClassificationSetValidityAssessor implements ValidityAssessor<Set<C
      * @param classifications the classifications
      * @return the token sets from triple
      */
-    private Multiset<TokenSet> getTokenSetsFromClassifications(final Set<Classification> classifications) {
+    private Multiset<TokenSet> getTokenSetsFromClassifications(final Multiset<Classification> classifications) {
 
         Multiset<TokenSet> tokenSets = HashMultiset.create();
         for (Classification classification : classifications) {

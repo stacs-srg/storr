@@ -80,7 +80,7 @@ public class ResolverPipeline<Threshold, Code extends AncestorAble<Code>, Classi
             multiValueMap = flattener.moveAllIntoKey(multiValueMap, multiValueMap.iterator().next());
         }
         multiValueMap = mapPruner.pruneUntilComplexityWithinBound(multiValueMap);
-        List<Set<Classification>> validSets = validCombinationGetter.getValidSets(multiValueMap, featureSet);
+        List<Multiset<Classification>> validSets = validCombinationGetter.getValidSets(multiValueMap, featureSet);
         return lossFunctionApplier.getBest(validSets);
     }
 

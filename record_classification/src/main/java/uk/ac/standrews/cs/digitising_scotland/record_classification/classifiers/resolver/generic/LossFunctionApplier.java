@@ -1,6 +1,8 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.resolver.generic;
 
 import java.util.*;
+
+import com.google.common.collect.Multiset;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.resolver.Interfaces.LossFunction;
 import uk.ac.standrews.cs.digitising_scotland.tools.MapSorter;
 
@@ -9,7 +11,7 @@ import uk.ac.standrews.cs.digitising_scotland.tools.MapSorter;
  * of Sets and finding set with the best loss.
  * Created by fraserdunlop on 07/10/2014 at 16:26.
  */
-public class LossFunctionApplier<V, LossMetric extends Comparable<LossMetric>, F extends LossFunction<Set<V>, LossMetric>> {
+public class LossFunctionApplier<V, LossMetric extends Comparable<LossMetric>, F extends LossFunction<Multiset<V>, LossMetric>> {
 
     private MapSorter mapSorter = new MapSorter();
     private F lossFunction;
@@ -28,19 +30,27 @@ public class LossFunctionApplier<V, LossMetric extends Comparable<LossMetric>, F
      * @param sets sets to rank based on loss
      * @return best according to lossFunction or null if sets is empty.
      */
-    public Set<V> getBest(final Collection<Set<V>> sets) {
+    public Set<V> getBest(final Collection<Multiset<V>> sets) {
 
-        Map<Set<V>, LossMetric> map = mapValuesToLoss(sets);
+        Map<Multiset<V>, LossMetric> map = mapValuesToLoss(sets);
         map = mapSorter.sortByValue(map);
-        if (map.keySet().iterator().hasNext()) { return map.keySet().iterator().next(); }
+        if (map.keySet().iterator().hasNext()) {
+            return toSet(map);
+        }
         return new HashSet<>();
 
     }
 
-    private Map<Set<V>, LossMetric> mapValuesToLoss(final Collection<Set<V>> values) {
+    private Set<V> toSet(Map<Multiset<V>, LossMetric> map) {
+        Set<V> tempSet = new HashSet<>();
+        tempSet.addAll(map.keySet().iterator().next());
+        return tempSet;
+    }
 
-        Map<Set<V>, LossMetric> map = new HashMap<>();
-        for (Set<V> set : values) {
+    private Map<Multiset<V>, LossMetric> mapValuesToLoss(final Collection<Multiset<V>> values) {
+
+        Map<Multiset<V>, LossMetric> map = new HashMap<>();
+        for (Multiset<V> set : values) {
             map.put(set, lossFunction.calculate(set));
         }
         return map;
