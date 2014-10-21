@@ -32,12 +32,12 @@ public class ResolverPipeline<Threshold, Code extends AncestorAble<Code>, Classi
     private final boolean multipleClassifications;
     private final boolean resolveHierarchies;
     private IClassifier<FeatureSet, Classification> classifier;
-    private BelowThresholdRemover<Code, Classification, Threshold> bTR;
-    private HierarchyResolver<Code, Classification> hR;
+    private BelowThresholdRemover<Code, Classification, Threshold> belowThresholdRemover;
+    private HierarchyResolver<Code, Classification> hierarchyResolver;
     private Flattener<Code, Classification> flattener;
-    private MultiValueMapPruner<Code, Classification, PComparator> pruner;
-    private ValidCombinationGetter<Code, Classification, FeatureSet, PValidityAssessor> vCG;
-    private LossFunctionApplier<Classification, LossMetric, PLossFunction> lFA;
+    private MultiValueMapPruner<Code, Classification, PComparator> mapPruner;
+    private ValidCombinationGetter<Code, Classification, FeatureSet, PValidityAssessor> validCombinationGetter;
+    private LossFunctionApplier<Classification, LossMetric, PLossFunction> lossFunctionApplier;
     private SubsetEnumerator<FeatureSet> subsetEnumerator;
 
     public ResolverPipeline(final IClassifier<FeatureSet, Classification> classifier, final boolean multipleClassifications,
@@ -48,12 +48,12 @@ public class ResolverPipeline<Threshold, Code extends AncestorAble<Code>, Classi
         this.classifier = classifier;
         this.multipleClassifications = multipleClassifications;
         this.resolveHierarchies = resolveHierarchies;
-        bTR = new BelowThresholdRemover<>(threshold);
-        hR = new HierarchyResolver<>();
+        belowThresholdRemover = new BelowThresholdRemover<>(threshold);
+        hierarchyResolver = new HierarchyResolver<>();
         flattener = new Flattener<>();
-        pruner = new MultiValueMapPruner<>(classificationComparator);
-        vCG = new ValidCombinationGetter<>(classificationSetValidityAssessor);
-        lFA = new LossFunctionApplier<>(lengthWeightedLossFunction);
+        mapPruner = new MultiValueMapPruner<>(classificationComparator);
+        validCombinationGetter = new ValidCombinationGetter<>(classificationSetValidityAssessor);
+        lossFunctionApplier = new LossFunctionApplier<>(lengthWeightedLossFunction);
         this.subsetEnumerator = subsetEnumerator;
     }
 
@@ -72,16 +72,16 @@ public class ResolverPipeline<Threshold, Code extends AncestorAble<Code>, Classi
 
     private Set<Classification> resolverPipeline(MultiValueMap<Code, Classification> multiValueMap, final FeatureSet featureSet) throws Exception {
 
-        multiValueMap = bTR.removeBelowThreshold(multiValueMap);
+        multiValueMap = belowThresholdRemover.removeBelowThreshold(multiValueMap);
         if (multipleClassifications && resolveHierarchies) {
-            multiValueMap = hR.moveAncestorsToDescendantKeys(multiValueMap);
+            multiValueMap = hierarchyResolver.moveAncestorsToDescendantKeys(multiValueMap);
         }
         else {
             multiValueMap = flattener.moveAllIntoKey(multiValueMap, multiValueMap.iterator().next());
         }
-        multiValueMap = pruner.pruneUntilComplexityWithinBound(multiValueMap);
-        List<Set<Classification>> validSets = vCG.getValidSets(multiValueMap, featureSet);
-        return lFA.getBest(validSets);
+        multiValueMap = mapPruner.pruneUntilComplexityWithinBound(multiValueMap);
+        List<Set<Classification>> validSets = validCombinationGetter.getValidSets(multiValueMap, featureSet);
+        return lossFunctionApplier.getBest(validSets);
     }
 
     private MultiValueMap<Code, Classification> classifySubsets(final FeatureSet tokenSet) throws Exception {

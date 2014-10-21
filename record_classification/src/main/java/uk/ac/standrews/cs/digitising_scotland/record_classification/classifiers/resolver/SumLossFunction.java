@@ -19,7 +19,7 @@ public class SumLossFunction implements LossFunction<Set<Classification>, Double
         double confidenceSum = 0;
 
         for (Classification triple : set) {
-            confidenceSum += triple.getConfidence();
+            confidenceSum += Math.abs(triple.getConfidence());
         }
 
         return confidenceSum;

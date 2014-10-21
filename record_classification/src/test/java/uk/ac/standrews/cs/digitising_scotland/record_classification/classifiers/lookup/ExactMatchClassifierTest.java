@@ -1,18 +1,27 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.lookup;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.classification.Classification;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeDictionary;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.RecordFactory;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
 
 /**
  * Test class to test {@link ExactMatchClassifier}.
@@ -139,4 +148,41 @@ public class ExactMatchClassifierTest {
         Assert.assertEquals(exactMatchClassifier, newMatcher);
     }
 
+    @Test
+    public void blackListTest() throws IOException {
+
+        ExactMatchClassifier classifier = new ExactMatchClassifier();
+        List<String> blacklist = new ArrayList<>();
+        String concatDescription = "foo";
+        Set<Classification> goldStandardCodes = new HashSet<>();
+        Map<String, Set<Classification>> lookup = new HashMap<>();
+        classifier.addToLookup(lookup, goldStandardCodes, concatDescription, blacklist);
+        Assert.assertEquals(1, lookup.size());
+        Assert.assertEquals(0, blacklist.size());
+
+        concatDescription = "foo bar";
+        classifier.addToLookup(lookup, goldStandardCodes, concatDescription, blacklist);
+        Assert.assertEquals(2, lookup.size());
+        Assert.assertEquals(0, blacklist.size());
+
+        concatDescription = "foo";
+        Set<Classification> set2 = makeClassificationSet();
+        classifier.addToLookup(lookup, set2, concatDescription, blacklist);
+        Assert.assertEquals(1, lookup.size());
+        Assert.assertEquals(1, blacklist.size());
+
+    }
+
+    private Set<Classification> makeClassificationSet() throws IOException {
+
+        File codeDictionaryFile = new File(getClass().getResource("/CodeCheckerTest.txt").getFile());
+        CodeDictionary dictionary = new CodeDictionary(codeDictionaryFile);
+        Code code = dictionary.getIterator().next().getValue();
+        TokenSet tokenSet = new TokenSet("test");
+        Double confidence = 1.0;
+        Classification c = new Classification(code, tokenSet, confidence);
+        Set<Classification> set = new HashSet<>();
+        set.add(c);
+        return set;
+    }
 }

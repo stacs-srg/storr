@@ -28,15 +28,15 @@ public class StrictConfusionMatrix extends AbstractConfusionMatrix {
     /**
      * True pos and false neg.
      *
-     * @param setCodeTriples the set code triples
-     * @param goldStandardTriples the gold standard triples
+     * @param predictedClassifications the set code triples
+     * @param goldStandardClassifications the gold standard triples
      */
-    protected void truePosAndFalseNeg(final Set<Classification> setCodeTriples, final Set<Classification> goldStandardTriples) {
+    protected void truePosAndFalseNeg(final Set<Classification> predictedClassifications, final Set<Classification> goldStandardClassifications) {
 
-        for (Classification goldStandardCode : goldStandardTriples) {
+        for (Classification goldStandardCode : goldStandardClassifications) {
             final Code code = goldStandardCode.getCode();
             int codeID = index.getID(code);
-            if (contains(code, setCodeTriples)) {
+            if (contains(code, predictedClassifications)) {
                 truePositive[codeID]++;
             }
             else {

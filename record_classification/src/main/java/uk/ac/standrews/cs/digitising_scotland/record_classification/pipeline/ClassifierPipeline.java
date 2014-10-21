@@ -44,9 +44,9 @@ public class ClassifierPipeline implements IPipeline {
     public ClassifierPipeline(final IClassifier<TokenSet, Classification> classifier, final Bucket cachePopulationBucket, final LossFunction<Set<Classification>, Double> lossFunction, final boolean multipleClassifications, final boolean resolveHierarchies) {
 
         /* The cache. */
-        TokenToClassificationMapGenerator populator = new TokenToClassificationMapGenerator();
+        TokenToClassificationMapGenerator populator = new TokenToClassificationMapGenerator(cachePopulationBucket);
         recordCache = new HashMap<>();
-        CachedClassifier<TokenSet, Classification> cache = new CachedClassifier<>(classifier, populator.generateMap(cachePopulationBucket));
+        CachedClassifier<TokenSet, Classification> cache = new CachedClassifier<>(classifier, populator.getMap());
 
         this.resolverPipeline = new RecordClassificationResolverPipeline<>(cache, lossFunction, CONFIDENCE_CHOP_LEVEL, multipleClassifications, resolveHierarchies);
         this.successfullyClassified = new Bucket();

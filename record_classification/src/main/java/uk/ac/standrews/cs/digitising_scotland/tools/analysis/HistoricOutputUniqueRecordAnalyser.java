@@ -19,9 +19,9 @@ import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
  * @author jkc25
  *
  */
-public class UniqueRecordAnalyser {
+public class HistoricOutputUniqueRecordAnalyser {
 
-    private static Logger LOGGER = LoggerFactory.getLogger(UniqueRecordAnalyser.class);
+    private static Logger LOGGER = LoggerFactory.getLogger(HistoricOutputUniqueRecordAnalyser.class);
     private static int descriptionPos;
     private static int correctPos;
     private static int nbPos;
@@ -41,7 +41,7 @@ public class UniqueRecordAnalyser {
             runOnAllFiles(input);
         }
         else {
-            UniqueRecordAnalyser instance = new UniqueRecordAnalyser();
+            HistoricOutputUniqueRecordAnalyser instance = new HistoricOutputUniqueRecordAnalyser();
             instance.run(input);
         }
 
@@ -58,7 +58,7 @@ public class UniqueRecordAnalyser {
 
     private static void runOnAllFiles(final File input) throws IOException {
 
-        UniqueRecordAnalyser instance = new UniqueRecordAnalyser();
+        HistoricOutputUniqueRecordAnalyser instance = new HistoricOutputUniqueRecordAnalyser();
         File[] files = input.listFiles();
         for (File file : files) {
             instance.run(file);

@@ -502,7 +502,7 @@ public final class Utils {
     public static boolean contains(final Code code, final Set<Classification> setCodeTriples) {
 
         for (Classification codeTriple : setCodeTriples) {
-            if (codeTriple.getCode() == code) { return true; }
+            if (codeTriple.getCode().equals(code)) { return true; }
         }
         return false;
     }
@@ -516,7 +516,7 @@ public final class Utils {
     public static Classification getCodeTripleWithCode(final Code code, final Set<Classification> setCodeTriples) {
 
         for (Classification codeTriple : setCodeTriples) {
-            if (codeTriple.getCode() == code) { return codeTriple; }
+            if (codeTriple.getCode().equals(code)) { return codeTriple; }
         }
         return null;
     }

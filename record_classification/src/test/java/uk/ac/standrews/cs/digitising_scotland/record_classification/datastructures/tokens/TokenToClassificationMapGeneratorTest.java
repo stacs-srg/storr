@@ -19,6 +19,7 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.OriginalData;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.classification.Classification;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeDictionary;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeNotValidException;
@@ -33,7 +34,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.exceptions.I
 public class TokenToClassificationMapGeneratorTest {
 
     CodeDictionary codeDictionary;
-    TokenToClassificationMapGenerator mapGenerator = new TokenToClassificationMapGenerator();
+    TokenToClassificationMapGenerator mapGenerator;
     String[] descriptions;
 
     public TokenToClassificationMapGeneratorTest(final String[] descriptions) {
@@ -51,6 +52,8 @@ public class TokenToClassificationMapGeneratorTest {
     @Before
     public void setup() throws IOException {
 
+        Bucket emptyBucket = new Bucket();
+        mapGenerator = new TokenToClassificationMapGenerator(emptyBucket);
         String codeDictionaryPath = getClass().getResource("/modCodeDictionary.txt").getFile();
         File codeDictionaryFile = new File(codeDictionaryPath);
         codeDictionary = new CodeDictionary(codeDictionaryFile);
