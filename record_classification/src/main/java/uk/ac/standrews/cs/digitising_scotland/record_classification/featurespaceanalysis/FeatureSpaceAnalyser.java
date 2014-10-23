@@ -62,84 +62,11 @@ public class FeatureSpaceAnalyser {
         return featureProfiles.get(code);
     }
 
-    public String formatReport(Code code){
-        if( featureProfiles.containsKey(code)) {
-            String codeAndDescription = buildCodeAndDescriptionLine(code);
-            String[] featureLines = buildFeatureLines(code);
-            return prettify(codeAndDescription, featureLines);
-        } else {
-            return "\nCode does not appear in training data.";
-        }
-
+    public boolean contains(Code code) {
+        return featureProfiles.containsKey(code);
     }
 
-    private String prettify(String codeAndDescription, String[] featureLines) {
-        int maxLine = maxLineLength(Arrays.asList(featureLines));
-        String codeDescInfo = "(Code and Description)\n";
-        String feaInfo = "(Feature count with ; code ; other codes)\n";
-        if(codeAndDescription.length()>maxLine){
-            maxLine = codeAndDescription.length();
-        }
-        if(codeDescInfo.length()>maxLine){
-            maxLine = codeDescInfo.length();
-        }
-        if(feaInfo.length()>maxLine){
-            maxLine = feaInfo.length();
-        }
-        String sepLine = makeSeparationLines(maxLine);
-        StringBuilder sb = new StringBuilder();
-        sb.append("\n");
-        sb.append(sepLine);
-        sb.append(codeDescInfo);
-        sb.append(codeAndDescription);
-        sb.append(sepLine);
-        sb.append(feaInfo);
-        for (String line : featureLines){
-            sb.append(line);
-        }
-        sb.append(sepLine);
-        return sb.toString();
+    public int featureDist(String feature) {
+        return featureDist.get(feature);
     }
-
-    private String makeSeparationLines(int maxLine) {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0 ; i < maxLine ; i++){
-            sb.append("-");
-        }
-        sb.append("\n");
-        return sb.toString();
-    }
-
-    private int maxLineLength(Iterable<String> lines) {
-        int maxLength = 0;
-        for(String line : lines){
-            if (line.length()>maxLength)
-                maxLength = line.length();
-        }
-        return maxLength;
-    }
-
-    private String[] buildFeatureLines(Code code) {
-        Set<String> features = featureProfiles.get(code).keySet();
-        String[] featureLines = new String[features.size()];
-        int maxTabDepth = (int) Math.ceil(maxLineLength(features)/4) + 3;
-        int i = 0;
-        for(String feature : features){
-            featureLines[i++] = feature + getTabs(maxTabDepth - feature.length()/4) + "-\t" + featureProfiles.get(code).get(feature) + "\t-\t" + featureDist.get(feature) + "\n";
-        }
-        return featureLines;
-    }
-
-    private String getTabs(int tabDepth) {
-        StringBuilder sb = new StringBuilder();
-        for(int i = 0 ; i < tabDepth ; i++){
-            sb.append("\t");
-        }
-        return sb.toString();
-    }
-
-    private String buildCodeAndDescriptionLine(Code code) {
-        return code.getCodeAsString() + " - " + "\"" + code.getDescription() + "\"\n";
-    }
-
 }

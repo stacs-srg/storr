@@ -6,6 +6,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeNotValidException;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.exceptions.InputFormatException;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.featurespaceanalysis.FeatureSpaceAnalyser;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.featurespaceanalysis.FeatureSpaceAnalyserFormatter;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.BucketGenerator;
 
 import java.io.File;
@@ -44,9 +45,10 @@ public class FeatureSpaceAnalyserTest {
         File trainingFile = new File(getClass().getResource("/TrainingDataModernCODFormatTest.txt").getFile());
         Bucket bucket = createTrainingBucket(trainingFile);
         FeatureSpaceAnalyser featureSpaceAnalyser = new FeatureSpaceAnalyser(bucket);
+        FeatureSpaceAnalyserFormatter formatter = new FeatureSpaceAnalyserFormatter(featureSpaceAnalyser);
         File codeFile = new File(getClass().getResource("/modCodeDictionary.txt").getFile());
         CodeDictionary codeDictionary = new CodeDictionary(codeFile);
-        System.out.println(featureSpaceAnalyser.formatReport(codeDictionary.getCode("D69")));
+        System.out.println(formatter.formatReport(codeDictionary.getCode("D69")));
     }
 
 }

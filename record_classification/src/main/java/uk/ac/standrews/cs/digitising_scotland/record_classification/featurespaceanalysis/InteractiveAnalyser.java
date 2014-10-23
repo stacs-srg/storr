@@ -29,26 +29,25 @@ public class InteractiveAnalyser {
         BucketGenerator bucketGen = new BucketGenerator(codeDictionary);
         Bucket bucket = bucketGen.generateTrainingBucket(new File(args[0]));
         FeatureSpaceAnalyser featureSpaceAnalyser = new FeatureSpaceAnalyser(bucket);
-        new InteractiveAnalyser(codeDictionary, featureSpaceAnalyser);
+        FeatureSpaceAnalyserFormatter formatter = new FeatureSpaceAnalyserFormatter(featureSpaceAnalyser);
+        new InteractiveAnalyser(codeDictionary, formatter);
     }
 
     private final Logger LOGGER = LoggerFactory.getLogger(FeatureSpaceAnalyser.class);
-    private final FeatureSpaceAnalyser featureSpaceAnalyser;
+    private FeatureSpaceAnalyserFormatter formatter;
 
     private static final String STOP_COMMAND = "stop";
     private static final String STOP_MESSAGE = "\nStop call detected. Stopping analyser...";
-    private static final String INSTRUCTION_MESSAGE = "\nPrints feature profile information given a code which appears in the training bucket.\n" +
-            "The table contains the features which predict the code, the number of training examples containing the feature associated with the code\n" +
-            "and the number of training examples containing the feature not associated with the code." ;
+
     private CodeDictionary codeDictionary;
 
 
     /**
      * Initiates the command line stopListener. This waits for input from the command line and processes the input.
      */
-    public InteractiveAnalyser(final CodeDictionary codeDictionary, final FeatureSpaceAnalyser featureSpaceAnalyser) throws CodeNotValidException {
+    public InteractiveAnalyser(final CodeDictionary codeDictionary, final FeatureSpaceAnalyserFormatter featureSpaceAnalyser) throws CodeNotValidException {
         this.codeDictionary = codeDictionary;
-        this.featureSpaceAnalyser = featureSpaceAnalyser;
+        this.formatter = featureSpaceAnalyser;
         LOGGER.info(instructions());
         try (BufferedReader in = new BufferedReader(new InputStreamReader(System.in, FileManipulation.FILE_CHARSET))) {
             String line;
@@ -76,14 +75,15 @@ public class InteractiveAnalyser {
     private boolean processInput(final String line) throws InterruptedException, CodeNotValidException {
 
         if(isCode(line)){
-            LOGGER.info(featureSpaceAnalyser.formatReport(codeDictionary.getCode(line)));
-        }
-        switch (line.toLowerCase()) {
-            case STOP_COMMAND:
-                LOGGER.info(stopCalled());
-                break;
-            default:
-                LOGGER.info(instructions());
+            LOGGER.info(formatter.formatReport(codeDictionary.getCode(line)));
+        }else {
+            switch (line.toLowerCase()) {
+                case STOP_COMMAND:
+                    LOGGER.info(stopCalled());
+                    break;
+                default:
+                    LOGGER.info(instructions());
+            }
         }
         return line.equalsIgnoreCase(STOP_COMMAND);
     }
@@ -110,7 +110,18 @@ public class InteractiveAnalyser {
      * @return the string
      */
     private String instructions() {
-
-        return INSTRUCTION_MESSAGE;
+        int depth = 90;
+        return   "\n" +
+                 formatter.repeatConcatString("#", depth) +
+                 "\n### ***FEATURE SPACE ANALYSER INSTRUCTIONS***\n" +
+                 "###\n" +
+                 "### Prints feature profile information given a code which appears in the training bucket.\n" +
+                 "### The table contains the features which predict the code,\n" +
+                 "### the number of training examples containing the feature associated with the code,\n" +
+                 "### and the number of training examples containing the feature in total.\n" +
+                 "###\n" +
+                 "### Type \"stop\" to quit program.\n" +
+                 "### Type a code for a feature analysis of code (case sensitive).\n" +
+                 formatter.repeatConcatString("#", depth);
     }
 }
