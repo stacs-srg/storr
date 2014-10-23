@@ -85,6 +85,8 @@ public final class TrainClassifyOneFile {
 
     public Bucket run(final String[] args) throws Exception {
 
+        printArgs(args);
+
         String experimentalFolderName;
         File goldStandard;
         Bucket trainingBucket;
@@ -156,6 +158,15 @@ public final class TrainClassifyOneFile {
         timer.stop();
 
         return allRecords;
+    }
+
+    private void printArgs(final String[] args) {
+
+        String argsString = "";
+        for (String string : args) {
+            argsString += string + " ";
+        }
+        LOGGER.info("Running with args: " + argsString);
     }
 
     private void printAllStats(final String experimentalFolderName, final CodeIndexer codeIndex, final Bucket bucket, final String identifier) throws IOException {

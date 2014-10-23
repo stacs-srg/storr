@@ -23,7 +23,7 @@ public class TrainClassifyOneFileTest {
         trainer = new TrainClassifyOneFile();
         String training = getClass().getResource("/occupationTrainingTest.txt").getFile();
         String propertiesFileLocation = "src/test/resources/machineLearning.default.properties";
-        String[] args = {training, propertiesFileLocation, "0.8", "false"};
+        String[] args = {training, propertiesFileLocation, "0.8", "0"};
         Bucket classified = trainer.run(args);
         Assert.assertEquals(20, classified.size(), 10);
 
@@ -37,7 +37,7 @@ public class TrainClassifyOneFileTest {
         trainer = new TrainClassifyOneFile();
         String training = getClass().getResource("/OneFileCodTestTrainingData.txt").getFile();
         String propertiesFileLocation = "src/test/resources/machineLearning.default.properties";
-        String[] args = {training, propertiesFileLocation, "0.8", "true"};
+        String[] args = {training, propertiesFileLocation, "0.8", "1"};
         Bucket classified = trainer.run(args);
         Assert.assertEquals(20, classified.size(), 10);
 
