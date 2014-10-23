@@ -166,7 +166,7 @@ public final class TrainClassifyOneFile {
         for (String string : args) {
             argsString += string + " ";
         }
-        LOGGER.info("Running with args: " + argsString);
+        LOGGER.info("Running with args: " + argsString.trim());
     }
 
     private void printAllStats(final String experimentalFolderName, final CodeIndexer codeIndex, final Bucket bucket, final String identifier) throws IOException {
