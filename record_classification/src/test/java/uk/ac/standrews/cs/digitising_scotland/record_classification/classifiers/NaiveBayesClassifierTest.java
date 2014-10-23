@@ -9,6 +9,7 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeNotValidException;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.legacy.naivebayes.NaiveBayesClassifier;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.Pair;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
@@ -40,7 +41,7 @@ public class NaiveBayesClassifierTest {
      * @throws Exception the exception
      */
     @Before
-    public void setUp() throws Exception {
+    public void setUp() throws Exception, CodeNotValidException {
 
         bucketB = createTrainingBucket();
         File tempFiles = new File("temp/");
@@ -99,7 +100,7 @@ public class NaiveBayesClassifierTest {
      * @return the training bucket
      * @throws Exception the exception
      */
-    private Bucket createTrainingBucket() throws Exception {
+    private Bucket createTrainingBucket() throws Exception, CodeNotValidException {
 
         File inputFileTraining = new File(getClass().getResource("/occupationTestFormatPipe.txt").getFile());
         List<Record> listOfRecordsTraining = RecordFactory.makeUnCodedRecordsFromFile(inputFileTraining);

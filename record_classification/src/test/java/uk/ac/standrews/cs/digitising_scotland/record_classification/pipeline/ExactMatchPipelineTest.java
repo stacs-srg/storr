@@ -30,7 +30,7 @@ public class ExactMatchPipelineTest {
     CodeDictionary codeDictionary;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() throws Exception, CodeNotValidException {
 
         File trainingFile = new File(getClass().getResource("/TrainingDataModernCODFormatTest.txt").getFile());
         Bucket trainingBucket = createTrainingBucket(trainingFile);

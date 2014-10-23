@@ -53,7 +53,7 @@ public class OLRShuffledTest {
      * @throws Exception the exception
      */
     @Before
-    public void setup() throws Exception {
+    public void setup() throws Exception, CodeNotValidException {
 
         String codeDictionary = getClass().getResource("/CodeFactoryOLRTestFile.txt").getFile();
 

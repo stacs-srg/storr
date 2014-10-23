@@ -92,7 +92,7 @@ public class BucketGenerator {
      * @param prediction file containing the records to be classified, one per line.
      * @return the bucket containing records to be classified
      */
-    public Bucket createPredictionBucket(final File prediction) {
+    public Bucket createPredictionBucket(final File prediction) throws CodeNotValidException {
 
         Bucket toClassify = null;
         AbstractFormatConverter formatConverter = new PilotDataFormatConverter();
@@ -115,7 +115,7 @@ public class BucketGenerator {
      * @param formatConverter the format converter to create records with
      * @return the bucket
      */
-    public Bucket createPredictionBucket(final File prediction, final AbstractFormatConverter formatConverter) {
+    public Bucket createPredictionBucket(final File prediction, final AbstractFormatConverter formatConverter) throws CodeNotValidException {
 
         Bucket toClassify = null;
 

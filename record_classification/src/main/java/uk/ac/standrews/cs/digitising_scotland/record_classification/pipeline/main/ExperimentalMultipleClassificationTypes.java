@@ -37,6 +37,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.classification.Classification;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeDictionary;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeNotValidException;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.vectors.CodeIndexer;
@@ -97,13 +98,13 @@ public final class ExperimentalMultipleClassificationTypes {
      * @throws Exception
      *             If exception occurs
      */
-    public static void main(final String[] args) throws Exception {
+    public static void main(final String[] args) throws Exception, CodeNotValidException {
 
         ExperimentalMultipleClassificationTypes instance = new ExperimentalMultipleClassificationTypes();
         instance.run(args);
     }
 
-    public void run(final String[] args) throws Exception {
+    public void run(final String[] args) throws Exception, CodeNotValidException {
 
         String experimentalFolderName;
         File goldStandard;

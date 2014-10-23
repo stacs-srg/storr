@@ -10,7 +10,7 @@ package uk.ac.standrews.cs.digitising_scotland.record_classification.datastructu
  * @author jkc25
  *
  */
-public class CodeNotValidException extends Exception {
+public class CodeNotValidException extends Throwable {
 
     /**
      * Generated serialVesionUID.

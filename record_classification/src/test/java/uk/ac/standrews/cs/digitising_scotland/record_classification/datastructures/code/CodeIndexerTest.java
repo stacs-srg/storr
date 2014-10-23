@@ -21,7 +21,7 @@ public class CodeIndexerTest {
     private CodeDictionary codeDictionary;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() throws Exception, CodeNotValidException {
 
         codeDictionary = new CodeDictionary(new File(getClass().getResource("/CodeCheckerTest.txt").getFile()));
         index = new CodeIndexer();

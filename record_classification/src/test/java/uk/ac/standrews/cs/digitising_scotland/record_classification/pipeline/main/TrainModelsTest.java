@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeNotValidException;
 
 public class TrainModelsTest {
 
@@ -19,7 +20,7 @@ public class TrainModelsTest {
     }
 
     @Test
-    public void testRunNoGoldStandard() throws Exception {
+    public void testRunNoGoldStandard() throws Exception, CodeNotValidException {
 
         expectedEx.expect(RuntimeException.class);
         String[] args = {"testFile", "modelLoc"};
@@ -28,7 +29,7 @@ public class TrainModelsTest {
     }
 
     @Test
-    public void testRunNoModelLocation() throws Exception {
+    public void testRunNoModelLocation() throws Exception, CodeNotValidException {
 
         String goldStandardFile = getClass().getResource("/CauseOfDeathTestFileSmall.txt").getFile();
         expectedEx.expect(RuntimeException.class);

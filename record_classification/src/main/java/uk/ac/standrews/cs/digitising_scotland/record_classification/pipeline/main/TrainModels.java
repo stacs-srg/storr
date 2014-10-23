@@ -6,6 +6,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.olr.OLRClassifier;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeDictionary;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeNotValidException;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.BucketGenerator;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.PipelineUtils;
 import uk.ac.standrews.cs.digitising_scotland.tools.Timer;
@@ -27,14 +28,14 @@ public class TrainModels {
      * @throws Exception
      *             If exception occurs
      */
-    public static void main(final String[] args) throws Exception {
+    public static void main(final String[] args) throws Exception, CodeNotValidException {
 
         TrainModels instance = new TrainModels();
         instance.run(args);
 
     }
 
-    public void run(final String[] args) throws Exception {
+    public void run(final String[] args) throws Exception, CodeNotValidException {
 
         Timer timer = PipelineUtils.initAndStartTimer();
 

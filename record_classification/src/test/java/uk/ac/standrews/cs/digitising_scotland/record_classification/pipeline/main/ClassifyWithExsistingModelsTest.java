@@ -12,6 +12,7 @@ import org.junit.Test;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.classification.Classification;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeNotValidException;
 import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearningConfiguration;
 
 import com.google.common.io.Files;
@@ -52,7 +53,7 @@ public class ClassifyWithExsistingModelsTest {
     }
 
     @Test
-    public void test() throws Exception {
+    public void test() throws Exception, CodeNotValidException {
 
         Iterator<Classification> it;
         Set<String> codesinmap;

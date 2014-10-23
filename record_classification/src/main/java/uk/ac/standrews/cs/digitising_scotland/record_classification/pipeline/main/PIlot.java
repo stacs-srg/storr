@@ -19,6 +19,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.BucketUtils;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.resolver.LengthWeightedLossFunction;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeDictionary;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeNotValidException;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.vectors.CodeIndexer;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.vectors.VectorFactory;
@@ -77,13 +78,13 @@ public final class PIlot {
      * @throws Exception
      *             If exception occurs
      */
-    public static void main(final String[] args) throws Exception {
+    public static void main(final String[] args) throws Exception, CodeNotValidException {
 
         PIlot instance = new PIlot();
         instance.run(args);
     }
 
-    public Bucket run(final String[] args) throws Exception {
+    public Bucket run(final String[] args) throws Exception, CodeNotValidException {
 
         String experimentalFolderName;
         File training;

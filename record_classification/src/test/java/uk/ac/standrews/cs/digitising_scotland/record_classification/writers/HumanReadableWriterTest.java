@@ -68,7 +68,7 @@ public class HumanReadableWriterTest {
      * @throws Exception the exception
      */
     @Test
-    public void testWriteOcc() throws Exception {
+    public void testWriteOcc() throws Exception, CodeNotValidException {
 
         String occDataFile = "/HumanReadableWriterTestOcc.txt";
         File writeFile = createAndWriteOccBucketWithClassificationTriplesToFile(OCCBUCKET, occDataFile);
@@ -159,7 +159,7 @@ public class HumanReadableWriterTest {
      * @return the file
      * @throws Exception the exception
      */
-    private File createAndWriteOccBucketWithClassificationTriplesToFile(final String writeFileName, final String readFileName) throws Exception {
+    private File createAndWriteOccBucketWithClassificationTriplesToFile(final String writeFileName, final String readFileName) throws Exception, CodeNotValidException {
 
         File writeFile = new File(writeFileName);
         HumanReadableWriter humanReadableWriter = new HumanReadableWriter(writeFile, delimiter);

@@ -46,7 +46,7 @@ public class ValidCombinationGetterTest {
     }
 
     @Test
-    public void getValidCodeTriplesTest() throws Exception {
+    public void getValidCodeTriplesTest() throws Exception, CodeNotValidException {
 
         TokenSet originalSet = new TokenSet("brown white");
         List<Multiset<Classification>> validTriples = vCG.getValidSets(mvmHelper.getMap(), originalSet);

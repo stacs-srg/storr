@@ -19,25 +19,34 @@ import java.util.HashMap;
  */
 public class FeatureSpaceAnalyserTest {
 
-//    @Test
-//    public void test() throws IOException, CodeNotValidException, InputFormatException {
-//        File trainingFile = new File(getClass().getResource("/TrainingDataModernCODFormatTest.txt").getFile());
-//        Bucket bucket = createTrainingBucket(trainingFile);
-//        FeatureSpaceAnalyser featureSpaceAnalyser = new FeatureSpaceAnalyser(bucket);
-//        File codeFile = new File(getClass().getResource("/modCodeDictionary.txt").getFile());
-//        CodeDictionary codeDictionary = new CodeDictionary(codeFile);
-//        HashMap<String, Integer> map = featureSpaceAnalyser.featureProfile(codeDictionary.getCode("R54"));
-//        System.out.println(map);
-//    }
-//
-//    private Bucket createTrainingBucket(final File trainingFile) throws IOException, InputFormatException, CodeNotValidException {
-//
-//        String codeDictionaryPath = getClass().getResource("/modCodeDictionary.txt").getFile();
-//        File codeDictionaryFile = new File(codeDictionaryPath);
-//        CodeDictionary codeDictionary = new CodeDictionary(codeDictionaryFile);
-//        BucketGenerator b = new BucketGenerator(codeDictionary);
-//        return b.generateTrainingBucket(trainingFile);
-//    }
-//
+    @Test
+    public void test() throws IOException, CodeNotValidException, InputFormatException {
+        File trainingFile = new File(getClass().getResource("/TrainingDataModernCODFormatTest.txt").getFile());
+        Bucket bucket = createTrainingBucket(trainingFile);
+        FeatureSpaceAnalyser featureSpaceAnalyser = new FeatureSpaceAnalyser(bucket);
+        File codeFile = new File(getClass().getResource("/modCodeDictionary.txt").getFile());
+        CodeDictionary codeDictionary = new CodeDictionary(codeFile);
+        HashMap<String, Integer> map = featureSpaceAnalyser.featureProfile(codeDictionary.getCode("R54"));
+        System.out.println(map);
+    }
+
+    private Bucket createTrainingBucket(final File trainingFile) throws IOException, InputFormatException, CodeNotValidException {
+
+        String codeDictionaryPath = getClass().getResource("/modCodeDictionary.txt").getFile();
+        File codeDictionaryFile = new File(codeDictionaryPath);
+        CodeDictionary codeDictionary = new CodeDictionary(codeDictionaryFile);
+        BucketGenerator b = new BucketGenerator(codeDictionary);
+        return b.generateTrainingBucket(trainingFile);
+    }
+
+    @Test
+    public void reportTest() throws InputFormatException, CodeNotValidException, IOException {
+        File trainingFile = new File(getClass().getResource("/TrainingDataModernCODFormatTest.txt").getFile());
+        Bucket bucket = createTrainingBucket(trainingFile);
+        FeatureSpaceAnalyser featureSpaceAnalyser = new FeatureSpaceAnalyser(bucket);
+        File codeFile = new File(getClass().getResource("/modCodeDictionary.txt").getFile());
+        CodeDictionary codeDictionary = new CodeDictionary(codeFile);
+        System.out.println(featureSpaceAnalyser.formatReport(codeDictionary.getCode("D69")));
+    }
 
 }

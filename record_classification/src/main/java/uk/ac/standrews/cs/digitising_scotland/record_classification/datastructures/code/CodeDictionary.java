@@ -120,6 +120,9 @@ public class CodeDictionary {
     public Iterator<Entry<String, Code>> getIterator() {
 
         return validCodes.entrySet().iterator();
+    }
 
+    public boolean isValid(final String code){
+        return validCodes.get(code) != null;
     }
 }

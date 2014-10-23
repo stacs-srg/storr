@@ -6,6 +6,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeNotValidException;
 import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearningConfiguration;
 
 public class TrainClassifyOneFileTest {
@@ -16,7 +17,7 @@ public class TrainClassifyOneFileTest {
     public ExpectedException expectedEx = ExpectedException.none();
 
     @Test
-    public void testPipelineHisco() throws Exception {
+    public void testPipelineHisco() throws Exception, CodeNotValidException {
 
         String codeDictionary = getClass().getResource("/HiscoTitles.txt").getFile();
         MachineLearningConfiguration.getDefaultProperties().setProperty("codeDictionaryFile", codeDictionary);
@@ -29,7 +30,7 @@ public class TrainClassifyOneFileTest {
     }
 
     @Test
-    public void testPipelineCod() throws Exception {
+    public void testPipelineCod() throws Exception, CodeNotValidException {
 
         String codeDictionary = getClass().getResource("/pilotTestCodeDictionary.txt").getFile();
         MachineLearningConfiguration.getDefaultProperties().setProperty("codeDictionaryFile", codeDictionary);
@@ -42,7 +43,7 @@ public class TrainClassifyOneFileTest {
     }
 
     @Test
-    public void testRunNoGoldStandard() throws Exception {
+    public void testRunNoGoldStandard() throws Exception, CodeNotValidException {
 
         trainer = new TrainClassifyOneFile();
         expectedEx.expect(RuntimeException.class);
@@ -52,7 +53,7 @@ public class TrainClassifyOneFileTest {
     }
 
     @Test
-    public void testRunNoModelLocation() throws Exception {
+    public void testRunNoModelLocation() throws Exception, CodeNotValidException {
 
         trainer = new TrainClassifyOneFile();
         String goldStandardFile = getClass().getResource("/CauseOfDeathTestFileSmall.txt").getFile();

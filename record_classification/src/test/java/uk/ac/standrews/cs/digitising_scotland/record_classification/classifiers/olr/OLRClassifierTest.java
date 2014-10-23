@@ -59,7 +59,7 @@ public class OLRClassifierTest {
      * @throws Exception the exception
      */
     @Before
-    public void setup() throws Exception {
+    public void setup() throws Exception, CodeNotValidException {
 
         codeDictionary = new CodeDictionary(new File(getClass().getResource("/CodeFactoryTestFile.txt").getFile()));
         createTrainingBucket();
@@ -91,7 +91,7 @@ public class OLRClassifierTest {
     }
 
     @Test
-    public void trainExistingModelWithNewDataTest() throws Exception {
+    public void trainExistingModelWithNewDataTest() throws Exception, CodeNotValidException {
 
         Bucket bucketA = createTrainingBucket();
         OLRClassifier olrClassifier1 = new OLRClassifier();
@@ -142,7 +142,7 @@ public class OLRClassifierTest {
      * @throws Exception 
      */
     @Test
-    public void testClassifyWithDeSerializedModel() throws Exception {
+    public void testClassifyWithDeSerializedModel() throws Exception, CodeNotValidException {
 
         Bucket bucketA = createTrainingBucket();
 
@@ -183,7 +183,7 @@ public class OLRClassifierTest {
      * @return the bucket
      * @throws Exception the exception
      */
-    private Bucket createTrainingBucket() throws Exception {
+    private Bucket createTrainingBucket() throws Exception, CodeNotValidException {
 
         properties.setProperty("numCategories", "8");
         properties.setProperty("OLRPoolSize", "3");
@@ -207,7 +207,7 @@ public class OLRClassifierTest {
      * @throws Exception the exception
      */
     @Test
-    public void testStop() throws Exception {
+    public void testStop() throws Exception, CodeNotValidException {
 
         Timer t = new Timer();
         t.start();
