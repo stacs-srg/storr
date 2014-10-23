@@ -28,7 +28,7 @@ public final class LevenshteinDistance {
      * @param s2 string 2
      * @return the similarity between s1 and s2.
      */
-    public static double similarity(String s1, String s2) {
+    public static double similarity(final String s1, String s2) {
 
         if (s1.length() < s2.length()) {
             String swap = s1;
