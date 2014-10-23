@@ -9,6 +9,7 @@ import java.util.Set;
 
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.lookup.ExactMatchClassifier;
@@ -23,6 +24,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.exceptions.I
 
 import com.google.common.collect.HashMultimap;
 
+@Ignore
 public class ExactMatchPipelineTest {
 
     ExactMatchClassifier exactMatchClassifier;
