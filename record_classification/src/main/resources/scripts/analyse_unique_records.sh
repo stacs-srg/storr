@@ -23,4 +23,6 @@ then
     echo Setting heap size: $1GB
 fi
 
-mvn exec:java -q -Dexec.cleanupDaemonThreads=false -Dexec.mainClass="uk.ac.standrews.cs.digitising_scotland.record_classification.tools.AnalyseUniqueRecords" -e -Dexec.args="$2 $3 $4 $5 $6 $7"
+# Commented out line using maven as not sure if that is installed on LWH systems
+#mvn exec:java -q -Dexec.cleanupDaemonThreads=false -Dexec.mainClass="uk.ac.standrews.cs.digitising_scotland.record_classification.tools.AnalyseUniqueRecords" -e -Dexec.args="$2 $3 $4 $5 $6 $7"
+java -d64 -Xmx$1G -cp target/record_classification-1.0-SNAPSHOT-jar-with-dependencies.jar uk.ac.standrews.cs.digitising_scotland.record_classification.tools.AnalyseUniqueRecords $2 $3 $3 $5 $6 $7

@@ -66,6 +66,7 @@ public final class TrainClassifyOneFile {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TrainClassifyOneFile.class);
     private static double DEFAULT_TRAINING_RATIO = 0.8;
+    private static final String usageHelp = "usage: $" + TrainClassifyOneFile.class.getSimpleName() + "    <goldStandardDataFile>  <propertiesFile>  <trainingRatio(optional)>    <output multiple classificatiosn";
 
     /**
      * Entry method for training and classifying a batch of records into
@@ -94,7 +95,8 @@ public final class TrainClassifyOneFile {
         experimentalFolderName = PipelineUtils.setupExperimentalFolders("TestExperiments");
 
         goldStandard = parseGoldStandFile(args);
-        double trainingRatio = parseTrainingPct(args);
+        parseProperties(args);
+        double trainingRatio = parseTrainingRatio(args);
         boolean multipleClassifications = parseMultipleClassifications(args);
 
         File codeDictionaryFile = new File(MachineLearningConfiguration.getDefaultProperties().getProperty("codeDictionaryFile"));
@@ -207,8 +209,8 @@ public final class TrainClassifyOneFile {
     private static File parseGoldStandFile(final String[] args) {
 
         File goldStandard = null;
-        if (args.length > 4) {
-            System.err.println("usage: $" + TrainClassifyOneFile.class.getSimpleName() + "    <goldStandardDataFile>    <trainingRatio(optional)>");
+        if (args.length > 5) {
+            System.err.println(usageHelp);
         }
         else {
             goldStandard = new File(args[0]);
@@ -218,23 +220,37 @@ public final class TrainClassifyOneFile {
         return goldStandard;
     }
 
-    private boolean parseMultipleClassifications(final String[] args) {
+    public File parseProperties(String[] args) {
 
-        if (args.length > 3) {
-            System.err.println("usage: $" + TrainClassifyOneFile.class.getSimpleName() + "    <goldStandardDataFile>    <trainingRatio(optional)>    <output multiple classificatiosn");
+        File properties = null;
+        if (args.length > 5) {
+            System.err.println(usageHelp);
         }
         else {
-            if (args[2].equals("1")) { return true; }
+            properties = new File(args[1]);
+            PipelineUtils.exitIfDoesNotExist(properties);
+            MachineLearningConfiguration.loadProperties(properties);
+        }
+        return properties;
+    }
+
+    private boolean parseMultipleClassifications(final String[] args) {
+
+        if (args.length > 5) {
+            System.err.println(usageHelp);
+        }
+        else {
+            if (args[3].equals("1")) { return true; }
         }
         return false;
 
     }
 
-    private static double parseTrainingPct(final String[] args) {
+    private static double parseTrainingRatio(final String[] args) {
 
         double trainingRatio = DEFAULT_TRAINING_RATIO;
         if (args.length > 1) {
-            double userRatio = Double.valueOf(args[1]);
+            double userRatio = Double.valueOf(args[2]);
             if (userRatio > 0 && userRatio < 1) {
                 trainingRatio = userRatio;
             }

@@ -67,6 +67,7 @@ import com.google.common.io.Files;
 public final class PIlot {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PIlot.class);
+    private static final String usageHelp = "usage: $" + PIlot.class.getSimpleName() + "    <trainingFile>    <predictionFile>  <propertiesFile>";
 
     /**
      * Entry method for training and classifying a batch of records into
@@ -96,6 +97,7 @@ public final class PIlot {
         File[] inputFiles = parseInput(args);
         training = inputFiles[0];
         prediction = inputFiles[1];
+        parseProperties(args);
 
         File codeDictionaryFile = new File(MachineLearningConfiguration.getDefaultProperties().getProperty("codeDictionaryFile"));
         CodeDictionary codeDictionary = new CodeDictionary(codeDictionaryFile);
@@ -209,9 +211,9 @@ public final class PIlot {
         //Training file in [0], prediction file in [1]
         File[] trainingPrediction = new File[2];
 
-        if (args.length != 2) {
-            System.err.println("You must supply 2 arguments");
-            System.err.println("usage: $" + PIlot.class.getSimpleName() + "    <trainingFile>    <predictionFile>");
+        if (args.length != 3) {
+            System.err.println("You must supply 3 arguments");
+            System.err.println(usageHelp);
         }
         else {
             trainingPrediction[0] = new File(args[0]);
@@ -221,6 +223,20 @@ public final class PIlot {
         }
 
         return trainingPrediction;
+    }
+
+    public File parseProperties(String[] args) {
+
+        File properties = null;
+        if (args.length > 4) {
+            System.err.println(usageHelp);
+        }
+        else {
+            properties = new File(args[2]);
+            PipelineUtils.exitIfDoesNotExist(properties);
+            MachineLearningConfiguration.loadProperties(properties);
+        }
+        return properties;
     }
 
 }

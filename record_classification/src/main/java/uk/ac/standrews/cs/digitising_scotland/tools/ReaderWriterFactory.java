@@ -1,10 +1,19 @@
 package uk.ac.standrews.cs.digitising_scotland.tools;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
 
-import java.io.*;
+import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
 
 /**
  * Factory for creating buffered readers and writers from Files.
@@ -12,7 +21,7 @@ import java.io.*;
  */
 public class ReaderWriterFactory {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(Utils.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ReaderWriterFactory.class);
 
     /**
      * Constructs a {@link java.io.BufferedReader} with the default File_Charset specified in {@link uk.ac.standrews.cs.digitising_scotland.util.FileManipulation}.
@@ -23,7 +32,7 @@ public class ReaderWriterFactory {
 
         BufferedReader br = null;
         try {
-            br = new BufferedReader(new InputStreamReader(new FileInputStream(inputFile), FileManipulation.FILE_CHARSET));
+            br = new BufferedReader(new InputStreamReader(new FileInputStream(inputFile.getAbsolutePath()), FileManipulation.FILE_CHARSET));
         }
         catch (FileNotFoundException e) {
             LOGGER.error(e.getMessage(), e);
