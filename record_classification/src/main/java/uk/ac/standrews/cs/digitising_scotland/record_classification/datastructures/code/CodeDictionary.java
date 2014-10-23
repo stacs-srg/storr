@@ -68,9 +68,16 @@ public class CodeDictionary {
     private void parseLineAndAddToMap(final String line) {
 
         String[] splitLine = line.split("\t");
-        String codeFromFile = splitLine[0].trim();
-        String descriptionFromFile = splitLine[1].trim();
-        createCodeAndAddToMap(codeFromFile, descriptionFromFile);
+        if (splitLine.length == 2) {
+            String codeFromFile = splitLine[0].trim();
+            String descriptionFromFile = splitLine[1].trim();
+            createCodeAndAddToMap(codeFromFile, descriptionFromFile);
+        }
+        else if (splitLine.length == 1) {
+            String codeFromFile = splitLine[0].trim();
+            String descriptionFromFile = "No Description";
+            createCodeAndAddToMap(codeFromFile, descriptionFromFile);
+        }
     }
 
     /**
@@ -122,7 +129,8 @@ public class CodeDictionary {
         return validCodes.entrySet().iterator();
     }
 
-    public boolean isValid(final String code){
+    public boolean isValid(final String code) {
+
         return validCodes.get(code) != null;
     }
 }

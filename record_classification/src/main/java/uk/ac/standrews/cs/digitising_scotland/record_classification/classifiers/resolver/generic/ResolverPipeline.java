@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.resolver.generic;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -70,15 +71,19 @@ public class ResolverPipeline<Threshold, Code extends AncestorAble<Code>, Classi
 
     private Set<Classification> resolverPipeline(MultiValueMap<Code, Classification> multiValueMap, final FeatureSet featureSet) throws Exception {
 
+        List<Multiset<Classification>> validSets = new ArrayList<>();
+
         multiValueMap = belowThresholdRemover.removeBelowThreshold(multiValueMap);
-        if (multipleClassifications && resolveHierarchies) {
-            multiValueMap = hierarchyResolver.moveAncestorsToDescendantKeys(multiValueMap);
+        if (!multiValueMap.isEmpty()) {
+            if (multipleClassifications && resolveHierarchies) {
+                multiValueMap = hierarchyResolver.moveAncestorsToDescendantKeys(multiValueMap);
+            }
+            else {
+                multiValueMap = flattener.moveAllIntoKey(multiValueMap, multiValueMap.iterator().next());
+            }
+            multiValueMap = mapPruner.pruneUntilComplexityWithinBound(multiValueMap);
+            validSets = validCombinationGetter.getValidSets(multiValueMap, featureSet);
         }
-        else {
-            multiValueMap = flattener.moveAllIntoKey(multiValueMap, multiValueMap.iterator().next());
-        }
-        multiValueMap = mapPruner.pruneUntilComplexityWithinBound(multiValueMap);
-        List<Multiset<Classification>> validSets = validCombinationGetter.getValidSets(multiValueMap, featureSet);
         return lossFunctionApplier.getBest(validSets);
     }
 

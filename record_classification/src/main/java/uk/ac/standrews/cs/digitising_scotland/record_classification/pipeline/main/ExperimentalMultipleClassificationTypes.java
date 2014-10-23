@@ -118,6 +118,7 @@ public final class ExperimentalMultipleClassificationTypes {
         goldStandard = parseGoldStandFile(args);
         double trainingRatio = parseTrainingPct(args);
         boolean multipleClassifications = parseMultipleClassifications(args);
+        parseProperties(args);
 
         File codeDictionaryFile = new File(MachineLearningConfiguration.getDefaultProperties().getProperty("codeDictionaryFile"));
         CodeDictionary codeDictionary = new CodeDictionary(codeDictionaryFile);
@@ -286,7 +287,7 @@ public final class ExperimentalMultipleClassificationTypes {
 
         File goldStandard = null;
         if (args.length > 4) {
-            System.err.println("usage: $" + ExperimentalMultipleClassificationTypes.class.getSimpleName() + "    <goldStandardDataFile>    <trainingRatio(optional)>");
+            System.err.println("usage: $" + ExperimentalMultipleClassificationTypes.class.getSimpleName() + "    <goldStandardDataFile>    <trainingRatio(optional)>  <output multiple classificatiosn> <properties file>");
         }
         else {
             goldStandard = new File(args[0]);
@@ -298,8 +299,8 @@ public final class ExperimentalMultipleClassificationTypes {
 
     private boolean parseMultipleClassifications(final String[] args) {
 
-        if (args.length > 3) {
-            System.err.println("usage: $" + ClassifyWithExsistingModels.class.getSimpleName() + "    <goldStandardDataFile>    <trainingRatio(optional)>    <output multiple classificatiosn");
+        if (args.length > 4) {
+            System.err.println("usage: $" + ClassifyWithExsistingModels.class.getSimpleName() + "    <goldStandardDataFile>    <trainingRatio(optional)>    <output multiple classificatiosn> <properties file>");
         }
         else {
             if (args[2].equals("1")) { return true; }
@@ -322,6 +323,17 @@ public final class ExperimentalMultipleClassificationTypes {
             }
         }
         return trainingRatio;
+    }
+
+    public File parseProperties(String[] args) {
+
+        File properties = null;
+
+        properties = new File(args[3]);
+        PipelineUtils.exitIfDoesNotExist(properties);
+        MachineLearningConfiguration.loadProperties(properties);
+        System.out.println(MachineLearningConfiguration.getDefaultProperties().getProperty("codeDictionaryFile"));
+        return properties;
     }
 
     private Bucket[] randomlyAssignToTrainingAndPrediction(final Bucket bucket, final double trainingRatio) {

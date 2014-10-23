@@ -78,19 +78,20 @@ public class MachineLearningConfiguration {
      */
     public static Properties loadProperties(File pathToProperties) {
 
-        Properties defaultProperties = new Properties();
+        Properties newProperties = new Properties();
 
         try {
             ClassLoader classLoader = MachineLearningConfiguration.class.getClassLoader();
             final String absolutePath = pathToProperties.getAbsolutePath();
             System.out.println(absolutePath);
             InputStream resourceAsStream = new FileInputStream(pathToProperties);
-            defaultProperties.load(resourceAsStream);
+            newProperties.load(resourceAsStream);
+            defaultProperties = newProperties;
         }
         catch (IOException e) {
             LOGGER.error(e.getMessage(), e);
         }
-        return defaultProperties;
+        return newProperties;
     }
 
 }
