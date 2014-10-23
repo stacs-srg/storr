@@ -73,17 +73,34 @@ public class FeatureSpaceAnalyserFormatter {
         return maxLength;
     }
 
+    private int maxInCodeFeatureCountLength(Set<String> features, Code code) {
+        Integer maxLength = 0;
+        for(String feature : features){
+            Integer numLength = featureSpaceAnalyser.featureProfile(code).get(feature);
+            if (numLength > maxLength)
+                maxLength = numLength;
+        }
+        return maxLength.toString().length();
+    }
+
     private String[] buildFeatureLines(Code code) {
         Set<String> features = featureSpaceAnalyser.featureProfile(code).keySet();
         String[] featureLines = new String[features.size()];
-        int maxTabDepth = (int) Math.ceil(maxLineLength(features)/4) + 3;
+        int offset = 8;
+        int maxFeatureLength = maxLineLength(features);
+        int maxInCodeFeatureCountLength = maxInCodeFeatureCountLength(features,code);
         int i = 0;
         for(String feature : features){
-            featureLines[i++] = feature + repeatConcatString("\t",maxTabDepth - feature.length() / 4) + "-\t" + featureSpaceAnalyser.featureProfile(code).get(feature) + "\t-\t" + featureSpaceAnalyser.featureDist(feature) + "\n";
+            int inCodeFeatureCount = featureSpaceAnalyser.featureProfile(code).get(feature);
+            int countInTotal = featureSpaceAnalyser.featureDist(feature);
+            featureLines[i++] = feature +
+                                repeatConcatString(" ", maxFeatureLength - feature.length() + offset) +
+                                inCodeFeatureCount +
+                                repeatConcatString(" ",maxInCodeFeatureCountLength - inCodeFeatureCount + offset) +
+                                countInTotal + "\n";
         }
         return featureLines;
     }
-
 
 
     protected String repeatConcatString(String str, int reps) {
