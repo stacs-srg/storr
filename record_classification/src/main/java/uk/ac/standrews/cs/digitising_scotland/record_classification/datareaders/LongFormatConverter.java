@@ -119,9 +119,7 @@ public final class LongFormatConverter extends AbstractFormatConverter {
 
                 if (causeIdentifier != start_pos) {
                     Code code = codeDictionary.getCode(removeQuotes(lineSplit[i + 2]));
-
                     TokenSet tokenSet = new TokenSet(lineSplit[causeIdentifier]);
-
                     Classification codeTriple = new Classification(code, tokenSet, 1.0);
                     goldStandard.add(codeTriple);
                 }

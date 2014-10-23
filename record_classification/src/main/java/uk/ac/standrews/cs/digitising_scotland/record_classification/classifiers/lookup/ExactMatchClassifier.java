@@ -8,8 +8,10 @@ import java.io.InputStream;
 import java.io.ObjectInput;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -31,7 +33,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 public class ExactMatchClassifier {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ExactMatchClassifier.class);
-    private Map<TokenSet, Set<Classification>> lookupTable;
+    private Map<String, Set<Classification>> lookupTable;
     private String modelFileName = "target/lookupTable";
 
     /**
@@ -77,28 +79,63 @@ public class ExactMatchClassifier {
      * Adds each gold standard {@link Classification} in the records to the lookupTable.
      * @param record to add
      */
-    private void addRecordToLookupTable(final Record record) {
+    private void addRecordToLookupTable(final Record record, final Map<String, Set<Classification>> lookup) {
 
         final Set<Classification> goldStandardCodes = record.getOriginalData().getGoldStandardClassifications();
-        for (Classification t : goldStandardCodes) {
-            final TokenSet description = new TokenSet(t.getTokenSet());
-            Set<Classification> st = new HashSet<Classification>();
-            st.add(t);
-            if (lookupTable.containsKey(description)) {
-                lookupTable.get(description).addAll(st);
+        String concatDescription = getConcatenatedDescription(goldStandardCodes);
+        List<String> blacklist = new ArrayList<>();
+        addToLookup(lookup, goldStandardCodes, concatDescription, blacklist);
+    }
+
+    protected void addToLookup(final Map<String, Set<Classification>> lookup, final Set<Classification> goldStandardCodes, final String concatDescription, final List<String> blacklist) {
+
+        if (!blacklist.contains(concatDescription)) {
+            if (!lookup.containsKey(concatDescription)) {
+
+                Set<Classification> editClassification = changeConfidences(goldStandardCodes);
+                lookup.put(concatDescription, editClassification);
+            }
+            else if (!goldStandardCodes.equals(lookup.get(concatDescription))) {
+                blacklist.add(concatDescription);
+                lookup.remove(concatDescription);
+                LOGGER.info(concatDescription + " removed");
+            }
+        }
+    }
+
+    private Set<Classification> changeConfidences(final Set<Classification> goldStandardCodes) {
+
+        Set<Classification> editedSet = new HashSet<>();
+        for (Classification classification : goldStandardCodes) {
+            // Make new code witj -1 as confidence so we can tell where classifications came from later.
+            // -2 means exact match, -1 means cache classifier
+            Classification editClassification = new Classification(classification.getCode(), classification.getTokenSet(), -2.0);
+            editedSet.add(editClassification);
+        }
+        return editedSet;
+    }
+
+    private String getConcatenatedDescription(final Set<Classification> goldStandardCodes) {
+
+        boolean isFirst = true;
+        String concat = "";
+        for (Classification classification : goldStandardCodes) {
+            if (isFirst) {
+                concat += classification.getTokenSet().toString();
+                isFirst = false;
             }
             else {
-                lookupTable.put(description, st);
-
+                concat += ", " + classification.getTokenSet().toString();
             }
         }
 
+        return concat;
     }
 
     private void fillLookupTable(final Bucket bucket) {
 
         for (Record record : bucket) {
-            addRecordToLookupTable(record);
+            addRecordToLookupTable(record, lookupTable);
         }
     }
 
@@ -123,7 +160,7 @@ public class ExactMatchClassifier {
         ObjectInput input = new ObjectInputStream(buffer);
         try {
 
-            Map<TokenSet, Set<Classification>> recoveredMap = (Map<TokenSet, Set<Classification>>) input.readObject();
+            Map<String, Set<Classification>> recoveredMap = (Map<String, Set<Classification>>) input.readObject();
             lookupTable = recoveredMap;
 
         }
@@ -217,16 +254,16 @@ public class ExactMatchClassifier {
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
 
-        if (this == obj) return true;
-        if (obj == null) return false;
-        if (getClass() != obj.getClass()) return false;
+        if (this == obj) { return true; }
+        if (obj == null) { return false; }
+        if (getClass() != obj.getClass()) { return false; }
         ExactMatchClassifier other = (ExactMatchClassifier) obj;
         if (lookupTable == null) {
-            if (other.lookupTable != null) return false;
+            if (other.lookupTable != null) { return false; }
         }
-        else if (!lookupTable.equals(other.lookupTable)) return false;
+        else if (!lookupTable.equals(other.lookupTable)) { return false; }
         return true;
     }
 

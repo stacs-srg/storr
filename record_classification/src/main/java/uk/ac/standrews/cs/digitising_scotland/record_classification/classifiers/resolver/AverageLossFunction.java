@@ -20,7 +20,7 @@ public class AverageLossFunction implements LossFunction<Multiset<Classification
 
         List<Double> confidences = new ArrayList<>();
         for (Classification triple : set) {
-            confidences.add(triple.getConfidence());
+            confidences.add(Math.abs(triple.getConfidence()));
         }
         Double confidenceSum = 0.;
         for (Double conf : confidences) {

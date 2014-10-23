@@ -19,7 +19,7 @@ public class LengthWeightedLossFunction implements LossFunction<Multiset<Classif
         double confidenceSum = 0;
 
         for (Classification triple : set) {
-            confidenceSum += triple.getConfidence() * triple.getTokenSet().size();
+            confidenceSum += Math.abs(triple.getConfidence()) * triple.getTokenSet().size();
         }
 
         return confidenceSum;

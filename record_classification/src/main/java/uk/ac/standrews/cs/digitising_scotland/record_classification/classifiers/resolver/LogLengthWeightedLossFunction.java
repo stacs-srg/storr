@@ -16,7 +16,7 @@ public class LogLengthWeightedLossFunction  implements LossFunction<Multiset<Cla
         double confidenceSum = 0;
 
         for (Classification triple : set) {
-            confidenceSum += triple.getConfidence() * Math.log(triple.getTokenSet().size()+1);
+            confidenceSum += Math.abs(triple.getConfidence()) * Math.log(triple.getTokenSet().size()+1);
         }
 
         return confidenceSum;

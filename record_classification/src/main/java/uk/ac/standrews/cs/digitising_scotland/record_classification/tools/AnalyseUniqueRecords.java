@@ -6,7 +6,12 @@ import java.io.PrintWriter;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Random;
+import java.util.Set;
 
 /**
  * Analyses the distribution of unique strings within a file.
@@ -18,7 +23,7 @@ public class AnalyseUniqueRecords {
 
     private static Random random = new Random(3495792347L);
 
-    private static final Charset FILE_CHARSET = Charset.forName("UTF-8");
+    private static Charset FILE_CHARSET = Charset.forName("UTF-8");
 
     public static void main(String[] args) throws IOException {
 
@@ -33,7 +38,16 @@ public class AnalyseUniqueRecords {
             final int prefix_length = args.length > 4 ? Integer.parseInt(args[4]) : 0;
             final int suffix_length = args.length > 5 ? Integer.parseInt(args[5]) : 0;
 
+            getFileEncoding(args);
+
             analyseStringsInFile(input_path_string, output_path_string, number_of_samples, number_of_repetitions, prefix_length, suffix_length);
+        }
+    }
+
+    private static void getFileEncoding(String[] args) {
+
+        if (args.length > 6) {
+            FILE_CHARSET = Charset.forName(args[6]);
         }
     }
 
@@ -114,14 +128,16 @@ public class AnalyseUniqueRecords {
         writer.println();
 
         writer.print("position\t");
-        for (int r = 1; r <= results.length; r++) writer.print("r" + r + "\t");
+        for (int r = 1; r <= results.length; r++)
+            writer.print("r" + r + "\t");
         writer.println();
 
         for (int i = 0; i < results[0].length; i++) {
 
             if (i < results[0].length - 1) {
                 writer.print((i * sample_interval + 1) + "\t");
-            } else {
+            }
+            else {
                 writer.print(number_of_strings + "\t");
             }
 
@@ -146,7 +162,8 @@ public class AnalyseUniqueRecords {
             while (line != null) {
                 if (notIgnored(line)) {
                     list.add(line);
-                } else {
+                }
+                else {
                     ignored_lines++;
                 }
 
@@ -180,8 +197,8 @@ public class AnalyseUniqueRecords {
 
         int i = n;
         int j = 1;
-        while (i >= 10){
-            i = i/10;
+        while (i >= 10) {
+            i = i / 10;
             j *= 10;
         }
 

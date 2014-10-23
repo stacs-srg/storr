@@ -1,5 +1,7 @@
 package uk.ac.standrews.cs.digitising_scotland.tools.configuration;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
@@ -62,6 +64,27 @@ public class MachineLearningConfiguration {
         try {
             ClassLoader classLoader = MachineLearningConfiguration.class.getClassLoader();
             InputStream resourceAsStream = classLoader.getResourceAsStream(machineLearningDefault);
+            defaultProperties.load(resourceAsStream);
+        }
+        catch (IOException e) {
+            LOGGER.error(e.getMessage(), e);
+        }
+        return defaultProperties;
+    }
+
+    /**
+     * Reads the default properties file.
+     * @return default properties
+     */
+    public static Properties loadProperties(File pathToProperties) {
+
+        Properties defaultProperties = new Properties();
+
+        try {
+            ClassLoader classLoader = MachineLearningConfiguration.class.getClassLoader();
+            final String absolutePath = pathToProperties.getAbsolutePath();
+            System.out.println(absolutePath);
+            InputStream resourceAsStream = new FileInputStream(pathToProperties);
             defaultProperties.load(resourceAsStream);
         }
         catch (IOException e) {

@@ -14,8 +14,8 @@ public class ClassificationComparator implements Comparator<Classification>, Ser
     @Override
     public int compare(final Classification o1, final Classification o2) {
 
-        double measure1 = o1.getTokenSet().size() * o1.getConfidence();
-        double measure2 = o2.getTokenSet().size() * o2.getConfidence();
+        double measure1 = o1.getTokenSet().size() * Math.abs(o1.getConfidence());
+        double measure2 = o2.getTokenSet().size() * Math.abs(o2.getConfidence());
         if (measure1 < measure2) {
             return 1;
         }

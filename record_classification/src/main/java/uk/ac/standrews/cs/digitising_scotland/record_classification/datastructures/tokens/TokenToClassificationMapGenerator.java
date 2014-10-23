@@ -16,31 +16,56 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
  */
 public class TokenToClassificationMapGenerator {
 
+    Map<TokenSet, Classification> map = new HashMap<>();
+    private List<TokenSet> blackList;
+
+    public TokenToClassificationMapGenerator(Bucket bucket) {
+
+        blackList = new ArrayList<>();
+        for (Record record : bucket) {
+            putClassificationsInMap(map, record);
+        }
+    }
+
     /**
      * Generates a map from TokenSets to Classifications.
      * TokenSets which are classified to a single Classification within a record
      * are put into the map with their corresponding classification.
-     * @param bucket used to populate map
      * @return a mapping from TokenSets to Classifications
      */
-    public Map<TokenSet, Classification> generateMap(final Bucket bucket) {
+    public Map<TokenSet, Classification> getMap() {
 
-        Map<TokenSet, Classification> map = new HashMap<>();
-        for (Record record : bucket)
-            putClassificationsInMap(map, record);
         return map;
     }
 
-    private void putClassificationsInMap(Map<TokenSet, Classification> map, Record record) {
+    private void putClassificationsInMap(final Map<TokenSet, Classification> map, final Record record) {
 
         List<Classification> singles = getClassifications(record);
         putClassificationsInMap(map, singles);
     }
 
-    private void putClassificationsInMap(Map<TokenSet, Classification> map, List<Classification> singles) {
+    private void putClassificationsInMap(final Map<TokenSet, Classification> map, final List<Classification> singles) {
 
-        for (Classification classification : singles)
-            map.put(classification.getTokenSet(), classification);
+        for (Classification classification : singles) {
+            // map.put(classification.getTokenSet(), classification);
+            addToLookup(map, classification, classification.getTokenSet(), blackList);
+        }
+    }
+
+    protected void addToLookup(final Map<TokenSet, Classification> lookup, final Classification goldStandardCode, final TokenSet description, final List<TokenSet> blacklist) {
+
+        if (!blacklist.contains(description)) {
+            if (!lookup.containsKey(description)) {
+                // Make new code witj -1 as confidence so we can tell where classifications came from later.
+                // -2 means exact match, -1 means cache classifier
+                Classification editClassification = new Classification(goldStandardCode.getCode(), goldStandardCode.getTokenSet(), -1.0);
+                lookup.put(description, editClassification);
+            }
+            else if (!goldStandardCode.equals(lookup.get(description))) {
+                blacklist.add(description);
+                lookup.remove(description);
+            }
+        }
     }
 
     /**
@@ -54,16 +79,20 @@ public class TokenToClassificationMapGenerator {
         final Set<Classification> set = record.getGoldStandardClassificationSet();
         for (Classification classification : set) {
             int count = countNumClassificationsWithSameTokenSet(set, classification.getTokenSet());
-            if (count == 1) singles.add(classification);
+            if (count == 1) {
+                singles.add(classification);
+            }
         }
         return singles;
     }
 
-    private int countNumClassificationsWithSameTokenSet(Set<Classification> set, TokenSet tokenSet) {
+    private int countNumClassificationsWithSameTokenSet(final Set<Classification> set, final TokenSet tokenSet) {
 
         int count = 0;
         for (Classification classification : set) {
-            if (tokenSet.equals(classification.getTokenSet())) count++;
+            if (tokenSet.equals(classification.getTokenSet())) {
+                count++;
+            }
         }
         return count;
     }
