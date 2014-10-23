@@ -219,7 +219,7 @@ public final class ExperimentalMultipleClassificationTypes {
         return new StringSimilarityClassifier(closestMatchMap);
     }
 
-    private void printAllStats(final String experimentalFolderName, String identifier, final CodeIndexer codeIndex, final Bucket allClassifed, final Bucket uniqueRecordsOnly) throws IOException {
+    private void printAllStats(final String experimentalFolderName, final String identifier, final CodeIndexer codeIndex, final Bucket allClassifed, final Bucket uniqueRecordsOnly) throws IOException {
 
         CodeMetrics codeMetrics = new CodeMetrics(new StrictConfusionMatrix(allClassifed, codeIndex), codeIndex);
         ListAccuracyMetrics accuracyMetrics = new ListAccuracyMetrics(allClassifed, codeMetrics);
