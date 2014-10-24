@@ -32,40 +32,6 @@ public final class PipelineUtils {
 
     }
 
-    //    public static void generateAndPrintStats(final Bucket classifiedBucket, final CodeIndexer codeIndexer, final String header, final String bucketIdentifier, final String experimentalFolderName, final String identifier) throws IOException {
-    //
-    //        LOGGER.info(header);
-    //        CodeMetrics codeMetrics = new CodeMetrics(new StrictConfusionMatrix(classifiedBucket, codeIndexer), codeIndexer);
-    //        ListAccuracyMetrics accuracyMetrics = new ListAccuracyMetrics(classifiedBucket, codeMetrics);
-    //        accuracyMetrics.prettyPrint(header);
-    //        generateStats(classifiedBucket, codeMetrics, accuracyMetrics, codeIndexer, experimentalFolderName, bucketIdentifier, identifier);
-    //    }
-
-    //    public static void generateStats(final Bucket bucket, CodeMetrics codeMetrics, final ListAccuracyMetrics accuracyMetrics, final CodeIndexer codeIndexer, final String experimentalFolderName, final String bucketIdentifier, final String identifier) throws IOException {
-    //
-    //        final String matrixDataPath = experimentalFolderName + "/Data/" + identifier + "/classificationCountMatrix.csv";
-    //        final String matrixImagePath = "classificationMatrix";
-    //        final String reportspath = experimentalFolderName + "/Reports/";
-    //
-    //        final String strictCodeStatsPath = experimentalFolderName + "/Data/" + identifier + "/strictCodeStats" + bucketIdentifier + ".csv";
-    //        final String strictCodePath = "strictCodeStats" + bucketIdentifier;
-    //        printCodeMetrics(bucket, codeMetrics, accuracyMetrics, codeIndexer, strictCodeStatsPath, strictCodePath, experimentalFolderName, identifier);
-    //
-    //        final String softCodeStatsPath = experimentalFolderName + "/Data/" + identifier + "/softCodeStats" + bucketIdentifier + ".csv";
-    //        final String softCodePath = "softCodeStats" + bucketIdentifier;
-    //        printCodeMetrics(bucket, codeMetrics, accuracyMetrics, codeIndexer, softCodeStatsPath, softCodePath, experimentalFolderName, identifier);
-    //
-    //        AbstractConfusionMatrix invertedConfusionMatrix = new InvertedSoftConfusionMatrix(bucket, codeIndexer);
-    //        double totalCorrectlyPredicted = invertedConfusionMatrix.getTotalCorrectlyPredicted();
-    //        LOGGER.info("Number of predictions too specific: " + totalCorrectlyPredicted);
-    //        LOGGER.info("Proportion of predictions too specific: " + totalCorrectlyPredicted / invertedConfusionMatrix.getTotalPredicted());
-    //
-    //        runRscript("src/main/R/CodeStatsPlotter.R", strictCodeStatsPath, reportspath, strictCodePath);
-    //        runRscript("src/main/R/CodeStatsPlotter.R", softCodeStatsPath, reportspath, softCodePath);
-    //        runRscript("src/main/R/HeatMapPlotter.R", matrixDataPath, reportspath, matrixImagePath);
-    //
-    //    }
-
     public static String printCodeMetrics(final Bucket bucket, final CodeMetrics codeMetrics, final ListAccuracyMetrics accuracyMetrics, final CodeIndexer codeIndexer, final String strictCodeStatsPath, final String codeStatsPath, final String experimentalFolderName, final String identifier) {
 
         LOGGER.info(codeMetrics.getMicroStatsAsString());
@@ -90,12 +56,10 @@ public final class PipelineUtils {
             olrClassifier = olrClassifier.deSerializeModel(modelLocations + "/olrModel");
         }
         catch (ClassNotFoundException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e);
         }
         catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e);
         }
         return olrClassifier;
     }
@@ -117,11 +81,14 @@ public final class PipelineUtils {
     public static boolean checkFileType(final File inputFile) throws IOException {
 
         BufferedReader br = ReaderWriterFactory.createBufferedReader(inputFile);
-        String line = br.readLine();
-        br.close();
-        final int expectedLineLength = 38;
-        final String[] length = line.split(Utils.getCSVComma());
-        if (length.length == expectedLineLength) { return true; }
+        String line = "";
+        if ((line = br.readLine()) != null) {
+            br.close();
+
+            final int expectedLineLength = 38;
+            final String[] length = line.split(Utils.getCSVComma());
+            if (length.length == expectedLineLength) { return true; }
+        }
         return false;
     }
 
@@ -140,7 +107,6 @@ public final class PipelineUtils {
         if (!file.exists()) {
             LOGGER.error(file.getAbsolutePath() + " does not exist. Exiting");
             throw new RuntimeException();
-            // System.exit(2);
         }
 
     }

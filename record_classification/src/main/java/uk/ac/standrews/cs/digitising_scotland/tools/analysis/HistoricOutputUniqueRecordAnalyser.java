@@ -126,7 +126,7 @@ public class HistoricOutputUniqueRecordAnalyser {
         Map<String, String> uniqueMap = new HashMap<>();
         while ((line = br.readLine()) != null) {
             String[] lineSplit = line.split(Utils.getCSVComma());
-            String description = lineSplit[0];
+            String description = lineSplit[descriptionPos];
             uniqueMap.put(description, line);
         }
         return uniqueMap;
