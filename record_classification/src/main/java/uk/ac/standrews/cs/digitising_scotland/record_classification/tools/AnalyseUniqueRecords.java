@@ -17,7 +17,7 @@ import java.util.Set;
  * Analyses the distribution of unique strings within a file.
  *
  * @author Graham Kirby (graham.kirby@st-andrews.ac.uk)
- * @see <a href="http://digitisingscotland.cs.st-andrews.ac.uk/record_classification/scripts/analyse_unique_records.html">Launch script documentation</a>}
+ * @see <a href="http://digitisingscotland.cs.st-andrews.ac.uk/record_classification/scripts/analyse_unique_records.html">Launch script documentation</a>
  */
 public class AnalyseUniqueRecords {
 
@@ -85,8 +85,10 @@ public class AnalyseUniqueRecords {
 
             for (int i = 0; i < number_of_repetitions; i++) {
 
-                String[] permuted_strings = permute(strings, permutation(strings.length, random));
-                results[i] = analyse(permuted_strings, number_of_samples, sample_interval);
+//                String[] permuted_strings = permute(strings, permutation(strings.length, random));
+                permute(strings, random);
+//                results[i] = analyse(permuted_strings, number_of_samples, sample_interval);
+                results[i] = analyse(strings, number_of_samples, sample_interval);
                 System.out.println("Completed repetition " + (i + 1));
             }
 
@@ -226,6 +228,22 @@ public class AnalyseUniqueRecords {
         }
 
         return result;
+    }
+
+    private static void permute(String[] strings, Random random) {
+
+        final int length = strings.length;
+
+        for (int i = 0; i < length; i++) {
+            swap(strings, i, random.nextInt(length));
+        }
+    }
+
+    private static void swap(String[] strings, int i, int j) {
+
+        String temp = strings[i];
+        strings[i] = strings[j];
+        strings[j] = temp;
     }
 
     private static String[] permute(String[] strings, int[] permutation) {
