@@ -1,0 +1,20 @@
+String Similarity Matches
+
+3 different similarity measures were used to perform record classification using the nGram pipeline described above.  
+
+Levenshtein distance is  string similarity metric commonly used in the field of record linkage. The Levenshtein distance  between two strings is defined as the number of single character edits to transform one string to the other. 
+
+Jaccard similarity is a statistic used to compare the similarity of sample sets, and in this case the similarity of two strings on a token level. Jaccard similarity is defined as J(A,B) = |A n B| / |A u B|
+, i.e. the size of the intersection of the sets divided by the size of the intersection of the sets. 
+
+The Dice Coefficient is another measure of set similarity (Dice, 1945).  S(A, B) = 2|A n B| / |A| + |B| and again, is used here on word level tokens.
+
+The assumption when running
+
+
+
+Dice, 1945
+Measures of the Amount of Ecologic Association Between Species
+Lee R. Dice
+Ecology, Vol. 26, No. 3 (Jul., 1945), pp. 297-302
+

@@ -71,13 +71,13 @@ Summary
 
 Evaluation
 
-Sequence of Experiements
+Sequence of Experiments
 
 Accuracy Measures - give results for just unique records
 
 Results
 
-Discussions - Cost effectivnesss of human coders vs automatic techniques
+Discussions - Cost effectivness of human coders vs automatic techniques
 
 Conclusions
 
