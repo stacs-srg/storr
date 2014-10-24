@@ -85,9 +85,7 @@ public class AnalyseUniqueRecords {
 
             for (int i = 0; i < number_of_repetitions; i++) {
 
-//                String[] permuted_strings = permute(strings, permutation(strings.length, random));
                 permute(strings, random);
-//                results[i] = analyse(permuted_strings, number_of_samples, sample_interval);
                 results[i] = analyse(strings, number_of_samples, sample_interval);
                 System.out.println("Completed repetition " + (i + 1));
             }
@@ -212,24 +210,6 @@ public class AnalyseUniqueRecords {
         return line.length() > 0;
     }
 
-    private static int[] permutation(int size, Random random) {
-
-        int[] result = new int[size];
-
-        List<Integer> array_list = new ArrayList();
-        for (int i = 0; i < size; i++) {
-            array_list.add(i);
-        }
-
-        for (int i = 0; i < size; i++) {
-            int index = random.nextInt(size - i);
-            result[i] = array_list.get(index);
-            array_list.remove(index);
-        }
-
-        return result;
-    }
-
     private static void permute(String[] strings, Random random) {
 
         final int length = strings.length;
@@ -244,16 +224,5 @@ public class AnalyseUniqueRecords {
         String temp = strings[i];
         strings[i] = strings[j];
         strings[j] = temp;
-    }
-
-    private static String[] permute(String[] strings, int[] permutation) {
-
-        String[] result = new String[strings.length];
-
-        for (int i = 0; i < strings.length; i++) {
-            result[i] = strings[permutation[i]];
-        }
-
-        return result;
     }
 }
