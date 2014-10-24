@@ -14,13 +14,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import uk.ac.shef.wit.simmetrics.similaritymetrics.AbstractStringMetric;
-import uk.ac.shef.wit.simmetrics.similaritymetrics.ChapmanMatchingSoundex;
 import uk.ac.shef.wit.simmetrics.similaritymetrics.DiceSimilarity;
 import uk.ac.shef.wit.simmetrics.similaritymetrics.JaccardSimilarity;
-import uk.ac.shef.wit.simmetrics.similaritymetrics.JaroWinkler;
 import uk.ac.shef.wit.simmetrics.similaritymetrics.Levenshtein;
-import uk.ac.shef.wit.simmetrics.similaritymetrics.NeedlemanWunch;
-import uk.ac.shef.wit.simmetrics.similaritymetrics.SmithWaterman;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.closestmatchmap.ClosestMatchMap;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.closestmatchmap.SimilarityMetric;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.closestmatchmap.SimilarityMetricFromSimmetricFactory;
@@ -118,6 +114,7 @@ public final class ExperimentalMultipleClassificationTypes {
         goldStandard = parseGoldStandFile(args);
         double trainingRatio = parseTrainingPct(args);
         boolean multipleClassifications = parseMultipleClassifications(args);
+        parseProperties(args);
 
         File codeDictionaryFile = new File(MachineLearningConfiguration.getDefaultProperties().getProperty("codeDictionaryFile"));
         CodeDictionary codeDictionary = new CodeDictionary(codeDictionaryFile);
@@ -139,10 +136,10 @@ public final class ExperimentalMultipleClassificationTypes {
         predictionBucket1 = trainingPredicition[1];
         classifyAndWrite(experimentalFolderName, trainingBucket, predictionBucket1, multipleClassifications, allRecords, codeIndex, map, simMetric, identifier);
 
-        simMetric = new JaroWinkler();
-        identifier = "JaroWinkler";
-        Bucket predictionBucket2 = copyOf(trainingPredicition[1]);
-        classifyAndWrite(experimentalFolderName, trainingBucket, predictionBucket2, multipleClassifications, allRecords, codeIndex, map, simMetric, identifier);
+        //        simMetric = new JaroWinkler();
+        //        identifier = "JaroWinkler";
+        //        Bucket predictionBucket2 = copyOf(trainingPredicition[1]);
+        //        classifyAndWrite(experimentalFolderName, trainingBucket, predictionBucket2, multipleClassifications, allRecords, codeIndex, map, simMetric, identifier);
 
         simMetric = new DiceSimilarity();
         identifier = "DiceSimilarity";
@@ -154,20 +151,20 @@ public final class ExperimentalMultipleClassificationTypes {
         Bucket predictionBucket4 = copyOf(trainingPredicition[1]);
         classifyAndWrite(experimentalFolderName, trainingBucket, predictionBucket4, multipleClassifications, allRecords, codeIndex, map, simMetric, identifier);
 
-        simMetric = new NeedlemanWunch();
-        identifier = "NeedlemanWunch";
-        Bucket predictionBucket5 = copyOf(trainingPredicition[1]);
-        classifyAndWrite(experimentalFolderName, trainingBucket, predictionBucket5, multipleClassifications, allRecords, codeIndex, map, simMetric, identifier);
-
-        simMetric = new SmithWaterman();
-        identifier = "SmithWaterman";
-        Bucket predictionBucket6 = copyOf(trainingPredicition[1]);
-        classifyAndWrite(experimentalFolderName, trainingBucket, predictionBucket6, multipleClassifications, allRecords, codeIndex, map, simMetric, identifier);
-
-        simMetric = new ChapmanMatchingSoundex();
-        identifier = "ChapmanMatchingSoundex";
-        Bucket predictionBucket7 = copyOf(trainingPredicition[1]);
-        classifyAndWrite(experimentalFolderName, trainingBucket, predictionBucket7, multipleClassifications, allRecords, codeIndex, map, simMetric, identifier);
+        //        simMetric = new NeedlemanWunch();
+        //        identifier = "NeedlemanWunch";
+        //        Bucket predictionBucket5 = copyOf(trainingPredicition[1]);
+        //        classifyAndWrite(experimentalFolderName, trainingBucket, predictionBucket5, multipleClassifications, allRecords, codeIndex, map, simMetric, identifier);
+        //
+        //        simMetric = new SmithWaterman();
+        //        identifier = "SmithWaterman";
+        //        Bucket predictionBucket6 = copyOf(trainingPredicition[1]);
+        //        classifyAndWrite(experimentalFolderName, trainingBucket, predictionBucket6, multipleClassifications, allRecords, codeIndex, map, simMetric, identifier);
+        //
+        //        simMetric = new ChapmanMatchingSoundex();
+        //        identifier = "ChapmanMatchingSoundex";
+        //        Bucket predictionBucket7 = copyOf(trainingPredicition[1]);
+        //        classifyAndWrite(experimentalFolderName, trainingBucket, predictionBucket7, multipleClassifications, allRecords, codeIndex, map, simMetric, identifier);
 
         timer.stop();
 
@@ -286,7 +283,7 @@ public final class ExperimentalMultipleClassificationTypes {
 
         File goldStandard = null;
         if (args.length > 4) {
-            System.err.println("usage: $" + ExperimentalMultipleClassificationTypes.class.getSimpleName() + "    <goldStandardDataFile>    <trainingRatio(optional)>");
+            System.err.println("usage: $" + ExperimentalMultipleClassificationTypes.class.getSimpleName() + "    <goldStandardDataFile>    <trainingRatio(optional)>  <output multiple classificatiosn> <properties file>");
         }
         else {
             goldStandard = new File(args[0]);
@@ -298,8 +295,8 @@ public final class ExperimentalMultipleClassificationTypes {
 
     private boolean parseMultipleClassifications(final String[] args) {
 
-        if (args.length > 3) {
-            System.err.println("usage: $" + ClassifyWithExsistingModels.class.getSimpleName() + "    <goldStandardDataFile>    <trainingRatio(optional)>    <output multiple classificatiosn");
+        if (args.length > 4) {
+            System.err.println("usage: $" + ClassifyWithExsistingModels.class.getSimpleName() + "    <goldStandardDataFile>    <trainingRatio(optional)>    <output multiple classificatiosn> <properties file>");
         }
         else {
             if (args[2].equals("1")) { return true; }
@@ -322,6 +319,17 @@ public final class ExperimentalMultipleClassificationTypes {
             }
         }
         return trainingRatio;
+    }
+
+    public File parseProperties(String[] args) {
+
+        File properties = null;
+
+        properties = new File(args[3]);
+        PipelineUtils.exitIfDoesNotExist(properties);
+        MachineLearningConfiguration.loadProperties(properties);
+        System.out.println(MachineLearningConfiguration.getDefaultProperties().getProperty("codeDictionaryFile"));
+        return properties;
     }
 
     private Bucket[] randomlyAssignToTrainingAndPrediction(final Bucket bucket, final double trainingRatio) {

@@ -6,9 +6,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.classification.Classification;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeDictionary;
@@ -27,8 +24,6 @@ public final class CodeIndexer implements Serializable {
 
     private static final long serialVersionUID = 3073583599428985116L;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(CodeIndexer.class);
-
     /** Maps UID's to codes. */
     private Map<Integer, Code> idToCodeMap = new HashMap<Integer, Code>();
 
@@ -38,12 +33,14 @@ public final class CodeIndexer implements Serializable {
     /** The current max id. */
     private int currentMaxID;
 
+    private final String numCategoriesId = "numCategories";
+
     /**
      * Instantiates a new CodeIndexer.
      */
     public CodeIndexer() {
 
-        MachineLearningConfiguration.getDefaultProperties().setProperty("numCategories", String.valueOf(idToCodeMap.size()));
+        MachineLearningConfiguration.getDefaultProperties().setProperty(numCategoriesId, String.valueOf(idToCodeMap.size()));
     }
 
     /**
@@ -77,7 +74,7 @@ public final class CodeIndexer implements Serializable {
             putCodeInMap(entry.getValue());
         }
 
-        MachineLearningConfiguration.getDefaultProperties().setProperty("numCategories", String.valueOf(idToCodeMap.size()));
+        MachineLearningConfiguration.getDefaultProperties().setProperty(numCategoriesId, String.valueOf(idToCodeMap.size()));
 
     }
 
@@ -92,7 +89,7 @@ public final class CodeIndexer implements Serializable {
                 putCodeInMap(classification.getCode());
             }
         }
-        MachineLearningConfiguration.getDefaultProperties().setProperty("numCategories", String.valueOf(idToCodeMap.size()));
+        MachineLearningConfiguration.getDefaultProperties().setProperty(numCategoriesId, String.valueOf(idToCodeMap.size()));
 
     }
 
@@ -144,74 +141,6 @@ public final class CodeIndexer implements Serializable {
         codeToIDMap.put(code, currentMaxID);
         currentMaxID++;
     }
-
-    //    public void writeCodeFactory(final File path) throws IOException {
-    //
-    //        FileOutputStream fos = new FileOutputStream(path.getAbsoluteFile() + ".ser");
-    //        ObjectOutputStream oos = new ObjectOutputStream(fos);
-    //        write(oos);
-    //    }
-
-    //    public CodeIndexer read(final File path) throws IOException, ClassNotFoundException {
-    //
-    //        InputStream file = new FileInputStream(path.getAbsoluteFile() + ".ser");
-    //        InputStream buffer = new BufferedInputStream(file);
-    //        ObjectInput input = new ObjectInputStream(buffer);
-    //        CodeIndexer recoveredFactory = null;
-    //        try {
-    //            recoveredFactory = (CodeIndexer) input.readObject();
-    //            idToCodeMap = recoveredFactory.idToCodeMap;
-    //            codeToIDMap = recoveredFactory.codeToIDMap;
-    //            currentMaxID = recoveredFactory.currentMaxID;
-    //
-    //        }
-    //        finally {
-    //            input.close();
-    //        }
-    //        return recoveredFactory;
-    //    }
-
-    //    public void write(final ObjectOutputStream oos) throws IOException {
-    //
-    //        oos.writeObject(this);
-    //    }
-    //
-    //    public void write(final DataOutputStream outputStream) throws IOException {
-    //
-    //        outputStream.writeInt(currentMaxID);
-    //        writeIDMap(outputStream, idToCodeMap);
-    //        //   writeCodeMap(outputStream, idToCodeMap);
-    //
-    //    }
-    //
-    //    private void writeObject(java.io.ObjectOutputStream stream) throws IOException {
-    //
-    //        stream.writeObject(idToCodeMap);
-    //        stream.writeObject(codeToIDMap);
-    //        stream.writeInt(currentMaxID);
-    //
-    //    }
-    //
-    //    private void readObject(java.io.ObjectInputStream stream) throws IOException, ClassNotFoundException {
-    //
-    //        idToCodeMap = (Map<Integer, Code>) stream.readObject();
-    //        codeToIDMap = (Map<Code, Integer>) stream.readObject();
-    //        currentMaxID = stream.readInt();
-    //    }
-    //
-    //    private void readObjectNoData() throws ObjectStreamException {
-    //
-    //    }
-    //
-    //    private void writeIDMap(final DataOutputStream outputStream, Map<Integer, Code> map) throws IOException {
-    //
-    //        for (Entry<Integer, Code> entry : map.entrySet()) {
-    //            outputStream.writeInt(entry.getKey());
-    //            final Code code = entry.getValue();
-    //            outputStream.writeUTF(code.getCodeAsString());
-    //            outputStream.writeUTF(code.getDescription());
-    //        }
-    //    }
 
     @Override
     public String toString() {

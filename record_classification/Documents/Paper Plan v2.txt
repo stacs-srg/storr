@@ -5,43 +5,39 @@ Fraser:
 Todo:	Write code to analysis feature space - Tool to build code/feature/count maps has been built.
 		Decide on which type of analysis we want to do - compare similarity of test/validation sets in terms of codes and features.
 		Write about the results of the analysis
+		On going - Aim to be finished by end of Friday.
 		
 Jamie:
 Other string similarity metircs
-Todo:	Write pipelines to perform the experiments - Mostly complete
-		Write up the results
-		Write up the algorithms
+Todo:	Write pipelines to perform the experiments - Complete
+		Finish experiments - End Friday
+		Write up the results - Monday
+		Write up the algorithms - Monday
 
 Anyone:
 Section on nGram classifier technique
-Todo:	Write pipelines to perform experiements - Mostly complete
-		Write about algorithms
-		Write about results
+Todo:	Write pipelines to perform experiments - Complete
+		Write about algorithms - Fraser to detail pipeline. Details on Basecamp
+		Write about results - Tuesday
 
 Jamie:
 Add section to results on unique records
-Todo: 	Resvisit old results and calculate measures for unique records
-		If we can't get unique results from old records then we need to re run these experiments
+Todo: 	Re-visit old results and calculate measures for unique records - Analysis code for unique results written.
+		Calculate stats for precision/recall/micro/macro - Done by Wednesday.
 		
 Graham:
 Write up section on cost effectiveness
 	Todo: Analysis how many unique records in 30millions
-	how long to code those unique records and calculate the cost/benefit 
+	How long to code those unique records and calculate the cost/benefit 
+	Done by Wednesday?
 	
 
-Timeline:	
-15th	 - Jamie 	- 1 day best case, 1 week worst case - calculate stats for previous experiments or start repeating experiments
-		 - Fraser 	- 2-3 days - finish building framework for feature space analysis and run experiements
+Fraser/Jamie
+Plot further analysis graphs for best performing algorithm
+		F1 Score against each class, sorted by frequency.
+	
 
-20th 	 - Graham 	- 1-2 days -  Write section on cost effectiveness	
 
-21st 	 - Jamie 	- 2 days - Run experiements on string similarity
-
-24th	 - Jamie	- 7 days worst case - Run experiments with ngram pipeline.
-
-Extra idea:
-Compare quality of exact match look up with best performing machine learning classifier to highlight variations in human coding.
-Easiest fix for valid comparison is keeping all the variables the same.
 
 Paper Plan
 
@@ -51,7 +47,11 @@ Introduction - Looks OK
 
 Data Set - OK if we only use Lambert data, will need updated if we use NAPP HISCO data too.
 
+Exploration of Dataset and Feature space.
+
 Approaches to Classification - updated to new approach. 3 String similarity techniques - Jaccard, Dice and Levenshtein.
+
+Paragraph that ties in the new pipeline stuff to old approaches.
 
 Cleaning - OK
 
@@ -61,6 +61,8 @@ Individual Machine Learning Classifiers
 
 Ensemble Approaches 
 
+Ngram technique
+
 Feature Selection/Feature Space - Update this and discuss: what are features, size of feature space, space overlap, uniqueness etc
 
 New NGram Loss Function Technique - Only if the results are good
@@ -69,15 +71,20 @@ Summary
 
 Evaluation
 
-Sequence of Experiements
+Sequence of Experiments
 
 Accuracy Measures - give results for just unique records
 
 Results
 
-Discussions - Cost effectivnesss of human coders vs automatic techniques
+Discussions - Cost effectivness of human coders vs automatic techniques
 
 Conclusions
 
+
+
+Extra idea:
+Compare quality of exact match look up with best performing machine learning classifier to highlight variations in human coding.
+Easiest fix for valid comparison is keeping all the variables the same.
 
 
