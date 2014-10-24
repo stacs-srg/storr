@@ -129,7 +129,9 @@ public class FeatureSpaceAnalyserFormatter {
 
 
     private String rmLastChar(String string) {
-        return string.subSequence(0, string.length() - 2).toString();
+        if(string.length()>2)
+            return string.subSequence(0, string.length() - 2).toString();
+        else return string;
     }
 
     private String paddedSeparator(String sep, int padEachSideBy) {
