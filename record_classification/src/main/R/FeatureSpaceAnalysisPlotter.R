@@ -17,4 +17,4 @@ barplot(counts, main="Feature Frequency - Inverse Code Frequency",
         legend = rownames(counts), beside=TRUE)
 
 #Closing the png printing device
-dev.off()
+#dev.off()
