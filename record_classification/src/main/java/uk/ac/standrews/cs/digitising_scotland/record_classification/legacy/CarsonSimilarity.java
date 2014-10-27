@@ -2,8 +2,9 @@ package uk.ac.standrews.cs.digitising_scotland.record_classification.legacy;
 
 import java.util.Comparator;
 import java.util.Map;
-import java.util.Map.Entry;
+import java.util.SortedSet;
 import java.util.TreeMap;
+import java.util.TreeSet;
 
 import uk.ac.shef.wit.simmetrics.similaritymetrics.AbstractStringMetric;
 import uk.ac.shef.wit.simmetrics.similaritymetrics.Levenshtein;
@@ -32,23 +33,31 @@ public class CarsonSimilarity<K> extends AbstractStringMetric {
         TokenSet ts2 = new TokenSet(s2);
 
         AbstractStringMetric metric = new Levenshtein();
-        Map<String, Double> tokenScore = new TreeMap<>(new ValueComparator());
+        Map<String, Double> tokenScore = new TreeMap<>();
 
         for (String string1 : ts1) {
             double highestScore = 0;
             for (String string2 : ts2) {
                 double currentScore = metric.getSimilarity(string1, string2);
-                System.out.println("comparing " + s1 + " to " + s2 + ". Currecnt score is " + currentScore);
+                // System.out.println("comparing " + s1 + " to " + s2 + ". Currecnt score is " + currentScore);
                 if (currentScore >= highestScore) {
                     highestScore = currentScore;
                 }
             }
             tokenScore.put(string1, highestScore);
         }
-
+        double total = 0;
+        double nonZero = 0;
         for (Map.Entry<String, Double> entry : tokenScore.entrySet()) {
-            System.out.println(entry.getValue());
+            final Double score = entry.getValue();
+            if (score != 0) {
+                total += score;
+                nonZero++;
+            }
         }
+
+        if (nonZero != 0) { return (float) (total / nonZero); }
+
         return 0;
     }
 
@@ -73,14 +82,19 @@ public class CarsonSimilarity<K> extends AbstractStringMetric {
         return 0;
     }
 
-}
+    private static <K, V extends Comparable<? super V>> SortedSet<Map.Entry<K, V>> entriesSortedByValues(Map<K, V> map) {
 
-class ValueComparator implements Comparator {
+        SortedSet<Map.Entry<K, V>> sortedEntries = new TreeSet<Map.Entry<K, V>>(new Comparator<Map.Entry<K, V>>() {
 
-    public int compare(Object o1, Object o2) {
+            @Override
+            public int compare(Map.Entry<K, V> e1, Map.Entry<K, V> e2) {
 
-        Entry<String, Double> entry1 = (Entry<String, Double>) o1;
-        Entry<String, Double> entry2 = (Entry<String, Double>) o2;
-        return entry1.getValue().compareTo(entry2.getValue());
+                int res = e1.getValue().compareTo(e2.getValue());
+                return res != 0 ? res : 1;
+            }
+        });
+        sortedEntries.addAll(map.entrySet());
+        return sortedEntries;
     }
+
 }
