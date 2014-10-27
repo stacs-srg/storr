@@ -7,7 +7,7 @@ dataSet <- read.csv(toString(args[1]))
 attach(dataSet)
 
 #Opening a png printing device
-png(file=toString(args[2]),width=800,height=800")
+png(file=toString(args[2]),width=800,height=800)
 
 #Plotting
 # Grouped Bar Plot
