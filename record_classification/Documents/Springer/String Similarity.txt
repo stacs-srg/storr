@@ -9,7 +9,6 @@ Jaccard similarity is a statistic used to compare the similarity of sample sets,
 
 The Dice Coefficient is another measure of set similarity (Dice, 1945).  S(A, B) = 2|A n B| / |A| + |B| and again, is used here on word level tokens.
 
-The assumption when running
 
 
 

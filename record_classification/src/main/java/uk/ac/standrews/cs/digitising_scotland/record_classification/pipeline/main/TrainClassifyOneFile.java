@@ -162,9 +162,10 @@ public final class TrainClassifyOneFile {
     }
 
     private void printArgs(final String[] args) {
+
         StringBuilder sb = new StringBuilder();
         for (String string : args) {
-            sb.append(string +  " ");
+            sb.append(string + " ");
         }
         LOGGER.info("Running with args: " + sb.toString().trim());
     }
@@ -239,8 +240,12 @@ public final class TrainClassifyOneFile {
         }
         else {
             properties = new File(args[1]);
-            PipelineUtils.exitIfDoesNotExist(properties);
-            MachineLearningConfiguration.loadProperties(properties);
+            if (properties.exists()) {
+                MachineLearningConfiguration.loadProperties(properties);
+            }
+            else {
+                LOGGER.error("Supplied properties file does not exsists. Using system defaults.");
+            }
         }
         return properties;
     }

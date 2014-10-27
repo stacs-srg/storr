@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.olr;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
@@ -50,6 +51,7 @@ public class OLRTest {
     @Before
     public void setup() {
 
+        MachineLearningConfiguration.loadProperties(new File("src/test/resources/machineLearning.default.properties"));
         vectorFactory = new VectorFactory(); //FIXME
         vectors = createVectors();
         MachineLearningConfiguration.getDefaultProperties().setProperty("numFeatures", "20");
@@ -64,11 +66,13 @@ public class OLRTest {
     @Parameterized.Parameters
     public static Collection<Object[]> getParameters() {
 
+        MachineLearningConfiguration.loadProperties(new File("src/test/resources/machineLearning.default.properties"));
+
         final List<Object[]> parameters = new ArrayList<Object[]>();
 
         Properties properties = new Properties(MachineLearningConfiguration.getDefaultProperties());
         properties.setProperty("numCategories", "2");
-        //  properties.setProperty("numFeatures", "50");
+        properties.setProperty("numFeatures", "20");
         properties.setProperty("perTermLearning", "true");
         properties.setProperty("olrRegularisation", "true");
         parameters.add(new Object[]{new Properties(properties)});

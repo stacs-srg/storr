@@ -3,7 +3,6 @@ package uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.ma
 import org.junit.Before;
 import org.junit.Test;
 
-import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeNotValidException;
 import uk.ac.standrews.cs.digitising_scotland.tools.configuration.MachineLearningConfiguration;
 
@@ -23,7 +22,7 @@ public class ExperimentalMultipleClassificationTypesTest {
         MachineLearningConfiguration.getDefaultProperties().setProperty("codeDictionaryFile", codeDictionary);
         trainer = new ExperimentalMultipleClassificationTypes();
         String training = getClass().getResource("/occupationTrainingTest.txt").getFile();
-        String[] args = {training, "0.8", "false"};
+        String[] args = {training, "0.8", "false", ""};
         trainer.run(args);
 
     }
@@ -35,7 +34,7 @@ public class ExperimentalMultipleClassificationTypesTest {
         MachineLearningConfiguration.getDefaultProperties().setProperty("codeDictionaryFile", codeDictionary);
         trainer = new ExperimentalMultipleClassificationTypes();
         String training = getClass().getResource("/OneFileCodTestTrainingData.txt").getFile();
-        String[] args = {training, "0.8", "true"};
+        String[] args = {training, "0.8", "true", ""};
         trainer.run(args);
 
     }

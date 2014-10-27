@@ -325,10 +325,18 @@ public final class ExperimentalMultipleClassificationTypes {
 
         File properties = null;
 
-        properties = new File(args[3]);
-        PipelineUtils.exitIfDoesNotExist(properties);
-        MachineLearningConfiguration.loadProperties(properties);
-        System.out.println(MachineLearningConfiguration.getDefaultProperties().getProperty("codeDictionaryFile"));
+        if (args.length > 3) {
+            properties = new File(args[3]);
+
+            if (properties.exists()) {
+                MachineLearningConfiguration.loadProperties(properties);
+                System.out.println(MachineLearningConfiguration.getDefaultProperties().getProperty("codeDictionaryFile"));
+            }
+            else {
+                LOGGER.error("Supplied properties file does not exsist. Using system defaults");
+
+            }
+        }
         return properties;
     }
 

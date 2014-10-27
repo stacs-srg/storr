@@ -23,7 +23,7 @@ public class TrainClassifyOneFileTest {
         MachineLearningConfiguration.getDefaultProperties().setProperty("codeDictionaryFile", codeDictionary);
         trainer = new TrainClassifyOneFile();
         String training = getClass().getResource("/occupationTrainingTest.txt").getFile();
-        String propertiesFileLocation = "src/test/resources/machineLearning.default.properties";
+        String propertiesFileLocation = "";
         String[] args = {training, propertiesFileLocation, "0.8", "0"};
         Bucket classified = trainer.run(args);
         Assert.assertEquals(20, classified.size(), 10);
