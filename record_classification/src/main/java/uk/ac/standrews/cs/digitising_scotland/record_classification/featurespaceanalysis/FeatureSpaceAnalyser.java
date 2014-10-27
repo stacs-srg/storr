@@ -5,6 +5,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Set;
 
 
@@ -157,5 +158,9 @@ public class FeatureSpaceAnalyser {
             feMap.put(feature,new FeatureProfile(feature,ffIcf,inCodeFeatureCount,countInTotal,profile));
         }
         return new CodeProfile(code, feMap);
+    }
+
+    public Set<Code> codes() {
+        return featureProfiles.keySet();
     }
 }

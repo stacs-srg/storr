@@ -1,7 +1,6 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.featurespaceanalysis;
 
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
-import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
 
 import java.text.DecimalFormat;
 import java.util.Arrays;
