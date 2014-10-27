@@ -17,7 +17,6 @@ import uk.ac.shef.wit.simmetrics.similaritymetrics.AbstractStringMetric;
 import uk.ac.shef.wit.simmetrics.similaritymetrics.BlockDistance;
 import uk.ac.shef.wit.simmetrics.similaritymetrics.CosineSimilarity;
 import uk.ac.shef.wit.simmetrics.similaritymetrics.DiceSimilarity;
-import uk.ac.shef.wit.simmetrics.similaritymetrics.JaccardSimilarity;
 import uk.ac.shef.wit.simmetrics.similaritymetrics.JaroWinkler;
 import uk.ac.shef.wit.simmetrics.similaritymetrics.MatchingCoefficient;
 import uk.ac.shef.wit.simmetrics.similaritymetrics.MongeElkan;
@@ -45,6 +44,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.vectors.CodeIndexer;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.vectors.VectorFactory;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.legacy.CarsonSimilarity;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.BucketGenerator;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.ClassifierPipeline;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.ExactMatchPipeline;
@@ -144,8 +144,8 @@ public final class ExperimentalMultipleClassificationTypes2Files {
         Bucket mapBucket = generator.generateTrainingBucket(mapFile);
         Map<String, Classification> map = getMap(mapBucket);
 
-        AbstractStringMetric simMetric = new JaccardSimilarity();
-        String identifier = "Jaccard";
+        AbstractStringMetric simMetric = new CarsonSimilarity<>();
+        String identifier = "Carson";
         predictionBucket1 = trainingPredicition[1];
         classifyAndWrite(experimentalFolderName, trainingBucket, predictionBucket1, multipleClassifications, allRecords, codeIndex, map, simMetric, identifier);
 
