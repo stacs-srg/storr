@@ -36,6 +36,31 @@ public class FeatureSpaceAnalyser {
      */
     private HashMap<String,Integer> featureDist;
 
+    public boolean isFeature(final String feature){
+        return codeProfiles.containsKey(feature);
+    }
+
+    public double featureFrequencyInverseCodeFrequency(Code code, String feature){
+        return ((double) getInCodeFeatureFrequency(code, feature)) / logScaledInverseCodeFrequency(feature);
+    }
+
+    private double logScaledInverseCodeFrequency(String feature) {
+        return Math.log( (double) getTotalNumberOfCodes() / (double) getNumberOfCodesContainingFeature(feature));
+    }
+
+    private int getNumberOfCodesContainingFeature(String feature) {
+        return codeProfiles.get(feature).size();
+    }
+
+    private int getTotalNumberOfCodes() {
+        return featureProfiles.size();
+    }
+
+    private Integer getInCodeFeatureFrequency(Code code, String feature) {
+        return featureProfiles.get(code).get(feature);
+    }
+
+
     /**
      * Takes an iterable container of records e.g. a bucket.
      * Builds profiles of codes and features to enable
@@ -98,7 +123,7 @@ public class FeatureSpaceAnalyser {
             if(!featureProfiles.get(code).containsKey(token)){
                 featureProfiles.get(code).put(token,1);
             } else {
-                int currentValue = featureProfiles.get(code).get(token);
+                int currentValue = getInCodeFeatureFrequency(code, token);
                 featureProfiles.get(code).put(token,currentValue+1);
             }
         }
@@ -127,9 +152,9 @@ public class FeatureSpaceAnalyser {
         for (String feature : features) {
             int inCodeFeatureCount = featureProfile(code).get(feature);
             int countInTotal = featureDist(feature);
-            double proportionInCode = (double) inCodeFeatureCount / (double) countInTotal;
             HashMap<Code, Integer> profile = codeProfile(feature);
-            feMap.put(feature,new FeatureProfile(feature,inCodeFeatureCount,countInTotal,proportionInCode,profile));
+            double ffIcf = featureFrequencyInverseCodeFrequency(code,feature);
+            feMap.put(feature,new FeatureProfile(feature,ffIcf,inCodeFeatureCount,countInTotal,profile));
         }
         return new CodeProfile(code, feMap);
     }
