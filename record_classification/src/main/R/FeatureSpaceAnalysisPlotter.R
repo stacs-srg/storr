@@ -11,7 +11,7 @@ png(file=toString(args[2]),width=800,height=800)
 
 #Plotting
 # Grouped Bar Plot
-counts <- tapply(ff.icf,list(as.factor(filename), as.factor(feature)), mean)
+counts <- tapply(ff.icf,list(as.factor(filename), as.factor(feature)), sum)
 barplot(counts, main="Feature Frequency - Inverse Code Frequency",
         xlab="Feature", ylab="ff-icf",col=c("darkblue","red"),
         legend = rownames(counts), beside=TRUE)
