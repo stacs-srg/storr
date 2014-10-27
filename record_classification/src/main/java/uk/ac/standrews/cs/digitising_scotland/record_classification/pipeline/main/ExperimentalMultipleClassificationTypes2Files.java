@@ -14,15 +14,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import uk.ac.shef.wit.simmetrics.similaritymetrics.AbstractStringMetric;
-import uk.ac.shef.wit.simmetrics.similaritymetrics.BlockDistance;
-import uk.ac.shef.wit.simmetrics.similaritymetrics.CosineSimilarity;
 import uk.ac.shef.wit.simmetrics.similaritymetrics.DiceSimilarity;
-import uk.ac.shef.wit.simmetrics.similaritymetrics.JaroWinkler;
-import uk.ac.shef.wit.simmetrics.similaritymetrics.MatchingCoefficient;
-import uk.ac.shef.wit.simmetrics.similaritymetrics.MongeElkan;
-import uk.ac.shef.wit.simmetrics.similaritymetrics.OverlapCoefficient;
-import uk.ac.shef.wit.simmetrics.similaritymetrics.QGramsDistance;
-import uk.ac.shef.wit.simmetrics.similaritymetrics.SmithWatermanGotoh;
+import uk.ac.shef.wit.simmetrics.similaritymetrics.JaccardSimilarity;
+import uk.ac.shef.wit.simmetrics.similaritymetrics.Levenshtein;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.closestmatchmap.ClosestMatchMap;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.closestmatchmap.SimilarityMetric;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.closestmatchmap.SimilarityMetricFromSimmetricFactory;
@@ -149,8 +143,8 @@ public final class ExperimentalMultipleClassificationTypes2Files {
         predictionBucket1 = trainingPredicition[1];
         classifyAndWrite(experimentalFolderName, trainingBucket, predictionBucket1, multipleClassifications, allRecords, codeIndex, map, simMetric, identifier);
 
-        simMetric = new JaroWinkler();
-        identifier = "JaroWinkler";
+        simMetric = new JaccardSimilarity();
+        identifier = "JaccardSimilarity";
         Bucket predictionBucket2 = copyOf(trainingPredicition[1]);
         classifyAndWrite(experimentalFolderName, trainingBucket, predictionBucket2, multipleClassifications, allRecords, codeIndex, map, simMetric, identifier);
 
@@ -159,45 +153,10 @@ public final class ExperimentalMultipleClassificationTypes2Files {
         Bucket predictionBucket3 = copyOf(trainingPredicition[1]);
         classifyAndWrite(experimentalFolderName, trainingBucket, predictionBucket3, multipleClassifications, allRecords, codeIndex, map, simMetric, identifier);
 
-        simMetric = new uk.ac.shef.wit.simmetrics.similaritymetrics.EuclideanDistance();
-        identifier = "EuclideanDistance";
+        simMetric = new Levenshtein();
+        identifier = "Levenshtein";
         Bucket predictionBucket4 = copyOf(trainingPredicition[1]);
         classifyAndWrite(experimentalFolderName, trainingBucket, predictionBucket4, multipleClassifications, allRecords, codeIndex, map, simMetric, identifier);
-
-        simMetric = new BlockDistance();
-        identifier = "BlockDistance";
-        Bucket predictionBucket5 = copyOf(trainingPredicition[1]);
-        classifyAndWrite(experimentalFolderName, trainingBucket, predictionBucket5, multipleClassifications, allRecords, codeIndex, map, simMetric, identifier);
-
-        simMetric = new CosineSimilarity();
-        identifier = "CosineSimilarity";
-        Bucket predictionBucket6 = copyOf(trainingPredicition[1]);
-        classifyAndWrite(experimentalFolderName, trainingBucket, predictionBucket6, multipleClassifications, allRecords, codeIndex, map, simMetric, identifier);
-
-        simMetric = new MatchingCoefficient();
-        identifier = "MatchingCoefficient";
-        Bucket predictionBucket7 = copyOf(trainingPredicition[1]);
-        classifyAndWrite(experimentalFolderName, trainingBucket, predictionBucket7, multipleClassifications, allRecords, codeIndex, map, simMetric, identifier);
-
-        simMetric = new SmithWatermanGotoh();
-        identifier = "SmithWatermanGotoh";
-        Bucket predictionBucket8 = copyOf(trainingPredicition[1]);
-        classifyAndWrite(experimentalFolderName, trainingBucket, predictionBucket8, multipleClassifications, allRecords, codeIndex, map, simMetric, identifier);
-
-        simMetric = new QGramsDistance();
-        identifier = "QGramsDistance";
-        Bucket predictionBucket9 = copyOf(trainingPredicition[1]);
-        classifyAndWrite(experimentalFolderName, trainingBucket, predictionBucket9, multipleClassifications, allRecords, codeIndex, map, simMetric, identifier);
-
-        simMetric = new OverlapCoefficient();
-        identifier = "OverlapCoefficient";
-        Bucket predictionBucket10 = copyOf(trainingPredicition[1]);
-        classifyAndWrite(experimentalFolderName, trainingBucket, predictionBucket10, multipleClassifications, allRecords, codeIndex, map, simMetric, identifier);
-
-        simMetric = new MongeElkan();
-        identifier = "MongeElkan";
-        Bucket predictionBucket11 = copyOf(trainingPredicition[1]);
-        classifyAndWrite(experimentalFolderName, trainingBucket, predictionBucket11, multipleClassifications, allRecords, codeIndex, map, simMetric, identifier);
 
         timer.stop();
 
