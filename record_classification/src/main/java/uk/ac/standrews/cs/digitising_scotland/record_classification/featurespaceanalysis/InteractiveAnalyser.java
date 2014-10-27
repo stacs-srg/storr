@@ -32,10 +32,13 @@ public class InteractiveAnalyser {
         new InteractiveAnalyser(codeDictionary, featureSpaceAnalyser);
     }
 
+    private FeatureSpaceAnalyser featureSpaceAnalyser;
+
     private boolean expectedInput;
 
     private final Logger LOGGER = LoggerFactory.getLogger(FeatureSpaceAnalyser.class);
     private CodeReportFormatter codeReportFormatter;
+    private FeatureReportFormatter featureReportFormatter;
 
     private static final String STOP_COMMAND = "stop";
     private static final String STOP_MESSAGE = "\nStop call detected. Stopping analyser...";
@@ -48,8 +51,10 @@ public class InteractiveAnalyser {
      */
     public InteractiveAnalyser(final CodeDictionary codeDictionary, final FeatureSpaceAnalyser featureSpaceAnalyser) throws CodeNotValidException {
         expectedInput = true;
+        this.featureSpaceAnalyser = featureSpaceAnalyser;
         this.codeDictionary = codeDictionary;
         this.codeReportFormatter = new CodeReportFormatter(featureSpaceAnalyser);
+        this.featureReportFormatter = new FeatureReportFormatter(featureSpaceAnalyser);
         LOGGER.info(instructions());
         try (BufferedReader in = new BufferedReader(new InputStreamReader(System.in, FileManipulation.FILE_CHARSET))) {
             String line;
@@ -93,7 +98,7 @@ public class InteractiveAnalyser {
                 LOGGER.info(codeReportFormatter.formatReport(codeDictionary.getCode(line)));
 
         }else if(!expectedInput && isFeature(line)) {
-            LOGGER.info("\nfeature output functionality will be here soon!");
+            LOGGER.info(featureReportFormatter.formatReport(line));
 
         }else {
             switch (line.toLowerCase()) {
@@ -108,7 +113,7 @@ public class InteractiveAnalyser {
     }
 
     private boolean isFeature(String line) {
-        return codeReportFormatter.isFeature(line);
+        return featureSpaceAnalyser.isFeature(line);
     }
 
     private boolean isCode(String line) {

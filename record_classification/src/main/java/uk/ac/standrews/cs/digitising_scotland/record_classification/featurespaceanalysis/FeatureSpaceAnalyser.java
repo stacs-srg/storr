@@ -48,7 +48,7 @@ public class FeatureSpaceAnalyser {
         return Math.log( (double) getTotalNumberOfCodes() / (double) getNumberOfCodesContainingFeature(feature));
     }
 
-    private int getNumberOfCodesContainingFeature(String feature) {
+    protected int getNumberOfCodesContainingFeature(String feature) {
         return codeProfiles.get(feature).size();
     }
 
@@ -141,7 +141,7 @@ public class FeatureSpaceAnalyser {
         return featureProfiles.containsKey(code);
     }
 
-    public int featureDist(String feature) {
+    public int featureCount(String feature) {
         return featureDist.get(feature);
     }
 
@@ -151,7 +151,7 @@ public class FeatureSpaceAnalyser {
         HashMap<String, FeatureProfile> feMap = new HashMap<>();
         for (String feature : features) {
             int inCodeFeatureCount = featureProfile(code).get(feature);
-            int countInTotal = featureDist(feature);
+            int countInTotal = featureCount(feature);
             HashMap<Code, Integer> profile = codeProfile(feature);
             double ffIcf = featureFrequencyInverseCodeFrequency(code,feature);
             feMap.put(feature,new FeatureProfile(feature,ffIcf,inCodeFeatureCount,countInTotal,profile));
