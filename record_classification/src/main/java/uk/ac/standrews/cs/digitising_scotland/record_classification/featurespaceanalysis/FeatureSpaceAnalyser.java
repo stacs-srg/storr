@@ -130,18 +130,7 @@ public class FeatureSpaceAnalyser {
             double proportionInCode = (double) inCodeFeatureCount / (double) countInTotal;
             HashMap<Code, Integer> profile = codeProfile(feature);
             feMap.put(feature,new FeatureProfile(feature,inCodeFeatureCount,countInTotal,proportionInCode,profile));
-
         }
         return new CodeProfile(code, feMap);
-    }
-
-    private int maxInCodeFeatureCountLength(Set<String> features, Code code) {
-        Integer maxLength = 0;
-        for (String feature : features) {
-            Integer numLength = featureProfile(code).get(feature);
-            if (numLength > maxLength)
-                maxLength = numLength;
-        }
-        return maxLength.toString().length();
     }
 }
