@@ -1,13 +1,12 @@
 package uk.ac.standrews.cs.digitising_scotland.record_classification.feauturespaceanalysis;
 
-import org.junit.Assert;
 import org.junit.Test;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.bucket.Bucket;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeDictionary;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeNotValidException;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.exceptions.InputFormatException;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.featurespaceanalysis.CodeReportFormatter;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.featurespaceanalysis.FeatureSpaceAnalyser;
-import uk.ac.standrews.cs.digitising_scotland.record_classification.featurespaceanalysis.FeatureSpaceAnalyserFormatter;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.BucketGenerator;
 
 import java.io.File;
@@ -42,25 +41,25 @@ public class FeatureSpaceAnalyserTest {
     }
 
     @Test
-    public void reportTest() throws InputFormatException, CodeNotValidException, IOException {
+    public void reportTest() throws Exception, CodeNotValidException {
         File trainingFile = new File(getClass().getResource("/TrainingDataModernCODFormatTest.txt").getFile());
         Bucket bucket = createTrainingBucket(trainingFile);
         FeatureSpaceAnalyser featureSpaceAnalyser = new FeatureSpaceAnalyser(bucket);
-        FeatureSpaceAnalyserFormatter formatter = new FeatureSpaceAnalyserFormatter(featureSpaceAnalyser);
+        CodeReportFormatter formatter = new CodeReportFormatter(featureSpaceAnalyser);
         File codeFile = new File(getClass().getResource("/modCodeDictionary.txt").getFile());
         CodeDictionary codeDictionary = new CodeDictionary(codeFile);
         System.out.println(formatter.formatReport(codeDictionary.getCode("D69")));
     }
 
     @Test
-    public void featureLinesRefactoringTest() throws InputFormatException, CodeNotValidException, IOException {
+    public void featureLinesRefactoringTest() throws Exception, CodeNotValidException {
         File trainingFile = new File(getClass().getResource("/TrainingDataModernCODFormatTest.txt").getFile());
         Bucket bucket = createTrainingBucket(trainingFile);
         FeatureSpaceAnalyser featureSpaceAnalyser = new FeatureSpaceAnalyser(bucket);
-        FeatureSpaceAnalyserFormatter formatter = new FeatureSpaceAnalyserFormatter(featureSpaceAnalyser);
+        CodeReportFormatter formatter = new CodeReportFormatter(featureSpaceAnalyser);
         File codeFile = new File(getClass().getResource("/modCodeDictionary.txt").getFile());
         CodeDictionary codeDictionary = new CodeDictionary(codeFile);
-        System.out.println(formatter.formatReport(codeDictionary.getCode("D69")));
+        System.out.println(formatter.formatReport(codeDictionary.getCode("J98")));
     }
 
 }
