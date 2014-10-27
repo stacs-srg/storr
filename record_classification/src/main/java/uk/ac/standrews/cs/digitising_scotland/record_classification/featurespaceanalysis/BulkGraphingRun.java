@@ -80,7 +80,7 @@ public class BulkGraphingRun {
         DataFileMakerThingy dataFileMakerThingy2 = new DataFileMakerThingy(dataSet1FeatureSpaceAnalyser);
         try(Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(new File(newDir.getAbsolutePath()+"/"+ statsFileName))))){
             writer.write(dataFileMakerThingy1.make(code,true,dataSet1.getName()));
-            writer.write(dataFileMakerThingy2.make(code,false,dataSet2.getName()));
+            writer.write(dataFileMakerThingy2.make(code,false,dataSet2.getName()+"2"));
         } catch (IOException e) {
             e.printStackTrace();
         }

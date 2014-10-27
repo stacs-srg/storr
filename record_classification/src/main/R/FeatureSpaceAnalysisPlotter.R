@@ -16,5 +16,5 @@ barplot(counts, main="Feature Frequency - Inverse Code Frequency",
         xlab="Feature", ylab="ff-icf",col=c("darkblue","red"),
         legend = rownames(counts), beside=TRUE)
 
-(#Closing the png printing device
-#dev.off()
+#Closing the png printing device
+dev.off()
