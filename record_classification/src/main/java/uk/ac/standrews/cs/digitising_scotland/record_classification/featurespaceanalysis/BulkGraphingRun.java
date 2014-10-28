@@ -24,6 +24,12 @@ public class BulkGraphingRun {
     private static final String statsFileName = "stats.csv";
     private final FeatureSpaceAnalyser dataSet2FeatureSpaceAnalyser;
 
+    /**
+     *
+     * @param args 0,1,2,3
+     * @throws Exception
+     * @throws CodeNotValidException
+     */
     public static void main(String args[]) throws Exception, CodeNotValidException {
 
         CodeDictionary codeDictionary = new CodeDictionary(new File(args[2]));
@@ -77,10 +83,18 @@ public class BulkGraphingRun {
     private void putCSVInDir(final File newDir, Code code) throws FileNotFoundException, UnsupportedEncodingException {
 
         DataFileMakerThingy dataFileMakerThingy1 = new DataFileMakerThingy(dataSet1FeatureSpaceAnalyser);
-        DataFileMakerThingy dataFileMakerThingy2 = new DataFileMakerThingy(dataSet1FeatureSpaceAnalyser);
+        DataFileMakerThingy dataFileMakerThingy2 = new DataFileMakerThingy(dataSet2FeatureSpaceAnalyser);
         try(Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(new File(newDir.getAbsolutePath()+"/"+ statsFileName))))){
-            writer.write(dataFileMakerThingy1.make(code,true,dataSet1.getName()));
-            writer.write(dataFileMakerThingy2.make(code,false,dataSet2.getName()+"2"));
+
+            if(dataSet1FeatureSpaceAnalyser.contains(code)) {
+                writer.write(dataFileMakerThingy1.make(code, true, dataSet1.getName()));
+                if(dataSet2FeatureSpaceAnalyser.contains(code)) {
+                    writer.write(dataFileMakerThingy2.make(code, false, dataSet2.getName()));
+                }
+            } else if(dataSet2FeatureSpaceAnalyser.contains(code)) {
+                writer.write(dataFileMakerThingy2.make(code, true, dataSet2.getName()));
+            }
+
         } catch (IOException e) {
             e.printStackTrace();
         }
