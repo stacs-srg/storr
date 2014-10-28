@@ -24,7 +24,7 @@ public class PrecisionAndRecallGenerator {
     private File[] processFiles(final Path folder) throws IOException {
 
         FileProcessor processor = new PrecisionAndRecallProcesser();
-        Finder finder = new Finder("strictCodeStats-allClassified.csv", processor);
+        Finder finder = new Finder("strictCodeStats-unique records.csv", processor);
         Files.walkFileTree(folder, finder);
         finder.done();
 

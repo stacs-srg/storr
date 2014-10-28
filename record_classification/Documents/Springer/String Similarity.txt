@@ -1,5 +1,11 @@
 String Similarity Matches
 
+The second approach using string similarity as classification technique differs from the first in two ways.
+Firstly, strings to be classified are compared to strings in the training set, rather than the code descriptions.
+This makes the assumption that the majority of strings will be present in the training set or will be variations of these strings with differences in spelling, plurality etc.
+
+
+
 3 different similarity measures were used to perform record classification using the nGram pipeline described above.  
 
 Levenshtein distance is  string similarity metric commonly used in the field of record linkage. The Levenshtein distance  between two strings is defined as the number of single character edits to transform one string to the other. 
