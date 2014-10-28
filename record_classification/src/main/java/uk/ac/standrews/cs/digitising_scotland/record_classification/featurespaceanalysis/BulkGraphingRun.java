@@ -115,7 +115,8 @@ public class BulkGraphingRun {
         File newDir = new File(topDir.getAbsolutePath() + "/" + code.getCodeAsString());
         makeAndCheckDir(newDir);
         putCSVInDir(newDir, code);
-        runRPlotScriptOnDir(newDir.getAbsolutePath());
+        String codeName = code.getCodeAsString() + "_-_\"" + code.getDescription().replaceAll(" ","_") + "\""; //tODO get description into graph
+        runRPlotScriptOnDir(newDir.getAbsolutePath(), codeName);
     }
 
     private void putCSVInDir(final File newDir, Code code) throws FileNotFoundException, UnsupportedEncodingException {
@@ -130,9 +131,9 @@ public class BulkGraphingRun {
 
     }
 
-    private void runRPlotScriptOnDir(String dataPath1) {
+    private void runRPlotScriptOnDir(String dataPath1, String codeName) {
         String imageOutputPath = dataPath1 + "/plot" + ".png";
-        String command = "Rscript " + pathToCopyOfRScript.toString() + " " + dataPath1 + "/"+ statsFileName + " " + imageOutputPath;
+        String command = "Rscript " + pathToCopyOfRScript.toString() + " " + dataPath1 + "/"+ statsFileName + " " + imageOutputPath + " " + codeName;
         System.out.println(Utils.executeCommand(command));
     }
 

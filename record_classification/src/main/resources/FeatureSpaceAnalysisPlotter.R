@@ -3,19 +3,15 @@
 args <- commandArgs(TRUE)
 
 #Reading in the data
-dataSet <- read.csv(toString(args[1]))
-attach(dataSet)
+data <-read.table(args[1],header=TRUE,as.is=TRUE,sep=",",dec=".")
+dataNum <- sapply(data,as.numeric)
+
 
 #Opening a png printing device
 png(file=toString(args[2]),width=800,height=800)
 
+string <- gsub("_"," ",args[3])
+title<-"Feature Frequency - Inverse Code Frequency"
 
-#Plotting
-# Grouped Bar Plot
-counts <- tapply(ff.icf,list(as.factor(filename), as.factor(feature)), mean)
-barplot(counts, main="Feature Frequency - Inverse Code Frequency",
-        xlab="Feature", ylab="ff-icf",col=c("darkblue","red"),
-        legend = rownames(counts), beside=TRUE)
-
-#Closing the png printing device
-#dev.off()
+barplot(dataNum, main = c(string,title), ylab="ff-icf",col=c("darkblue","red"),
+        legend = c("dataSet1","dataSet2"), beside=TRUE,las=2)
