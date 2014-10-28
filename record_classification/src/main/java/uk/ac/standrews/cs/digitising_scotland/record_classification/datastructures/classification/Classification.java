@@ -121,8 +121,9 @@ public class Classification extends AbstractClassification<Code, Double> {
     @Override
     public int compareTo(Double o) {
 
-        if (confidence > o) return 1;
-        if (confidence.equals(o))
+        Double c = Math.abs(confidence);
+        if (c > o) return 1;
+        if (c.equals(o))
             return 0;
         else return -1;
     }
