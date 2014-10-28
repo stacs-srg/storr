@@ -20,7 +20,7 @@ public class BulkGraphingRun {
     private static File dataSet2;
     private final FeatureSpaceAnalyser dataSet1FeatureSpaceAnalyser;
     private final File topDir;
-    private static final String pathToRScript = "/Users/fraserdunlop/IdeaProjects/DSCleanPull/record_classification/src/main/R/FeatureSpaceAnalysisPlotter.R";
+    private String pathToRScript = this.getClass().getResource("/FeatureSpaceAnalysisPlotter.R").getPath();
     private static final String statsFileName = "stats.csv";
     private final FeatureSpaceAnalyser dataSet2FeatureSpaceAnalyser;
 
