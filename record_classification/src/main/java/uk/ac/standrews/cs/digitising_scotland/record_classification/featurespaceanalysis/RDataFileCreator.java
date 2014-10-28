@@ -10,12 +10,12 @@ import java.util.*;
  *
  * Created by fraserdunlop on 28/10/2014 at 11:27.
  */
-public class DataFileMakerThingy2 {
+public class RDataFileCreator {
     private final FeatureSpaceAnalyser fsa1;
     private final FeatureSpaceAnalyser fsa2;
     private int outputLimit =15;
 
-    public DataFileMakerThingy2(FeatureSpaceAnalyser dataSet1FeatureSpaceAnalyser, FeatureSpaceAnalyser dataSet2FeatureSpaceAnalyser) {
+    public RDataFileCreator(FeatureSpaceAnalyser dataSet1FeatureSpaceAnalyser, FeatureSpaceAnalyser dataSet2FeatureSpaceAnalyser) {
         this.fsa1 = dataSet1FeatureSpaceAnalyser;
         this.fsa2 = dataSet2FeatureSpaceAnalyser;
     }
