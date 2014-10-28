@@ -1,0 +1,36 @@
+
+NGram Classifier Pipeline
+
+Influenced by related work on coding causes of death, the following algorithm was developed to maximize the useful information in each string that is being classified. The algorithm is as follows: 
+
+1. Tokenise original description into n tokens  ->  {T1, T2, T3, … ,Tn}
+
+2. Enumerate all possible token n-grams (subsets formed by consecutive tokens)
+Let’s call our set of n-grams G.
+
+3. Classify each subset in G using your desired classification algorithm (machine learning, string similarity etc)
+
+4. Discard classifications for which we have a low confidence in
+the classification being correct.
+
+5. Enumerate all valid combinations of these n-gram/code pairs. We have two conditions by which we define validity both of which have to hold for a set of classifications to be deemed valid.
+    - condition 1 - codes must be from distinct hierarchies i.e. the codes 952 and 95240 would not be allowed to appear in combination as one is a decendent of the other in the hierarchy
+    - condition 2 - the union of the tokens from the n-grams must be a subset of the tokens from the original string i.e. a word cannot be used in the prediction of more than one code in a set of classifications
+
+6. Calculate a 'goodness' score for each valid set of classifications
+    - our current goodness measure is calculated like so:
+    - for each classification in the set we multiply the confidence in
+    the classification by the length of the n-gram which predicted the classification.
+    - the sum of these values is the goodness of the set
+
+7. We classify the original description to the set of classifications which has the
+best goodness score
+
+This process allows for single strings to be classified to multiple codes if required (such as when coding causes of death). 
+
+
+
+
+
+
+

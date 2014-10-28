@@ -1,25 +1,21 @@
+
 String Similarity Matches
 
-The second approach using string similarity as classification technique differs from the first in two ways.
-Firstly, strings to be classified are compared to strings in the training set, rather than the code descriptions.
-This makes the assumption that the majority of strings will be present in the training set or will be variations of these strings with differences in spelling, plurality etc.
+The second approach using string similarity as classification technique differs from the first in two ways.  Firstly, strings to be classified are compared to strings in the training set, rather than the code descriptions.  This makes the assumption that the majority of strings will be present in the training set and those are not will be variations of these strings with differences in spelling, plurality etc.
 
+The second difference is that the string similarity metrics are used in conjunction with the nGram pipeline described in <Section Reference>. This compensates somewhat for the problem detailed in section 3.2 where short and long strings were attempting to be matched. 
 
+3 different similarity measures were used to perform record classification using the nGram pipeline and matches were performed against both the hisco code descriptions and the training descriptions.  The similarity measures used were as follows:
 
-3 different similarity measures were used to perform record classification using the nGram pipeline described above.  
-
-Levenshtein distance is  string similarity metric commonly used in the field of record linkage. The Levenshtein distance  between two strings is defined as the number of single character edits to transform one string to the other. 
+Levenshtein distance is a string similarity metric commonly used in the field of record linkage. The Levenshtein distance between two strings is defined as the number of single character edits to transform one string to the other. (need reference)
 
 Jaccard similarity is a statistic used to compare the similarity of sample sets, and in this case the similarity of two strings on a token level. Jaccard similarity is defined as J(A,B) = |A n B| / |A u B|
 , i.e. the size of the intersection of the sets divided by the size of the intersection of the sets. 
+(need reference)
 
 The Dice Coefficient is another measure of set similarity (Dice, 1945).  S(A, B) = 2|A n B| / |A| + |B| and again, is used here on word level tokens.
 
+Results were gathered for all records and unique records only. 
 
 
-
-Dice, 1945
-Measures of the Amount of Ecologic Association Between Species
-Lee R. Dice
-Ecology, Vol. 26, No. 3 (Jul., 1945), pp. 297-302
-
+Dice, 1945, Measures of the Amount of Ecologic Association Between Species, Lee R. Dice, Ecology, Vol. 26, No. 3 (Jul., 1945), pp. 297-302
