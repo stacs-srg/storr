@@ -13,6 +13,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.resolver.Interfaces.SubsetEnumerator;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.resolver.Interfaces.ValidityAssessor;
 
+import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multiset;
 
 /**
@@ -82,9 +83,31 @@ public class ResolverPipeline<Threshold, Code extends AncestorAble<Code>, Classi
                 multiValueMap = flattener.moveAllIntoKey(multiValueMap, multiValueMap.iterator().next());
             }
             multiValueMap = mapPruner.pruneUntilComplexityWithinBound(multiValueMap);
-            validSets = validCombinationGetter.getValidSets(multiValueMap, featureSet);
+            if (multipleClassifications) {
+                validSets = validCombinationGetter.getValidSets(multiValueMap, featureSet);
+            }
+            else {
+                validSets = addAllFromMultiValueMap(multiValueMap);
+            }
         }
         return lossFunctionApplier.getBest(validSets);
+    }
+
+    private List<Multiset<Classification>> addAllFromMultiValueMap(MultiValueMap<Code, Classification> multiValueMap) {
+
+        List<Multiset<Classification>> list = new ArrayList<>();
+
+        for (Code code : multiValueMap) {
+
+            List<Classification> l = multiValueMap.get(code);
+            for (Classification classification : l) {
+                HashMultiset<Classification> temp = HashMultiset.create();
+                temp.add(classification);
+                list.add(temp);
+            }
+
+        }
+        return list;
     }
 
     private MultiValueMap<Code, Classification> classifySubsets(final FeatureSet tokenSet) throws Exception {

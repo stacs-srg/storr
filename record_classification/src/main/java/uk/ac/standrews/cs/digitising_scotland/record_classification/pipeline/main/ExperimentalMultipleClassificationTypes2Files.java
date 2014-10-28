@@ -38,6 +38,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.vectors.CodeIndexer;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.vectors.VectorFactory;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.legacy.CarsonSimilarity;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.BucketGenerator;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.ClassifierPipeline;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.ExactMatchPipeline;
@@ -137,15 +138,15 @@ public final class ExperimentalMultipleClassificationTypes2Files {
         Bucket mapBucket = generator.generateTrainingBucket(mapFile);
         Map<String, Classification> map = getMap(mapBucket);
 
-        AbstractStringMetric simMetric = new JaccardSimilarity();
-        String identifier = "Jaccard";
+        AbstractStringMetric simMetric = new CarsonSimilarity<>();
+        String identifier = "Carson";
         predictionBucket1 = trainingPredicition[1];
         classifyAndWrite(experimentalFolderName, trainingBucket, predictionBucket1, multipleClassifications, allRecords, codeIndex, map, simMetric, identifier);
 
-        //        simMetric = new JaroWinkler();
-        //        identifier = "JaroWinkler";
-        //        Bucket predictionBucket2 = copyOf(trainingPredicition[1]);
-        //        classifyAndWrite(experimentalFolderName, trainingBucket, predictionBucket2, multipleClassifications, allRecords, codeIndex, map, simMetric, identifier);
+        simMetric = new JaccardSimilarity();
+        identifier = "JaccardSimilarity";
+        Bucket predictionBucket2 = copyOf(trainingPredicition[1]);
+        classifyAndWrite(experimentalFolderName, trainingBucket, predictionBucket2, multipleClassifications, allRecords, codeIndex, map, simMetric, identifier);
 
         simMetric = new DiceSimilarity();
         identifier = "DiceSimilarity";
@@ -156,21 +157,6 @@ public final class ExperimentalMultipleClassificationTypes2Files {
         identifier = "Levenshtein";
         Bucket predictionBucket4 = copyOf(trainingPredicition[1]);
         classifyAndWrite(experimentalFolderName, trainingBucket, predictionBucket4, multipleClassifications, allRecords, codeIndex, map, simMetric, identifier);
-
-        //        simMetric = new NeedlemanWunch();
-        //        identifier = "NeedlemanWunch";
-        //        Bucket predictionBucket5 = copyOf(trainingPredicition[1]);
-        //        classifyAndWrite(experimentalFolderName, trainingBucket, predictionBucket5, multipleClassifications, allRecords, codeIndex, map, simMetric, identifier);
-        //
-        //        simMetric = new SmithWaterman();
-        //        identifier = "SmithWaterman";
-        //        Bucket predictionBucket6 = copyOf(trainingPredicition[1]);
-        //        classifyAndWrite(experimentalFolderName, trainingBucket, predictionBucket6, multipleClassifications, allRecords, codeIndex, map, simMetric, identifier);
-        //
-        //        simMetric = new ChapmanMatchingSoundex();
-        //        identifier = "ChapmanMatchingSoundex";
-        //        Bucket predictionBucket7 = copyOf(trainingPredicition[1]);
-        //        classifyAndWrite(experimentalFolderName, trainingBucket, predictionBucket7, multipleClassifications, allRecords, codeIndex, map, simMetric, identifier);
 
         timer.stop();
 
