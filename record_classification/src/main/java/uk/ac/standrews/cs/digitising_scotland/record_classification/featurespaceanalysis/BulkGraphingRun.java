@@ -4,6 +4,7 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeDictionary;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.CodeNotValidException;
+import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.records.Record;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.BucketGenerator;
 import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
 
@@ -36,22 +37,49 @@ public class BulkGraphingRun {
      */
     public static void main(String args[]) throws Exception, CodeNotValidException {
 
-        CodeDictionary codeDictionary = new CodeDictionary(new File(args[2]));
-        BucketGenerator bucketGen = new BucketGenerator(codeDictionary);
-        dataSet1 = new File(args[0]);
-        Bucket dataSet1 = bucketGen.generateTrainingBucket(BulkGraphingRun.dataSet1);
-        dataSet2 = new File(args[1]);
-        Bucket dataSet2 = bucketGen.generateTrainingBucket(BulkGraphingRun.dataSet2);
-        FeatureSpaceAnalyser dataSet1FeatureSpaceAnalyser = new FeatureSpaceAnalyser(dataSet1);
-        FeatureSpaceAnalyser dataSet2FeatureSpaceAnalyser = new FeatureSpaceAnalyser(dataSet2);
-
-        new BulkGraphingRun(new File(args[3]), dataSet1FeatureSpaceAnalyser,dataSet2FeatureSpaceAnalyser);
-    }
-
-    public BulkGraphingRun(File topDir,  FeatureSpaceAnalyser dataSet1FeatureSpaceAnalyser, FeatureSpaceAnalyser dataSet2FeatureSpaceAnalyser) throws Exception {
+        File topDir = new File(args[2]);
         if(topDir.exists()){
             throw new Exception("Output path supplied would overwrite a directory which already exists. Please choose something different.");
         }
+        CodeDictionary codeDictionary = new CodeDictionary(new File(args[1]));
+        BucketGenerator bucketGen = new BucketGenerator(codeDictionary);
+        dataSet1 = new File(args[0]);
+        Bucket dataSet1 = bucketGen.generateTrainingBucket(BulkGraphingRun.dataSet1);
+//        dataSet2 = new File(args[1]);
+//        Bucket dataSet2 = bucketGen.generateTrainingBucket(BulkGraphingRun.dataSet2);
+        Bucket[] buckets = randomlyAssignToTrainingAndPrediction(dataSet1,0.8);
+        FeatureSpaceAnalyser dataSet1FeatureSpaceAnalyser = new FeatureSpaceAnalyser(buckets[0]);
+        FeatureSpaceAnalyser dataSet2FeatureSpaceAnalyser = new FeatureSpaceAnalyser(buckets[1]);
+
+        new BulkGraphingRun(topDir, dataSet1FeatureSpaceAnalyser,dataSet2FeatureSpaceAnalyser);
+    }
+
+    private static Bucket[] randomlyAssignToTrainingAndPrediction(final Bucket bucket, final double trainingRatio) {
+
+        Bucket[] buckets = initBuckets();
+
+        for (Record record : bucket) {
+            if (Math.random() < trainingRatio) {
+                buckets[0].addRecordToBucket(record);
+            }
+            else {
+                buckets[1].addRecordToBucket(record);
+            }
+        }
+        return buckets;
+    }
+
+    private static Bucket[] initBuckets() {
+
+        Bucket[] buckets = new Bucket[2];
+        for (int i = 0; i < buckets.length; i++) {
+            buckets[i] = new Bucket();
+        }
+        return buckets;
+    }
+
+    public BulkGraphingRun(File topDir,  FeatureSpaceAnalyser dataSet1FeatureSpaceAnalyser, FeatureSpaceAnalyser dataSet2FeatureSpaceAnalyser) throws Exception {
+
         this.topDir = topDir;
         pathToCopyOfRScript = new File(topDir+"/RScript.R").toPath();
         this.dataSet1FeatureSpaceAnalyser = dataSet1FeatureSpaceAnalyser;
@@ -92,19 +120,10 @@ public class BulkGraphingRun {
 
     private void putCSVInDir(final File newDir, Code code) throws FileNotFoundException, UnsupportedEncodingException {
 
-        DataFileMakerThingy dataFileMakerThingy1 = new DataFileMakerThingy(dataSet1FeatureSpaceAnalyser);
-        DataFileMakerThingy dataFileMakerThingy2 = new DataFileMakerThingy(dataSet2FeatureSpaceAnalyser);
+        DataFileMakerThingy2 dataFileMakerThingy = new DataFileMakerThingy2(dataSet1FeatureSpaceAnalyser,dataSet2FeatureSpaceAnalyser);
         try(Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(new File(newDir.getAbsolutePath()+"/"+ statsFileName))))){
 
-            if(dataSet1FeatureSpaceAnalyser.contains(code)) {
-                writer.write(dataFileMakerThingy1.make(code, true, dataSet1.getName()));
-                if(dataSet2FeatureSpaceAnalyser.contains(code)) {
-                    writer.write(dataFileMakerThingy2.make(code, false, dataSet2.getName()));
-                }
-            } else if(dataSet2FeatureSpaceAnalyser.contains(code)) {
-                writer.write(dataFileMakerThingy2.make(code, true, dataSet2.getName()));
-            }
-
+                writer.write(dataFileMakerThingy.make(code));
         } catch (IOException e) {
             e.printStackTrace();
         }
