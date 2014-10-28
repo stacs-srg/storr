@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.digitising_scotland.record_classification.legacy;
+package uk.ac.standrews.cs.digitising_scotland.record_classification.classifiers.closestmatchmap;
 
 import java.util.Comparator;
 import java.util.Map;
