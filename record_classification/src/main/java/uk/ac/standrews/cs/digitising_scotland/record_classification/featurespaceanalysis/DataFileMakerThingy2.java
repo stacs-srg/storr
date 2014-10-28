@@ -13,7 +13,7 @@ import java.util.*;
 public class DataFileMakerThingy2 {
     private final FeatureSpaceAnalyser fsa1;
     private final FeatureSpaceAnalyser fsa2;
-    private int magicNumber;
+    private int outputLimit =15;
 
     public DataFileMakerThingy2(FeatureSpaceAnalyser dataSet1FeatureSpaceAnalyser, FeatureSpaceAnalyser dataSet2FeatureSpaceAnalyser) {
         this.fsa1 = dataSet1FeatureSpaceAnalyser;
@@ -32,12 +32,11 @@ public class DataFileMakerThingy2 {
             featureList = sortFeatures(codeProfile2, features);
         }
         Iterator<String> iterator = featureList.iterator();
-        int i = 0; //TODO magic number to restrict number of features plotted
-        magicNumber = 15;
-        while(iterator.hasNext() && i < magicNumber){
+        int i = 0;
+        while(iterator.hasNext() && i < outputLimit){
             i++;
-            sb.append((new TokenSet(iterator.next())).toString().replaceAll("'",""));
-            if(iterator.hasNext() && i < magicNumber)
+            sb.append((new TokenSet(iterator.next())).toString().replaceAll("'","")); //Regex replace apostrophes as they mess up R's file reader.
+            if(iterator.hasNext() && i < outputLimit)
                 sb.append(",");
             else sb.append("\n");
         }
@@ -75,7 +74,7 @@ public class DataFileMakerThingy2 {
         }
 
         private Double getFfIcf(FeatureProfile profile) {
-            Double fficf1 = null;
+            Double fficf1;
             if(profile!=null) {
                  fficf1 = profile.getFfIcf();
             } else {
@@ -107,7 +106,7 @@ public class DataFileMakerThingy2 {
         iterator = features.iterator();
         DecimalFormat df = new DecimalFormat("#0.0000");
         int i = 0;
-        while(iterator.hasNext() && i < magicNumber){
+        while(iterator.hasNext() && i < outputLimit){
             i++;
             String feature = iterator.next();
             if(codeProfile1 != null && codeProfile1.getFeatures().contains(feature)){
@@ -116,7 +115,7 @@ public class DataFileMakerThingy2 {
             } else {
                 sb.append(0.0);
             }
-            if(iterator.hasNext() && i < magicNumber)
+            if(iterator.hasNext() && i < outputLimit)
                 sb.append(",");
             else
                 sb.append("\n");
