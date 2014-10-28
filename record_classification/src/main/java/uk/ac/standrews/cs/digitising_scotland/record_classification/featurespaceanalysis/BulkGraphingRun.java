@@ -8,6 +8,10 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.Buc
 import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
 
 import java.io.*;
+import java.net.URI;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.HashSet;
 
 /**
@@ -20,12 +24,12 @@ public class BulkGraphingRun {
     private static File dataSet2;
     private final FeatureSpaceAnalyser dataSet1FeatureSpaceAnalyser;
     private final File topDir;
-    private String pathToRScript = this.getClass().getResource("/FeatureSpaceAnalysisPlotter.R").getPath();
+    private Path pathToRScript = new File(this.getClass().getResource("/FeatureSpaceAnalysisPlotter.R").getPath()).toPath();
     private static final String statsFileName = "stats.csv";
     private final FeatureSpaceAnalyser dataSet2FeatureSpaceAnalyser;
+    private Path pathToCopyOfRScript;
 
     /**
-     *
      * @param args 0,1,2,3
      * @throws Exception
      * @throws CodeNotValidException
@@ -49,6 +53,7 @@ public class BulkGraphingRun {
             throw new Exception("Output path supplied would overwrite a directory which already exists. Please choose something different.");
         }
         this.topDir = topDir;
+        pathToCopyOfRScript = new File(topDir+"/RScript.R").toPath();
         this.dataSet1FeatureSpaceAnalyser = dataSet1FeatureSpaceAnalyser;
         this.dataSet2FeatureSpaceAnalyser = dataSet2FeatureSpaceAnalyser;
         run();
@@ -58,8 +63,13 @@ public class BulkGraphingRun {
 
     }
 
+    private void copyRScript() throws IOException {
+        Files.copy(pathToRScript,pathToCopyOfRScript);
+    }
+
     private void run() throws Exception {
         makeAndCheckDir(topDir);
+        copyRScript();
         populateWithCodeAnalysis();
 
 
@@ -103,7 +113,7 @@ public class BulkGraphingRun {
 
     private void runRPlotScriptOnDir(String dataPath1) {
         String imageOutputPath = dataPath1 + "/plot" + ".png";
-        String command = "Rscript " + pathToRScript + " " + dataPath1 + "/"+ statsFileName + " " + imageOutputPath;
+        String command = "Rscript " + pathToCopyOfRScript.toString() + " " + dataPath1 + "/"+ statsFileName + " " + imageOutputPath;
         System.out.println(Utils.executeCommand(command));
     }
 
