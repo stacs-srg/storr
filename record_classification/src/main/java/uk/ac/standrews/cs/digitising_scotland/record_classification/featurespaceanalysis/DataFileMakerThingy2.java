@@ -3,16 +3,17 @@ package uk.ac.standrews.cs.digitising_scotland.record_classification.featurespac
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.code.Code;
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
 
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
+import java.text.DecimalFormat;
+import java.util.*;
 
 /**
+ *
  * Created by fraserdunlop on 28/10/2014 at 11:27.
  */
 public class DataFileMakerThingy2 {
     private final FeatureSpaceAnalyser fsa1;
     private final FeatureSpaceAnalyser fsa2;
+    private int magicNumber;
 
     public DataFileMakerThingy2(FeatureSpaceAnalyser dataSet1FeatureSpaceAnalyser, FeatureSpaceAnalyser dataSet2FeatureSpaceAnalyser) {
         this.fsa1 = dataSet1FeatureSpaceAnalyser;
@@ -21,41 +22,101 @@ public class DataFileMakerThingy2 {
 
     public String make(Code code) {
         Set<String> features = new HashSet<>();
-        CodeProfile codeProfile1 = null;
-        CodeProfile codeProfile2 = null;
-        if(fsa1.contains(code)) {
-             codeProfile1= fsa1.getAnalysis(code);
-            features.addAll(codeProfile1.getFeatures());
-        }
-        if(fsa2.contains(code)) {
-            codeProfile2= fsa2.getAnalysis(code);
-            features.addAll(codeProfile2.getFeatures());
-        }
+        CodeProfile codeProfile1 = getCodeProfile(fsa1,code,features);
+        CodeProfile codeProfile2 = getCodeProfile(fsa2, code, features);
         StringBuilder sb = new StringBuilder();
-        Iterator<String> iterator = features.iterator();
-        while(iterator.hasNext()){
-            sb.append((new TokenSet(iterator.next())).toString());
-            if(iterator.hasNext())
+        List<String> featureList = new ArrayList<>();
+        if(codeProfile1!=null) {
+            featureList = sortFeatures(codeProfile1, features);
+        }else if(codeProfile2!=null){
+            featureList = sortFeatures(codeProfile2, features);
+        }
+        Iterator<String> iterator = featureList.iterator();
+        int i = 0; //TODO magic number to restrict number of features plotted
+        magicNumber = 15;
+        while(iterator.hasNext() && i < magicNumber){
+            i++;
+            sb.append((new TokenSet(iterator.next())).toString().replaceAll("'",""));
+            if(iterator.hasNext() && i < magicNumber)
                 sb.append(",");
             else sb.append("\n");
         }
-        appendScoreLine(codeProfile1, features, sb);
-        appendScoreLine(codeProfile2, features, sb);
+        appendScoreLine(codeProfile1, featureList, sb);
+        appendScoreLine(codeProfile2, featureList, sb);
 
         return sb.toString();
     }
 
-    private void appendScoreLine(CodeProfile codeProfile1, Set<String> features, StringBuilder sb) {
+    private List<String> sortFeatures(CodeProfile codeProfile, Collection<String> features) {
+        List<String> sorted = new ArrayList<>(features);
+        sorted.sort(new featureComparator(codeProfile));
+        return sorted;
+    }
+
+    private class featureComparator implements Comparator<String>{
+
+        private CodeProfile codeProfile;
+
+        public featureComparator(CodeProfile codeProfile){
+            this.codeProfile = codeProfile;
+        }
+
+        @Override
+        public int compare(String feature1, String feature2) {
+            double fficf1 = getFfIcf(getFeatureProfile(feature1));
+            double fficf2 = getFfIcf(getFeatureProfile(feature2));
+            if(fficf1>fficf2){
+                return -1;
+            } else if(fficf1<fficf2){
+                return 1;
+            } else {
+                return 0;
+            }
+        }
+
+        private Double getFfIcf(FeatureProfile profile) {
+            Double fficf1 = null;
+            if(profile!=null) {
+                 fficf1 = profile.getFfIcf();
+            } else {
+                fficf1 = 0.0;
+            }
+            return fficf1;
+        }
+
+        private FeatureProfile getFeatureProfile(String feature1) {
+            FeatureProfile profile =  null;
+            if(codeProfile.contains(feature1)) {
+                profile = codeProfile.getProfile(feature1);
+            }
+            return profile;
+        }
+    }
+
+    private CodeProfile getCodeProfile(FeatureSpaceAnalyser fsa, Code code, Set<String> features) {
+        CodeProfile codeProfile2 = null;
+        if(fsa.contains(code)) {
+            codeProfile2= fsa.getAnalysis(code);
+            features.addAll(codeProfile2.getFeatures());
+        }
+        return codeProfile2;
+    }
+
+    private void appendScoreLine(CodeProfile codeProfile1, List<String> features, StringBuilder sb) {
         Iterator<String> iterator;
         iterator = features.iterator();
-        while(iterator.hasNext()){
+        DecimalFormat df = new DecimalFormat("#0.0000");
+        int i = 0;
+        while(iterator.hasNext() && i < magicNumber){
+            i++;
             String feature = iterator.next();
             if(codeProfile1 != null && codeProfile1.getFeatures().contains(feature)){
-                sb.append(codeProfile1.getProfile(feature).getFfIcf());
+                double ffIcf = codeProfile1.getProfile(feature).getFfIcf();
+                sb.append(df.format(ffIcf));
             } else {
                 sb.append(0.0);
             }
-            if(iterator.hasNext())
+            if(iterator.hasNext() && i < magicNumber)
                 sb.append(",");
             else
                 sb.append("\n");

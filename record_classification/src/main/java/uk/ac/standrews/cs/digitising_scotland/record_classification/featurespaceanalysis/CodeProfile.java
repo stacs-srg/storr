@@ -73,4 +73,8 @@ public class CodeProfile {
     public Code getCode() {
         return code;
     }
+
+    public boolean contains(String feature) {
+        return feMap.containsKey(feature);
+    }
 }
