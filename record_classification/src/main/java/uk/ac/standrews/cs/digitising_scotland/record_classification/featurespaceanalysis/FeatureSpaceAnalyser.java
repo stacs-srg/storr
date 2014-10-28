@@ -5,7 +5,6 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructur
 import uk.ac.standrews.cs.digitising_scotland.record_classification.datastructures.tokens.TokenSet;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Set;
 
 
@@ -42,7 +41,7 @@ public class FeatureSpaceAnalyser {
     }
 
     public double featureFrequencyInverseCodeFrequency(Code code, String feature){
-        return ((double) getInCodeFeatureFrequency(code, feature)) / logScaledInverseCodeFrequency(feature);
+        return getNormalisedFeatureFrequency(code, feature) / logScaledInverseCodeFrequency(feature);
     }
 
     private double logScaledInverseCodeFrequency(String feature) {
@@ -57,8 +56,8 @@ public class FeatureSpaceAnalyser {
         return featureProfiles.size();
     }
 
-    private Integer getInCodeFeatureFrequency(Code code, String feature) {
-        return featureProfiles.get(code).get(feature);
+    private double getNormalisedFeatureFrequency(Code code, String feature) {
+        return (double) featureProfiles.get(code).get(feature) / (double) featureDist.get(feature);
     }
 
 
@@ -128,6 +127,10 @@ public class FeatureSpaceAnalyser {
                 featureProfiles.get(code).put(token,currentValue+1);
             }
         }
+    }
+
+    private int getInCodeFeatureFrequency(Code code, String feature) {
+        return featureProfiles.get(code).get(feature);
     }
 
     public HashMap<String, Integer> featureProfile(Code code) {

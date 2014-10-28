@@ -26,7 +26,6 @@ public class CodeProfile {
     /**
      * Instantiate data structure with code and Hash Map of features to FeatureProfile
      * objects calculated for the features.
-     * TODO perhaps hashmap reveals to much of the internal structure? -> move String-FeatureProfile map into FeatureSpaceAnalyser?
      *
      * @param code  the code for which the datastructure contains data.
      * @param feMap the map of features to their data structures.
@@ -72,5 +71,9 @@ public class CodeProfile {
      */
     public Code getCode() {
         return code;
+    }
+
+    public boolean contains(String feature) {
+        return feMap.containsKey(feature);
     }
 }

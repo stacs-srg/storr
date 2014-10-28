@@ -9,8 +9,6 @@ import uk.ac.standrews.cs.digitising_scotland.record_classification.pipeline.Buc
 import uk.ac.standrews.cs.digitising_scotland.tools.Utils;
 
 import java.io.*;
-import java.net.URI;
-import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashSet;
@@ -115,12 +113,15 @@ public class BulkGraphingRun {
         File newDir = new File(topDir.getAbsolutePath() + "/" + code.getCodeAsString());
         makeAndCheckDir(newDir);
         putCSVInDir(newDir, code);
-        runRPlotScriptOnDir(newDir.getAbsolutePath());
+        //note - we replace whitespace with underscores which are then replaced by whitespace by R
+        //this is because whitespace delimits arguments in the command line.
+        String codeAndDescriptionString = code.getCodeAsString() + "_-_\"" + code.getDescription().replaceAll(" ","_") + "\"";
+        runRPlotScriptOnDir(newDir.getAbsolutePath(), codeAndDescriptionString);
     }
 
     private void putCSVInDir(final File newDir, Code code) throws FileNotFoundException, UnsupportedEncodingException {
 
-        DataFileMakerThingy2 dataFileMakerThingy = new DataFileMakerThingy2(dataSet1FeatureSpaceAnalyser,dataSet2FeatureSpaceAnalyser);
+        RDataFileCreator dataFileMakerThingy = new RDataFileCreator(dataSet1FeatureSpaceAnalyser,dataSet2FeatureSpaceAnalyser);
         try(Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(new File(newDir.getAbsolutePath()+"/"+ statsFileName))))){
 
                 writer.write(dataFileMakerThingy.make(code));
@@ -130,9 +131,9 @@ public class BulkGraphingRun {
 
     }
 
-    private void runRPlotScriptOnDir(String dataPath1) {
+    private void runRPlotScriptOnDir(String dataPath1, String codeName) {
         String imageOutputPath = dataPath1 + "/plot" + ".png";
-        String command = "Rscript " + pathToCopyOfRScript.toString() + " " + dataPath1 + "/"+ statsFileName + " " + imageOutputPath;
+        String command = "Rscript " + pathToCopyOfRScript.toString() + " " + dataPath1 + "/"+ statsFileName + " " + imageOutputPath + " " + codeName;
         System.out.println(Utils.executeCommand(command));
     }
 
