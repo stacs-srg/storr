@@ -120,19 +120,10 @@ public class BulkGraphingRun {
 
     private void putCSVInDir(final File newDir, Code code) throws FileNotFoundException, UnsupportedEncodingException {
 
-        DataFileMakerThingy dataFileMakerThingy1 = new DataFileMakerThingy(dataSet1FeatureSpaceAnalyser);
-        DataFileMakerThingy dataFileMakerThingy2 = new DataFileMakerThingy(dataSet2FeatureSpaceAnalyser);
+        DataFileMakerThingy2 dataFileMakerThingy = new DataFileMakerThingy2(dataSet1FeatureSpaceAnalyser,dataSet2FeatureSpaceAnalyser);
         try(Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(new File(newDir.getAbsolutePath()+"/"+ statsFileName))))){
 
-            if(dataSet1FeatureSpaceAnalyser.contains(code)) {
-                writer.write(dataFileMakerThingy1.make(code, true,"80split"));// dataSet1.getName()));
-                if(dataSet2FeatureSpaceAnalyser.contains(code)) {
-                    writer.write(dataFileMakerThingy2.make(code, false,"20split"));// dataSet2.getName()));
-                }
-            } else if(dataSet2FeatureSpaceAnalyser.contains(code)) {
-                writer.write(dataFileMakerThingy2.make(code, true,"20split"));
-            }
-
+                writer.write(dataFileMakerThingy.make(code));
         } catch (IOException e) {
             e.printStackTrace();
         }

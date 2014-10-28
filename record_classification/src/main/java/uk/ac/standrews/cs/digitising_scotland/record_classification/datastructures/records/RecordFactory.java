@@ -263,9 +263,16 @@ public abstract class RecordFactory {
         final int scaleFactor = 1000;
         int id = (int) Math.rint(Math.random() * scaleFactor);
         Record record = new Record(id, originalData);
-        Classification goldStandardClassification = new Classification(thisCode, new TokenSet(originalData.getDescription()), 1.0);
+        Classification goldStandardClassification = new Classification(thisCode, new TokenSet(concat(originalData.getDescription())), 1.0);
         record.getOriginalData().getGoldStandardClassifications().add(goldStandardClassification);
         return record;
+    }
+
+    private static String concat(List<String> description) {
+        StringBuilder sb = new StringBuilder();
+        for (String feature : description)
+            sb.append(feature).append(" ");
+        return sb.toString();
     }
 
     /**
@@ -279,7 +286,7 @@ public abstract class RecordFactory {
 
         int id = ID;
         Record record = new Record(id, originalData);
-        Classification goldStandardClassification = new Classification(thisCode, new TokenSet(originalData.getDescription()), 1.0);
+        Classification goldStandardClassification = new Classification(thisCode, new TokenSet(concat(originalData.getDescription())), 1.0);
         record.getOriginalData().getGoldStandardClassifications().add(goldStandardClassification);
         return record;
     }

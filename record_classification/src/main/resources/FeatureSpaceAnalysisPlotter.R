@@ -9,13 +9,6 @@ attach(dataSet)
 #Opening a png printing device
 png(file=toString(args[2]),width=800,height=800)
 
-plot.window.orig <- plot.window
-  plot.window <- function(xlim, ylim, log="", asp=NA, ...) {
-      if (!all(is.finite(xlim))) xlim <- c(0,1)
-      if (!all(is.finite(ylim))) ylim <- c(0,1)
-      plot.window.orig(xlim, ylim, log="", asp=NA, ...)
-   }
-  assignInNamespace("plot.window", plot.window, "graphics")
 
 #Plotting
 # Grouped Bar Plot
