@@ -20,17 +20,12 @@ the classification being correct.
 6. Calculate a 'goodness' score for each valid set of classifications
     - our current goodness measure is calculated like so:
     - for each classification in the set we multiply the confidence in
-    the classification by the length of the n-gram which predicted the classification.
+    the classification by the logarithm of the length of the n-gram which predicted the classification.
     - the sum of these values is the goodness of the set
 
-7. We classify the original description to the set of classifications which has the
+7. We classify the original description to the classification (or set of classifications) which has the
 best goodness score
 
 This process allows for single strings to be classified to multiple codes if required (such as when coding causes of death). 
-
-
-
-
-
 
 
