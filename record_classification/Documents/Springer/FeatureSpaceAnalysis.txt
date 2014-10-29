@@ -1,3 +1,7 @@
+In machine learning tasks the measurable attributes that define the data are called features. In the case of text classification tasks we are interested in the words that make up the texts in questions, hence, these are our features. 
+
+The size of the feature space, ie the number of different words that occur in the corpus of documents used for training and in classification, is an important property to consider. Very large feature spaces can be problematic as they are harder for the machine learning algorithms to learn effectivey. 
+
 We analyse the feature space using "feature frequency - inverse code frequency" statistics.
 
 These are analogous to "tf-idf" or "term frequency - inverse document frequency" statistics.
