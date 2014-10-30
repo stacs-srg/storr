@@ -559,4 +559,24 @@ public class CodeMetrics {
         return sb.toString();
     }
 
+    public String getMacroStatsAsString() {
+
+        double sumRecall = 0;
+        for (double d : precision) {
+            sumRecall += d;
+        }
+
+        double sumPrecision = 0;
+        for (double d : precision) {
+            sumPrecision += d;
+        }
+
+        double macroPrecision = sumPrecision / precision.length;
+        double macroRecall = sumRecall / recall.length;
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("macro precision: " + macroPrecision + "\n");
+        sb.append("macro recall: " + macroRecall + "\n");
+        return sb.toString();
+    }
 }
