@@ -31,4 +31,6 @@ public interface ILXP extends ILXPFactory {
     boolean containsKey(String key);
 
     java.util.Set<String> getKeys();
+
+    void addTypeLabel(ITypeLabel personlabel) throws Exception;
 }

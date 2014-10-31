@@ -1,7 +1,7 @@
 package uk.ac.standrews.cs.digitising_scotland.linkage.factory;
 
 
-import uk.ac.standrews.cs.digitising_scotland.jstore.impl.TypeLabel;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.Types;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.ILXP;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.ILXPFactory;
 
@@ -17,11 +17,11 @@ public abstract class TFactory<T extends ILXP> implements ILXPFactory<T> {
      */
     @Override
     public boolean checkConsistentWith(int label_id) {
-        return TypeLabel.checkConsistentWith( label_id,required_type_labelID );
+        return Types.checkLabelsConsistentWith(label_id, required_type_labelID);
     }
 
     @Override
-    public int getLabel() {
+    public int getTypeLabel() {
         return required_type_labelID;
     }
 

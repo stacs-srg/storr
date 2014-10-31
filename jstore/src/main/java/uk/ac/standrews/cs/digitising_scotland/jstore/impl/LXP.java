@@ -4,6 +4,7 @@ import org.json.JSONException;
 import org.json.JSONWriter;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.ILXP;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.ILXPFactory;
+import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.ITypeLabel;
 import uk.ac.standrews.cs.digitising_scotland.util.ErrorHandling;
 import uk.ac.standrews.cs.nds.persistence.PersistentObjectException;
 import uk.ac.standrews.cs.nds.rpc.stream.JSONReader;
@@ -63,11 +64,24 @@ public class LXP implements ILXP {
     public boolean checkConsistentWith(int label_id) {
         return true; // there is no contract with this class - creates whatever is there.
         // over-ridden in super classes.
+        // TODO Reconsider this method.
     }
 
     @Override
-    public int getLabel() {
-        return -1;
+    public int getTypeLabel() {
+        try {
+            return Integer.parseInt(get(TypeLabel.LABEL)); // safe only one way in.
+        } catch (KeyNotFoundException e) {
+            return -1;
+        }
+    }
+
+    @Override
+    public void addTypeLabel(ITypeLabel label) throws Exception {
+        if (containsKey(TypeLabel.LABEL)) {
+            throw new Exception("Type label already specified");
+        }
+        put(TypeLabel.LABEL, Integer.toString(label.getId()));
     }
 
     @Override

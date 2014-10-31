@@ -17,10 +17,10 @@ public interface ILXPFactory<T extends ILXP> {
     /*
      * return true if the factory can create an instance with the specified label and false otherwise
      */
-     boolean checkConsistentWith( int label_id ) throws IOException, PersistentObjectException;
+    boolean checkConsistentWith(int label_id) throws IOException, PersistentObjectException;
 
     /*
      * return the label id required by type T
      */
-    int getLabel();
+    int getTypeLabel();
 }

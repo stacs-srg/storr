@@ -8,17 +8,17 @@ package uk.ac.standrews.cs.digitising_scotland.jstore.impl;
 public enum Type {
      UNKNOWN, STRING, INT, FLOAT ,REFERENCE;
 
-    public static Type SringToType(String value) {
-        if( STRING.name().equals(value) ) {
+    public static Type stringToType(String value) {
+        if (STRING.name().toLowerCase().equals(value.toLowerCase())) {
             return STRING;
         }
-        if( INT.name().equals(value) ) {
+        if (INT.name().toLowerCase().equals(value.toLowerCase())) {
             return INT;
         }
-        if( FLOAT.name().equals(value) ) {
+        if (FLOAT.name().toLowerCase().equals(value.toLowerCase())) {
             return FLOAT;
         }
-        if( REFERENCE.name().equals(value) ) {
+        if (REFERENCE.name().toLowerCase().equals(value.toLowerCase())) {
             return REFERENCE;
         }
         return UNKNOWN;

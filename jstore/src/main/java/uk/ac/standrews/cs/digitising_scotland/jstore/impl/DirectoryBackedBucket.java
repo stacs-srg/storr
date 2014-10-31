@@ -13,6 +13,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import static uk.ac.standrews.cs.digitising_scotland.jstore.impl.Types.check_label_consistency;
+import static uk.ac.standrews.cs.digitising_scotland.jstore.impl.Types.check_structural_consistency;
+
 /**
  * Created by al on 19/09/2014.
  */
@@ -73,7 +76,7 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
     public static IBucket createBucket(final String name, IRepository repo, ILXPFactory tFactory ) throws RepositoryException  {
         try {
             IBucket bucket = createBucket(name, repo);
-            bucket.setTypeLabelID( tFactory.getLabel() );
+            bucket.setTypeLabelID(tFactory.getTypeLabel());
 
             return new DirectoryBackedBucket(name, repo.getRepo_path(), tFactory);
         } catch (IOException e) {
@@ -101,17 +104,12 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
         }
 
         if( type_label_id != -1 ) { // we have set a type label in this bucket there must check for consistency
-            if( record.containsKey( TypeLabel.LABEL ) ) {
 
-                try {
-                    if( ! TypeLabel.checkConsistentWith( Integer.parseInt( record.get(TypeLabel.LABEL) ),type_label_id) ) {
-                        throw new IOException( "Inconsistent labels" );
-                    }
-                } catch (KeyNotFoundException e) {
-                    throw new IOException( "Label key not found" ); // TODO change to some other exception?
-                }
-            } else { // no label in type so that is a failure too
-                throw new IOException( "No label" );
+            if (!(check_label_consistency(record, type_label_id))) { // Keep these separate for more error precision
+                throw new IOException("Label incompatibility");
+            }
+            if (!check_structural_consistency(record, type_label_id)) {
+                throw new IOException("Structural integrity incompatibility");
             }
         }
 
@@ -147,7 +145,6 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
         return Paths.get(filePath(id)).toFile().exists();
     }
 
-
     // Stream operations
 
     public IInputStream<T> getInputStream() throws IOException {
@@ -177,6 +174,24 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
         } catch (IOException e) {
             ErrorHandling.error("I/O Exception setting kind");
         }
+    }
+
+    public static BucketKind getKind(String name, String repo_filename) {
+
+        // TODO look at usages of Paths and filenames and tidy up
+
+        Path meta_path = Paths.get(repo_filename, name, "META"); // repo/bucketname/meta
+
+        if (Files.exists(meta_path.resolve(BucketKind.DIRECTORYBACKED.name()))) {
+            return BucketKind.DIRECTORYBACKED;
+        }
+        if (Files.exists(meta_path.resolve(BucketKind.INDEXED.name()))) {
+            return BucketKind.INDEXED;
+        }
+        if (Files.exists(meta_path.resolve(BucketKind.INDIRECT.name()))) {
+            return BucketKind.INDIRECT;
+        }
+        return BucketKind.UNKNOWN;
     }
 
     public void setTypeLabelID(int type_label_id) throws IOException {
@@ -219,7 +234,6 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
         }
     }
 
-
     //******** Private methods *********
 
     public static boolean bucketExists(final String name, IRepository repo) {
@@ -233,22 +247,4 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
     }
 
 
-    public static BucketKind getKind(String name, String repo_filename) {
-
-        // TODO look at usages of Paths and filenames and tidy up
-
-        Path meta_path = Paths.get( repo_filename,name,"META" ); // repo/bucketname/meta
-
-        if( Files.exists( meta_path.resolve( BucketKind.DIRECTORYBACKED.name() ) ) ) {
-            return BucketKind.DIRECTORYBACKED;
-        }
-        if( Files.exists( meta_path.resolve( BucketKind.INDEXED.name() ) ) ) {
-            return BucketKind.INDEXED;
-        }
-        if( Files.exists( meta_path.resolve( BucketKind.INDIRECT.name() ) ) ) {
-            return BucketKind.INDIRECT;
-        }
-        return BucketKind.UNKNOWN;
-
-    }
 }

@@ -31,6 +31,7 @@ public class InfrastructureTest {
     private static IRepository repo;
     private IBucket types;
     private ITypeLabel personlabel;
+    private ITypeLabel personlabel2;
 
     @Before
     public void setUpEachTest() throws RepositoryException, IOException, StoreException {
@@ -45,6 +46,7 @@ public class InfrastructureTest {
         repo.makeBucket(generic_bucket_name1,BucketKind.DIRECTORYBACKED);
 
         personlabel = TypeFactory.getInstance().createType(PERSONRECORDTYPETEMPLATE, "Person", types);
+        personlabel2 = TypeFactory.getInstance().createType(PERSONRECORDTYPETEMPLATE, "Person", types);
 
     }
 
@@ -97,7 +99,7 @@ public class InfrastructureTest {
     }
 
     @Test
-    public synchronized void testLabelledLXP() throws Exception, RepositoryException {
+    public synchronized void testLabelledLXP1() throws Exception, RepositoryException {
         IBucket b = repo.getBucket(generic_bucket_name1);
         b.setTypeLabelID(personlabel.getId());
 
@@ -115,6 +117,67 @@ public class InfrastructureTest {
             return;
         }
         fail("Type violation not detected");
+    }
+
+    @Test
+    public synchronized void testLabelledLXP2() throws Exception, RepositoryException {
+        IBucket b = repo.getBucket(generic_bucket_name1);
+        b.setTypeLabelID(personlabel.getId());
+
+        try {
+            LXP lxp = new LXP();        // correct structure but no label!
+            lxp.put("name", "al");
+            lxp.put("age", "55");
+            b.put(lxp);
+        } catch (IOException e) {
+            System.out.println("IO exception caught");
+            return;
+        } catch (Exception e) {
+            // should get an exception due to wrong type;
+            System.out.println("Type exception caught");
+            return;
+        }
+        fail("Type violation not detected");
+    }
+
+    @Test
+    public synchronized void testLabelledLXP3() throws Exception, RepositoryException {
+        IBucket b = repo.getBucket(generic_bucket_name1);
+        b.setTypeLabelID(personlabel.getId());
+
+        LXP lxp = new LXP();        // correct structure
+        lxp.put("name", "al");
+        lxp.put("age", "55");
+        lxp.put(TypeLabel.LABEL, Integer.toString(personlabel.getId()));    // with correct label
+        b.put(lxp); // Should succeed: labels correct and type label identical to bucket
+    }
+
+    @Test
+    public synchronized void testLabelledLXP4() throws Exception, RepositoryException {
+        IBucket b = repo.getBucket(generic_bucket_name1);
+        b.setTypeLabelID(personlabel2.getId());
+
+        LXP lxp = new LXP();        // correct structure
+        lxp.put("name", "al");
+        lxp.put("age", "55");
+        lxp.put(TypeLabel.LABEL, Integer.toString(personlabel.getId())); // structurally equivalent label
+        b.put(lxp); // Should succeed labels correct and type label structurally equivalent
+    }
+
+    @Test
+    public synchronized void testLabelledLXP5() throws Exception, RepositoryException {
+        IBucket b = repo.getBucket(generic_bucket_name1);
+        b.setTypeLabelID(personlabel2.getId());
+
+        try {
+            LXP lxp = new LXP();        // incorrect structure
+            lxp.put("name", "al");
+            lxp.put("address", "home");
+            lxp.addTypeLabel(personlabel); // correct label but not structurally equivalent label
+            b.put(lxp);
+        } catch (Exception e) {
+            // should get an exception due to incorrect structure
+        }
     }
 
     @Test
