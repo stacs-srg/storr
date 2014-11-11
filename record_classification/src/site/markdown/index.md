@@ -48,7 +48,7 @@ A selection of shell scripts are provided to help the user run the software. <a 
 
 ## Frequently Asked Questions
 
-A brief FAQ can be [found here](faq.html). If this doesn't answer you're quesion, please direct any questions to the details below.  
+A brief FAQ can be [found here](faq.html).
 ## Contact
 
 Any questions or suggestions may be sent to Graham Kirby at graham.kirby@st-andrews.ac.uk. We would welcome any information on others\' experience with the software.

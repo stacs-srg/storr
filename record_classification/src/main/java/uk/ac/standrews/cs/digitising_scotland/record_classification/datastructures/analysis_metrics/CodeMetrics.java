@@ -562,7 +562,7 @@ public class CodeMetrics {
     public String getMacroStatsAsString() {
 
         double sumRecall = 0;
-        for (double d : precision) {
+        for (double d : precision) { // TODO this doesn't look right!
             sumRecall += d;
         }
 

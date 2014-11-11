@@ -25,9 +25,9 @@ import com.google.common.io.Files;
  *
  */
 //@Ignore("Failing, need to fix")
-public class ClassifyWithExsistingModelsTest {
+public class ClassifyWithExistingModelsTest {
 
-    private ClassifyWithExsistingModels classifier;
+    private ClassifyWithExistingModels classifier;
     private final String expectedModelLocation = "/Models";
 
     @Before
@@ -37,7 +37,7 @@ public class ClassifyWithExsistingModelsTest {
         MachineLearningConfiguration.getDefaultProperties().setProperty("codeDictionaryFile", codeDictionaryLocation);
         copyFilesToExpectedLocation();
 
-        classifier = new ClassifyWithExsistingModels();
+        classifier = new ClassifyWithExistingModels();
 
     }
 

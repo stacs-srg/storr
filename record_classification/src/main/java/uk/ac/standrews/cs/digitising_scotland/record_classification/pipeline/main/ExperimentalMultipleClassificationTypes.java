@@ -296,7 +296,7 @@ public final class ExperimentalMultipleClassificationTypes {
     private boolean parseMultipleClassifications(final String[] args) {
 
         if (args.length > 4) {
-            System.err.println("usage: $" + ClassifyWithExsistingModels.class.getSimpleName() + "    <goldStandardDataFile>    <trainingRatio(optional)>    <output multiple classificatiosn> <properties file>");
+            System.err.println("usage: $" + ClassifyWithExistingModels.class.getSimpleName() + "    <goldStandardDataFile>    <trainingRatio(optional)>    <output multiple classificatiosn> <properties file>");
         }
         else {
             if (args[2].equals("1")) { return true; }

@@ -23,7 +23,7 @@ public class AnalyseUniqueRecords {
 
     private static Random random = new Random(3495792347L);
 
-    private static Charset FILE_CHARSET = Charset.forName("UTF-8");
+    private static Charset FILE_CHARSET = Charset.forName("UTF-16");
 
     public static void main(String[] args) throws IOException {
 
@@ -64,7 +64,7 @@ public class AnalyseUniqueRecords {
         }
 
         if (Files.exists(Paths.get(args[1]))) {
-            System.err.println("Error: output file " + args[0] + " already exists in directory " + System.getProperty("user.dir"));
+            System.err.println("Error: output file " + args[1] + " already exists in directory " + System.getProperty("user.dir"));
             return false;
         }
 

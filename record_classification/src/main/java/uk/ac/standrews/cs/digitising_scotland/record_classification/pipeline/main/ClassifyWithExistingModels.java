@@ -64,9 +64,9 @@ import com.google.common.io.Files;
  * 
  * @author jkc25, frjd2
  */
-public final class ClassifyWithExsistingModels {
+public final class ClassifyWithExistingModels {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ClassifyWithExsistingModels.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ClassifyWithExistingModels.class);
 
     /**
      * Entry method for training and classifying a batch of records into
@@ -79,12 +79,12 @@ public final class ClassifyWithExsistingModels {
      */
     public static void main(final String[] args) throws Exception, CodeNotValidException {
 
-        ClassifyWithExsistingModels instance = new ClassifyWithExsistingModels();
+        ClassifyWithExistingModels instance = new ClassifyWithExistingModels();
         instance.run(args);
 
     }
 
-    public ClassifyWithExsistingModels() {
+    public ClassifyWithExistingModels() {
 
     }
 
@@ -186,7 +186,7 @@ public final class ClassifyWithExsistingModels {
     private boolean parseMultipleClassifications(final String[] args) {
 
         if (args.length > 3) {
-            System.err.println("usage: $" + ClassifyWithExsistingModels.class.getSimpleName() + "    <goldStandardDataFile>    <trainingRatio(optional)>    <output multiple classificatiosn");
+            System.err.println("usage: $" + ClassifyWithExistingModels.class.getSimpleName() + "    <goldStandardDataFile>    <trainingRatio(optional)>    <output multiple classificatiosn");
         }
         else {
             if (args[2].equals("1")) { return true; }
@@ -199,7 +199,7 @@ public final class ClassifyWithExsistingModels {
 
         File goldStandard = null;
         if (args.length > 3) {
-            System.err.println("usage: $" + ClassifyWithExsistingModels.class.getSimpleName() + "    <goldStandardDataFile>    <trainingRatio(optional)>");
+            System.err.println("usage: $" + ClassifyWithExistingModels.class.getSimpleName() + "    <goldStandardDataFile>    <trainingRatio(optional)>");
         }
         else {
             goldStandard = new File(args[0]);
@@ -213,7 +213,7 @@ public final class ClassifyWithExsistingModels {
 
         String modelLocation = null;
         if (args.length > 3) {
-            System.err.println("usage: $" + ClassifyWithExsistingModels.class.getSimpleName() + "    <goldStandardDataFile>    <trainingRatio(optional)>");
+            System.err.println("usage: $" + ClassifyWithExistingModels.class.getSimpleName() + "    <goldStandardDataFile>    <trainingRatio(optional)>");
         }
         else {
             modelLocation = args[1];
