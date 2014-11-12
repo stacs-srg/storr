@@ -39,6 +39,7 @@ public class DBManipulation {
     private static final String SELECT_SCHEMA_SYNTAX = "SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '";
     private static final String SELECT_TABLE_SYNTAX1 = "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '";
     private static final String SELECT_TABLE_SYNTAX2 = "' AND TABLE_NAME = '";
+    
 
     public static final Object NULL_DATE = new Object();
 
@@ -126,4 +127,5 @@ public class DBManipulation {
 
         executeStatement(connection, DROP_DB_SYNTAX + database_name);
     }
+    
 }

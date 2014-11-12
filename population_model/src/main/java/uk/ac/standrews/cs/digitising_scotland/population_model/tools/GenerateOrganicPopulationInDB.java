@@ -35,6 +35,6 @@ public class GenerateOrganicPopulationInDB extends AbstractPopulationToDB {
     }
 
     public IPopulation getPopulation(final int batch_size, final ProgressIndicator indicator) throws Exception {
-    	return OrganicPopulation.runPopulationModel(batch_size, true, false, true);
+    	return OrganicPopulation.runPopulationModel(batch_size, true, true, true);
     }
 }

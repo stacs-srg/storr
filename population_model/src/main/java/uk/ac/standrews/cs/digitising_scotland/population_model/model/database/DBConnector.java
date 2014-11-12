@@ -29,7 +29,7 @@ import java.sql.SQLException;
  * @author Alan Dearle (alan.dearle@st-andrews.ac.uk)
  * @author Graham Kirby (graham.kirby@st-andrews.ac.uk)
  */
-class DBConnector {
+public class DBConnector {
 
     private static final String CONNECTION_STRING_PREFIX = "jdbc:mysql://";
 
@@ -91,7 +91,7 @@ class DBConnector {
      * @throws SQLException if a database access error occurs
      */
     public Connection createConnection() throws SQLException {
-
+    	System.out.println(connection_string);
         return DriverManager.getConnection(connection_string, username, password);
     }
 }
