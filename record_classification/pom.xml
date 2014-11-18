@@ -60,10 +60,14 @@
                     <mapping>
                         <java>JAVA_STYLE</java>
                     </mapping>
+                    <includes>
+                        <include>src/**</include>
+                    </includes>
                     <excludes>
                         <exclude>**/README</exclude>
                         <exclude>src/test/resources/**</exclude>
                         <exclude>src/main/resources/**</exclude>
+                        <exclude>**/*.R</exclude>
                     </excludes>
                 </configuration>
                 <executions>
