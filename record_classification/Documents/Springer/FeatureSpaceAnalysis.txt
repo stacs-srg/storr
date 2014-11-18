@@ -1,3 +1,20 @@
+====
+    Copyright 2014 Digitising Scotland project:
+    <http://digitisingscotland.cs.st-andrews.ac.uk/>
+
+    This file is part of the module record_classification.
+
+    record_classification is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+    License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later
+    version.
+
+    record_classification is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+    warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License along with record_classification. If not, see
+    <http://www.gnu.org/licenses/>.
+====
+
 In machine learning tasks the measurable attributes that define the data are called features. In the case of text classification tasks we are interested in the words that make up the texts in questions, hence, these are our features. 
 
 The size of the feature space, ie the number of different words that occur in the corpus of documents used for training and in classification, is an important property to consider. Very large feature spaces can be problematic as they are harder for the machine learning algorithms to learn effectivey. 
