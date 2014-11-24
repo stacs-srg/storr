@@ -2,7 +2,7 @@ package uk.ac.standrews.cs.digitising_scotland.linkage.lxp_records;
 
 
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.LXP;
-import uk.ac.standrews.cs.digitising_scotland.jstore.impl.Types;
+import uk.ac.standrews.cs.digitising_scotland.jstore.types.Types;
 import uk.ac.standrews.cs.nds.persistence.PersistentObjectException;
 import uk.ac.standrews.cs.nds.rpc.stream.JSONReader;
 
@@ -24,7 +24,7 @@ public abstract class AbstractLXP extends LXP {
     }
 
     public AbstractLXP(int object_id, JSONReader reader) throws PersistentObjectException {
-        super( object_id,reader);
+        super(object_id, reader);
     }
 
     public AbstractLXP(JSONReader reader) throws PersistentObjectException {
@@ -40,4 +40,5 @@ public abstract class AbstractLXP extends LXP {
         return Types.checkLabelsConsistentWith(label_id, required_type_labelID);
 
     }
+
 }

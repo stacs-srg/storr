@@ -26,11 +26,11 @@ public interface ILXP extends ILXPFactory {
 
     String get(String key) throws KeyNotFoundException;
 
-    String put( String key, String value);
+    String put(String key, String value);
 
     boolean containsKey(String key);
 
     java.util.Set<String> getKeys();
 
-    void addTypeLabel(ITypeLabel personlabel) throws Exception;
+    void addTypeLabel(IReferenceType personlabel) throws Exception;
 }

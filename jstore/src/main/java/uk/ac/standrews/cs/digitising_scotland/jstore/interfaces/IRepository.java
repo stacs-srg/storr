@@ -9,7 +9,7 @@ import java.util.Iterator;
  */
 public interface IRepository {
 
-    IBucket makeBucket(String types_name, BucketKind kind) throws RepositoryException;
+    IBucket makeBucket(String name, BucketKind kind) throws RepositoryException;
 
     <T extends ILXP> IBucket<T> makeBucket(final String name, BucketKind kind, ILXPFactory<T> tFactory) throws RepositoryException;
 

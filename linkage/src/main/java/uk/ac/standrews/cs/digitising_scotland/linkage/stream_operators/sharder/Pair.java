@@ -3,7 +3,7 @@ package uk.ac.standrews.cs.digitising_scotland.linkage.stream_operators.sharder;
 import org.json.JSONException;
 import org.json.JSONWriter;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.ILXP;
-import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.ITypeLabel;
+import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.IReferenceType;
 import uk.ac.standrews.cs.digitising_scotland.linkage.interfaces.IPair;
 import uk.ac.standrews.cs.nds.persistence.PersistentObjectException;
 import uk.ac.standrews.cs.nds.rpc.stream.JSONReader;
@@ -18,7 +18,7 @@ public class Pair<T extends ILXP> implements IPair<T> { //TODO fix up this
     private T first;
     private T second;
 
-    public Pair( T first, T second ) {
+    public Pair(T first, T second) {
         this.first = first;
         this.second = second;
     }
@@ -69,7 +69,7 @@ public class Pair<T extends ILXP> implements IPair<T> { //TODO fix up this
     }
 
     @Override
-    public void addTypeLabel(ITypeLabel personlabel) throws Exception {
+    public void addTypeLabel(IReferenceType personlabel) throws Exception {
 
     }
 

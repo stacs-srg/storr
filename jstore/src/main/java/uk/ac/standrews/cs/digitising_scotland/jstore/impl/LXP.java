@@ -3,8 +3,8 @@ package uk.ac.standrews.cs.digitising_scotland.jstore.impl;
 import org.json.JSONException;
 import org.json.JSONWriter;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.ILXP;
-import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.ILXPFactory;
-import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.ITypeLabel;
+import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.IReferenceType;
+import uk.ac.standrews.cs.digitising_scotland.jstore.types.Types;
 import uk.ac.standrews.cs.digitising_scotland.util.ErrorHandling;
 import uk.ac.standrews.cs.nds.persistence.PersistentObjectException;
 import uk.ac.standrews.cs.nds.rpc.stream.JSONReader;
@@ -17,8 +17,7 @@ import java.util.Set;
 public class LXP implements ILXP {
 
     private int id;
-    private HashMap<String, String> map;
-    private final static LXP instance = new LXP();
+    protected HashMap<String, String> map;
 
     public LXP() {
 
@@ -26,14 +25,14 @@ public class LXP implements ILXP {
         this.map = new HashMap<>();
     }
 
-    public LXP( int object_id ) {
+    public LXP(int object_id) {
 
         this.id = object_id;
         this.map = new HashMap<>();
     }
 
     public LXP(int object_id, JSONReader reader) throws PersistentObjectException {
-        this( object_id );
+        this(object_id);
         try {
             reader.nextSymbol();
             reader.object();
@@ -46,17 +45,21 @@ public class LXP implements ILXP {
             }
 
         } catch (JSONException e) {
+            if (reader.have(JSONReader.ENDOBJECT)) { // we are at the end and that is OK
+                return;
+            }
+            // otherise bad stuff has happend
             throw new PersistentObjectException(e);
         }
     }
 
     public LXP(JSONReader reader) throws PersistentObjectException {
-        this( Store.getInstance().getNextFreePID(), reader );
+        this(Store.getInstance().getNextFreePID(), reader);
     }
 
     @Override
     public ILXP create(int persistent_object_id, JSONReader reader) throws PersistentObjectException {
-        return new LXP( persistent_object_id, reader );
+        return new LXP(persistent_object_id, reader);
     }
 
 
@@ -70,18 +73,18 @@ public class LXP implements ILXP {
     @Override
     public int getTypeLabel() {
         try {
-            return Integer.parseInt(get(TypeLabel.LABEL)); // safe only one way in.
+            return Integer.parseInt(get(Types.LABEL)); // safe only one way in.
         } catch (KeyNotFoundException e) {
             return -1;
         }
     }
 
     @Override
-    public void addTypeLabel(ITypeLabel label) throws Exception {
-        if (containsKey(TypeLabel.LABEL)) {
+    public void addTypeLabel(IReferenceType label) throws Exception {
+        if (containsKey(Types.LABEL)) {
             throw new Exception("Type label already specified");
         }
-        put(TypeLabel.LABEL, Integer.toString(label.getId()));
+        put(Types.LABEL, Integer.toString(label.getId()));
     }
 
     @Override
@@ -104,15 +107,15 @@ public class LXP implements ILXP {
 
     @Override
     public String get(String key) throws KeyNotFoundException {
-        if( containsKey(key ) ) {
+        if (containsKey(key)) {
             return map.get(key);
         }
-        throw new KeyNotFoundException( key );
+        throw new KeyNotFoundException(key);
     }
 
     @Override
     public String put(String key, String value) {
-        return map.put(key,value);
+        return map.put(key, value);
     }
 
     @Override
@@ -144,9 +147,5 @@ public class LXP implements ILXP {
             ErrorHandling.error("in LXP.toString()");
         }
         return sw.toString();
-    }
-
-    public static ILXPFactory getInstance() {
-        return instance;
     }
 }

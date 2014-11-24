@@ -7,7 +7,6 @@ import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.IBucket;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.IRepository;
 import uk.ac.standrews.cs.digitising_scotland.linkage.factory.BirthFactory;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.factory.TypeFactory;
-import uk.ac.standrews.cs.digitising_scotland.linkage.labels.BirthTypeLabel;
 import uk.ac.standrews.cs.digitising_scotland.linkage.lxp_records.Birth;
 import uk.ac.standrews.cs.digitising_scotland.linkage.stream_operators.sharder.Blocker;
 
@@ -22,7 +21,7 @@ public class FNLFFMFOverBirths extends Blocker<Birth> {
     public FNLFFMFOverBirths(final IBucket<Birth> birthsBucket,
                              final IRepository output_repo) throws RepositoryException, IOException {
 
-        super( birthsBucket.getInputStream(), output_repo, new BirthFactory(TypeFactory.getInstance().typeWithname("Birth").getId()));
+        super(birthsBucket.getInputStream(), output_repo, new BirthFactory(TypeFactory.getInstance().typeWithname("Birth").getId()));
     }
 
     @Override
@@ -33,10 +32,10 @@ public class FNLFFMFOverBirths extends Blocker<Birth> {
         StringBuilder builder = new StringBuilder();
 
         try {
-            builder.append(record.get(BirthTypeLabel.FORENAME));            // TODO this is still not good enough
-            builder.append(record.get(BirthTypeLabel.SURNAME));
-            builder.append(record.get(BirthTypeLabel.FATHERS_FORENAME));
-            builder.append(record.get(BirthTypeLabel.MOTHERS_FORENAME));
+            builder.append(record.get(Birth.FORENAME));            // TODO this is still not good enough
+            builder.append(record.get(Birth.SURNAME));
+            builder.append(record.get(Birth.FATHERS_FORENAME));
+            builder.append(record.get(Birth.MOTHERS_FORENAME));
             return new String[]{removeNasties(builder.toString())};
 
         } catch (KeyNotFoundException e) {

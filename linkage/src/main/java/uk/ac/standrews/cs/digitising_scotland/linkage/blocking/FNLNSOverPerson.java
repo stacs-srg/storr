@@ -3,11 +3,12 @@ package uk.ac.standrews.cs.digitising_scotland.linkage.blocking;
 
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.KeyNotFoundException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.RepositoryException;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.factory.TypeFactory;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.IBucket;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.ILXP;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.ILXPFactory;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.IRepository;
-import uk.ac.standrews.cs.digitising_scotland.linkage.labels.PersonTypeLabel;
+import uk.ac.standrews.cs.digitising_scotland.linkage.lxp_records.Person;
 import uk.ac.standrews.cs.digitising_scotland.linkage.stream_operators.sharder.Blocker;
 import uk.ac.standrews.cs.nds.util.ErrorHandling;
 
@@ -28,14 +29,14 @@ public class FNLNSOverPerson<T extends ILXP> extends Blocker<T> {
     public String[] determineBlockedBucketNamesForRecord(final ILXP record) {
 
         try {
-            if (record.containsKey("TYPE") && record.get("TYPE").equals(PersonTypeLabel.TYPE)) {
+            if (record.containsKey("TYPE") && record.get("TYPE").equals(TypeFactory.getInstance().typeWithname("person"))) {
 
                 // Note will concat nulls into key if any fields are null - working hypothesis - this doesn't matter.
 
-                String forename = record.get(PersonTypeLabel.FORENAME);
-                String surname = record.get(PersonTypeLabel.SURNAME);
-                String mmsurname = record.get(PersonTypeLabel.MOTHERS_MAIDEN_SURNAME);
-                String sex = record.get(PersonTypeLabel.SEX);
+                String forename = record.get(Person.FORENAME);
+                String surname = record.get(Person.SURNAME);
+                String mmsurname = record.get(Person.MOTHERS_MAIDEN_SURNAME);
+                String sex = record.get(Person.SEX);
 
                 StringBuilder builder = new StringBuilder();
 
@@ -55,7 +56,7 @@ public class FNLNSOverPerson<T extends ILXP> extends Blocker<T> {
                 return new String[]{};
             }
         } catch (KeyNotFoundException e) {
-            ErrorHandling.error("Record found with unknown key" );
+            ErrorHandling.error("Record found with unknown key");
             return new String[]{};
         }
     }

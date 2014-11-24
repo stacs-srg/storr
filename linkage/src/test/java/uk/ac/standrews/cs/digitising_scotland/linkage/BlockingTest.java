@@ -6,10 +6,10 @@ import org.junit.Test;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.RepositoryException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.Store;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.StoreException;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.factory.TypeFactory;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.*;
 import uk.ac.standrews.cs.digitising_scotland.linkage.blocking.FNLFFMFOverBirths;
 import uk.ac.standrews.cs.digitising_scotland.linkage.factory.BirthFactory;
-import uk.ac.standrews.cs.digitising_scotland.jstore.impl.factory.TypeFactory;
 import uk.ac.standrews.cs.digitising_scotland.linkage.lxp_records.Birth;
 import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
 
@@ -34,16 +34,14 @@ public class BlockingTest {
 
     private static String store_path = "src/test/resources/STORE";
 
-    private static final String BIRTHRECORDTYPETEMPLATE = "src/test/resources/BirthRecord.jsn";
-
     private static IStore store;
     private static IBucket<Birth> births;
     private static IBucket types;
 
     private IRepository repo;
-    private ITypeLabel birthlabel;
-    private ITypeLabel deathlabel;
-    private ITypeLabel marriagelabel;
+    private IReferenceType birthlabel;
+    private IReferenceType deathlabel;
+    private IReferenceType marriagelabel;
 
 
     @Before
@@ -51,9 +49,8 @@ public class BlockingTest {
 
         store = new Store(store_path);
         repo = store.makeRepository(repo_path);
-        types =  repo.makeBucket(types_name, BucketKind.DIRECTORYBACKED);
         TypeFactory tf = TypeFactory.getInstance();
-        birthlabel = tf.createType(BIRTHRECORDTYPETEMPLATE, "Birth", types);
+        birthlabel = tf.createType(Birth.class, "Birth");
         births = repo.makeBucket(births_name, BucketKind.DIRECTORYBACKED, new BirthFactory(birthlabel.getId()));
     }
 
@@ -69,8 +66,8 @@ public class BlockingTest {
     @Test
     public synchronized void testPFPLMFFF() throws Exception, RepositoryException {
 
-        EventImporter.importDigitisingScotlandRecords(births, births_source_path,birthlabel);
-        FNLFFMFOverBirths blocker = new FNLFFMFOverBirths( births, repo );
+        EventImporter.importDigitisingScotlandRecords(births, births_source_path, birthlabel);
+        FNLFFMFOverBirths blocker = new FNLFFMFOverBirths(births, repo);
 
         blocker.apply();
     }

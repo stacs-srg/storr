@@ -3,6 +3,7 @@ package uk.ac.standrews.cs.digitising_scotland.jstore.impl;
 import org.json.JSONException;
 import org.json.JSONWriter;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.*;
+import uk.ac.standrews.cs.digitising_scotland.jstore.types.Types;
 import uk.ac.standrews.cs.digitising_scotland.util.ErrorHandling;
 import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
 import uk.ac.standrews.cs.nds.persistence.PersistentObjectException;
@@ -13,8 +14,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import static uk.ac.standrews.cs.digitising_scotland.jstore.impl.Types.check_label_consistency;
-import static uk.ac.standrews.cs.digitising_scotland.jstore.impl.Types.check_structural_consistency;
+import static uk.ac.standrews.cs.digitising_scotland.jstore.types.Types.check_label_consistency;
+import static uk.ac.standrews.cs.digitising_scotland.jstore.types.Types.check_structural_consistency;
 
 /**
  * Created by al on 19/09/2014.
@@ -43,7 +44,7 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
 
 
     public DirectoryBackedBucket(final String name, final String base_path, ILXPFactory<T> tFactory) throws RepositoryException, IOException {
-        this(name,base_path);
+        this(name, base_path);
         this.tFactory = tFactory;
         int type_label_id = this.getTypeLabelID();
         if (type_label_id == -1) { // no types associated with this bucket.
@@ -58,7 +59,7 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
         }
     }
 
-    public static IBucket createBucket(final String name, IRepository repo ) throws RepositoryException  {
+    public static IBucket createBucket(final String name, IRepository repo) throws RepositoryException {
         if (bucketExists(name, repo)) {
             throw new RepositoryException("Bucket: " + name + " already exists");
         }
@@ -66,29 +67,29 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
         try {
             Path path = getBucketPath(name, repo);
             FileManipulation.createDirectoryIfDoesNotExist(path);
-            return new DirectoryBackedBucket(name, repo.getRepo_path() );
+            return new DirectoryBackedBucket(name, repo.getRepo_path());
         } catch (IOException e) {
             throw new RepositoryException(e.getMessage());
         }
     }
 
 
-    public static IBucket createBucket(final String name, IRepository repo, ILXPFactory tFactory ) throws RepositoryException  {
+    public static IBucket createBucket(final String name, IRepository repo, ILXPFactory tFactory) throws RepositoryException {
         try {
             IBucket bucket = createBucket(name, repo);
             bucket.setTypeLabelID(tFactory.getTypeLabel());
 
             return new DirectoryBackedBucket(name, repo.getRepo_path(), tFactory);
         } catch (IOException e) {
-                throw new RepositoryException(e.getMessage());
+            throw new RepositoryException(e.getMessage());
         }
     }
 
     public T get(int id) throws IOException, PersistentObjectException {
         try (BufferedReader reader = Files.newBufferedReader(Paths.get(filePath(id)), FileManipulation.FILE_CHARSET)) {
 
-            if( tFactory == null ) { //  No java type specified
-                return (T) ( new LXP(id, new JSONReader(reader) ) ); // TODO is this legal??? - talk to Graham!
+            if (tFactory == null) { //  No java type specified
+                return (T) (new LXP(id, new JSONReader(reader))); // TODO is this legal??? - talk to Graham!
             } else {
                 return tFactory.create(id, new JSONReader(reader));
             }
@@ -103,13 +104,22 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
             throw new IOException("File already exists - LXP records in buckets may not be overwritten");
         }
 
-        if( type_label_id != -1 ) { // we have set a type label in this bucket there must check for consistency
+        if (type_label_id != -1) { // we have set a type label in this bucket there must check for consistency
 
             if (!(check_label_consistency(record, type_label_id))) { // Keep these separate for more error precision
                 throw new IOException("Label incompatibility");
             }
             if (!check_structural_consistency(record, type_label_id)) {
                 throw new IOException("Structural integrity incompatibility");
+            }
+        } else if (record.containsKey(Types.LABEL)) { // no type label on bucket but record has a type label so check structure
+
+            try {
+                if (!check_structural_consistency(record, Integer.parseInt(record.get(Types.LABEL)))) {
+                    throw new IOException("Structural integrity incompatibility");
+                }
+            } catch (KeyNotFoundException e) {
+                // this cannot happen - label checked in if .. so .. just let it go
             }
         }
 
@@ -150,7 +160,7 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
     public IInputStream<T> getInputStream() throws IOException {
 
         try {
-            return new BucketBackedInputStream(this,directory);
+            return new BucketBackedInputStream(this, directory);
         } catch (IOException e) {
             ErrorHandling.error("I/O Exception getting stream");
             return null;
@@ -165,7 +175,7 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
         return BucketKind.DIRECTORYBACKED;
     }
 
-    public void setKind( BucketKind kind  ) {
+    public void setKind(BucketKind kind) {
         Path path = directory.toPath();
         Path metapath = path.resolve("META");
         Path labelpath = metapath.resolve(kind.name());
@@ -195,8 +205,8 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
     }
 
     public void setTypeLabelID(int type_label_id) throws IOException {
-        if( this.type_label_id != -1 ) {
-            throw new IOException( "Type label already set");
+        if (this.type_label_id != -1) {
+            throw new IOException("Type label already set");
         }
         this.type_label_id = type_label_id; // cache it and keep a persistent copy of the label.
         Path path = directory.toPath();
@@ -204,8 +214,8 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
         FileManipulation.createDirectoryIfDoesNotExist(metapath);
 
         Path typepath = metapath.resolve("TYPELABEL");
-        if( Files.exists(typepath) ) {
-            throw new IOException( "Type label already set");
+        if (Files.exists(typepath)) {
+            throw new IOException("Type label already set");
         }
         FileManipulation.createFileIfDoesNotExist((typepath));
 
@@ -217,7 +227,9 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
     }
 
     public int getTypeLabelID() {
-        if( type_label_id != -1 ) { return type_label_id; } // only look it up if not cached.
+        if (type_label_id != -1) {
+            return type_label_id;
+        } // only look it up if not cached.
 
         Path path = directory.toPath();
         Path typepath = path.resolve("META").resolve("TYPELABEL");
@@ -229,7 +241,7 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
             return type_label_id;
 
         } catch (IOException e) {
-            ErrorHandling.error( "I/O Exception getting labelID");
+            ErrorHandling.error("I/O Exception getting labelID");
             return -1;
         }
     }

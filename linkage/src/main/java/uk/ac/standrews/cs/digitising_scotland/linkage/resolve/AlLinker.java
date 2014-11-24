@@ -2,17 +2,14 @@ package uk.ac.standrews.cs.digitising_scotland.linkage.resolve;
 
 import org.json.JSONException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.*;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.factory.TypeFactory;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.*;
 import uk.ac.standrews.cs.digitising_scotland.linkage.EventImporter;
 import uk.ac.standrews.cs.digitising_scotland.linkage.RecordFormatException;
 import uk.ac.standrews.cs.digitising_scotland.linkage.blocking.MultipleBlockerOverPerson;
 import uk.ac.standrews.cs.digitising_scotland.linkage.factory.BirthFactory;
 import uk.ac.standrews.cs.digitising_scotland.linkage.factory.PersonFactory;
-import uk.ac.standrews.cs.digitising_scotland.jstore.impl.factory.TypeFactory;
 import uk.ac.standrews.cs.digitising_scotland.linkage.interfaces.IPair;
-import uk.ac.standrews.cs.digitising_scotland.linkage.labels.FatherOfTypeLabel;
-import uk.ac.standrews.cs.digitising_scotland.linkage.labels.MotherOfTypeLabel;
-import uk.ac.standrews.cs.digitising_scotland.linkage.labels.SameAsTypeLabel;
 import uk.ac.standrews.cs.digitising_scotland.linkage.lxp_records.*;
 import uk.ac.standrews.cs.digitising_scotland.linkage.visualise.IndexedBucketVisualiser;
 import uk.ac.standrews.cs.nds.persistence.PersistentObjectException;
@@ -20,14 +17,12 @@ import uk.ac.standrews.cs.nds.persistence.PersistentObjectException;
 import java.io.IOException;
 import java.util.Iterator;
 
-import static uk.ac.standrews.cs.digitising_scotland.linkage.record_utilities.LXPConstructors.*;
-
-
 /**
  * Attempt to create a linking framework
  * Created by al on 6/8/2014.
  */
 public class AlLinker {
+
 
     // Repositories and stores
 
@@ -35,11 +30,6 @@ public class AlLinker {
     private static String input_repo_name = "BDM_repo";                         // input repository containing event records
     private static String linkage_repo_name = "linkage_repo";                   // repository for linked records
     private static String blocked_people_repo_name = "blocked_people_repo";     // repository for blocked records
-
-    private static final String BIRTHRECORDTYPETEMPLATE = "src/test/resources/BirthRecord.jsn";
-    private static final String DEATHRECORDTYPETEMPLATE = "src/test/resources/DeathRecord.jsn";
-    private static final String MARRIAGERECORDTYPETEMPLATE = "src/test/resources/MarriageRecord.jsn";
-    private static final String PERSONRECORDTYPETEMPLATE = "src/test/resources/PersonRecord.jsn";   // TODO write this spec.
 
     private Store store;
     private IRepository input_repo;             // Repository containing buckets of BDM records
@@ -75,10 +65,10 @@ public class AlLinker {
     private static String relationships_name = "relationships";                     // Name of bucket containing relationships between people
     private static String lineage_name = "lineage";
 
-    private ITypeLabel birthlabel;
-    private ITypeLabel deathlabel;
-    private ITypeLabel marriageLabel;
-    private ITypeLabel personLabel;
+    private IReferenceType birthlabel;
+    private IReferenceType deathlabel;
+    private IReferenceType marriageLabel;
+    private IReferenceType personLabel;
     private TypeFactory tf;
 
     public AlLinker() throws RepositoryException, RecordFormatException, JSONException, IOException, PersistentObjectException, StoreException, KeyNotFoundException {
@@ -89,7 +79,7 @@ public class AlLinker {
         link();
 
         System.out.println("Identity table:");
-        IndexedBucketVisualiser v = new IndexedBucketVisualiser( lineage, people );
+        IndexedBucketVisualiser v = new IndexedBucketVisualiser(lineage, people);
         v.show();
     }
 
@@ -100,63 +90,64 @@ public class AlLinker {
         linkage_repo = store.makeRepository(linkage_repo_name);
         blocked_people_repo = store.makeRepository(blocked_people_repo_name);  // a repo of Buckets of records blocked by  first name, last name, sex
 
-        types =  input_repo.makeBucket(types_name, BucketKind.DIRECTORYBACKED); // generic
+        types = input_repo.makeBucket(types_name, BucketKind.DIRECTORYBACKED); // generic
 
         tf = TypeFactory.getInstance();
-        initialiseTypes( types );
+        initialiseTypes(types);
 
         initialiseFactories();
 
-        births = input_repo.makeBucket(births_name,BucketKind.DIRECTORYBACKED, LXP.getInstance());   // TODO make these type specific
-        deaths = input_repo.makeBucket(deaths_name,BucketKind.DIRECTORYBACKED,LXP.getInstance());   // TODO look for all occurances and change them to typed or generic
+        births = input_repo.makeBucket(births_name, BucketKind.DIRECTORYBACKED);   // TODO make these type specific
+        deaths = input_repo.makeBucket(deaths_name, BucketKind.DIRECTORYBACKED);   // TODO look for all occurances and change them to typed or generic
 
-        marriages = input_repo.makeBucket(marriages_name, BucketKind.DIRECTORYBACKED, LXP.getInstance());
+        marriages = input_repo.makeBucket(marriages_name, BucketKind.DIRECTORYBACKED);
 
-        people = linkage_repo.makeBucket(people_name,BucketKind.DIRECTORYBACKED,LXP.getInstance()); // linkage_repo.makeIndexedBucket(people_name);
+        people = linkage_repo.makeBucket(people_name, BucketKind.DIRECTORYBACKED); // linkage_repo.makeIndexedBucket(people_name);
 
-        relationships = linkage_repo.makeBucket(relationships_name,BucketKind.DIRECTORYBACKED,LXP.getInstance()); // linkage_repo.makeIndexedBucket(relationships_name);
+        relationships = linkage_repo.makeBucket(relationships_name, BucketKind.DIRECTORYBACKED); // linkage_repo.makeIndexedBucket(relationships_name);
 
-        lineage = (IIndexedBucket<IPair<Person>>) linkage_repo.makeBucket(lineage_name,BucketKind.INDEXED,LXP.getInstance());  // a bucket of Pairs of ids of records for people with the same first name, last name, sex, indexed by first id.
-        lineage.addIndex(SameAsTypeLabel.first);
+        lineage = (IIndexedBucket<IPair<Person>>) linkage_repo.makeBucket(lineage_name, BucketKind.INDEXED);  // a bucket of Pairs of ids of records for people with the same first name, last name, sex, indexed by first id.
+        lineage.addIndex(SameAs.FIRST);
 
 
     }
 
-    private void initialiseTypes( IBucket types ) {
+    private void initialiseTypes(IBucket types) {
 
-        birthlabel = tf.createType(BIRTHRECORDTYPETEMPLATE, "Birth", types);
-        deathlabel = tf.createType(DEATHRECORDTYPETEMPLATE,"Death",  types);
-        marriageLabel = tf.createType(MARRIAGERECORDTYPETEMPLATE, "Marriage", types);
-        personLabel = tf.createType(PERSONRECORDTYPETEMPLATE, "Person", types);
+        //TODO Need to put checks in here and only do this if they don't exist already.
+
+        birthlabel = tf.createType(Birth.class, "birth");
+        deathlabel = tf.createType(Death.class, "death");
+        marriageLabel = tf.createType(Marriage.class, "marriage");
+        personLabel = tf.createType(Person.class, "person");
+
     }
 
     private void initialiseFactories() {
-        BirthFactory birthFactory = new BirthFactory( birthlabel.getId() );
-        PersonFactory personFactory = new PersonFactory( personLabel.getId() );
+        BirthFactory birthFactory = new BirthFactory(birthlabel.getId());
+        PersonFactory personFactory = new PersonFactory(personLabel.getId());
     }
 
     /**
-     *  Import the birth,death, marriage records
-     *  Initialises the people bucket with the people injected - one record for each person referenced in the original record
-     *  Initialises the known(100% certain) relationships between people and stores the relationships in the relationships bucket
+     * Import the birth,death, marriage records
+     * Initialises the people bucket with the people injected - one record for each person referenced in the original record
+     * Initialises the known(100% certain) relationships between people and stores the relationships in the relationships bucket
      */
-    private void injestBDMRecords() throws RecordFormatException, JSONException, IOException, KeyNotFoundException {
+    private void injestBDMRecords() throws RecordFormatException, JSONException, IOException, KeyNotFoundException, PersistentObjectException {
 
         EventImporter.importDigitisingScotlandRecords(births, births_source_path, birthlabel);
         EventImporter.importDigitisingScotlandRecords(marriages, marriages_source_path, deathlabel);
         EventImporter.importDigitisingScotlandRecords(deaths, deaths_source_path, marriageLabel);
 
-        createPeopleAndRelationshipsFromBirthsOrDeaths( births );
-        createPeopleAndRelationshipsFromBirthsOrDeaths( deaths );
-        createPeopleAndRelationshipsFromMarriages( marriages );
+        createPeopleAndRelationshipsFromBirthsOrDeaths(births);
+        createPeopleAndRelationshipsFromBirthsOrDeaths(deaths);
+        createPeopleAndRelationshipsFromMarriages(marriages);
     }
 
     private void block() {
         try {
-
-            IBlocker blocker = new MultipleBlockerOverPerson( people, blocked_people_repo, LXP.getInstance() );
+            IBlocker blocker = new MultipleBlockerOverPerson(people, blocked_people_repo, new PersonFactory(TypeFactory.getInstance().typeWithname("Person").getId()));
             blocker.apply();
-
         } catch (RepositoryException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -180,14 +171,14 @@ public class AlLinker {
     }
 
 
-
     /**
      * This method populates the people bucket with 1 person from each birth or marriage record (the relevant field names are the same in each)
      * For each record there will be 1 person created - e.g. mother, father baby
      * Thus the people bucket will contain multiple copies of a person - one instance per record that they appear in.
+     *
      * @param bucket - the bucket from which to take the inputs records
      */
-    private void createPeopleAndRelationshipsFromBirthsOrDeaths( IBucket bucket ) throws IOException, KeyNotFoundException {
+    private void createPeopleAndRelationshipsFromBirthsOrDeaths(IBucket bucket) throws IOException, KeyNotFoundException, PersistentObjectException {
 
         IOutputStream<Person> people_stream = people.getOutputStream();
         IOutputStream<Relationship> relationships_stream = relationships.getOutputStream();
@@ -197,26 +188,26 @@ public class AlLinker {
 
             // add the people
 
-      //      Person baby = createBaby(new Birth(birth_record), people_stream);
+            //      Person baby = createBaby(new Birth(birth_record), people_stream);
 
-            Person baby = createPersonFromOwnBirthDeath(birth_record);
+            Person baby = Person.createPersonFromOwnBirthDeath(birth_record);
             people_stream.add(baby);
-            Person dad = createFatherFromChildsBirthDeath(baby, birth_record);
-            if( dad != null ) {
+            Person dad = Person.createFatherFromChildsBirthDeath(baby, birth_record);
+            if (dad != null) {
                 people_stream.add(dad);
-                addRelationship(birth_record, dad, baby, FatherOfTypeLabel.TYPE, relationships_stream);
+                addRelationship(dad, "FatherOf", baby, birth_record, relationships_stream);
             }
-            Person mum = createMotherFromChildsBirthDeath(baby, birth_record);
-            if( mum != null ) {
+            Person mum = Person.createMotherFromChildsBirthDeath(baby, birth_record);
+            if (mum != null) {
                 people_stream.add(mum);
-                addRelationship(birth_record, dad, baby, MotherOfTypeLabel.TYPE, relationships_stream);
+                addRelationship(dad, "MotherOf", baby, birth_record, relationships_stream);
             }
 
             // Could add is_child but not now...
         }
     }
 
-    private void createPeopleAndRelationshipsFromMarriages( IBucket<Marriage> bucket ) throws IOException, KeyNotFoundException {
+    private void createPeopleAndRelationshipsFromMarriages(IBucket<Marriage> bucket) throws IOException, KeyNotFoundException {
 
         IOutputStream<Person> people_stream = people.getOutputStream();
         IOutputStream<Relationship> relationships_stream = relationships.getOutputStream();
@@ -226,39 +217,40 @@ public class AlLinker {
 
             // add the people
 
-            Person bride = createBrideFromMarriageRecord(marriage_record);
+            Person bride = Person.createBrideFromMarriageRecord(marriage_record);
             people_stream.add(bride);
-            Person groom = createGroomFromMarriageRecord(marriage_record);
+            Person groom = Person.createGroomFromMarriageRecord(marriage_record);
             people_stream.add(groom);
 
-            Person grooms_mother = createGroomsMotherFromMarriageRecord(groom, marriage_record);
+            Person grooms_mother = Person.createGroomsMotherFromMarriageRecord(groom, marriage_record);
             people_stream.add(grooms_mother);
-            Person grooms_father = createGroomsFatherFromMarriageRecord(groom, marriage_record);
+            Person grooms_father = Person.createGroomsFatherFromMarriageRecord(groom, marriage_record);
             people_stream.add(grooms_father);
-            Person brides_mother = createBridesMotherFromMarriageRecord(bride, marriage_record);
+            Person brides_mother = Person.createBridesMotherFromMarriageRecord(bride, marriage_record);
             people_stream.add(brides_mother);
-            Person brides_father = createBridesFatherFromMarriageRecord(bride, marriage_record);
+            Person brides_father = Person.createBridesFatherFromMarriageRecord(bride, marriage_record);
             people_stream.add(brides_father);
 
             // add the relationships
 
-            addRelationship(marriage_record, grooms_father, groom, FatherOfTypeLabel.TYPE, relationships_stream);
-            addRelationship(marriage_record, grooms_mother, groom, MotherOfTypeLabel.TYPE, relationships_stream);
-            addRelationship(marriage_record, brides_father, bride, FatherOfTypeLabel.TYPE, relationships_stream);
-            addRelationship(marriage_record, brides_mother, bride, MotherOfTypeLabel.TYPE, relationships_stream);
+            addRelationship(grooms_father, "FatherOf", groom, marriage_record, relationships_stream);
+            addRelationship(grooms_mother, "MotherOf", groom, marriage_record, relationships_stream);
+            addRelationship(brides_father, "FatherOf", bride, marriage_record, relationships_stream);
+            addRelationship(brides_mother, "MotherOf", bride, marriage_record, relationships_stream);
         }
     }
 
 
-    private void addRelationship(ILXP original_record, ILXP record1, ILXP record2, String relationship_type, IOutputStream output ) {
+    private void addRelationship(Person record1, String relationship_type, Person record2, ILXP evidence, IOutputStream output) {
 
         if (record1 != null) {
-            ILXP is_mother = new LXP();
-            is_mother.put("TYPE", relationship_type);
-            is_mother.put(MotherOfTypeLabel.child_id, Integer.toString(record2.getId()));
-            is_mother.put(MotherOfTypeLabel.mother_id, Integer.toString(record1.getId()));
-            is_mother.put(MotherOfTypeLabel.birth_record_id, Integer.toString(original_record.getId()));
-            output.add(is_mother);
+            ILXP lxp = new LXP();
+
+            lxp.put("person1", Integer.toString(record1.getId()));
+            lxp.put("person2", Integer.toString(record2.getId()));
+            lxp.put("relationship", relationship_type);
+            lxp.put("evidence", Integer.toString(evidence.getId()));
+            output.add(lxp);
         }
     }
 

@@ -4,8 +4,7 @@ import org.json.JSONException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.LXP;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.IBucket;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.ILXP;
-import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.ITypeLabel;
-import uk.ac.standrews.cs.digitising_scotland.linkage.labels.CommonTypeLabel;
+import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.IReferenceType;
 import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
 
 import java.io.BufferedReader;
@@ -32,13 +31,13 @@ public class EventImporter {
     /**
      * @param b        the bucket from which to import
      * @param filename containing the source records in digitising scotland format
-     * @param label the expected type of the records being imported
+     * @param label    the expected type of the records being imported
      * @return the number of records read in
      * @throws IOException
      * @throws RecordFormatException
      * @throws JSONException
      */
-    public static int importDigitisingScotlandRecords(final IBucket b, final String filename, ITypeLabel label) throws IOException, RecordFormatException, JSONException {
+    public static int importDigitisingScotlandRecords(final IBucket b, final String filename, IReferenceType label) throws IOException, RecordFormatException, JSONException {
 
         int counter = 0;
         try (final BufferedReader reader = Files.newBufferedReader(Paths.get(filename), FileManipulation.FILE_CHARSET)) {
@@ -57,7 +56,7 @@ public class EventImporter {
     /**
      * Creates a LXP birth record from a file.
      */
-    private static ILXP importDigitisingScotlandRecord(final BufferedReader reader, ITypeLabel label) throws IOException, RecordFormatException {
+    private static ILXP importDigitisingScotlandRecord(final BufferedReader reader, IReferenceType label) throws IOException, RecordFormatException {
 
         Collection<String> field_names = label.getLabels();
         int record_type = label.getId();
@@ -68,8 +67,6 @@ public class EventImporter {
 
         try {
             LXP record = new LXP();
-
-            record.put(CommonTypeLabel.LABEL, Integer.toString(record_type));
 
             Iterable<String> field_values = Arrays.asList(line.split(SEPARATOR, -1));
             addFields(field_names, field_values, record);

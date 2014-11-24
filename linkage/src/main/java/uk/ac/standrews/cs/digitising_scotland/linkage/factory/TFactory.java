@@ -1,7 +1,7 @@
 package uk.ac.standrews.cs.digitising_scotland.linkage.factory;
 
 
-import uk.ac.standrews.cs.digitising_scotland.jstore.impl.Types;
+import uk.ac.standrews.cs.digitising_scotland.jstore.types.Types;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.ILXP;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.ILXPFactory;
 
