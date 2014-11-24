@@ -19,26 +19,9 @@
     <developers>
         <developer>
             <id/>
-            <name>Jamie Carson</name>
-            <email>jkc25@st-andrews.ac.uk</email>
-            <url>http://jkc25.host.cs.st-andrews.ac.uk</url>
-            <organization>University of St Andrews</organization>
-            <organizationUrl>http://www.st-andrews.ac.uk/</organizationUrl>
-            <roles><role>Developer</role></roles>
-        </developer>
-        <developer>
-            <id/>
             <name>Alan Dearle</name>
             <email>alan.dearle@st-andrews.ac.uk</email>
             <url>http://al.host.cs.st-andrews.ac.uk/</url>
-            <organization>University of St Andrews</organization>
-            <organizationUrl>http://www.st-andrews.ac.uk/</organizationUrl>
-            <roles><role>Developer</role></roles>
-        </developer>
-        <developer>
-            <id/>
-            <name>Fraser Dunlop</name>
-            <email>frjd2@st-andrews.ac.uk</email>
             <organization>University of St Andrews</organization>
             <organizationUrl>http://www.st-andrews.ac.uk/</organizationUrl>
             <roles><role>Developer</role></roles>
@@ -54,14 +37,6 @@
         </developer>
         <developer>
             <id/>
-            <name>Victor Andrei</name>
-            <email>va9@st-andrews.ac.uk</email>
-            <organization>University of St Andrews</organization>
-            <organizationUrl>http://www.st-andrews.ac.uk/</organizationUrl>
-            <roles><role>Student Intern 2014</role></roles>
-        </developer>
-        <developer>
-            <id/>
             <name>Tom Dalton</name>
             <email>tsd4@st-andrews.ac.uk</email>
             <organization>University of St Andrews</organization>
@@ -70,6 +45,18 @@
         </developer>
     </developers>
     <contributors>
+        <contributor>
+            <name>Jamie Carson</name>
+            <email>jamiekcarson@gmail.com</email>
+            <organization>Previously University of St Andrews</organization>
+            <roles><role>Developer</role></roles>
+        </contributor>
+        <contributor>
+            <name>Fraser Dunlop</name>
+            <email>fraser.dunlop@gmail.com</email>
+            <organization>Previously University of St Andrews</organization>
+            <roles><role>Developer</role></roles>
+        </contributor>
         <contributor>
             <name>Chris Dibben</name>
             <email>chris.dibben@ed.ac.uk</email>
@@ -132,6 +119,13 @@
             <roles><role>Collaborator</role></roles>
         </contributor>
         <contributor>
+            <name>Victor Andrei</name>
+            <email>va9@st-andrews.ac.uk</email>
+            <organization>University of St Andrews</organization>
+            <organizationUrl>http://www.st-andrews.ac.uk/</organizationUrl>
+            <roles><role>Student Intern 2014</role></roles>
+        </contributor>
+        <contributor>
             <name>Conrad de Kerckhove</name>
             <url>https://www.linkedin.com/in/cfedk</url>
             <organization>University of St Andrews</organization>
@@ -148,15 +142,13 @@
         <contributor>
             <name>Ben Lovell</name>
             <url>https://uk.linkedin.com/pub/ben-lovell/22/5a2/b76</url>
-            <organization>University of St Andrews</organization>
-            <organizationUrl>http://www.st-andrews.ac.uk/</organizationUrl>
+            <organization>Previously University of St Andrews</organization>
             <roles><role>Student Intern 2012</role></roles>
         </contributor>
         <contributor>
             <name>Ivars Zubkans</name>
             <url>https://lv.linkedin.com/pub/ivars-zubkans/32/750/19</url>
-            <organization>University of St Andrews</organization>
-            <organizationUrl>http://www.st-andrews.ac.uk/</organizationUrl>
+            <organization>Previously University of St Andrews</organization>
             <roles><role>Student Intern 2012</role></roles>
         </contributor>
     </contributors>
