@@ -46,6 +46,11 @@ public interface IBucket<T extends ILXP> {
     String getName();
 
     /**
+     * @return the repository in which the bucket is located
+     */
+    IRepository getRepository();
+
+    /**
      * @param id - an id to lookup
      * @return true if the bucket contains the given id
      */
@@ -54,15 +59,15 @@ public interface IBucket<T extends ILXP> {
     /**
      * @param kind - the content kind of the bucket to be set
      */
-    void setKind( BucketKind kind );
+    void setKind(BucketKind kind);
 
     /**
-    * @return the kind of the bucket
-    */
+     * @return the kind of the bucket
+     */
     BucketKind getKind();
 
     int getTypeLabelID();
 
-    void setTypeLabelID( int id ) throws IOException;
+    void setTypeLabelID(int id) throws IOException;
 
 }

@@ -1,9 +1,10 @@
 package uk.ac.standrews.cs.digitising_scotland.jstore.impl;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.*;
+import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.IObjectCache;
+import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.IRepository;
+import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.IStore;
 import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
-import uk.ac.standrews.cs.nds.persistence.PersistentObjectException;
 import uk.ac.standrews.cs.nds.util.ErrorHandling;
 
 import java.io.BufferedReader;
@@ -28,9 +29,9 @@ public class Store implements IStore {
     private final File store_root_directory;
     private final File repo_directory;
     private final File id_file;
-    private final IStoreIndex store_index;
 
     private static IStore instance;
+    private final IObjectCache object_cache;
     private int id = 1;
 
     @SuppressFBWarnings(value = "ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD", justification = "intended behaviour")
@@ -48,8 +49,8 @@ public class Store implements IStore {
         checkCreateId();
 
         initId();
-        store_index = new StoreIndex(this);
         instance = this;
+        object_cache = new ObjectCache();
     }
 
     public synchronized static IStore getInstance() {
@@ -89,7 +90,7 @@ public class Store implements IStore {
 
     @Override
     public IRepository getRepo(String name) throws RepositoryException {
-        return new Repository(repo_path + File.separator + name);
+        return new Repository(repo_path, name);
     }
 
     @Override
@@ -109,13 +110,8 @@ public class Store implements IStore {
     }
 
     @Override
-    public ILXP get(int id) throws IOException, PersistentObjectException {
-
-        IBucket bucket = store_index.get(id);
-        if (bucket == null) {
-            return null;
-        }
-        return bucket.get(id);
+    public IObjectCache getObjectCache() {
+        return object_cache;
     }
 
     private void initId() throws IOException {

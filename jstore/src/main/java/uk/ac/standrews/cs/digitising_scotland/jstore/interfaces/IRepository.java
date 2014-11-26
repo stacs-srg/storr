@@ -27,5 +27,6 @@ public interface IRepository {
 
     String getRepo_path(); // return the repo path of this repository (not intended for public use).
 
+    String getName();
 
 }

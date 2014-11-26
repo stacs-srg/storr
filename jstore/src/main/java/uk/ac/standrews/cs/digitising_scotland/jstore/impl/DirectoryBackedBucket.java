@@ -23,17 +23,25 @@ import static uk.ac.standrews.cs.digitising_scotland.jstore.types.Types.check_st
 public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
 
     protected ILXPFactory<T> tFactory = null;
-    private String base_path; // the name of the parent directory in which this bucket (itself a directory) is stored.
+    private IRepository repository;  // the repository in which the bucket is stored
     private String name;     // the name of this bucket - used as the directory name
     protected File directory;  // the directory implementing the bucket storage
     private int type_label_id = -1; // not set
+    IObjectCache objectCache = Store.getInstance().getObjectCache();
+
+    // indirection handling
+
+    protected final static String $INDIRECTION$ = "$INDIRECTION$";
+    protected final static String BUCKET = "bucket";
+    protected final static String REPOSITORY = "repository";
+    protected final static String OID = "oid";
 
     /*
      * Creates a DirectoryBackedBucket with no factory - a persistent collection of ILXPs
      */
-    public DirectoryBackedBucket(final String name, final String base_path) throws RepositoryException, IOException {
+    public DirectoryBackedBucket(final String name, final IRepository repository) throws RepositoryException, IOException {
         this.name = name;
-        this.base_path = base_path;
+        this.repository = repository;
         String dir_name = dirPath();
         directory = new File(dir_name);
 
@@ -43,8 +51,8 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
     }
 
 
-    public DirectoryBackedBucket(final String name, final String base_path, ILXPFactory<T> tFactory) throws RepositoryException, IOException {
-        this(name, base_path);
+    public DirectoryBackedBucket(final String name, final IRepository repository, ILXPFactory<T> tFactory) throws RepositoryException, IOException {
+        this(name, repository);
         this.tFactory = tFactory;
         int type_label_id = this.getTypeLabelID();
         if (type_label_id == -1) { // no types associated with this bucket.
@@ -59,73 +67,97 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
         }
     }
 
-    public static IBucket createBucket(final String name, IRepository repo) throws RepositoryException {
-        if (bucketExists(name, repo)) {
+    public static IBucket createBucket(final String name, IRepository repository) throws RepositoryException {
+        if (bucketExists(name, repository)) {
             throw new RepositoryException("Bucket: " + name + " already exists");
         }
 
         try {
-            Path path = getBucketPath(name, repo);
+            Path path = getBucketPath(name, repository);
             FileManipulation.createDirectoryIfDoesNotExist(path);
-            return new DirectoryBackedBucket(name, repo.getRepo_path());
+            return new DirectoryBackedBucket(name, repository);
         } catch (IOException e) {
             throw new RepositoryException(e.getMessage());
         }
     }
 
 
-    public static IBucket createBucket(final String name, IRepository repo, ILXPFactory tFactory) throws RepositoryException {
+    public static IBucket createBucket(final String name, IRepository repository, ILXPFactory tFactory) throws RepositoryException {
         try {
-            IBucket bucket = createBucket(name, repo);
+            IBucket bucket = createBucket(name, repository);
             bucket.setTypeLabelID(tFactory.getTypeLabel());
 
-            return new DirectoryBackedBucket(name, repo.getRepo_path(), tFactory);
+            return new DirectoryBackedBucket(name, repository, tFactory);
         } catch (IOException e) {
             throw new RepositoryException(e.getMessage());
         }
     }
 
     public T get(int id) throws IOException, PersistentObjectException {
+        T result;
         try (BufferedReader reader = Files.newBufferedReader(Paths.get(filePath(id)), FileManipulation.FILE_CHARSET)) {
 
+            objectCache.put(this, id);                             // Putting this call here ensures that all records that are in a bucket and loaded are in the cache
             if (tFactory == null) { //  No java type specified
-                return (T) (new LXP(id, new JSONReader(reader))); // TODO is this legal??? - talk to Graham!
+                result = (T) (new LXP(id, new JSONReader(reader))); // TODO is this legal??? - talk to Graham!
             } else {
-                return tFactory.create(id, new JSONReader(reader));
+                result = tFactory.create(id, new JSONReader(reader));
             }
+        }
+        // Now check for indirection
+        if (result.containsKey($INDIRECTION$)) { // try and load the record that the indirection record points to
+            try {
+                return resolve_indirection(result);
+            } catch (KeyNotFoundException e) {
+                ErrorHandling.exceptionError(e, "Indirection error: Key not found");
+                throw new PersistentObjectException("Indirection error");
+            } catch (RepositoryException e) {
+                ErrorHandling.exceptionError(e, "Indirection error: Reposotory not found");
+                throw new PersistentObjectException("Indirection error");
+            }
+        } else {
+            return result; // a normal LXP was found
         }
     }
 
+
     public void put(final T record) throws IOException, JSONException {
 
-        Path path = Paths.get(this.filePath(record.getId()));
-
-        if (Files.exists(path)) {
-            throw new IOException("File already exists - LXP records in buckets may not be overwritten");
+        if (objectCache.contains(record.getId())) { // the object is already in the store so write an indirection
+            writeLXP(record, create_indirection(record));
         }
+        writeLXP(record, record); // normal object write
+    }
+
+
+    protected void writeLXP(ILXP record_to_check, ILXP record_to_write) throws IOException, JSONException {
 
         if (type_label_id != -1) { // we have set a type label in this bucket there must check for consistency
 
-            if (!(check_label_consistency(record, type_label_id))) { // Keep these separate for more error precision
+            if (!(check_label_consistency(record_to_check, type_label_id))) { // Keep these separate for more error precision
                 throw new IOException("Label incompatibility");
             }
-            if (!check_structural_consistency(record, type_label_id)) {
+            if (!check_structural_consistency(record_to_check, type_label_id)) {
                 throw new IOException("Structural integrity incompatibility");
             }
-        } else if (record.containsKey(Types.LABEL)) { // no type label on bucket but record has a type label so check structure
+        } else if (record_to_check.containsKey(Types.LABEL)) { // no type label on bucket but record has a type label so check structure
 
             try {
-                if (!check_structural_consistency(record, Integer.parseInt(record.get(Types.LABEL)))) {
+                if (!check_structural_consistency(record_to_check, Integer.parseInt(record_to_check.get(Types.LABEL)))) {
                     throw new IOException("Structural integrity incompatibility");
                 }
             } catch (KeyNotFoundException e) {
                 // this cannot happen - label checked in if .. so .. just let it go
             }
         }
-
+        Path path = Paths.get(this.filePath(record_to_write.getId()));
+        if (Files.exists(path)) {
+            throw new IOException("File already exists - LXP records in buckets may not be overwritten");
+        }
         try (Writer writer = Files.newBufferedWriter(path, FileManipulation.FILE_CHARSET)) {
 
-            record.serializeToJSON(new JSONWriter(writer));
+            objectCache.put(this, record_to_write.getId());                              // Putting this call here ensures that all records that are in a bucket and loaded are in the cache
+            record_to_write.serializeToJSON(new JSONWriter(writer));
         }
     }
 
@@ -139,7 +171,7 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
 
     protected String dirPath() {
 
-        return base_path + File.separator + name;
+        return repository.getRepo_path() + File.separator + name;
     }
 
     public String filePath(final String id) {
@@ -148,6 +180,11 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
 
     public String getName() {
         return this.name;
+    }
+
+    @Override
+    public IRepository getRepository() {
+        return this.repository;
     }
 
     public boolean contains(int id) {
@@ -186,11 +223,11 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
         }
     }
 
-    public static BucketKind getKind(String name, String repo_filename) {
+    public static BucketKind getKind(String name, IRepository repo) {
 
         // TODO look at usages of Paths and filenames and tidy up
 
-        Path meta_path = Paths.get(repo_filename, name, "META"); // repo/bucketname/meta
+        Path meta_path = Paths.get(repo.getRepo_path(), name, "META"); // repo/bucketname/meta
 
         if (Files.exists(meta_path.resolve(BucketKind.DIRECTORYBACKED.name()))) {
             return BucketKind.DIRECTORYBACKED;
@@ -247,6 +284,33 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
     }
 
     //******** Private methods *********
+
+
+    protected ILXP create_indirection(final T record) throws IOException, JSONException {
+
+        int oid = record.getId();
+        IBucket b = objectCache.getBucket(oid);
+        IRepository r = b.getRepository();
+
+        ILXP indirection_record = new LXP();
+        indirection_record.put($INDIRECTION$, "true");
+        indirection_record.put(BUCKET, b.getName());
+        indirection_record.put(REPOSITORY, r.getName());
+        indirection_record.put(OID, Integer.toString(oid));
+
+        return indirection_record;
+    }
+
+    private T resolve_indirection(T record) throws KeyNotFoundException, RepositoryException, IOException, PersistentObjectException {
+
+        String bucket_name = record.get(BUCKET);
+        String repo_name = record.get(REPOSITORY);
+        int oid = Integer.parseInt(record.get(OID));
+        return Store.getInstance().getRepo(repo_name).getBucket(bucket_name, tFactory).get(oid);
+    }
+
+    //******** Private methods *********
+
 
     public static boolean bucketExists(final String name, IRepository repo) {
 

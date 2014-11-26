@@ -180,9 +180,9 @@ public class InfrastructureTest {
     @Test
     public synchronized void testReferenceLabel() throws Exception, RepositoryException {
         IBucket b1 = repo.getBucket(generic_bucket_name1);
-        b1.setTypeLabelID(personlabel.getId());
+        b1.setTypeLabelID(personlabel.getId());               //id is 1: lxp is {"age":"int","name":"string"}
         IBucket b2 = repo.getBucket(generic_bucket_name2);
-        b2.setTypeLabelID(personreftuple.getId());
+        b2.setTypeLabelID(personreftuple.getId());            // id is 5: lxp is {"person_ref":"Person"}
 
 
         LXP lxp = new LXP();        // correct structure
@@ -191,11 +191,11 @@ public class InfrastructureTest {
         lxp.put(Types.LABEL, Integer.toString(personlabel.getId())); // correct label
         int person_id = lxp.getId();
 
-        b1.put(lxp);
+        b1.put(lxp);   // lxp.id is 7 label is 1
 
 
-        LXP lxp2 = new LXP();        // correct structure
-        lxp2.put("person_ref", Integer.toString(person_id));
+        LXP lxp2 = new LXP();        // correct structure    // id is 8
+        lxp2.put("person_ref", Integer.toString(person_id));    // person_ref=7, ref to Person
 
         b2.put(lxp2);
     }

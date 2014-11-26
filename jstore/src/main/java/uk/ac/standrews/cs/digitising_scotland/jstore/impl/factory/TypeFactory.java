@@ -26,7 +26,7 @@ public class TypeFactory {
     private static final String type_Rep_bucket_name = "Type_reps";
     private static final String type_names_bucket_name = "Type_names";
     private IBucket type_reps_bucket = null;
-    private IBucket type_name_map = null;
+    private IBucket type_name_bucket = null;
 
     private IRepository type_repo;
 
@@ -38,7 +38,7 @@ public class TypeFactory {
         try {
             get_repo(type_repo_name);
             type_reps_bucket = get_bucket(type_Rep_bucket_name);
-            type_name_map = get_bucket(type_names_bucket_name);
+            type_name_bucket = get_bucket(type_names_bucket_name);
             load_caches();
         } catch (RepositoryException e) {
             e.printStackTrace();
@@ -87,7 +87,7 @@ public class TypeFactory {
         // private HashMap<Integer,IReferenceType> ids_to_type_cache = new HashMap<>();
 
         try {
-            Iterator<LXP> i = type_name_map.getInputStream().iterator();
+            Iterator<LXP> i = type_name_bucket.getInputStream().iterator();
             while (i.hasNext()) {
                 ILXP lxp = i.next();
                 // as set up in namevaluepair below.
@@ -113,12 +113,13 @@ public class TypeFactory {
     private void do_housekeeping(String type_name, LXPReferenceType ref_type) {
         try {
             ILXP type_rep = ref_type.get_typerep();
+            ILXP name_value = namevaluepair(type_name, type_rep.getId());
             type_reps_bucket.put(type_rep);
-            type_name_map.put(namevaluepair(type_name, type_rep.getId()));
+            type_name_bucket.put(name_value);
         } catch (IOException e) {
-            ErrorHandling.exceptionError(e, "IO exception adding type " + type_name + "to types bucket");
+            ErrorHandling.exceptionError(e, "IO exception adding type " + type_name + " to types bucket");
         } catch (JSONException e) {
-            ErrorHandling.exceptionError(e, "JSON exception adding type " + type_name + "to types bucket");
+            ErrorHandling.exceptionError(e, "JSON exception adding type " + type_name + " to types bucket");
         }
         names_to_type_cache.put(type_name, ref_type);
         ids_to_type_cache.put(ref_type.getId(), ref_type);

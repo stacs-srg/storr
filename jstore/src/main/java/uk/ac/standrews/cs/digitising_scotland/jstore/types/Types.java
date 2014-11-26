@@ -4,6 +4,7 @@ import uk.ac.standrews.cs.digitising_scotland.jstore.impl.KeyNotFoundException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.LXP;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.Store;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.factory.TypeFactory;
+import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.IBucket;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.ILXP;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.IReferenceType;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.IType;
@@ -65,7 +66,7 @@ public class Types {
      * Checks that the content of a record is consistent with a supplied label (generally from a bucket)
      *
      * @param record   whose _structure is to be checked
-     * @param ref_type teh type being checked against
+     * @param ref_type the type being checked against
      * @param <T>      the type of the record being checked
      * @return true if the structure is consistent
      * @throws IOException
@@ -146,11 +147,18 @@ public class Types {
         } else { // it is a reference type
             Integer id = Integer.valueOf(value);  // must be a reference to a record of appropriate type
             ILXP record = null;
+
             try {
-                record = Store.getInstance().get(id);
+                IBucket bucket = Store.getInstance().getObjectCache().getBucket(id);
+                if (bucket == null) { // didn't find the bucket
+                    return false;
+                }
+                record = bucket.get(id);
                 if (record == null) { // we haven't found that record in the store
                     return false;
                 }
+
+
             } catch (IOException e) {
                 ErrorHandling.exceptionError(e, "Recovering record type");
                 return false;
@@ -158,7 +166,6 @@ public class Types {
                 ErrorHandling.exceptionError(e, "Recovering record type");
                 return false;
             }
-
             return check_structural_consistency(record, fieldIType.getReferenceType());
         }
     }

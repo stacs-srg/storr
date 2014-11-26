@@ -77,22 +77,22 @@ public class Person extends AbstractLXP {
     public Person(String surname, String forename, String sex, String fathers_forename, String fathers_surname, String fathers_occupation, String mothers_forename, String mothers_surname, String mothers_maiden_surname, String changed_surname, String changed_forename, String changed_mothers_maiden_surname, String original_record_id, String original_record_type, String role, String occupation) {
 
         this();
-        map.put(SURNAME, surname);
-        map.put(FORENAME, forename);
-        map.put(SEX, sex);
-        map.put(FATHERS_FORENAME, fathers_forename);
-        map.put(FATHERS_SURNAME, fathers_surname);
-        map.put(FATHERS_OCCUPATION, fathers_occupation);
-        map.put(MOTHERS_FORENAME, mothers_forename);
-        map.put(MOTHERS_SURNAME, mothers_surname);
-        map.put(MOTHERS_MAIDEN_SURNAME, mothers_maiden_surname);
-        map.put(CHANGED_SURNAME, changed_surname);
-        map.put(CHANGED_FORENAME, changed_forename);
-        map.put(CHANGED_MOTHERS_MAIDEN_SURNAME, changed_mothers_maiden_surname);
-        map.put(ORIGINAL_RECORD_ID, original_record_id);
-        map.put(ORIGINAL_RECORD_TYPE, original_record_type);
-        map.put(ROLE, role);
-        map.put(OCCUPATION, occupation);
+        put(SURNAME, surname);
+        put(FORENAME, forename);
+        put(SEX, sex);
+        put(FATHERS_FORENAME, fathers_forename);
+        put(FATHERS_SURNAME, fathers_surname);
+        put(FATHERS_OCCUPATION, fathers_occupation);
+        put(MOTHERS_FORENAME, mothers_forename);
+        put(MOTHERS_SURNAME, mothers_surname);
+        put(MOTHERS_MAIDEN_SURNAME, mothers_maiden_surname);
+        put(CHANGED_SURNAME, changed_surname);
+        put(CHANGED_FORENAME, changed_forename);
+        put(CHANGED_MOTHERS_MAIDEN_SURNAME, changed_mothers_maiden_surname);
+        put(ORIGINAL_RECORD_ID, original_record_id);
+        put(ORIGINAL_RECORD_TYPE, original_record_type);
+        put(ROLE, role);
+        put(OCCUPATION, occupation);
     }
 
     public static Person createPersonFromOwnBirthDeath(ILXP BD_record) throws KeyNotFoundException {// TODO rewrite as typed

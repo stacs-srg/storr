@@ -18,4 +18,6 @@ public interface IReferenceType extends IType {
     public IType getFieldType(String label) throws KeyNotFoundException;
 
     public int getId();
+
+    ILXP getRep();
 }

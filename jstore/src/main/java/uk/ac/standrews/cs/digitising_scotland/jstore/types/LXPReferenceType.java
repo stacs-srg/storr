@@ -82,4 +82,9 @@ public class LXPReferenceType implements IReferenceType {
         return typerep.getId();
     }
 
+    @Override
+    public ILXP getRep() {
+        return typerep;
+    }
+
 }

@@ -27,23 +27,23 @@ public class DirectoryBackedIndexedBucket<T extends ILXP> extends DirectoryBacke
      * Creates a handle on a bucket.
      * Assumes that bucket has been created already using a factory - i.e. the directory already exists.
      *
-     * @param name      the name of the bucket (also used as directory name).
-     * @param base_path the repository path in which the bucket is created.
+     * @param name       the name of the bucket (also used as directory name).
+     * @param repository the repository in which the bucket is created.
      */
-    public DirectoryBackedIndexedBucket(final String name, final String base_path) throws IOException, RepositoryException {
-        super( name, base_path );
+    public DirectoryBackedIndexedBucket(final String name, final IRepository repository) throws IOException, RepositoryException {
+        super(name, repository);
         initIndexes();
     }
 
-    public DirectoryBackedIndexedBucket(final String name, final String base_path, ILXPFactory tFactory) throws IOException, RepositoryException {
-        super( name, base_path,tFactory );
+    public DirectoryBackedIndexedBucket(final String name, final IRepository repository, ILXPFactory tFactory) throws IOException, RepositoryException {
+        super(name, repository, tFactory);
         initIndexes();
     }
 
-    public static IBucket createBucket(final String name, IRepository repo, ILXPFactory tFactory ) throws RepositoryException  {
-        DirectoryBackedBucket.createBucket(name, repo,tFactory);
+    public static IBucket createBucket(final String name, IRepository repository, ILXPFactory tFactory) throws RepositoryException {  // TODO delete these and make into constructors
+        DirectoryBackedBucket.createBucket(name, repository, tFactory);
         try {
-            return new DirectoryBackedIndexedBucket(name, repo.getRepo_path(),tFactory );
+            return new DirectoryBackedIndexedBucket(name, repository, tFactory);
         } catch (IOException e) {
             throw new RepositoryException(e.getMessage());
         }
@@ -100,20 +100,19 @@ public class DirectoryBackedIndexedBucket<T extends ILXP> extends DirectoryBacke
 
     public IInputStream getInputStream() throws IOException {
         // We already know that the type is compatible - checked in constructor.
-        return new BucketBackedInputStream( this,this.directory );
+        return new BucketBackedInputStream(this, this.directory);
     }
 
 
     public IOutputStream getOutputStream() {
         // We already know that the type is compatible - checked in constructor.
-        return new BucketBackedOutputStream( this );
+        return new BucketBackedOutputStream(this);
     }
 
     @Override
     public BucketKind getKind() {
         return BucketKind.INDEXED;
     }
-
 
 
 }

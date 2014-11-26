@@ -8,10 +8,11 @@ import java.util.Iterator;
  * A simple store index that relies on dumb searching of the directories in the store
  * Would be possible to write a much more sophisticated index - perhaps using hard links etc.
  * YAGNI
- *
+ * <p/>
  * Created by al on 04/07/2014.
  */
-public class StoreIndex<T extends ILXP> implements IStoreIndex<T> {
+@Deprecated
+public class StoreIndex<T extends ILXP> {
 
     private IStore store;
 
@@ -19,7 +20,6 @@ public class StoreIndex<T extends ILXP> implements IStoreIndex<T> {
         this.store = store;
     }
 
-    @Override
     public IBucket get(int id) {
 
         Iterator<IRepository> repo_iterator = store.getIterator();
@@ -34,7 +34,7 @@ public class StoreIndex<T extends ILXP> implements IStoreIndex<T> {
                 IBucket bucket = null;
                 try {
                     bucket = repo.getBucket(bucket_iterator.next());
-                    if( ! bucket.getKind().equals(BucketKind.INDIRECT ) && bucket.contains(id) ) {  // only look at primary storage
+                    if (!bucket.getKind().equals(BucketKind.INDIRECT) && bucket.contains(id)) {  // only look at primary storage
 
                         return bucket;
                     }

@@ -19,10 +19,12 @@ public class Repository implements IRepository {
 
     private final String repo_path;
     private final File repo_directory;
+    private final String name;
 
-    public Repository(final String repo_path) throws RepositoryException {
+    public Repository(final String base_path, String name) throws RepositoryException {
 
-        this.repo_path = repo_path;
+        this.name = name;
+        this.repo_path = base_path + File.separator + name;
         repo_directory = new File(repo_path);
 
         if (!repo_directory.exists()) {  // only if the repo doesn't exist - try and make the directory
@@ -40,20 +42,20 @@ public class Repository implements IRepository {
 
 
     public IBucket makeBucket(final String name, BucketKind kind) throws RepositoryException {
-        switch( kind ) {
+        switch (kind) {
             case DIRECTORYBACKED: {
                 IBucket bucket = DirectoryBackedBucket.createBucket(name, this);
-                bucket.setKind( kind );
+                bucket.setKind(kind);
                 return bucket;
             }
             case INDIRECT: {
                 IBucket bucket = DirectoryBackedIndirectBucket.createBucket(name, this);
-                bucket.setKind( kind );
+                bucket.setKind(kind);
                 return bucket;
             }
             case INDEXED: {
                 IBucket bucket = DirectoryBackedIndexedBucket.createBucket(name, this);
-                bucket.setKind( kind );
+                bucket.setKind(kind);
                 return bucket;
             }
             default: {
@@ -63,20 +65,20 @@ public class Repository implements IRepository {
     }
 
     public <T extends ILXP> IBucket<T> makeBucket(final String name, BucketKind kind, ILXPFactory<T> tFactory) throws RepositoryException {
-        switch( kind ) {
+        switch (kind) {
             case DIRECTORYBACKED: {
-                    IBucket<T> bucket = DirectoryBackedBucket.createBucket(name, this, tFactory);
-                    bucket.setKind( kind );
-                    return bucket;
+                IBucket<T> bucket = DirectoryBackedBucket.createBucket(name, this, tFactory);
+                bucket.setKind(kind);
+                return bucket;
             }
             case INDIRECT: {
                 IBucket<T> bucket = DirectoryBackedIndirectBucket.createBucket(name, this, tFactory);
-                bucket.setKind( kind );
+                bucket.setKind(kind);
                 return bucket;
             }
             case INDEXED: {
                 IBucket<T> bucket = DirectoryBackedIndexedBucket.createBucket(name, this, tFactory);
-                bucket.setKind( kind );
+                bucket.setKind(kind);
                 return bucket;
             }
             default: {
@@ -114,18 +116,18 @@ public class Repository implements IRepository {
     @Override
     public <T extends ILXP> IBucket<T> getBucket(String name, ILXPFactory<T> tFactory) throws RepositoryException {
         if (bucketExists(name)) {
-            BucketKind kind = DirectoryBackedBucket.getKind(name, repo_path);
+            BucketKind kind = DirectoryBackedBucket.getKind(name, this);
             try {
-                switch( kind ) {
+                switch (kind) {
                     case DIRECTORYBACKED: {
-                        IBucket bucket = new DirectoryBackedBucket(name, repo_path,tFactory);
+                        IBucket bucket = new DirectoryBackedBucket(name, this, tFactory);
                         return bucket;
                     }
                     case INDIRECT: {
-                        return new DirectoryBackedIndirectBucket(name,repo_path,tFactory);
+                        return new DirectoryBackedIndirectBucket(name, this, tFactory);
                     }
                     case INDEXED: {
-                        return new DirectoryBackedIndexedBucket(name, repo_path,tFactory);
+                        return new DirectoryBackedIndexedBucket(name, this, tFactory);
                     }
                     default: {
                         throw new RepositoryException("Bucketkind: " + kind + " not recognized");
@@ -141,18 +143,18 @@ public class Repository implements IRepository {
     @Override
     public IBucket getBucket(String name) throws RepositoryException {
         if (bucketExists(name)) {
-            BucketKind kind = DirectoryBackedBucket.getKind(name, repo_path);
+            BucketKind kind = DirectoryBackedBucket.getKind(name, this);
             try {
-                switch( kind ) {
+                switch (kind) {
                     case DIRECTORYBACKED: {
-                        IBucket bucket = new DirectoryBackedBucket(name, repo_path);
+                        IBucket bucket = new DirectoryBackedBucket(name, this);
                         return bucket;
                     }
                     case INDIRECT: {
-                        return new DirectoryBackedIndirectBucket(name,repo_path);
+                        return new DirectoryBackedIndirectBucket(name, this);
                     }
                     case INDEXED: {
-                        return new DirectoryBackedIndexedBucket(name, repo_path);
+                        return new DirectoryBackedIndexedBucket(name, this);
                     }
                     default: {
                         throw new RepositoryException("Bucketkind: " + kind + " not recognized");
@@ -172,13 +174,18 @@ public class Repository implements IRepository {
     }
 
     @Override
-    public <T extends ILXP> Iterator<IBucket<T>> getIterator( ILXPFactory<T> tFactory ) {
-        return new BucketIterator(this, repo_directory,tFactory);
+    public <T extends ILXP> Iterator<IBucket<T>> getIterator(ILXPFactory<T> tFactory) {
+        return new BucketIterator(this, repo_directory, tFactory);
     }
 
     @Override
     public String getRepo_path() {
         return repo_path;
+    }
+
+    @Override
+    public String getName() {
+        return name;
     }
 
     private static class BucketNamesIterator implements Iterator<String> {
@@ -234,7 +241,7 @@ public class Repository implements IRepository {
             String name = file_iterator.next().getName();
 
             try {
-                return repository.getBucket(name,tFactory);
+                return repository.getBucket(name, tFactory);
 
             } catch (RepositoryException e) {
                 ErrorHandling.exceptionError(e, "RepositoryException in iterator");
