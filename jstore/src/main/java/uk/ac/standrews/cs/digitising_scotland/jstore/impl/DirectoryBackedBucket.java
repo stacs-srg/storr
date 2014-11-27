@@ -121,7 +121,11 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
 
     public void put(final T record) throws BucketException {
         try {
-            if (objectCache.contains(record.getId())) { // the object is already in the store so write an indirection
+            int id = record.getId();
+            if (this.contains(id)) {
+                throw new BucketException("records may bot be overwritten");
+            }
+            if (objectCache.contains(id)) { // the object is already in the store so write an indirection
                 writeLXP(record, create_indirection(record));
             } else {
                 writeLXP(record, record); // normal object write
@@ -161,9 +165,7 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
             }
         }
         Path path = Paths.get(this.filePath(record_to_write.getId()));
-        if (Files.exists(path)) {
-            throw new BucketException("File already exists - LXP records in buckets may not be overwritten");
-        }
+
         try (Writer writer = Files.newBufferedWriter(path, FileManipulation.FILE_CHARSET)) { // auto close and exception
 
             objectCache.put(this, record_to_write.getId());                              // Putting this call here ensures that all records that are in a bucket and loaded are in the cache
