@@ -2,9 +2,9 @@ package uk.ac.standrews.cs.digitising_scotland.linkage.lxp_records;
 
 import org.json.JSONException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.LXP;
-import uk.ac.standrews.cs.digitising_scotland.jstore.impl.RepositoryException;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.RepositoryException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.Store;
-import uk.ac.standrews.cs.digitising_scotland.jstore.impl.StoreException;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.StoreException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.factory.TypeFactory;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.*;
 import uk.ac.standrews.cs.digitising_scotland.jstore.types.Types;

@@ -2,6 +2,7 @@ package uk.ac.standrews.cs.digitising_scotland.linkage;
 
 import org.json.JSONException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.LXP;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.BucketException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.IBucket;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.ILXP;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.IReferenceType;
@@ -37,7 +38,7 @@ public class EventImporter {
      * @throws RecordFormatException
      * @throws JSONException
      */
-    public static int importDigitisingScotlandRecords(final IBucket b, final String filename, IReferenceType label) throws IOException, RecordFormatException, JSONException {
+    public static int importDigitisingScotlandRecords(final IBucket b, final String filename, IReferenceType label) throws BucketException, IOException, RecordFormatException, JSONException {
 
         int counter = 0;
         try (final BufferedReader reader = Files.newBufferedReader(Paths.get(filename), FileManipulation.FILE_CHARSET)) {

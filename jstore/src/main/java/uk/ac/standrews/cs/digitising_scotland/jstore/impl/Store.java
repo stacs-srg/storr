@@ -1,6 +1,8 @@
 package uk.ac.standrews.cs.digitising_scotland.jstore.impl;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.RepositoryException;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.StoreException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.IObjectCache;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.IRepository;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.IStore;

@@ -1,12 +1,13 @@
 package uk.ac.standrews.cs.digitising_scotland.linkage.blocking;
 
 
-import uk.ac.standrews.cs.digitising_scotland.jstore.impl.KeyNotFoundException;
-import uk.ac.standrews.cs.digitising_scotland.jstore.impl.RepositoryException;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.BucketException;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.KeyNotFoundException;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.RepositoryException;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.factory.TypeFactory;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.IBucket;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.IRepository;
 import uk.ac.standrews.cs.digitising_scotland.linkage.factory.BirthFactory;
-import uk.ac.standrews.cs.digitising_scotland.jstore.impl.factory.TypeFactory;
 import uk.ac.standrews.cs.digitising_scotland.linkage.lxp_records.Birth;
 import uk.ac.standrews.cs.digitising_scotland.linkage.stream_operators.sharder.Blocker;
 
@@ -19,7 +20,7 @@ import java.io.IOException;
 public class FNLFFMFOverBirths extends Blocker<Birth> {
 
     public FNLFFMFOverBirths(final IBucket<Birth> birthsBucket,
-                             final IRepository output_repo) throws RepositoryException, IOException {
+                             final IRepository output_repo) throws BucketException, RepositoryException, IOException {
 
         super(birthsBucket.getInputStream(), output_repo, new BirthFactory(TypeFactory.getInstance().typeWithname("Birth").getId()));
     }

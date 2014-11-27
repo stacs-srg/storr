@@ -1,18 +1,16 @@
 package uk.ac.standrews.cs.digitising_scotland.jstore.impl.factory;
 
 
-import org.json.JSONException;
-import uk.ac.standrews.cs.digitising_scotland.jstore.impl.KeyNotFoundException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.LXP;
-import uk.ac.standrews.cs.digitising_scotland.jstore.impl.RepositoryException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.Store;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.BucketException;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.KeyNotFoundException;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.RepositoryException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.*;
 import uk.ac.standrews.cs.digitising_scotland.jstore.types.LXPReferenceType;
 import uk.ac.standrews.cs.digitising_scotland.jstore.types.Types;
 import uk.ac.standrews.cs.digitising_scotland.util.ErrorHandling;
-import uk.ac.standrews.cs.nds.persistence.PersistentObjectException;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -100,12 +98,10 @@ public class TypeFactory {
                 names_to_type_cache.put(name, reference);
                 ids_to_type_cache.put(type_key, reference);
             }
-        } catch (IOException e) {
+        } catch (BucketException e) {
             ErrorHandling.exceptionError(e, "IO exception getting iterator over type name map");
         } catch (KeyNotFoundException e) {
             ErrorHandling.exceptionError(e, "Could not find key whilst reestablising caches");
-        } catch (PersistentObjectException e) {
-            ErrorHandling.exceptionError(e, "PersistentObjectException whilst reestablising caches");
         }
 
     }
@@ -116,10 +112,8 @@ public class TypeFactory {
             ILXP name_value = namevaluepair(type_name, type_rep.getId());
             type_reps_bucket.put(type_rep);
             type_name_bucket.put(name_value);
-        } catch (IOException e) {
-            ErrorHandling.exceptionError(e, "IO exception adding type " + type_name + " to types bucket");
-        } catch (JSONException e) {
-            ErrorHandling.exceptionError(e, "JSON exception adding type " + type_name + " to types bucket");
+        } catch (BucketException e) {
+            ErrorHandling.exceptionError(e, "Bucket exception adding type " + type_name + " to types bucket");
         }
         names_to_type_cache.put(type_name, ref_type);
         ids_to_type_cache.put(ref_type.getId(), ref_type);

@@ -1,9 +1,9 @@
 package uk.ac.standrews.cs.digitising_scotland.jstore.impl;
 
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.BucketException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.IBucket;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.IInputStream;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.ILXP;
-import uk.ac.standrews.cs.nds.persistence.PersistentObjectException;
 import uk.ac.standrews.cs.nds.util.ErrorHandling;
 
 import java.io.File;
@@ -38,7 +38,7 @@ public class IndexedBucketInputStream implements IInputStream {
             try {
                 return bucket.get(Integer.parseInt(file_iterator.next().getName()));
 
-            } catch (PersistentObjectException | IOException e) {
+            } catch (BucketException e) {
                 ErrorHandling.exceptionError(e, "Exception in iterator");
                 return null;
             }

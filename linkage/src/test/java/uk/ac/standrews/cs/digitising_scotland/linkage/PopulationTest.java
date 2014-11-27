@@ -4,9 +4,10 @@ import org.json.JSONException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import uk.ac.standrews.cs.digitising_scotland.jstore.impl.RepositoryException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.Store;
-import uk.ac.standrews.cs.digitising_scotland.jstore.impl.StoreException;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.BucketException;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.RepositoryException;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.StoreException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.factory.TypeFactory;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.*;
 import uk.ac.standrews.cs.digitising_scotland.linkage.factory.BirthFactory;
@@ -82,7 +83,7 @@ public class PopulationTest {
 
     @Test
 //    @Ignore
-    public synchronized void testReadingPopulationRecords() throws RepositoryException, RecordFormatException, JSONException, IOException {
+    public synchronized void testReadingPopulationRecords() throws RepositoryException, RecordFormatException, BucketException, IOException, JSONException {
 
         IBucket<Birth> b = repo.getBucket(birth_bucket_name1, new BirthFactory(birthlabel.getId()));
 
@@ -91,7 +92,7 @@ public class PopulationTest {
 
     @Test
 //    @Ignore
-    public synchronized void testSimpleMatchPopulationRecords() throws RepositoryException, RecordFormatException, JSONException, IOException {
+    public synchronized void testSimpleMatchPopulationRecords() throws RepositoryException, RecordFormatException, JSONException, IOException, BucketException {
 
 
         IBucket<Birth> b = repo.getBucket(birth_bucket_name1, new BirthFactory(birthlabel.getId()));

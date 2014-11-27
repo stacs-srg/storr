@@ -1,7 +1,12 @@
 package uk.ac.standrews.cs.digitising_scotland.linkage.resolve;
 
 import org.json.JSONException;
-import uk.ac.standrews.cs.digitising_scotland.jstore.impl.*;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.LXP;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.Store;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.BucketException;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.KeyNotFoundException;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.RepositoryException;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.StoreException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.factory.TypeFactory;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.*;
 import uk.ac.standrews.cs.digitising_scotland.linkage.EventImporter;
@@ -71,7 +76,7 @@ public class AlLinker {
     private IReferenceType personLabel;
     private TypeFactory tf;
 
-    public AlLinker() throws RepositoryException, RecordFormatException, JSONException, IOException, PersistentObjectException, StoreException, KeyNotFoundException {
+    public AlLinker() throws BucketException, RepositoryException, RecordFormatException, JSONException, IOException, PersistentObjectException, StoreException, KeyNotFoundException {
 
         initialise();
         injestBDMRecords();
@@ -133,7 +138,7 @@ public class AlLinker {
      * Initialises the people bucket with the people injected - one record for each person referenced in the original record
      * Initialises the known(100% certain) relationships between people and stores the relationships in the relationships bucket
      */
-    private void injestBDMRecords() throws RecordFormatException, JSONException, IOException, KeyNotFoundException, PersistentObjectException {
+    private void injestBDMRecords() throws BucketException, RecordFormatException, JSONException, IOException, KeyNotFoundException, PersistentObjectException {
 
         EventImporter.importDigitisingScotlandRecords(births, births_source_path, birthlabel);
         EventImporter.importDigitisingScotlandRecords(marriages, marriages_source_path, deathlabel);
@@ -150,12 +155,14 @@ public class AlLinker {
             blocker.apply();
         } catch (RepositoryException e) {
             e.printStackTrace();
+        } catch (BucketException e) {
+            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private void link() throws IOException {
+    private void link() throws BucketException {
 
         Iterator<IBucket<Person>> blocked_people_iterator = blocked_people_repo.getIterator(new PersonFactory(personLabel.getId()));
 
@@ -178,7 +185,7 @@ public class AlLinker {
      *
      * @param bucket - the bucket from which to take the inputs records
      */
-    private void createPeopleAndRelationshipsFromBirthsOrDeaths(IBucket bucket) throws IOException, KeyNotFoundException, PersistentObjectException {
+    private void createPeopleAndRelationshipsFromBirthsOrDeaths(IBucket bucket) throws BucketException, KeyNotFoundException {
 
         IOutputStream<Person> people_stream = people.getOutputStream();
         IOutputStream<Relationship> relationships_stream = relationships.getOutputStream();
@@ -207,7 +214,7 @@ public class AlLinker {
         }
     }
 
-    private void createPeopleAndRelationshipsFromMarriages(IBucket<Marriage> bucket) throws IOException, KeyNotFoundException {
+    private void createPeopleAndRelationshipsFromMarriages(IBucket<Marriage> bucket) throws BucketException, KeyNotFoundException {
 
         IOutputStream<Person> people_stream = people.getOutputStream();
         IOutputStream<Relationship> relationships_stream = relationships.getOutputStream();

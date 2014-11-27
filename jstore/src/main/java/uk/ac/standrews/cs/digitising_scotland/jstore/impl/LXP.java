@@ -2,6 +2,7 @@ package uk.ac.standrews.cs.digitising_scotland.jstore.impl;
 
 import org.json.JSONException;
 import org.json.JSONWriter;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.KeyNotFoundException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.ILXP;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.IReferenceType;
 import uk.ac.standrews.cs.digitising_scotland.jstore.types.Types;

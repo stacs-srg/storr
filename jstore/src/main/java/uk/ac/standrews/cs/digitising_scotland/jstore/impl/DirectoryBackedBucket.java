@@ -2,6 +2,9 @@ package uk.ac.standrews.cs.digitising_scotland.jstore.impl;
 
 import org.json.JSONException;
 import org.json.JSONWriter;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.BucketException;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.KeyNotFoundException;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.RepositoryException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.*;
 import uk.ac.standrews.cs.digitising_scotland.jstore.types.Types;
 import uk.ac.standrews.cs.digitising_scotland.util.ErrorHandling;
@@ -93,71 +96,82 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
         }
     }
 
-    public T get(int id) throws IOException, PersistentObjectException {
+    public T get(int id) throws BucketException {
         T result;
         try (BufferedReader reader = Files.newBufferedReader(Paths.get(filePath(id)), FileManipulation.FILE_CHARSET)) {
 
             objectCache.put(this, id);                             // Putting this call here ensures that all records that are in a bucket and loaded are in the cache
             if (tFactory == null) { //  No java type specified
                 result = (T) (new LXP(id, new JSONReader(reader))); // TODO is this legal??? - talk to Graham!
-            } else {
-                result = tFactory.create(id, new JSONReader(reader));
-            }
-        }
-        // Now check for indirection
-        if (result.containsKey($INDIRECTION$)) { // try and load the record that the indirection record points to
-            try {
+            } else result = tFactory.create(id, new JSONReader(reader));
+
+            // Now check for indirection
+            if (result.containsKey($INDIRECTION$)) { // try and load the record that the indirection record points to
                 return resolve_indirection(result);
-            } catch (KeyNotFoundException e) {
-                ErrorHandling.exceptionError(e, "Indirection error: Key not found");
-                throw new PersistentObjectException("Indirection error");
-            } catch (RepositoryException e) {
-                ErrorHandling.exceptionError(e, "Indirection error: Reposotory not found");
-                throw new PersistentObjectException("Indirection error");
+            } else {
+                return result; // a normal LXP was found
             }
-        } else {
-            return result; // a normal LXP was found
+        } catch (IOException e) {
+            throw new BucketException("I/O error");
+        } catch (PersistentObjectException e) {
+            throw new BucketException("Persistent object  error");
         }
     }
 
 
-    public void put(final T record) throws IOException, JSONException {
-
-        if (objectCache.contains(record.getId())) { // the object is already in the store so write an indirection
-            writeLXP(record, create_indirection(record));
+    public void put(final T record) throws BucketException {
+        try {
+            if (objectCache.contains(record.getId())) { // the object is already in the store so write an indirection
+                writeLXP(record, create_indirection(record));
+            } else {
+                writeLXP(record, record); // normal object write
+            }
+        } catch (IOException e) {
+            throw new BucketException("Persistent object  error");
+        } catch (JSONException e) {
+            throw new BucketException("JSONException error");
         }
-        writeLXP(record, record); // normal object write
     }
 
 
-    protected void writeLXP(ILXP record_to_check, ILXP record_to_write) throws IOException, JSONException {
+    protected void writeLXP(ILXP record_to_check, ILXP record_to_write) throws BucketException {
 
         if (type_label_id != -1) { // we have set a type label in this bucket there must check for consistency
 
             if (!(check_label_consistency(record_to_check, type_label_id))) { // Keep these separate for more error precision
-                throw new IOException("Label incompatibility");
+                throw new BucketException("Label incompatibility");
             }
-            if (!check_structural_consistency(record_to_check, type_label_id)) {
-                throw new IOException("Structural integrity incompatibility");
+            try {
+                if (!check_structural_consistency(record_to_check, type_label_id)) {
+                    throw new BucketException("Structural integrity incompatibility");
+                }
+            } catch (IOException e) {
+                throw new BucketException("I/O exception checking Structural integrity");
             }
         } else if (record_to_check.containsKey(Types.LABEL)) { // no type label on bucket but record has a type label so check structure
 
             try {
                 if (!check_structural_consistency(record_to_check, Integer.parseInt(record_to_check.get(Types.LABEL)))) {
-                    throw new IOException("Structural integrity incompatibility");
+                    throw new BucketException("Structural integrity incompatibility");
                 }
             } catch (KeyNotFoundException e) {
                 // this cannot happen - label checked in if .. so .. just let it go
+            } catch (IOException e) {
+                throw new BucketException("I/O exception checking consistency");
             }
         }
         Path path = Paths.get(this.filePath(record_to_write.getId()));
         if (Files.exists(path)) {
-            throw new IOException("File already exists - LXP records in buckets may not be overwritten");
+            throw new BucketException("File already exists - LXP records in buckets may not be overwritten");
         }
-        try (Writer writer = Files.newBufferedWriter(path, FileManipulation.FILE_CHARSET)) {
+        try (Writer writer = Files.newBufferedWriter(path, FileManipulation.FILE_CHARSET)) { // auto close and exception
 
             objectCache.put(this, record_to_write.getId());                              // Putting this call here ensures that all records that are in a bucket and loaded are in the cache
             record_to_write.serializeToJSON(new JSONWriter(writer));
+        } catch (IOException e) {
+            throw new BucketException("I/O exception writing record");
+        } catch (JSONException e) {
+            throw new BucketException("JSON exception writing record");
         }
     }
 
@@ -194,13 +208,13 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
 
     // Stream operations
 
-    public IInputStream<T> getInputStream() throws IOException {
+    public IInputStream<T> getInputStream() throws BucketException {
 
         try {
             return new BucketBackedInputStream(this, directory);
         } catch (IOException e) {
             ErrorHandling.error("I/O Exception getting stream");
-            return null;
+            throw new BucketException(e.getMessage());
         }
     }
 
@@ -301,12 +315,19 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
         return indirection_record;
     }
 
-    private T resolve_indirection(T record) throws KeyNotFoundException, RepositoryException, IOException, PersistentObjectException {
+    private T resolve_indirection(T record) throws BucketException {
 
-        String bucket_name = record.get(BUCKET);
-        String repo_name = record.get(REPOSITORY);
-        int oid = Integer.parseInt(record.get(OID));
-        return Store.getInstance().getRepo(repo_name).getBucket(bucket_name, tFactory).get(oid);
+        try {
+
+            String bucket_name = record.get(BUCKET);
+            String repo_name = record.get(REPOSITORY);
+            int oid = Integer.parseInt(record.get(OID));
+            return Store.getInstance().getRepo(repo_name).getBucket(bucket_name, tFactory).get(oid);
+        } catch (KeyNotFoundException e) {
+            throw new BucketException("Indirection Key not found");
+        } catch (RepositoryException e) {
+            throw new BucketException("Repository exception");
+        }
     }
 
     //******** Private methods *********

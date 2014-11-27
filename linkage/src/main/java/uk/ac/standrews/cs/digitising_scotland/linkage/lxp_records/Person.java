@@ -1,6 +1,6 @@
 package uk.ac.standrews.cs.digitising_scotland.linkage.lxp_records;
 
-import uk.ac.standrews.cs.digitising_scotland.jstore.impl.KeyNotFoundException;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.KeyNotFoundException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.ILXP;
 import uk.ac.standrews.cs.digitising_scotland.jstore.types.LXPBaseType;
 import uk.ac.standrews.cs.digitising_scotland.jstore.types.LXP_SCALAR;

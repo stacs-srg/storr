@@ -1,8 +1,9 @@
 package uk.ac.standrews.cs.digitising_scotland.linkage.blocking;
 
 
-import uk.ac.standrews.cs.digitising_scotland.jstore.impl.KeyNotFoundException;
-import uk.ac.standrews.cs.digitising_scotland.jstore.impl.RepositoryException;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.BucketException;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.KeyNotFoundException;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.RepositoryException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.factory.TypeFactory;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.IBucket;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.ILXP;
@@ -20,7 +21,7 @@ import java.io.IOException;
  */
 public class FNLNSOverPerson<T extends ILXP> extends Blocker<T> {
 
-    public FNLNSOverPerson(final IBucket<T> people, final IRepository output_repo, ILXPFactory<T> tFactory) throws RepositoryException, IOException {
+    public FNLNSOverPerson(final IBucket<T> people, final IRepository output_repo, ILXPFactory<T> tFactory) throws BucketException, RepositoryException, IOException {
 
         super(people.getInputStream(), output_repo, tFactory);
     }

@@ -4,6 +4,10 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.*;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.BucketException;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.KeyNotFoundException;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.RepositoryException;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.StoreException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.factory.TypeFactory;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.*;
 import uk.ac.standrews.cs.digitising_scotland.jstore.types.Types;
@@ -117,8 +121,8 @@ public class InfrastructureTest {
             lxp.put("age", "42");
             lxp.put("address", "home");
             b.put(lxp);
-        } catch (IOException e) {
-            System.out.println("IO exception caught");
+        } catch (BucketException e) {
+            System.out.println("Bucket exception caught");
             return;
         } catch (Exception e) {
             // should get an exception due to wrong type;
@@ -222,7 +226,7 @@ public class InfrastructureTest {
             lxp2.put("person_ref", Integer.toString(100)); // an illegal reference - not a legal identifier
 
             b2.put(lxp2);
-        } catch (IOException e) { // should catch this - reference is not in the store yet!
+        } catch (BucketException e) { // should catch this - reference is not in the store yet!
             // do nothing test succeeds
             return;
         }
@@ -255,7 +259,7 @@ public class InfrastructureTest {
             lxp3.put("person_ref", Integer.toString(lxp2_id)); // an illegal reference to this tuple - wrong reference type
 
             b2.put(lxp3);
-        } catch (IOException e) { // should catch this - illegal reference
+        } catch (BucketException e) { // should catch this - illegal reference
             // do nothing test succeeds if exception is caught
             return;
         }
@@ -289,7 +293,7 @@ public class InfrastructureTest {
 
             b1.put(lxp);
 
-        } catch (IOException e) { // should catch this - structure is wrong
+        } catch (BucketException e) { // should catch this - structure is wrong
             // do nothing test succeeds if exception is caught
             return;
         }

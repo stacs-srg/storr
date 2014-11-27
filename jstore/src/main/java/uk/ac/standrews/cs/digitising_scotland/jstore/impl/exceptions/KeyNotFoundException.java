@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.digitising_scotland.jstore.impl;
+package uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions;
 
 /**
  * Created by al on 14/10/2014.

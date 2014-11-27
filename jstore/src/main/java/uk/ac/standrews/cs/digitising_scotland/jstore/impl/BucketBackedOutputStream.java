@@ -1,12 +1,10 @@
 package uk.ac.standrews.cs.digitising_scotland.jstore.impl;
 
-import org.json.JSONException;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.BucketException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.IBucket;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.ILXP;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.IOutputStream;
 import uk.ac.standrews.cs.nds.util.ErrorHandling;
-
-import java.io.IOException;
 
 /**
  * Created by al on 28/04/2014.
@@ -22,7 +20,7 @@ public class BucketBackedOutputStream<T> extends BucketBackedAbstractStream impl
         try {
             bucket.put(record);
 
-        } catch (IOException | JSONException e) {
+        } catch (BucketException e) {
             ErrorHandling.error("Cannot save record with id: " + record.getId() + " to bucket: " + bucket.getName() + "exception: " + e.getMessage());
         }
     }

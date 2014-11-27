@@ -2,7 +2,7 @@ package uk.ac.standrews.cs.digitising_scotland.jstore.interfaces;
 
 import org.json.JSONException;
 import org.json.JSONWriter;
-import uk.ac.standrews.cs.digitising_scotland.jstore.impl.KeyNotFoundException;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.KeyNotFoundException;
 
 /**
  * Interface to the LXP (labeled cross product class).

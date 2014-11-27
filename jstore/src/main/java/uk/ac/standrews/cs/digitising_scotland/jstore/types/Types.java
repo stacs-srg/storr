@@ -1,15 +1,15 @@
 package uk.ac.standrews.cs.digitising_scotland.jstore.types;
 
-import uk.ac.standrews.cs.digitising_scotland.jstore.impl.KeyNotFoundException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.LXP;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.Store;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.BucketException;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.KeyNotFoundException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.factory.TypeFactory;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.IBucket;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.ILXP;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.IReferenceType;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.IType;
 import uk.ac.standrews.cs.digitising_scotland.util.ErrorHandling;
-import uk.ac.standrews.cs.nds.persistence.PersistentObjectException;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -159,10 +159,7 @@ public class Types {
                 }
 
 
-            } catch (IOException e) {
-                ErrorHandling.exceptionError(e, "Recovering record type");
-                return false;
-            } catch (PersistentObjectException e) {
+            } catch (BucketException e) {
                 ErrorHandling.exceptionError(e, "Recovering record type");
                 return false;
             }

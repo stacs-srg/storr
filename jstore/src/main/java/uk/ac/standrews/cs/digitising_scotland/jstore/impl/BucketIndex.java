@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.digitising_scotland.jstore.impl;
 
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.KeyNotFoundException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.IBucketIndex;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.IInputStream;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.ILXP;

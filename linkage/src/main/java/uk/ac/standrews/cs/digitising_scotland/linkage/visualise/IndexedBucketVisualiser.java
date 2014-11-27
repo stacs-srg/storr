@@ -1,6 +1,7 @@
 package uk.ac.standrews.cs.digitising_scotland.linkage.visualise;
 
 
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.BucketException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.*;
 import uk.ac.standrews.cs.digitising_scotland.linkage.lxp_records.Person;
 import uk.ac.standrews.cs.digitising_scotland.linkage.lxp_records.SameAs;
@@ -23,7 +24,7 @@ public class IndexedBucketVisualiser {
         this.people = people;
     }
 
-    public void show() throws IOException, PersistentObjectException {
+    public void show() throws IOException, PersistentObjectException, BucketException {
 
         IBucketIndex index = indexed.getIndex(SameAs.FIRST);
         Set<String> keys = index.keySet();

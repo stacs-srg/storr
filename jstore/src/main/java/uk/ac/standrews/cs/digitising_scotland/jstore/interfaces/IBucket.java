@@ -1,7 +1,6 @@
 package uk.ac.standrews.cs.digitising_scotland.jstore.interfaces;
 
-import org.json.JSONException;
-import uk.ac.standrews.cs.nds.persistence.PersistentObjectException;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.BucketException;
 
 import java.io.IOException;
 
@@ -15,14 +14,14 @@ public interface IBucket<T extends ILXP> {
      * @param id - the identifier of the LXP record for which a reader is required.
      * @return an LXP record with the specified id, or null if the record cannot be found
      */
-    T get(int id) throws IOException, PersistentObjectException;
+    T get(int id) throws BucketException;
 
     /**
      * Writes the state of a record to a bucket
      *
      * @param record whose state is to be written
      */
-    void put(T record) throws IOException, JSONException;
+    void put(T record) throws BucketException;
 
     /**
      * @param id
@@ -33,7 +32,7 @@ public interface IBucket<T extends ILXP> {
     /**
      * @return an input Stream containing all the LXP records in this Bucket
      */
-    IInputStream<T> getInputStream() throws IOException;
+    IInputStream<T> getInputStream() throws BucketException;
 
     /**
      * @return an output Stream which supports the writing of records to this Bucket

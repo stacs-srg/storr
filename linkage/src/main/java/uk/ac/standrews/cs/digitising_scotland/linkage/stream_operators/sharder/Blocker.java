@@ -1,7 +1,7 @@
 package uk.ac.standrews.cs.digitising_scotland.linkage.stream_operators.sharder;
 
 
-import uk.ac.standrews.cs.digitising_scotland.jstore.impl.RepositoryException;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.RepositoryException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.*;
 import uk.ac.standrews.cs.nds.util.ErrorHandling;
 
@@ -23,7 +23,7 @@ public abstract class Blocker<T extends ILXP> implements IBlocker<T> {
      * @param input       the stream over which to block
      * @param output_repo - the repository into which results are written
      */
-    public Blocker(final IInputStream<T> input, final IRepository output_repo, ILXPFactory<T> factory ) {
+    public Blocker(final IInputStream<T> input, final IRepository output_repo, ILXPFactory<T> factory) {
 
         this.input = input;
         this.output_repo = output_repo;
@@ -58,7 +58,7 @@ public abstract class Blocker<T extends ILXP> implements IBlocker<T> {
                 // Need to create a new bucket
                 if (output_repo.bucketExists(bucket_name)) {
                     try {
-                         output_repo.getBucket(bucket_name, factory).getOutputStream().add(record);
+                        output_repo.getBucket(bucket_name, factory).getOutputStream().add(record);
                     } catch (RepositoryException e) {
                         ErrorHandling.exceptionError(e, "RepositoryException obtaining bucket instance");
                     }

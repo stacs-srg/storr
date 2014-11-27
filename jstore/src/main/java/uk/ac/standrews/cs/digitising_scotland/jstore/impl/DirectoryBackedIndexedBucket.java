@@ -1,6 +1,7 @@
 package uk.ac.standrews.cs.digitising_scotland.jstore.impl;
 
-import org.json.JSONException;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.BucketException;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.RepositoryException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.*;
 
 import java.io.File;
@@ -85,22 +86,30 @@ public class DirectoryBackedIndexedBucket<T extends ILXP> extends DirectoryBacke
 
 
     @Override
-    public void put(final T record) throws IOException, JSONException {
+    public void put(final T record) throws BucketException {
 
         Set<String> keys = indexes.keySet(); // all the keys currently being indexed
         for (String key : keys) {
             if (record.containsKey(key)) { // we are indexing this key
                 IBucketIndex index = indexes.get(key); // so get the index
-                index.add(record); // and add this record to the index for that key
+                try {
+                    index.add(record); // and add this record to the index for that key
+                } catch (IOException e) {
+                    throw new BucketException("I/O exception adding index");
+                }
             }
         }
         super.put(record);
     }
 
 
-    public IInputStream getInputStream() throws IOException {
+    public IInputStream getInputStream() throws BucketException {
         // We already know that the type is compatible - checked in constructor.
-        return new BucketBackedInputStream(this, this.directory);
+        try {
+            return new BucketBackedInputStream(this, this.directory);
+        } catch (IOException e) {
+            throw new BucketException("I/O exception getting stream");
+        }
     }
 
 

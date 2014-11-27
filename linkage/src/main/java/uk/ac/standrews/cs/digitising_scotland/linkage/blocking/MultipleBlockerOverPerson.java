@@ -1,8 +1,9 @@
 package uk.ac.standrews.cs.digitising_scotland.linkage.blocking;
 
 
-import uk.ac.standrews.cs.digitising_scotland.jstore.impl.KeyNotFoundException;
-import uk.ac.standrews.cs.digitising_scotland.jstore.impl.RepositoryException;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.BucketException;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.KeyNotFoundException;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.RepositoryException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.IBucket;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.ILXPFactory;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.IRepository;
@@ -30,7 +31,7 @@ import java.util.ArrayList;
  */
 public class MultipleBlockerOverPerson extends Blocker<Person> {
 
-    public MultipleBlockerOverPerson(final IBucket peopleBucket, final IRepository output_repo, ILXPFactory<Person> tFactory) throws RepositoryException, IOException {
+    public MultipleBlockerOverPerson(final IBucket peopleBucket, final IRepository output_repo, ILXPFactory<Person> tFactory) throws BucketException, RepositoryException, IOException {
 
         super(peopleBucket.getInputStream(), output_repo, tFactory);
     }

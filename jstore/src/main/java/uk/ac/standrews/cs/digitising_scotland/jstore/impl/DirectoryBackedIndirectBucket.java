@@ -1,6 +1,8 @@
 package uk.ac.standrews.cs.digitising_scotland.jstore.impl;
 
 import org.json.JSONException;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.BucketException;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.RepositoryException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.*;
 import uk.ac.standrews.cs.digitising_scotland.util.ErrorHandling;
 
@@ -35,45 +37,24 @@ public class DirectoryBackedIndirectBucket<T extends ILXP> extends DirectoryBack
     /**
      * Writes an indirection record into the file system
      */
-    public void put(final T record) throws IOException, JSONException {
+    public void put(final T record) throws BucketException {
 
-        writeLXP(record, create_indirection(record));
-
-// OLD VERSION
-//        Path path = Paths.get(filePath(record.getId()));
-//
-//        if (Files.exists(path)) {
-//            throw new IOException("File already exists - LXP records in buckets may not be overwritten");
-//        }
-//
-//        // create a file containing nothing whose name is the id of the record
-//
-//        Path p = Files.createFile(Paths.get(filePath(record.getId())), null);
-//
-//        // Sym link could be created by finding the original at this point and putting it in - but may not work on all platforms?
+        try {
+            writeLXP(record, create_indirection(record));
+        } catch (IOException | JSONException e) {
+            throw new BucketException("Error creating indirection");
+        }
 
     }
 
-    // No need to overwrite get since the code in DirectoryBackedBucket can handle indirections.
-
-// public T get(final int id) throws PersistentObjectException, IOException {
-// OLD VERSION
-//        if (Files.exists(Paths.get(filePath(id)), NOFOLLOW_LINKS)) {
-//
-//            return Store.getInstance().get(id); // go find the record where ever it is (
-//            // Store.getInstance().getObjectCache().getBucket(id).get(id);
-//            // TODO need to rewrite this.
-//
-//        } else {
-//            throw new PersistentObjectException("Record does not exist in indexed bucket");
-//        }
-//        return null;
-//    }
-
 
     @Override
-    public IInputStream<T> getInputStream() throws IOException {
-        return new BucketBackedInputStream(this, directory);
+    public IInputStream<T> getInputStream() throws BucketException {
+        try {
+            return new BucketBackedInputStream(this, directory);
+        } catch (IOException e) {
+            throw new BucketException("I/O exception getting stream");
+        }
     }
 
 

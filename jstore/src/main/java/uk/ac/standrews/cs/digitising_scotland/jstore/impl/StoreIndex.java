@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.digitising_scotland.jstore.impl;
 
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.RepositoryException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.*;
 
 import java.util.Iterator;

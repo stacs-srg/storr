@@ -1,6 +1,6 @@
 package uk.ac.standrews.cs.digitising_scotland.linkage.stream_operators.filter;
 
-import uk.ac.standrews.cs.digitising_scotland.jstore.impl.KeyNotFoundException;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.KeyNotFoundException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.IInputStream;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.ILXP;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.IOutputStream;
@@ -27,7 +27,7 @@ public class ExactMatch<T extends ILXP> extends Filter {
         try {
             return record.containsKey(label) && record.get(label).equals(value);
         } catch (KeyNotFoundException e) {
-            ErrorHandling.exceptionError( e, "Key not found: ");
+            ErrorHandling.exceptionError(e, "Key not found: ");
             return false;
         }
     }
