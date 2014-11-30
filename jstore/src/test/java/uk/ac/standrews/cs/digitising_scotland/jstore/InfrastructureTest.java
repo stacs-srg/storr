@@ -2,8 +2,10 @@ package uk.ac.standrews.cs.digitising_scotland.jstore;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
-import uk.ac.standrews.cs.digitising_scotland.jstore.impl.*;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.LXP;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.Store;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.BucketException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.KeyNotFoundException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.RepositoryException;
@@ -341,6 +343,7 @@ public class InfrastructureTest {
 
 
     @Test
+    @Ignore
     public synchronized void illegalFieldType() {
 
         // TODO need a test for illegal field label types -
@@ -349,6 +352,7 @@ public class InfrastructureTest {
     }
 
     @Test
+    @Ignore
     public synchronized void emptyStringInlabelType() {
 
         // TODO need a test for empty label types

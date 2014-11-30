@@ -1,7 +1,10 @@
 package uk.ac.standrews.cs.digitising_scotland.jstore.types;
 
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.Store;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.BucketException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.KeyNotFoundException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.LXP;
+import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.IBucket;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.ILXP;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.IReferenceType;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.IType;
@@ -45,25 +48,45 @@ public class LXPReferenceType implements IReferenceType {
         return typerep;
     }
 
-    @Override
-    public boolean isReferenceType() {
-        return true;
+    public boolean valueConsistentWithType(String value) {
+        Integer id = Integer.valueOf(value);  // must be a reference to a record of appropriate type
+        ILXP record = null;
+
+        try {
+            IBucket bucket = Store.getInstance().getObjectCache().getBucket(id);
+            if (bucket == null) { // didn't find the bucket
+                return false;
+            }
+            record = bucket.get(id);
+            if (record == null) { // we haven't found that record in the store
+                return false;
+            }
+        } catch (BucketException e) {
+            ErrorHandling.exceptionError(e, "Recovering record type");
+            return false;
+        }
+        return Types.check_structural_consistency(record, this);
     }
 
-    @Override
-    public boolean isBaseType() {
-        return false;
-    }
-
-    @Override
-    public LXPReferenceType getReferenceType() {
-        return this;
-    }
-
-    @Override
-    public LXPBaseType getBaseType() {
-        return null;
-    }
+//    @Override
+//    public boolean isReferenceType() {
+//        return true;
+//    }
+//
+//    @Override
+//    public boolean isBaseType() {
+//        return false;
+//    }
+//
+//    @Override
+//    public LXPReferenceType getReferenceType() {
+//        return this;
+//    }
+//
+//    @Override
+//    public LXPBaseType getBaseType() {
+//        return null;
+//    }
 
     @Override
     public Collection<String> getLabels() {

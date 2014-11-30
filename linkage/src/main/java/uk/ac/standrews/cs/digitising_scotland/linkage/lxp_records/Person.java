@@ -2,11 +2,12 @@ package uk.ac.standrews.cs.digitising_scotland.linkage.lxp_records;
 
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.KeyNotFoundException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.ILXP;
-import uk.ac.standrews.cs.digitising_scotland.jstore.types.LXPBaseType;
 import uk.ac.standrews.cs.digitising_scotland.jstore.types.LXP_SCALAR;
 import uk.ac.standrews.cs.digitising_scotland.jstore.types.Types;
 import uk.ac.standrews.cs.nds.persistence.PersistentObjectException;
 import uk.ac.standrews.cs.nds.rpc.stream.JSONReader;
+
+import static uk.ac.standrews.cs.digitising_scotland.jstore.types.LXPBaseType.STRING;
 
 /**
  * Created by al on 03/10/2014.
@@ -15,37 +16,37 @@ public class Person extends AbstractLXP {
 
     // Person labels - these should not really be here (maybe generated?
 
-    @LXP_SCALAR(type = LXPBaseType.STRING)
+    @LXP_SCALAR(type = STRING)
     public static final String SURNAME = "surname";
-    @LXP_SCALAR(type = LXPBaseType.STRING)
+    @LXP_SCALAR(type = STRING)
     public static final String FORENAME = "forename";
-    @LXP_SCALAR(type = LXPBaseType.STRING)
+    @LXP_SCALAR(type = STRING)
     public static final String SEX = "sex";
-    @LXP_SCALAR(type = LXPBaseType.STRING)
+    @LXP_SCALAR(type = STRING)
     public static final String FATHERS_FORENAME = "fathers_forename";
-    @LXP_SCALAR(type = LXPBaseType.STRING)
+    @LXP_SCALAR(type = STRING)
     public static final String FATHERS_SURNAME = "fathers_surname";
-    @LXP_SCALAR(type = LXPBaseType.STRING)
+    @LXP_SCALAR(type = STRING)
     public static final String FATHERS_OCCUPATION = "fathers_occupation";
-    @LXP_SCALAR(type = LXPBaseType.STRING)
+    @LXP_SCALAR(type = STRING)
     public static final String MOTHERS_FORENAME = "mothers_forename";
-    @LXP_SCALAR(type = LXPBaseType.STRING)
+    @LXP_SCALAR(type = STRING)
     public static final String MOTHERS_SURNAME = "mothers_surname";
-    @LXP_SCALAR(type = LXPBaseType.STRING)
+    @LXP_SCALAR(type = STRING)
     public static final String MOTHERS_MAIDEN_SURNAME = "mothers_maiden_surname";
-    @LXP_SCALAR(type = LXPBaseType.STRING)
+    @LXP_SCALAR(type = STRING)
     public static final String CHANGED_SURNAME = "changed_surname";
-    @LXP_SCALAR(type = LXPBaseType.STRING)
+    @LXP_SCALAR(type = STRING)
     public static final String CHANGED_FORENAME = "changed_forename";
-    @LXP_SCALAR(type = LXPBaseType.STRING)
+    @LXP_SCALAR(type = STRING)
     public static final String CHANGED_MOTHERS_MAIDEN_SURNAME = "changed_mothers_maiden_surname";
-    @LXP_SCALAR(type = LXPBaseType.STRING)
+    @LXP_SCALAR(type = STRING)
     public static final String ORIGINAL_RECORD_ID = "original_record_id";
-    @LXP_SCALAR(type = LXPBaseType.STRING)
+    @LXP_SCALAR(type = STRING)
     public static final String ORIGINAL_RECORD_TYPE = "original_record_type";
-    @LXP_SCALAR(type = LXPBaseType.STRING)
+    @LXP_SCALAR(type = STRING)
     public static final String ROLE = "role";
-    @LXP_SCALAR(type = LXPBaseType.STRING)
+    @LXP_SCALAR(type = STRING)
     public static final String OCCUPATION = "occupation";
 
     // Marriage record labels - these should not really be here (maybe generated?

@@ -41,7 +41,7 @@ public class LXP implements ILXP {
             while (!reader.isEndOfStream()) {
 
                 String key = reader.key();
-                String value = reader.stringValue();
+                String value = reader.stringValue();  // TODO USE HAVE HERE????
                 this.put(key, value);
             }
 

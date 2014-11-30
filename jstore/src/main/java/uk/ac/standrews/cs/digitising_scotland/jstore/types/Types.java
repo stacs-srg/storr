@@ -1,11 +1,8 @@
 package uk.ac.standrews.cs.digitising_scotland.jstore.types;
 
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.LXP;
-import uk.ac.standrews.cs.digitising_scotland.jstore.impl.Store;
-import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.BucketException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.KeyNotFoundException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.factory.TypeFactory;
-import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.IBucket;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.ILXP;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.IReferenceType;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.IType;
@@ -85,18 +82,15 @@ public class Types {
                 return false;
             }
             // required label is present now check the types of the keys in the record
-            String value = null;
             try {
-                value = record.get(label);
-                if (!Types.checkfieldContent(value, ref_type.getFieldType(label))) {
+                String value = record.get(label);
+                if (!ref_type.getFieldType(label).valueConsistentWithType(value)) {
                     return false;
                 }
             } catch (KeyNotFoundException e) {
                 ErrorHandling.exceptionError(e, "Label missing (illegal code path): " + label);// this cannot happpen - already tested
                 return false; // for safety
             }
-
-
         }
         return true; // all matched to here we are finished!
 
@@ -109,63 +103,63 @@ public class Types {
      * @param fieldIType
      * @return
      */
-    private static boolean checkfieldContent(String value, IType fieldIType) {
-        if (fieldIType.isBaseType()) {
-            switch (fieldIType.getBaseType()) {
-                case STRING: {
-                    return true;   // everything is string encoded in JSON.
-                }
-                case FLOAT: {
-                    try {
-                        Float f = Float.valueOf(value);
-                        // we got have a float - all OK.
-                        return true;
-                    } catch (NumberFormatException e) {
-                        // it wasn't a float value;
-                        return false;
-                    }
-                }
-                case INT: {
-                    try {
-                        Integer i = Integer.valueOf(value);
-                        // we got have an int - all OK.
-                        return true;
-                    } catch (NumberFormatException e) {
-                        // it wasn't an int value;
-                        return false;
-                    }
-                }
-                case UNKNOWN: {
-                    ErrorHandling.error("Encountered UNKNOWN type whilst checking field contents");
-                    return false;
-                }
-                default: {
-                    ErrorHandling.error("Unhandled field type whilst checking field contents");
-                    return false;
-                }
-            }
-        } else { // it is a reference type
-            Integer id = Integer.valueOf(value);  // must be a reference to a record of appropriate type
-            ILXP record = null;
-
-            try {
-                IBucket bucket = Store.getInstance().getObjectCache().getBucket(id);
-                if (bucket == null) { // didn't find the bucket
-                    return false;
-                }
-                record = bucket.get(id);
-                if (record == null) { // we haven't found that record in the store
-                    return false;
-                }
-
-
-            } catch (BucketException e) {
-                ErrorHandling.exceptionError(e, "Recovering record type");
-                return false;
-            }
-            return check_structural_consistency(record, fieldIType.getReferenceType());
-        }
-    }
+//    private static boolean checkfieldContent(String value, IType fieldIType) {
+//        if (fieldIType.isBaseType()) {
+//            switch (fieldIType.getBaseType()) {
+//                case STRING: {
+//                    return true;   // everything is string encoded in JSON.
+//                }
+//                case FLOAT: {
+//                    try {
+//                        Float f = Float.valueOf(value);
+//                        // we got have a float - all OK.
+//                        return true;
+//                    } catch (NumberFormatException e) {
+//                        // it wasn't a float value;
+//                        return false;
+//                    }
+//                }
+//                case INT: {
+//                    try {
+//                        Integer i = Integer.valueOf(value);
+//                        // we got have an int - all OK.
+//                        return true;
+//                    } catch (NumberFormatException e) {
+//                        // it wasn't an int value;
+//                        return false;
+//                    }
+//                }
+//                case UNKNOWN: {
+//                    ErrorHandling.error("Encountered UNKNOWN type whilst checking field contents");
+//                    return false;
+//                }
+//                default: {
+//                    ErrorHandling.error("Unhandled field type whilst checking field contents");
+//                    return false;
+//                }
+//            }
+//        } else { // it is a reference type
+//            Integer id = Integer.valueOf(value);  // must be a reference to a record of appropriate type
+//            ILXP record = null;
+//
+//            try {
+//                IBucket bucket = Store.getInstance().getObjectCache().getBucket(id);
+//                if (bucket == null) { // didn't find the bucket
+//                    return false;
+//                }
+//                record = bucket.get(id);
+//                if (record == null) { // we haven't found that record in the store
+//                    return false;
+//                }
+//
+//
+//            } catch (BucketException e) {
+//                ErrorHandling.exceptionError(e, "Recovering record type");
+//                return false;
+//            }
+//            return check_structural_consistency(record, fieldIType.getReferenceType());
+//        }
+//    }
 
     /**
      * Checks the TYPE LABEL is consistent with a supplied label (generally from a bucket)
@@ -224,18 +218,19 @@ public class Types {
             if (Modifier.isStatic(f.getModifiers())) {
 
                 if (f.isAnnotationPresent(LXP_SCALAR.class)) {
+                    if (f.isAnnotationPresent(LXP_REF.class)) {
+                        ErrorHandling.error("Conflicting labels: " + f.getName()); // Graham wrote this :)
+                    }
                     LXP_SCALAR scalar_type = f.getAnnotation(LXP_SCALAR.class);
                     try {
                         f.setAccessible(true);
                         String label_name = (String) f.get(null); // label name is the value of the labelled Java field!
-                        System.out.println("   Adding: " + label_name + "," + scalar_type.type().getBaseType().name());
-                        type_rep.put(label_name, scalar_type.type().getBaseType().name());
+                        System.out.println("   Adding: " + label_name + "," + scalar_type.type().name());
+                        type_rep.put(label_name, scalar_type.type().name());
                     } catch (IllegalAccessException e) {
                         ErrorHandling.exceptionError(e, "Illegal access for label: " + f.getName());
                     }
-                }
-
-                if (f.isAnnotationPresent(LXP_REF.class)) {
+                } else if (f.isAnnotationPresent(LXP_REF.class)) {
                     LXP_REF ref_type = f.getAnnotation(LXP_REF.class);
                     String ref_type_name = ref_type.type(); // this is the name of the type that the reference refers to
                     try {

@@ -102,7 +102,7 @@ public class Store implements IStore {
 
     @Override
     public int getNextFreePID() {
-        int next_id = id++;
+        int next_id = id++;                 // TODO Consider Making them big and random
         try {
             saveId();
         } catch (IOException e) {
