@@ -16,6 +16,7 @@ import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.security.SecureRandom;
 import java.util.Iterator;
 
 /**
@@ -109,6 +110,20 @@ public class Store implements IStore {
             ErrorHandling.exceptionError(e, "Saving id");
         }
         return next_id;
+    }
+
+    private static SecureRandom sr = new SecureRandom();
+
+    public static int getPRN() {
+
+        return sr.nextInt();
+    }
+
+    public static void main(String args[]) {  // TODO Al is playing here
+        for (int i = 0; i < 10; i++) {
+            System.out.println("Next int is : " + getPRN());
+
+        }
     }
 
     @Override

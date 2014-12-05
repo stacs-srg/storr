@@ -46,17 +46,14 @@ public class Repository implements IRepository {
         switch (kind) {
             case DIRECTORYBACKED: {
                 IBucket bucket = DirectoryBackedBucket.createBucket(name, this);
-                bucket.setKind(kind);
                 return bucket;
             }
             case INDIRECT: {
                 IBucket bucket = DirectoryBackedIndirectBucket.createBucket(name, this);
-                bucket.setKind(kind);
                 return bucket;
             }
             case INDEXED: {
                 IBucket bucket = DirectoryBackedIndexedBucket.createBucket(name, this);
-                bucket.setKind(kind);
                 return bucket;
             }
             default: {
@@ -68,18 +65,15 @@ public class Repository implements IRepository {
     public <T extends ILXP> IBucket<T> makeBucket(final String name, BucketKind kind, ILXPFactory<T> tFactory) throws RepositoryException {
         switch (kind) {
             case DIRECTORYBACKED: {
-                IBucket<T> bucket = DirectoryBackedBucket.createBucket(name, this, tFactory);
-                bucket.setKind(kind);
+                IBucket<T> bucket = new DirectoryBackedBucket(name, this, tFactory);
                 return bucket;
             }
             case INDIRECT: {
-                IBucket<T> bucket = DirectoryBackedIndirectBucket.createBucket(name, this, tFactory);
-                bucket.setKind(kind);
+                IBucket<T> bucket = new DirectoryBackedIndirectBucket(name, this, tFactory);
                 return bucket;
             }
             case INDEXED: {
-                IBucket<T> bucket = DirectoryBackedIndexedBucket.createBucket(name, this, tFactory);
-                bucket.setKind(kind);
+                IBucket<T> bucket = new DirectoryBackedIndexedBucket(name, this, tFactory);
                 return bucket;
             }
             default: {
@@ -118,24 +112,20 @@ public class Repository implements IRepository {
     public <T extends ILXP> IBucket<T> getBucket(String name, ILXPFactory<T> tFactory) throws RepositoryException {
         if (bucketExists(name)) {
             BucketKind kind = DirectoryBackedBucket.getKind(name, this);
-            try {
-                switch (kind) {
-                    case DIRECTORYBACKED: {
-                        IBucket bucket = new DirectoryBackedBucket(name, this, tFactory);
-                        return bucket;
-                    }
-                    case INDIRECT: {
-                        return new DirectoryBackedIndirectBucket(name, this, tFactory);
-                    }
-                    case INDEXED: {
-                        return new DirectoryBackedIndexedBucket(name, this, tFactory);
-                    }
-                    default: {
-                        throw new RepositoryException("Bucketkind: " + kind + " not recognized");
-                    }
+            switch (kind) {
+                case DIRECTORYBACKED: {
+                    IBucket bucket = new DirectoryBackedBucket(name, this, tFactory);
+                    return bucket;
                 }
-            } catch (IOException e) {
-                throw new RepositoryException("IO Exception accessing bucket " + name);
+                case INDIRECT: {
+                    return new DirectoryBackedIndirectBucket(name, this, tFactory);
+                }
+                case INDEXED: {
+                    return new DirectoryBackedIndexedBucket(name, this, tFactory);
+                }
+                default: {
+                    throw new RepositoryException("Bucketkind: " + kind + " not recognized");
+                }
             }
         }
         return null;

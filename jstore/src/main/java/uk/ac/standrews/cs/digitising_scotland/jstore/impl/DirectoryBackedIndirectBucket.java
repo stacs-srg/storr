@@ -4,7 +4,6 @@ import org.json.JSONException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.BucketException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.RepositoryException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.*;
-import uk.ac.standrews.cs.digitising_scotland.util.ErrorHandling;
 
 import java.io.IOException;
 
@@ -14,23 +13,14 @@ import java.io.IOException;
 public class DirectoryBackedIndirectBucket<T extends ILXP> extends DirectoryBackedBucket<T> {
 
     public DirectoryBackedIndirectBucket(String name, IRepository repository) throws IOException, RepositoryException {
+
         super(name, repository);
+        setKind(BucketKind.INDIRECT);
     }
 
-    public DirectoryBackedIndirectBucket(String name, IRepository repository, ILXPFactory<T> tFactory) throws IOException, RepositoryException {
+    public DirectoryBackedIndirectBucket(String name, IRepository repository, ILXPFactory<T> tFactory) throws RepositoryException {
         super(name, repository, tFactory);
-    }
-
-    public static <T extends ILXP> IBucket<T> createBucket(String name, Repository repository, ILXPFactory<T> tFactory) throws RepositoryException {
-
-        try {
-            DirectoryBackedBucket.createBucket(name, repository, tFactory);
-            return new DirectoryBackedIndirectBucket(name, repository, tFactory);
-        } catch (IOException e) {
-
-            ErrorHandling.error("I/O Exception creating bucket");
-            return null;
-        }
+        setKind(BucketKind.INDIRECT);
     }
 
     @Override
@@ -46,7 +36,6 @@ public class DirectoryBackedIndirectBucket<T extends ILXP> extends DirectoryBack
         }
 
     }
-
 
     @Override
     public IInputStream<T> getInputStream() throws BucketException {

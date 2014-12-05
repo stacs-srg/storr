@@ -42,19 +42,20 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
     /*
      * Creates a DirectoryBackedBucket with no factory - a persistent collection of ILXPs
      */
-    public DirectoryBackedBucket(final String name, final IRepository repository) throws RepositoryException, IOException {
+    public DirectoryBackedBucket(final String name, final IRepository repository) throws RepositoryException {
         this.name = name;
         this.repository = repository;
         String dir_name = dirPath();
         directory = new File(dir_name);
+        setKind(BucketKind.DIRECTORYBACKED);
 
         if (!directory.isDirectory()) {
-            throw new IOException("Bucket Directory: " + dir_name + " does not exist");
+            throw new RepositoryException("Bucket Directory: " + dir_name + " does not exist");
         }
     }
 
 
-    public DirectoryBackedBucket(final String name, final IRepository repository, ILXPFactory<T> tFactory) throws RepositoryException, IOException {
+    public DirectoryBackedBucket(final String name, final IRepository repository, ILXPFactory<T> tFactory) throws RepositoryException {
         this(name, repository);
         this.tFactory = tFactory;
         int type_label_id = this.getTypeLabelID();
@@ -65,7 +66,7 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
             if (!tFactory.checkConsistentWith(type_label_id)) {
                 throw new RepositoryException("incompatible types");
             }
-        } catch (PersistentObjectException e) {
+        } catch (PersistentObjectException | IOException e) {
             throw new RepositoryException(e.getMessage());
         }
     }
@@ -79,18 +80,6 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
             Path path = getBucketPath(name, repository);
             FileManipulation.createDirectoryIfDoesNotExist(path);
             return new DirectoryBackedBucket(name, repository);
-        } catch (IOException e) {
-            throw new RepositoryException(e.getMessage());
-        }
-    }
-
-
-    public static IBucket createBucket(final String name, IRepository repository, ILXPFactory tFactory) throws RepositoryException {
-        try {
-            IBucket bucket = createBucket(name, repository);
-            bucket.setTypeLabelID(tFactory.getTypeLabel());
-
-            return new DirectoryBackedBucket(name, repository, tFactory);
         } catch (IOException e) {
             throw new RepositoryException(e.getMessage());
         }
@@ -228,7 +217,7 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
         return BucketKind.DIRECTORYBACKED;
     }
 
-    public void setKind(BucketKind kind) {
+    protected void setKind(BucketKind kind) {
         Path path = directory.toPath();
         Path metapath = path.resolve("META");
         Path labelpath = metapath.resolve(kind.name());
@@ -240,8 +229,6 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
     }
 
     public static BucketKind getKind(String name, IRepository repo) {
-
-        // TODO look at usages of Paths and filenames and tidy up
 
         Path meta_path = Paths.get(repo.getRepo_path(), name, "META"); // repo/bucketname/meta
 
@@ -279,7 +266,9 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
         }
     }
 
-    public int getTypeLabelID() {
+    //******** Private methods *********
+
+    private int getTypeLabelID() {
         if (type_label_id != -1) {
             return type_label_id;
         } // only look it up if not cached.
@@ -298,9 +287,6 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
             return -1;
         }
     }
-
-    //******** Private methods *********
-
 
     protected ILXP create_indirection(final T record) throws IOException, JSONException {
 

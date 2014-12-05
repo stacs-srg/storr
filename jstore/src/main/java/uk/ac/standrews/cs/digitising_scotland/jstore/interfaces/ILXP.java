@@ -5,7 +5,7 @@ import org.json.JSONWriter;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.KeyNotFoundException;
 
 /**
- * Interface to the LXP (labeled cross product class).
+ * Interface to a LXP (labeled cross product class).
  * It provides a thin wrapper over a Map (providing name value lookup) along with identity and the ability to save and recover persistent versions (encoded in JSON).
  *
  * @author al
@@ -24,13 +24,42 @@ public interface ILXP extends ILXPFactory {
      */
     void serializeToJSON(JSONWriter writer) throws JSONException;
 
-    String get(String key) throws KeyNotFoundException;
+    /**
+     * A getter method over labelled values in the LXP
+     *
+     * @param label - the label whose value is required
+     * @return the value associated with @param label
+     * @throws KeyNotFoundException
+     */
+    String get(String label) throws KeyNotFoundException;
 
-    String put(String key, String value);
+    /**
+     * A setter method over labelled values in the LXP
+     *
+     * @param label - the label whose value is being set
+     * @param value - the value to associated with the @param label
+     * @return the value associated with @param label
+     * @throws KeyNotFoundException
+     */
+    String put(String label, String value);
 
-    boolean containsKey(String key);
+    /**
+     * @param label - the label to be looked up
+     * @return true if the LXP contains the supplied label
+     */
+    boolean containsKey(String label);
 
-    java.util.Set<String> getKeys();
+    /**
+     * @return all the labels contained in the LXP
+     */
+    java.util.Set<String> getLabels();
 
-    void addTypeLabel(IReferenceType personlabel) throws Exception;
+    /**
+     * Associates a type with this LXP.
+     * If a type is present it must be structurally compatible with the fields of the LXP
+     *
+     * @param typelabel - the typelabel to associate with the LXP
+     * @throws Exception if the typelabel does not match the structure of the lXP.
+     */
+    void addTypeLabel(IReferenceType typelabel) throws Exception;
 }

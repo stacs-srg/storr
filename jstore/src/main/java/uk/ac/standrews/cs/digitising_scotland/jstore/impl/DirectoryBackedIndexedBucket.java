@@ -31,20 +31,21 @@ public class DirectoryBackedIndexedBucket<T extends ILXP> extends DirectoryBacke
      * @param name       the name of the bucket (also used as directory name).
      * @param repository the repository in which the bucket is created.
      */
-    public DirectoryBackedIndexedBucket(final String name, final IRepository repository) throws IOException, RepositoryException {
+    public DirectoryBackedIndexedBucket(final String name, final IRepository repository) throws RepositoryException {
         super(name, repository);
-        initIndexes();
-    }
-
-    public DirectoryBackedIndexedBucket(final String name, final IRepository repository, ILXPFactory tFactory) throws IOException, RepositoryException {
-        super(name, repository, tFactory);
-        initIndexes();
-    }
-
-    public static IBucket createBucket(final String name, IRepository repository, ILXPFactory tFactory) throws RepositoryException {  // TODO delete these and make into constructors
-        DirectoryBackedBucket.createBucket(name, repository, tFactory);
+        setKind(BucketKind.INDEXED);
         try {
-            return new DirectoryBackedIndexedBucket(name, repository, tFactory);
+            initIndexes();
+        } catch (IOException e) {
+            throw new RepositoryException(e.getMessage());
+        }
+    }
+
+    public DirectoryBackedIndexedBucket(final String name, final IRepository repository, ILXPFactory tFactory) throws RepositoryException {
+        super(name, repository, tFactory);
+        setKind(BucketKind.INDEXED);
+        try {
+            initIndexes();
         } catch (IOException e) {
             throw new RepositoryException(e.getMessage());
         }

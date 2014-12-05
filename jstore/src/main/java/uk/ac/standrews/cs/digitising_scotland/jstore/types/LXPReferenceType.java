@@ -44,7 +44,8 @@ public class LXPReferenceType implements IReferenceType {
         this.typerep = typerep;
     }
 
-    public ILXP get_typerep() {
+    @Override
+    public ILXP getRep() {
         return typerep;
     }
 
@@ -68,29 +69,9 @@ public class LXPReferenceType implements IReferenceType {
         return Types.check_structural_consistency(record, this);
     }
 
-//    @Override
-//    public boolean isReferenceType() {
-//        return true;
-//    }
-//
-//    @Override
-//    public boolean isBaseType() {
-//        return false;
-//    }
-//
-//    @Override
-//    public LXPReferenceType getReferenceType() {
-//        return this;
-//    }
-//
-//    @Override
-//    public LXPBaseType getBaseType() {
-//        return null;
-//    }
-
     @Override
     public Collection<String> getLabels() {
-        return typerep.getKeys();
+        return typerep.getLabels();
     }
 
     @Override
@@ -103,11 +84,6 @@ public class LXPReferenceType implements IReferenceType {
 
     public int getId() {
         return typerep.getId();
-    }
-
-    @Override
-    public ILXP getRep() {
-        return typerep;
     }
 
 }

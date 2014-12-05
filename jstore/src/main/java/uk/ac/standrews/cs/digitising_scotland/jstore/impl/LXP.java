@@ -41,7 +41,7 @@ public class LXP implements ILXP {
             while (!reader.isEndOfStream()) {
 
                 String key = reader.key();
-                String value = reader.stringValue();  // TODO USE HAVE HERE????
+                String value = reader.stringValue();  // TODO USE HAVE HERE???? - BEEF UP PARSING TO SUPPORT TYPED FIELDS
                 this.put(key, value);
             }
 
@@ -68,7 +68,6 @@ public class LXP implements ILXP {
     public boolean checkConsistentWith(int label_id) {
         return true; // there is no contract with this class - creates whatever is there.
         // over-ridden in super classes.
-        // TODO Reconsider this method.
     }
 
     @Override
@@ -125,7 +124,7 @@ public class LXP implements ILXP {
     }
 
     @Override
-    public Set<String> getKeys() {
+    public Set<String> getLabels() {
         return map.keySet();
     }
 

@@ -64,7 +64,7 @@ public class Pair<T extends ILXP> implements IPair<T> { //TODO fix up this
     }
 
     @Override
-    public Set<String> getKeys() {
+    public Set<String> getLabels() {
         return null;
     }
 

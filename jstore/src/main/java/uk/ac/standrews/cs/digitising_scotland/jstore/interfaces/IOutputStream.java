@@ -6,5 +6,10 @@ package uk.ac.standrews.cs.digitising_scotland.jstore.interfaces;
  */
 public interface IOutputStream<T extends ILXP> {
 
+    /**
+     * Add a record to the stream
+     *
+     * @param record - the record to be added to a stream
+     */
     void add(T record);
 }

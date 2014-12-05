@@ -1,16 +1,17 @@
 package uk.ac.standrews.cs.digitising_scotland.jstore.interfaces;
 
 /**
+ * This interface represents the type of the caches used to store in memory objects.
+ * It permits the association between buckets and object ids to be maintained.
  * Created by al on 25/11/14.
  */
 public interface IObjectCache {
     /**
-     * Adds the triple to the object cache.
+     * Adds the bucket X oid tuple to the object cache.
      *
-     * @param bucket
-     * @param oid
+     * @param bucket - the bucket of the registered object
+     * @param oid    - the object id of the registered object
      */
-
     public void put(IBucket bucket, int oid);
 
     /**

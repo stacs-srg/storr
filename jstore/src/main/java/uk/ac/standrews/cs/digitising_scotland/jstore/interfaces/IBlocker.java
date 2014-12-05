@@ -1,7 +1,8 @@
 package uk.ac.standrews.cs.digitising_scotland.jstore.interfaces;
 
 /**
- * Provides blocking over an ILXPInputStream to put records selected into a bucket
+ * Classes that implement this interface provides blocking over
+ * an ILXPInputStream to put records selected into some bucket.
  * Created by al on 29/04/2014.
  */
 public interface IBlocker<T extends ILXP> {
@@ -18,12 +19,16 @@ public interface IBlocker<T extends ILXP> {
     void apply();
 
     /**
+     * Assins the record to the appropriate bucket
      *
      * @param record the record to be assigned to a bucket (determined by @method determineBlockedBucketNamesForRecord
      */
     void assign(T record);
 
     /**
+     * Determins the names of the buckets into which a record should be placed.
+     * The actual assignment is performed by @method assign.
+     *
      * @param record a record to be blocked
      * @return the names of the buckets into which the record should be blocked
      */

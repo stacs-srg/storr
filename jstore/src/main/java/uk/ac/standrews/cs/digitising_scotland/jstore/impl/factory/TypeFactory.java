@@ -108,7 +108,7 @@ public class TypeFactory {
 
     private void do_housekeeping(String type_name, LXPReferenceType ref_type) {
         try {
-            ILXP type_rep = ref_type.get_typerep();
+            ILXP type_rep = ref_type.getRep();
             ILXP name_value = namevaluepair(type_name, type_rep.getId());
             type_reps_bucket.put(type_rep);
             type_name_bucket.put(name_value);

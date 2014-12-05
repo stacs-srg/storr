@@ -70,9 +70,7 @@ public class Types {
      */
     public static <T extends ILXP> boolean check_structural_consistency(final T record, IReferenceType ref_type) {
 
-        Set<String> record_keys = record.getKeys();
-
-        // TODO the keys and types in ref_type must exist in record_keys and the values of appropriate types
+        Set<String> record_keys = record.getLabels();
 
         Collection<String> required_labels = ref_type.getLabels();
 
