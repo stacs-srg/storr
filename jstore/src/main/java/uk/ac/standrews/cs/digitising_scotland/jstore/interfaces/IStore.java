@@ -56,7 +56,7 @@ public interface IStore {
      * @return the next free identifier in the store
      * @deprecated - use sparse addresses in future instead of this.
      */
-    int getNextFreePID();
+    long getNextFreePID();
 
     /**
      * @return the cache of loaded objects (in memory) in the system

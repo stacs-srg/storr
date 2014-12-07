@@ -12,16 +12,14 @@ import uk.ac.standrews.cs.nds.rpc.stream.JSONReader;
 public class BirthFactory extends TFactory<Birth> implements ILXPFactory<Birth> {
 
 
-    public BirthFactory( int required_label_id ) {
+    public BirthFactory(long required_label_id) {
         this.required_type_labelID = required_label_id;
     }
 
     @Override
-    public Birth create(int persistent_object_id, JSONReader reader) throws PersistentObjectException {
-        return new Birth( persistent_object_id, reader,required_type_labelID );
+    public Birth create(long persistent_object_id, JSONReader reader) throws PersistentObjectException {
+        return new Birth(persistent_object_id, reader, required_type_labelID);
     }
-
-
 
 
 }

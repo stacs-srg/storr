@@ -14,9 +14,9 @@ public class Relationship extends AbstractLXP {
         super();
     }
 
-    public Relationship(int label_id, JSONReader reader) throws PersistentObjectException {
+    public Relationship(long label_id, JSONReader reader) throws PersistentObjectException {
 
-        super(Store.getInstance().getNextFreePID(), reader );
+        super(Store.getInstance().getNextFreePID(), reader);
 
     }
 

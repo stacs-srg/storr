@@ -76,7 +76,7 @@ public class Birth extends AbstractLXP {
         super();
     }
 
-    public Birth(int persistent_Object_id, JSONReader reader, int required_label_id) throws PersistentObjectException {
+    public Birth(long persistent_Object_id, JSONReader reader, long required_label_id) throws PersistentObjectException {
 
         super(persistent_Object_id, reader);
 

@@ -24,13 +24,13 @@ public class SameAs extends AbstractLXP {
     public SameAs(Person first, Person second, String relationship, float confidence) {
 
         super();
-        put(FIRST, Integer.toString(first.getId()));
-        put(SECOND, Integer.toString(second.getId()));
+        put(FIRST, Long.toString(first.getId()));
+        put(SECOND, Long.toString(second.getId()));
         put(RELATIONSHIP, relationship);
         put(CONFIDENCE, Float.toString(confidence));
     }
 
-    public SameAs(int persistent_Object_id, JSONReader reader, int required_label_id) throws PersistentObjectException {
+    public SameAs(long persistent_Object_id, JSONReader reader, long required_label_id) throws PersistentObjectException {
 
         super(persistent_Object_id, reader);
     }

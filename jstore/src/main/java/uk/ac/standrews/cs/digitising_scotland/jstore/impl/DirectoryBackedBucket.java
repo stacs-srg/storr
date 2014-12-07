@@ -29,7 +29,7 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
     private IRepository repository;  // the repository in which the bucket is stored
     private String name;     // the name of this bucket - used as the directory name
     protected File directory;  // the directory implementing the bucket storage
-    private int type_label_id = -1; // not set
+    private long type_label_id = -1; // not set
     IObjectCache objectCache = Store.getInstance().getObjectCache();
 
     // indirection handling
@@ -58,7 +58,7 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
     public DirectoryBackedBucket(final String name, final IRepository repository, ILXPFactory<T> tFactory) throws RepositoryException {
         this(name, repository);
         this.tFactory = tFactory;
-        int type_label_id = this.getTypeLabelID();
+        long type_label_id = this.getTypeLabelID();
         if (type_label_id == -1) { // no types associated with this bucket.
             throw new RepositoryException("no type label associated with bucket");
         }
@@ -85,7 +85,7 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
         }
     }
 
-    public T get(int id) throws BucketException {
+    public T get(long id) throws BucketException {
         T result;
         try (BufferedReader reader = Files.newBufferedReader(Paths.get(filePath(id)), FileManipulation.FILE_CHARSET)) {
 
@@ -110,7 +110,7 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
 
     public void put(final T record) throws BucketException {
         try {
-            int id = record.getId();
+            long id = record.getId();
             if (this.contains(id)) {
                 throw new BucketException("records may bot be overwritten");
             }
@@ -144,7 +144,7 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
         } else if (record_to_check.containsKey(Types.LABEL)) { // no type label on bucket but record has a type label so check structure
 
             try {
-                if (!check_structural_consistency(record_to_check, Integer.parseInt(record_to_check.get(Types.LABEL)))) {
+                if (!check_structural_consistency(record_to_check, Long.parseLong(record_to_check.get(Types.LABEL)))) {
                     throw new BucketException("Structural integrity incompatibility");
                 }
             } catch (KeyNotFoundException e) {
@@ -166,8 +166,8 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
         }
     }
 
-    public String filePath(final int id) {
-        return filePath(Integer.toString(id));
+    public String filePath(final long id) {
+        return filePath(Long.toString(id));
     }
 
     protected File baseDir() {
@@ -192,7 +192,7 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
         return this.repository;
     }
 
-    public boolean contains(int id) {
+    public boolean contains(long id) {
 
         return Paths.get(filePath(id)).toFile().exists();
     }
@@ -244,7 +244,7 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
         return BucketKind.UNKNOWN;
     }
 
-    public void setTypeLabelID(int type_label_id) throws IOException {
+    public void setTypeLabelID(long type_label_id) throws IOException {
         if (this.type_label_id != -1) {
             throw new IOException("Type label already set");
         }
@@ -261,14 +261,14 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
 
         try (BufferedWriter writer = Files.newBufferedWriter(typepath, FileManipulation.FILE_CHARSET)) {
 
-            writer.write(Integer.toString(type_label_id)); // Write the id of the typelabel LXP into this field.
+            writer.write(Long.toString(type_label_id)); // Write the id of the typelabel LXP into this field.
             writer.newLine();
         }
     }
 
     //******** Private methods *********
 
-    private int getTypeLabelID() {
+    private long getTypeLabelID() {
         if (type_label_id != -1) {
             return type_label_id;
         } // only look it up if not cached.
@@ -279,7 +279,7 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
         try (BufferedReader reader = Files.newBufferedReader(typepath, FileManipulation.FILE_CHARSET)) {
 
             String id_as_string = reader.readLine();
-            type_label_id = Integer.parseInt(id_as_string);
+            type_label_id = Long.parseLong(id_as_string);
             return type_label_id;
 
         } catch (IOException e) {
@@ -290,7 +290,7 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
 
     protected ILXP create_indirection(final T record) throws IOException, JSONException {
 
-        int oid = record.getId();
+        long oid = record.getId();
         IBucket b = objectCache.getBucket(oid);
         IRepository r = b.getRepository();
 
@@ -298,7 +298,7 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
         indirection_record.put($INDIRECTION$, "true");
         indirection_record.put(BUCKET, b.getName());
         indirection_record.put(REPOSITORY, r.getName());
-        indirection_record.put(OID, Integer.toString(oid));
+        indirection_record.put(OID, Long.toString(oid));
 
         return indirection_record;
     }
@@ -309,7 +309,7 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
 
             String bucket_name = record.get(BUCKET);
             String repo_name = record.get(REPOSITORY);
-            int oid = Integer.parseInt(record.get(OID));
+            long oid = Long.parseLong(record.get(OID));
             return Store.getInstance().getRepo(repo_name).getBucket(bucket_name, tFactory).get(oid);
         } catch (KeyNotFoundException e) {
             throw new BucketException("Indirection Key not found");

@@ -38,9 +38,9 @@ public class EventImporter {
      * @throws RecordFormatException
      * @throws JSONException
      */
-    public static int importDigitisingScotlandRecords(final IBucket b, final String filename, IReferenceType label) throws BucketException, IOException, RecordFormatException, JSONException {
+    public static long importDigitisingScotlandRecords(final IBucket b, final String filename, IReferenceType label) throws BucketException, IOException, RecordFormatException, JSONException {
 
-        int counter = 0;
+        long counter = 0;
         try (final BufferedReader reader = Files.newBufferedReader(Paths.get(filename), FileManipulation.FILE_CHARSET)) {
 
             ILXP record = importDigitisingScotlandRecord(reader, label);
@@ -60,7 +60,7 @@ public class EventImporter {
     private static ILXP importDigitisingScotlandRecord(final BufferedReader reader, IReferenceType label) throws IOException, RecordFormatException {
 
         Collection<String> field_names = label.getLabels();
-        int record_type = label.getId();
+        long record_type = label.getId();
         String line = reader.readLine();
         if (line == null) {
             return null;

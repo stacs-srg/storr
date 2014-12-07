@@ -113,16 +113,16 @@ public class PopulationTest {
 //        IIndexedBucket<Birth> b = (IIndexedBucket<Birth>) repo.getBucket(indexed_bucket_name1,new BirthFactory(birthlabel.getId())); // TODO delete BirthTypeLabel and rest
 //
 //        b.addIndex(BirthReferenceType.SURNAME);
-//        int counter1 = EventImporter.importDigitisingScotlandRecords(b, BIRTH_RECORDS_PATH,birthlabel);
+//        long counter1 = EventImporter.importDigitisingScotlandRecords(b, BIRTH_RECORDS_PATH,birthlabel);
 //
 //        IBucketIndex index = b.getIndex(BirthReferenceType.SURNAME);
 //
 //        Set<String> keys = index.keySet();
-//        int counter2 = 0;
+//        long counter2 = 0;
 //        for( String key : keys ) {
 //
 //            // System.out.print("keys: " + key + " :");
-//            List<Integer> values = index.values(key);
+//            List<Long> values = index.values(key);
 //            counter2 += values.size();
 //            // System.out.println( values );
 //

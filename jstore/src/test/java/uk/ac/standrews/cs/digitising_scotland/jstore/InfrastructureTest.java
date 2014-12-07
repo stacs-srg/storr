@@ -153,7 +153,7 @@ public class InfrastructureTest {
         LXP lxp = new LXP();        // correct structure
         lxp.put("name", "al");
         lxp.put("age", "55");
-        lxp.put(Types.LABEL, Integer.toString(personlabel.getId()));    // with correct label
+        lxp.put(Types.LABEL, Long.toString(personlabel.getId()));    // with correct label
         b.put(lxp); // Should succeed: labels correct and type label identical to bucket
     }
 
@@ -165,7 +165,7 @@ public class InfrastructureTest {
         LXP lxp = new LXP();        // correct structure
         lxp.put("name", "al");
         lxp.put("age", "55");
-        lxp.put(Types.LABEL, Integer.toString(personlabel.getId())); // structurally equivalent label
+        lxp.put(Types.LABEL, Long.toString(personlabel.getId())); // structurally equivalent label
         b.put(lxp); // Should succeed labels correct and type label structurally equivalent
     }
 
@@ -194,14 +194,14 @@ public class InfrastructureTest {
         LXP lxp = new LXP();        // correct structure
         lxp.put("name", "al");
         lxp.put("age", "55");
-        lxp.put(Types.LABEL, Integer.toString(personlabel.getId())); // correct label
-        int person_id = lxp.getId();
+        lxp.put(Types.LABEL, Long.toString(personlabel.getId())); // correct label
+        long person_id = lxp.getId();
 
         b1.put(lxp);   // lxp.id is 7 label is 1
 
 
         LXP lxp2 = new LXP();        // correct structure    // id is 8
-        lxp2.put("person_ref", Integer.toString(person_id));    // person_ref=7, ref to Person
+        lxp2.put("person_ref", Long.toString(person_id));    // person_ref=7, ref to Person
 
         b2.put(lxp2);
     }
@@ -217,8 +217,8 @@ public class InfrastructureTest {
         LXP lxp = new LXP();        // correct structure
         lxp.put("name", "al");
         lxp.put("age", "55");
-        lxp.put(Types.LABEL, Integer.toString(personlabel.getId())); // correct label
-        int person_id = lxp.getId();
+        lxp.put(Types.LABEL, Long.toString(personlabel.getId())); // correct label
+        long person_id = lxp.getId();
 
         b1.put(lxp);
 
@@ -246,19 +246,19 @@ public class InfrastructureTest {
         LXP lxp = new LXP();        // correct structure
         lxp.put("name", "al");
         lxp.put("age", "55");
-        lxp.put(Types.LABEL, Integer.toString(personlabel.getId())); // correct label
-        int person_id = lxp.getId();
+        lxp.put(Types.LABEL, Long.toString(personlabel.getId())); // correct label
+        long person_id = lxp.getId();
 
         b1.put(lxp);
 
 
         LXP lxp2 = new LXP();
         b3.put(lxp2); // just stick something in bucket3
-        int lxp2_id = lxp2.getId();
+        long lxp2_id = lxp2.getId();
 
         try {
             LXP lxp3 = new LXP();        // correct structure
-            lxp3.put("person_ref", Integer.toString(lxp2_id)); // an illegal reference to this tuple - wrong reference type
+            lxp3.put("person_ref", Long.toString(lxp2_id)); // an illegal reference to this tuple - wrong reference type
 
             b2.put(lxp3);
         } catch (BucketException e) { // should catch this - illegal reference
@@ -276,8 +276,8 @@ public class InfrastructureTest {
         LXP lxp = new LXP();        // incorrect structure
         lxp.put("name", "al");
         lxp.put("age", "55");
-        lxp.put(Types.LABEL, Integer.toString(personlabel.getId())); // correct label
-        int person_id = lxp.getId();
+        lxp.put(Types.LABEL, Long.toString(personlabel.getId())); // correct label
+        long person_id = lxp.getId();
 
         b1.put(lxp);
     }
@@ -290,8 +290,8 @@ public class InfrastructureTest {
             LXP lxp = new LXP();        // incorrect structure
             lxp.put("name", "al");
             lxp.put("wrongfield", "55");
-            lxp.put(Types.LABEL, Integer.toString(personlabel.getId())); // correct label
-            int person_id = lxp.getId();
+            lxp.put(Types.LABEL, Long.toString(personlabel.getId())); // correct label
+            long person_id = lxp.getId();
 
             b1.put(lxp);
 
@@ -309,7 +309,7 @@ public class InfrastructureTest {
         lxp.put("age", "42");
         lxp.put("address", "home");
         b.put(lxp);       // <<--------- write record **
-        int id = lxp.getId();
+        long id = lxp.getId();
 
         ILXP lxp2 = b.get(id);
         assertTrue(lxp2.containsKey("age"));

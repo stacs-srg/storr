@@ -88,7 +88,7 @@ public class Death extends AbstractLXP {
         super();
     }
 
-    public Death(int label_id, JSONReader reader) throws PersistentObjectException {
+    public Death(long label_id, JSONReader reader) throws PersistentObjectException {
 
         super(Store.getInstance().getNextFreePID(), reader);
 

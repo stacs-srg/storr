@@ -39,7 +39,7 @@ public class IndexedBucketVisualiser {
 
                 if (first) {
                     String first_id_string = next.get(SameAs.FIRST); // id of second person in person table
-                    ILXP person1 = people.get(Integer.parseInt(first_id_string));
+                    ILXP person1 = people.get(Long.parseLong(first_id_string));
                     if (person1 != null) {
                         System.out.println("\toriginal: " + person1.toString());
                     }
@@ -47,7 +47,7 @@ public class IndexedBucketVisualiser {
 
                 String relation = next.get(SameAs.RELATIONSHIP);
                 String second_id_string = next.get(SameAs.SECOND); // id of second person in person table
-                ILXP person2 = people.get(Integer.parseInt(second_id_string));
+                ILXP person2 = people.get(Long.parseLong(second_id_string));
                 if (relation != null && person2 != null) {
                     System.out.println("\t" + " * " + relation + ": " + person2.toString());
                 }

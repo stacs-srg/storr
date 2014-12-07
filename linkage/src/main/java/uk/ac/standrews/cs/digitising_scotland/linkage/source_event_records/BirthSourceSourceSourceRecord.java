@@ -83,9 +83,9 @@ public class BirthSourceSourceSourceRecord extends IndividualSourceSourceRecord 
 
         final Date birth_date = person.getBirthDate();
 
-        int birth_day = DateManipulation.dateToDay(birth_date);
-        int birth_month = DateManipulation.dateToMonth(birth_date);
-        int birth_year = DateManipulation.dateToYear(birth_date);
+        long birth_day = DateManipulation.dateToDay(birth_date);
+        long birth_month = DateManipulation.dateToMonth(birth_date);
+        long birth_year = DateManipulation.dateToYear(birth_date);
 
         setBirthDay(String.valueOf(birth_day));
         setBirthMonth(String.valueOf(birth_month));
@@ -99,9 +99,9 @@ public class BirthSourceSourceSourceRecord extends IndividualSourceSourceRecord 
             // Attributes associated with individual's parents' marriage.
             final Date marriage_date = parents_partnership.getMarriageDate();
 
-            int marriage_day = DateManipulation.dateToDay(marriage_date);
-            int marriage_month = DateManipulation.dateToMonth(marriage_date);
-            int marriage_year = DateManipulation.dateToYear(marriage_date);
+            long marriage_day = DateManipulation.dateToDay(marriage_date);
+            long marriage_month = DateManipulation.dateToMonth(marriage_date);
+            long marriage_year = DateManipulation.dateToYear(marriage_date);
 
             setParentsMarriageDay(String.valueOf(marriage_day));
             setParentsMarriageMonth(String.valueOf(marriage_month));

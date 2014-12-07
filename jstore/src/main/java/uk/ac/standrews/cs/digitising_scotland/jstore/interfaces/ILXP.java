@@ -15,7 +15,7 @@ public interface ILXP extends ILXPFactory {
     /**
      * @return the id of the record
      */
-    int getId();
+    long getId();
 
     /**
      * Writes the state of the LXP to a Bucket.

@@ -29,7 +29,7 @@ public class TypeFactory {
     private IRepository type_repo;
 
     private HashMap<String, IReferenceType> names_to_type_cache = new HashMap<>();
-    private HashMap<Integer, IReferenceType> ids_to_type_cache = new HashMap<>();
+    private HashMap<Long, IReferenceType> ids_to_type_cache = new HashMap<>();
 
     private TypeFactory() {
 
@@ -68,11 +68,11 @@ public class TypeFactory {
         return names_to_type_cache.containsKey(name);
     }
 
-    public IReferenceType typeWithId(int id) {
+    public IReferenceType typeWithId(long id) {
         return ids_to_type_cache.get(id);
     }
 
-    public boolean containsId(int id) {
+    public boolean containsId(long id) {
         return ids_to_type_cache.containsKey(id);
     }
 
@@ -90,7 +90,7 @@ public class TypeFactory {
                 ILXP lxp = i.next();
                 // as set up in namevaluepair below.
                 String name = lxp.get("name");
-                int type_key = Integer.parseInt(lxp.get("key"));
+                long type_key = Long.parseLong(lxp.get("key"));
 
                 ILXP type_rep = type_reps_bucket.get(type_key);
                 LXPReferenceType reference = new LXPReferenceType((LXP) (type_rep));
@@ -119,11 +119,11 @@ public class TypeFactory {
         ids_to_type_cache.put(ref_type.getId(), ref_type);
     }
 
-    private ILXP namevaluepair(String type_name, int typekey) {
+    private ILXP namevaluepair(String type_name, long typekey) {
         LXP lxp = new LXP();
         // used in load_caches above
         lxp.put("name", type_name);
-        lxp.put("key", Integer.toString(typekey));
+        lxp.put("key", Long.toString(typekey));
         return lxp;
     }
 

@@ -253,10 +253,10 @@ public class AlLinker {
         if (record1 != null) {
             ILXP lxp = new LXP();
 
-            lxp.put("person1", Integer.toString(record1.getId()));
-            lxp.put("person2", Integer.toString(record2.getId()));
+            lxp.put("person1", Long.toString(record1.getId()));
+            lxp.put("person2", Long.toString(record2.getId()));
             lxp.put("relationship", relationship_type);
-            lxp.put("evidence", Integer.toString(evidence.getId()));
+            lxp.put("evidence", Long.toString(evidence.getId()));
             output.add(lxp);
         }
     }

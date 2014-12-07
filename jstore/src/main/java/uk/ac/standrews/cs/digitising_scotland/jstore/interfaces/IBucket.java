@@ -12,15 +12,17 @@ public interface IBucket<T extends ILXP> {
 
     /**
      * Gets the LXP record with the specified id
+     *
      * @param id - the identifier of the LXP record for which a reader is required.
      * @return an LXP record with the specified id, or null if the record cannot be found
      * @throws BucketException if the record cannot be found or if something goes wrong.
      */
-    T get(int id) throws BucketException;
+    T get(long id) throws BucketException;
 
     /**
      * Writes the state of a record to a bucket
      * The id of the record is used to determine its name in the bucket.
+     *
      * @param record whose state is to be written
      */
     void put(T record) throws BucketException;
@@ -29,7 +31,7 @@ public interface IBucket<T extends ILXP> {
      * @param id
      * @return the filepath corresponding to record with identifier id in this bucket (more public than it should be).
      */
-    String filePath(int id);
+    String filePath(long id);
 
     /**
      * @return an input Stream containing all the LXP records in this Bucket
@@ -53,10 +55,11 @@ public interface IBucket<T extends ILXP> {
 
     /**
      * A predicate to determine if a LXP with the given id is located in the bucker.
+     *
      * @param id - an id to lookup
      * @return true if the bucket contains the given id
      */
-    boolean contains(int id);
+    boolean contains(long id);
 
     /**
      * @return the implementation kind of the bucket
@@ -65,9 +68,10 @@ public interface IBucket<T extends ILXP> {
 
     /**
      * Sets the type of the bucket contents.
+     *
      * @param id - the id of a type rep specifyling the content type of the bucket.
-     * Such types are specified using a TypeFactory and are stored in the STORE's type repo.
+     *           Such types are specified using a TypeFactory and are stored in the STORE's type repo.
      */
-    void setTypeLabelID(int id) throws IOException;
+    void setTypeLabelID(long id) throws IOException;
 
 }

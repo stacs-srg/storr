@@ -17,7 +17,7 @@ import java.util.Set;
 
 public class LXP implements ILXP {
 
-    private int id;
+    private long id;
     protected HashMap<String, String> map;
 
     public LXP() {
@@ -26,13 +26,13 @@ public class LXP implements ILXP {
         this.map = new HashMap<>();
     }
 
-    public LXP(int object_id) {
+    public LXP(long object_id) {
 
         this.id = object_id;
         this.map = new HashMap<>();
     }
 
-    public LXP(int object_id, JSONReader reader) throws PersistentObjectException {
+    public LXP(long object_id, JSONReader reader) throws PersistentObjectException {
         this(object_id);
         try {
             reader.nextSymbol();
@@ -59,21 +59,21 @@ public class LXP implements ILXP {
     }
 
     @Override
-    public ILXP create(int persistent_object_id, JSONReader reader) throws PersistentObjectException {
+    public ILXP create(long persistent_object_id, JSONReader reader) throws PersistentObjectException {
         return new LXP(persistent_object_id, reader);
     }
 
 
     @Override
-    public boolean checkConsistentWith(int label_id) {
+    public boolean checkConsistentWith(long label_id) {
         return true; // there is no contract with this class - creates whatever is there.
         // over-ridden in super classes.
     }
 
     @Override
-    public int getTypeLabel() {
+    public long getTypeLabel() {
         try {
-            return Integer.parseInt(get(Types.LABEL)); // safe only one way in.
+            return Long.parseLong(get(Types.LABEL)); // safe only one way in.
         } catch (KeyNotFoundException e) {
             return -1;
         }
@@ -84,11 +84,11 @@ public class LXP implements ILXP {
         if (containsKey(Types.LABEL)) {
             throw new Exception("Type label already specified");
         }
-        put(Types.LABEL, Integer.toString(label.getId()));
+        put(Types.LABEL, Long.toString(label.getId()));
     }
 
     @Override
-    public int getId() {
+    public long getId() {
 
         return id;
     }

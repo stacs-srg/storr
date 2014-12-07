@@ -50,7 +50,7 @@ public class LXPReferenceType implements IReferenceType {
     }
 
     public boolean valueConsistentWithType(String value) {
-        Integer id = Integer.valueOf(value);  // must be a reference to a record of appropriate type
+        Long id = Long.valueOf(value);  // must be a reference to a record of appropriate type
         ILXP record = null;
 
         try {
@@ -82,7 +82,7 @@ public class LXPReferenceType implements IReferenceType {
         } else return LXPBaseType.UNKNOWN;
     }
 
-    public int getId() {
+    public long getId() {
         return typerep.getId();
     }
 

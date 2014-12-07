@@ -11,19 +11,19 @@ import uk.ac.standrews.cs.nds.rpc.stream.JSONReader;
  */
 public abstract class AbstractLXP extends LXP {
 
-    protected int required_type_labelID;
+    protected long required_type_labelID;
 
     public AbstractLXP() {
 
         super();
     }
 
-    public AbstractLXP(int object_id) {
+    public AbstractLXP(long object_id) {
 
         super(object_id);
     }
 
-    public AbstractLXP(int object_id, JSONReader reader) throws PersistentObjectException {
+    public AbstractLXP(long object_id, JSONReader reader) throws PersistentObjectException {
         super(object_id, reader);
     }
 
@@ -35,7 +35,7 @@ public abstract class AbstractLXP extends LXP {
      * This says that we can we can create an instance of this type iff the labels supplied in the label_id are present
      */
     @Override
-    public boolean checkConsistentWith(int label_id) {
+    public boolean checkConsistentWith(long label_id) {
 
         return Types.checkLabelsConsistentWith(label_id, required_type_labelID);
 

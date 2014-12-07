@@ -12,14 +12,14 @@ import uk.ac.standrews.cs.nds.rpc.stream.JSONReader;
 public class DeathFactory extends TFactory<Death> implements ILXPFactory<Death> {
 
 
-    public DeathFactory(int deathlabelID) {
+    public DeathFactory(long deathlabelID) {
         this.required_type_labelID = deathlabelID;
     }
 
 
     @Override
-    public Death create(int label_id, JSONReader reader) throws PersistentObjectException {
-        return new Death( label_id, reader );
+    public Death create(long label_id, JSONReader reader) throws PersistentObjectException {
+        return new Death(label_id, reader);
     }
 
 }

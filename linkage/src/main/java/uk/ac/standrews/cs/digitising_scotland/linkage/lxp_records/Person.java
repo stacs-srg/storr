@@ -121,7 +121,7 @@ public class Person extends AbstractLXP {
         String changed_forename = BD_record.get(CHANGED_FORENAME);
         String changed_mothers_maiden_surname = BD_record.get(CHANGED_MOTHERS_MAIDEN_SURNAME);
 
-        String original_record_id = Integer.toString(BD_record.getId());
+        String original_record_id = Long.toString(BD_record.getId());
         String original_record_type = BD_record.get(Types.LABEL);
         String role = "baby";
         String occupation = "";
@@ -152,7 +152,7 @@ public class Person extends AbstractLXP {
         String changed_forename = ""; // unknown
         String changed_mothers_maiden_surname = ""; // unknown
 
-        String original_record_id = Integer.toString(BD_record.getId());
+        String original_record_id = Long.toString(BD_record.getId());
         String original_record_type = BD_record.get(Types.LABEL);
         String role = "father";
         String occupation = child.get(FATHERS_OCCUPATION);
@@ -183,7 +183,7 @@ public class Person extends AbstractLXP {
         String changed_forename = ""; // unknown
         String changed_mothers_maiden_surname = ""; // unknown
 
-        String original_record_id = Integer.toString(BD_record.getId());
+        String original_record_id = Long.toString(BD_record.getId());
         String original_record_type = BD_record.get(Types.LABEL);
         String role = "mother";
         String occupation = child.get(FATHERS_OCCUPATION);
@@ -224,7 +224,7 @@ public class Person extends AbstractLXP {
         String changed_forename = ""; // unknown
         String changed_mothers_maiden_surname = ""; // unknown
 
-        String original_record_id = Integer.toString(marriage_record.getId());
+        String original_record_id = Long.toString(marriage_record.getId());
         String original_record_type = marriage_record.get(Types.LABEL);
         String role = "bride";
         String occupation = "";
@@ -264,7 +264,7 @@ public class Person extends AbstractLXP {
         String changed_forename = ""; // unknown
         String changed_mothers_maiden_surname = ""; // unknown
 
-        String original_record_id = Integer.toString(marriage_record.getId());
+        String original_record_id = Long.toString(marriage_record.getId());
         String original_record_type = marriage_record.get(Types.LABEL);
         String role = "bride";
         String occupation = "";
@@ -297,7 +297,7 @@ public class Person extends AbstractLXP {
         String changed_forename = ""; // unknown
         String changed_mothers_maiden_surname = ""; // unknown
 
-        String original_record_id = Integer.toString(marriage_record.getId());
+        String original_record_id = Long.toString(marriage_record.getId());
         String original_record_type = marriage_record.get(Types.LABEL);
         String role = "brides_father";
         String occupation = marriage_record.get(BRIDE_FATHER_OCCUPATION);
@@ -330,7 +330,7 @@ public class Person extends AbstractLXP {
         String changed_forename = ""; // unknown
         String changed_mothers_maiden_surname = ""; // unknown
 
-        String original_record_id = Integer.toString(marriage_record.getId());
+        String original_record_id = Long.toString(marriage_record.getId());
         String original_record_type = marriage_record.get(Types.LABEL);
         String role = "brides_mother";
         String occupation = ""; // unknown
@@ -363,7 +363,7 @@ public class Person extends AbstractLXP {
         String changed_forename = ""; // unknown
         String changed_mothers_maiden_surname = ""; // unknown
 
-        String original_record_id = Integer.toString(marriage_record.getId());
+        String original_record_id = Long.toString(marriage_record.getId());
         String original_record_type = marriage_record.get(Types.LABEL);
         String role = "grooms_father";
         String occupation = marriage_record.get(GROOM_FATHERS_OCCUPATION);
@@ -397,7 +397,7 @@ public class Person extends AbstractLXP {
         String changed_forename = ""; // unknown
         String changed_mothers_maiden_surname = ""; // unknown
 
-        String original_record_id = Integer.toString(marriage_record.getId());
+        String original_record_id = Long.toString(marriage_record.getId());
         String original_record_type = marriage_record.get(Types.LABEL);
         String role = "grooms_mother";
         String occupation = ""; // unknown

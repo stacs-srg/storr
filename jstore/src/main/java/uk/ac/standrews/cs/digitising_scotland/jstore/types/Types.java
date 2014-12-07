@@ -29,11 +29,11 @@ public class Types {
      * @param <T>           the type of the record being checked
      * @return true if the labels are consistent
      */
-    public static <T extends ILXP> boolean check_label_consistency(final T record, int type_label_id) {
+    public static <T extends ILXP> boolean check_label_consistency(final T record, long type_label_id) {
 
         if (record.containsKey(Types.LABEL)) { // if there is a label it must be correct
             try {
-                return Types.checkLabelsConsistentWith(Integer.parseInt(record.get(Types.LABEL)), type_label_id);
+                return Types.checkLabelsConsistentWith(Long.parseLong(record.get(Types.LABEL)), type_label_id);
             } catch (KeyNotFoundException e) {
                 return false; // label not there
             }
@@ -51,7 +51,7 @@ public class Types {
      * @return true if the structure is consistent
      * @throws IOException
      */
-    public static <T extends ILXP> boolean check_structural_consistency(final T record, int type_label_id) throws IOException {
+    public static <T extends ILXP> boolean check_structural_consistency(final T record, long type_label_id) throws IOException {
 
 
         IReferenceType bucket_type = TypeFactory.getInstance().typeWithId(type_label_id);
@@ -166,7 +166,7 @@ public class Types {
      * @param type_label_id     the label against which the checking is to be performed
      * @return true if the labels are consistent
      */
-    public static boolean checkLabelsConsistentWith(int supplied_label_id, int type_label_id) {
+    public static boolean checkLabelsConsistentWith(long supplied_label_id, long type_label_id) {
         // do id check first
         if (type_label_id == supplied_label_id) {
             return true;

@@ -64,7 +64,7 @@ import java.util.Date;
  */
 public class DeathSourceSourceSourceRecord extends IndividualSourceSourceRecord {
 
-    public static final int FIRST_YEAR_DOB_PRESENT = 1966;
+    public static final long FIRST_YEAR_DOB_PRESENT = 1966;
     private static final SimpleDateFormat DOB_DATE_FORMAT = new SimpleDateFormat("ddMMyyyy");
 
     private DateRecord death_date;
@@ -110,7 +110,7 @@ public class DeathSourceSourceSourceRecord extends IndividualSourceSourceRecord 
 
             final IPartnership parents_partnership = population.findPartnership(parents_partnership_id);
             setParentAttributes(person, population, parents_partnership);
-         }
+        }
     }
 
     public String getDeathDay() {
@@ -272,8 +272,8 @@ public class DeathSourceSourceSourceRecord extends IndividualSourceSourceRecord 
 
         if (death_date != null) {
 
-            int birth_year = DateManipulation.dateToYear(birth_date);
-            int death_year = DateManipulation.dateToYear(death_date);
+            long birth_year = DateManipulation.dateToYear(birth_date);
+            long death_year = DateManipulation.dateToYear(death_date);
 
             setDeathYear(String.valueOf(death_year));
             setDeathAge(String.valueOf(death_year - birth_year));

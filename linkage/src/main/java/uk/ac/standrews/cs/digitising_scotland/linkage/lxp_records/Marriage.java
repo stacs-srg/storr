@@ -99,7 +99,7 @@ public class Marriage extends AbstractLXP {
         super();
     }
 
-    public Marriage(int label_id, JSONReader reader) throws PersistentObjectException {
+    public Marriage(long label_id, JSONReader reader) throws PersistentObjectException {
 
         super(Store.getInstance().getNextFreePID(), reader);
     }

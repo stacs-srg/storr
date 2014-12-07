@@ -34,12 +34,12 @@ public class Pair<T extends ILXP> implements IPair<T> { //TODO fix up this
     //TODO all bodged below here
 
     @Override
-    public int getTypeLabel() {
+    public long getTypeLabel() {
         return -1;
     }    // TODO write these!
 
     @Override
-    public int getId() {
+    public long getId() {
         return 0;
     }
 
@@ -75,12 +75,12 @@ public class Pair<T extends ILXP> implements IPair<T> { //TODO fix up this
 
 
     @Override
-    public ILXP create(int label_id, JSONReader reader) throws PersistentObjectException {
+    public ILXP create(long label_id, JSONReader reader) throws PersistentObjectException {
         return null;
     }
 
     @Override
-    public boolean checkConsistentWith(int label_id) throws IOException, PersistentObjectException {
+    public boolean checkConsistentWith(long label_id) throws IOException, PersistentObjectException {
         return false;
     }
 

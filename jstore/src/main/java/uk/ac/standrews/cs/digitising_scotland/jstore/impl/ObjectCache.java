@@ -16,7 +16,7 @@ import java.util.HashMap;
  */
 public class ObjectCache implements IObjectCache {
 
-    HashMap<Integer, IBucket> map = new HashMap<Integer, IBucket>();
+    HashMap<Long, IBucket> map = new HashMap<Long, IBucket>();
 
     public ObjectCache() {
 
@@ -28,7 +28,7 @@ public class ObjectCache implements IObjectCache {
      * @param bucket
      * @param oid
      */
-    public void put(IBucket bucket, int oid) {
+    public void put(IBucket bucket, long oid) {
         map.put(oid, bucket);
     }
 
@@ -36,7 +36,7 @@ public class ObjectCache implements IObjectCache {
      * @param oid - the oid to be loooked up
      * @return the Bucket from which the oid was loaded
      */
-    public IBucket getBucket(int oid) {
+    public IBucket getBucket(long oid) {
         return map.get(oid);
     }
 
@@ -44,7 +44,7 @@ public class ObjectCache implements IObjectCache {
      * @param oid - the oid to be loooked up
      * @return true if the oid is loaded
      */
-    public boolean contains(int oid) {
+    public boolean contains(long oid) {
         return map.containsKey(oid);
     }
 

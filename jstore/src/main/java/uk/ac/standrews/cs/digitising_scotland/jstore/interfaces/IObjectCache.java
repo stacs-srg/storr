@@ -12,17 +12,17 @@ public interface IObjectCache {
      * @param bucket - the bucket of the registered object
      * @param oid    - the object id of the registered object
      */
-    public void put(IBucket bucket, int oid);
+    public void put(IBucket bucket, long oid);
 
     /**
      * @param oid - the oid to be loooked up
      * @return the Bucket from which the oid was loaded
      */
-    public IBucket getBucket(int oid);
+    public IBucket getBucket(long oid);
 
     /**
      * @param oid - the oid to be loooked up
      * @return true if the oid is loaded
      */
-    public boolean contains(int oid);
+    public boolean contains(long oid);
 }

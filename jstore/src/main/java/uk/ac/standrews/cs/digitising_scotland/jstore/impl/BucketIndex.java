@@ -22,7 +22,7 @@ public class BucketIndex implements IBucketIndex {
     private final Path dir;
     private final DirectoryBackedIndexedBucket indexed_bucket;
     private final String label;
-    private Map<String, List<Integer>> map = null; // a map of values to the record with fields with those values.
+    private Map<String, List<Long>> map = null; // a map of values to the record with fields with those values.
 
     /**
      * Create an index of records in a IndexedFileBasedBucketImpl.
@@ -59,9 +59,9 @@ public class BucketIndex implements IBucketIndex {
                 File f = files.next();
                 String key = f.getName(); // the name of the file is also the key
                 List<String> values = Files.readAllLines(f.toPath(), FILE_CHARSET); // read in all the lines (ids as Strings)
-                ArrayList<Integer> ids = new ArrayList<>();
+                ArrayList<Long> ids = new ArrayList<>();
                 for (String s : values) {
-                    ids.add(Integer.parseInt(s)); // add in the keys from the file
+                    ids.add(Long.parseLong(s)); // add in the keys from the file
                 }
                 map.put(key, ids); // add to HashMap
             }
@@ -78,7 +78,7 @@ public class BucketIndex implements IBucketIndex {
 
 
     @Override
-    public List<Integer> values(final String value) throws IOException {
+    public List<Long> values(final String value) throws IOException {
 
         onDemandLoadContents();
 
@@ -90,10 +90,10 @@ public class BucketIndex implements IBucketIndex {
 
         onDemandLoadContents();
 
-        List<Integer> entries = map.get(value); // list of integers which are indices into the bucket;
+        List<Long> entries = map.get(value); // list of integers which are indices into the bucket;
         ArrayList<File> files = new ArrayList<>();
 
-        for (Integer i : entries) {
+        for (Long i : entries) {
             files.add(new File(indexed_bucket.filePath(i)));
         }
 
@@ -112,12 +112,12 @@ public class BucketIndex implements IBucketIndex {
             throw new IOException("type label not found");
         }
 
-        List<Integer> entry = map.get(value); // look up index for the value associated with this do we have any of these values in the index already
+        List<Long> entry = map.get(value); // look up index for the value associated with this do we have any of these values in the index already
 
         if (entry != null) {
             entry.add(record.getId()); // add it in.
         } else {
-            ArrayList<Integer> list = new ArrayList<>();    // create a new list
+            ArrayList<Long> list = new ArrayList<>();    // create a new list
             list.add(record.getId());                     // add it in
             map.put(value, list);                           // add new list to the map.
         }

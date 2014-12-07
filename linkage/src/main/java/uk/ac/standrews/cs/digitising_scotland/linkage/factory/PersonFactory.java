@@ -12,14 +12,14 @@ import uk.ac.standrews.cs.nds.rpc.stream.JSONReader;
 public class PersonFactory extends TFactory<Person> implements ILXPFactory<Person> {
 
 
-    public PersonFactory(int personlabelID) {
+    public PersonFactory(long personlabelID) {
         this.required_type_labelID = personlabelID;
     }
 
 
     @Override
-    public Person create(int label_id, JSONReader reader) throws PersistentObjectException {
-        return new Person( reader );
+    public Person create(long label_id, JSONReader reader) throws PersistentObjectException {
+        return new Person(reader);
     }
 
 }

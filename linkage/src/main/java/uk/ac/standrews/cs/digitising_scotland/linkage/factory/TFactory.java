@@ -10,18 +10,18 @@ import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.ILXPFactory;
  */
 public abstract class TFactory<T extends ILXP> implements ILXPFactory<T> {
 
-    protected int required_type_labelID;
+    protected long required_type_labelID;
 
     /*
      * This says that we can we can create an instance of this type iff the labels supplied in the label_id are present
      */
     @Override
-    public boolean checkConsistentWith(int label_id) {
+    public boolean checkConsistentWith(long label_id) {
         return Types.checkLabelsConsistentWith(label_id, required_type_labelID);
     }
 
     @Override
-    public int getTypeLabel() {
+    public long getTypeLabel() {
         return required_type_labelID;
     }
 

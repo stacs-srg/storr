@@ -9,10 +9,8 @@ import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.IStore;
 import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
 import uk.ac.standrews.cs.nds.util.ErrorHandling;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -25,17 +23,18 @@ import java.util.Iterator;
 public class Store implements IStore {
 
     private final static String REPO_DIR_NAME = "REPOS";
-    private final static String ID_FILE_NAME = "id_file";
+//    private final static String ID_FILE_NAME = "id_file"; // // no longer needed for pseudo random ids
 
     private final String store_path;
     private final String repo_path;
     private final File store_root_directory;
     private final File repo_directory;
-    private final File id_file;
+//    private final File id_file; // no longer needed for pseudo random ids
 
     private static IStore instance;
     private final IObjectCache object_cache;
-    private int id = 1;
+    private static SecureRandom sr = new SecureRandom();
+    // private int id = 1;
 
     @SuppressFBWarnings(value = "ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD", justification = "intended behaviour")
     public Store(String store_path) throws StoreException, IOException {
@@ -44,14 +43,15 @@ public class Store implements IStore {
 
         store_root_directory = new File(store_path);
         repo_directory = new File(repo_path);
-        id_file = new File(store_path + File.separator + ID_FILE_NAME);
+        // no longer needed for pseudo random ids:
+        // id_file = new File(store_path + File.separator + ID_FILE_NAME);
 
         checkCreate(store_root_directory);
         checkCreate(repo_directory);
 
-        checkCreateId();
+        // checkCreateId(); // no longer needed for pseudo random ids
 
-        initId();
+        // initId(); // no longer needed for pseudo random ids
         instance = this;
         object_cache = new ObjectCache();
     }
@@ -102,62 +102,69 @@ public class Store implements IStore {
     }
 
     @Override
-    public int getNextFreePID() {
-        int next_id = id++;                 // TODO Consider Making them big and random
-        try {
-            saveId();
-        } catch (IOException e) {
-            ErrorHandling.exceptionError(e, "Saving id");
-        }
-        return next_id;
+    public long getNextFreePID() {
+        return getPRN();
     }
 
-    private static SecureRandom sr = new SecureRandom();
-
-    public static int getPRN() {
-
-        return sr.nextInt();
-    }
-
-    public static void main(String args[]) {  // TODO Al is playing here
-        for (int i = 0; i < 10; i++) {
-            System.out.println("Next int is : " + getPRN());
-
-        }
-    }
+//    @Override
+//    public int getNextFreePID() {
+//        int next_id = id++;                 // TODO Consider Making them big and random
+//        try {
+//            saveId();
+//        } catch (IOException e) {
+//            ErrorHandling.exceptionError(e, "Saving id");
+//        }
+//        return next_id;
+//    }
 
     @Override
     public IObjectCache getObjectCache() {
         return object_cache;
     }
 
-    private void initId() throws IOException {
+    /******************** private methods ********************/
 
-        try (BufferedReader reader = Files.newBufferedReader(Paths.get(id_file.getAbsolutePath()), FileManipulation.FILE_CHARSET)) {
+    /**
+     * @return a pseudo random positive long
+     */
+    private static long getPRN() {
 
-            String line = reader.readLine();
-            if (line == null) throw new IOException("Couldn't read ID from file");
-            id = Integer.parseInt(line);
-        }
+        long next_prn;
+        do {
+            next_prn = sr.nextLong();
+        } while (next_prn <= 0);
+        return next_prn;
     }
 
-    private void saveId() throws IOException {
-
-        try (final PrintWriter writer = new PrintWriter(Files.newBufferedWriter(Paths.get(id_file.getAbsolutePath()), FileManipulation.FILE_CHARSET))) {
-            writer.println(id);
-            writer.println();
-        }
-    }
-
-    private void checkCreateId() throws IOException, StoreException {
-        if (!id_file.exists()) { // only create this file if it doesn't exist
-
-            if (!id_file.createNewFile()) {
-                throw new StoreException("ID file " + id_file.getAbsolutePath() + " does not exist and cannot be created");
-            }
-            saveId(); // initialise the persistent counter
-        }
-    }
+// These method were used for saving ids before pseudo random longs were used.
+//
+//    private void initId() throws IOException {
+//
+//        try (BufferedReader reader = Files.newBufferedReader(Paths.get(id_file.getAbsolutePath()), FileManipulation.FILE_CHARSET)) {
+//
+//            String line = reader.readLine();
+//            if (line == null) throw new IOException("Couldn't read ID from file");
+//            id = Integer.parseInt(line);
+//        }
+//    }
+//
+//    private void saveId() throws IOException {
+//
+//        try (final PrintWriter writer = new PrintWriter(Files.newBufferedWriter(Paths.get(id_file.getAbsolutePath()), FileManipulation.FILE_CHARSET))) {
+//            writer.println(id);
+//            writer.println();
+//        }
+//    }
+//
+//    private void checkCreateId() throws IOException, StoreException {
+//        if (!id_file.exists()) { // only create this file if it doesn't exist
+//
+//            if (!id_file.createNewFile()) {
+//                throw new StoreException("ID file " + id_file.getAbsolutePath() + " does not exist and cannot be created");
+//            }
+//            saveId(); // initialise the persistent counter
+//        }
+//    }
 
     private void checkCreate(File root_dir) throws StoreException {
         if (!root_dir.exists()) {  // only create if it doesn't exist - try and make the directory

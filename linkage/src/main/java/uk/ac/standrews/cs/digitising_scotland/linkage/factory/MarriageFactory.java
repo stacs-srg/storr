@@ -12,14 +12,14 @@ import uk.ac.standrews.cs.nds.rpc.stream.JSONReader;
 public class MarriageFactory extends TFactory<Marriage> implements ILXPFactory<Marriage> {
 
 
-    public MarriageFactory(int marriagelabelID) {
+    public MarriageFactory(long marriagelabelID) {
         this.required_type_labelID = marriagelabelID;
     }
 
 
     @Override
-    public Marriage create(int label_id, JSONReader reader) throws PersistentObjectException {
-        return new Marriage( label_id, reader );
+    public Marriage create(long label_id, JSONReader reader) throws PersistentObjectException {
+        return new Marriage(label_id, reader);
     }
 
 }
