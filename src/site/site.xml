@@ -36,10 +36,10 @@
         </head>
 
         <links>
-            <item name="Home"         href="index.html" />
-            <item name="Publications" href="publications.html" />
-            <!--<item name="Software"     href="software.html" />-->
-            <item name="Software"     href="project-info.html" />
+            <item name="Home"          href="index.html" />
+            <item name="Publications"  href="publications.html" />
+            <item name="Presentations" href="presentations.html" />
+            <item name="Software"      href="project-info.html" />
         </links>
     </body>
 
