@@ -140,7 +140,7 @@ public class Store implements IStore {
 //
 //    private void initId() throws IOException {
 //
-//        try (BufferedReader reader = Files.newBufferedReader(Paths.get(id_file.getAbsolutePath()), FileManipulation.FILE_CHARSET)) {
+//        try (BufferedReader reader = Files.newBufferedReader(Paths.getString(id_file.getAbsolutePath()), FileManipulation.FILE_CHARSET)) {
 //
 //            String line = reader.readLine();
 //            if (line == null) throw new IOException("Couldn't read ID from file");
@@ -150,7 +150,7 @@ public class Store implements IStore {
 //
 //    private void saveId() throws IOException {
 //
-//        try (final PrintWriter writer = new PrintWriter(Files.newBufferedWriter(Paths.get(id_file.getAbsolutePath()), FileManipulation.FILE_CHARSET))) {
+//        try (final PrintWriter writer = new PrintWriter(Files.newBufferedWriter(Paths.getString(id_file.getAbsolutePath()), FileManipulation.FILE_CHARSET))) {
 //            writer.println(id);
 //            writer.println();
 //        }

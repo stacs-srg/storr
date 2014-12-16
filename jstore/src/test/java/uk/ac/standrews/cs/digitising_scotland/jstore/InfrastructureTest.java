@@ -6,10 +6,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.LXP;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.Store;
-import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.BucketException;
-import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.KeyNotFoundException;
-import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.RepositoryException;
-import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.StoreException;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.*;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.factory.TypeFactory;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.*;
 import uk.ac.standrews.cs.digitising_scotland.jstore.types.Types;
@@ -107,7 +104,7 @@ public class InfrastructureTest {
         try {
             b.put(lxp);
         } catch (Exception e) {
-            // should get an exception due to overwrite;
+            // should getString an exception due to overwrite;
             return;
         }
         fail("Overwrite of LXP record not detected");
@@ -127,7 +124,7 @@ public class InfrastructureTest {
             System.out.println("Bucket exception caught");
             return;
         } catch (Exception e) {
-            // should get an exception due to wrong type;
+            // should getString an exception due to wrong type;
             System.out.println("Type exception caught");
             return;
         }
@@ -141,7 +138,7 @@ public class InfrastructureTest {
 
         LXP lxp = new LXP();        // correct structure but no label - that is OK!
         lxp.put("name", "al");
-        lxp.put("age", "55");
+        lxp.put("age", 55);
         b.put(lxp);
     }
 
@@ -152,8 +149,8 @@ public class InfrastructureTest {
 
         LXP lxp = new LXP();        // correct structure
         lxp.put("name", "al");
-        lxp.put("age", "55");
-        lxp.put(Types.LABEL, Long.toString(personlabel.getId()));    // with correct label
+        lxp.put("age", 55);
+        lxp.put(Types.LABEL, personlabel.getId());    // with correct label
         b.put(lxp); // Should succeed: labels correct and type label identical to bucket
     }
 
@@ -164,8 +161,8 @@ public class InfrastructureTest {
 
         LXP lxp = new LXP();        // correct structure
         lxp.put("name", "al");
-        lxp.put("age", "55");
-        lxp.put(Types.LABEL, Long.toString(personlabel.getId())); // structurally equivalent label
+        lxp.put("age", 55);
+        lxp.put(Types.LABEL, personlabel.getId()); // structurally equivalent label
         b.put(lxp); // Should succeed labels correct and type label structurally equivalent
     }
 
@@ -179,30 +176,29 @@ public class InfrastructureTest {
         lxp.put("address", "home");
         lxp.addTypeLabel(personlabel); // correct label but not structurally equivalent label
         b.put(lxp);
-        // should get an exception due to incorrect structure
+        // should getString an exception due to incorrect structure
 
     }
 
     @Test
     public synchronized void testReferenceLabel() throws Exception, RepositoryException {
         IBucket b1 = repo.getBucket(generic_bucket_name1);
-        b1.setTypeLabelID(personlabel.getId());               //id is 1: lxp is {"age":"int","name":"string"}
+        b1.setTypeLabelID(personlabel.getId());
         IBucket b2 = repo.getBucket(generic_bucket_name2);
-        b2.setTypeLabelID(personreftuple.getId());            // id is 5: lxp is {"person_ref":"Person"}
+        b2.setTypeLabelID(personreftuple.getId());
 
 
         LXP lxp = new LXP();        // correct structure
         lxp.put("name", "al");
-        lxp.put("age", "55");
-        lxp.put(Types.LABEL, Long.toString(personlabel.getId())); // correct label
+        lxp.put("age", 55);
+        lxp.put(Types.LABEL, personlabel.getId()); // correct label
         long person_id = lxp.getId();
 
-        b1.put(lxp);   // lxp.id is 7 label is 1
+        b1.put(lxp);
 
 
-        LXP lxp2 = new LXP();        // correct structure    // id is 8
-        lxp2.put("person_ref", Long.toString(person_id));    // person_ref=7, ref to Person
-
+        LXP lxp2 = new LXP();        // correct structure
+        lxp2.put("person_ref", person_id);
         b2.put(lxp2);
     }
 
@@ -216,8 +212,8 @@ public class InfrastructureTest {
 
         LXP lxp = new LXP();        // correct structure
         lxp.put("name", "al");
-        lxp.put("age", "55");
-        lxp.put(Types.LABEL, Long.toString(personlabel.getId())); // correct label
+        lxp.put("age", 55);
+        lxp.put(Types.LABEL, personlabel.getId()); // correct label
         long person_id = lxp.getId();
 
         b1.put(lxp);
@@ -245,8 +241,8 @@ public class InfrastructureTest {
 
         LXP lxp = new LXP();        // correct structure
         lxp.put("name", "al");
-        lxp.put("age", "55");
-        lxp.put(Types.LABEL, Long.toString(personlabel.getId())); // correct label
+        lxp.put("age", 55);
+        lxp.put(Types.LABEL, personlabel.getId()); // correct label
         long person_id = lxp.getId();
 
         b1.put(lxp);
@@ -275,9 +271,8 @@ public class InfrastructureTest {
 
         LXP lxp = new LXP();        // incorrect structure
         lxp.put("name", "al");
-        lxp.put("age", "55");
-        lxp.put(Types.LABEL, Long.toString(personlabel.getId())); // correct label
-        long person_id = lxp.getId();
+        lxp.put("age", 55);
+        lxp.put(Types.LABEL, personlabel.getId()); // correct label
 
         b1.put(lxp);
     }
@@ -290,8 +285,7 @@ public class InfrastructureTest {
             LXP lxp = new LXP();        // incorrect structure
             lxp.put("name", "al");
             lxp.put("wrongfield", "55");
-            lxp.put(Types.LABEL, Long.toString(personlabel.getId())); // correct label
-            long person_id = lxp.getId();
+            lxp.put(Types.LABEL, personlabel.getId()); // correct label
 
             b1.put(lxp);
 
@@ -303,7 +297,7 @@ public class InfrastructureTest {
     }
 
     @Test
-    public synchronized void testLXPFromFile() throws Exception, RepositoryException, KeyNotFoundException {
+    public synchronized void testLXPFromFile() throws Exception, RepositoryException, KeyNotFoundException, TypeMismatchFoundException {
         IBucket b = repo.getBucket(generic_bucket_name1);
         LXP lxp = new LXP();
         lxp.put("age", "42");
@@ -313,14 +307,14 @@ public class InfrastructureTest {
 
         ILXP lxp2 = b.get(id);
         assertTrue(lxp2.containsKey("age"));
-        assertEquals(lxp2.get("age"), "42");
+        assertEquals(lxp2.getString("age"), "42");
         assertTrue(lxp2.containsKey("address"));
-        assertEquals(lxp2.get("address"), "home");
+        assertEquals(lxp2.getString("address"), "home");
     }
 
 
     @Test
-    public synchronized void testStreams() throws Exception, RepositoryException, KeyNotFoundException {
+    public synchronized void testStreams() throws Exception, RepositoryException, KeyNotFoundException, TypeMismatchFoundException {
         IBucket b = repo.getBucket(generic_bucket_name1);
         // create a few records
         for (int i = 1; i < 10; i++) {
@@ -333,14 +327,42 @@ public class InfrastructureTest {
         for (Object o : b.getInputStream()) {
             ILXP record = (ILXP) o;  // TODO dynamic cast - eliminate?
             assertTrue(record.containsKey("age"));
-            assertEquals(record.get("age"), "42");
+            assertEquals(record.getString("age"), "42");
             assertTrue(record.containsKey("address"));
-            assertEquals(record.get("address"), "home");
+            assertEquals(record.getString("address"), "home");
             count++;
         }
         assertEquals(count, 10);
     }
 
+
+    @Test
+    public synchronized void testBaseTypedFields() throws Exception, RepositoryException, KeyNotFoundException, TypeMismatchFoundException {
+        IBucket b = repo.getBucket(generic_bucket_name1);
+        LXP lxp = new LXP();
+
+        // base types supported are: BOOLEAN, DOUBLE, INTEGER, LONG & STRING
+        lxp.put("boolean", true);
+        lxp.put("double", 3.14d);
+        lxp.put("int", 7);
+        lxp.put("long", 23L);
+        lxp.put("string", "al");
+        b.put(lxp);       // <<--------- write record **
+        long id = lxp.getId();
+
+        ILXP lxp2 = b.get(id);
+        assertTrue(lxp2.containsKey("boolean"));
+        assertEquals(lxp2.getBoolean("boolean"), true);
+        assertTrue(lxp2.containsKey("double"));
+        assertEquals(3.14d, lxp2.getDouble("double"), 0.0d);
+        assertTrue(lxp2.containsKey("int"));
+        assertEquals(lxp2.getInt("int"), 7);
+        assertTrue(lxp2.containsKey("long"));
+        assertEquals(lxp2.getLong("long"), 23L);
+        assertTrue(lxp2.containsKey("string"));
+        assertEquals(lxp2.getString("string"), "al");
+
+    }
 
     @Test
     @Ignore

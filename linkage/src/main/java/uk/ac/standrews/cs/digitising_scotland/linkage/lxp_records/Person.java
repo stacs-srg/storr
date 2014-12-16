@@ -1,6 +1,7 @@
 package uk.ac.standrews.cs.digitising_scotland.linkage.lxp_records;
 
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.KeyNotFoundException;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.TypeMismatchFoundException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.ILXP;
 import uk.ac.standrews.cs.digitising_scotland.jstore.types.LXP_SCALAR;
 import uk.ac.standrews.cs.digitising_scotland.jstore.types.Types;
@@ -96,33 +97,33 @@ public class Person extends AbstractLXP {
         put(OCCUPATION, occupation);
     }
 
-    public static Person createPersonFromOwnBirthDeath(ILXP BD_record) throws KeyNotFoundException {// TODO rewrite as typed
+    public static Person createPersonFromOwnBirthDeath(ILXP BD_record) throws KeyNotFoundException, TypeMismatchFoundException {// TODO rewrite as typed
 
-        String surname = BD_record.get(SURNAME);
-        String forename = BD_record.get(FORENAME);
-        String sex = BD_record.get(SEX);
-        String fathers_forename = BD_record.get(FATHERS_FORENAME);
+        String surname = BD_record.getString(SURNAME);
+        String forename = BD_record.getString(FORENAME);
+        String sex = BD_record.getString(SEX);
+        String fathers_forename = BD_record.getString(FATHERS_FORENAME);
 
-        String fathers_surname = BD_record.get(FATHERS_SURNAME);
+        String fathers_surname = BD_record.getString(FATHERS_SURNAME);
         if (fathers_surname.equals("0")) {
-            fathers_surname = BD_record.get(SURNAME);           // TODO move this code elsewhere
+            fathers_surname = BD_record.getString(SURNAME);           // TODO move this code elsewhere
         }
 
-        String fathers_occupation = BD_record.get(FATHERS_OCCUPATION);
-        String mothers_forename = BD_record.get(MOTHERS_FORENAME);
+        String fathers_occupation = BD_record.getString(FATHERS_OCCUPATION);
+        String mothers_forename = BD_record.getString(MOTHERS_FORENAME);
 
-        String mothers_surname = BD_record.get(MOTHERS_SURNAME);
+        String mothers_surname = BD_record.getString(MOTHERS_SURNAME);
         if (mothers_surname.equals("0")) {
-            mothers_surname = BD_record.get(SURNAME);        // TODO move this code elsewhere
+            mothers_surname = BD_record.getString(SURNAME);        // TODO move this code elsewhere
         }
 
-        String mothers_maiden_surname = BD_record.get(MOTHERS_MAIDEN_SURNAME);
-        String changed_surname = BD_record.get(CHANGED_SURNAME);
-        String changed_forename = BD_record.get(CHANGED_FORENAME);
-        String changed_mothers_maiden_surname = BD_record.get(CHANGED_MOTHERS_MAIDEN_SURNAME);
+        String mothers_maiden_surname = BD_record.getString(MOTHERS_MAIDEN_SURNAME);
+        String changed_surname = BD_record.getString(CHANGED_SURNAME);
+        String changed_forename = BD_record.getString(CHANGED_FORENAME);
+        String changed_mothers_maiden_surname = BD_record.getString(CHANGED_MOTHERS_MAIDEN_SURNAME);
 
         String original_record_id = Long.toString(BD_record.getId());
-        String original_record_type = BD_record.get(Types.LABEL);
+        String original_record_type = BD_record.getString(Types.LABEL);
         String role = "baby";
         String occupation = "";
 
@@ -131,14 +132,14 @@ public class Person extends AbstractLXP {
                 changed_surname, changed_forename, changed_mothers_maiden_surname, original_record_id, original_record_type, role, occupation);
     }
 
-    public static Person createFatherFromChildsBirthDeath(Person child, Birth BD_record) throws KeyNotFoundException {// TODO rewrite as typed
+    public static Person createFatherFromChildsBirthDeath(Person child, Birth BD_record) throws KeyNotFoundException, TypeMismatchFoundException {// TODO rewrite as typed
 
-        if (child.get(FATHERS_SURNAME).equals("")) {
+        if (child.getString(FATHERS_SURNAME).equals("")) {
             return null;
         }
 
-        String surname = child.get(FATHERS_SURNAME);
-        String forename = child.get(FATHERS_FORENAME);
+        String surname = child.getString(FATHERS_SURNAME);
+        String forename = child.getString(FATHERS_FORENAME);
         String sex = "M"; //  this is the father
         String fathers_forename = ""; // unknown - father of father
         String fathers_surname = ""; //unknown - father of father  - could guess but no
@@ -153,23 +154,23 @@ public class Person extends AbstractLXP {
         String changed_mothers_maiden_surname = ""; // unknown
 
         String original_record_id = Long.toString(BD_record.getId());
-        String original_record_type = BD_record.get(Types.LABEL);
+        String original_record_type = BD_record.getString(Types.LABEL);
         String role = "father";
-        String occupation = child.get(FATHERS_OCCUPATION);
+        String occupation = child.getString(FATHERS_OCCUPATION);
 
         return new Person(surname, forename, sex, fathers_forename, fathers_surname,
                 fathers_occupation, mothers_forename, mothers_surname, mothers_maiden_surname,
                 changed_surname, changed_forename, changed_mothers_maiden_surname, original_record_id, original_record_type, role, occupation);
     }
 
-    public static Person createMotherFromChildsBirthDeath(ILXP child, ILXP BD_record) throws KeyNotFoundException {// TODO rewrite as typed
+    public static Person createMotherFromChildsBirthDeath(ILXP child, ILXP BD_record) throws KeyNotFoundException, TypeMismatchFoundException {// TODO rewrite as typed
 
-        if (child.get(FATHERS_SURNAME).equals("")) {
+        if (child.getString(FATHERS_SURNAME).equals("")) {
             return null;
         }
 
-        String surname = child.get(MOTHERS_SURNAME);
-        String forename = child.get(MOTHERS_FORENAME);
+        String surname = child.getString(MOTHERS_SURNAME);
+        String forename = child.getString(MOTHERS_FORENAME);
         String sex = "F"; //  this is the mother
         String fathers_forename = ""; // unknown - father of mother
         String fathers_surname = ""; //unknown - father of mother  - could guess but no
@@ -184,9 +185,9 @@ public class Person extends AbstractLXP {
         String changed_mothers_maiden_surname = ""; // unknown
 
         String original_record_id = Long.toString(BD_record.getId());
-        String original_record_type = BD_record.get(Types.LABEL);
+        String original_record_type = BD_record.getString(Types.LABEL);
         String role = "mother";
-        String occupation = child.get(FATHERS_OCCUPATION);
+        String occupation = child.getString(FATHERS_OCCUPATION);
 
         return new Person(surname, forename, sex, fathers_forename, fathers_surname,
                 fathers_occupation, mothers_forename, mothers_surname, mothers_maiden_surname,
@@ -200,23 +201,23 @@ public class Person extends AbstractLXP {
      * @param marriage_record a record from which to extract person information
      * @return the LXP representing the bride
      */
-    public static Person createBrideFromMarriageRecord(ILXP marriage_record) throws KeyNotFoundException {// TODO rewrite as typed
+    public static Person createBrideFromMarriageRecord(ILXP marriage_record) throws KeyNotFoundException, TypeMismatchFoundException {// TODO rewrite as typed
 
-        String surname = marriage_record.get(BRIDE_SURNAME);
-        String forename = marriage_record.get(BRIDE_FORENAME);
+        String surname = marriage_record.getString(BRIDE_SURNAME);
+        String forename = marriage_record.getString(BRIDE_FORENAME);
         String sex = "F"; //  this is the bride
-        String fathers_forename = marriage_record.get(BRIDE_FATHERS_FORENAME);
+        String fathers_forename = marriage_record.getString(BRIDE_FATHERS_FORENAME);
 
-        String fathers_surname = marriage_record.get(BRIDE_FATHERS_SURNAME);
+        String fathers_surname = marriage_record.getString(BRIDE_FATHERS_SURNAME);
         if (fathers_surname.equals("0")) {
-            fathers_surname = marriage_record.get(BRIDE_SURNAME); // TODO factor out?
+            fathers_surname = marriage_record.getString(BRIDE_SURNAME); // TODO factor out?
         }
 
-        String fathers_occupation = marriage_record.get(BRIDE_FATHER_OCCUPATION);
-        String mothers_forename = marriage_record.get(BRIDE_MOTHERS_FORENAME);
-        String mothers_surname = marriage_record.get(BRIDE_FATHERS_SURNAME);   // Assumes the mother's surname is same as father's - OK??
+        String fathers_occupation = marriage_record.getString(BRIDE_FATHER_OCCUPATION);
+        String mothers_forename = marriage_record.getString(BRIDE_MOTHERS_FORENAME);
+        String mothers_surname = marriage_record.getString(BRIDE_FATHERS_SURNAME);   // Assumes the mother's surname is same as father's - OK??
         if (mothers_surname.equals("0")) {
-            mothers_surname = marriage_record.get(SURNAME);
+            mothers_surname = marriage_record.getString(SURNAME);
         }
 
         String mothers_maiden_surname = ""; // unknown??    // TODO check these
@@ -225,7 +226,7 @@ public class Person extends AbstractLXP {
         String changed_mothers_maiden_surname = ""; // unknown
 
         String original_record_id = Long.toString(marriage_record.getId());
-        String original_record_type = marriage_record.get(Types.LABEL);
+        String original_record_type = marriage_record.getString(Types.LABEL);
         String role = "bride";
         String occupation = "";
 
@@ -240,23 +241,23 @@ public class Person extends AbstractLXP {
      * @param marriage_record a record from which to extract person information
      * @return the LXP representing the groom
      */
-    public static Person createGroomFromMarriageRecord(ILXP marriage_record) throws KeyNotFoundException {// TODO rewrite as typed
+    public static Person createGroomFromMarriageRecord(ILXP marriage_record) throws KeyNotFoundException, TypeMismatchFoundException {// TODO rewrite as typed
 
-        String surname = marriage_record.get(GROOM_SURNAME);
-        String forename = marriage_record.get(GROOM_FORENAME);
+        String surname = marriage_record.getString(GROOM_SURNAME);
+        String forename = marriage_record.getString(GROOM_FORENAME);
         String sex = "F"; //  this is the bride
-        String fathers_forename = marriage_record.get(GROOM_FATHERS_FORENAME);
+        String fathers_forename = marriage_record.getString(GROOM_FATHERS_FORENAME);
 
-        String fathers_surname = marriage_record.get(GROOM_FATHERS_SURNAME);
+        String fathers_surname = marriage_record.getString(GROOM_FATHERS_SURNAME);
         if (fathers_surname.equals("0")) {
-            fathers_surname = marriage_record.get(GROOM_SURNAME); // TODO factor out?
+            fathers_surname = marriage_record.getString(GROOM_SURNAME); // TODO factor out?
         }
 
-        String fathers_occupation = marriage_record.get(GROOM_FATHERS_OCCUPATION);
-        String mothers_forename = marriage_record.get(GROOM_MOTHERS_FORENAME);
-        String mothers_surname = marriage_record.get(GROOM_FATHERS_SURNAME);
+        String fathers_occupation = marriage_record.getString(GROOM_FATHERS_OCCUPATION);
+        String mothers_forename = marriage_record.getString(GROOM_MOTHERS_FORENAME);
+        String mothers_surname = marriage_record.getString(GROOM_FATHERS_SURNAME);
         if (mothers_surname.equals("0")) {
-            mothers_surname = marriage_record.get(SURNAME);
+            mothers_surname = marriage_record.getString(SURNAME);
         }
 
         String mothers_maiden_surname = ""; // unknown??    // TODO check these
@@ -265,7 +266,7 @@ public class Person extends AbstractLXP {
         String changed_mothers_maiden_surname = ""; // unknown
 
         String original_record_id = Long.toString(marriage_record.getId());
-        String original_record_type = marriage_record.get(Types.LABEL);
+        String original_record_type = marriage_record.getString(Types.LABEL);
         String role = "bride";
         String occupation = "";
 
@@ -275,14 +276,14 @@ public class Person extends AbstractLXP {
 
     }
 
-    public static Person createBridesFatherFromMarriageRecord(ILXP bride, ILXP marriage_record) throws KeyNotFoundException {// TODO rewrite as typed
+    public static Person createBridesFatherFromMarriageRecord(ILXP bride, ILXP marriage_record) throws KeyNotFoundException, TypeMismatchFoundException {// TODO rewrite as typed
 
-        String surname = marriage_record.get(BRIDE_FATHERS_SURNAME);
+        String surname = marriage_record.getString(BRIDE_FATHERS_SURNAME);
         if (surname.equals("0")) {
-            surname = marriage_record.get(BRIDE_SURNAME); // TODO factor out?
+            surname = marriage_record.getString(BRIDE_SURNAME); // TODO factor out?
         }
 
-        String forename = marriage_record.get(BRIDE_FATHERS_FORENAME);
+        String forename = marriage_record.getString(BRIDE_FATHERS_FORENAME);
         String sex = "M"; //  this is the brides father
 
         String fathers_forename = ""; // unknown - father of bride's father
@@ -298,9 +299,9 @@ public class Person extends AbstractLXP {
         String changed_mothers_maiden_surname = ""; // unknown
 
         String original_record_id = Long.toString(marriage_record.getId());
-        String original_record_type = marriage_record.get(Types.LABEL);
+        String original_record_type = marriage_record.getString(Types.LABEL);
         String role = "brides_father";
-        String occupation = marriage_record.get(BRIDE_FATHER_OCCUPATION);
+        String occupation = marriage_record.getString(BRIDE_FATHER_OCCUPATION);
 
         return new Person(surname, forename, sex, fathers_forename, fathers_surname,
                 fathers_occupation, mothers_forename, mothers_surname, mothers_maiden_surname,
@@ -308,14 +309,14 @@ public class Person extends AbstractLXP {
 
     }
 
-    public static Person createBridesMotherFromMarriageRecord(ILXP bride, ILXP marriage_record) throws KeyNotFoundException { // TODO rewrite as typed
+    public static Person createBridesMotherFromMarriageRecord(ILXP bride, ILXP marriage_record) throws KeyNotFoundException, TypeMismatchFoundException { // TODO rewrite as typed
 
-        String surname = marriage_record.get(BRIDE_MOTHERS_MAIDEN_SURNAME);  //<<<<<<<<<<<<< TODO see below
+        String surname = marriage_record.getString(BRIDE_MOTHERS_MAIDEN_SURNAME);  //<<<<<<<<<<<<< TODO see below
 //        if( surname.equals("0") ) {
-//            surname = marriage_record.get(MarriageLabels.BRIDE_SURNAME); // TODO factor out?
+//            surname = marriage_record.getString(MarriageLabels.BRIDE_SURNAME); // TODO factor out?
 //        }
 
-        String forename = marriage_record.get(BRIDE_MOTHERS_FORENAME);
+        String forename = marriage_record.getString(BRIDE_MOTHERS_FORENAME);
         String sex = "M"; //  this is the brides father
 
         String fathers_forename = ""; // unknown - father of bride's mother
@@ -331,7 +332,7 @@ public class Person extends AbstractLXP {
         String changed_mothers_maiden_surname = ""; // unknown
 
         String original_record_id = Long.toString(marriage_record.getId());
-        String original_record_type = marriage_record.get(Types.LABEL);
+        String original_record_type = marriage_record.getString(Types.LABEL);
         String role = "brides_mother";
         String occupation = ""; // unknown
 
@@ -341,14 +342,14 @@ public class Person extends AbstractLXP {
 
     }
 
-    public static Person createGroomsFatherFromMarriageRecord(ILXP groom, ILXP marriage_record) throws KeyNotFoundException {// TODO rewrite as typed
+    public static Person createGroomsFatherFromMarriageRecord(ILXP groom, ILXP marriage_record) throws KeyNotFoundException, TypeMismatchFoundException {// TODO rewrite as typed
 
-        String surname = marriage_record.get(GROOM_FATHERS_SURNAME);
+        String surname = marriage_record.getString(GROOM_FATHERS_SURNAME);
         if (surname.equals("0")) {
-            surname = marriage_record.get(GROOM_SURNAME); // TODO factor out?
+            surname = marriage_record.getString(GROOM_SURNAME); // TODO factor out?
         }
 
-        String forename = marriage_record.get(GROOM_FATHERS_FORENAME);
+        String forename = marriage_record.getString(GROOM_FATHERS_FORENAME);
         String sex = "M"; //  this is the brides father
 
         String fathers_forename = ""; // unknown - father of groom's father
@@ -364,9 +365,9 @@ public class Person extends AbstractLXP {
         String changed_mothers_maiden_surname = ""; // unknown
 
         String original_record_id = Long.toString(marriage_record.getId());
-        String original_record_type = marriage_record.get(Types.LABEL);
+        String original_record_type = marriage_record.getString(Types.LABEL);
         String role = "grooms_father";
-        String occupation = marriage_record.get(GROOM_FATHERS_OCCUPATION);
+        String occupation = marriage_record.getString(GROOM_FATHERS_OCCUPATION);
 
         return new Person(surname, forename, sex, fathers_forename, fathers_surname,
                 fathers_occupation, mothers_forename, mothers_surname, mothers_maiden_surname,
@@ -375,14 +376,14 @@ public class Person extends AbstractLXP {
 
     }
 
-    public static Person createGroomsMotherFromMarriageRecord(ILXP groom, ILXP marriage_record) throws KeyNotFoundException {// TODO rewrite as typed
+    public static Person createGroomsMotherFromMarriageRecord(ILXP groom, ILXP marriage_record) throws KeyNotFoundException, TypeMismatchFoundException {// TODO rewrite as typed
 
-        String surname = marriage_record.get(GROOM_MOTHERS_MAIDEN_SURNAME);  //<<<<<<<<<<<<< TODO see below
+        String surname = marriage_record.getString(GROOM_MOTHERS_MAIDEN_SURNAME);  //<<<<<<<<<<<<< TODO see below
 //        if( surname.equals("0") ) {
-//            surname = marriage_record.get(MarriageLabels.GROOM_SURNAME); // TODO factor out?
+//            surname = marriage_record.getString(MarriageLabels.GROOM_SURNAME); // TODO factor out?
 //        }
 
-        String forename = marriage_record.get(GROOM_MOTHERS_FORENAME);
+        String forename = marriage_record.getString(GROOM_MOTHERS_FORENAME);
         String sex = "M"; //  this is the brides father
 
         String fathers_forename = ""; // unknown - father of bride's mother
@@ -398,7 +399,7 @@ public class Person extends AbstractLXP {
         String changed_mothers_maiden_surname = ""; // unknown
 
         String original_record_id = Long.toString(marriage_record.getId());
-        String original_record_type = marriage_record.get(Types.LABEL);
+        String original_record_type = marriage_record.getString(Types.LABEL);
         String role = "grooms_mother";
         String occupation = ""; // unknown
 

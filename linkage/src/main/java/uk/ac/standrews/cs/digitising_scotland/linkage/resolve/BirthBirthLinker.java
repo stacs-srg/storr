@@ -2,6 +2,7 @@ package uk.ac.standrews.cs.digitising_scotland.linkage.resolve;
 
 
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.KeyNotFoundException;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.TypeMismatchFoundException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.IInputStream;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.ILXP;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.IOutputStream;
@@ -33,14 +34,16 @@ public class BirthBirthLinker extends AbstractPairwiseLinker<Person> {
         // Return true if we have person in different roles
 
         try {
-            if ((first.get(Person.ROLE).equals("baby") && second.get(Person.ROLE).equals("mother")) ||
-                    (first.get(Person.ROLE).equals("mother") && second.get(Person.ROLE).equals("baby")) ||
-                    (first.get(Person.ROLE).equals("baby") && second.get(Person.ROLE).equals("father")) ||
-                    (first.get(Person.ROLE).equals("father") && second.get(Person.ROLE).equals("baby"))) {
+            if ((first.getString(Person.ROLE).equals("baby") && second.getString(Person.ROLE).equals("mother")) ||
+                    (first.getString(Person.ROLE).equals("mother") && second.getString(Person.ROLE).equals("baby")) ||
+                    (first.getString(Person.ROLE).equals("baby") && second.getString(Person.ROLE).equals("father")) ||
+                    (first.getString(Person.ROLE).equals("father") && second.getString(Person.ROLE).equals("baby"))) {
                 return true;
             }
         } catch (KeyNotFoundException e) {
             ErrorHandling.exceptionError(e, "Key not found");
+        } catch (TypeMismatchFoundException e) {
+            ErrorHandling.exceptionError(e, "Type mismatch");
         }
         return false;
     }
@@ -51,7 +54,7 @@ public class BirthBirthLinker extends AbstractPairwiseLinker<Person> {
         Person first = (Person) pair.first();  // TODO check dynamic casting
         Person second = (Person) pair.second();
 
-        // get the people in the right order parent first
+        // getString the people in the right order parent first
 
         ILXP result_record = new SameAs(first, second, "???", 1.0f);
 

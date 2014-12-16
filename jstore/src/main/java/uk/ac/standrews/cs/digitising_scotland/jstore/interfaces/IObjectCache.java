@@ -2,17 +2,19 @@ package uk.ac.standrews.cs.digitising_scotland.jstore.interfaces;
 
 /**
  * This interface represents the type of the caches used to store in memory objects.
- * It permits the association between buckets and object ids to be maintained.
+ * It permits the association between buckets, tuples and object ids to be maintained.
+ * TODO consider getting rid of buckets.
+ * TODO consider cache evacuation
  * Created by al on 25/11/14.
  */
 public interface IObjectCache {
     /**
      * Adds the bucket X oid tuple to the object cache.
-     *
-     * @param bucket - the bucket of the registered object
      * @param oid    - the object id of the registered object
+     * @param bucket - the bucket of the registered object
+     * @param tuple - the tuple to add.
      */
-    public void put(IBucket bucket, long oid);
+    public void put(long oid, IBucket bucket, ILXP tuple);
 
     /**
      * @param oid - the oid to be loooked up
@@ -25,4 +27,10 @@ public interface IObjectCache {
      * @return true if the oid is loaded
      */
     public boolean contains(long oid);
+
+    /**
+     * @param id - the id of the tuple to be looked up
+     * @return the tuple with the given id if it exists in the cache and null otherwise
+     */
+    ILXP getObject(long id);
 }

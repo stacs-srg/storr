@@ -92,7 +92,7 @@ public class DirectoryBackedIndexedBucket<T extends ILXP> extends DirectoryBacke
         Set<String> keys = indexes.keySet(); // all the keys currently being indexed
         for (String key : keys) {
             if (record.containsKey(key)) { // we are indexing this key
-                IBucketIndex index = indexes.get(key); // so get the index
+                IBucketIndex index = indexes.get(key); // so getString the index
                 try {
                     index.add(record); // and add this record to the index for that key
                 } catch (IOException e) {

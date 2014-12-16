@@ -4,6 +4,7 @@ package uk.ac.standrews.cs.digitising_scotland.linkage.blocking;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.BucketException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.KeyNotFoundException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.RepositoryException;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.TypeMismatchFoundException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.IBucket;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.ILXPFactory;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.IRepository;
@@ -45,13 +46,13 @@ public class MultipleBlockerOverPerson extends Blocker<Person> {
         // Only operates over person records
 
         try {
-            String FN = record.get(Person.FORENAME);
-            String LN = record.get(Person.SURNAME);
-            String FF = record.get(Person.FATHERS_FORENAME);
-            String FL = record.get(Person.FATHERS_SURNAME);
+            String FN = record.getString(Person.FORENAME);
+            String LN = record.getString(Person.SURNAME);
+            String FF = record.getString(Person.FATHERS_FORENAME);
+            String FL = record.getString(Person.FATHERS_SURNAME);
             FL = (FL == null || FL.equals("0")) ? LN : FL; // TODO fix these - fathers surname coded as "0" if same as baby
-            String MF = record.get(Person.MOTHERS_FORENAME);
-            String MM = record.get(Person.MOTHERS_MAIDEN_SURNAME);
+            String MF = record.getString(Person.MOTHERS_FORENAME);
+            String MM = record.getString(Person.MOTHERS_MAIDEN_SURNAME);
 
             String FNLN = removeNasties(FN + LN);
             String FNLNMF = removeNasties(FNLN + MF);
@@ -66,6 +67,9 @@ public class MultipleBlockerOverPerson extends Blocker<Person> {
             return dedup(blocked_names);
         } catch (KeyNotFoundException e) {
             ErrorHandling.exceptionError(e, "Key not found");
+            return new String[]{};
+        } catch (TypeMismatchFoundException e) {
+            ErrorHandling.exceptionError(e, "Type mismatch");
             return new String[]{};
         }
     }

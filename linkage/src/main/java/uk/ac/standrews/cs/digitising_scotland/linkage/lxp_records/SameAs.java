@@ -17,7 +17,7 @@ public class SameAs extends AbstractLXP {
     public static final String SECOND = "second";
     @LXP_SCALAR(type = LXPBaseType.STRING)
     public static final String RELATIONSHIP = "relationship";
-    @LXP_SCALAR(type = LXPBaseType.FLOAT)
+    @LXP_SCALAR(type = LXPBaseType.DOUBLE)
     public static final String CONFIDENCE = "confidence";
 
 

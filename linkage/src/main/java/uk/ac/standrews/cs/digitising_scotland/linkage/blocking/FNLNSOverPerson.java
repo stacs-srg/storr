@@ -4,6 +4,7 @@ package uk.ac.standrews.cs.digitising_scotland.linkage.blocking;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.BucketException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.KeyNotFoundException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.RepositoryException;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.TypeMismatchFoundException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.factory.TypeFactory;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.IBucket;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.ILXP;
@@ -30,14 +31,14 @@ public class FNLNSOverPerson<T extends ILXP> extends Blocker<T> {
     public String[] determineBlockedBucketNamesForRecord(final ILXP record) {
 
         try {
-            if (record.containsKey("TYPE") && record.get("TYPE").equals(TypeFactory.getInstance().typeWithname("person"))) {
+            if (record.containsKey("TYPE") && record.getString("TYPE").equals(TypeFactory.getInstance().typeWithname("person"))) {
 
                 // Note will concat nulls into key if any fields are null - working hypothesis - this doesn't matter.
 
-                String forename = record.get(Person.FORENAME);
-                String surname = record.get(Person.SURNAME);
-                String mmsurname = record.get(Person.MOTHERS_MAIDEN_SURNAME);
-                String sex = record.get(Person.SEX);
+                String forename = record.getString(Person.FORENAME);
+                String surname = record.getString(Person.SURNAME);
+                String mmsurname = record.getString(Person.MOTHERS_MAIDEN_SURNAME);
+                String sex = record.getString(Person.SEX);
 
                 StringBuilder builder = new StringBuilder();
 
@@ -58,6 +59,9 @@ public class FNLNSOverPerson<T extends ILXP> extends Blocker<T> {
             }
         } catch (KeyNotFoundException e) {
             ErrorHandling.error("Record found with unknown key");
+            return new String[]{};
+        } catch (TypeMismatchFoundException e) {
+            ErrorHandling.error("Type mismmatch: " + e.getMessage());
             return new String[]{};
         }
     }

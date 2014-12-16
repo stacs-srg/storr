@@ -1,6 +1,7 @@
 package uk.ac.standrews.cs.digitising_scotland.jstore.interfaces;
 
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.KeyNotFoundException;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.TypeMismatchFoundException;
 
 
 /**
@@ -26,7 +27,7 @@ public interface IReferenceType extends IType {
      * rep for @class LXPBaseType(INT).
      * @throws KeyNotFoundException
      */
-    public IType getFieldType(String label) throws KeyNotFoundException;
+    public IType getFieldType(String label) throws KeyNotFoundException, TypeMismatchFoundException;
 
     /**
      * @return the id of this typerep - this is the id of the underlying rep implementation.

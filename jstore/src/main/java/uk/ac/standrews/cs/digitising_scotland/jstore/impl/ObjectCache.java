@@ -1,6 +1,7 @@
 package uk.ac.standrews.cs.digitising_scotland.jstore.impl;
 
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.IBucket;
+import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.ILXP;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.IObjectCache;
 
 import java.util.HashMap;
@@ -16,7 +17,7 @@ import java.util.HashMap;
  */
 public class ObjectCache implements IObjectCache {
 
-    HashMap<Long, IBucket> map = new HashMap<Long, IBucket>();
+    HashMap<Long, Data> map = new HashMap<Long, Data>();
 
     public ObjectCache() {
 
@@ -24,12 +25,12 @@ public class ObjectCache implements IObjectCache {
 
     /**
      * Adds the triple to the object cache.
-     *
-     * @param bucket
+     *  @param bucket
+    //     * @param result
      * @param oid
      */
-    public void put(IBucket bucket, long oid) {
-        map.put(oid, bucket);
+    public void put(long oid, IBucket bucket, ILXP tuple) {
+        map.put(oid, new Data(bucket, tuple));
     }
 
     /**
@@ -37,7 +38,11 @@ public class ObjectCache implements IObjectCache {
      * @return the Bucket from which the oid was loaded
      */
     public IBucket getBucket(long oid) {
-        return map.get(oid);
+        Data d = map.get(oid);
+        if (d == null) {
+            return null;
+        }
+        return d.bucket;
     }
 
     /**
@@ -46,6 +51,25 @@ public class ObjectCache implements IObjectCache {
      */
     public boolean contains(long oid) {
         return map.containsKey(oid);
+    }
+
+    @Override
+    public ILXP getObject(long oid) {
+        Data d = map.get(oid);
+        if (d == null) {
+            return null;
+        }
+        return d.tuple;
+    }
+
+    private class Data {
+        public IBucket bucket;
+        public ILXP tuple;
+
+        public Data(IBucket bucket, ILXP tuple) {
+            this.bucket = bucket;
+            this.tuple = tuple;
+        }
     }
 
 }

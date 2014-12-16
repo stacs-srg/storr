@@ -54,7 +54,6 @@ public interface IStore {
 
     /**
      * @return the next free identifier in the store
-     * @deprecated - use sparse addresses in future instead of this.
      */
     long getNextFreePID();
 

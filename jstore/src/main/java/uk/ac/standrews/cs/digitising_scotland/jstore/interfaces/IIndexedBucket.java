@@ -6,7 +6,7 @@ import java.io.IOException;
  * Augments the functionality of a bucket with indexes.
  * Indexes are double indexes: label first and then key value associated with that label.
  * Thus if you have a bucket containing [name: string, age: int] tuples you can create an index
- * over the labels - say name and then get the index of all people called "al".
+ * over the labels - say name and then getString the index of all people called "al".
  * Created by al on 27/05/2014.
  */
 public interface IIndexedBucket<T extends ILXP> extends IBucket<T> {

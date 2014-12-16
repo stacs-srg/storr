@@ -4,6 +4,7 @@ package uk.ac.standrews.cs.digitising_scotland.linkage.blocking;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.BucketException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.KeyNotFoundException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.RepositoryException;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.TypeMismatchFoundException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.factory.TypeFactory;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.IBucket;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.IRepository;
@@ -33,13 +34,16 @@ public class FNLFFMFOverBirths extends Blocker<Birth> {
         StringBuilder builder = new StringBuilder();
 
         try {
-            builder.append(record.get(Birth.FORENAME));            // TODO this is still not good enough
-            builder.append(record.get(Birth.SURNAME));
-            builder.append(record.get(Birth.FATHERS_FORENAME));
-            builder.append(record.get(Birth.MOTHERS_FORENAME));
+            builder.append(record.getString(Birth.FORENAME));            // TODO this is still not good enough
+            builder.append(record.getString(Birth.SURNAME));
+            builder.append(record.getString(Birth.FATHERS_FORENAME));
+            builder.append(record.getString(Birth.MOTHERS_FORENAME));
             return new String[]{removeNasties(builder.toString())};
 
         } catch (KeyNotFoundException e) {
+            e.printStackTrace(); // TODO fix
+            return new String[]{};
+        } catch (TypeMismatchFoundException e) {
             e.printStackTrace(); // TODO fix
             return new String[]{};
         }

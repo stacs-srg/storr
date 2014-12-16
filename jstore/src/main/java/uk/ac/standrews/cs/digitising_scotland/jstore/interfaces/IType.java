@@ -13,6 +13,6 @@ public interface IType {
      * a @call valueConsistentWithType( 7 ) will yield true whereas
      * valueConsistentWithType( 7.3 ) will yield false.
      */
-    public boolean valueConsistentWithType(String value);
+    public boolean valueConsistentWithType(Object value);
 
 }

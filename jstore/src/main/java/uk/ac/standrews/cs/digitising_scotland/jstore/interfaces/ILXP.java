@@ -3,6 +3,7 @@ package uk.ac.standrews.cs.digitising_scotland.jstore.interfaces;
 import org.json.JSONException;
 import org.json.JSONWriter;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.KeyNotFoundException;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.TypeMismatchFoundException;
 
 /**
  * Interface to a LXP (labeled cross product class).
@@ -24,14 +25,67 @@ public interface ILXP extends ILXPFactory {
      */
     void serializeToJSON(JSONWriter writer) throws JSONException;
 
+
     /**
      * A getter method over labelled values in the LXP
      *
      * @param label - the label whose value is required
      * @return the value associated with @param label
-     * @throws KeyNotFoundException
+     * @throws KeyNotFoundException - if the tuple does not contain the key
+     * @throws TypeMismatchFoundException if the value associated with the key is not a String
      */
-    String get(String label) throws KeyNotFoundException;
+    Object get(String label) throws KeyNotFoundException;
+
+    /**
+     * A getter method over labelled values in the LXP
+     *
+     * @param label - the label whose value is required
+     * @return the value associated with @param label
+     * @throws KeyNotFoundException - if the tuple does not contain the key
+     * @throws TypeMismatchFoundException if the value associated with the key is not a String
+     */
+    String getString(String label) throws KeyNotFoundException, TypeMismatchFoundException;
+
+    /**
+     * A getter method over labelled values in the LXP
+     *
+     * @param label - the label whose value is required
+     * @return the value associated with @param label
+     * @throws KeyNotFoundException       - if the tuple does not contain the key
+     * @throws TypeMismatchFoundException if the value associated with the key is not a String
+     */
+    double getDouble(String label) throws KeyNotFoundException, TypeMismatchFoundException;
+
+    /**
+     * A getter method over labelled values in the LXP
+     *
+     * @param label - the label whose value is required
+     * @return the value associated with @param label
+     * @throws KeyNotFoundException       - if the tuple does not contain the key
+     * @throws TypeMismatchFoundException if the value associated with the key is not a String
+     */
+    int getInt(String label) throws KeyNotFoundException, TypeMismatchFoundException;
+
+    /**
+     * A getter method over labelled values in the LXP
+     *
+     * @param label - the label whose value is required
+     * @return the value associated with @param label
+     * @throws KeyNotFoundException       - if the tuple does not contain the key
+     * @throws TypeMismatchFoundException if the value associated with the key is not a String
+     */
+    boolean getBoolean(String label) throws KeyNotFoundException, TypeMismatchFoundException;
+
+    /**
+     * A getter method over labelled values in the LXP
+     *
+     * @param label - the label whose value is required
+     * @return the value associated with @param label
+     * @throws KeyNotFoundException       - if the tuple does not contain the key
+     * @throws TypeMismatchFoundException if the value associated with the key is not a String
+     */
+    long getLong(String label) throws KeyNotFoundException, TypeMismatchFoundException;
+
 
     /**
      * A setter method over labelled values in the LXP
@@ -39,9 +93,44 @@ public interface ILXP extends ILXPFactory {
      * @param label - the label whose value is being set
      * @param value - the value to associated with the @param label
      * @return the value associated with @param label
-     * @throws KeyNotFoundException
      */
-    String put(String label, String value);
+    void put(String label, String value);
+
+    /**
+     * A setter method over labelled values in the LXP
+     *
+     * @param label - the label whose value is being set
+     * @param value - the value to associated with the @param label
+     * @return the value associated with @param label
+     */
+    void put(String label, double value);
+
+    /**
+     * A setter method over labelled values in the LXP
+     *
+     * @param label - the label whose value is being set
+     * @param value - the value to associated with the @param label
+     * @return the value associated with @param label
+     */
+    void put(String label, int value);
+
+    /**
+     * A setter method over labelled values in the LXP
+     *
+     * @param label - the label whose value is being set
+     * @param value - the value to associated with the @param label
+     * @return the value associated with @param label
+     */
+    void put(String label, boolean value);
+
+    /**
+     * A setter method over labelled values in the LXP
+     *
+     * @param label - the label whose value is being set
+     * @param value - the value to associated with the @param label
+     * @return the value associated with @param label
+     */
+    void put(String label, long value);
 
     /**
      * @param label - the label to be looked up

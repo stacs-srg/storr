@@ -2,6 +2,7 @@ package uk.ac.standrews.cs.digitising_scotland.jstore.types;
 
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.LXP;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.KeyNotFoundException;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.TypeMismatchFoundException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.factory.TypeFactory;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.ILXP;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.IReferenceType;
@@ -33,9 +34,9 @@ public class Types {
 
         if (record.containsKey(Types.LABEL)) { // if there is a label it must be correct
             try {
-                return Types.checkLabelsConsistentWith(Long.parseLong(record.get(Types.LABEL)), type_label_id);
-            } catch (KeyNotFoundException e) {
-                return false; // label not there
+                return Types.checkLabelsConsistentWith(record.getLong(Types.LABEL), type_label_id);
+            } catch (KeyNotFoundException | TypeMismatchFoundException e) {
+                return false; // label not there or inappropriate type
             }
         } else {
             return true; // if there is no label that is OK
@@ -81,12 +82,16 @@ public class Types {
             }
             // required label is present now check the types of the keys in the record
             try {
-                String value = record.get(label);
+                Object value = record.get(label);
                 if (!ref_type.getFieldType(label).valueConsistentWithType(value)) {
                     return false;
                 }
             } catch (KeyNotFoundException e) {
                 ErrorHandling.exceptionError(e, "Label missing (illegal code path): " + label);// this cannot happpen - already tested
+                return false; // for safety
+            } catch (TypeMismatchFoundException e) {
+                //TODO look at me in a little while - 10/12/14!!!!!!
+                ErrorHandling.exceptionError(e, "Type mistmatch for label: " + label + "error: " + e.getMessage());
                 return false; // for safety
             }
         }
@@ -94,70 +99,6 @@ public class Types {
 
     }
 
-    //******* private methods *******
-
-    /**
-     * @param value
-     * @param fieldIType
-     * @return
-     */
-//    private static boolean checkfieldContent(String value, IType fieldIType) {
-//        if (fieldIType.isBaseType()) {
-//            switch (fieldIType.getBaseType()) {
-//                case STRING: {
-//                    return true;   // everything is string encoded in JSON.
-//                }
-//                case FLOAT: {
-//                    try {
-//                        Float f = Float.valueOf(value);
-//                        // we got have a float - all OK.
-//                        return true;
-//                    } catch (NumberFormatException e) {
-//                        // it wasn't a float value;
-//                        return false;
-//                    }
-//                }
-//                case INT: {
-//                    try {
-//                        Integer i = Integer.valueOf(value);
-//                        // we got have an int - all OK.
-//                        return true;
-//                    } catch (NumberFormatException e) {
-//                        // it wasn't an int value;
-//                        return false;
-//                    }
-//                }
-//                case UNKNOWN: {
-//                    ErrorHandling.error("Encountered UNKNOWN type whilst checking field contents");
-//                    return false;
-//                }
-//                default: {
-//                    ErrorHandling.error("Unhandled field type whilst checking field contents");
-//                    return false;
-//                }
-//            }
-//        } else { // it is a reference type
-//            Integer id = Integer.valueOf(value);  // must be a reference to a record of appropriate type
-//            ILXP record = null;
-//
-//            try {
-//                IBucket bucket = Store.getInstance().getObjectCache().getBucket(id);
-//                if (bucket == null) { // didn't find the bucket
-//                    return false;
-//                }
-//                record = bucket.get(id);
-//                if (record == null) { // we haven't found that record in the store
-//                    return false;
-//                }
-//
-//
-//            } catch (BucketException e) {
-//                ErrorHandling.exceptionError(e, "Recovering record type");
-//                return false;
-//            }
-//            return check_structural_consistency(record, fieldIType.getReferenceType());
-//        }
-//    }
 
     /**
      * Checks the TYPE LABEL is consistent with a supplied label (generally from a bucket)
@@ -185,6 +126,9 @@ public class Types {
         } catch (KeyNotFoundException e) {
             ErrorHandling.error("KeyNotFoundException - returning false");
             return false;
+        } catch (TypeMismatchFoundException e) {
+            ErrorHandling.error("Type mismatch - returning false");
+            return false;
         }
     }
 
@@ -196,8 +140,11 @@ public class Types {
         if (LXPBaseType.INT.name().toLowerCase().equals(value.toLowerCase())) {
             return LXPBaseType.INT;
         }
-        if (LXPBaseType.FLOAT.name().toLowerCase().equals(value.toLowerCase())) {
-            return LXPBaseType.FLOAT;
+        if (LXPBaseType.DOUBLE.name().toLowerCase().equals(value.toLowerCase())) {
+            return LXPBaseType.DOUBLE;
+        }
+        if (LXPBaseType.BOOLEAN.name().toLowerCase().equals(value.toLowerCase())) {
+            return LXPBaseType.BOOLEAN;
         }
         if (TypeFactory.getInstance().containsKey(value)) {
             return TypeFactory.getInstance().typeWithname(value);

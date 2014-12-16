@@ -1,5 +1,7 @@
 package uk.ac.standrews.cs.digitising_scotland.jstore.interfaces;
 
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.BucketException;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.Set;
@@ -15,21 +17,21 @@ public interface IBucketIndex<T extends ILXP> {
      * @return the key set of this index
      * @throws IOException
      */
-    Set<String> keySet() throws IOException;
+    Set<String> keySet() throws IOException, BucketException;
 
     /**
      * @param value - the value to ge extracted from the index (e.g. "al" from a name labelled field)
      * @return a stream of records which (exactly) contain the specified value.
      * @throws IOException
      */
-    IInputStream<T> records(String value) throws IOException;
+    IInputStream<T> records(String value) throws IOException, BucketException;
 
     /**
      * @param value
      * @return the list of record ids that (exactly) contain the specified value e.g. "al" from a set of names
      * @throws IOException
      */
-    List<Integer> values(String value) throws IOException;
+    List<Integer> values(String value) throws IOException, BucketException;
 
     /**
      * Adds a record to the index.
@@ -37,5 +39,5 @@ public interface IBucketIndex<T extends ILXP> {
      * @param record
      * @throws IOException
      */
-    void add(T record) throws IOException;
+    void add(T record) throws IOException, BucketException;
 }

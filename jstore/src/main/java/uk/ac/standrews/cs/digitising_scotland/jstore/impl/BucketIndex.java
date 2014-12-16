@@ -1,6 +1,8 @@
 package uk.ac.standrews.cs.digitising_scotland.jstore.impl;
 
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.BucketException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.KeyNotFoundException;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.TypeMismatchFoundException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.IBucketIndex;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.IInputStream;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.ILXP;
@@ -40,7 +42,7 @@ public class BucketIndex implements IBucketIndex {
         this.indexed_bucket = indexed_bucket;
     }
 
-    private void onDemandLoadContents() throws IOException {
+    private void onDemandLoadContents() throws BucketException {
 
         if (map == null) { // not loaded yet
             // read in the indexed ids from the index file
@@ -58,7 +60,12 @@ public class BucketIndex implements IBucketIndex {
 
                 File f = files.next();
                 String key = f.getName(); // the name of the file is also the key
-                List<String> values = Files.readAllLines(f.toPath(), FILE_CHARSET); // read in all the lines (ids as Strings)
+                List<String> values = null; // read in all the lines (ids as Strings)
+                try {
+                    values = Files.readAllLines(f.toPath(), FILE_CHARSET);
+                } catch (IOException e) {
+                    throw new BucketException(e.getMessage());
+                }
                 ArrayList<Long> ids = new ArrayList<>();
                 for (String s : values) {
                     ids.add(Long.parseLong(s)); // add in the keys from the file
@@ -69,7 +76,7 @@ public class BucketIndex implements IBucketIndex {
     }
 
     @Override
-    public Set<String> keySet() throws IOException {
+    public Set<String> keySet() throws BucketException {
 
         onDemandLoadContents();
 
@@ -78,7 +85,7 @@ public class BucketIndex implements IBucketIndex {
 
 
     @Override
-    public List<Long> values(final String value) throws IOException {
+    public List<Long> values(final String value) throws BucketException {
 
         onDemandLoadContents();
 
@@ -86,7 +93,7 @@ public class BucketIndex implements IBucketIndex {
     }
 
     @Override
-    public IInputStream records(final String value) throws IOException {
+    public IInputStream records(final String value) throws BucketException {
 
         onDemandLoadContents();
 
@@ -97,19 +104,25 @@ public class BucketIndex implements IBucketIndex {
             files.add(new File(indexed_bucket.filePath(i)));
         }
 
-        return new IndexedBucketInputStream(indexed_bucket, files.iterator());
+        try {
+            return new IndexedBucketInputStream(indexed_bucket, files.iterator());
+        } catch (IOException e) {
+            throw new BucketException(e.getMessage());
+        }
     }
 
     @Override
-    public void add(final ILXP record) throws IOException {
+    public void add(final ILXP record) throws BucketException {
 
         onDemandLoadContents();
 
-        String value = null; // get the value associated with the label being indexed in this index.
+        String value = null; // getString the value associated with the label being indexed in this index.
         try {
-            value = record.get(label);
+            value = record.getString(label);
         } catch (KeyNotFoundException e) {
-            throw new IOException("type label not found");
+            throw new BucketException("type label not found");
+        } catch (TypeMismatchFoundException e) {
+            throw new BucketException("type mismatch");
         }
 
         List<Long> entry = map.get(value); // look up index for the value associated with this do we have any of these values in the index already
@@ -124,16 +137,20 @@ public class BucketIndex implements IBucketIndex {
 
         // Now add the new value to the list.
 
-        Path path = dir.resolve(value);  // Paths.get( dir.toFile().getAbsolutePath() + File.separator + value );
+        Path path = dir.resolve(value);  // Paths.getString( dir.toFile().getAbsolutePath() + File.separator + value );
 
-        if (!Files.exists(path)) {
-            Files.createFile(path);
-        }
+        try {
+            if (!Files.exists(path)) {
+                Files.createFile(path);
+            }
 
-        try (Writer writer = Files.newBufferedWriter(path, FILE_CHARSET)) {
+            try (Writer writer = Files.newBufferedWriter(path, FILE_CHARSET)) {
 
-            writer.append(record.getId() + "\n"); // add the new item to the list.
-            writer.flush();
+                writer.append(record.getId() + "\n"); // add the new item to the list.
+                writer.flush();
+            }
+        } catch (IOException e) {
+            throw new BucketException(e.getMessage());
         }
     }
 }

@@ -2,6 +2,8 @@ package uk.ac.standrews.cs.digitising_scotland.linkage.stream_operators.sharder;
 
 import org.json.JSONException;
 import org.json.JSONWriter;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.KeyNotFoundException;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.TypeMismatchFoundException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.ILXP;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.IReferenceType;
 import uk.ac.standrews.cs.digitising_scotland.linkage.interfaces.IPair;
@@ -14,7 +16,7 @@ import java.util.Set;
 /**
  * Created by al on 19/06/2014.
  */
-public class Pair<T extends ILXP> implements IPair<T> { //TODO fix up this
+public class Pair<T extends ILXP> implements IPair<T> { //TODO fix up this - conside typing and empty methods
     private T first;
     private T second;
 
@@ -31,7 +33,7 @@ public class Pair<T extends ILXP> implements IPair<T> { //TODO fix up this
         return second;
     }
 
-    //TODO all bodged below here
+    // TODO all bodged below here
 
     @Override
     public long getTypeLabel() {
@@ -45,17 +47,60 @@ public class Pair<T extends ILXP> implements IPair<T> { //TODO fix up this
 
     @Override
     public void serializeToJSON(JSONWriter writer) throws JSONException {
-
     }
 
     @Override
-    public String get(String key) {
+    public Object get(String label) throws KeyNotFoundException {
         return null;
     }
 
     @Override
-    public String put(String key, String value) {
+    public String getString(String key) {
         return null;
+    }
+
+    @Override
+    public double getDouble(String label) throws KeyNotFoundException, TypeMismatchFoundException {
+        return 0;
+    }
+
+    @Override
+    public int getInt(String label) throws KeyNotFoundException, TypeMismatchFoundException {
+        return 0;
+    }
+
+    @Override
+    public boolean getBoolean(String label) throws KeyNotFoundException, TypeMismatchFoundException {
+        return false;
+    }
+
+    @Override
+    public long getLong(String label) throws KeyNotFoundException, TypeMismatchFoundException {
+        return 0;
+    }
+
+    @Override
+    public void put(String key, String value) {
+    }
+
+    @Override
+    public void put(String label, double value) {
+
+    }
+
+    @Override
+    public void put(String label, int value) {
+
+    }
+
+    @Override
+    public void put(String label, boolean value) {
+
+    }
+
+    @Override
+    public void put(String label, long value) {
+
     }
 
     @Override

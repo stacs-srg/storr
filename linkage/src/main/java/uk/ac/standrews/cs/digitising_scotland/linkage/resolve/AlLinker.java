@@ -3,10 +3,7 @@ package uk.ac.standrews.cs.digitising_scotland.linkage.resolve;
 import org.json.JSONException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.LXP;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.Store;
-import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.BucketException;
-import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.KeyNotFoundException;
-import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.RepositoryException;
-import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.StoreException;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.*;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.factory.TypeFactory;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.*;
 import uk.ac.standrews.cs.digitising_scotland.linkage.EventImporter;
@@ -76,7 +73,7 @@ public class AlLinker {
     private IReferenceType personLabel;
     private TypeFactory tf;
 
-    public AlLinker() throws BucketException, RepositoryException, RecordFormatException, JSONException, IOException, PersistentObjectException, StoreException, KeyNotFoundException {
+    public AlLinker() throws BucketException, RepositoryException, RecordFormatException, JSONException, IOException, PersistentObjectException, StoreException, KeyNotFoundException, TypeMismatchFoundException {
 
         initialise();
         injestBDMRecords();
@@ -138,7 +135,7 @@ public class AlLinker {
      * Initialises the people bucket with the people injected - one record for each person referenced in the original record
      * Initialises the known(100% certain) relationships between people and stores the relationships in the relationships bucket
      */
-    private void injestBDMRecords() throws BucketException, RecordFormatException, JSONException, IOException, KeyNotFoundException, PersistentObjectException {
+    private void injestBDMRecords() throws BucketException, RecordFormatException, JSONException, IOException, KeyNotFoundException, PersistentObjectException, TypeMismatchFoundException {
 
         EventImporter.importDigitisingScotlandRecords(births, births_source_path, birthlabel);
         EventImporter.importDigitisingScotlandRecords(marriages, marriages_source_path, deathlabel);
@@ -185,7 +182,7 @@ public class AlLinker {
      *
      * @param bucket - the bucket from which to take the inputs records
      */
-    private void createPeopleAndRelationshipsFromBirthsOrDeaths(IBucket bucket) throws BucketException, KeyNotFoundException {
+    private void createPeopleAndRelationshipsFromBirthsOrDeaths(IBucket bucket) throws BucketException, KeyNotFoundException, TypeMismatchFoundException {
 
         IOutputStream<Person> people_stream = people.getOutputStream();
         IOutputStream<Relationship> relationships_stream = relationships.getOutputStream();
@@ -214,7 +211,7 @@ public class AlLinker {
         }
     }
 
-    private void createPeopleAndRelationshipsFromMarriages(IBucket<Marriage> bucket) throws BucketException, KeyNotFoundException {
+    private void createPeopleAndRelationshipsFromMarriages(IBucket<Marriage> bucket) throws BucketException, KeyNotFoundException, TypeMismatchFoundException {
 
         IOutputStream<Person> people_stream = people.getOutputStream();
         IOutputStream<Relationship> relationships_stream = relationships.getOutputStream();
@@ -265,7 +262,7 @@ public class AlLinker {
      * **************************************************************************************************************
      */
 
-    public static void main(String[] args) throws Exception, KeyNotFoundException {
+    public static void main(String[] args) throws Exception, KeyNotFoundException, TypeMismatchFoundException {
 
         new AlLinker();
     }

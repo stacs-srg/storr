@@ -4,6 +4,7 @@ import uk.ac.standrews.cs.digitising_scotland.jstore.impl.Store;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.BucketException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.KeyNotFoundException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.LXP;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.TypeMismatchFoundException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.IBucket;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.ILXP;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.IReferenceType;
@@ -49,21 +50,27 @@ public class LXPReferenceType implements IReferenceType {
         return typerep;
     }
 
-    public boolean valueConsistentWithType(String value) {
-        Long id = Long.valueOf(value);  // must be a reference to a record of appropriate type
+    public boolean valueConsistentWithType(Object value) {
+        if (!(value instanceof Long)) {
+            return false;
+        }
+
+        Long id = (Long) value;  // must be a reference to a record of appropriate type
         ILXP record = null;
 
         try {
             IBucket bucket = Store.getInstance().getObjectCache().getBucket(id);
             if (bucket == null) { // didn't find the bucket
+                ErrorHandling.error("Did not find referenced bucket whilst checking type consistency");
                 return false;
             }
             record = bucket.get(id);
             if (record == null) { // we haven't found that record in the store
+                ErrorHandling.error("Did not find referenced record whilst checking type consistency");
                 return false;
             }
         } catch (BucketException e) {
-            ErrorHandling.exceptionError(e, "Recovering record type");
+            ErrorHandling.error("Bucket exception whilst checking type consistency");
             return false;
         }
         return Types.check_structural_consistency(record, this);
@@ -75,9 +82,10 @@ public class LXPReferenceType implements IReferenceType {
     }
 
     @Override
-    public IType getFieldType(String label) throws KeyNotFoundException {
+    public IType getFieldType(String label) throws KeyNotFoundException, TypeMismatchFoundException {
         if (typerep.containsKey(label)) {
-            String value = typerep.get(label);
+            // TODO This needs repaired - check usages!
+            String value = typerep.getString(label);
             return Types.stringToType(value);
         } else return LXPBaseType.UNKNOWN;
     }

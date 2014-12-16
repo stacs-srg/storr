@@ -6,6 +6,7 @@ import uk.ac.standrews.cs.digitising_scotland.jstore.impl.Store;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.BucketException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.KeyNotFoundException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.RepositoryException;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.TypeMismatchFoundException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.*;
 import uk.ac.standrews.cs.digitising_scotland.jstore.types.LXPReferenceType;
 import uk.ac.standrews.cs.digitising_scotland.jstore.types.Types;
@@ -88,9 +89,9 @@ public class TypeFactory {
             Iterator<LXP> i = type_name_bucket.getInputStream().iterator();
             while (i.hasNext()) {
                 ILXP lxp = i.next();
-                // as set up in namevaluepair below.
-                String name = lxp.get("name");
-                long type_key = Long.parseLong(lxp.get("key"));
+                // as set up in @code namevaluepair below.
+                String name = lxp.getString("name");
+                long type_key = lxp.getLong("key");
 
                 ILXP type_rep = type_reps_bucket.get(type_key);
                 LXPReferenceType reference = new LXPReferenceType((LXP) (type_rep));
@@ -102,6 +103,8 @@ public class TypeFactory {
             ErrorHandling.exceptionError(e, "IO exception getting iterator over type name map");
         } catch (KeyNotFoundException e) {
             ErrorHandling.exceptionError(e, "Could not find key whilst reestablising caches");
+        } catch (TypeMismatchFoundException e) {
+            ErrorHandling.exceptionError(e, "Type mismatch");
         }
 
     }
@@ -123,7 +126,7 @@ public class TypeFactory {
         LXP lxp = new LXP();
         // used in load_caches above
         lxp.put("name", type_name);
-        lxp.put("key", Long.toString(typekey));
+        lxp.put("key", typekey);
         return lxp;
     }
 
@@ -142,7 +145,7 @@ public class TypeFactory {
         if (type_repo.bucketExists(bucket_name)) {
             return type_repo.getBucket(bucket_name);
         } else {
-            ErrorHandling.error("Didn't find types bucket creating new one called: " + bucket_name);
+            ErrorHandling.error("Didn't find types bucket, creating a new types bucket called: " + bucket_name);
             return type_repo.makeBucket(bucket_name, BucketKind.DIRECTORYBACKED);
         }
     }
