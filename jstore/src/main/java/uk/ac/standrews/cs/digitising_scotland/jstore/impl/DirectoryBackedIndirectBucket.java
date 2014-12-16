@@ -2,6 +2,7 @@ package uk.ac.standrews.cs.digitising_scotland.jstore.impl;
 
 import org.json.JSONException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.BucketException;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.IllegalKeyException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.RepositoryException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.*;
 
@@ -33,6 +34,8 @@ public class DirectoryBackedIndirectBucket<T extends ILXP> extends DirectoryBack
             writeLXP(record, create_indirection(record));
         } catch (IOException | JSONException e) {
             throw new BucketException("Error creating indirection");
+        } catch (IllegalKeyException e) {
+            throw new BucketException("Illegal key creating indirection");
         }
 
     }

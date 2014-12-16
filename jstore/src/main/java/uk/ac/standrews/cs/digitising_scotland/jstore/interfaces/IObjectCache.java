@@ -3,8 +3,6 @@ package uk.ac.standrews.cs.digitising_scotland.jstore.interfaces;
 /**
  * This interface represents the type of the caches used to store in memory objects.
  * It permits the association between buckets, tuples and object ids to be maintained.
- * TODO consider getting rid of buckets.
- * TODO consider cache evacuation
  * Created by al on 25/11/14.
  */
 public interface IObjectCache {

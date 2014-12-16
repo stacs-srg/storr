@@ -2,6 +2,7 @@ package uk.ac.standrews.cs.digitising_scotland.jstore.types;
 
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.Store;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.BucketException;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.IllegalKeyException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.KeyNotFoundException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.LXP;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.TypeMismatchFoundException;
@@ -38,6 +39,8 @@ public class LXPReferenceType implements IReferenceType {
             ErrorHandling.exceptionError(e, "persistent object exception reading types file: " + json_encoded_type_descriptor_file_name);
         } catch (IOException e) {
             ErrorHandling.exceptionError(e, "IO exception reading types file: " + json_encoded_type_descriptor_file_name);
+        } catch (IllegalKeyException e) {
+            ErrorHandling.exceptionError(e, "Illegal key encountered reading types file: " + json_encoded_type_descriptor_file_name);
         }
     }
 

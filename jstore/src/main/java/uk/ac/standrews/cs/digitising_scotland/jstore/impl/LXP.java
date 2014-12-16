@@ -2,6 +2,7 @@ package uk.ac.standrews.cs.digitising_scotland.jstore.impl;
 
 import org.json.JSONException;
 import org.json.JSONWriter;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.IllegalKeyException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.KeyNotFoundException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.TypeMismatchFoundException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.ILXP;
@@ -33,7 +34,7 @@ public class LXP implements ILXP {
         this.map = new HashMap<>();
     }
 
-    public LXP(long object_id, JSONReader reader) throws PersistentObjectException {
+    public LXP(long object_id, JSONReader reader) throws PersistentObjectException, IllegalKeyException {
         this(object_id);
         try {
             reader.nextSymbol();
@@ -43,11 +44,9 @@ public class LXP implements ILXP {
 
                 String key = reader.key();
 
-                // TODO Parising experiment
-
                 if (reader.have(JSONReader.LONG)) {
                     long value = reader.longValue();
-                    System.out.println("for key: " + key + " ,read a long :" + value);  // TODO add long
+                    System.out.println("for key: " + key + " ,read a long :" + value);
                     this.put(key, value);
                 }
                 if (reader.have(JSONReader.INTEGER)) {
@@ -74,18 +73,22 @@ public class LXP implements ILXP {
             if (reader.have(JSONReader.ENDOBJECT)) { // we are at the end and that is OK
                 return;
             }
-            // otherise bad stuff has happend
+            // otherise bad stuff has happened
             throw new PersistentObjectException(e);
         }
     }
 
-    public LXP(JSONReader reader) throws PersistentObjectException {
+    public LXP(JSONReader reader) throws PersistentObjectException, IllegalKeyException {
         this(Store.getInstance().getNextFreePID(), reader);
     }
 
     @Override
     public ILXP create(long persistent_object_id, JSONReader reader) throws PersistentObjectException {
-        return new LXP(persistent_object_id, reader);
+        try {
+            return new LXP(persistent_object_id, reader);
+        } catch (IllegalKeyException e) {
+            throw new PersistentObjectException("Illegal key exception");
+        }
     }
 
 
@@ -109,7 +112,11 @@ public class LXP implements ILXP {
         if (containsKey(Types.LABEL)) {
             throw new Exception("Type label already specified");
         }
-        put(Types.LABEL, label.getId());
+        try {
+            put(Types.LABEL, label.getId());
+        } catch (IllegalKeyException e) {
+            throw new Exception("Illegal label");
+        }
     }
 
     @Override
@@ -206,27 +213,32 @@ public class LXP implements ILXP {
     }
 
     @Override
-    public void put(String key, String value) {
+    public void put(String key, String value) throws IllegalKeyException {
+        check(key);
         map.put(key, value);
     }
 
     @Override
-    public void put(String key, boolean value) {
+    public void put(String key, boolean value) throws IllegalKeyException {
+        check(key);
         map.put(key, new Boolean(value));
     }
 
     @Override
-    public void put(String key, long value) {
+    public void put(String key, long value) throws IllegalKeyException {
+        check(key);
         map.put(key, new Long(value));
     }
 
     @Override
-    public void put(String key, double value) {
+    public void put(String key, double value) throws IllegalKeyException {
+        check(key);
         map.put(key, new Double(value));
     }
 
     @Override
-    public void put(String key, int value) {
+    public void put(String key, int value) throws IllegalKeyException {
+        check(key);
         map.put(key, new Integer(value));
     }
 
@@ -270,5 +282,13 @@ public class LXP implements ILXP {
             ErrorHandling.error("in LXP.toString()");
         }
         return sw.toString();
+    }
+
+    //****** Private methods ******//
+
+    private void check(String key) throws IllegalKeyException {
+        if (key == null || key.equals("")) {
+            throw new IllegalKeyException("null key");
+        }
     }
 }

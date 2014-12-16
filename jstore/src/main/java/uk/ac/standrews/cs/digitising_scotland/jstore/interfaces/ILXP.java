@@ -2,6 +2,7 @@ package uk.ac.standrews.cs.digitising_scotland.jstore.interfaces;
 
 import org.json.JSONException;
 import org.json.JSONWriter;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.IllegalKeyException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.KeyNotFoundException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.TypeMismatchFoundException;
 
@@ -94,7 +95,7 @@ public interface ILXP extends ILXPFactory {
      * @param value - the value to associated with the @param label
      * @return the value associated with @param label
      */
-    void put(String label, String value);
+    void put(String label, String value) throws IllegalKeyException;
 
     /**
      * A setter method over labelled values in the LXP
@@ -103,7 +104,7 @@ public interface ILXP extends ILXPFactory {
      * @param value - the value to associated with the @param label
      * @return the value associated with @param label
      */
-    void put(String label, double value);
+    void put(String label, double value) throws IllegalKeyException;
 
     /**
      * A setter method over labelled values in the LXP
@@ -112,7 +113,7 @@ public interface ILXP extends ILXPFactory {
      * @param value - the value to associated with the @param label
      * @return the value associated with @param label
      */
-    void put(String label, int value);
+    void put(String label, int value) throws IllegalKeyException;
 
     /**
      * A setter method over labelled values in the LXP
@@ -121,7 +122,7 @@ public interface ILXP extends ILXPFactory {
      * @param value - the value to associated with the @param label
      * @return the value associated with @param label
      */
-    void put(String label, boolean value);
+    void put(String label, boolean value) throws IllegalKeyException;
 
     /**
      * A setter method over labelled values in the LXP
@@ -130,7 +131,7 @@ public interface ILXP extends ILXPFactory {
      * @param value - the value to associated with the @param label
      * @return the value associated with @param label
      */
-    void put(String label, long value);
+    void put(String label, long value) throws IllegalKeyException;
 
     /**
      * @param label - the label to be looked up

@@ -3,10 +3,7 @@ package uk.ac.standrews.cs.digitising_scotland.jstore.impl.factory;
 
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.LXP;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.Store;
-import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.BucketException;
-import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.KeyNotFoundException;
-import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.RepositoryException;
-import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.TypeMismatchFoundException;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.*;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.*;
 import uk.ac.standrews.cs.digitising_scotland.jstore.types.LXPReferenceType;
 import uk.ac.standrews.cs.digitising_scotland.jstore.types.Types;
@@ -125,8 +122,12 @@ public class TypeFactory {
     private ILXP namevaluepair(String type_name, long typekey) {
         LXP lxp = new LXP();
         // used in load_caches above
-        lxp.put("name", type_name);
-        lxp.put("key", typekey);
+        try {
+            lxp.put("name", type_name);
+            lxp.put("key", typekey);
+        } catch (IllegalKeyException e) {
+            // ignore this clearly cannot happen!
+        }
         return lxp;
     }
 

@@ -2,10 +2,7 @@ package uk.ac.standrews.cs.digitising_scotland.jstore.impl;
 
 import org.json.JSONException;
 import org.json.JSONWriter;
-import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.BucketException;
-import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.KeyNotFoundException;
-import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.RepositoryException;
-import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.TypeMismatchFoundException;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.*;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.*;
 import uk.ac.standrews.cs.digitising_scotland.jstore.types.Types;
 import uk.ac.standrews.cs.digitising_scotland.util.ErrorHandling;
@@ -100,7 +97,7 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
         try (BufferedReader reader = Files.newBufferedReader(Paths.get(filePath(id)), FileManipulation.FILE_CHARSET)) {
 
             if (tFactory == null) { //  No java type specified
-                result = (T) (new LXP(id, new JSONReader(reader))); // TODO is this legal??? - talk to Graham!
+                result = (T) (new LXP(id, new JSONReader(reader)));
             } else result = tFactory.create(id, new JSONReader(reader));
 
             // Now check for indirection
@@ -113,7 +110,9 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
         } catch (IOException e) {
             throw new BucketException("I/O error");
         } catch (PersistentObjectException e) {
-            throw new BucketException("Persistent object  error");
+            throw new BucketException("Persistent object error");
+        } catch (IllegalKeyException e) {
+            throw new BucketException("Illegal key error");
         }
     }
 
@@ -133,6 +132,8 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
             throw new BucketException("Persistent object  error");
         } catch (JSONException e) {
             throw new BucketException("JSONException error");
+        } catch (IllegalKeyException e) {
+            throw new BucketException("Illegal key error");
         }
     }
 
@@ -300,7 +301,7 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
         }
     }
 
-    protected ILXP create_indirection(final T record) throws IOException, JSONException {
+    protected ILXP create_indirection(final T record) throws IOException, JSONException, IllegalKeyException {
 
         long oid = record.getId();
         IBucket b = objectCache.getBucket(oid);

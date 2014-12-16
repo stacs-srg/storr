@@ -106,16 +106,6 @@ public class Store implements IStore {
         return getPRN();
     }
 
-//    @Override
-//    public int getNextFreePID() {
-//        int next_id = id++;                 // TODO Consider Making them big and random
-//        try {
-//            saveId();
-//        } catch (IOException e) {
-//            ErrorHandling.exceptionError(e, "Saving id");
-//        }
-//        return next_id;
-//    }
 
     @Override
     public IObjectCache getObjectCache() {

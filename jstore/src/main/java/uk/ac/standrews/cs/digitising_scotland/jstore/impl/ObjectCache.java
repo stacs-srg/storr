@@ -14,6 +14,7 @@ import java.util.HashMap;
  * All loaded and newly created LXP instances are loaded into it.
  * <p/>
  * TODO consider cache eviction
+ * TODO consider getting rid of buckets.
  */
 public class ObjectCache implements IObjectCache {
 

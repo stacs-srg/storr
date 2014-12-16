@@ -1,6 +1,7 @@
 package uk.ac.standrews.cs.digitising_scotland.jstore.types;
 
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.LXP;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.IllegalKeyException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.KeyNotFoundException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.TypeMismatchFoundException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.factory.TypeFactory;
@@ -174,6 +175,8 @@ public class Types {
                         type_rep.put(label_name, scalar_type.type().name());
                     } catch (IllegalAccessException e) {
                         ErrorHandling.exceptionError(e, "Illegal access for label: " + f.getName());
+                    } catch (IllegalKeyException e) {
+                        ErrorHandling.exceptionError(e, "Illegal key in label: " + f.getName());
                     }
                 } else if (f.isAnnotationPresent(LXP_REF.class)) {
                     LXP_REF ref_type = f.getAnnotation(LXP_REF.class);
@@ -185,6 +188,8 @@ public class Types {
                         type_rep.put(label_name, ref_type_name);
                     } catch (IllegalAccessException e) {
                         ErrorHandling.exceptionError(e, "Illegal access for label: " + f.getName());
+                    } catch (IllegalKeyException e) {
+                        ErrorHandling.exceptionError(e, "Illegal key in label: " + f.getName());
                     }
                 }
 
