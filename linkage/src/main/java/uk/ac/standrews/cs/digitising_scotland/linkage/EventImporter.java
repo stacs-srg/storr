@@ -5,10 +5,10 @@ import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.BucketExcep
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.IllegalKeyException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.IBucket;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.IReferenceType;
+import uk.ac.standrews.cs.digitising_scotland.jstore.types.Types;
 import uk.ac.standrews.cs.digitising_scotland.linkage.lxp_records.Birth;
 import uk.ac.standrews.cs.digitising_scotland.linkage.lxp_records.Death;
 import uk.ac.standrews.cs.digitising_scotland.linkage.lxp_records.Marriage;
-import uk.ac.standrews.cs.digitising_scotland.util.ErrorHandling;
 import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
 
 import java.io.BufferedReader;
@@ -41,7 +41,7 @@ public class EventImporter {
      * @throws RecordFormatException
      * @throws BucketException
      */
-    public static int importDigitisingScotlandDeaths(IBucket<Death> deaths, String filename, IReferenceType referencetype) throws RecordFormatException, IOException, BucketException {
+    public static int importDigitisingScotlandDeaths(IBucket<Death> deaths, String filename, IReferenceType referencetype) throws RecordFormatException, IOException, BucketException, IllegalKeyException {
         long counter = 0;
         try (final BufferedReader reader = Files.newBufferedReader(Paths.get(filename), FileManipulation.FILE_CHARSET)) {
 
@@ -70,7 +70,7 @@ public class EventImporter {
      * @throws RecordFormatException
      * @throws BucketException
      */
-    public static int importDigitisingScotlandMarriages(IBucket<Marriage> marriages, String filename, IReferenceType referencetype) throws RecordFormatException, IOException, BucketException {
+    public static int importDigitisingScotlandMarriages(IBucket<Marriage> marriages, String filename, IReferenceType referencetype) throws RecordFormatException, IOException, BucketException, IllegalKeyException {
         long counter = 0;
         try (final BufferedReader reader = Files.newBufferedReader(Paths.get(filename), FileManipulation.FILE_CHARSET)) {
 
@@ -99,7 +99,7 @@ public class EventImporter {
      * @throws RecordFormatException
      * @throws BucketException
      */
-    public static int importDigitisingScotlandBirths(IBucket<Birth> births, String filename, IReferenceType referencetype) throws RecordFormatException, IOException, BucketException {
+    public static int importDigitisingScotlandBirths(IBucket<Birth> births, String filename, IReferenceType referencetype) throws RecordFormatException, IOException, BucketException, IllegalKeyException {
         long counter = 0;
         try (final BufferedReader reader = Files.newBufferedReader(Paths.get(filename), FileManipulation.FILE_CHARSET)) {
 
@@ -123,7 +123,7 @@ public class EventImporter {
     /**
      * Fills in a LXP record data from a file.
      */
-    private static void importDigitisingScotlandRecord(final LXP record, final BufferedReader reader, IReferenceType label) throws IOException, RecordFormatException {
+    private static void importDigitisingScotlandRecord(final LXP record, final BufferedReader reader, IReferenceType label) throws IOException, RecordFormatException, IllegalKeyException {
 
         Collection<String> field_names = label.getLabels();
         long record_type = label.getId();
@@ -142,7 +142,7 @@ public class EventImporter {
         }
     }
 
-    private static void addFields(final Iterable<String> field_names, final Iterable<String> field_values, final LXP record) {
+    private static void addFields(final Iterable<String> field_names, final Iterable<String> field_values, final LXP record) throws IllegalKeyException {
 
         Iterator<String> value_iterator = field_values.iterator();
         for (String field_name : field_names) {
@@ -150,15 +150,14 @@ public class EventImporter {
         }
     }
 
-    private static void addField(final String field_value, final String field_name, final LXP record) {
+    private static void addField(final String field_value, final String field_name, final LXP record) throws IllegalKeyException {
 
         // TODO need to check that this is a legal field for the type
 
-        try {
-            record.put(field_name, field_value);
-        } catch (IllegalKeyException e) {
-            ErrorHandling.error("Illegal key encountered in field");
+        if (!Types.getTypeRep(record.getClass()).containsKey(field_name)) {
+            throw new IllegalKeyException("Illegal key: " + field_name);
         }
+        record.put(field_name, field_value);
     }
 
 }

@@ -72,16 +72,12 @@ public class InfrastructureTest {
     public void deleteStore() throws IOException {
 
         Path sp = Paths.get(store_path);
-        System.out.println("store_path: " + sp.toAbsolutePath());
-        System.out.println("exists1: " + Files.exists(sp));
 
         if (Files.exists(sp)) {
 
             FileManipulation.deleteDirectory(store_path);
 
         }
-
-        System.out.println("exists2: " + Files.exists(sp));
     }
 
     @Test

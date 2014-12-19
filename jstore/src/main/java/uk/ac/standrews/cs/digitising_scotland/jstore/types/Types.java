@@ -171,7 +171,6 @@ public class Types {
                     try {
                         f.setAccessible(true);
                         String label_name = (String) f.get(null); // label name is the value of the labelled Java field!
-                        System.out.println("   Adding: " + label_name + "," + scalar_type.type().name());
                         type_rep.put(label_name, scalar_type.type().name());
                     } catch (IllegalAccessException e) {
                         ErrorHandling.exceptionError(e, "Illegal access for label: " + f.getName());
@@ -184,7 +183,6 @@ public class Types {
                     try {
                         f.setAccessible(true);
                         String label_name = (String) f.get(null); // label name is the value of the labelled Java field!
-                        System.out.println("   Adding: " + label_name + "," + ref_type_name);
                         type_rep.put(label_name, ref_type_name);
                     } catch (IllegalAccessException e) {
                         ErrorHandling.exceptionError(e, "Illegal access for label: " + f.getName());
