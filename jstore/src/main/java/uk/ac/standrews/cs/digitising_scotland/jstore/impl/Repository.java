@@ -45,15 +45,15 @@ public class Repository implements IRepository {
     public IBucket makeBucket(final String name, BucketKind kind) throws RepositoryException {
         switch (kind) {
             case DIRECTORYBACKED: {
-                IBucket bucket = DirectoryBackedBucket.createBucket(name, this);
+                IBucket bucket = DirectoryBackedBucket.createBucket(name, this, kind);
                 return bucket;
             }
             case INDIRECT: {
-                IBucket bucket = DirectoryBackedIndirectBucket.createBucket(name, this);
+                IBucket bucket = DirectoryBackedIndirectBucket.createBucket(name, this, kind);
                 return bucket;
             }
             case INDEXED: {
-                IBucket bucket = DirectoryBackedIndexedBucket.createBucket(name, this);
+                IBucket bucket = DirectoryBackedIndexedBucket.createBucket(name, this, kind);
                 return bucket;
             }
             default: {
@@ -65,7 +65,7 @@ public class Repository implements IRepository {
     public <T extends ILXP> IBucket<T> makeBucket(final String name, BucketKind kind, ILXPFactory<T> tFactory) throws RepositoryException {
         switch (kind) {
             case DIRECTORYBACKED: {
-                IBucket<T> bucket = new DirectoryBackedBucket(name, this, tFactory);
+                IBucket<T> bucket = new DirectoryBackedBucket(name, this, tFactory, kind);
                 return bucket;
             }
             case INDIRECT: {
@@ -114,7 +114,7 @@ public class Repository implements IRepository {
             BucketKind kind = DirectoryBackedBucket.getKind(name, this);
             switch (kind) {
                 case DIRECTORYBACKED: {
-                    IBucket bucket = new DirectoryBackedBucket(name, this, tFactory);
+                    IBucket bucket = new DirectoryBackedBucket(name, this, tFactory, kind);
                     return bucket;
                 }
                 case INDIRECT: {
@@ -138,7 +138,7 @@ public class Repository implements IRepository {
             try {
                 switch (kind) {
                     case DIRECTORYBACKED: {
-                        IBucket bucket = new DirectoryBackedBucket(name, this);
+                        IBucket bucket = new DirectoryBackedBucket(name, this, BucketKind.DIRECTORYBACKED);
                         return bucket;
                     }
                     case INDIRECT: {

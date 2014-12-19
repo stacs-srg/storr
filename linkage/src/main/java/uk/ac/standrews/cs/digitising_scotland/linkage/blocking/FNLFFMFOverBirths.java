@@ -11,6 +11,7 @@ import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.IRepository;
 import uk.ac.standrews.cs.digitising_scotland.linkage.factory.BirthFactory;
 import uk.ac.standrews.cs.digitising_scotland.linkage.lxp_records.Birth;
 import uk.ac.standrews.cs.digitising_scotland.linkage.stream_operators.sharder.Blocker;
+import uk.ac.standrews.cs.digitising_scotland.util.ErrorHandling;
 
 import java.io.IOException;
 
@@ -41,10 +42,10 @@ public class FNLFFMFOverBirths extends Blocker<Birth> {
             return new String[]{removeNasties(builder.toString())};
 
         } catch (KeyNotFoundException e) {
-            e.printStackTrace(); // TODO fix
+            ErrorHandling.exceptionError(e, "Key not found");
             return new String[]{};
         } catch (TypeMismatchFoundException e) {
-            e.printStackTrace(); // TODO fix
+            ErrorHandling.exceptionError(e, "Type mismatch");
             return new String[]{};
         }
     }

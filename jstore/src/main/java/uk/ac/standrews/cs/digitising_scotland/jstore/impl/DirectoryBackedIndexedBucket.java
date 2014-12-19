@@ -32,8 +32,7 @@ public class DirectoryBackedIndexedBucket<T extends ILXP> extends DirectoryBacke
      * @param repository the repository in which the bucket is created.
      */
     public DirectoryBackedIndexedBucket(final String name, final IRepository repository) throws RepositoryException {
-        super(name, repository);
-        setKind(BucketKind.INDEXED);
+        super(name, repository, BucketKind.INDEXED);
         try {
             initIndexes();
         } catch (IOException e) {
@@ -42,8 +41,7 @@ public class DirectoryBackedIndexedBucket<T extends ILXP> extends DirectoryBacke
     }
 
     public DirectoryBackedIndexedBucket(final String name, final IRepository repository, ILXPFactory tFactory) throws RepositoryException {
-        super(name, repository, tFactory);
-        setKind(BucketKind.INDEXED);
+        super(name, repository, BucketKind.INDEXED);
         try {
             initIndexes();
         } catch (IOException e) {

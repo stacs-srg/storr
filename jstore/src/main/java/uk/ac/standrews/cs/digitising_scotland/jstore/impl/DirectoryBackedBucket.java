@@ -40,12 +40,12 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
     /*
      * Creates a DirectoryBackedBucket with no factory - a persistent collection of ILXPs
      */
-    public DirectoryBackedBucket(final String name, final IRepository repository) throws RepositoryException {
+    public DirectoryBackedBucket(final String name, final IRepository repository, BucketKind kind) throws RepositoryException {
         this.name = name;
         this.repository = repository;
         String dir_name = dirPath();
         directory = new File(dir_name);
-        setKind(BucketKind.DIRECTORYBACKED);
+        setKind(kind);
 
         if (!directory.isDirectory()) {
             throw new RepositoryException("Bucket Directory: " + dir_name + " does not exist");
@@ -53,25 +53,13 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
     }
 
 
-    public DirectoryBackedBucket(final String name, final IRepository repository, ILXPFactory<T> tFactory) throws RepositoryException {
-        this(name, repository);
+    public DirectoryBackedBucket(final String name, final IRepository repository, ILXPFactory<T> tFactory, BucketKind kind) throws RepositoryException {
+        this(name, repository, kind);
         this.tFactory = tFactory;
         type_label_id = tFactory.getTypeLabel();
-
-//        long type_label_id = this.getTypeLabelID();
-//        if (type_label_id == -1) { // no types associated with this bucket.
-//            throw new RepositoryException("no type label associated with bucket");
-//        }
-//        try {
-//            if (!tFactory.checkConsistentWith(type_label_id)) {
-//                throw new RepositoryException("incompatible types");
-//            }
-//        } catch (PersistentObjectException | IOException e) {
-//            throw new RepositoryException(e.getMessage());
-//        }
     }
 
-    public static IBucket createBucket(final String name, IRepository repository) throws RepositoryException {
+    public static IBucket createBucket(final String name, IRepository repository, BucketKind kind) throws RepositoryException {
         if (bucketExists(name, repository)) {
             throw new RepositoryException("Bucket: " + name + " already exists");
         }
@@ -79,7 +67,7 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
         try {
             Path path = getBucketPath(name, repository);
             FileManipulation.createDirectoryIfDoesNotExist(path);
-            return new DirectoryBackedBucket(name, repository);
+            return new DirectoryBackedBucket(name, repository, kind);
         } catch (IOException e) {
             throw new RepositoryException(e.getMessage());
         }

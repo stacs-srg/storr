@@ -15,13 +15,11 @@ public class DirectoryBackedIndirectBucket<T extends ILXP> extends DirectoryBack
 
     public DirectoryBackedIndirectBucket(String name, IRepository repository) throws IOException, RepositoryException {
 
-        super(name, repository);
-        setKind(BucketKind.INDIRECT);
+        super(name, repository, BucketKind.INDIRECT);
     }
 
     public DirectoryBackedIndirectBucket(String name, IRepository repository, ILXPFactory<T> tFactory) throws RepositoryException {
-        super(name, repository, tFactory);
-        setKind(BucketKind.INDIRECT);
+        super(name, repository, BucketKind.INDIRECT);
     }
 
     @Override

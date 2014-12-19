@@ -101,7 +101,6 @@ public class AlLinker {
 
         births = input_repo.makeBucket(births_name, BucketKind.DIRECTORYBACKED);   // TODO make these type specific
         deaths = input_repo.makeBucket(deaths_name, BucketKind.DIRECTORYBACKED);   // TODO look for all occurances and change them to typed or generic
-
         marriages = input_repo.makeBucket(marriages_name, BucketKind.DIRECTORYBACKED);
 
         people = linkage_repo.makeBucket(people_name, BucketKind.DIRECTORYBACKED); // linkage_repo.makeIndexedBucket(people_name);
@@ -115,8 +114,6 @@ public class AlLinker {
     }
 
     private void initialiseTypes(IBucket types) {
-
-        //TODO Need to put checks in here and only do this if they don't exist already.
 
         birthlabel = tf.createType(Birth.class, "birth");
         deathlabel = tf.createType(Death.class, "death");
