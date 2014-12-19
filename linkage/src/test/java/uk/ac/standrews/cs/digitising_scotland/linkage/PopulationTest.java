@@ -6,6 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.Store;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.BucketException;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.IllegalKeyException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.RepositoryException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.StoreException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.factory.TypeFactory;
@@ -14,6 +15,7 @@ import uk.ac.standrews.cs.digitising_scotland.linkage.factory.BirthFactory;
 import uk.ac.standrews.cs.digitising_scotland.linkage.lxp_records.Birth;
 import uk.ac.standrews.cs.digitising_scotland.linkage.stream_operators.filter.ExactMatch;
 import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
+import uk.ac.standrews.cs.nds.persistence.PersistentObjectException;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -83,22 +85,22 @@ public class PopulationTest {
 
     @Test
 //    @Ignore
-    public synchronized void testReadingPopulationRecords() throws RepositoryException, RecordFormatException, BucketException, IOException, JSONException {
+    public synchronized void testReadingPopulationRecords() throws RepositoryException, RecordFormatException, BucketException, IOException, JSONException, PersistentObjectException, IllegalKeyException {
 
         IBucket<Birth> b = repo.getBucket(birth_bucket_name1, new BirthFactory(birthlabel.getId()));
 
-        EventImporter.importDigitisingScotlandRecords(b, BIRTH_RECORDS_PATH, birthlabel);
+        EventImporter.importDigitisingScotlandBirths(b, BIRTH_RECORDS_PATH, birthlabel);
     }
 
     @Test
 //    @Ignore
-    public synchronized void testSimpleMatchPopulationRecords() throws RepositoryException, RecordFormatException, JSONException, IOException, BucketException {
+    public synchronized void testSimpleMatchPopulationRecords() throws RepositoryException, RecordFormatException, JSONException, IOException, BucketException, PersistentObjectException, IllegalKeyException {
 
 
         IBucket<Birth> b = repo.getBucket(birth_bucket_name1, new BirthFactory(birthlabel.getId()));
         IBucket<Birth> b2 = repo.getBucket(birth_bucket_name2, new BirthFactory(birthlabel.getId()));
 
-        EventImporter.importDigitisingScotlandRecords(b, BIRTH_RECORDS_PATH, birthlabel);
+        EventImporter.importDigitisingScotlandBirths(b, BIRTH_RECORDS_PATH, birthlabel);
 
         ExactMatch filter = new ExactMatch(b.getInputStream(), b2.getOutputStream(), "surname", "GONTHWICK");
         filter.apply();

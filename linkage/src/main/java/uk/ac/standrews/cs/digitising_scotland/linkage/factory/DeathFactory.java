@@ -1,6 +1,7 @@
 package uk.ac.standrews.cs.digitising_scotland.linkage.factory;
 
 
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.IllegalKeyException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.ILXPFactory;
 import uk.ac.standrews.cs.digitising_scotland.linkage.lxp_records.Death;
 import uk.ac.standrews.cs.nds.persistence.PersistentObjectException;
@@ -18,7 +19,7 @@ public class DeathFactory extends TFactory<Death> implements ILXPFactory<Death> 
 
 
     @Override
-    public Death create(long label_id, JSONReader reader) throws PersistentObjectException {
+    public Death create(long label_id, JSONReader reader) throws PersistentObjectException, IllegalKeyException {
         return new Death(label_id, reader);
     }
 

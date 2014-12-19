@@ -3,6 +3,7 @@ package uk.ac.standrews.cs.digitising_scotland.linkage;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.IllegalKeyException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.RepositoryException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.Store;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.StoreException;
@@ -64,9 +65,10 @@ public class BlockingTest {
     }
 
     @Test
-    public synchronized void testPFPLMFFF() throws Exception, RepositoryException {
+    public synchronized void testPFPLMFFF() throws Exception, RepositoryException, IllegalKeyException {
 
-        EventImporter.importDigitisingScotlandRecords(births, births_source_path, birthlabel);
+        int count = EventImporter.importDigitisingScotlandBirths(births, births_source_path, birthlabel);
+        System.out.println("read in " + count + " records.");
         FNLFFMFOverBirths blocker = new FNLFFMFOverBirths(births, repo);
 
         blocker.apply();

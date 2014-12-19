@@ -1,6 +1,7 @@
 package uk.ac.standrews.cs.digitising_scotland.linkage.factory;
 
 
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.IllegalKeyException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.ILXPFactory;
 import uk.ac.standrews.cs.digitising_scotland.linkage.lxp_records.Birth;
 import uk.ac.standrews.cs.nds.persistence.PersistentObjectException;
@@ -17,7 +18,7 @@ public class BirthFactory extends TFactory<Birth> implements ILXPFactory<Birth> 
     }
 
     @Override
-    public Birth create(long persistent_object_id, JSONReader reader) throws PersistentObjectException {
+    public Birth create(long persistent_object_id, JSONReader reader) throws PersistentObjectException, IllegalKeyException {
         return new Birth(persistent_object_id, reader, required_type_labelID);
     }
 

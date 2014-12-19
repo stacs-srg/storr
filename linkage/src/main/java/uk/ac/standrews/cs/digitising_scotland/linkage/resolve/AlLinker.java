@@ -73,7 +73,7 @@ public class AlLinker {
     private IReferenceType personLabel;
     private TypeFactory tf;
 
-    public AlLinker() throws BucketException, RepositoryException, RecordFormatException, JSONException, IOException, PersistentObjectException, StoreException, KeyNotFoundException, TypeMismatchFoundException {
+    public AlLinker() throws BucketException, RepositoryException, RecordFormatException, JSONException, IOException, PersistentObjectException, StoreException, KeyNotFoundException, TypeMismatchFoundException, IllegalKeyException {
 
         initialise();
         injestBDMRecords();
@@ -135,11 +135,11 @@ public class AlLinker {
      * Initialises the people bucket with the people injected - one record for each person referenced in the original record
      * Initialises the known(100% certain) relationships between people and stores the relationships in the relationships bucket
      */
-    private void injestBDMRecords() throws BucketException, RecordFormatException, JSONException, IOException, KeyNotFoundException, PersistentObjectException, TypeMismatchFoundException {
+    private void injestBDMRecords() throws BucketException, RecordFormatException, JSONException, IOException, KeyNotFoundException, PersistentObjectException, TypeMismatchFoundException, IllegalKeyException {
 
-        EventImporter.importDigitisingScotlandRecords(births, births_source_path, birthlabel);
-        EventImporter.importDigitisingScotlandRecords(marriages, marriages_source_path, deathlabel);
-        EventImporter.importDigitisingScotlandRecords(deaths, deaths_source_path, marriageLabel);
+        EventImporter.importDigitisingScotlandBirths(births, births_source_path, birthlabel);
+        EventImporter.importDigitisingScotlandMarriages(marriages, marriages_source_path, deathlabel);
+        EventImporter.importDigitisingScotlandDeaths(deaths, deaths_source_path, marriageLabel);
 
         createPeopleAndRelationshipsFromBirthsOrDeaths(births);
         createPeopleAndRelationshipsFromBirthsOrDeaths(deaths);
@@ -250,11 +250,15 @@ public class AlLinker {
         if (record1 != null) {
             ILXP lxp = new LXP();
 
-            lxp.put("person1", Long.toString(record1.getId()));
-            lxp.put("person2", Long.toString(record2.getId()));
-            lxp.put("relationship", relationship_type);
-            lxp.put("evidence", Long.toString(evidence.getId()));
-            output.add(lxp);
+            try {
+                lxp.put("person1", Long.toString(record1.getId()));
+                lxp.put("person2", Long.toString(record2.getId()));
+                lxp.put("relationship", relationship_type);
+                lxp.put("evidence", Long.toString(evidence.getId()));
+                output.add(lxp);
+            } catch (IllegalKeyException e) {
+                // cannot occur - so ignore.
+            }
         }
     }
 
@@ -262,7 +266,7 @@ public class AlLinker {
      * **************************************************************************************************************
      */
 
-    public static void main(String[] args) throws Exception, KeyNotFoundException, TypeMismatchFoundException {
+    public static void main(String[] args) throws Exception, KeyNotFoundException, TypeMismatchFoundException, IllegalKeyException {
 
         new AlLinker();
     }

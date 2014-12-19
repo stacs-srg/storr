@@ -1,6 +1,7 @@
 package uk.ac.standrews.cs.digitising_scotland.linkage.lxp_records;
 
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.Store;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.IllegalKeyException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.types.LXPBaseType;
 import uk.ac.standrews.cs.digitising_scotland.jstore.types.LXP_SCALAR;
 import uk.ac.standrews.cs.nds.persistence.PersistentObjectException;
@@ -88,7 +89,7 @@ public class Death extends AbstractLXP {
         super();
     }
 
-    public Death(long label_id, JSONReader reader) throws PersistentObjectException {
+    public Death(long label_id, JSONReader reader) throws PersistentObjectException, IllegalKeyException {
 
         super(Store.getInstance().getNextFreePID(), reader);
 

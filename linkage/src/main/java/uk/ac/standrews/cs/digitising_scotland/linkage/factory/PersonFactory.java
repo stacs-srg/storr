@@ -1,6 +1,7 @@
 package uk.ac.standrews.cs.digitising_scotland.linkage.factory;
 
 
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.IllegalKeyException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.ILXPFactory;
 import uk.ac.standrews.cs.digitising_scotland.linkage.lxp_records.Person;
 import uk.ac.standrews.cs.nds.persistence.PersistentObjectException;
@@ -18,7 +19,7 @@ public class PersonFactory extends TFactory<Person> implements ILXPFactory<Perso
 
 
     @Override
-    public Person create(long label_id, JSONReader reader) throws PersistentObjectException {
+    public Person create(long label_id, JSONReader reader) throws PersistentObjectException, IllegalKeyException {
         return new Person(reader);
     }
 

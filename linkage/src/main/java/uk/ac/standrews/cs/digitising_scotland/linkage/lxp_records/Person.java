@@ -1,10 +1,12 @@
 package uk.ac.standrews.cs.digitising_scotland.linkage.lxp_records;
 
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.IllegalKeyException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.KeyNotFoundException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.TypeMismatchFoundException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.ILXP;
 import uk.ac.standrews.cs.digitising_scotland.jstore.types.LXP_SCALAR;
 import uk.ac.standrews.cs.digitising_scotland.jstore.types.Types;
+import uk.ac.standrews.cs.digitising_scotland.util.ErrorHandling;
 import uk.ac.standrews.cs.nds.persistence.PersistentObjectException;
 import uk.ac.standrews.cs.nds.rpc.stream.JSONReader;
 
@@ -71,7 +73,7 @@ public class Person extends AbstractLXP {
         super();
     }
 
-    public Person(JSONReader reader) throws PersistentObjectException {
+    public Person(JSONReader reader) throws PersistentObjectException, IllegalKeyException {
 
         super(reader);
     }
@@ -79,22 +81,27 @@ public class Person extends AbstractLXP {
     public Person(String surname, String forename, String sex, String fathers_forename, String fathers_surname, String fathers_occupation, String mothers_forename, String mothers_surname, String mothers_maiden_surname, String changed_surname, String changed_forename, String changed_mothers_maiden_surname, String original_record_id, String original_record_type, String role, String occupation) {
 
         this();
-        put(SURNAME, surname);
-        put(FORENAME, forename);
-        put(SEX, sex);
-        put(FATHERS_FORENAME, fathers_forename);
-        put(FATHERS_SURNAME, fathers_surname);
-        put(FATHERS_OCCUPATION, fathers_occupation);
-        put(MOTHERS_FORENAME, mothers_forename);
-        put(MOTHERS_SURNAME, mothers_surname);
-        put(MOTHERS_MAIDEN_SURNAME, mothers_maiden_surname);
-        put(CHANGED_SURNAME, changed_surname);
-        put(CHANGED_FORENAME, changed_forename);
-        put(CHANGED_MOTHERS_MAIDEN_SURNAME, changed_mothers_maiden_surname);
-        put(ORIGINAL_RECORD_ID, original_record_id);
-        put(ORIGINAL_RECORD_TYPE, original_record_type);
-        put(ROLE, role);
-        put(OCCUPATION, occupation);
+        try {
+            put(SURNAME, surname);
+            put(FORENAME, forename);
+            put(SEX, sex);
+            put(FATHERS_FORENAME, fathers_forename);
+            put(FATHERS_SURNAME, fathers_surname);
+            put(FATHERS_OCCUPATION, fathers_occupation);
+            put(MOTHERS_FORENAME, mothers_forename);
+            put(MOTHERS_SURNAME, mothers_surname);
+            put(MOTHERS_MAIDEN_SURNAME, mothers_maiden_surname);
+            put(CHANGED_SURNAME, changed_surname);
+            put(CHANGED_FORENAME, changed_forename);
+            put(CHANGED_MOTHERS_MAIDEN_SURNAME, changed_mothers_maiden_surname);
+            put(ORIGINAL_RECORD_ID, original_record_id);
+            put(ORIGINAL_RECORD_TYPE, original_record_type);
+            put(ROLE, role);
+            put(OCCUPATION, occupation);
+        } catch (IllegalKeyException e) {
+            ErrorHandling.error("Illegal key in LXP");
+        }
+
     }
 
     public static Person createPersonFromOwnBirthDeath(ILXP BD_record) throws KeyNotFoundException, TypeMismatchFoundException {// TODO rewrite as typed

@@ -56,17 +56,19 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
     public DirectoryBackedBucket(final String name, final IRepository repository, ILXPFactory<T> tFactory) throws RepositoryException {
         this(name, repository);
         this.tFactory = tFactory;
-        long type_label_id = this.getTypeLabelID();
-        if (type_label_id == -1) { // no types associated with this bucket.
-            throw new RepositoryException("no type label associated with bucket");
-        }
-        try {
-            if (!tFactory.checkConsistentWith(type_label_id)) {
-                throw new RepositoryException("incompatible types");
-            }
-        } catch (PersistentObjectException | IOException e) {
-            throw new RepositoryException(e.getMessage());
-        }
+        type_label_id = tFactory.getTypeLabel();
+
+//        long type_label_id = this.getTypeLabelID();
+//        if (type_label_id == -1) { // no types associated with this bucket.
+//            throw new RepositoryException("no type label associated with bucket");
+//        }
+//        try {
+//            if (!tFactory.checkConsistentWith(type_label_id)) {
+//                throw new RepositoryException("incompatible types");
+//            }
+//        } catch (PersistentObjectException | IOException e) {
+//            throw new RepositoryException(e.getMessage());
+//        }
     }
 
     public static IBucket createBucket(final String name, IRepository repository) throws RepositoryException {

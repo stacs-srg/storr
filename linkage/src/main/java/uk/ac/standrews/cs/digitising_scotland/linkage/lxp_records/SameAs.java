@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.digitising_scotland.linkage.lxp_records;
 
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.IllegalKeyException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.types.LXPBaseType;
 import uk.ac.standrews.cs.digitising_scotland.jstore.types.LXP_REF;
 import uk.ac.standrews.cs.digitising_scotland.jstore.types.LXP_SCALAR;
@@ -24,13 +25,17 @@ public class SameAs extends AbstractLXP {
     public SameAs(Person first, Person second, String relationship, float confidence) {
 
         super();
-        put(FIRST, Long.toString(first.getId()));
-        put(SECOND, Long.toString(second.getId()));
-        put(RELATIONSHIP, relationship);
-        put(CONFIDENCE, Float.toString(confidence));
+        try {
+            put(FIRST, Long.toString(first.getId()));
+            put(SECOND, Long.toString(second.getId()));
+            put(RELATIONSHIP, relationship);
+            put(CONFIDENCE, Float.toString(confidence));
+        } catch (IllegalKeyException e) {
+            // cannot occur so ignore
+        }
     }
 
-    public SameAs(long persistent_Object_id, JSONReader reader, long required_label_id) throws PersistentObjectException {
+    public SameAs(long persistent_Object_id, JSONReader reader, long required_label_id) throws PersistentObjectException, IllegalKeyException {
 
         super(persistent_Object_id, reader);
     }

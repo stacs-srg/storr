@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.digitising_scotland.linkage.lxp_records;
 
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.IllegalKeyException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.types.LXPBaseType;
 import uk.ac.standrews.cs.digitising_scotland.jstore.types.LXP_SCALAR;
 import uk.ac.standrews.cs.nds.persistence.PersistentObjectException;
@@ -76,7 +77,7 @@ public class Birth extends AbstractLXP {
         super();
     }
 
-    public Birth(long persistent_Object_id, JSONReader reader, long required_label_id) throws PersistentObjectException {
+    public Birth(long persistent_Object_id, JSONReader reader, long required_label_id) throws PersistentObjectException, IllegalKeyException {
 
         super(persistent_Object_id, reader);
 
