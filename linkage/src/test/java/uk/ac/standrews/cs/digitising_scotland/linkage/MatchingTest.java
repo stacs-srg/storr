@@ -25,7 +25,7 @@ import java.nio.file.Paths;
 /**
  * Created by al on 25/04/2014.
  */
-public class PopulationTest {
+public class MatchingTest {
 
     private static String birth_bucket_name1 = "BUCKET1";
     private static String birth_bucket_name2 = "BUCKET2";
@@ -77,13 +77,6 @@ public class PopulationTest {
         }
     }
 
-    @Test
-    public synchronized void testReadingPopulationRecords() throws RepositoryException, RecordFormatException, BucketException, IOException, JSONException, PersistentObjectException, IllegalKeyException {
-
-        IBucket<Birth> b = repo.getBucket(birth_bucket_name1, new BirthFactory(birthlabel.getId()));
-
-        EventImporter.importDigitisingScotlandBirths(b, BIRTH_RECORDS_PATH, birthlabel);
-    }
 
     @Test
     public synchronized void testSimpleMatchPopulationRecords() throws RepositoryException, RecordFormatException, JSONException, IOException, BucketException, PersistentObjectException, IllegalKeyException {

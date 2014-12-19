@@ -1,21 +1,15 @@
 package uk.ac.standrews.cs.digitising_scotland.linkage;
 
-import org.json.JSONException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.Store;
-import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.BucketException;
-import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.IllegalKeyException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.RepositoryException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.StoreException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.factory.TypeFactory;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.*;
-import uk.ac.standrews.cs.digitising_scotland.linkage.factory.BirthFactory;
 import uk.ac.standrews.cs.digitising_scotland.linkage.lxp_records.Birth;
-import uk.ac.standrews.cs.digitising_scotland.linkage.stream_operators.filter.ExactMatch;
 import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
-import uk.ac.standrews.cs.nds.persistence.PersistentObjectException;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -25,7 +19,7 @@ import java.nio.file.Paths;
 /**
  * Created by al on 25/04/2014.
  */
-public class PopulationTest {
+public class IndexTest {
 
     private static String birth_bucket_name1 = "BUCKET1";
     private static String birth_bucket_name2 = "BUCKET2";
@@ -77,26 +71,33 @@ public class PopulationTest {
         }
     }
 
-    @Test
-    public synchronized void testReadingPopulationRecords() throws RepositoryException, RecordFormatException, BucketException, IOException, JSONException, PersistentObjectException, IllegalKeyException {
-
-        IBucket<Birth> b = repo.getBucket(birth_bucket_name1, new BirthFactory(birthlabel.getId()));
-
-        EventImporter.importDigitisingScotlandBirths(b, BIRTH_RECORDS_PATH, birthlabel);
-    }
 
     @Test
-    public synchronized void testSimpleMatchPopulationRecords() throws RepositoryException, RecordFormatException, JSONException, IOException, BucketException, PersistentObjectException, IllegalKeyException {
+    public synchronized void testIndex() throws Exception, RepositoryException {
 
+        //TODO All commented out
 
-        IBucket<Birth> b = repo.getBucket(birth_bucket_name1, new BirthFactory(birthlabel.getId()));
-        IBucket<Birth> b2 = repo.getBucket(birth_bucket_name2, new BirthFactory(birthlabel.getId()));
-
-        EventImporter.importDigitisingScotlandBirths(b, BIRTH_RECORDS_PATH, birthlabel);
-
-        ExactMatch filter = new ExactMatch(b.getInputStream(), b2.getOutputStream(), "surname", "GONTHWICK");
-        filter.apply();
+//        IIndexedBucket<Birth> b = (IIndexedBucket<Birth>) repo.getBucket(indexed_bucket_name1,new BirthFactory(birthlabel.getId())); // TODO delete BirthTypeLabel and rest
+//
+//        b.addIndex(BirthReferenceType.SURNAME);
+//        long counter1 = EventImporter.importDigitisingScotlandRecords(b, BIRTH_RECORDS_PATH,birthlabel);
+//
+//        IBucketIndex index = b.getIndex(BirthReferenceType.SURNAME);
+//
+//        Set<String> keys = index.keySet();
+//        long counter2 = 0;
+//        for( String key : keys ) {
+//
+//            // System.out.print("keys: " + key + " :");
+//            List<Long> values = index.values(key);
+//            counter2 += values.size();
+//            // System.out.println( values );
+//
+//        }
+//        assertTrue(counter1 == counter2); // records indexed are the same as those read in.
+//
+//
+//
     }
-
 }
 
