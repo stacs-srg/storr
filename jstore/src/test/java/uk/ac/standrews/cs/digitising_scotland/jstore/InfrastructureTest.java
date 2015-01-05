@@ -100,7 +100,7 @@ public class InfrastructureTest {
         try {
             b.put(lxp);
         } catch (Exception e) {
-            // should getString an exception due to overwrite;
+            // should get an exception due to overwrite;
             return;
         }
         fail("Overwrite of LXP record not detected");
@@ -120,12 +120,21 @@ public class InfrastructureTest {
             System.out.println("Bucket exception caught");
             return;
         } catch (Exception e) {
-            // should getString an exception due to wrong type;
+            // should get an exception due to wrong type;
             System.out.println("Type exception caught");
             return;
         }
         fail("Type violation not detected");
     }
+
+// Persistence example-
+//    Employee employee = new Employee("Samuel", "Joseph", "Wurzelbacher");
+//    Address address = new Address("Holland", "Ohio");
+//    employee.setAddress(address);
+//
+//    em.getTransaction().begin();
+//    em.persist(employee);
+//    em.getTransaction().commit();
 
     @Test
     public synchronized void testLabelledLXP2() throws Exception, RepositoryException, IllegalKeyException {

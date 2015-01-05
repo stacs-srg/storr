@@ -152,8 +152,6 @@ public class EventImporter {
 
     private static void addField(final String field_value, final String field_name, final LXP record) throws IllegalKeyException {
 
-        // TODO need to check that this is a legal field for the type
-
         if (!Types.getTypeRep(record.getClass()).containsKey(field_name)) {
             throw new IllegalKeyException("Illegal key: " + field_name);
         }

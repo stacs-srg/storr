@@ -51,7 +51,7 @@ public class PopulationTest {
         birthlabel = TypeFactory.getInstance().createType(Birth.class, "BIRTH");
 
         IBucket<Birth> b1 = repo.makeBucket(birth_bucket_name1, BucketKind.DIRECTORYBACKED);
-        b1.setTypeLabelID(birthlabel.getId());     // TODO consider making this a label not an id.
+        b1.setTypeLabelID(birthlabel.getId());
         IBucket<Birth> b2 = repo.makeBucket(birth_bucket_name2, BucketKind.DIRECTORYBACKED);
         b2.setTypeLabelID(birthlabel.getId());
         repo.makeBucket(generic_bucket_name1, BucketKind.DIRECTORYBACKED);
