@@ -8,6 +8,7 @@ import uk.ac.standrews.cs.digitising_scotland.jstore.impl.LXP;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.Store;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.*;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.factory.TypeFactory;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.transaction.interfaces.ITransaction;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.*;
 import uk.ac.standrews.cs.digitising_scotland.jstore.types.Types;
 import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
@@ -86,7 +87,7 @@ public class InfrastructureTest {
         LXP lxp = new LXP();
         lxp.put("age", "42");
         lxp.put("address", "home");
-        b.put(lxp);
+        b.makePersistent(lxp);
     }
 
     @Test
@@ -95,10 +96,10 @@ public class InfrastructureTest {
         LXP lxp = new LXP();
         lxp.put("age", "42");
         lxp.put("address", "home");
-        b.put(lxp);
+        b.makePersistent(lxp);
 
         try {
-            b.put(lxp);
+            b.makePersistent(lxp);
         } catch (Exception e) {
             // should get an exception due to overwrite;
             return;
@@ -115,7 +116,7 @@ public class InfrastructureTest {
             LXP lxp = new LXP();
             lxp.put("age", "42");
             lxp.put("address", "home");
-            b.put(lxp);
+            b.makePersistent(lxp);
         } catch (BucketException e) {
             System.out.println("Bucket exception caught");
             return;
@@ -127,14 +128,34 @@ public class InfrastructureTest {
         fail("Type violation not detected");
     }
 
-// Persistence example-
-//    Employee employee = new Employee("Samuel", "Joseph", "Wurzelbacher");
-//    Address address = new Address("Holland", "Ohio");
-//    employee.setAddress(address);
-//
-//    em.getTransaction().begin();
-//    em.persist(employee);
-//    em.getTransaction().commit();
+    @Test
+    public synchronized void testSimpleTransaction() throws RepositoryException, IllegalKeyException, BucketException, StoreException {
+
+        IBucket b = repo.getBucket(generic_bucket_name1);
+
+        LXP lxp = new LXP();
+        lxp.put("age", "42");
+        lxp.put("address", "home");
+        b.makePersistent(lxp);
+        long oid = lxp.getId();
+
+        ITransaction txn = store.getTransactionManager().beginTransaction();
+
+        try {
+
+            ILXP lxp2 = b.getObjectById(oid);
+            lxp2.put("age", "43");
+
+            b.update(lxp2);
+
+            txn.commit();
+        } finally {
+            if (txn.isActive()) {
+                txn.rollback();
+            }
+        }
+    }
+
 
     @Test
     public synchronized void testLabelledLXP2() throws Exception, RepositoryException, IllegalKeyException {
@@ -144,7 +165,7 @@ public class InfrastructureTest {
         LXP lxp = new LXP();        // correct structure but no label - that is OK!
         lxp.put("name", "al");
         lxp.put("age", 55);
-        b.put(lxp);
+        b.makePersistent(lxp);
     }
 
     @Test
@@ -156,7 +177,7 @@ public class InfrastructureTest {
         lxp.put("name", "al");
         lxp.put("age", 55);
         lxp.put(Types.LABEL, personlabel.getId());    // with correct label
-        b.put(lxp); // Should succeed: labels correct and type label identical to bucket
+        b.makePersistent(lxp); // Should succeed: labels correct and type label identical to bucket
     }
 
     @Test
@@ -168,7 +189,7 @@ public class InfrastructureTest {
         lxp.put("name", "al");
         lxp.put("age", 55);
         lxp.put(Types.LABEL, personlabel.getId()); // structurally equivalent label
-        b.put(lxp); // Should succeed labels correct and type label structurally equivalent
+        b.makePersistent(lxp); // Should succeed labels correct and type label structurally equivalent
     }
 
     @Test(expected = Exception.class)
@@ -180,7 +201,7 @@ public class InfrastructureTest {
         lxp.put("name", "al");
         lxp.put("address", "home");
         lxp.addTypeLabel(personlabel); // correct label but not structurally equivalent label
-        b.put(lxp);
+        b.makePersistent(lxp);
         // should getString an exception due to incorrect structure
 
     }
@@ -199,12 +220,12 @@ public class InfrastructureTest {
         lxp.put(Types.LABEL, personlabel.getId()); // correct label
         long person_id = lxp.getId();
 
-        b1.put(lxp);
+        b1.makePersistent(lxp);
 
 
         LXP lxp2 = new LXP();        // correct structure
         lxp2.put("person_ref", person_id);
-        b2.put(lxp2);
+        b2.makePersistent(lxp2);
     }
 
     @Test
@@ -221,14 +242,14 @@ public class InfrastructureTest {
         lxp.put(Types.LABEL, personlabel.getId()); // correct label
         long person_id = lxp.getId();
 
-        b1.put(lxp);
+        b1.makePersistent(lxp);
 
 
         try {
             LXP lxp2 = new LXP();        // correct structure
             lxp2.put("person_ref", Integer.toString(100)); // an illegal reference - not a legal identifier
 
-            b2.put(lxp2);
+            b2.makePersistent(lxp2);
         } catch (BucketException e) { // should catch this - reference is not in the store yet!
             // do nothing test succeeds
             return;
@@ -250,18 +271,18 @@ public class InfrastructureTest {
         lxp.put(Types.LABEL, personlabel.getId()); // correct label
         long person_id = lxp.getId();
 
-        b1.put(lxp);
+        b1.makePersistent(lxp);
 
 
         LXP lxp2 = new LXP();
-        b3.put(lxp2); // just stick something in bucket3
+        b3.makePersistent(lxp2); // just stick something in bucket3
         long lxp2_id = lxp2.getId();
 
         try {
             LXP lxp3 = new LXP();        // correct structure
             lxp3.put("person_ref", Long.toString(lxp2_id)); // an illegal reference to this tuple - wrong reference type
 
-            b2.put(lxp3);
+            b2.makePersistent(lxp3);
         } catch (BucketException e) { // should catch this - illegal reference
             // do nothing test succeeds if exception is caught
             return;
@@ -279,7 +300,7 @@ public class InfrastructureTest {
         lxp.put("age", 55);
         lxp.put(Types.LABEL, personlabel.getId()); // correct label
 
-        b1.put(lxp);
+        b1.makePersistent(lxp);
     }
 
     @Test
@@ -292,7 +313,7 @@ public class InfrastructureTest {
             lxp.put("wrongfield", "55");
             lxp.put(Types.LABEL, personlabel.getId()); // correct label
 
-            b1.put(lxp);
+            b1.makePersistent(lxp);
 
         } catch (BucketException e) { // should catch this - structure is wrong
             // do nothing test succeeds if exception is caught
@@ -307,10 +328,10 @@ public class InfrastructureTest {
         LXP lxp = new LXP();
         lxp.put("age", "42");
         lxp.put("address", "home");
-        b.put(lxp);       // <<--------- write record **
+        b.makePersistent(lxp);       // <<--------- write record **
         long id = lxp.getId();
 
-        ILXP lxp2 = b.get(id);
+        ILXP lxp2 = b.getObjectById(id);
         assertTrue(lxp2.containsKey("age"));
         assertEquals(lxp2.getString("age"), "42");
         assertTrue(lxp2.containsKey("address"));
@@ -326,7 +347,7 @@ public class InfrastructureTest {
             LXP lxp = new LXP();
             lxp.put("age", "42");
             lxp.put("address", "home");
-            b.put(lxp);
+            b.makePersistent(lxp);
         }
         int count = 1;
         for (Object o : b.getInputStream()) {
@@ -352,10 +373,10 @@ public class InfrastructureTest {
         lxp.put("int", 7);
         lxp.put("long", 23L);
         lxp.put("string", "al");
-        b.put(lxp);       // <<--------- write record **
+        b.makePersistent(lxp);       // <<--------- write record **
         long id = lxp.getId();
 
-        ILXP lxp2 = b.get(id);
+        ILXP lxp2 = b.getObjectById(id);
         assertTrue(lxp2.containsKey("boolean"));
         assertEquals(lxp2.getBoolean("boolean"), true);
         assertTrue(lxp2.containsKey("double"));
@@ -384,7 +405,7 @@ public class InfrastructureTest {
         IBucket b = repo.getBucket(generic_bucket_name1);
         LXP lxp = new LXP();
         lxp.put("", "fish");
-        b.put(lxp);       // <<--------- write record **
+        b.makePersistent(lxp);       // <<--------- write record **
     }
 
 

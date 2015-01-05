@@ -1,6 +1,7 @@
 package uk.ac.standrews.cs.digitising_scotland.jstore.interfaces;
 
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.RepositoryException;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.transaction.interfaces.ITransactionManager;
 
 import java.util.Iterator;
 
@@ -18,6 +19,11 @@ import java.util.Iterator;
  * Created by al on 06/06/2014.
  */
 public interface IStore {
+
+    /*
+     * Start a transaction against the store
+     */
+    ITransactionManager getTransactionManager();
 
     /**
      * @param name - the name of the repository to be created

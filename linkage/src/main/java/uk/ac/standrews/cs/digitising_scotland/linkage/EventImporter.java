@@ -51,11 +51,11 @@ public class EventImporter {
                 while (true) {
                     Death d = new Death();
                     importDigitisingScotlandRecord(d, reader, referencetype);
-                    deaths.put(d);
+                    deaths.makePersistent(d);
                     count++;
                 }
             } catch (IOException e) {
-                // expect this to be thrown when we get to the end.
+                // expect this to be thrown when we getObjectById to the end.
             }
             return count;
         }
@@ -80,11 +80,11 @@ public class EventImporter {
                 while (true) {
                     Marriage m = new Marriage();
                     importDigitisingScotlandRecord(m, reader, referencetype);
-                    marriages.put(m);
+                    marriages.makePersistent(m);
                     count++;
                 }
             } catch (IOException e) {
-                // expect this to be thrown when we get to the end.
+                // expect this to be thrown when we getObjectById to the end.
             }
             return count;
         }
@@ -109,11 +109,11 @@ public class EventImporter {
                 while (true) {
                     Birth b = new Birth();
                     importDigitisingScotlandRecord(b, reader, referencetype);
-                    births.put(b);
+                    births.makePersistent(b);
                     count++;
                 }
             } catch (IOException e) {
-                // expect this to be thrown when we get to the end.
+                // expect this to be thrown when we getObjectById to the end.
             }
             return count;
         }

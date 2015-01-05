@@ -2,7 +2,7 @@ package uk.ac.standrews.cs.digitising_scotland.jstore.interfaces;
 
 /**
  * Classes that implement this interface provides blocking over
- * an ILXPInputStream to put records selected into some bucket.
+ * an ILXPInputStream to makePersistent records selected into some bucket.
  * Created by al on 29/04/2014.
  */
 public interface IBlocker<T extends ILXP> {

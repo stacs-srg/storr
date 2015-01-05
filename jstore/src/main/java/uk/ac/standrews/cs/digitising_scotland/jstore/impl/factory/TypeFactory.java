@@ -90,7 +90,7 @@ public class TypeFactory {
                 String name = lxp.getString("name");
                 long type_key = lxp.getLong("key");
 
-                ILXP type_rep = type_reps_bucket.get(type_key);
+                ILXP type_rep = type_reps_bucket.getObjectById(type_key);
                 LXPReferenceType reference = new LXPReferenceType((LXP) (type_rep));
 
                 names_to_type_cache.put(name, reference);
@@ -110,8 +110,8 @@ public class TypeFactory {
         try {
             ILXP type_rep = ref_type.getRep();
             ILXP name_value = namevaluepair(type_name, type_rep.getId());
-            type_reps_bucket.put(type_rep);
-            type_name_bucket.put(name_value);
+            type_reps_bucket.makePersistent(type_rep);
+            type_name_bucket.makePersistent(name_value);
         } catch (BucketException e) {
             ErrorHandling.exceptionError(e, "Bucket exception adding type " + type_name + " to types bucket");
         }

@@ -3,6 +3,8 @@ package uk.ac.standrews.cs.digitising_scotland.jstore.impl;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.RepositoryException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.StoreException;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.transaction.impl.TransactionManager;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.transaction.interfaces.ITransactionManager;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.IObjectCache;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.IRepository;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.IStore;
@@ -36,6 +38,8 @@ public class Store implements IStore {
     private static SecureRandom sr = new SecureRandom();
     // private int id = 1;
 
+    private static ITransactionManager tm = new TransactionManager(); // TODO can we create this lazily??
+
     @SuppressFBWarnings(value = "ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD", justification = "intended behaviour")
     public Store(String store_path) throws StoreException, IOException {
         this.store_path = store_path;
@@ -63,6 +67,12 @@ public class Store implements IStore {
             return null;
         }
         return instance;
+    }
+
+
+    @Override
+    public ITransactionManager getTransactionManager() {
+        return tm;
     }
 
     @Override

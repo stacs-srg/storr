@@ -7,6 +7,7 @@ import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.RepositoryE
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.*;
 
 import java.io.IOException;
+import java.nio.file.Paths;
 
 /**
  * Created by al on 03/10/2014.
@@ -26,10 +27,10 @@ public class DirectoryBackedIndirectBucket<T extends ILXP> extends DirectoryBack
     /**
      * Writes an indirection record into the file system
      */
-    public void put(final T record) throws BucketException {
+    public void makePersistent(final T record) throws BucketException {
 
         try {
-            writeLXP(record, create_indirection(record));
+            writeLXP(record, create_indirection(record), Paths.get(this.filePath(record.getId())));
         } catch (IOException | JSONException e) {
             throw new BucketException("Error creating indirection");
         } catch (IllegalKeyException e) {

@@ -43,7 +43,7 @@ public class BucketBackedInputStream<T extends ILXP> implements IInputStream<T> 
         public T next() {
 
             try {
-                return bucket.get(Long.parseLong(file_iterator.next().getName()));
+                return bucket.getObjectById(Long.parseLong(file_iterator.next().getName()));
 
             } catch (BucketException e) {
                 ErrorHandling.exceptionError(e, "Exception in iterator");

@@ -68,7 +68,7 @@ public class DirectoryBackedIndexedBucket<T extends ILXP> extends DirectoryBacke
     @Override
     public void addIndex(final String label) throws IOException {
 
-        Path path = Paths.get(this.filePath(INDEX_DIR_NAME + "/" + INDEX + label));
+        Path path = Paths.get(this.filePath(INDEX_DIR_NAME + File.separator + INDEX + label));
 
         if (Files.exists(path)) {
             throw new IOException("index exists");
@@ -85,7 +85,7 @@ public class DirectoryBackedIndexedBucket<T extends ILXP> extends DirectoryBacke
 
 
     @Override
-    public void put(final T record) throws BucketException {
+    public void makePersistent(final T record) throws BucketException {
 
         Set<String> keys = indexes.keySet(); // all the keys currently being indexed
         for (String key : keys) {
@@ -98,7 +98,7 @@ public class DirectoryBackedIndexedBucket<T extends ILXP> extends DirectoryBacke
                 }
             }
         }
-        super.put(record);
+        super.makePersistent(record);
     }
 
 

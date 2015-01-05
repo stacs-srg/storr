@@ -3,6 +3,7 @@ package uk.ac.standrews.cs.digitising_scotland.jstore.impl;
 import org.json.JSONException;
 import org.json.JSONWriter;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.*;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.transaction.impl.Transaction;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.*;
 import uk.ac.standrews.cs.digitising_scotland.jstore.types.Types;
 import uk.ac.standrews.cs.digitising_scotland.util.ErrorHandling;
@@ -14,6 +15,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Iterator;
 
 import static uk.ac.standrews.cs.digitising_scotland.jstore.types.Types.check_label_consistency;
 import static uk.ac.standrews.cs.digitising_scotland.jstore.types.Types.check_structural_consistency;
@@ -37,6 +39,8 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
     protected final static String REPOSITORY = "repository";
     protected final static String OID = "oid";
 
+    private static final String TRANSACTIONS = "TRANSACTIONS";
+
     /*
      * Creates a DirectoryBackedBucket with no factory - a persistent collection of ILXPs
      */
@@ -50,6 +54,10 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
         if (!directory.isDirectory()) {
             throw new RepositoryException("Bucket Directory: " + dir_name + " does not exist");
         }
+
+        //TODO clean up transaction directory following a crash
+
+        tidy_up_transaction_data();
     }
 
 
@@ -67,13 +75,16 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
         try {
             Path path = getBucketPath(name, repository);
             FileManipulation.createDirectoryIfDoesNotExist(path);
+            // set up directory for transaction support...
+            FileManipulation.createDirectoryIfDoesNotExist(path.resolve(TRANSACTIONS));
+
             return new DirectoryBackedBucket(name, repository, kind);
         } catch (IOException e) {
             throw new RepositoryException(e.getMessage());
         }
     }
 
-    public T get(long id) throws BucketException {
+    public T getObjectById(long id) throws BucketException {
         T result;
 
         if (this.contains(id) && objectCache.contains(id)) {
@@ -81,7 +92,7 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
             if (o == null) {
                 ErrorHandling.error("Could not find cached object in object cache");
             }
-            return (T) o; // this is safe since the value couldn't get into the cache unless of teh right type.
+            return (T) o; // this is safe since the value couldn't getObjectById into the cache unless of teh right type.
         }
 
         try (BufferedReader reader = Files.newBufferedReader(Paths.get(filePath(id)), FileManipulation.FILE_CHARSET)) {
@@ -107,16 +118,16 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
     }
 
 
-    public void put(final T record) throws BucketException {
+    public void makePersistent(final T record) throws BucketException {
         try {
             long id = record.getId();
             if (this.contains(id)) {
-                throw new BucketException("records may bot be overwritten");
+                throw new BucketException("records may not be overwritten - use update");
             }
             if (objectCache.contains(id)) { // the object is already in the store so write an indirection
-                writeLXP(record, create_indirection(record));
+                writeLXP(record, create_indirection(record), Paths.get(this.filePath(record.getId())));
             } else {
-                writeLXP(record, record); // normal object write
+                writeLXP(record, record, Paths.get(this.filePath(record.getId()))); // normal object write
             }
         } catch (IOException e) {
             throw new BucketException("Persistent object  error");
@@ -127,8 +138,27 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
         }
     }
 
+    @Override
+    public void update(T record) throws BucketException {
+        long id = record.getId();
+        if (!this.contains(id)) {
+            throw new BucketException("bucket does not contain specified id");
+        }
+        Transaction t = Store.getInstance().getTransactionManager().getTransaction(Long.toString(Thread.currentThread().getId()));
+        if (t == null) {
+            throw new BucketException("No transactional context specified");
+        }
 
-    protected void writeLXP(ILXP record_to_check, ILXP record_to_write) throws BucketException {
+        Path new_record_write_location = transactionsPath(record.getId());
+        if (new_record_write_location.toFile().exists()) { // we have a transaction conflict.
+            t.rollback();
+        }
+        t.add(this, record.getId());
+
+        writeLXP(record, record, new_record_write_location); //  object write to transaction log
+    }
+
+    protected void writeLXP(ILXP record_to_check, ILXP record_to_write, Path filepath) throws BucketException {
 
         if (type_label_id != -1) { // we have set a type label in this bucket there must check for consistency
 
@@ -156,38 +186,16 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
                 throw new BucketException("Type mismatch checking consistency");
             }
         }
-        Path path = Paths.get(this.filePath(record_to_write.getId()));
 
-        try (Writer writer = Files.newBufferedWriter(path, FileManipulation.FILE_CHARSET)) { // auto close and exception
+        try (Writer writer = Files.newBufferedWriter(filepath, FileManipulation.FILE_CHARSET)) { // auto close and exception
 
-            objectCache.put(record_to_write.getId(), this, record_to_write);  // Putting this call here ensures that all records that are in a bucket and loaded are in the cache
             record_to_write.serializeToJSON(new JSONWriter(writer));
+            objectCache.put(record_to_write.getId(), this, record_to_write);  // Putting this call here ensures that all records that are in a bucket and loaded are in the cache
         } catch (IOException e) {
             throw new BucketException("I/O exception writing record");
         } catch (JSONException e) {
             throw new BucketException("JSON exception writing record");
         }
-    }
-
-    public String filePath(final long id) {
-        return filePath(Long.toString(id));
-    }
-
-    protected File baseDir() {
-        return directory;
-    }
-
-    protected String dirPath() {
-
-        return repository.getRepo_path() + File.separator + name;
-    }
-
-    public String filePath(final String id) {
-        return dirPath() + File.separator + id;
-    }
-
-    public String getName() {
-        return this.name;
     }
 
     @Override
@@ -269,6 +277,91 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
         }
     }
 
+
+    public String getName() {
+        return this.name;
+    }
+
+    /**
+     * ******** Transaction support **********
+     */
+
+    @Override
+    public void swizzle(long oid) {
+
+        Path shadow_location = transactionsPath(oid);
+        if (!shadow_location.toFile().exists()) {
+            ErrorHandling.error("******* Transaction error:Shadow file does not exist *******");
+        }
+        Path primary_location = Paths.get(filePath(oid));
+        if (!primary_location.toFile().exists()) {
+            ErrorHandling.error("******* Transaction error: Primary file does not exist *******");
+        }
+        if (!primary_location.toFile().delete()) {
+            ErrorHandling.error("******* Transaction error: Primary file cannot be deleted *******");
+        }
+        try {
+            Files.createLink(primary_location, shadow_location);
+        } catch (IOException e) {
+            ErrorHandling.error("******* Transaction error: Primary file cannot be linked from shadow *******");
+        }
+        if (!shadow_location.toFile().delete()) {
+            ErrorHandling.error("******* Transaction error: Shadow file cannot be deleted *******");
+        }
+    }
+
+    @Override
+    public void cleanup(long oid) {
+        Path shadow_location = transactionsPath(oid);
+        if (!shadow_location.toFile().exists()) {
+            ErrorHandling.error("******* Transaction error: Shadow file does not exist *******");
+        }
+        if (!shadow_location.toFile().delete()) {
+            ErrorHandling.error("******* Transaction error: Shadow file cannot be deleted *******");
+        }
+    }
+
+
+    /*
+     * Tidies up transaction data that may be left over following a crash
+     */
+    private void tidy_up_transaction_data() {
+        Iterator<File> iter = FileIteratorFactory.createFileIterator(Paths.get(filePath(TRANSACTIONS)).toFile(), true, false);
+        while (iter.hasNext()) {
+            File f = iter.next();
+            if (!f.delete()) {
+                ErrorHandling.error("******* Transaction error: error tidying up transaction data on recovery");
+            }
+        }
+    }
+
+
+    /**
+     * ******** Path manipulation **********
+     */
+
+    private Path transactionsPath(long oid) {
+        return Paths.get(filePath(TRANSACTIONS + File.separator + oid));
+    }
+
+
+    protected String dirPath() {
+
+        return repository.getRepo_path() + File.separator + name;
+    }
+
+    public String filePath(final long id) {
+        return filePath(Long.toString(id));
+    }
+
+    public String filePath(final String id) {
+        return dirPath() + File.separator + id;
+    }
+
+    protected File baseDir() {
+        return directory;
+    }
+
     //******** Private methods *********
 
     private long getTypeLabelID() {
@@ -313,7 +406,7 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
             String bucket_name = record.getString(BUCKET);
             String repo_name = record.getString(REPOSITORY);
             long oid = Long.parseLong(record.getString(OID));
-            return Store.getInstance().getRepo(repo_name).getBucket(bucket_name, tFactory).get(oid);
+            return Store.getInstance().getRepo(repo_name).getBucket(bucket_name, tFactory).getObjectById(oid);
         } catch (KeyNotFoundException e) {
             throw new BucketException("Indirection Key not found");
         } catch (RepositoryException e) {

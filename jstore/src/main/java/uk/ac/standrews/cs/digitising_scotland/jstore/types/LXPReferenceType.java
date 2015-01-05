@@ -67,7 +67,7 @@ public class LXPReferenceType implements IReferenceType {
                 ErrorHandling.error("Did not find referenced bucket whilst checking type consistency");
                 return false;
             }
-            record = bucket.get(id);
+            record = bucket.getObjectById(id);
             if (record == null) { // we haven't found that record in the store
                 ErrorHandling.error("Did not find referenced record whilst checking type consistency");
                 return false;

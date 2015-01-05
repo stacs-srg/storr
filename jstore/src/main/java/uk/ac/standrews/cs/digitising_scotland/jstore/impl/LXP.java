@@ -286,6 +286,7 @@ public class LXP implements ILXP {
 
     //****** Private methods ******//
 
+
     private void check(String key) throws IllegalKeyException {
         if (key == null || key.equals("")) {
             throw new IllegalKeyException("null key");
