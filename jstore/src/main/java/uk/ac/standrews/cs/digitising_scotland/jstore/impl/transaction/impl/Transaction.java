@@ -23,7 +23,7 @@ public class Transaction implements ITransaction {
     }
 
     @Override
-    public void commit() throws ConcurrentModificationException {
+    public synchronized void commit() throws ConcurrentModificationException {
         if (!active) {
             throw new ConcurrentModificationException();
         }
@@ -36,7 +36,7 @@ public class Transaction implements ITransaction {
 
 
     @Override
-    public void rollback() {
+    public synchronized void rollback() {
         if (!active) {
             throw new IllegalStateException("Transaction " + getId() + " inactive");
         }
@@ -55,7 +55,7 @@ public class Transaction implements ITransaction {
         return id;
     }
 
-    public void add(IBucket bucket, long record) {
+    public synchronized void add(IBucket bucket, long record) {
         if (active) {
             buckets.add(new Pair(bucket, record));
         }
@@ -71,7 +71,8 @@ public class Transaction implements ITransaction {
 
     private void tidy_up() {
         for (Pair p : buckets) {
-            p.bucket.cleanup(p.oid);
+            p.bucket.cleanup(p.oid);    // get rid of shadows from bucket
+            buckets.remove(p);          // remove them as we go.
         }
     }
 

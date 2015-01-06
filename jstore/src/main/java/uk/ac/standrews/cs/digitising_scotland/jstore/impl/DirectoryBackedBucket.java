@@ -139,7 +139,7 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
     }
 
     @Override
-    public void update(T record) throws BucketException {
+    public synchronized void update(T record) throws BucketException {
         long id = record.getId();
         if (!this.contains(id)) {
             throw new BucketException("bucket does not contain specified id");
@@ -152,6 +152,8 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
         Path new_record_write_location = transactionsPath(record.getId());
         if (new_record_write_location.toFile().exists()) { // we have a transaction conflict.
             t.rollback();
+            return;
+            // TODO should this throw an exception?
         }
         t.add(this, record.getId());
 

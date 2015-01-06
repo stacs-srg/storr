@@ -45,16 +45,13 @@ public class Repository implements IRepository {
     public IBucket makeBucket(final String name, BucketKind kind) throws RepositoryException {
         switch (kind) {
             case DIRECTORYBACKED: {
-                IBucket bucket = DirectoryBackedBucket.createBucket(name, this, kind);
-                return bucket;
+                return DirectoryBackedBucket.createBucket(name, this, kind);
             }
             case INDIRECT: {
-                IBucket bucket = DirectoryBackedIndirectBucket.createBucket(name, this, kind);
-                return bucket;
+                return DirectoryBackedIndirectBucket.createBucket(name, this, kind);
             }
             case INDEXED: {
-                IBucket bucket = DirectoryBackedIndexedBucket.createBucket(name, this, kind);
-                return bucket;
+                return DirectoryBackedIndexedBucket.createBucket(name, this, kind);
             }
             default: {
                 throw new RepositoryException("Bucketkind: " + kind + " not recognized");

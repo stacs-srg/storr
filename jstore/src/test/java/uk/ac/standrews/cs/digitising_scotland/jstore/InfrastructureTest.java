@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ConcurrentModificationException;
 
 import static junit.framework.TestCase.fail;
 import static org.junit.Assert.assertEquals;
@@ -43,6 +44,8 @@ public class InfrastructureTest {
     private IReferenceType personlabel2;
     private IReferenceType personreftuple;
 
+    private Integer conflict_counter;
+
     @Before
     public void setUpEachTest() throws RepositoryException, IOException, StoreException {
 
@@ -61,6 +64,7 @@ public class InfrastructureTest {
 
         personreftuple = TypeFactory.getInstance().createType(PERSONREFTUPLETYPETEMPLATE, "PersonRefTuple");
 
+        conflict_counter = new Integer(0);
     }
 
     @After
@@ -152,6 +156,132 @@ public class InfrastructureTest {
         } finally {
             if (txn.isActive()) {
                 txn.rollback();
+            }
+        }
+    }
+
+    @Test(expected = BucketException.class)
+    public synchronized void updateOutwithTransaction() throws RepositoryException, IllegalKeyException, BucketException {
+        IBucket b = repo.getBucket(generic_bucket_name1);
+
+        LXP lxp = new LXP();
+        lxp.put("age", "42");
+        lxp.put("address", "home");
+        b.makePersistent(lxp);
+        long oid = lxp.getId();
+
+        ILXP lxp2 = b.getObjectById(oid);
+        lxp2.put("age", "43");
+
+        b.update(lxp2);
+    }
+
+    @Test(expected = BucketException.class)
+    public synchronized void updateNonPersistentObject() throws RepositoryException, IllegalKeyException, BucketException {
+        IBucket b = repo.getBucket(generic_bucket_name1);
+
+        LXP lxp = new LXP();
+        lxp.put("age", "42");
+        lxp.put("address", "home");
+
+        b.update(lxp);
+    }
+
+    @Test
+    public synchronized void testMultiBucketTransaction() throws RepositoryException, IllegalKeyException, BucketException, StoreException {
+
+        IBucket b1 = repo.getBucket(generic_bucket_name1);
+        IBucket b2 = repo.getBucket(generic_bucket_name2);
+
+        LXP lxp1 = new LXP();
+        lxp1.put("age", "42");
+        b1.makePersistent(lxp1);
+        long oid1 = lxp1.getId();
+
+        LXP lxp2 = new LXP();
+        lxp2.put("age", "42");
+        b2.makePersistent(lxp2);
+        long oid2 = lxp2.getId();
+
+        ITransaction txn = store.getTransactionManager().beginTransaction();
+
+        try {
+
+            ILXP lxp11 = b1.getObjectById(oid1);
+            ILXP lxp22 = b2.getObjectById(oid2);
+            lxp11.put("age", "43");
+            lxp22.put("age", "43");
+
+            b1.update(lxp11);
+            b2.update(lxp22);
+
+            txn.commit();
+        } finally {
+            if (txn.isActive()) {
+                txn.rollback();
+            }
+        }
+    }
+
+    @Test
+    public synchronized void testTransactionConflict() throws RepositoryException, IllegalKeyException, BucketException, StoreException {
+
+        IBucket b = repo.getBucket(generic_bucket_name1);
+
+        LXP lxp = new LXP();
+        lxp.put("age", "42");
+        b.makePersistent(lxp);
+        long oid = lxp.getId();
+
+        UpdateThread t1 = new UpdateThread(b, oid);
+        UpdateThread t2 = new UpdateThread(b, oid);
+
+        t1.start();
+        t2.start();
+
+        try {
+            t1.join();
+            t2.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        if (conflict_counter != 1) {
+            System.out.println("conflict_counter = " + conflict_counter);
+            fail("Conflict counter not 1");
+        }
+    }
+
+    private class UpdateThread extends Thread {
+
+        private final long oid;
+        private final IBucket b;
+
+        public UpdateThread(IBucket b, long oid) {
+            this.b = b;
+            this.oid = oid;
+        }
+
+        public void run() {
+            ITransaction txn = store.getTransactionManager().beginTransaction();
+
+            try {
+                ILXP lxp2 = b.getObjectById(oid);
+                lxp2.put("age", "43");
+                b.update(lxp2);
+                Thread.sleep(1000);
+                try {
+                    txn.commit();
+                } catch (ConcurrentModificationException e) {
+                    synchronized (conflict_counter) {
+                        conflict_counter += 1;
+                    }
+                }
+            } catch (InterruptedException | StoreException | IllegalKeyException | BucketException e1) {
+                fail("Exception: " + e1.toString());
+            } finally {
+                if (txn.isActive()) {
+                    txn.rollback();
+                }
             }
         }
     }
