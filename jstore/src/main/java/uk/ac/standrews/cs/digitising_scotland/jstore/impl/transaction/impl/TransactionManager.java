@@ -16,7 +16,7 @@ public class TransactionManager implements ITransactionManager {
     @Override
     public ITransaction beginTransaction() {
 
-        Transaction t = new Transaction();
+        Transaction t = new Transaction(this);
         map.put(t.getId(), t);
         return t;
     }
@@ -25,4 +25,12 @@ public class TransactionManager implements ITransactionManager {
     public Transaction getTransaction(String id) {
         return map.get(id);
     }
+
+    @Override
+    public void removeTransaction(Transaction t) {
+        if (!t.isActive()) {
+            map.remove(t.getId());
+        }
+    }
+
 }

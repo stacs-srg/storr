@@ -54,10 +54,6 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
         if (!directory.isDirectory()) {
             throw new RepositoryException("Bucket Directory: " + dir_name + " does not exist");
         }
-
-        //TODO clean up transaction directory following a crash
-
-        tidy_up_transaction_data();
     }
 
 
@@ -144,7 +140,7 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
         if (!this.contains(id)) {
             throw new BucketException("bucket does not contain specified id");
         }
-        Transaction t = Store.getInstance().getTransactionManager().getTransaction(Long.toString(Thread.currentThread().getId()));
+        Transaction t = Store.getInstance().getTransactionManager().getTransaction(Long.toString(Thread.currentThread().getId())); // TODO shorten this with a local cache
         if (t == null) {
             throw new BucketException("No transactional context specified");
         }
@@ -153,11 +149,11 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
         if (new_record_write_location.toFile().exists()) { // we have a transaction conflict.
             t.rollback();
             return;
-            // TODO should this throw an exception?
+            // TODO make this throw concurrent update exception
         }
         t.add(this, record.getId());
 
-        writeLXP(record, record, new_record_write_location); //  object write to transaction log
+        writeLXP(record, record, new_record_write_location); //  write to transaction log
     }
 
     protected void writeLXP(ILXP record_to_check, ILXP record_to_write, Path filepath) throws BucketException {

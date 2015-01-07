@@ -2,12 +2,12 @@ package uk.ac.standrews.cs.digitising_scotland.jstore;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.LXP;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.Store;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.*;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.factory.TypeFactory;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.transaction.exceptions.TransactionFailedException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.transaction.interfaces.ITransaction;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.*;
 import uk.ac.standrews.cs.digitising_scotland.jstore.types.Types;
@@ -17,7 +17,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ConcurrentModificationException;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static junit.framework.TestCase.fail;
 import static org.junit.Assert.assertEquals;
@@ -37,14 +38,17 @@ public class InfrastructureTest {
     private static final String PERSONRECORDTYPETEMPLATE = "src/test/resources/PersonRecord.jsn";
     private static final String PERSONREFTUPLETYPETEMPLATE = "src/test/resources/PersonRefRecord.jsn";
 
-    private static IStore store;
-    private static IRepository repo;
+    private IStore store;
+    private IRepository repo;
+
     private IBucket types;
     private IReferenceType personlabel;
     private IReferenceType personlabel2;
     private IReferenceType personreftuple;
 
-    private Integer conflict_counter;
+    private AtomicInteger conflict_counter;
+
+    private CountDownLatch latch;
 
     @Before
     public void setUpEachTest() throws RepositoryException, IOException, StoreException {
@@ -61,10 +65,10 @@ public class InfrastructureTest {
 
         personlabel = TypeFactory.getInstance().createType(PERSONRECORDTYPETEMPLATE, "Person");
         personlabel2 = TypeFactory.getInstance().createType(PERSONRECORDTYPETEMPLATE, "Person");
-
         personreftuple = TypeFactory.getInstance().createType(PERSONREFTUPLETYPETEMPLATE, "PersonRefTuple");
 
-        conflict_counter = new Integer(0);
+        conflict_counter = new AtomicInteger(0);
+        latch = new CountDownLatch(2);
     }
 
     @After
@@ -133,7 +137,7 @@ public class InfrastructureTest {
     }
 
     @Test
-    public synchronized void testSimpleTransaction() throws RepositoryException, IllegalKeyException, BucketException, StoreException {
+    public synchronized void testSimpleTransaction() throws RepositoryException, IllegalKeyException, BucketException, StoreException, TransactionFailedException {
 
         IBucket b = repo.getBucket(generic_bucket_name1);
 
@@ -145,23 +149,21 @@ public class InfrastructureTest {
 
         ITransaction txn = store.getTransactionManager().beginTransaction();
 
-        try {
 
-            ILXP lxp2 = b.getObjectById(oid);
-            lxp2.put("age", "43");
+        ILXP lxp2 = b.getObjectById(oid);
+        lxp2.put("age", "43");
 
-            b.update(lxp2);
+        b.update(lxp2);
 
-            txn.commit();
-        } finally {
-            if (txn.isActive()) {
-                txn.rollback();
-            }
-        }
+        txn.commit();
+
+        // do lookup again and check that it is 43 - if it worked.
+        // do a similar one with abort.
+
     }
 
     @Test(expected = BucketException.class)
-    public synchronized void updateOutwithTransaction() throws RepositoryException, IllegalKeyException, BucketException {
+    public synchronized void updateOutwithTransactionThrowsException() throws RepositoryException, IllegalKeyException, BucketException {
         IBucket b = repo.getBucket(generic_bucket_name1);
 
         LXP lxp = new LXP();
@@ -177,7 +179,7 @@ public class InfrastructureTest {
     }
 
     @Test(expected = BucketException.class)
-    public synchronized void updateNonPersistentObject() throws RepositoryException, IllegalKeyException, BucketException {
+    public synchronized void updateNonPersistentObjectThrowsException() throws RepositoryException, IllegalKeyException, BucketException {
         IBucket b = repo.getBucket(generic_bucket_name1);
 
         LXP lxp = new LXP();
@@ -216,11 +218,13 @@ public class InfrastructureTest {
             b2.update(lxp22);
 
             txn.commit();
-        } finally {
+        } catch (TransactionFailedException e) {
             if (txn.isActive()) {
                 txn.rollback();
             }
         }
+        // do lookup again and check that it is 43 - if it worked.
+        // do a similar one with abort.
     }
 
     @Test
@@ -239,13 +243,14 @@ public class InfrastructureTest {
         t1.start();
         t2.start();
 
-        try {
+        try {  // wait for the transactions to finish.
             t1.join();
             t2.join();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        if (conflict_counter != 1) {
+
+        if (conflict_counter.get() != 1) {
             System.out.println("conflict_counter = " + conflict_counter);
             fail("Conflict counter not 1");
         }
@@ -268,13 +273,15 @@ public class InfrastructureTest {
                 ILXP lxp2 = b.getObjectById(oid);
                 lxp2.put("age", "43");
                 b.update(lxp2);
-                Thread.sleep(1000);
+
+                // Want both threads to get to here at 'same time'.
+                latch.countDown(); // decrement
+                latch.await();    // wait for the latch to get to zero.
+
                 try {
                     txn.commit();
-                } catch (ConcurrentModificationException e) {
-                    synchronized (conflict_counter) {
-                        conflict_counter += 1;
-                    }
+                } catch (TransactionFailedException e) {
+                    conflict_counter.incrementAndGet();
                 }
             } catch (InterruptedException | StoreException | IllegalKeyException | BucketException e1) {
                 fail("Exception: " + e1.toString());
@@ -521,7 +528,6 @@ public class InfrastructureTest {
     }
 
     @Test
-    @Ignore
     public synchronized void illegalFieldType() {
 
         // TODO need a test for illegal field label types -

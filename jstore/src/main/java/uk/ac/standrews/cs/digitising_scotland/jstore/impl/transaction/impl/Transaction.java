@@ -1,11 +1,11 @@
 package uk.ac.standrews.cs.digitising_scotland.jstore.impl.transaction.impl;
 
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.transaction.exceptions.TransactionFailedException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.transaction.interfaces.ITransaction;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.IBucket;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.ILXP;
 
 import java.util.ArrayList;
-import java.util.ConcurrentModificationException;
 import java.util.List;
 
 /**
@@ -13,21 +13,22 @@ import java.util.List;
  */
 public class Transaction implements ITransaction {
 
+    private final TransactionManager tm;
     String id;
     boolean active = true;
     List<Pair> buckets = new ArrayList<>();
 
-    public Transaction() {
-        long threadId = Thread.currentThread().getId();
-        id = Long.toString(threadId); // TODO this is good enough for a single machine - need to do more work for multiple node support
+    public Transaction(TransactionManager tm) {
+        this.tm = tm;
+        id = Long.toString(Thread.currentThread().getId()); // TODO this is good enough for a single machine - need to do more work for multiple node support
     }
 
     @Override
-    public synchronized void commit() throws ConcurrentModificationException {
+    public synchronized void commit() throws TransactionFailedException {
         if (!active) {
-            throw new ConcurrentModificationException();
+            throw new TransactionFailedException();
         }
-        active = false;
+        close_transaction();
 
         // TODO if we fail now we need to delete everything from the persistent store.
 
@@ -40,10 +41,9 @@ public class Transaction implements ITransaction {
         if (!active) {
             throw new IllegalStateException("Transaction " + getId() + " inactive");
         }
-        active = false;
+        close_transaction();
         tidy_up();
     }
-
 
     @Override
     public boolean isActive() {
@@ -63,6 +63,12 @@ public class Transaction implements ITransaction {
 
     //**************** private ****************//
 
+    private void close_transaction() {
+
+        active = false;
+        tm.removeTransaction(this);
+    }
+
     private void swizzle_records() {
         for (Pair p : buckets) {
             p.bucket.swizzle(p.oid);
@@ -72,7 +78,7 @@ public class Transaction implements ITransaction {
     private void tidy_up() {
         for (Pair p : buckets) {
             p.bucket.cleanup(p.oid);    // get rid of shadows from bucket
-            buckets.remove(p);          // remove them as we go.
+            buckets.remove(p);
         }
     }
 

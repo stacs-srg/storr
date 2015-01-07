@@ -11,5 +11,5 @@ public interface ITransactionManager {
 
     public Transaction getTransaction(String id);
 
-
+    public void removeTransaction(Transaction t);
 }

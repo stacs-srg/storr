@@ -1,8 +1,7 @@
 package uk.ac.standrews.cs.digitising_scotland.jstore.impl.transaction.interfaces;
 
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.StoreException;
-
-import java.util.ConcurrentModificationException;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.transaction.exceptions.TransactionFailedException;
 
 /**
  *
@@ -12,7 +11,7 @@ import java.util.ConcurrentModificationException;
  */
 public interface ITransaction {
 
-    public void commit() throws ConcurrentModificationException, StoreException;
+    public void commit() throws TransactionFailedException, StoreException;
 
     public void rollback() throws IllegalStateException;
 
