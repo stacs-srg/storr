@@ -25,7 +25,7 @@ import java.util.List;
  * @author Graham Kirby (graham.kirby@st-andrews.ac.uk)
  * @author Tom Dalton (tsd4@st-andrews.ac.uk)
  */
-public interface IPersonUncertainty {
+public interface IPerson {
 
     /**
      * Representation of female sex.
@@ -111,14 +111,14 @@ public interface IPersonUncertainty {
 
     
     /**
-     * Gets the identifiers of the person's partnerships, or null if none are recorded.
-     * @return the identifiers of the person's partnerships
+     * Gets the Links of the person's potential partnerships, or null if none are recorded.
+     * @return the Linkes to the person's potential partnerships
      */
-    List<Integer> getPartnerships();
+    List<Link> getPartnerships();
 
     /**
-     * Gets the identifier of the person's parents' partnership, or -1 if none are recorded.
+     * Gets the Link of the person's parents' partnership, or null if none are recorded.
      * @return the identifier of the person's parents' partnership
      */
-    int getParentsPartnership();
+    Link getParentsPartnership();
 }
