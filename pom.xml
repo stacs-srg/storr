@@ -4,274 +4,101 @@
 
     <parent>
         <groupId>uk.ac.standrews.cs</groupId>
-        <artifactId>common-pom</artifactId>
-        <version>2.0-SNAPSHOT</version>
+        <artifactId>digitising_scotland</artifactId>
+<version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>digitising_scotland</artifactId>
+	<groupId>uk.ac.standrews.cs.digitising_scotland</groupId>
+    <artifactId>jstore</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <packaging>pom</packaging>
-    <name>digitising_scotland</name>
-    <description>Software produced by the Digitising Scotland project.</description>
-    <url>http://digitisingscotland.cs.st-andrews.ac.uk/</url>
-    <inceptionYear>2012</inceptionYear>
-
-    <developers>
-        <developer>
-            <id/>
-            <name>Alan Dearle</name>
-            <email>alan.dearle@st-andrews.ac.uk</email>
-            <url>http://al.host.cs.st-andrews.ac.uk/</url>
-            <organization>University of St Andrews</organization>
-            <organizationUrl>http://www.st-andrews.ac.uk/</organizationUrl>
-            <roles><role>Developer</role></roles>
-        </developer>
-        <developer>
-            <id/>
-            <name>Graham Kirby</name>
-            <email>graham.kirby@st-andrews.ac.uk</email>
-            <url>http://graham.host.cs.st-andrews.ac.uk/</url>
-            <organization>University of St Andrews</organization>
-            <organizationUrl>http://www.st-andrews.ac.uk/</organizationUrl>
-            <roles><role>Developer</role></roles>
-        </developer>
-        <developer>
-            <id/>
-            <name>Tom Dalton</name>
-            <email>tsd4@st-andrews.ac.uk</email>
-            <organization>University of St Andrews</organization>
-            <organizationUrl>http://www.st-andrews.ac.uk/</organizationUrl>
-            <roles><role>Student Intern 2014</role></roles>
-        </developer>
-    </developers>
-    <contributors>
-        <contributor>
-            <name>Jamie Carson</name>
-            <email>jamiekcarson@gmail.com</email>
-            <organization>Previously University of St Andrews</organization>
-            <roles><role>Developer</role></roles>
-        </contributor>
-        <contributor>
-            <name>Fraser Dunlop</name>
-            <email>fraser.dunlop@gmail.com</email>
-            <organization>Previously University of St Andrews</organization>
-            <roles><role>Developer</role></roles>
-        </contributor>
-        <contributor>
-            <name>Chris Dibben</name>
-            <email>chris.dibben@ed.ac.uk</email>
-            <url>http://www.ed.ac.uk/schools-departments/geosciences/people?indv=3666</url>
-            <organization>University of Edinburgh</organization>
-            <organizationUrl>http://www.ed.ac.uk/</organizationUrl>
-            <roles><role>Collaborator</role></roles>
-        </contributor>
-        <contributor>
-            <name>Lee Williamson</name>
-            <email>lee.williamson@ed.ac.uk</email>
-            <url>http://www.ed.ac.uk/schools-departments/geosciences/people?indv=3966</url>
-            <organization>University of Edinburgh</organization>
-            <organizationUrl>http://www.ed.ac.uk/</organizationUrl>
-            <roles><role>Collaborator</role></roles>
-        </contributor>
-        <contributor>
-            <name>Alasdair Gray</name>
-            <email>A.J.G.Gray@hw.ac.uk</email>
-            <url>http://www.macs.hw.ac.uk/~ajg33/</url>
-            <organization>Heriot-Watt University</organization>
-            <organizationUrl>http://www.hw.ac.uk/</organizationUrl>
-            <roles><role>Collaborator</role></roles>
-        </contributor>
-        <contributor>
-            <name>Peter Christen</name>
-            <email>peter.christen@anu.edu.au</email>
-            <url>http://cs.anu.edu.au/~Peter.Christen/</url>
-            <organization>Australian National University</organization>
-            <organizationUrl>http://www.anu.edu.au/</organizationUrl>
-            <roles><role>Collaborator</role></roles>
-        </contributor>
-        <contributor>
-            <name>John Bass</name>
-            <organization>Institute for Marine and Antarctic Studies</organization>
-            <organizationUrl>http://www.imas.utas.edu.au</organizationUrl>
-            <roles><role>Collaborator</role></roles>
-        </contributor>
-        <contributor>
-            <name>Eilidh Garrett</name>
-            <email>eilidh.garrett@btinternet.com</email>
-            <url>http://www.geog.cam.ac.uk/people/garrett/</url>
-            <organization>University of Cambridge</organization>
-            <organizationUrl>http://www.cam.ac.uk/</organizationUrl>
-            <roles><role>Collaborator</role></roles>
-        </contributor>
-        <contributor>
-            <name>Alice Reid</name>
-            <email>alice.reid@geog.cam.ac.uk</email>
-            <url>http://www.geog.cam.ac.uk/people/reid/</url>
-            <organization>University of Cambridge</organization>
-            <organizationUrl>http://www.cam.ac.uk/</organizationUrl>
-            <roles><role>Collaborator</role></roles>
-        </contributor>
-        <contributor>
-            <name>Masih Hajiarabderkani</name>
-            <url>https://masih.host.cs.st-andrews.ac.uk</url>
-            <organization>University of St Andrews</organization>
-            <organizationUrl>http://www.st-andrews.ac.uk/</organizationUrl>
-            <roles><role>Collaborator</role></roles>
-        </contributor>
-        <contributor>
-            <name>Victor Andrei</name>
-            <email>va9@st-andrews.ac.uk</email>
-            <organization>University of St Andrews</organization>
-            <organizationUrl>http://www.st-andrews.ac.uk/</organizationUrl>
-            <roles><role>Student Intern 2014</role></roles>
-        </contributor>
-        <contributor>
-            <name>Conrad de Kerckhove</name>
-            <url>https://www.linkedin.com/in/cfedk</url>
-            <organization>University of St Andrews</organization>
-            <organizationUrl>http://www.st-andrews.ac.uk/</organizationUrl>
-            <roles><role>Student Intern 2013</role></roles>
-        </contributor>
-        <contributor>
-            <name>Ilia Shumailov</name>
-            <url>https://www.linkedin.com/pub/ilia-shumailov/93/297/781</url>
-            <organization>University of St Andrews</organization>
-            <organizationUrl>http://www.st-andrews.ac.uk/</organizationUrl>
-            <roles><role>Student Intern 2013</role></roles>
-        </contributor>
-        <contributor>
-            <name>Ben Lovell</name>
-            <url>https://uk.linkedin.com/pub/ben-lovell/22/5a2/b76</url>
-            <organization>Previously University of St Andrews</organization>
-            <roles><role>Student Intern 2012</role></roles>
-        </contributor>
-        <contributor>
-            <name>Ivars Zubkans</name>
-            <url>https://lv.linkedin.com/pub/ivars-zubkans/32/750/19</url>
-            <organization>Previously University of St Andrews</organization>
-            <roles><role>Student Intern 2012</role></roles>
-        </contributor>
-    </contributors>
-
-    <modules>
-        <module>jstore</module>
-        <module>linkage</module>
-        <module>population_model</module>
-        <module>util</module>
-        <module>record_classification</module>
-    </modules>
-
-    <licenses>
-        <license>
-            <comments></comments>
-            <name>GNU General Public License 3.0</name>
-            <url>http://www.gnu.org/licenses/gpl-3.0.txt</url>
-            <distribution>repo</distribution>
-        </license>
-    </licenses>
-
-    <scm>
-        <connection>scm:hg:http://quicksilver.hg.cs.st-andrews.ac.uk/digitising_scotland/</connection>
-        <developerConnection>scm:hg:ssh://quicksilver@quicksilver.host.cs.st-andrews.ac.uk/hg/digitising_scotland/
-        </developerConnection>
-        <url>http://quicksilver.hg.cs.st-andrews.ac.uk/digitising_scotland/</url>
-    </scm>
-
-    <ciManagement>
-        <system>Jenkins</system>
-        <url>https://builds.cs.st-andrews.ac.uk/job/digitising_scotland/</url>
-    </ciManagement>
+    <packaging>jar</packaging>
+    <name>jstore</name>
+    <description>JSON store</description>
 
     <build>
         <plugins>
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-site-plugin</artifactId>
-                <version>3.3</version>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.apache.maven.doxia</groupId>
-                        <artifactId>doxia-module-markdown</artifactId>
-                        <version>1.4</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>lt.velykis.maven.skins</groupId>
-                        <artifactId>reflow-velocity-tools</artifactId>
-                        <version>1.0.0</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>org.apache.velocity</groupId>
-                        <artifactId>velocity</artifactId>
-                        <version>1.7</version>
-                    </dependency>
-                </dependencies>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.4</version>
                 <configuration>
-                    <generateReports>true</generateReports>
-                    <inputEncoding>UTF-8</inputEncoding>
-                    <outputEncoding>UTF-8</outputEncoding>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                        </manifest>
+                    </archive>
                 </configuration>
             </plugin>
-        </plugins>
 
-        <extensions>
-            <extension>
-                <groupId>org.apache.maven.wagon</groupId>
-                <artifactId>wagon-ssh</artifactId>
-                <version>2.3</version>
-            </extension>
-        </extensions>
-    </build>
-
-    <reporting>
-        <plugins>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-project-info-reports-plugin</artifactId>
-                <version>2.7</version>
-                <reportSets>
-                    <reportSet>
-                        <reports>
-                            <report>modules</report>
-                            <report>license</report>
-                            <report>project-team</report>
-                            <report>scm</report>
-                            <report>cim</report>
-                            <report>dependency-management</report>
-                        </reports>
-                    </reportSet>
-                </reportSets>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.4</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                        </manifest>
+                    </archive>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <!-- this is used for inheritance merges -->
+                        <phase>package</phase>
+                        <!-- bind to the packaging phase -->
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.3</version>
+            </plugin>
+
         </plugins>
-    </reporting>
-
-    <properties>
-        <repository.type>hg</repository.type>
-        <repository.location>http://quicksilver.hg.cs.st-andrews.ac.uk/digitising_scotland</repository.location>
-
-        <checkstyle.config>
-            http://quicksilver.hg.cs.st-andrews.ac.uk/digitising_scotland/raw-file/tip/config/checkstyle-config.xml
-        </checkstyle.config>
-
-        <teamlist.showAvatarImages>false</teamlist.showAvatarImages>
-
-    </properties>
-
-    <distributionManagement>
-        <site>
-            <id>digitisingscotland.cs</id>
-            <url>
-                scp://digitisingscotland.host.cs.st-andrews.ac.uk/cs/home/digitisingscotland/public_html_digitisingscotland
-            </url>
-        </site>
-    </distributionManagement>
+    </build>
 
     <repositories>
         <repository>
             <id>uk.ac.standrews.cs.maven.repository</id>
             <name>School of Computer Science Maven Repository</name>
             <url>http://maven.cs.st-andrews.ac.uk/</url>
+            <snapshots>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
         </repository>
     </repositories>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.11</version>
+        </dependency>
+
+        <dependency>
+            <groupId>uk.ac.standrews.cs.digitising_scotland</groupId>
+            <artifactId>util</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>uk.ac.standrews.cs</groupId>
+            <artifactId>nds</artifactId>
+            <version>2.0-SNAPSHOT</version>
+        </dependency>
+
+
+
+    </dependencies>
 
 </project>  

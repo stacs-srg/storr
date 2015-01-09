@@ -1,25 +1,27 @@
-# Home
+This module implements generic record linkage.
 
-![Digitising Scotland][image-1]
+## Documentation
 
-The [Digitising Scotland project][9], funded by ESRC grant [ES/K00574X/1][1], will digitise the 24 million Scottish
-vital events record images (births, marriages and deaths) since 1855. This will allow research access to
-individual-level information on some 18 million individuals – a large proportion of those who have lived in Scotland
-since 1855. At the moment these records are kept as indexed images accessible from [Scotland's People][2], but this
-means that to extract data for research projects a researcher must first search for an individual record by name, and
-then manually transcribe the information they need themselves (eg cause of death, occupation, etc). This has made any
-large-scale research project impossible – a situation that the Digitising Scotland project will change.
+The API documentation is here:
 
-In the School of Computer Science we are currently applying machine learning techniques to automate the classification
-of occupations and causes of death from these records to standard classifications ([HISCO][3] and [ICD-10][4]
-respectively). We are also in the planning stages of the linkage process, which will establish links between related
-records to determine genealogical structures. The people involved are listed [here][5].
+<div class="source">
+    <pre><a href="https://builds.cs.st-andrews.ac.uk/job/digitising_scotland/javadoc/index.html?uk/ac/standrews/cs/digitising_scotland/generic_linkage/package-summary.html">https://builds.cs.st-andrews.ac.uk/job/digitising_scotland/javadoc/</a></pre>
+</div>
 
-[1]:	http://gtr.rcuk.ac.uk/project/0E071FE5-BC80-479F-BF05-40D196FD27AA
-[2]:	http://www.scotlandspeople.gov.uk/Content/Help/index.aspx?r=554&amp;612
-[3]:	http://socialhistory.org/en/projects/hisco-history-work
-[4]:	http://www.who.int/classifications/icd/en/
-[5]:	team-list.html
-[9]:	http://www.lscs.ac.uk/projects/digitising-scotland/
+## Download
 
-[image-1]:	digitising-scotland-logo.jpg "Digitising Scotland"
+Code and documentation can be downloaded from here:
+
+<div class="source">
+    <pre><a href="https://builds.cs.st-andrews.ac.uk/job/digitising_scotland/lastSuccessfulBuild/artifact/generic_linkage/target/">https://builds.cs.st-andrews.ac.uk/job/digitising_scotland/lastSuccessfulBuild/artifact/generic_linkage/target/</a></pre>
+</div>
+
+## Maven
+
+To use the code from Maven or other build tools, see the [dependency information](dependency-info.html).
+
+The Maven repository is here:
+
+<div class="source">
+    <pre><a href="http://maven.cs.st-andrews.ac.uk">http://maven.cs.st-andrews.ac.uk</a></pre>
+</div>
