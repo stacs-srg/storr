@@ -33,7 +33,7 @@ public class Store implements IStore {
     private final File repo_directory;
 //    private final File id_file; // no longer needed for pseudo random ids
 
-    private static IStore instance;
+    private static IStore instance = null;
     private final IObjectCache object_cache;
     private static SecureRandom sr = new SecureRandom();
     // private int id = 1;
@@ -54,10 +54,11 @@ public class Store implements IStore {
         checkCreate(store_root_directory);
         checkCreate(repo_directory);
 
-        instance = this;
         object_cache = new ObjectCache();
+        instance = this;
+
         try {
-            this.tm = new TransactionManager(); // TODO can we create this lazily??
+            this.tm = new TransactionManager();  // This references the instance object that this constructor creates - is this safe?
         } catch (RepositoryException e) {
             throw new StoreException( e );
         }

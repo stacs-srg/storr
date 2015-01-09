@@ -14,7 +14,9 @@ import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.*;
 import uk.ac.standrews.cs.digitising_scotland.jstore.types.Types;
 import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
 
+import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -36,9 +38,10 @@ public class InfrastructureTest {
     private static String generic_bucket_name3 = "BUCKET3";
 
     private static String types_name = "types";
-    private static String store_path = System.getProperty("java.io.tmpdir") + "STORE";  // "src/test/resources/STORE";
-    private static final String PERSONRECORDTYPETEMPLATE = "src/test/resources/PersonRecord.jsn"; //InfrastructureTest.class.getResource("PersonRecord.jsn").toString();//
-    private static final String PERSONREFTUPLETYPETEMPLATE = "src/test/resources/PersonRefRecord.jsn";
+    private static String store_path = System.getProperty("java.io.tmpdir") + "STORE";
+
+    private static String PERSONRECORDTYPETEMPLATE ;
+    private static String PERSONREFTUPLETYPETEMPLATE ;
 
     private IStore store;
     private IRepository repo;
@@ -53,9 +56,12 @@ public class InfrastructureTest {
     private CountDownLatch latch;
 
     @Before
-    public void setUpEachTest() throws RepositoryException, IOException, StoreException {
+    public void setUpEachTest() throws RepositoryException, IOException, StoreException, URISyntaxException {
 
-        System.out.println(store_path);
+
+        PERSONRECORDTYPETEMPLATE = new File(InfrastructureTest.class.getResource("/PersonRecord.jsn").toURI()).getAbsolutePath();
+        PERSONREFTUPLETYPETEMPLATE = new File(InfrastructureTest.class.getResource("/PersonRefRecord.jsn").toURI()).getAbsolutePath();
+
         deleteStore();
 
         store = new Store(store_path);
@@ -92,8 +98,11 @@ public class InfrastructureTest {
         }
     }
 
+
+
     @Test
     public synchronized void testLXPCreation() throws Exception, RepositoryException, IllegalKeyException {
+
         IBucket b = repo.getBucket(generic_bucket_name1);
         LXP lxp = new LXP();
         lxp.put("age", "42");
