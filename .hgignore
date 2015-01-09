@@ -3,32 +3,4 @@ syntax: glob
 *.iml
 .idea
 target
-**/*_test.dot
 
-**/*_test.ged
-**/population_config.txt
-.Ulysses-Group.plist
-.UlyssesRoot
-pom-template.xml
-.classpath
-.project
-.settings
-.pmd
-*.orig
-Experiment*
-machineLearning.properties
-machineLearning.default.properties
-
-linkage/src/test/resources/STORE/*
-
-syntax: regexp
-^record_classification/ModData/25000\.txt$
-syntax: regexp
-^record_classification/ModData/modDataSample11\.txt$
-syntax: regexp
-^record_classification/ModData/testCodeMap\.txt$
-
-syntax: regexp
-^record_classification/top level files$
-syntax: regexp
-^record_classification/ModData$

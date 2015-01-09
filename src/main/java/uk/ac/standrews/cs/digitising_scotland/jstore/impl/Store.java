@@ -42,11 +42,7 @@ public class Store implements IStore {
 
     @SuppressFBWarnings(value = "ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD", justification = "intended behaviour")
     public Store(String store_path) throws StoreException, IOException {
-        try {
-            this.tm = new TransactionManager(); // TODO can we create this lazily??
-        } catch (RepositoryException e) {
-            throw new StoreException( e );
-        }
+
         this.store_path = store_path;
         this.repo_path = store_path + File.separator + REPO_DIR_NAME;
 
@@ -63,6 +59,11 @@ public class Store implements IStore {
         // initId(); // no longer needed for pseudo random ids
         instance = this;
         object_cache = new ObjectCache();
+        try {
+            this.tm = new TransactionManager(); // TODO can we create this lazily??
+        } catch (RepositoryException e) {
+            throw new StoreException( e );
+        }
     }
 
     public synchronized static IStore getInstance() {
