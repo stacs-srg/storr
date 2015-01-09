@@ -83,6 +83,10 @@ public class Transaction implements ITransaction {
             sb.append(SEPARATOR);
             sb.append(p.oid);
         }
+
+        return sb;
+
+        /********* FIXME AL IS HERE *********/
     }
 
     /*
@@ -112,6 +116,8 @@ public class Transaction implements ITransaction {
      * Remove the commit record from the store
     */
     private void remove_commit_record() {
+
+        /********* FIXME AL IS HERE *********/
     }
 
     private void close_transaction() {

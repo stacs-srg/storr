@@ -4,67 +4,16 @@
 
     <parent>
         <groupId>uk.ac.standrews.cs</groupId>
-        <artifactId>digitising_scotland</artifactId>
-<version>1.0-SNAPSHOT</version>
+        <artifactId>common-pom</artifactId>
+        <version>2.0-SNAPSHOT</version>
     </parent>
 
-	<groupId>uk.ac.standrews.cs.digitising_scotland</groupId>
+    <groupId>uk.ac.standrews.cs</groupId>
     <artifactId>jstore</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>jstore</name>
     <description>JSON store</description>
-
-    <build>
-        <plugins>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>2.4</version>
-                <configuration>
-                    <archive>
-                        <manifest>
-                            <addClasspath>true</addClasspath>
-                        </manifest>
-                    </archive>
-                </configuration>
-            </plugin>
-
-            <plugin>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <version>2.4</version>
-                <configuration>
-                    <archive>
-                        <manifest>
-                            <addClasspath>true</addClasspath>
-                        </manifest>
-                    </archive>
-                    <descriptorRefs>
-                        <descriptorRef>jar-with-dependencies</descriptorRef>
-                    </descriptorRefs>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>make-assembly</id>
-                        <!-- this is used for inheritance merges -->
-                        <phase>package</phase>
-                        <!-- bind to the packaging phase -->
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <version>1.3</version>
-            </plugin>
-
-        </plugins>
-    </build>
 
     <repositories>
         <repository>
@@ -78,7 +27,6 @@
     </repositories>
 
     <dependencies>
-
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -96,9 +44,6 @@
             <artifactId>nds</artifactId>
             <version>2.0-SNAPSHOT</version>
         </dependency>
-
-
-
     </dependencies>
 
 </project>  

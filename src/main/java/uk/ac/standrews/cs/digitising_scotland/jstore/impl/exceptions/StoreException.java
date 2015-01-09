@@ -8,7 +8,12 @@ package uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions;
  */
 public class StoreException extends Exception {
 
-    public StoreException(final String message) {
-        super(message);
+    public StoreException(final Throwable cause) {
+        super(cause);
+    }
+
+
+    public StoreException(String message) {
+        super( message );
     }
 }

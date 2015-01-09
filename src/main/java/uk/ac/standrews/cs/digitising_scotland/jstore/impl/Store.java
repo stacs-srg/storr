@@ -38,10 +38,15 @@ public class Store implements IStore {
     private static SecureRandom sr = new SecureRandom();
     // private int id = 1;
 
-    private static ITransactionManager tm = new TransactionManager(); // TODO can we create this lazily??
+    private static ITransactionManager tm = null;
 
     @SuppressFBWarnings(value = "ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD", justification = "intended behaviour")
     public Store(String store_path) throws StoreException, IOException {
+        try {
+            this.tm = new TransactionManager(); // TODO can we create this lazily??
+        } catch (RepositoryException e) {
+            throw new StoreException( e );
+        }
         this.store_path = store_path;
         this.repo_path = store_path + File.separator + REPO_DIR_NAME;
 
