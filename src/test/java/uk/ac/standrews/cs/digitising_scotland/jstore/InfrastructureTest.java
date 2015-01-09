@@ -2,6 +2,7 @@ package uk.ac.standrews.cs.digitising_scotland.jstore;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.LXP;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.Store;
@@ -27,6 +28,7 @@ import static org.junit.Assert.assertTrue;
 /**
  * Created by al on 25/04/2014.
  */
+@Ignore
 public class InfrastructureTest {
 
     private static String generic_bucket_name1 = "BUCKET1";
@@ -34,8 +36,8 @@ public class InfrastructureTest {
     private static String generic_bucket_name3 = "BUCKET3";
 
     private static String types_name = "types";
-    private static String store_path = "src/test/resources/STORE";
-    private static final String PERSONRECORDTYPETEMPLATE = "src/test/resources/PersonRecord.jsn";
+    private static String store_path = System.getProperty("java.io.tmpdir") + "STORE";  // "src/test/resources/STORE";
+    private static final String PERSONRECORDTYPETEMPLATE = "src/test/resources/PersonRecord.jsn"; //InfrastructureTest.class.getResource("PersonRecord.jsn").toString();//
     private static final String PERSONREFTUPLETYPETEMPLATE = "src/test/resources/PersonRefRecord.jsn";
 
     private IStore store;
@@ -53,6 +55,7 @@ public class InfrastructureTest {
     @Before
     public void setUpEachTest() throws RepositoryException, IOException, StoreException {
 
+        System.out.println(store_path);
         deleteStore();
 
         store = new Store(store_path);
