@@ -18,6 +18,8 @@ Experiment*
 machineLearning.properties
 machineLearning.default.properties
 
+linkage/src/test/resources/STORE/*
+
 syntax: regexp
 ^record_classification/ModData/25000\.txt$
 syntax: regexp
