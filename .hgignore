@@ -4,6 +4,7 @@ syntax: glob
 .idea
 target
 **/*_test.dot
+
 **/*_test.ged
 **/population_config.txt
 .Ulysses-Group.plist
