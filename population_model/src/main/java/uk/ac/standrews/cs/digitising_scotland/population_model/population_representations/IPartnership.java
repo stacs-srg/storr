@@ -24,7 +24,7 @@ import java.util.Date;
  * @author Graham Kirby (graham.kirby@st-andrews.ac.uk)
  * @author Tom Dalton (tsd4@st-andrews.ac.uk)
  */
-public interface IPartnershipUncertainty extends Comparable<IPartnershipUncertainty> {
+public interface IPartnership extends Comparable<IPartnership> {
 
     /**
      * Gets the partnership's unique identifier.
@@ -33,46 +33,51 @@ public interface IPartnershipUncertainty extends Comparable<IPartnershipUncertai
     int getId();
 
     /**
-     * Returns and array of possible identifiers for the female in the partnership.
-     * @return the possible identifiers of the female with the associated heuritisic for linkage
+     * Returns and array of Links for the female in the partnership.
+     * @return the possible Links for the female
      */
-    int[][] getFemalePartnerId();
+    Link[] getFemalePartnerId();
 
     /**
-     * Returns and array of possible identifiers for the male in the partnership.
-     * @return the possible identifiers of the male with the associated heuritisic for linkage
+     * Returns and array of Links for the male in the partnership.
+     * @return the possible Links of the male
      */
-    int[][] getMalePartnerId();
+    Link[] getMalePartnerId();
 
     
     // TODO This method?
-    /**
-     * Gets the set of identifiers of the possible parters of the given person identifier., or -1 if neither member
-     * of this partnership has the given identifier.
-     * @param id the identifier
-     * @return he set of possible identifiers of the partner of the person with the given identifier
-     */
-    int[] getPartnerOf(int id);
+//    /**
+//     * Gets the set of identifiers of the possible parters of the given person identifier., or -1 if neither member
+//     * of this partnership has the given identifier.
+//     * @param id the identifier
+//     * @return he set of possible identifiers of the partner of the person with the given identifier
+//     */
+//    Link[] getPartnerOf(int id);
 
     
-    /**
-     * Gets the date of the marriage between the partners in this partnership, or null if they are not married.
-     * @return the date of the marriage of this partnership
-     */
-    Date getMarriageDate();
-
-    /**
-     * Gets the place of marriage, or null if not recorded.
-     * @return the place of marriage
-     */
-    String getMarriagePlace();
+    // Concentrating on birth record partnerships for the time being will intergrate marriages later.
+//    /**
+//     * Gets the date of the marriage between the partners in this partnership, or null if they are not married.
+//     * @return the date of the marriage of this partnership
+//     */
+//    Date getMarriageDate();
+//
+//    /**
+//     * Gets the place of marriage, or null if not recorded.
+//     * @return the place of marriage
+//     */
+//    String getMarriagePlace();
 
     
     // TODO Do we want a list of integers here or do we want to have a single child per instance. Giving the approach of 
     //      for each child a parthership object exists which has any multiple parentship options?
+    // 
+    //      For time being there is a Partnership object created from a birth record, therefore only one associated
+    //		child to each partnership. Therefore siblings are attached to seperate partnership records but will be linked
+    //		comapring the parents on the two records.
     /**
      * Gets the identifiers of this partnership object's child_id, or null if none are recorded.
      * @return the identifier of the partnership's child_id
      */
-    int getChildId();
+    Link getChildId();
 }
