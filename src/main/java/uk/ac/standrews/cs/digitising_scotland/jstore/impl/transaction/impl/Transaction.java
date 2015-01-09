@@ -7,6 +7,7 @@ import uk.ac.standrews.cs.digitising_scotland.jstore.impl.transaction.exceptions
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.transaction.interfaces.ITransaction;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.IBucket;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.ILXP;
+import uk.ac.standrews.cs.digitising_scotland.util.ErrorHandling;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,10 +38,9 @@ public class Transaction implements ITransaction {
         }
         close_transaction();
 
-        // TODO if we fail now we need to delete everything from the persistent store.
-        write_commit_record();
+        long commit_record_id = write_commit_record();
         swizzle_records();
-        remove_commit_record();
+        remove_commit_record(commit_record_id);
     }
 
     @Override
@@ -85,14 +85,12 @@ public class Transaction implements ITransaction {
         }
 
         return sb;
-
-        /********* FIXME AL IS HERE *********/
     }
 
     /*
      * Write a commit record to the store to support durability in the event of machine or JVM crash
      */
-    private void write_commit_record() {
+    private long write_commit_record() {
 
         LXP commit_record = new LXP();
 
@@ -109,15 +107,20 @@ public class Transaction implements ITransaction {
             e.printStackTrace();
         }
 
+        return commit_record.getId();
 
     }
 
     /*
      * Remove the commit record from the store
     */
-    private void remove_commit_record() {
+    private void remove_commit_record( long commit_record_id ) {
 
-        /********* FIXME AL IS HERE *********/
+        try {
+            log.delete( commit_record_id );
+        } catch (BucketException e) {
+            ErrorHandling.error( "Cannot delete transaction commit record: " + commit_record_id);
+        }
     }
 
     private void close_transaction() {

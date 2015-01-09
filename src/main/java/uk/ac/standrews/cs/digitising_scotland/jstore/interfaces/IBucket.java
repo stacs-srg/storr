@@ -98,4 +98,9 @@ public interface IBucket<T extends ILXP> {
      * @param oid - the oid to be cleaned up
      */
     void cleanup(long oid);
+
+    /*
+     * Delete the record with the specified oid
+     */
+    void delete(long oid) throws BucketException;
 }

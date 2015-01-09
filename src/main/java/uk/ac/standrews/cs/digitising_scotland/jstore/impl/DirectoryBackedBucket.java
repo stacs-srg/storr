@@ -319,6 +319,15 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
         }
     }
 
+    @Override
+    public void delete(long oid) throws BucketException {
+        Path record_location = Paths.get(filePath(oid));
+        if (!record_location.toFile().exists()) {
+            throw new BucketException( "Record with id: " + oid + " does not exist" );
+        }
+        record_location.toFile().delete();
+    }
+
 
     /*
      * Tidies up transaction data that may be left over following a crash

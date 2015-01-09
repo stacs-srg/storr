@@ -54,9 +54,6 @@ public class Store implements IStore {
         checkCreate(store_root_directory);
         checkCreate(repo_directory);
 
-        // checkCreateId(); // no longer needed for pseudo random ids
-
-        // initId(); // no longer needed for pseudo random ids
         instance = this;
         object_cache = new ObjectCache();
         try {
