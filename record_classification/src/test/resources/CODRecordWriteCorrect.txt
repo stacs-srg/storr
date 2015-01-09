@@ -1,8 +1,0 @@
-1855|4157|a|"acute bron"|"acute bron" "heart disease"|R99|
-1855|4157|b|"heart disease"|
-1855|4112|a|"acute hydrocephalus"|"acute hydrocephalus" "fever"|R99|
-1855|4112|b|"fever"|
-1855|4111|a|acute bronchitis|acute bronchitis|R99|
-1855|4159|a|acute bron|acute bron|R99|
-1855|4160|a|acute bron|acute bron|R99|
-1855|4158|a|"acute bron, heart disease"|"acute bron, heart disease"|R99|

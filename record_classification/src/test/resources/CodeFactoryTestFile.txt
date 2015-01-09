@@ -1,9 +1,0 @@
-2100	2100 Architects and Town Planners
-2200 	2200 Civil Engineers
-3000 	3000 Surveyors
-4215 	4215 Ship's Master (Sea)
-6700 	6700 Pharmacists
-95120	95120 Bricklayer (Construction) 
-95240 	9524 Cement Finisher
-9500	9500 Bricklayers, Carpenters And Other Construction Workers
-952	952 Reinforced Concreters, Cement Finishers and Terazzo Workers

@@ -1,8 +1,0 @@
-1855|4157|a|"acute bron"|"acute bron" "heart disease"|I6191|"acute bron" "heart disease"|X59|"acute bron" "heart disease"|R99|
-1855|4157|b|"heart disease"|
-1855|4112|a|"acute hydrocephalus"|"acute hydrocephalus" "fever"|I6191|"acute hydrocephalus" "fever"|R99|"acute hydrocephalus" "fever"|X59|
-1855|4112|b|"fever"|
-1855|4111|a|acute bronchitis|acute bronchitis|X59|acute bronchitis|R99|acute bronchitis|I6191|
-1855|4159|a|acute bron|acute bron|X59|acute bron|R99|acute bron|I6191|
-1855|4160|a|acute bron|acute bron|X59|acute bron|R99|acute bron|I6191|
-1855|4158|a|"acute bron, heart disease"|"acute bron, heart disease"|X59|"acute bron, heart disease"|I6191|"acute bron, heart disease"|R99|

@@ -1,9 +1,0 @@
-1855|0|a|architect|architect|2200|
-1855|1|a|civil engineer|civil engineer|2200|
-1855|2|a|civil engineer|civil engineer|2200|
-1855|3|a|surveyor|surveyor|2200|
-1855|4|a|surveyor|surveyor|2200|
-1855|5|a|shipowner|shipowner|2200|
-1855|6|a|shipowner|shipowner|2200|
-1855|7|a|shipowner|shipowner|2200|
-1900|8|a|shipooner|shipooner|2200|

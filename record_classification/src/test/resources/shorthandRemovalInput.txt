@@ -1,6 +1,0 @@
-Debility	deb and test	0001
-Debility	deb and test	0002
-Debility	deb and bron	0003
-Debility	albuminaria and deb	0004
-Debility	deb pneu test	0005
-Debility	chron bron test	0006

@@ -1,6 +1,0 @@
-4157	["acute bron", "heart disease"]	1855	1	M	(3) 11 - 15	I6191	I61.91 Intracerebral haemorrhage, unspecified	X59	X59 accident other	R99	R99 other causes	
-4112	["acute hydrocephalus", "fever"]	1855	1	M	(5) 56+	I6191	I61.91 Intracerebral haemorrhage, unspecified	R99	R99 other causes	X59	X59 accident other	
-4111	[acute bronchitis]	1855	1	F	(0) 0 - 1	X59	X59 accident other	R99	R99 other causes	I6191	I61.91 Intracerebral haemorrhage, unspecified	
-4159	[acute bron]	1855	1	M	(1) 2 - 5	X59	X59 accident other	R99	R99 other causes	I6191	I61.91 Intracerebral haemorrhage, unspecified	
-4160	[acute bron]	1855	1	M	(2) 6 - 10	X59	X59 accident other	R99	R99 other causes	I6191	I61.91 Intracerebral haemorrhage, unspecified	
-4158	["acute bron, heart disease"]	1855	1	M	(4) 16 - 45	X59	X59 accident other	R99	R99 other causes	I6191	I61.91 Intracerebral haemorrhage, unspecified	

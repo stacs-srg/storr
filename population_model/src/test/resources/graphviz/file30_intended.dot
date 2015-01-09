@@ -1,5 +1,0 @@
-digraph familyTree {
-node [shape=box style=solid color=blue]
-p00000001 [label="b: 15/03/1780\nd: 02/10/1863"]
-p00000002 [label="b: 14/01/1788\nd: 30/01/1871"]
-}

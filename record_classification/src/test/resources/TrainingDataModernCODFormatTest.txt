@@ -1,5 +1,0 @@
-50,"Chest Infection","Old Age",,,"Motor Neurone Disease",1,1,"J98",2,1,"R54",6,1,"G12",,,,,,,,,,,,,,,,,,,"J98","7","M","10","2014"
-11,"Massive Pulmonary Embolism",,,,"Ulcerative Proctitis",1,1,"I26",6,1,"K512",,,,,,,,,,,,,,,,,,,,,,"I26","7","M","10","2014"
-2229,"Anaemia and Low Platelet","Old Age",,,"Renal Tumour-Nephrectomy",1,1,"D649",1,2,"D69",2,1,"R54",6,1,"C64",6,2,"Y883",,,,,,,,,,,,,"D46","6","M","10","2014"
-45,"Coronary Artery Disease",,,,,1,1,"I25",,,,,,,,,,,,,,,,,,,,,,,,,"I25","4","F","10","2014"
-501,"Renal Tumour-Nephrectomy",,,,,1,1,"C64",,,,,,,,,,,,,,,,,,,,,,,,,"C64","7","F","10","2014"
