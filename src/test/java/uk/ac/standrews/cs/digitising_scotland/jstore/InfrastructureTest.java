@@ -54,7 +54,6 @@ public class InfrastructureTest {
     @Before
     public void setUpEachTest() throws RepositoryException, IOException, StoreException, URISyntaxException {
 
-
         PERSONRECORDTYPETEMPLATE = new File(InfrastructureTest.class.getResource("/PersonRecord.jsn").toURI()).getAbsolutePath();
         PERSONREFTUPLETYPETEMPLATE = new File(InfrastructureTest.class.getResource("/PersonRefRecord.jsn").toURI()).getAbsolutePath();
 
@@ -144,8 +143,6 @@ public class InfrastructureTest {
         lxp2.put("age", "43");
 
         b.update(lxp2);
-
-        System.out.println("wait here");
 
         txn.commit();
 

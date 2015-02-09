@@ -20,8 +20,8 @@ import java.util.Iterator;
  */
 public interface IStore {
 
-    /*
-     * Start a transaction against the store
+    /**
+     * @return  the transaction manager associated with teh store
      */
     ITransactionManager getTransactionManager();
 
