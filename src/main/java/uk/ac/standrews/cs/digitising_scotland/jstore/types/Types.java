@@ -1,11 +1,10 @@
 package uk.ac.standrews.cs.digitising_scotland.jstore.types;
 
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.LXP;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.TypeFactory;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.IllegalKeyException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.KeyNotFoundException;
-import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.StoreException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.TypeMismatchFoundException;
-import uk.ac.standrews.cs.digitising_scotland.jstore.impl.TypeFactory;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.ILXP;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.IReferenceType;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.IType;
@@ -158,11 +157,7 @@ public class Types {
     public static LXP getTypeRep(Class c) {
 
         LXP type_rep = null;
-        try {
-            type_rep = new LXP();
-        } catch (StoreException e) {
-            ErrorHandling.exceptionError( e, "Cannot create LXP : " + c.getName() );
-        }
+        type_rep = new LXP();
 
         Field[] fields = c.getDeclaredFields();
         for (Field f : fields) {

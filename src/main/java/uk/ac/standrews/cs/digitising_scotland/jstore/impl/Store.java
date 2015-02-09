@@ -107,11 +107,6 @@ public class Store implements IStore {
         return new RepoIterator(this, repo_directory);
     }
 
-    @Override
-    public long getNextFreePID() {
-        return getPRN();
-    }
-
 
     @Override
     public IObjectCache getObjectCache() {
@@ -119,6 +114,10 @@ public class Store implements IStore {
     }
 
     /******************** private methods ********************/
+
+    public static long getNextFreePID() {
+        return getPRN();
+    }
 
     /**
      * @return a pseudo random positive long

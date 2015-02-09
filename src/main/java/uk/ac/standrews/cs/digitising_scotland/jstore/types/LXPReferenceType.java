@@ -32,7 +32,7 @@ public class LXPReferenceType implements IReferenceType {
 
             this.typerep = new LXP(new JSONReader(reader));
 
-        } catch (PersistentObjectException | IOException | StoreException | IllegalKeyException e) {
+        } catch (PersistentObjectException | IOException | IllegalKeyException e) {
             ErrorHandling.exceptionError(e, "Error creating LXPReference" );
             // at this point we are in big trouble!
         }

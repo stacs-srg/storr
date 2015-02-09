@@ -59,11 +59,6 @@ public interface IStore {
     Iterator<IRepository> getIterator();
 
     /**
-     * @return the next free identifier in the store
-     */
-    long getNextFreePID();
-
-    /**
      * @return the cache of loaded objects (in memory) in the system
      */
     IObjectCache getObjectCache();

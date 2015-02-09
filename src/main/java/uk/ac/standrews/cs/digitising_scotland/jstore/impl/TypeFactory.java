@@ -119,11 +119,7 @@ public class TypeFactory {
 
     private ILXP namevaluepair(String type_name, long typekey) {
         LXP lxp = null;
-        try {
-            lxp = new LXP();
-        } catch (StoreException e) {
-            ErrorHandling.exceptionError(e, "Store exception in type factory" );
-        }
+        lxp = new LXP();
         // used in load_caches above
         try {
             lxp.put("name", type_name);
