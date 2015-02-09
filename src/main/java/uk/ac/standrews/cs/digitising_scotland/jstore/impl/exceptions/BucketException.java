@@ -10,4 +10,8 @@ public class BucketException extends Exception {
     public BucketException(final String message) {
         super(message);
     }
+
+    public BucketException(final Throwable thrown) {
+        super(thrown);
+    }
 }

@@ -30,7 +30,7 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
     private String name;     // the name of this bucket - used as the directory name
     protected File directory;  // the directory implementing the bucket storage
     private long type_label_id = -1; // not set
-    IObjectCache objectCache = Store.getInstance().getObjectCache();
+    IObjectCache objectCache;
 
     // indirection handling
 
@@ -47,6 +47,11 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
     public DirectoryBackedBucket(final String name, final IRepository repository, BucketKind kind) throws RepositoryException {
         this.name = name;
         this.repository = repository;
+        try {
+            objectCache = StoreFactory.getStore().getObjectCache();
+        } catch (StoreException e) {
+            throw new RepositoryException(e);
+        }
         String dir_name = dirPath();
         directory = new File(dir_name);
         setKind(kind);
@@ -125,12 +130,8 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
             } else {
                 writeLXP(record, record, Paths.get(this.filePath(record.getId()))); // normal object write
             }
-        } catch (IOException e) {
-            throw new BucketException("Persistent object  error");
-        } catch (JSONException e) {
-            throw new BucketException("JSONException error");
-        } catch (IllegalKeyException e) {
-            throw new BucketException("Illegal key error");
+        } catch (IOException | JSONException | StoreException | IllegalKeyException e) {
+            throw new BucketException(e);
         }
     }
 
@@ -140,7 +141,12 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
         if (!this.contains(id)) {
             throw new BucketException("bucket does not contain specified id");
         }
-        Transaction t = Store.getInstance().getTransactionManager().getTransaction(Long.toString(Thread.currentThread().getId())); // TODO shorten this with a local cache
+        Transaction t = null; // TODO shorten this with a local cache
+        try {
+            t = StoreFactory.getStore().getTransactionManager().getTransaction(Long.toString(Thread.currentThread().getId()));
+        } catch (StoreException e) {
+            throw new BucketException(e);
+        }
         if (t == null) {
             throw new BucketException("No transactional context specified");
         }
@@ -332,7 +338,8 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
     /*
      * Tidies up transaction data that may be left over following a crash
      */
-    private void tidy_up_transaction_data() {
+    @Override
+    public void tidy_up_transaction_data() {
         Iterator<File> iter = FileIteratorFactory.createFileIterator(Paths.get(filePath(TRANSACTIONS)).toFile(), true, false);
         while (iter.hasNext()) {
             File f = iter.next();
@@ -391,7 +398,7 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
         }
     }
 
-    protected ILXP create_indirection(final T record) throws IOException, JSONException, IllegalKeyException {
+    protected ILXP create_indirection(final T record) throws IOException, JSONException, IllegalKeyException, StoreException {
 
         long oid = record.getId();
         IBucket b = objectCache.getBucket(oid);
@@ -413,13 +420,9 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
             String bucket_name = record.getString(BUCKET);
             String repo_name = record.getString(REPOSITORY);
             long oid = Long.parseLong(record.getString(OID));
-            return Store.getInstance().getRepo(repo_name).getBucket(bucket_name, tFactory).getObjectById(oid);
-        } catch (KeyNotFoundException e) {
-            throw new BucketException("Indirection Key not found");
-        } catch (RepositoryException e) {
-            throw new BucketException("Repository exception");
-        } catch (TypeMismatchFoundException e) {
-            throw new BucketException("Type mismatch exception: " + e.getMessage());
+            return StoreFactory.getStore().getRepo(repo_name).getBucket(bucket_name, tFactory).getObjectById(oid);
+        } catch (KeyNotFoundException | RepositoryException | BucketException | TypeMismatchFoundException | StoreException e) {
+            throw new BucketException(e);
         }
     }
 

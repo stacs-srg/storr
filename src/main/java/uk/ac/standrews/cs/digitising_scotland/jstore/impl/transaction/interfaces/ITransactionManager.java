@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.digitising_scotland.jstore.impl.transaction.interfaces;
 
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.transaction.exceptions.TransactionFailedException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.transaction.impl.Transaction;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.IBucket;
 
@@ -8,7 +9,7 @@ import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.IBucket;
  */
 public interface ITransactionManager {
 
-    public ITransaction beginTransaction();
+    public ITransaction beginTransaction() throws TransactionFailedException;
 
     public Transaction getTransaction(String id);
 

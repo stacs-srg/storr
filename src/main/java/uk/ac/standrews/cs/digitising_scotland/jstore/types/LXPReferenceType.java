@@ -1,11 +1,8 @@
 package uk.ac.standrews.cs.digitising_scotland.jstore.types;
 
-import uk.ac.standrews.cs.digitising_scotland.jstore.impl.Store;
-import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.BucketException;
-import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.IllegalKeyException;
-import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.KeyNotFoundException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.LXP;
-import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.TypeMismatchFoundException;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.StoreFactory;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.*;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.IBucket;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.ILXP;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.IReferenceType;
@@ -35,12 +32,9 @@ public class LXPReferenceType implements IReferenceType {
 
             this.typerep = new LXP(new JSONReader(reader));
 
-        } catch (PersistentObjectException e) {
-            ErrorHandling.exceptionError(e, "persistent object exception reading types file: " + json_encoded_type_descriptor_file_name);
-        } catch (IOException e) {
-            ErrorHandling.exceptionError(e, "IO exception reading types file: " + json_encoded_type_descriptor_file_name);
-        } catch (IllegalKeyException e) {
-            ErrorHandling.exceptionError(e, "Illegal key encountered reading types file: " + json_encoded_type_descriptor_file_name);
+        } catch (PersistentObjectException | IOException | StoreException | IllegalKeyException e) {
+            ErrorHandling.exceptionError(e, "Error creating LXPReference" );
+            // at this point we are in big trouble!
         }
     }
 
@@ -62,7 +56,13 @@ public class LXPReferenceType implements IReferenceType {
         ILXP record = null;
 
         try {
-            IBucket bucket = Store.getInstance().getObjectCache().getBucket(id);
+            IBucket bucket = null;
+            try {
+                bucket = StoreFactory.getStore().getObjectCache().getBucket(id);
+            } catch (StoreException e) {
+                ErrorHandling.error( "Cannot get store" );
+                return false;
+            }
             if (bucket == null) { // didn't find the bucket
                 ErrorHandling.error("Did not find referenced bucket whilst checking type consistency");
                 return false;

@@ -4,6 +4,7 @@ import org.json.JSONException;
 import org.json.JSONWriter;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.IllegalKeyException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.KeyNotFoundException;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.StoreException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.TypeMismatchFoundException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.ILXP;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.IReferenceType;
@@ -17,14 +18,16 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import static uk.ac.standrews.cs.digitising_scotland.jstore.impl.StoreFactory.getStore;
+
 public class LXP implements ILXP {
 
     private long id;
     protected HashMap<String, Object> map;
 
-    public LXP() {
+    public LXP() throws StoreException {
 
-        this.id = Store.getInstance().getNextFreePID();
+        this.id = getStore().getNextFreePID();
         this.map = new HashMap<>();
     }
 
@@ -78,8 +81,8 @@ public class LXP implements ILXP {
         }
     }
 
-    public LXP(JSONReader reader) throws PersistentObjectException, IllegalKeyException {
-        this(Store.getInstance().getNextFreePID(), reader);
+    public LXP(JSONReader reader) throws PersistentObjectException, IllegalKeyException, StoreException {
+        this(getStore().getNextFreePID(), reader);
     }
 
     @Override

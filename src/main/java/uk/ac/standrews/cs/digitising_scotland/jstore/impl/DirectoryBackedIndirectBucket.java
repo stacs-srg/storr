@@ -4,6 +4,7 @@ import org.json.JSONException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.BucketException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.IllegalKeyException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.RepositoryException;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.StoreException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.*;
 
 import java.io.IOException;
@@ -31,10 +32,8 @@ public class DirectoryBackedIndirectBucket<T extends ILXP> extends DirectoryBack
 
         try {
             writeLXP(record, create_indirection(record), Paths.get(this.filePath(record.getId())));
-        } catch (IOException | JSONException e) {
+        } catch (IOException | JSONException | StoreException | IllegalKeyException e) {
             throw new BucketException("Error creating indirection");
-        } catch (IllegalKeyException e) {
-            throw new BucketException("Illegal key creating indirection");
         }
 
     }

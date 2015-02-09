@@ -4,4 +4,11 @@ package uk.ac.standrews.cs.digitising_scotland.jstore.impl.transaction.exception
  * Created by al on 06/01/15.
  */
 public class TransactionFailedException extends Exception {
+    public TransactionFailedException(Throwable throwable) {
+        super( throwable );
+    }
+
+    public TransactionFailedException(String s) {
+        super( s );
+    }
 }

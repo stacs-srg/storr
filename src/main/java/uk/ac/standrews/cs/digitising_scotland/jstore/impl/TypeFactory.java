@@ -1,8 +1,6 @@
-package uk.ac.standrews.cs.digitising_scotland.jstore.impl.factory;
+package uk.ac.standrews.cs.digitising_scotland.jstore.impl;
 
 
-import uk.ac.standrews.cs.digitising_scotland.jstore.impl.LXP;
-import uk.ac.standrews.cs.digitising_scotland.jstore.impl.Store;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.*;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.*;
 import uk.ac.standrews.cs.digitising_scotland.jstore.types.LXPReferenceType;
@@ -120,7 +118,12 @@ public class TypeFactory {
     }
 
     private ILXP namevaluepair(String type_name, long typekey) {
-        LXP lxp = new LXP();
+        LXP lxp = null;
+        try {
+            lxp = new LXP();
+        } catch (StoreException e) {
+            ErrorHandling.exceptionError(e, "Store exception in type factory" );
+        }
         // used in load_caches above
         try {
             lxp.put("name", type_name);
@@ -132,7 +135,12 @@ public class TypeFactory {
     }
 
     private void get_repo(String type_repo_name) throws RepositoryException {
-        IStore store = Store.getInstance();
+        IStore store = null;
+        try {
+            store = StoreFactory.getStore();
+        } catch (StoreException e) {
+            throw new RepositoryException( e );
+        }
 
         if (store.repoExists(type_repo_name)) {
             type_repo = store.getRepo(type_repo_name);

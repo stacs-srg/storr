@@ -38,13 +38,19 @@ public interface IBucket<T extends ILXP> {
      */
     void update(T record) throws BucketException;
 
-    /**
-     * @param id
-     * @return the filepath corresponding to record with identifier id in this bucket (more public than it should be).
+    /*
+     * Delete the record with the specified oid
      */
+    void delete(long oid) throws BucketException;
+
+
+    /*
+         * @param id
+         * @return the filepath corresponding to record with identifier id in this bucket (more public than it should be).
+         */
     String filePath(long id);
 
-    /**
+    /*
      * @return an input Stream containing all the LXP records in this Bucket
      */
     IInputStream<T> getInputStream() throws BucketException;
@@ -90,7 +96,7 @@ public interface IBucket<T extends ILXP> {
      *
      * @param oid - the oid to swizzle
      */
-    void swizzle(long oid);
+     void swizzle(long oid);
 
     /**
      * Used by transaction API only.
@@ -99,8 +105,12 @@ public interface IBucket<T extends ILXP> {
      */
     void cleanup(long oid);
 
-    /*
-     * Delete the record with the specified oid
+    /**
+     * Used by transaction API only.
+     *
+     * Tidies up transaction data that may be left over following a crash
      */
-    void delete(long oid) throws BucketException;
+    void tidy_up_transaction_data();
+
+
 }

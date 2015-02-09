@@ -1,25 +1,22 @@
 package uk.ac.standrews.cs.digitising_scotland.jstore;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.LXP;
-import uk.ac.standrews.cs.digitising_scotland.jstore.impl.Store;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.StoreFactory;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.TypeFactory;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.*;
-import uk.ac.standrews.cs.digitising_scotland.jstore.impl.factory.TypeFactory;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.transaction.exceptions.TransactionFailedException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.transaction.interfaces.ITransaction;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.*;
 import uk.ac.standrews.cs.digitising_scotland.jstore.types.Types;
-import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -38,7 +35,6 @@ public class InfrastructureTest {
     private static String generic_bucket_name3 = "BUCKET3";
 
     private static String types_name = "types";
-    private static String store_path = System.getProperty("java.io.tmpdir") + "STORE";
 
     private static String PERSONRECORDTYPETEMPLATE ;
     private static String PERSONREFTUPLETYPETEMPLATE ;
@@ -62,9 +58,11 @@ public class InfrastructureTest {
         PERSONRECORDTYPETEMPLATE = new File(InfrastructureTest.class.getResource("/PersonRecord.jsn").toURI()).getAbsolutePath();
         PERSONREFTUPLETYPETEMPLATE = new File(InfrastructureTest.class.getResource("/PersonRefRecord.jsn").toURI()).getAbsolutePath();
 
-        deleteStore();
+        Path tempStore = Files.createTempDirectory(null);
 
-        store = new Store(store_path);
+        StoreFactory.setStorePath( tempStore.toString() );
+        store = StoreFactory.makeStore();
+        System.out.println( "STORE PATH = " + tempStore.toString() );
 
         repo = store.makeRepository("repo");
 
@@ -79,26 +77,6 @@ public class InfrastructureTest {
         conflict_counter = new AtomicInteger(0);
         latch = new CountDownLatch(2);
     }
-
-    @After
-    public void tearDown() throws IOException {
-
-        deleteStore();
-    }
-
-
-    public void deleteStore() throws IOException {
-
-        Path sp = Paths.get(store_path);
-
-        if (Files.exists(sp)) {
-
-            FileManipulation.deleteDirectory(store_path);
-
-        }
-    }
-
-
 
     @Test
     public synchronized void testLXPCreation() throws Exception, RepositoryException, IllegalKeyException {
@@ -167,6 +145,8 @@ public class InfrastructureTest {
 
         b.update(lxp2);
 
+        System.out.println("wait here");
+
         txn.commit();
 
         // do lookup again and check that it is 43 - if it worked.
@@ -175,7 +155,7 @@ public class InfrastructureTest {
     }
 
     @Test(expected = BucketException.class)
-    public synchronized void updateOutwithTransactionThrowsException() throws RepositoryException, IllegalKeyException, BucketException {
+    public synchronized void updateOutwithTransactionThrowsException() throws RepositoryException, IllegalKeyException, BucketException, StoreException {
         IBucket b = repo.getBucket(generic_bucket_name1);
 
         LXP lxp = new LXP();
@@ -191,7 +171,7 @@ public class InfrastructureTest {
     }
 
     @Test(expected = BucketException.class)
-    public synchronized void updateNonPersistentObjectThrowsException() throws RepositoryException, IllegalKeyException, BucketException {
+    public synchronized void updateNonPersistentObjectThrowsException() throws RepositoryException, IllegalKeyException, BucketException, StoreException {
         IBucket b = repo.getBucket(generic_bucket_name1);
 
         LXP lxp = new LXP();
@@ -202,7 +182,7 @@ public class InfrastructureTest {
     }
 
     @Test
-    public synchronized void testMultiBucketTransaction() throws RepositoryException, IllegalKeyException, BucketException, StoreException {
+    public synchronized void testMultiBucketTransaction() throws RepositoryException, IllegalKeyException, BucketException, StoreException, TransactionFailedException {
 
         IBucket b1 = repo.getBucket(generic_bucket_name1);
         IBucket b2 = repo.getBucket(generic_bucket_name2);
@@ -279,7 +259,12 @@ public class InfrastructureTest {
         }
 
         public void run() {
-            ITransaction txn = store.getTransactionManager().beginTransaction();
+            ITransaction txn = null;
+            try {
+                txn = store.getTransactionManager().beginTransaction();
+            } catch (TransactionFailedException e) {
+                fail("Exception: " + e.toString());
+            }
 
             try {
                 ILXP lxp2 = b.getObjectById(oid);
@@ -295,8 +280,8 @@ public class InfrastructureTest {
                 } catch (TransactionFailedException e) {
                     conflict_counter.incrementAndGet();
                 }
-            } catch (InterruptedException | StoreException | IllegalKeyException | BucketException e1) {
-                fail("Exception: " + e1.toString());
+            } catch (InterruptedException | StoreException | IllegalKeyException | BucketException e) {
+                fail("Exception: " + e.toString());
             } finally {
                 if (txn.isActive()) {
                     txn.rollback();
@@ -548,7 +533,7 @@ public class InfrastructureTest {
     }
 
     @Test(expected = IllegalKeyException.class)
-    public synchronized void emptyStringInlabelType() throws RepositoryException, BucketException, IllegalKeyException {
+    public synchronized void emptyStringInlabelType() throws RepositoryException, BucketException, IllegalKeyException, StoreException {
 
         IBucket b = repo.getBucket(generic_bucket_name1);
         LXP lxp = new LXP();

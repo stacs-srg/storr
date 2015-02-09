@@ -1,16 +1,15 @@
 package uk.ac.standrews.cs.digitising_scotland.jstore.impl.transaction.impl;
 
-import uk.ac.standrews.cs.digitising_scotland.jstore.impl.Store;
-import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.RepositoryException;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.StoreFactory;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.*;
+import uk.ac.standrews.cs.digitising_scotland.jstore.impl.transaction.exceptions.TransactionFailedException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.transaction.interfaces.ITransaction;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.transaction.interfaces.ITransactionManager;
-import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.BucketKind;
-import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.IBucket;
-import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.IRepository;
-import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.IStore;
+import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.*;
 import uk.ac.standrews.cs.digitising_scotland.util.ErrorHandling;
 
 import java.util.HashMap;
+import java.util.Iterator;
 
 /**
  * Created by al on 05/01/15.
@@ -25,14 +24,14 @@ public class TransactionManager implements ITransactionManager {
 
     HashMap<String, Transaction> map = new HashMap<>();
 
-
     public TransactionManager() throws RepositoryException {
         get_repo(transaction_repo_name);
         transaction_bucket = get_bucket(transaction_bucket_name);
+        cleanup_after_restart();
     }
 
     @Override
-    public ITransaction beginTransaction() {
+    public ITransaction beginTransaction() throws TransactionFailedException {
 
         Transaction t = new Transaction(this);
         map.put(t.getId(), t);
@@ -60,8 +59,157 @@ public class TransactionManager implements ITransactionManager {
      * ************* Private methods ***************
      */
 
+    private void cleanup_after_restart() {
+
+        if( clean_up_needed() ) {
+
+            System.out.println( "Running recovery" );
+
+            // go through each of the records in the log
+            // These are either committed or not.
+            // Committed records have well formed LXP records written in the log, incomplete ones will have start records
+
+            // for each committed transaction we need to:
+            //  1. swizzle_records();                       // over-writes the records in the store with the shadows.
+            //  2. remove_commit_record(commit_record_id);  // cleans up the log
+            //  as defined in commit.
+
+            // for incomplete:
+            // A. delete the shadow records
+            // B. remove_commit_record(commit_record_id) (incomplete records only)
+
+            Iterator<ILXP> transaction_records;
+
+            try {
+                transaction_records = transaction_bucket.getInputStream().iterator();
+
+                while (transaction_records.hasNext()) {
+                    ILXP transaction_record = transaction_records.next(); // this might be a commit record or a start record
+                    long record_id = transaction_record.getId();
+
+                    try {
+                        if( transaction_record.containsKey( Transaction.LOG_KEY ) ) {
+
+                            recover_commit_record( record_id, transaction_record );
+
+                        }
+                    } catch (TypeMismatchFoundException | KeyNotFoundException | RepositoryException | StoreException e) {
+                        // We cannot get the repo or the store - we need to 1. delete the write records
+                        ErrorHandling.exceptionError(e, "Cannot recover update record information during failure recovery");
+                    }
+                    // delete the record
+                    try {
+                        transaction_bucket.delete(record_id);          // 2. & B. remove_commit_record(commit_record_id)
+                    } catch (BucketException e) {
+                        // Not much to do here.
+                    }
+                }
+            } catch (BucketException e) {
+                ErrorHandling.error("Cannot get records to clean up transaction in failure recovery");
+            }
+
+            // If we get to here all we can do is delete the shadow records as in A. above.
+            // we don't know where they are, and they may or may not exist.
+            // need to search all.
+
+            delete_all_shadows();
+        }
+    }
+
+    private void recover_commit_record( long commit_record_id, ILXP transaction_record ) throws KeyNotFoundException, TypeMismatchFoundException, StoreException, RepositoryException {
+        String updateString = transaction_record.getString(Transaction.LOG_KEY);
+
+        // we need to ensure that this is well formed
+
+        if (!updateString.startsWith(Transaction.START_RECORD_MARKER) && updateString.endsWith(Transaction.END_RECORD_MARKER)) {
+            // We do not have a good transaction record.
+            // abort and go to clean up.
+            try {
+                transaction_bucket.delete(commit_record_id);          // B. remove_commit_record(commit_record_id)
+                // this potentially leaves shadow copies behind
+            } catch (BucketException e) {
+                ErrorHandling.error("Cannot delete commit_record with transaction id: " + commit_record_id);
+                return;
+            }
+        }
+
+        updateString = updateString.replaceFirst(Transaction.START_RECORD_MARKER, ""); // Good record - remove head marker.
+        updateString = replaceLast(updateString, Transaction.END_RECORD_MARKER, ""); // remove the end marker
+
+        String[] updates = updateString.split(Transaction.LOG_RECORD_SEPARATOR); // a list of update records in string form - each is a triple as described 2 lines down.
+
+        for (String update_pair : updates) {
+            String[] parts = update_pair.split(Transaction.UPDATE_RECORD_SEPARATOR); // a repo name, a bucket name and an oid
+
+            IRepository repo = StoreFactory.getStore().getRepo(parts[0]);
+            IBucket bucket = repo.getBucket(parts[1]);
+
+            Long updated_record_oid = Long.getLong(parts[2]);
+
+            bucket.swizzle(updated_record_oid);             //  1. swizzle_records();   // over-writes the records in the store with the shadows.
+        }
+    }
+
+    /**
+     *
+     *
+     * @return true if we need to store recovery
+     */
+    private boolean clean_up_needed() {
+        try {
+            Iterator iter = transaction_bucket.getInputStream().iterator();
+            // return true if the transaction bucket contains start records or commit records.
+            return iter.hasNext();
+
+        } catch (BucketException e) {
+            return true; // safe
+        }
+    }
+
+    private void delete_all_shadows() {
+        IStore store = null;
+        try {
+            store = StoreFactory.getStore();
+            Iterator<IRepository> repo_iterator = store.getIterator();
+            while( repo_iterator.hasNext() ) {
+                IRepository repo = repo_iterator.next();
+                Iterator<String> bucket_names = repo.getBucketNameIterator();
+                while( bucket_names.hasNext() ) {
+                    String bucket_name = bucket_names.next();
+                    try {
+                        IBucket bucket = repo.getBucket(bucket_name);
+                        bucket.tidy_up_transaction_data();
+                    } catch (RepositoryException e) {
+                        ErrorHandling.error( "Cannot get bucket during recovery: " + bucket_name );
+                    }
+
+                }
+
+            }
+        } catch (StoreException e) {
+            ErrorHandling.error( "Cannot get store during recovery" );
+        }
+    }
+
+
+    private static String replaceLast(String string, String toReplace, String replacement) {
+        int pos = string.lastIndexOf(toReplace);
+        if (pos > -1) {
+            return string.substring(0, pos)
+                    + replacement
+                    + string.substring(pos + toReplace.length(), string.length());
+        } else {
+            return string;
+        }
+    }
+
     private void get_repo(String transaction_repo_name) throws RepositoryException {
-        IStore store = Store.getInstance();
+        IStore store = null;
+        try {
+            store = StoreFactory.getStore();
+        } catch (StoreException e) {
+            throw new RepositoryException(e);
+        }
 
         if (store.repoExists(transaction_repo_name)) {
             transaction_repo = store.getRepo(transaction_repo_name);

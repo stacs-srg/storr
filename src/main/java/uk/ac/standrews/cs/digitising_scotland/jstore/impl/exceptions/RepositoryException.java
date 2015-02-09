@@ -10,4 +10,8 @@ public class RepositoryException extends Exception {
     public RepositoryException(final String message) {
         super(message);
     }
+
+    public RepositoryException(final Throwable thrown) {
+        super(thrown);
+    }
 }

@@ -1,9 +1,7 @@
 package uk.ac.standrews.cs.digitising_scotland.jstore.impl;
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.RepositoryException;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.exceptions.StoreException;
-import uk.ac.standrews.cs.digitising_scotland.jstore.impl.transaction.impl.TransactionManager;
 import uk.ac.standrews.cs.digitising_scotland.jstore.impl.transaction.interfaces.ITransactionManager;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.IObjectCache;
 import uk.ac.standrews.cs.digitising_scotland.jstore.interfaces.IRepository;
@@ -27,23 +25,23 @@ public class Store implements IStore {
     private final static String REPO_DIR_NAME = "REPOS";
 //    private final static String ID_FILE_NAME = "id_file"; // // no longer needed for pseudo random ids
 
-    private final String store_path;
+    private static String store_path = null;
     private final String repo_path;
     private final File store_root_directory;
     private final File repo_directory;
 //    private final File id_file; // no longer needed for pseudo random ids
 
-    private static IStore instance = null;
     private final IObjectCache object_cache;
     private static SecureRandom sr = new SecureRandom();
     // private int id = 1;
 
-    private static ITransactionManager tm = null;
+    private ITransactionManager tm = null;
 
-    @SuppressFBWarnings(value = "ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD", justification = "intended behaviour")
-    public Store(String store_path) throws StoreException, IOException {
+    protected Store() throws StoreException {
 
-        this.store_path = store_path;
+        if( store_path == null ) {
+            throw new StoreException( "Null store path specified" );
+        }
         this.repo_path = store_path + File.separator + REPO_DIR_NAME;
 
         store_root_directory = new File(store_path);
@@ -55,24 +53,18 @@ public class Store implements IStore {
         checkCreate(repo_directory);
 
         object_cache = new ObjectCache();
-        instance = this;
-
-        try {
-            this.tm = new TransactionManager();  // This references the instance object that this constructor creates - is this safe?
-        } catch (RepositoryException e) {
-            throw new StoreException( e );
-        }
     }
 
-    public synchronized static IStore getInstance() {
-
-        if (instance == null) {
-            ErrorHandling.hardError("No Store specified");
-            return null;
+    public void setTransactionManager( ITransactionManager trans_manager ) throws StoreException {
+        if( tm != null ) {
+            throw new StoreException( "Transaction Manager already set" );
         }
-        return instance;
+        this.tm = trans_manager;
     }
 
+    protected static void set_store_path( String path ) {
+        store_path = path;
+    }
 
     @Override
     public ITransactionManager getTransactionManager() {
