@@ -85,7 +85,11 @@ public class Repository implements IRepository {
     @Override
     public boolean bucketExists(final String name) {
 
-        return Files.exists(getBucketPath(name));
+        if( legal_name(name)) {
+            return Files.exists(getBucketPath(name));
+        } else {
+            return false;
+        }
     }
 
     private Path getBucketPath(final String name) {
