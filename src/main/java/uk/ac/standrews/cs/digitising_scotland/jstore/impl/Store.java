@@ -74,6 +74,9 @@ public class Store implements IStore {
     @Override
     public IRepository makeRepository(final String name) throws RepositoryException {
 
+        if( ! legal_name( name ) ) {
+            throw new RepositoryException( "Illegal Repository name <" + name + ">" );
+        }
         createRepository(name);
         return getRepo(name);
     }
@@ -191,6 +194,10 @@ public class Store implements IStore {
         } catch (IOException e) {
             throw new RepositoryException(e.getMessage());
         }
+    }
+
+    private static boolean legal_name(String name) { // TODO May want to strengthen these conditions
+        return name != null && ! name.equals( "" );
     }
 
     private static class RepoIterator implements Iterator<IRepository> {

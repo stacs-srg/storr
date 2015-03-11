@@ -45,6 +45,9 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
      * Creates a DirectoryBackedBucket with no factory - a persistent collection of ILXPs
      */
     public DirectoryBackedBucket(final String name, final IRepository repository, BucketKind kind) throws RepositoryException {
+        if( ! legal_name( name ) ) {
+            throw new RepositoryException("Illegal name <" + name + ">" );
+        }
         this.name = name;
         this.repository = repository;
         try {
@@ -69,6 +72,9 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
     }
 
     public static IBucket createBucket(final String name, IRepository repository, BucketKind kind) throws RepositoryException {
+        if( ! legal_name( name ) ) {
+            throw new RepositoryException("Illegal name <" + name + ">" );
+        }
         if (bucketExists(name, repository)) {
             throw new RepositoryException("Bucket: " + name + " already exists");
         }
@@ -428,10 +434,13 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
 
     //******** Private methods *********
 
+    private static boolean legal_name(String name) { // TODO May want to strengthen these conditions
+        return name != null && ! name.equals( "" );
+    }
 
     public static boolean bucketExists(final String name, IRepository repo) {
 
-        return Files.exists(getBucketPath(name, repo));
+        return legal_name( name ) && Files.exists(getBucketPath(name, repo));
     }
 
     private static Path getBucketPath(final String name, IRepository repo) {

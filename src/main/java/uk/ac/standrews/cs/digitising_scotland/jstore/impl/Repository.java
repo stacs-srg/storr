@@ -24,6 +24,9 @@ public class Repository implements IRepository {
 
     public Repository(final String base_path, String name) throws RepositoryException {
 
+        if( ! legal_name( name ) ) {
+            throw new RepositoryException( "Illegal repository name <" + name + ">" );
+        }
         this.name = name;
         this.repo_path = base_path + File.separator + name;
         repo_directory = new File(repo_path);
@@ -204,6 +207,10 @@ public class Repository implements IRepository {
             throw new UnsupportedOperationException("remove called on stream - unsupported");
         }
 
+    }
+
+    private static boolean legal_name(String name) { // TODO May want to strengthen these conditions
+        return name != null && ! name.equals( "" );
     }
 
     private static class BucketIterator<T extends ILXP> implements Iterator<IBucket<T>> {
