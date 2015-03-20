@@ -30,6 +30,12 @@ public enum LXPBaseType implements IType {
             return value instanceof Integer;
         }
     },
+    LONG {
+        @Override
+        public boolean valueConsistentWithType(Object value) {
+            return value instanceof Long;
+        }
+    },
     DOUBLE {
         @Override
         public boolean valueConsistentWithType(Object value) {
@@ -42,7 +48,9 @@ public enum LXPBaseType implements IType {
             return value instanceof Boolean;
         }
     },
-    LXP {
+    LXP
+
+    {
         @Override
         public boolean valueConsistentWithType(Object value) {
             return value instanceof Long;
