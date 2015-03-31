@@ -7,7 +7,7 @@ import uk.ac.standrews.cs.jstore.impl.exceptions.KeyNotFoundException;
 import uk.ac.standrews.cs.jstore.impl.exceptions.TypeMismatchFoundException;
 
 /**
- * Interface to a LXP (labeled cross product class).
+ * Interface to a OID (labeled cross product class).
  * It provides a thin wrapper over a Map (providing name value lookup) along with identity and the ability to save and recover persistent versions (encoded in JSON).
  *
  * @author al
@@ -28,7 +28,7 @@ public interface ILXP extends ILXPFactory {
 
 
     /**
-     * A getter method over labelled values in the LXP
+     * A getter method over labelled values in the LXPOID
      *
      * @param label - the label whose value is required
      * @return the value associated with @param label
@@ -53,7 +53,7 @@ public interface ILXP extends ILXPFactory {
      * @param label - the label whose value is required
      * @return the value associated with @param label
      * @throws KeyNotFoundException       - if the tuple does not contain the key
-     * @throws TypeMismatchFoundException if the value associated with the key is not a String
+     * @throws TypeMismatchFoundException if the value associated with the key is not a double
      */
     double getDouble(String label) throws KeyNotFoundException, TypeMismatchFoundException;
 
@@ -63,7 +63,7 @@ public interface ILXP extends ILXPFactory {
      * @param label - the label whose value is required
      * @return the value associated with @param label
      * @throws KeyNotFoundException       - if the tuple does not contain the key
-     * @throws TypeMismatchFoundException if the value associated with the key is not a String
+     * @throws TypeMismatchFoundException if the value associated with the key is not an integer
      */
     int getInt(String label) throws KeyNotFoundException, TypeMismatchFoundException;
 
@@ -73,7 +73,7 @@ public interface ILXP extends ILXPFactory {
      * @param label - the label whose value is required
      * @return the value associated with @param label
      * @throws KeyNotFoundException       - if the tuple does not contain the key
-     * @throws TypeMismatchFoundException if the value associated with the key is not a String
+     * @throws TypeMismatchFoundException if the value associated with the key is not a boolean
      */
     boolean getBoolean(String label) throws KeyNotFoundException, TypeMismatchFoundException;
 
@@ -83,17 +83,25 @@ public interface ILXP extends ILXPFactory {
      * @param label - the label whose value is required
      * @return the value associated with @param label
      * @throws KeyNotFoundException       - if the tuple does not contain the key
-     * @throws TypeMismatchFoundException if the value associated with the key is not a String
+     * @throws TypeMismatchFoundException if the value associated with the key is not a long
      */
     long getLong(String label) throws KeyNotFoundException, TypeMismatchFoundException;
 
+    /**
+     * A getter method over labelled values in the LXP
+     *
+     * @param label - the label whose value is required
+     * @return the value associated with @param label
+     * @throws KeyNotFoundException       - if the tuple does not contain the key
+     * @throws TypeMismatchFoundException if the value associated with the key is not a Store reference
+     */
+    IStoreReference getRef(String label) throws KeyNotFoundException, TypeMismatchFoundException;
 
     /**
      * A setter method over labelled values in the LXP
      *
      * @param label - the label whose value is being set
      * @param value - the value to associated with the @param label
-     * @return the value associated with @param label
      */
     void put(String label, String value) throws IllegalKeyException;
 
@@ -102,7 +110,6 @@ public interface ILXP extends ILXPFactory {
      *
      * @param label - the label whose value is being set
      * @param value - the value to associated with the @param label
-     * @return the value associated with @param label
      */
     void put(String label, double value) throws IllegalKeyException;
 
@@ -111,7 +118,6 @@ public interface ILXP extends ILXPFactory {
      *
      * @param label - the label whose value is being set
      * @param value - the value to associated with the @param label
-     * @return the value associated with @param label
      */
     void put(String label, int value) throws IllegalKeyException;
 
@@ -120,7 +126,6 @@ public interface ILXP extends ILXPFactory {
      *
      * @param label - the label whose value is being set
      * @param value - the value to associated with the @param label
-     * @return the value associated with @param label
      */
     void put(String label, boolean value) throws IllegalKeyException;
 
@@ -129,18 +134,26 @@ public interface ILXP extends ILXPFactory {
      *
      * @param label - the label whose value is being set
      * @param value - the value to associated with the @param label
-     * @return the value associated with @param label
      */
     void put(String label, long value) throws IllegalKeyException;
 
     /**
+     * A setter method over labelled values in the LXP
+     *
+     * @param label - the label whose value is being set
+     * @param value - the value to associated with the @param label
+     */
+    void put(String label, IStoreReference value) throws IllegalKeyException;
+
+
+    /**
      * @param label - the label to be looked up
-     * @return true if the LXP contains the supplied label
+     * @return true if the OID contains the supplied label
      */
     boolean containsKey(String label);
 
     /**
-     * @return all the labels contained in the LXP
+     * @return all the labels contained in the OID
      */
     java.util.Set<String> getLabels();
 

@@ -1,14 +1,14 @@
 package uk.ac.standrews.cs.jstore.types;
 
-import uk.ac.standrews.cs.jstore.impl.LXP;
-import uk.ac.standrews.cs.jstore.impl.StoreFactory;
-import uk.ac.standrews.cs.jstore.impl.exceptions.*;
-import uk.ac.standrews.cs.jstore.interfaces.IBucket;
-import uk.ac.standrews.cs.jstore.interfaces.ILXP;
-import uk.ac.standrews.cs.jstore.interfaces.IReferenceType;
-import uk.ac.standrews.cs.jstore.interfaces.IType;
 import uk.ac.standrews.cs.digitising_scotland.util.ErrorHandling;
 import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
+import uk.ac.standrews.cs.jstore.impl.LXP;
+import uk.ac.standrews.cs.jstore.impl.StoreReference;
+import uk.ac.standrews.cs.jstore.impl.exceptions.*;
+import uk.ac.standrews.cs.jstore.interfaces.ILXP;
+import uk.ac.standrews.cs.jstore.interfaces.IReferenceType;
+import uk.ac.standrews.cs.jstore.interfaces.IStoreReference;
+import uk.ac.standrews.cs.jstore.interfaces.IType;
 import uk.ac.standrews.cs.nds.persistence.PersistentObjectException;
 import uk.ac.standrews.cs.nds.rpc.stream.JSONReader;
 
@@ -20,7 +20,7 @@ import java.util.Collection;
 
 /**
  * Created by al on 2/11/2014.
- * A class representing reference types that may be encoded above LXP storage layer (optional)
+ * A class representing reference types that may be encoded above OID storage layer (optional)
  */
 public class LXPReferenceType implements IReferenceType {
 
@@ -48,34 +48,28 @@ public class LXPReferenceType implements IReferenceType {
     }
 
     public boolean valueConsistentWithType(Object value) {
-        if (!(value instanceof Long)) {
+        if (!(value instanceof String)) {
             return false;
         }
 
-        Long id = (Long) value;  // must be a reference to a record of appropriate type
-        ILXP record = null;
+        IStoreReference reference;
 
         try {
-            IBucket bucket = null;
-            try {
-                bucket = StoreFactory.getStore().getObjectCache().getBucket(id);
-            } catch (StoreException e) {
-                ErrorHandling.error( "Cannot get store" );
-                return false;
-            }
-            if (bucket == null) { // didn't find the bucket
-                ErrorHandling.error("Did not find referenced bucket whilst checking type consistency");
-                return false;
-            }
-            record = bucket.getObjectById(id);
-            if (record == null) { // we haven't found that record in the store
-                ErrorHandling.error("Did not find referenced record whilst checking type consistency");
-                return false;
-            }
-        } catch (BucketException e) {
-            ErrorHandling.error("Bucket exception whilst checking type consistency");
+            reference = new StoreReference((String) value);
+        } catch ( ReferenceException e ) {
+            // We could not determine that this is a store reference
+            ErrorHandling.exceptionError(e, "Could not create store reference - not necessarily a system error" );
             return false;
         }
+
+        ILXP record = null;
+        try {
+            record = reference.getReferend();
+        } catch (BucketException e) {
+            ErrorHandling.error("Did not find referenced record whilst checking type consistency");
+            return false;
+        }
+
         return Types.check_structural_consistency(record, this);
     }
 

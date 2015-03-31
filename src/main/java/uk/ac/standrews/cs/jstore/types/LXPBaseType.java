@@ -5,7 +5,7 @@ import uk.ac.standrews.cs.digitising_scotland.util.ErrorHandling;
 
 /**
  * Created by al on 20/06/2014.
- * A class representing types that may be encoded above LXP storage layer (optional)
+ * A class representing types that may be encoded above OID storage layer (optional)
  * Mirrors types used in @class java.sql.Types
  */
 public enum LXPBaseType implements IType {
@@ -48,7 +48,7 @@ public enum LXPBaseType implements IType {
             return value instanceof Boolean;
         }
     },
-    LXP {
+    OID {
         @Override
         public boolean valueConsistentWithType(Object value) {
             return value instanceof Long;

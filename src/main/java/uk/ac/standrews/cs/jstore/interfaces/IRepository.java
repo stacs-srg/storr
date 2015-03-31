@@ -23,7 +23,7 @@ public interface IRepository {
     IBucket makeBucket(String name, BucketKind kind) throws RepositoryException;
 
     /**
-     * This method creates a new bucket that is constrained to contain LXP records compatible with T.
+     * This method creates a new bucket that is constrained to contain OID records compatible with T.
      *
      * @param name     - the name of the bucket to be created.
      * @param kind     - the implementation kind of the bucket - see @class BucketKind

@@ -5,7 +5,7 @@ import uk.ac.standrews.cs.jstore.impl.exceptions.BucketException;
 import java.io.IOException;
 
 /**
- * The interface for a Bucket (a repository of LXP records).
+ * The interface for a Bucket (a repository of OID records).
  * Each record in the repository is identified by id.
  *
  * Operations in this class mirror those in JDO:
@@ -16,10 +16,10 @@ import java.io.IOException;
 public interface IBucket<T extends ILXP> {
 
     /**
-     * Gets the LXP record with the specified id
+     * Gets the OID record with the specified id
      *
-     * @param id - the identifier of the LXP record for which a reader is required.
-     * @return an LXP record with the specified id, or null if the record cannot be found
+     * @param id - the identifier of the OID record for which a reader is required.
+     * @return an OID record with the specified id, or null if the record cannot be found
      * @throws BucketException if the record cannot be found or if something goes wrong.
      */
     T getObjectById(long id) throws BucketException;
@@ -51,7 +51,7 @@ public interface IBucket<T extends ILXP> {
     String filePath(long id);
 
     /*
-     * @return an input Stream containing all the LXP records in this Bucket
+     * @return an input Stream containing all the OID records in this Bucket
      */
     IInputStream<T> getInputStream() throws BucketException;
 
@@ -71,7 +71,7 @@ public interface IBucket<T extends ILXP> {
     IRepository getRepository();
 
     /**
-     * A predicate to determine if a LXP with the given id is located in the bucker.
+     * A predicate to determine if a OID with the given id is located in the bucker.
      *
      * @param id - an id to lookup
      * @return true if the bucket contains the given id

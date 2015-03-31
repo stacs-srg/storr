@@ -67,7 +67,7 @@ public class TransactionManager implements ITransactionManager {
 
             // go through each of the records in the log
             // These are either committed or not.
-            // Committed records have well formed LXP records written in the log, incomplete ones will have start records
+            // Committed records have well formed OID records written in the log, incomplete ones will have start records
 
             // for each committed transaction we need to:
             //  1. swizzle_records();                       // over-writes the records in the store with the shadows.

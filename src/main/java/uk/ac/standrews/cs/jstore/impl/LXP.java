@@ -7,6 +7,7 @@ import uk.ac.standrews.cs.jstore.impl.exceptions.KeyNotFoundException;
 import uk.ac.standrews.cs.jstore.impl.exceptions.TypeMismatchFoundException;
 import uk.ac.standrews.cs.jstore.interfaces.ILXP;
 import uk.ac.standrews.cs.jstore.interfaces.IReferenceType;
+import uk.ac.standrews.cs.jstore.interfaces.IStoreReference;
 import uk.ac.standrews.cs.jstore.types.Types;
 import uk.ac.standrews.cs.digitising_scotland.util.ErrorHandling;
 import uk.ac.standrews.cs.nds.persistence.PersistentObjectException;
@@ -215,6 +216,19 @@ public class LXP implements ILXP {
     }
 
     @Override
+    public IStoreReference getRef(String key) throws KeyNotFoundException, TypeMismatchFoundException {
+        if (containsKey(key)) {
+            Object result = map.get(key);
+            if (result instanceof String) { // expected
+                return new StoreReference( (String) result );
+            } else {
+                throw new TypeMismatchFoundException("expected IStoreReference found: " + result.getClass().getName());
+            }
+        }
+        throw new KeyNotFoundException(key);
+    }
+
+    @Override
     public void put(String key, String value) throws IllegalKeyException {
         check(key);
         map.put(key, value);
@@ -242,6 +256,12 @@ public class LXP implements ILXP {
     public void put(String key, int value) throws IllegalKeyException {
         check(key);
         map.put(key, new Integer(value));
+    }
+
+    @Override
+    public void put(String key, IStoreReference value) throws IllegalKeyException {
+        check(key);
+        map.put(key, value.toString());
     }
 
     @Override
@@ -281,7 +301,7 @@ public class LXP implements ILXP {
         try {
             serializeToJSON(new JSONWriter(sw));
         } catch (JSONException e) {
-            ErrorHandling.error("in LXP.toString()");
+            ErrorHandling.error("in OID.toString()");
         }
         return sw.toString();
     }

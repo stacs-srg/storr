@@ -5,6 +5,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import uk.ac.standrews.cs.jstore.impl.LXP;
 import uk.ac.standrews.cs.jstore.impl.StoreFactory;
+import uk.ac.standrews.cs.jstore.impl.StoreReference;
 import uk.ac.standrews.cs.jstore.impl.TypeFactory;
 import uk.ac.standrews.cs.jstore.impl.exceptions.*;
 import uk.ac.standrews.cs.jstore.impl.transaction.exceptions.TransactionFailedException;
@@ -101,7 +102,7 @@ public class InfrastructureTest {
             // should get an exception due to overwrite;
             return;
         }
-        fail("Overwrite of LXP record not detected");
+        fail("Overwrite of OID record not detected");
     }
 
     @Test
@@ -349,12 +350,11 @@ public class InfrastructureTest {
         lxp.put("name", "al");
         lxp.put("age", 55);
         lxp.put(Types.LABEL, personlabel.getId()); // correct label
-        long person_id = lxp.getId();
 
         b1.makePersistent(lxp);
 
         LXP lxp2 = new LXP();        // correct structure
-        lxp2.put("person_ref", person_id);
+        lxp2.put("person_ref", new StoreReference( repo, b1, lxp) );
         b2.makePersistent(lxp2);
     }
 

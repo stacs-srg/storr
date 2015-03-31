@@ -102,8 +102,11 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
             } else result = tFactory.create(id, new JSONReader(reader));
 
             // Now check for indirection
-            if (result.containsKey(StoreReference.$INDIRECTION$)) { // try and load the record that the indirection record points to
-                result = resolve_indirection(result);
+            if (result.containsKey(StoreReference.$INDIRECTION$)) {
+                // we have an indirection
+                // so try and load the record that the indirection record points to.
+                StoreReference<T> ref = new StoreReference<T>( result.getString( StoreReference.REPOSITORY ), result.getString( StoreReference.BUCKET ), result.getLong( StoreReference.OID ) );
+                result = ref.getReferend();
             }
             objectCache.put(id, this, (LXP) result);                             // Putting this call here ensures that all records that are in a bucket and loaded are in the cache
             return result;
@@ -275,7 +278,7 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
 
         try (BufferedWriter writer = Files.newBufferedWriter(typepath, FileManipulation.FILE_CHARSET)) {
 
-            writer.write(Long.toString(type_label_id)); // Write the id of the typelabel LXP into this field.
+            writer.write(Long.toString(type_label_id)); // Write the id of the typelabel OID into this field.
             writer.newLine();
         }
     }
@@ -397,18 +400,13 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
         }
     }
 
-    protected ILXP create_indirection(final T record) throws IOException, JSONException, IllegalKeyException, StoreException {
+    protected StoreReference create_indirection(final T record) throws IOException, JSONException, IllegalKeyException, StoreException {
 
         long oid = record.getId();
         IBucket b = objectCache.getBucket(oid);
         IRepository r = b.getRepository();
 
-        return new StoreReference( r.getName(), b.getName(), oid);
-    }
-
-    private T resolve_indirection(T record) throws BucketException {
-        
-            return new StoreReference( record ).get_referend(tFactory);
+        return new StoreReference( r, b, record);
     }
 
     //******** Private methods *********

@@ -10,8 +10,8 @@ import java.util.HashMap;
  * Created by al on 25/11/14.
  * This class maintains a cache of all in-memory objects that are stored in buckets
  * Note that transient objects are not in this cache.
- * It maps from id to a Bucket in which the LXP with that id is contained
- * All loaded and newly created LXP instances are loaded into it.
+ * It maps from id to a Bucket in which the OID with that id is contained
+ * All loaded and newly created OID instances are loaded into it.
  * <p/>
  * TODO consider cache eviction
  * TODO consider getting rid of buckets.

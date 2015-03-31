@@ -91,7 +91,7 @@ public class Transaction implements ITransaction {
     //**************** private ****************//
 
     /*
-     * @return the updates log as a string which can be written to an LXP field
+     * @return the updates log as a string which can be written to an OID field
      *
      */
     private StringBuffer stringify() {

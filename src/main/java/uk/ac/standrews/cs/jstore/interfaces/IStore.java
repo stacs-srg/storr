@@ -10,7 +10,7 @@ import java.util.Iterator;
  * The Stores are implemented as a Hierarchy in which there is one instance of the Store (per node).
  * Each Store can contain a multiplicity of Repositories (implementing @class IRepository).
  * Each repository can contain buckets (implementing at least @class IBucket).
- * Buckets contain LXP (labelled cross product) records.
+ * Buckets contain OID (labelled cross product) records.
  * Repositories (Repos) and buckets may be deleted.
  * The reason this model was adopted was to be permit buckets to be clustered together into local groups.
  * For example, buckets of blocked records may be clustered together into a single repo.

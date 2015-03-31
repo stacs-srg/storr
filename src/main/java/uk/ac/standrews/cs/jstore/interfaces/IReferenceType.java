@@ -5,11 +5,6 @@ import uk.ac.standrews.cs.jstore.impl.exceptions.TypeMismatchFoundException;
 
 
 /**
- * This is used to represent a type of an LXP - for example an LXP of the following form:
- * [name: "al", age: 55] would be represented as a reference type [name: string, age: int]
- * Which has the labels {"name","age"}. The field type of field "name" would return the rep
- * of int (encoded as a @class LXPBaseType(INT).
- * This information is encoded as an LXP of the form shown above i.e.: [name: string, age: int]
  * Created by al on 20/06/2014.
  */
 public interface IReferenceType extends IType {
@@ -35,7 +30,7 @@ public interface IReferenceType extends IType {
     public long getId();
 
     /**
-     * @return the LXP used to encode the reference type - e.g. [name: string, age: int]
+     * @return the OID used to encode the reference type - e.g. [name: string, age: int]
      */
     ILXP getRep();
 }
