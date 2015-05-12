@@ -34,10 +34,18 @@ public class TypeFactory {
             type_reps_bucket = get_bucket(type_Rep_bucket_name);
             type_name_bucket = get_bucket(type_names_bucket_name);
             load_caches();
+            createAnyType();
         } catch (RepositoryException e) {
             e.printStackTrace();
         }
     }
+
+    private void createAnyType() {
+        LXP typerep = Types.getTypeRep(LXP.class);
+        LXPReferenceType lxp_type = new LXPReferenceType(typerep);
+        do_housekeeping("lxp", lxp_type);
+    }
+
 
     public IReferenceType createType(String json_encoded_type_descriptor_file_name, String type_name) {
         LXPReferenceType ref_type = new LXPReferenceType(json_encoded_type_descriptor_file_name);

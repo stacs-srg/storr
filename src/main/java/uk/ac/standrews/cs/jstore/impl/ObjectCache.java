@@ -4,7 +4,8 @@ import uk.ac.standrews.cs.jstore.interfaces.IBucket;
 import uk.ac.standrews.cs.jstore.interfaces.ILXP;
 import uk.ac.standrews.cs.jstore.interfaces.IObjectCache;
 
-import java.util.HashMap;
+import java.util.Map;
+import java.util.WeakHashMap;
 
 /**
  * Created by al on 25/11/14.
@@ -13,12 +14,10 @@ import java.util.HashMap;
  * It maps from id to a Bucket in which the OID with that id is contained
  * All loaded and newly created OID instances are loaded into it.
  * <p/>
- * TODO consider cache eviction
- * TODO consider getting rid of buckets.
  */
 public class ObjectCache implements IObjectCache {
 
-    HashMap<Long, Data> map = new HashMap<Long, Data>();
+    Map<Long, Data> map = new WeakHashMap<Long, Data>();
 
     public ObjectCache() {
 

@@ -91,7 +91,6 @@ public class Types {
                 ErrorHandling.exceptionError(e, "Label missing (illegal code path): " + label);// this cannot happpen - already tested
                 return false; // for safety
             } catch (TypeMismatchFoundException e) {
-                //TODO look at me in a little while - 10/12/14!!!!!!
                 ErrorHandling.exceptionError(e, "Type mistmatch for label: " + label + "error: " + e.getMessage());
                 return false; // for safety
             }
@@ -137,6 +136,9 @@ public class Types {
 
         if (LXPBaseType.STRING.name().toLowerCase().equals(value.toLowerCase())) {
             return LXPBaseType.STRING;
+        }
+        if (LXPBaseType.LONG.name().toLowerCase().equals(value.toLowerCase())) {
+            return LXPBaseType.LONG;
         }
         if (LXPBaseType.INT.name().toLowerCase().equals(value.toLowerCase())) {
             return LXPBaseType.INT;

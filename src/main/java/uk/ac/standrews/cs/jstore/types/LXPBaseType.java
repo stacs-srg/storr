@@ -14,8 +14,9 @@ public enum LXPBaseType implements IType {
         @Override
         public boolean valueConsistentWithType(Object value) {
             ErrorHandling.error("Encountered UNKNOWN type whilst checking field contents");
+            Throwable t = new Throwable( "" );
+            t.printStackTrace();
             return false;
-
         }
     },
     STRING {
@@ -47,12 +48,13 @@ public enum LXPBaseType implements IType {
         public boolean valueConsistentWithType(Object value) {
             return value instanceof Boolean;
         }
-    },
-    OID {
-        @Override
-        public boolean valueConsistentWithType(Object value) {
-            return value instanceof Long;
-        }
     }
+//    ,
+//    OID {
+//        @Override
+//        public boolean valueConsistentWithType(Object value) {
+//            return value instanceof String;
+//        }
+//    }
 
 }

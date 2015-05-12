@@ -15,6 +15,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 
 import static uk.ac.standrews.cs.jstore.types.Types.check_label_consistency;
@@ -143,7 +144,7 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
         if (!this.contains(id)) {
             throw new BucketException("bucket does not contain specified id");
         }
-        Transaction t = null; // TODO shorten this with a local cache
+        Transaction t = null;
         try {
             t = StoreFactory.getStore().getTransactionManager().getTransaction(Long.toString(Thread.currentThread().getId()));
         } catch (StoreException e) {
@@ -156,8 +157,7 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
         Path new_record_write_location = transactionsPath(record.getId());
         if (new_record_write_location.toFile().exists()) { // we have a transaction conflict.
             t.rollback();
-            return;
-            // TODO make this throw concurrent update exception
+            throw new ConcurrentModificationException();
         }
         t.add(this, record.getId());
 

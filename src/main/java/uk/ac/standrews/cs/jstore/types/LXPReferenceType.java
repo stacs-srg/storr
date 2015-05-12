@@ -81,7 +81,6 @@ public class LXPReferenceType implements IReferenceType {
     @Override
     public IType getFieldType(String label) throws KeyNotFoundException, TypeMismatchFoundException {
         if (typerep.containsKey(label)) {
-            // TODO This needs repaired - check usages!
             String value = typerep.getString(label);
             return Types.stringToType(value);
         } else return LXPBaseType.UNKNOWN;
