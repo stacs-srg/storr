@@ -22,7 +22,7 @@ public class Repository implements IRepository {
     private final File repo_directory;
     private final String name;
 
-    public Repository(final String base_path, String name) throws RepositoryException {
+    public Repository(final Path base_path, String name) throws RepositoryException {
 
         if( ! legal_name( name ) ) {
             throw new RepositoryException( "Illegal repository name <" + name + ">" );

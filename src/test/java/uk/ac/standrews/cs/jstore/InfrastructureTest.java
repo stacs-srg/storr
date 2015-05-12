@@ -60,7 +60,7 @@ public class InfrastructureTest {
 
         Path tempStore = Files.createTempDirectory(null);
 
-        StoreFactory.setStorePath( tempStore.toString() );
+        StoreFactory.setStorePath( tempStore );
         store = StoreFactory.makeStore();
         System.out.println( "STORE PATH = " + tempStore.toString() );
 

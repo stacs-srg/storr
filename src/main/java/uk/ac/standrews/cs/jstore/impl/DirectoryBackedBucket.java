@@ -2,12 +2,12 @@ package uk.ac.standrews.cs.jstore.impl;
 
 import org.json.JSONException;
 import org.json.JSONWriter;
+import uk.ac.standrews.cs.digitising_scotland.util.ErrorHandling;
+import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
 import uk.ac.standrews.cs.jstore.impl.exceptions.*;
 import uk.ac.standrews.cs.jstore.impl.transaction.impl.Transaction;
 import uk.ac.standrews.cs.jstore.interfaces.*;
 import uk.ac.standrews.cs.jstore.types.Types;
-import uk.ac.standrews.cs.digitising_scotland.util.ErrorHandling;
-import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
 import uk.ac.standrews.cs.nds.persistence.PersistentObjectException;
 import uk.ac.standrews.cs.nds.rpc.stream.JSONReader;
 
@@ -15,7 +15,6 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 
 import static uk.ac.standrews.cs.jstore.types.Types.check_label_consistency;
@@ -157,7 +156,7 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
         Path new_record_write_location = transactionsPath(record.getId());
         if (new_record_write_location.toFile().exists()) { // we have a transaction conflict.
             t.rollback();
-            throw new ConcurrentModificationException();
+            return;
         }
         t.add(this, record.getId());
 

@@ -1,19 +1,18 @@
 package uk.ac.standrews.cs.jstore.impl;
 
+import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
 import uk.ac.standrews.cs.jstore.impl.exceptions.RepositoryException;
 import uk.ac.standrews.cs.jstore.impl.exceptions.StoreException;
 import uk.ac.standrews.cs.jstore.impl.transaction.interfaces.ITransactionManager;
 import uk.ac.standrews.cs.jstore.interfaces.IObjectCache;
 import uk.ac.standrews.cs.jstore.interfaces.IRepository;
 import uk.ac.standrews.cs.jstore.interfaces.IStore;
-import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
 import uk.ac.standrews.cs.nds.util.ErrorHandling;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.security.SecureRandom;
 import java.util.Iterator;
 
@@ -25,11 +24,8 @@ public class Store implements IStore {
     private final static String REPO_DIR_NAME = "REPOS";
 //    private final static String ID_FILE_NAME = "id_file"; // // no longer needed for pseudo random ids
 
-    private static String store_path = null;
-    private final String repo_path;
-    private final File store_root_directory;
-    private final File repo_directory;
-//    private final File id_file; // no longer needed for pseudo random ids
+    private static Path store_path = null;
+    private final Path repo_path;
 
     private final IObjectCache object_cache;
     private static SecureRandom sr = new SecureRandom();
@@ -42,15 +38,10 @@ public class Store implements IStore {
         if( store_path == null ) {
             throw new StoreException( "Null store path specified" );
         }
-        this.repo_path = store_path + File.separator + REPO_DIR_NAME;
+        this.repo_path = store_path.resolve( REPO_DIR_NAME );
 
-        store_root_directory = new File(store_path);
-        repo_directory = new File(repo_path);
-        // no longer needed for pseudo random ids:
-        // id_file = new File(store_path + File.separator + ID_FILE_NAME);
-
-        checkCreate(store_root_directory);
-        checkCreate(repo_directory);
+        checkCreate(store_path);
+        checkCreate(repo_path);
 
         object_cache = new ObjectCache();
     }
@@ -62,7 +53,7 @@ public class Store implements IStore {
         this.tm = trans_manager;
     }
 
-    protected static void set_store_path( String path ) {
+    protected static void set_store_path( Path path ) {
         store_path = path;
     }
 
@@ -107,7 +98,7 @@ public class Store implements IStore {
 
     @Override
     public Iterator<IRepository> getIterator() {
-        return new RepoIterator(this, repo_directory);
+        return new RepoIterator(this, repo_path);
     }
 
 
@@ -134,23 +125,27 @@ public class Store implements IStore {
         return next_prn;
     }
 
-    private void checkCreate(File root_dir) throws StoreException {
-        if (!root_dir.exists()) {  // only create if it doesn't exist - try and make the directory
+    private void checkCreate(Path dir) throws StoreException {
 
-            if (!root_dir.mkdir()) {
-                throw new StoreException("Directory " + root_dir.getAbsolutePath() + " does not exist and cannot be created");
+        if (!Files.exists( dir )) {  // only create if it doesn't exist - try and make the directory
+
+            try {
+                Path xx = Files.createDirectories(dir);
+            } catch (IOException e) {
+                throw new StoreException("Directory " + dir.toString() + " does not exist and cannot be created");
             }
 
         } else { // it does exist - check that it is a directory
-            if (!root_dir.isDirectory()) {
-                throw new StoreException(root_dir.getAbsolutePath() + " exists but is not a directory");
+
+            if (!Files.isDirectory(dir)) {
+                throw new StoreException(dir.toString() + " exists but is not a directory");
             }
         }
     }
 
     private Path getRepoPath(final String name) {
 
-        return Paths.get(repo_path).resolve(name);
+        return repo_path.resolve(name);
     }
 
     private void createRepository(String name) throws RepositoryException {
@@ -175,10 +170,10 @@ public class Store implements IStore {
         private final Iterator<File> file_iterator;
         private final IStore store;
 
-        public RepoIterator(final IStore store, final File repo_directory) {
+        public RepoIterator(final IStore store, final Path repo_directory) {
 
             this.store = store;
-            file_iterator = FileIteratorFactory.createFileIterator(repo_directory, false, true);
+            file_iterator = FileIteratorFactory.createFileIterator(repo_directory.toFile(), false, true);
         }
 
         public boolean hasNext() {

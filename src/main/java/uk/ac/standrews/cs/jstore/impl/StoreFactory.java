@@ -5,6 +5,8 @@ import uk.ac.standrews.cs.jstore.impl.exceptions.StoreException;
 import uk.ac.standrews.cs.jstore.impl.transaction.impl.TransactionManager;
 import uk.ac.standrews.cs.jstore.interfaces.IStore;
 
+import java.nio.file.Path;
+
 /**
  * Created by al on 16/01/15.
  */
@@ -32,7 +34,7 @@ public class StoreFactory {
         return getStore();
     }
 
-    public static void setStorePath( String store_path ) {
+    public static void setStorePath( Path store_path ) {
         Store.set_store_path( store_path );
 
     }
