@@ -2,8 +2,8 @@ package uk.ac.standrews.cs.jstore.impl;
 
 import uk.ac.standrews.cs.jstore.impl.exceptions.RepositoryException;
 import uk.ac.standrews.cs.jstore.interfaces.*;
-import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
 import uk.ac.standrews.cs.nds.util.ErrorHandling;
+import uk.ac.standrews.cs.util.tools.*;
 
 import java.io.File;
 import java.io.IOException;

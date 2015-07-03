@@ -1,7 +1,6 @@
 package uk.ac.standrews.cs.jstore.types;
 
 import uk.ac.standrews.cs.digitising_scotland.util.ErrorHandling;
-import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
 import uk.ac.standrews.cs.jstore.impl.LXP;
 import uk.ac.standrews.cs.jstore.impl.StoreReference;
 import uk.ac.standrews.cs.jstore.impl.exceptions.*;
@@ -11,6 +10,7 @@ import uk.ac.standrews.cs.jstore.interfaces.IStoreReference;
 import uk.ac.standrews.cs.jstore.interfaces.IType;
 import uk.ac.standrews.cs.nds.persistence.PersistentObjectException;
 import uk.ac.standrews.cs.nds.rpc.stream.JSONReader;
+import uk.ac.standrews.cs.util.tools.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;
