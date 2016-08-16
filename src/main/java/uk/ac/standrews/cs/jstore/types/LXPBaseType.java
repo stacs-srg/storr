@@ -1,7 +1,7 @@
 package uk.ac.standrews.cs.jstore.types;
 
 import uk.ac.standrews.cs.jstore.interfaces.IType;
-import uk.ac.standrews.cs.digitising_scotland.util.ErrorHandling;
+import uk.ac.standrews.cs.jstore.util.ErrorHandling;
 
 /**
  * Created by al on 20/06/2014.

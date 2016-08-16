@@ -14,7 +14,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 
-import static uk.ac.standrews.cs.digitising_scotland.util.FileManipulation.FILE_CHARSET;
+import static uk.ac.standrews.cs.jstore.util.FileManipulation.FILE_CHARSET;
 
 /**
  * Created by al on 23/05/2014.

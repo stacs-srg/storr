@@ -6,7 +6,7 @@ import uk.ac.standrews.cs.jstore.impl.transaction.exceptions.TransactionFailedEx
 import uk.ac.standrews.cs.jstore.impl.transaction.interfaces.ITransaction;
 import uk.ac.standrews.cs.jstore.impl.transaction.interfaces.ITransactionManager;
 import uk.ac.standrews.cs.jstore.interfaces.*;
-import uk.ac.standrews.cs.digitising_scotland.util.ErrorHandling;
+import uk.ac.standrews.cs.jstore.util.ErrorHandling;
 
 import java.util.HashMap;
 import java.util.Iterator;

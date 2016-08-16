@@ -1,11 +1,14 @@
 package uk.ac.standrews.cs.jstore.impl;
 
-import uk.ac.standrews.cs.digitising_scotland.util.ErrorHandling;
 import uk.ac.standrews.cs.jstore.impl.exceptions.BucketException;
 import uk.ac.standrews.cs.jstore.impl.exceptions.ReferenceException;
 import uk.ac.standrews.cs.jstore.impl.exceptions.RepositoryException;
 import uk.ac.standrews.cs.jstore.impl.exceptions.StoreException;
-import uk.ac.standrews.cs.jstore.interfaces.*;
+import uk.ac.standrews.cs.jstore.interfaces.IBucket;
+import uk.ac.standrews.cs.jstore.interfaces.ILXP;
+import uk.ac.standrews.cs.jstore.interfaces.IRepository;
+import uk.ac.standrews.cs.jstore.interfaces.IStoreReference;
+import uk.ac.standrews.cs.jstore.util.ErrorHandling;
 
 /**
  * Created by al on 23/03/15.

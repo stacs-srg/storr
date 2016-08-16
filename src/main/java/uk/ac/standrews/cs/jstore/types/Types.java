@@ -8,7 +8,7 @@ import uk.ac.standrews.cs.jstore.impl.exceptions.TypeMismatchFoundException;
 import uk.ac.standrews.cs.jstore.interfaces.ILXP;
 import uk.ac.standrews.cs.jstore.interfaces.IReferenceType;
 import uk.ac.standrews.cs.jstore.interfaces.IType;
-import uk.ac.standrews.cs.digitising_scotland.util.ErrorHandling;
+import uk.ac.standrews.cs.jstore.util.ErrorHandling;
 
 import java.io.IOException;
 import java.lang.reflect.Field;

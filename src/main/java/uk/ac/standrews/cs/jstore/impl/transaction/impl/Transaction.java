@@ -7,7 +7,7 @@ import uk.ac.standrews.cs.jstore.impl.exceptions.StoreException;
 import uk.ac.standrews.cs.jstore.impl.transaction.exceptions.TransactionFailedException;
 import uk.ac.standrews.cs.jstore.impl.transaction.interfaces.ITransaction;
 import uk.ac.standrews.cs.jstore.interfaces.IBucket;
-import uk.ac.standrews.cs.digitising_scotland.util.ErrorHandling;
+import uk.ac.standrews.cs.jstore.util.ErrorHandling;
 
 import java.util.ArrayList;
 import java.util.List;

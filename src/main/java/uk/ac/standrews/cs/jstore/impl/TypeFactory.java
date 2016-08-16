@@ -5,7 +5,7 @@ import uk.ac.standrews.cs.jstore.impl.exceptions.*;
 import uk.ac.standrews.cs.jstore.interfaces.*;
 import uk.ac.standrews.cs.jstore.types.LXPReferenceType;
 import uk.ac.standrews.cs.jstore.types.Types;
-import uk.ac.standrews.cs.digitising_scotland.util.ErrorHandling;
+import uk.ac.standrews.cs.jstore.util.ErrorHandling;
 
 import java.util.HashMap;
 import java.util.Iterator;
