@@ -1,6 +1,5 @@
 package uk.ac.standrews.cs.jstore.impl;
 
-
 import uk.ac.standrews.cs.jstore.impl.exceptions.RepositoryException;
 import uk.ac.standrews.cs.jstore.impl.exceptions.StoreException;
 import uk.ac.standrews.cs.jstore.impl.transaction.interfaces.ITransactionManager;
@@ -66,7 +65,7 @@ public class Store implements IStore {
     @Override
     public IRepository makeRepository(final String name) throws RepositoryException {
 
-        if( ! legal_name( name ) ) {
+        if(!legal_name(name)) {
             throw new RepositoryException( "Illegal Repository name <" + name + ">" );
         }
         createRepository(name);
@@ -108,9 +107,9 @@ public class Store implements IStore {
         return object_cache;
     }
 
-    /******************** private methods ********************/
+    /******************** private and protected methods ********************/
 
-    public static long getNextFreePID() {
+    protected static long getNextFreePID() {
         return getPRN();
     }
 
@@ -131,7 +130,7 @@ public class Store implements IStore {
         if (!Files.exists( dir )) {  // only create if it doesn't exist - try and make the directory
 
             try {
-                Path xx = Files.createDirectories(dir);
+                FileManipulation.createDirectoryIfDoesNotExist(dir);
             } catch (IOException e) {
                 throw new StoreException("Directory " + dir.toString() + " does not exist and cannot be created");
             }

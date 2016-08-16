@@ -19,9 +19,7 @@ public class ObjectCache implements IObjectCache {
 
     Map<Long, Data> map = new WeakHashMap<Long, Data>();
 
-    public ObjectCache() {
-
-    }
+    public ObjectCache() {}
 
     /**
      * Adds the triple to the object cache.

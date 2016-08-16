@@ -28,14 +28,11 @@ import static org.junit.Assert.assertTrue;
 /**
  * Created by al on 25/04/2014.
  */
-@Ignore
 public class InfrastructureTest {
 
     private static String generic_bucket_name1 = "BUCKET1";
     private static String generic_bucket_name2 = "BUCKET2";
     private static String generic_bucket_name3 = "BUCKET3";
-
-    private static String types_name = "types";
 
     private static String PERSONRECORDTYPETEMPLATE ;
     private static String PERSONREFTUPLETYPETEMPLATE ;
@@ -43,7 +40,6 @@ public class InfrastructureTest {
     private IStore store;
     private IRepository repo;
 
-    private IBucket types;
     private IReferenceType personlabel;
     private IReferenceType personlabel2;
     private IReferenceType personreftuple;
@@ -53,7 +49,7 @@ public class InfrastructureTest {
     private CountDownLatch latch;
 
     @Before
-    public void setUpEachTest() throws RepositoryException, IOException, StoreException, URISyntaxException {
+    public void setUp() throws RepositoryException, IOException, StoreException, URISyntaxException {
 
         PERSONRECORDTYPETEMPLATE = new File(InfrastructureTest.class.getResource("/PersonRecord.jsn").toURI()).getAbsolutePath();
         PERSONREFTUPLETYPETEMPLATE = new File(InfrastructureTest.class.getResource("/PersonRefRecord.jsn").toURI()).getAbsolutePath();
@@ -62,7 +58,7 @@ public class InfrastructureTest {
 
         StoreFactory.setStorePath( tempStore );
         store = StoreFactory.makeStore();
-        System.out.println( "STORE PATH = " + tempStore.toString() );
+        System.out.println("STORE PATH = " + tempStore.toString());
 
         repo = store.makeRepository("repo");
 
@@ -374,7 +370,6 @@ public class InfrastructureTest {
 
         b1.makePersistent(lxp);
 
-
         try {
             LXP lxp2 = new LXP();        // correct structure
             lxp2.put("person_ref", Integer.toString(100)); // an illegal reference - not a legal identifier
@@ -417,8 +412,8 @@ public class InfrastructureTest {
             // do nothing test succeeds if exception is caught
             return;
         }
-        fail("Illegal reference not detected");
 
+        fail("Illegal reference not detected");
     }
 
     @Test
@@ -468,7 +463,6 @@ public class InfrastructureTest {
         assertEquals(lxp2.getString("address"), "home");
     }
 
-
     @Test
     public synchronized void testStreams() throws Exception, RepositoryException, KeyNotFoundException, TypeMismatchFoundException, IllegalKeyException {
         IBucket b = repo.getBucket(generic_bucket_name1);
@@ -490,7 +484,6 @@ public class InfrastructureTest {
         }
         assertEquals(count, 10);
     }
-
 
     @Test
     public synchronized void testBaseTypedFields() throws Exception, RepositoryException, KeyNotFoundException, TypeMismatchFoundException, IllegalKeyException {
@@ -517,12 +510,11 @@ public class InfrastructureTest {
         assertEquals(lxp2.getLong("long"), 23L);
         assertTrue(lxp2.containsKey("string"));
         assertEquals(lxp2.getString("string"), "al");
-
     }
 
+    @Ignore
     @Test
     public synchronized void illegalFieldType() {
-
         // TODO need a test for illegal field label types -
         // e.g. reference to a type that doesn't exist
         // code needs fixed in injest if we keep it.
@@ -537,6 +529,4 @@ public class InfrastructureTest {
         b.makePersistent(lxp);       // <<--------- write record **
     }
 
-
 }
-

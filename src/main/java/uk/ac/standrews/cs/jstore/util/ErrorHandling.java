@@ -35,13 +35,14 @@ public final class ErrorHandling {
 
     private static final String SEPARATOR = " : ";
     private static final String HARD_ERROR_LABEL = "FATAL ERROR: ";
+    private static final Object SYNC = new Object(); // To allow Diagnostic calls to be synchronised with respect to these methods.
+    private static final String DEFAULT_DATE_FORMAT_PATTERN = "HHmm.ss.SSS yyyy-MM-dd";
 
     private static boolean use_timestamp = false;
-
-    protected static final Object SYNC = new Object(); // To allow Diagnostic calls to be synchronised with respect to these methods.
-
-    protected static final String DEFAULT_DATE_FORMAT_PATTERN = "HHmm.ss.SSS yyyy-MM-dd";
     private static DateFormat dateformat = new SimpleDateFormat(DEFAULT_DATE_FORMAT_PATTERN);
+
+    // Stops this class from being instantiated
+    private ErrorHandling() {}
 
     /**
      * Outputs an error message on the event bus and to standard error, if enabled.
@@ -62,10 +63,6 @@ public final class ErrorHandling {
     public static void exceptionError(final Throwable e, final Object... msg) {
 
         outputError(false, Diagnostic.getMethodInCallChain(), e, msg);
-    }
-
-    private ErrorHandling() {
-
     }
 
     private static void outputError(final boolean fatal, final String source, final Throwable e, final Object... messages) {

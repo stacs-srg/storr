@@ -30,17 +30,30 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
 /**
+ * This class provides a set of utilities function over the file system to manage
+ * files and directories.
+ *
  * Created by al on 11/05/2014.
  */
 public class FileManipulation {
 
     public static final Charset FILE_CHARSET = Charset.forName("UTF-8");
 
+    /**
+     * Delete the specified directory recursively
+     * @param directory_path
+     * @throws IOException
+     */
     public static void deleteDirectory(final String directory_path) throws IOException {
 
         deleteDirectory(Paths.get(directory_path));
     }
 
+    /**
+     * Delete the specified directory recursively
+     * @param directory
+     * @throws IOException
+     */
     public static void deleteDirectory(final Path directory) throws IOException {
 
         Files.walkFileTree(directory, new SimpleFileVisitor<Path>() {
@@ -97,23 +110,22 @@ public class FileManipulation {
 
         List<Path> result = new ArrayList<>();
         try (DirectoryStream<Path> stream = Files.newDirectoryStream(directory)) {
+
             for (Path entry : stream) {
                 result.add(entry);
             }
         } catch (DirectoryIteratorException e) {
-            throw e.getCause();
+            throw new IOException(e);
         }
         return result;
     }
 
     public static void assertThatFilesHaveSameContent(final Path path1, final Path path2) throws IOException {
 
-        try (
-                BufferedReader reader1 = Files.newBufferedReader(path1, FILE_CHARSET);
-                BufferedReader reader2 = Files.newBufferedReader(path2, FILE_CHARSET)) {
+        try (BufferedReader reader1 = Files.newBufferedReader(path1, FILE_CHARSET);
+             BufferedReader reader2 = Files.newBufferedReader(path2, FILE_CHARSET)) {
 
             String line1;
-
             while ((line1 = reader1.readLine()) != null) {
                 final String line2 = reader2.readLine();
                 assertEquals(line1, line2);

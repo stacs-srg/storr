@@ -200,14 +200,11 @@ public class Repository implements IRepository {
 
         @Override
         public String next() {
-
             return file_iterator.next().getName();
-
         }
 
         @Override
         public void remove() {
-
             throw new UnsupportedOperationException("remove called on stream - unsupported");
         }
 

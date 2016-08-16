@@ -14,28 +14,41 @@ public class StoreFactory {
 
     private static Store store = null;
 
+    /**
+     * Get the latest made store.
+     * If no store was made, one will be created and returned.
+     * @return
+     * @throws StoreException
+     */
     public static IStore getStore() throws StoreException {
 
-        if( store == null ) {
+        if (store == null) {
             store = new Store();
             try {
-                store.setTransactionManager( new TransactionManager() );
+                store.setTransactionManager(new TransactionManager());
             } catch (RepositoryException e) {
-                throw new StoreException( e );
+                throw new StoreException(e);
             }
-            return store;
-        } else {
-            return store;
         }
+
+        return store;
     }
 
+    /**
+     * Create a new store
+     * @return
+     * @throws StoreException
+     */
     public static IStore makeStore() throws StoreException {
         store = null;
         return getStore();
     }
 
+    /**
+     * Set the path of the store. This will be used when creating the store.
+     * @param store_path
+     */
     public static void setStorePath( Path store_path ) {
         Store.set_store_path( store_path );
-
     }
 }
