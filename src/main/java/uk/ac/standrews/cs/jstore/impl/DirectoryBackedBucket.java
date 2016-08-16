@@ -3,13 +3,13 @@ package uk.ac.standrews.cs.jstore.impl;
 import org.json.JSONException;
 import org.json.JSONWriter;
 import uk.ac.standrews.cs.digitising_scotland.util.ErrorHandling;
+import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
 import uk.ac.standrews.cs.jstore.impl.exceptions.*;
 import uk.ac.standrews.cs.jstore.impl.transaction.impl.Transaction;
 import uk.ac.standrews.cs.jstore.interfaces.*;
 import uk.ac.standrews.cs.jstore.types.Types;
 import uk.ac.standrews.cs.nds.persistence.PersistentObjectException;
 import uk.ac.standrews.cs.nds.rpc.stream.JSONReader;
-import uk.ac.standrews.cs.util.tools.*;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -30,7 +30,7 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
     private String name;     // the name of this bucket - used as the directory name
     protected File directory;  // the directory implementing the bucket storage
     private long type_label_id = -1; // not set
-    IObjectCache objectCache;
+    private IObjectCache objectCache;
 
     private static final String TRANSACTIONS = "TRANSACTIONS";
 
@@ -92,14 +92,28 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
             if (o == null) {
                 ErrorHandling.error("Could not find cached object in object cache");
             }
-            return (T) o; // this is safe since the value couldn't getObjectById from the cache unless of the right type.
+            return (T) o; // this is safe since this.contains(id) and also the cache contains the object.
         }
+
+        // get to here means it is not in the cache
 
         try (BufferedReader reader = Files.newBufferedReader(Paths.get(filePath(id)), FileManipulation.FILE_CHARSET)) {
 
-            if (tFactory == null) { //  No java type specified
-                result = (T) (new LXP(id, new JSONReader(reader)));
-            } else result = tFactory.create(id, new JSONReader(reader));
+            if (tFactory == null) { //  No java constructor specified
+                try {
+                    result = (T) (new LXP(id, new JSONReader(reader)));
+                } catch (PersistentObjectException e) {
+                    ErrorHandling.error("Could not create new LXP for object with id: " + id + " in directory: " + directory );
+                    return null;
+                }
+            } else {
+                try {
+                    result = tFactory.create(id, new JSONReader(reader));
+                } catch (PersistentObjectException e) {
+                    ErrorHandling.error("Could not create new LXP (using factory) for object with id: " + id + " in directory: " + directory );
+                    return null;
+                }
+            }
 
             // Now check for indirection
             if (result.containsKey(StoreReference.$INDIRECTION$)) {
@@ -108,15 +122,12 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
                 StoreReference<T> ref = new StoreReference<T>( result.getString( StoreReference.REPOSITORY ), result.getString( StoreReference.BUCKET ), result.getLong( StoreReference.OID ) );
                 result = ref.getReferend();
             }
-            objectCache.put(id, this, (LXP) result);                             // Putting this call here ensures that all records that are in a bucket and loaded are in the cache
+            objectCache.put(id, this, (LXP) result);           // Putting this call here ensures that all records that are in a bucket and loaded are in the cache
             return result;
 
         } catch (IOException e) {
-            throw new BucketException("I/O error");
-        } catch (PersistentObjectException e) {
-            throw new BucketException("Persistent object error");
-        } catch (IllegalKeyException e) {
-            throw new BucketException("Illegal key error");
+            ErrorHandling.error("Exception creating reader for LXP with id: " + id  + " in directory: " + directory );
+            return null;
         }
     }
 
@@ -192,6 +203,10 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
             }
         }
 
+        writeData( record_to_write, filepath );
+    }
+
+    private void writeData( ILXP record_to_write, Path filepath ) throws BucketException {
         try (Writer writer = Files.newBufferedWriter(filepath, FileManipulation.FILE_CHARSET)) { // auto close and exception
 
             record_to_write.serializeToJSON(new JSONWriter(writer));
@@ -219,8 +234,8 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
 
         try {
             return new BucketBackedInputStream(this, directory);
-        } catch (IOException e) {
-            ErrorHandling.error("I/O Exception getting stream");
+        } catch (Exception e) {
+            ErrorHandling.error("Exception getting stream");
             throw new BucketException(e.getMessage());
         }
     }

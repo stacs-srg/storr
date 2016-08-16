@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.jstore.impl;
 
+import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
 import uk.ac.standrews.cs.jstore.impl.exceptions.RepositoryException;
 import uk.ac.standrews.cs.jstore.impl.exceptions.StoreException;
 import uk.ac.standrews.cs.jstore.impl.transaction.interfaces.ITransactionManager;
@@ -7,7 +8,6 @@ import uk.ac.standrews.cs.jstore.interfaces.IObjectCache;
 import uk.ac.standrews.cs.jstore.interfaces.IRepository;
 import uk.ac.standrews.cs.jstore.interfaces.IStore;
 import uk.ac.standrews.cs.nds.util.ErrorHandling;
-import uk.ac.standrews.cs.util.tools.*;
 
 import java.io.File;
 import java.io.IOException;

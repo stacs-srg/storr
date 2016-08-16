@@ -1,8 +1,10 @@
 package uk.ac.standrews.cs.jstore.types;
 
 import uk.ac.standrews.cs.digitising_scotland.util.ErrorHandling;
+import uk.ac.standrews.cs.digitising_scotland.util.FileManipulation;
 import uk.ac.standrews.cs.jstore.impl.LXP;
 import uk.ac.standrews.cs.jstore.impl.StoreReference;
+import uk.ac.standrews.cs.jstore.impl.TypeFactory;
 import uk.ac.standrews.cs.jstore.impl.exceptions.*;
 import uk.ac.standrews.cs.jstore.interfaces.ILXP;
 import uk.ac.standrews.cs.jstore.interfaces.IReferenceType;
@@ -10,7 +12,6 @@ import uk.ac.standrews.cs.jstore.interfaces.IStoreReference;
 import uk.ac.standrews.cs.jstore.interfaces.IType;
 import uk.ac.standrews.cs.nds.persistence.PersistentObjectException;
 import uk.ac.standrews.cs.nds.rpc.stream.JSONReader;
-import uk.ac.standrews.cs.util.tools.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -70,7 +71,11 @@ public class LXPReferenceType implements IReferenceType {
             return false;
         }
 
-        return Types.check_structural_consistency(record, this);
+        if( this.equals( TypeFactory.getInstance().typeWithname( "lxp" ) ) ) { // if we just require an lxp don't do more structural checking.
+            return true;
+        } else {
+            return Types.check_structural_consistency(record, this);
+        }
     }
 
     @Override

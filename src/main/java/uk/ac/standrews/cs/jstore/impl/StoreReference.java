@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.jstore.impl;
 
+import uk.ac.standrews.cs.digitising_scotland.util.ErrorHandling;
 import uk.ac.standrews.cs.jstore.impl.exceptions.BucketException;
 import uk.ac.standrews.cs.jstore.impl.exceptions.ReferenceException;
 import uk.ac.standrews.cs.jstore.impl.exceptions.RepositoryException;
@@ -11,12 +12,12 @@ import uk.ac.standrews.cs.jstore.interfaces.*;
  */
 public class StoreReference<T extends ILXP> extends LXP implements IStoreReference {
 
-    public final static String $INDIRECTION$ = "$INDIRECTION$";
+    protected final static String $INDIRECTION$ = "$INDIRECTION$";
     protected final static String REPOSITORY = "repository";
     protected final static String BUCKET = "bucket";
     protected final static String OID = "oid";
 
-    T reference = null;
+    private T reference = null;
 
     private static final String SEPARATOR = "/";
 
@@ -43,14 +44,28 @@ public class StoreReference<T extends ILXP> extends LXP implements IStoreReferen
         this.put(OID, oid);
     }
 
-    public StoreReference( IRepository repo, IBucket bucket, T reference ) {
-        this( repo.getName(),bucket.getName(), reference.getId() );
+    public StoreReference( String repo_name, String bucket_name, T reference ) {
+        super();
+        this.put($INDIRECTION$, "true");
+        this.put(REPOSITORY, repo_name );
+        this.put(BUCKET, bucket_name);
+        this.put(OID, reference.getId());
+    }
+
+    public StoreReference( IRepository repo, IBucket bucket, long oid ) {
+        this(repo.getName(), bucket.getName(), oid);
+    }
+
+    public StoreReference(IRepository repo, IBucket bucket, T reference) {
+        this(repo.getName(), bucket.getName(), reference.getId());
         this.reference = reference;
     }
 
     public StoreReference(ILXP record)  {
         this(record.getString(REPOSITORY), record.getString(BUCKET), record.getLong(OID));
     }
+
+
 
     @Override
     public String getRepoName() {
@@ -78,9 +93,16 @@ public class StoreReference<T extends ILXP> extends LXP implements IStoreReferen
 
                     reference = (T) StoreFactory.getStore().getRepo(getRepoName()).getBucket(getBucketName()).getObjectById(getOid());
 
+                    if( reference == null ) { // still not found it.
+                        ErrorHandling.error( "Returning null: cannot resolve reference to LXP: " + this.toString() );
+                        return null;
+                    }
                 }
-                return (T) reference;
+                return reference;
             } catch (ClassCastException | BucketException | RepositoryException | StoreException e) {
+
+                ErrorHandling.error( "*** Exception: " + e.getClass().getSimpleName()  + " for: " + this.toString() );
+
                 throw new BucketException(e);
             }
         } else {
@@ -90,13 +112,5 @@ public class StoreReference<T extends ILXP> extends LXP implements IStoreReferen
 
     public String toString() {
         return getRepoName() + SEPARATOR + getBucketName() + SEPARATOR + getOid();
-    }
-
-    public <T extends ILXP> T get_referend( ILXPFactory<T> tFactory ) throws BucketException {
-        try {
-            return StoreFactory.getStore().getRepo(getRepoName()).getBucket(getBucketName(), tFactory).getObjectById(getOid());
-        } catch (BucketException | RepositoryException | StoreException e) {
-            throw new BucketException( e );
-        }
     }
 }

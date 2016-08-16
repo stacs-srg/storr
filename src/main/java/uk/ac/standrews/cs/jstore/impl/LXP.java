@@ -49,24 +49,18 @@ public class LXP implements ILXP {
 
                 if (reader.have(JSONReader.LONG)) {
                     long value = reader.longValue();
-                    System.out.println("for key: " + key + " ,read a long :" + value);
                     this.put(key, value);
-                }
-                if (reader.have(JSONReader.INTEGER)) {
+                } else if (reader.have(JSONReader.INTEGER)) {
                     int value = reader.intValue();
-                    System.out.println("for key: " + key + " ,read a string :" + value);
                     this.put(key, value);
                 } else if (reader.have(JSONReader.DOUBLE)) {
                     double value = reader.doubleValue();
-                    System.out.println("for key: " + key + " ,read a double :" + value);
                     this.put(key, value);
                 } else if (reader.have(JSONReader.STRING)) {
                     String value = reader.stringValue();
-                    System.out.println("for key: " + key + " ,read a string :" + value);
                     this.put(key, value);
                 } else if (reader.have(JSONReader.BOOLEAN)) {
                     Boolean value = reader.booleanValue();
-                    System.out.println("for key: " + key + " ,read a bool :" + value);
                     this.put(key, value);
                 } else {
                     throw new PersistentObjectException("Unexpected type in JSON string");

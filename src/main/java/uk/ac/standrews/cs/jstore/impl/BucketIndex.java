@@ -6,7 +6,6 @@ import uk.ac.standrews.cs.jstore.impl.exceptions.TypeMismatchFoundException;
 import uk.ac.standrews.cs.jstore.interfaces.IBucketIndex;
 import uk.ac.standrews.cs.jstore.interfaces.IInputStream;
 import uk.ac.standrews.cs.jstore.interfaces.ILXP;
-import uk.ac.standrews.cs.util.tools.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,7 +14,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 
-import static uk.ac.standrews.cs.util.tools.FileManipulation.FILE_CHARSET;
+import static uk.ac.standrews.cs.digitising_scotland.util.FileManipulation.FILE_CHARSET;
 
 /**
  * Created by al on 23/05/2014.
