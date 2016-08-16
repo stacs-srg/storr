@@ -20,7 +20,17 @@
         <maven-compiler-plugin.version>3.5.1</maven-compiler-plugin.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <!-- The directory on Beast where the files are deployed after a successful Jenkins build.-->
+        <repository.home>file:///data/jenkins/remote_maven_repository/</repository.home>
     </properties>
+
+    <distributionManagement>
+        <repository>
+            <id>uk.ac.standrews.cs.jenkins.distribution.management</id>
+            <name>Jenkins Distribution Management</name>
+            <url>${repository.home}</url>
+        </repository>
+    </distributionManagement>
 
     <build>
         <plugins>
