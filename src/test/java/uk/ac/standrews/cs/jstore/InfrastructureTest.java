@@ -12,8 +12,8 @@ import uk.ac.standrews.cs.jstore.impl.transaction.exceptions.TransactionFailedEx
 import uk.ac.standrews.cs.jstore.impl.transaction.interfaces.ITransaction;
 import uk.ac.standrews.cs.jstore.interfaces.*;
 import uk.ac.standrews.cs.jstore.types.Types;
+import uk.ac.standrews.cs.jstore.utils.Helper;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
@@ -34,8 +34,8 @@ public class InfrastructureTest {
     private static String generic_bucket_name2 = "BUCKET2";
     private static String generic_bucket_name3 = "BUCKET3";
 
-    private static String PERSONRECORDTYPETEMPLATE ;
-    private static String PERSONREFTUPLETYPETEMPLATE ;
+    private static String PERSON_RECORD_TYPE_TEMPLATE;
+    private static String PERSON_REF_TUPLE_TYPE_TEMPLATE;
 
     private IStore store;
     private IRepository repo;
@@ -51,8 +51,8 @@ public class InfrastructureTest {
     @Before
     public void setUp() throws RepositoryException, IOException, StoreException, URISyntaxException {
 
-        PERSONRECORDTYPETEMPLATE = new File(InfrastructureTest.class.getResource("/PersonRecord.jsn").toURI()).getAbsolutePath();
-        PERSONREFTUPLETYPETEMPLATE = new File(InfrastructureTest.class.getResource("/PersonRefRecord.jsn").toURI()).getAbsolutePath();
+        PERSON_RECORD_TYPE_TEMPLATE = Helper.getResourcePath("PersonRecord.jsn");
+        PERSON_REF_TUPLE_TYPE_TEMPLATE = Helper.getResourcePath("PersonRefRecord.jsn");
 
         Path tempStore = Files.createTempDirectory(null);
 
@@ -66,17 +66,16 @@ public class InfrastructureTest {
         repo.makeBucket(generic_bucket_name2, BucketKind.DIRECTORYBACKED);
         repo.makeBucket(generic_bucket_name3, BucketKind.DIRECTORYBACKED);
 
-        personlabel = TypeFactory.getInstance().createType(PERSONRECORDTYPETEMPLATE, "Person");
-        personlabel2 = TypeFactory.getInstance().createType(PERSONRECORDTYPETEMPLATE, "Person");
-        personreftuple = TypeFactory.getInstance().createType(PERSONREFTUPLETYPETEMPLATE, "PersonRefTuple");
+        personlabel = TypeFactory.getInstance().createType(PERSON_RECORD_TYPE_TEMPLATE, "Person");
+        personlabel2 = TypeFactory.getInstance().createType(PERSON_RECORD_TYPE_TEMPLATE, "Person");
+        personreftuple = TypeFactory.getInstance().createType(PERSON_REF_TUPLE_TYPE_TEMPLATE, "PersonRefTuple");
 
         conflict_counter = new AtomicInteger(0);
         latch = new CountDownLatch(2);
     }
 
     @Test
-    public synchronized void testLXPCreation() throws Exception, RepositoryException, IllegalKeyException {
-
+    public synchronized void testLXPCreation() throws RepositoryException, IllegalKeyException, BucketException {
         IBucket b = repo.getBucket(generic_bucket_name1);
         LXP lxp = new LXP();
         lxp.put("age", "42");
@@ -84,42 +83,26 @@ public class InfrastructureTest {
         b.makePersistent(lxp);
     }
 
-    @Test
-    public synchronized void testLXPOverwrite() throws Exception, RepositoryException, IllegalKeyException {
+    @Test (expected = BucketException.class)
+    public synchronized void testLXPOverwrite() throws RepositoryException, IllegalKeyException, BucketException {
         IBucket b = repo.getBucket(generic_bucket_name1);
         LXP lxp = new LXP();
         lxp.put("age", "42");
         lxp.put("address", "home");
         b.makePersistent(lxp);
 
-        try {
-            b.makePersistent(lxp);
-        } catch (Exception e) {
-            // should get an exception due to overwrite;
-            return;
-        }
-        fail("Overwrite of OID record not detected");
+        b.makePersistent(lxp);
     }
 
-    @Test
-    public synchronized void testLabelledLXP1() throws Exception, RepositoryException, IllegalKeyException {
+    @Test (expected = BucketException.class)
+    public synchronized void testLabelledLXP1() throws RepositoryException, IllegalKeyException, IOException, BucketException {
         IBucket b = repo.getBucket(generic_bucket_name1);
         b.setTypeLabelID(personlabel.getId());
 
-        try {
-            LXP lxp = new LXP();
-            lxp.put("age", "42");
-            lxp.put("address", "home");
-            b.makePersistent(lxp);
-        } catch (BucketException e) {
-            System.out.println("Bucket exception caught");
-            return;
-        } catch (Exception e) {
-            // should get an exception due to wrong type;
-            System.out.println("Type exception caught");
-            return;
-        }
-        fail("Type violation not detected");
+        LXP lxp = new LXP();
+        lxp.put("age", "42");
+        lxp.put("address", "home");
+        b.makePersistent(lxp);
     }
 
     @Test
@@ -143,9 +126,12 @@ public class InfrastructureTest {
 
         txn.commit();
 
-        // do lookup again and check that it is 43 - if it worked.
-        // do a similar one with abort.
+        long id = lxp2.getId();
+        ILXP retrievedLXP2 = b.getObjectById(id);
+        String age = retrievedLXP2.getString("age");
+        assertEquals("43", age);
 
+        // TODO a similar one with abort.
     }
 
     @Test(expected = BucketException.class)
@@ -215,7 +201,6 @@ public class InfrastructureTest {
 
     @Test
     public synchronized void testTransactionConflict() throws RepositoryException, IllegalKeyException, BucketException, StoreException {
-
         IBucket b = repo.getBucket(generic_bucket_name1);
 
         LXP lxp = new LXP();
@@ -354,7 +339,7 @@ public class InfrastructureTest {
         b2.makePersistent(lxp2);
     }
 
-    @Test
+    @Test (expected = BucketException.class)
     public synchronized void testIllegalReferenceLabel() throws Exception, RepositoryException, IllegalKeyException {
         IBucket b1 = repo.getBucket(generic_bucket_name1);
         b1.setTypeLabelID(personlabel.getId());
@@ -370,20 +355,15 @@ public class InfrastructureTest {
 
         b1.makePersistent(lxp);
 
-        try {
-            LXP lxp2 = new LXP();        // correct structure
-            lxp2.put("person_ref", Integer.toString(100)); // an illegal reference - not a legal identifier
 
-            b2.makePersistent(lxp2);
-        } catch (BucketException e) { // should catch this - reference is not in the store yet!
-            // do nothing test succeeds
-            return;
-        }
-        fail("Illegal reference not detected");
+        LXP lxp2 = new LXP();        // correct structure
+        lxp2.put("person_ref", Integer.toString(100)); // an illegal reference - not a legal identifier
+
+        b2.makePersistent(lxp2);
     }
 
-    @Test
-    public synchronized void testIllegalReferenceLabel2() throws Exception, RepositoryException, IllegalKeyException {
+    @Test (expected = BucketException.class)
+    public synchronized void testIllegalReferenceLabel2() throws RepositoryException, IllegalKeyException, IOException, BucketException {
         IBucket b1 = repo.getBucket(generic_bucket_name1);
         b1.setTypeLabelID(personlabel.getId());
         IBucket b2 = repo.getBucket(generic_bucket_name2);
@@ -398,26 +378,19 @@ public class InfrastructureTest {
 
         b1.makePersistent(lxp);
 
-
         LXP lxp2 = new LXP();
         b3.makePersistent(lxp2); // just stick something in bucket3
         long lxp2_id = lxp2.getId();
 
-        try {
-            LXP lxp3 = new LXP();        // correct structure
-            lxp3.put("person_ref", Long.toString(lxp2_id)); // an illegal reference to this tuple - wrong reference type
 
-            b2.makePersistent(lxp3);
-        } catch (BucketException e) { // should catch this - illegal reference
-            // do nothing test succeeds if exception is caught
-            return;
-        }
+        LXP lxp3 = new LXP();        // correct structure
+        lxp3.put("person_ref", Long.toString(lxp2_id)); // an illegal reference to this tuple - wrong reference type
 
-        fail("Illegal reference not detected");
+        b2.makePersistent(lxp3);
     }
 
     @Test
-    public synchronized void testLegalTypedRecordInUntypedBucket() throws Exception, RepositoryException, IllegalKeyException {
+    public synchronized void testLegalTypedRecordInUntypedBucket() throws RepositoryException, IllegalKeyException, BucketException {
         IBucket b1 = repo.getBucket(generic_bucket_name1);
 
         LXP lxp = new LXP();        // incorrect structure
@@ -428,27 +401,20 @@ public class InfrastructureTest {
         b1.makePersistent(lxp);
     }
 
-    @Test
-    public synchronized void testIllegalTypedRecordInUntypedBucket() throws Exception, RepositoryException, IllegalKeyException {
+    @Test (expected = BucketException.class)
+    public synchronized void testIllegalTypedRecordInUntypedBucket() throws RepositoryException, IllegalKeyException, BucketException {
         IBucket b1 = repo.getBucket(generic_bucket_name1);
 
-        try {
-            LXP lxp = new LXP();        // incorrect structure
-            lxp.put("name", "al");
-            lxp.put("wrongfield", "55");
-            lxp.put(Types.LABEL, personlabel.getId()); // correct label
+        LXP lxp = new LXP();        // incorrect structure
+        lxp.put("name", "al");
+        lxp.put("wrongfield", "55");
+        lxp.put(Types.LABEL, personlabel.getId()); // correct label
 
-            b1.makePersistent(lxp);
-
-        } catch (BucketException e) { // should catch this - structure is wrong
-            // do nothing test succeeds if exception is caught
-            return;
-        }
-        fail("Illegal field not detected");
+        b1.makePersistent(lxp);
     }
 
     @Test
-    public synchronized void testLXPFromFile() throws Exception, RepositoryException, KeyNotFoundException, TypeMismatchFoundException, IllegalKeyException {
+    public synchronized void testLXPFromFile() throws RepositoryException, KeyNotFoundException, TypeMismatchFoundException, IllegalKeyException, BucketException {
         IBucket b = repo.getBucket(generic_bucket_name1);
         LXP lxp = new LXP();
         lxp.put("age", "42");
@@ -464,7 +430,7 @@ public class InfrastructureTest {
     }
 
     @Test
-    public synchronized void testStreams() throws Exception, RepositoryException, KeyNotFoundException, TypeMismatchFoundException, IllegalKeyException {
+    public synchronized void testStreams() throws RepositoryException, KeyNotFoundException, TypeMismatchFoundException, IllegalKeyException, BucketException {
         IBucket b = repo.getBucket(generic_bucket_name1);
         // create a few records
         for (int i = 1; i < 10; i++) {
@@ -473,6 +439,7 @@ public class InfrastructureTest {
             lxp.put("address", "home");
             b.makePersistent(lxp);
         }
+
         int count = 1;
         for (Object o : b.getInputStream()) {
             ILXP record = (ILXP) o;
@@ -486,7 +453,7 @@ public class InfrastructureTest {
     }
 
     @Test
-    public synchronized void testBaseTypedFields() throws Exception, RepositoryException, KeyNotFoundException, TypeMismatchFoundException, IllegalKeyException {
+    public synchronized void testBaseTypedFields() throws RepositoryException, KeyNotFoundException, TypeMismatchFoundException, IllegalKeyException, BucketException {
         IBucket b = repo.getBucket(generic_bucket_name1);
         LXP lxp = new LXP();
 
@@ -521,12 +488,32 @@ public class InfrastructureTest {
     }
 
     @Test(expected = IllegalKeyException.class)
-    public synchronized void emptyStringInlabelType() throws RepositoryException, BucketException, IllegalKeyException, StoreException {
-
+    public synchronized void emptyStringInLabelType() throws RepositoryException, BucketException, IllegalKeyException, StoreException {
         IBucket b = repo.getBucket(generic_bucket_name1);
         LXP lxp = new LXP();
         lxp.put("", "fish");
         b.makePersistent(lxp);       // <<--------- write record **
+    }
+
+    @Test(expected = IllegalKeyException.class)
+    public synchronized void nullLabelType() throws RepositoryException, BucketException, IllegalKeyException, StoreException {
+        IBucket b = repo.getBucket(generic_bucket_name1);
+        LXP lxp = new LXP();
+        lxp.put(null, "fish");
+        b.makePersistent(lxp);       // <<--------- write record **
+    }
+
+    @Test
+    public synchronized void emptyStringValue() throws RepositoryException, BucketException, IllegalKeyException, StoreException {
+        IBucket b = repo.getBucket(generic_bucket_name1);
+        LXP lxp = new LXP();
+        lxp.put("string", "");
+        b.makePersistent(lxp);       // <<--------- write record **
+
+        long id = lxp.getId();
+        ILXP retrievedLXP = b.getObjectById(id);
+        String retrievedString = retrievedLXP.getString("string");
+        assertEquals("", retrievedString);
     }
 
 }
