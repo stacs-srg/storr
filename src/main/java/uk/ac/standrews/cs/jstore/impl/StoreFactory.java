@@ -26,6 +26,7 @@ public class StoreFactory {
             store = new Store();
             try {
                 store.setTransactionManager(new TransactionManager());
+                TypeFactory.makeTypeFactory();
             } catch (RepositoryException e) {
                 throw new StoreException(e);
             }
@@ -45,7 +46,7 @@ public class StoreFactory {
     }
 
     /**
-     * Set the path of the store. This will be used when creating the store.
+     * Set the path of the store. This must be set before requesting a store.
      * @param store_path
      */
     public static void setStorePath( Path store_path ) {

@@ -15,17 +15,17 @@ import java.util.Iterator;
  */
 public class TypeFactory {
 
-    private static final TypeFactory instance = new TypeFactory();
     private static final String type_repo_name = "Types_repository";
     private static final String type_Rep_bucket_name = "Type_reps";
     private static final String type_names_bucket_name = "Type_names";
     private IBucket type_reps_bucket = null;
     private IBucket type_name_bucket = null;
-
     private IRepository type_repo;
 
     private HashMap<String, IReferenceType> names_to_type_cache = new HashMap<>();
     private HashMap<Long, IReferenceType> ids_to_type_cache = new HashMap<>();
+
+    private static TypeFactory instance;
 
     private TypeFactory() {
 
@@ -40,12 +40,19 @@ public class TypeFactory {
         }
     }
 
+    public static TypeFactory getInstance() {
+        return instance;
+    }
+
+    public static void makeTypeFactory() {
+        instance = new TypeFactory();
+    }
+
     private void createAnyType() {
         LXP typerep = Types.getTypeRep(LXP.class);
         LXPReferenceType lxp_type = new LXPReferenceType(typerep);
         do_housekeeping("lxp", lxp_type);
     }
-
 
     public IReferenceType createType(String json_encoded_type_descriptor_file_name, String type_name) {
         LXPReferenceType ref_type = new LXPReferenceType(json_encoded_type_descriptor_file_name);
@@ -58,10 +65,6 @@ public class TypeFactory {
         LXPReferenceType ref_type = new LXPReferenceType(typerep);
         do_housekeeping(type_name, ref_type);
         return ref_type;
-    }
-
-    public static TypeFactory getInstance() {
-        return instance;
     }
 
     public IReferenceType typeWithname(String name) {
@@ -126,7 +129,7 @@ public class TypeFactory {
     }
 
     private ILXP namevaluepair(String type_name, long typekey) {
-        LXP lxp = null;
+        LXP lxp;
         lxp = new LXP();
         // used in load_caches above
         try {
@@ -139,7 +142,7 @@ public class TypeFactory {
     }
 
     private void get_repo(String type_repo_name) throws RepositoryException {
-        IStore store = null;
+        IStore store;
         try {
             store = StoreFactory.getStore();
         } catch (StoreException e) {

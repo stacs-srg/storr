@@ -53,28 +53,17 @@ public class LXPReferenceType implements IReferenceType {
             return false;
         }
 
-        IStoreReference reference;
-
         try {
-            reference = new StoreReference((String) value);
-        } catch ( ReferenceException e ) {
-            // We could not determine that this is a store reference
-            ErrorHandling.exceptionError(e, "Could not create store reference - not necessarily a system error" );
-            return false;
-        }
+            IStoreReference reference = createStoreReference(value);
+            ILXP record = getRecord(reference);
 
-        ILXP record = null;
-        try {
-            record = reference.getReferend();
-        } catch (BucketException e) {
-            ErrorHandling.error("Did not find referenced record whilst checking type consistency");
+            if( this.equals( TypeFactory.getInstance().typeWithname("lxp") ) ) { // if we just require an lxp don't do more structural checking.
+                return true;
+            } else {
+                return Types.check_structural_consistency(record, this);
+            }
+        } catch (ReferenceException | BucketException e) {
             return false;
-        }
-
-        if( this.equals( TypeFactory.getInstance().typeWithname( "lxp" ) ) ) { // if we just require an lxp don't do more structural checking.
-            return true;
-        } else {
-            return Types.check_structural_consistency(record, this);
         }
     }
 
@@ -95,4 +84,30 @@ public class LXPReferenceType implements IReferenceType {
         return typerep.getId();
     }
 
+    private IStoreReference createStoreReference(Object value) throws ReferenceException {
+        IStoreReference reference;
+
+        try {
+            reference = new StoreReference((String) value);
+        } catch (ReferenceException e) {
+            // We could not determine that this is a store reference
+            ErrorHandling.exceptionError(e, "Could not create store reference - not necessarily a system error" );
+            throw new ReferenceException(e.getMessage());
+        }
+
+        return reference;
+    }
+
+    private ILXP getRecord(IStoreReference reference) throws BucketException {
+        ILXP record;
+
+        try {
+            record = reference.getReferend();
+        } catch (BucketException e) {
+            ErrorHandling.error("Did not find referenced record whilst checking type consistency");
+            throw new BucketException(e);
+        }
+
+        return record;
+    }
 }
