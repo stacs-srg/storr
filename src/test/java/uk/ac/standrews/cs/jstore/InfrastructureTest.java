@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.jstore;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -12,6 +13,7 @@ import uk.ac.standrews.cs.jstore.impl.transaction.exceptions.TransactionFailedEx
 import uk.ac.standrews.cs.jstore.impl.transaction.interfaces.ITransaction;
 import uk.ac.standrews.cs.jstore.interfaces.*;
 import uk.ac.standrews.cs.jstore.types.Types;
+import uk.ac.standrews.cs.jstore.util.FileManipulation;
 import uk.ac.standrews.cs.jstore.utils.Helper;
 
 import java.io.IOException;
@@ -30,6 +32,8 @@ import static org.junit.Assert.assertTrue;
  */
 public class InfrastructureTest {
 
+    private static final String REPO_NAME = "repo";
+
     private static String generic_bucket_name1 = "BUCKET1";
     private static String generic_bucket_name2 = "BUCKET2";
     private static String generic_bucket_name3 = "BUCKET3";
@@ -45,8 +49,9 @@ public class InfrastructureTest {
     private IReferenceType personreftuple;
 
     private AtomicInteger conflict_counter;
-
     private CountDownLatch latch;
+
+    private Path tempStore;
 
     @Before
     public void setUp() throws RepositoryException, IOException, StoreException, URISyntaxException {
@@ -54,13 +59,13 @@ public class InfrastructureTest {
         PERSON_RECORD_TYPE_TEMPLATE = Helper.getResourcePath("PersonRecord.jsn");
         PERSON_REF_TUPLE_TYPE_TEMPLATE = Helper.getResourcePath("PersonRefRecord.jsn");
 
-        Path tempStore = Files.createTempDirectory(null);
+        tempStore = Files.createTempDirectory(null);
 
-        StoreFactory.setStorePath( tempStore );
+        StoreFactory.setStorePath(tempStore);
         store = StoreFactory.makeStore();
-        System.out.println("STORE PATH = " + tempStore.toString());
+        System.out.println("STORE PATH = " + tempStore.toString() + " has been created");
 
-        repo = store.makeRepository("repo");
+        repo = store.makeRepository(REPO_NAME);
 
         repo.makeBucket(generic_bucket_name1, BucketKind.DIRECTORYBACKED);
         repo.makeBucket(generic_bucket_name2, BucketKind.DIRECTORYBACKED);
@@ -74,6 +79,12 @@ public class InfrastructureTest {
         latch = new CountDownLatch(2);
     }
 
+    @After
+    public void tearDown() throws IOException {
+        FileManipulation.deleteDirectory(tempStore);
+        System.out.println("STORE PATH = " + tempStore.toString() + " has been deleted");
+    }
+
     @Test
     public synchronized void testLXPCreation() throws RepositoryException, IllegalKeyException, BucketException {
         IBucket b = repo.getBucket(generic_bucket_name1);
@@ -81,6 +92,10 @@ public class InfrastructureTest {
         lxp.put("age", "42");
         lxp.put("address", "home");
         b.makePersistent(lxp);
+
+        long id = lxp.getId();
+        ILXP retrievedLXP = b.getObjectById(id);
+        assertEquals(retrievedLXP, lxp);
     }
 
     @Test (expected = BucketException.class)
@@ -335,7 +350,7 @@ public class InfrastructureTest {
         b1.makePersistent(lxp);
 
         LXP lxp2 = new LXP();        // correct structure
-        lxp2.put("person_ref", new StoreReference( repo, b1, lxp) );
+        lxp2.put("person_ref", new StoreReference<>( repo, b1, lxp) );
         b2.makePersistent(lxp2);
     }
 

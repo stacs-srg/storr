@@ -26,6 +26,7 @@ public class StoreFactory {
             store = new Store();
             try {
                 store.setTransactionManager(new TransactionManager());
+                TypeFactory.makeTypeFactory();
             } catch (RepositoryException e) {
                 throw new StoreException(e);
             }
