@@ -44,7 +44,6 @@ public class Repository implements IRepository {
         }
     }
 
-
     public IBucket makeBucket(final String name, BucketKind kind) throws RepositoryException {
         switch (kind) {
             case DIRECTORYBACKED: {

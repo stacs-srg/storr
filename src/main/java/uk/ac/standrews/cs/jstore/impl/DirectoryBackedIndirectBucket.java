@@ -16,7 +16,6 @@ import java.nio.file.Paths;
 public class DirectoryBackedIndirectBucket<T extends ILXP> extends DirectoryBackedBucket<T> {
 
     public DirectoryBackedIndirectBucket(String name, IRepository repository) throws IOException, RepositoryException {
-
         super(name, repository, BucketKind.INDIRECT);
     }
 

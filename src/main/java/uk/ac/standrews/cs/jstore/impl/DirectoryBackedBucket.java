@@ -350,7 +350,6 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
         record_location.toFile().delete();
     }
 
-
     /*
      * Tidies up transaction data that may be left over following a crash
      */
@@ -365,7 +364,6 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
         }
     }
 
-
     /**
      * ******** Path manipulation **********
      */
@@ -374,9 +372,7 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
         return Paths.get(filePath(TRANSACTIONS + File.separator + oid));
     }
 
-
     protected String dirPath() {
-
         return repository.getRepo_path() + File.separator + name;
     }
 

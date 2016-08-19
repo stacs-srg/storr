@@ -6,6 +6,7 @@ import org.junit.Test;
 import uk.ac.standrews.cs.jstore.impl.exceptions.RepositoryException;
 import uk.ac.standrews.cs.jstore.impl.exceptions.StoreException;
 import uk.ac.standrews.cs.jstore.interfaces.BucketKind;
+import uk.ac.standrews.cs.jstore.interfaces.IBucket;
 import uk.ac.standrews.cs.jstore.interfaces.IRepository;
 import uk.ac.standrews.cs.jstore.interfaces.IStore;
 import uk.ac.standrews.cs.jstore.util.FileManipulation;
@@ -20,7 +21,7 @@ import static org.junit.Assert.*;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class StoreTest {
+public class RepositoryTest {
 
     private static final String REPO_NAME = "repo";
     private static String generic_bucket_name1 = "BUCKET1";
@@ -39,7 +40,7 @@ public class StoreTest {
         System.out.println("STORE PATH = " + tempStore.toString() + " has been created");
 
         repo = store.makeRepository(REPO_NAME);
-        repo.makeBucket(generic_bucket_name1, BucketKind.DIRECTORYBACKED);
+
     }
 
     @After
@@ -49,15 +50,20 @@ public class StoreTest {
     }
 
     @Test
-    public void deleteRepositoryTest() throws RepositoryException {
-        store.deleteRepo(REPO_NAME);
-        assertFalse(store.repoExists(REPO_NAME));
+    public void createBucketTest() throws RepositoryException {
+        IBucket bucket = repo.makeBucket(generic_bucket_name1, BucketKind.DIRECTORYBACKED);
+
+        assertTrue(repo.bucketExists(generic_bucket_name1));
+        assertEquals(bucket.getName(), repo.getBucket(generic_bucket_name1).getName());
     }
 
     @Test
-    public void checkRepositoryHasBeenCreatedTest() throws RepositoryException {
-        assertTrue(store.repoExists(REPO_NAME));
-        assertEquals(repo.getRepo_path(), store.getRepo(REPO_NAME).getRepo_path());
-    }
+    public void deleteBucketTest() throws RepositoryException {
+        repo.makeBucket(generic_bucket_name1, BucketKind.DIRECTORYBACKED);
 
+        assertTrue(repo.bucketExists(generic_bucket_name1));
+        repo.deleteBucket(generic_bucket_name1);
+
+        assertFalse(repo.bucketExists(generic_bucket_name1));
+    }
 }
