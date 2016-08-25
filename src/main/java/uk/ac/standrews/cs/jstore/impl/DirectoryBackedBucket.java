@@ -101,7 +101,7 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
 
             if (tFactory == null) { //  No java constructor specified
                 try {
-                    result = (T) (new LXP(id, new JSONReader(reader)));
+                        result = (T) (new LXP(id, new JSONReader(reader)));
                 } catch (PersistentObjectException e) {
                     ErrorHandling.error("Could not create new LXP for object with id: " + id + " in directory: " + directory );
                     return null;
@@ -120,15 +120,14 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
                 // we have an indirection
                 // so try and load the record that the indirection record points to.
                 StoreReference<T> ref = new StoreReference<T>( result.getString( StoreReference.REPOSITORY ), result.getString( StoreReference.BUCKET ), result.getLong( StoreReference.OID ) );
-                result = ref.getReferend();
-            }
-            objectCache.put(id, this, (LXP) result);           // Putting this call here ensures that all records that are in a bucket and loaded are in the cache
-            return result;
-
-        } catch (IOException e) {
-            ErrorHandling.error("Exception creating reader for LXP with id: " + id  + " in directory: " + directory );
-            return null;
+                    result = (T) ref.getReferend();
+                }
+        } catch (IOException e1) {
+                ErrorHandling.error("Exception creating reader for LXP with id: " + id  + " in directory: " + directory );
+                return null;
         }
+        objectCache.put(id, this, (LXP) result);           // Putting this call here ensures that all records that are in a bucket and loaded are in the cache
+        return result;
     }
 
 
@@ -242,6 +241,10 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
 
     public IOutputStream<T> getOutputStream() {
         return new BucketBackedOutputStream(this);
+    }
+
+    public ILXPFactory<T> getFactory() {
+        return tFactory;
     }
 
     public BucketKind getKind() {

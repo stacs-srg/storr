@@ -84,6 +84,11 @@ public interface IBucket<T extends ILXP> {
     BucketKind getKind();
 
     /**
+     * @return the factory associated with the bucket if there is one and null if there is not.
+     */
+    ILXPFactory<T> getFactory();
+
+    /**
      * Sets the type of the bucket contents.
      *
      * @param id - the id of a type rep specifyling the content type of the bucket.

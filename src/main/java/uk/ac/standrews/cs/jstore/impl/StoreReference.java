@@ -20,8 +20,6 @@ public class StoreReference<T extends ILXP> extends LXP implements IStoreReferen
     protected final static String BUCKET = "bucket";
     protected final static String OID = "oid";
 
-    private T reference = null;
-
     private static final String SEPARATOR = "/";
 
     /**
@@ -61,7 +59,6 @@ public class StoreReference<T extends ILXP> extends LXP implements IStoreReferen
 
     public StoreReference(IRepository repo, IBucket bucket, T reference) {
         this(repo.getName(), bucket.getName(), reference.getId());
-        this.reference = reference;
     }
 
     public StoreReference(ILXP record)  {
@@ -87,11 +84,12 @@ public class StoreReference<T extends ILXP> extends LXP implements IStoreReferen
 
     @Override
     public T getReferend() throws BucketException {
-        if( reference == null ) {
+
+            T reference = null;
 
             try {
 
-                reference = (T) StoreFactory.getStore().getObjectCache().getObject( getOid() );
+                reference = (T) StoreFactory.getStore().getObjectCache().getObject( getOid() ); // If in the cache should be of the correct type
                 if( reference == null ) { // didn't find object in cache
 
                     reference = (T) StoreFactory.getStore().getRepo(getRepoName()).getBucket(getBucketName()).getObjectById(getOid());
@@ -103,17 +101,15 @@ public class StoreReference<T extends ILXP> extends LXP implements IStoreReferen
                 }
                 return reference;
             } catch (ClassCastException | BucketException | RepositoryException | StoreException e) {
-
                 ErrorHandling.error( "*** Exception: " + e.getClass().getSimpleName()  + " for: " + this.toString() );
-
                 throw new BucketException(e);
             }
-        } else {
-            return reference;
-        }
+
     }
 
     public String toString() {
         return getRepoName() + SEPARATOR + getBucketName() + SEPARATOR + getOid();
     }
+
+
 }
