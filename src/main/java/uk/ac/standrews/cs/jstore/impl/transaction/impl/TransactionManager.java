@@ -22,7 +22,7 @@ public class TransactionManager implements ITransactionManager {
     private IBucket transaction_bucket = null;
     private IRepository transaction_repo = null;
 
-    HashMap<String, Transaction> map = new HashMap<>();
+    private HashMap<String, Transaction> map = new HashMap<>();
 
     public TransactionManager() throws RepositoryException {
         get_repo(transaction_repo_name);
@@ -204,7 +204,7 @@ public class TransactionManager implements ITransactionManager {
     }
 
     private void get_repo(String transaction_repo_name) throws RepositoryException {
-        IStore store = null;
+        IStore store;
         try {
             store = StoreFactory.getStore();
         } catch (StoreException e) {

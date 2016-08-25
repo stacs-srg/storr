@@ -38,7 +38,7 @@ public final class ErrorHandling {
     private static final Object SYNC = new Object(); // To allow Diagnostic calls to be synchronised with respect to these methods.
     private static final String DEFAULT_DATE_FORMAT_PATTERN = "HHmm.ss.SSS yyyy-MM-dd";
 
-    private static boolean use_timestamp = false;
+    private static final boolean USE_TIMESTAMP = false;
     private static DateFormat dateformat = new SimpleDateFormat(DEFAULT_DATE_FORMAT_PATTERN);
 
     // Stops this class from being instantiated
@@ -74,7 +74,7 @@ public final class ErrorHandling {
                 sb.append(HARD_ERROR_LABEL + " ");
             }
 
-            if (use_timestamp) {
+            if (USE_TIMESTAMP) {
                 //add current time to the error message
                 sb.append("[");
                 final Date now = new Date();
