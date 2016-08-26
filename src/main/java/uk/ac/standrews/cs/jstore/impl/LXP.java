@@ -27,11 +27,13 @@ public class LXP implements ILXP {
 
     public LXP() {
 
+
         this.id = getNextFreePID();
         this.map = new HashMap<>();
     }
 
     public LXP(long object_id) {
+
 
         this.id = object_id;
         this.map = new HashMap<>();

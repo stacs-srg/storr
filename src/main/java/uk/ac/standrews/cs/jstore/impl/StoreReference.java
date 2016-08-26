@@ -17,8 +17,6 @@ public class StoreReference<T extends ILXP> extends LXP implements IStoreReferen
     protected final static String BUCKET = "bucket";
     protected final static String OID = "oid";
 
-    private T reference = null;
-
     private static final String SEPARATOR = "/";
 
     /**
@@ -58,7 +56,6 @@ public class StoreReference<T extends ILXP> extends LXP implements IStoreReferen
 
     public StoreReference(IRepository repo, IBucket bucket, T reference) {
         this(repo.getName(), bucket.getName(), reference.getId());
-        this.reference = reference;
     }
 
     public StoreReference(ILXP record)  {
@@ -82,42 +79,32 @@ public class StoreReference<T extends ILXP> extends LXP implements IStoreReferen
 
     @Override
     public T getReferend() throws BucketException {
-        if(reference == null) {
 
-            try {
-                reference = getReference();
-            } catch (ClassCastException | BucketException |
-                    RepositoryException | StoreException e) {
+        IStore store = null;
+        try {
+            store = StoreFactory.getStore();
 
-                ErrorHandling.error( "*** Exception: " + e.getClass().getSimpleName()
-                        + " for: " + this.toString() );
-                throw new BucketException(e);
+            T reference = getCachedObjectReference(store);
+
+            if (reference == null) { // didn't find object in cache
+                reference = getRepoObjectReference(store);
+
+                if (reference == null) { // still not found it.
+                    ErrorHandling.error("Returning null: cannot resolve reference to LXP: " + this.toString());
+                    return null;
+                }
             }
+            return reference;
 
+        } catch (StoreException  e1) {
+            throw new BucketException(e1.getMessage());
+        } catch(RepositoryException e2) {
+            throw new BucketException(e2.getMessage());
         }
-
-        return reference;
     }
 
     public String toString() {
         return getRepoName() + SEPARATOR + getBucketName() + SEPARATOR + getOid();
-    }
-
-    private T getReference() throws StoreException, BucketException, RepositoryException {
-
-        IStore store = StoreFactory.getStore();
-        T reference = getCachedObjectReference(store);
-
-        if( reference == null ) { // didn't find object in cache
-            reference = getRepoObjectReference(store);
-
-            if( reference == null ) { // still not found it.
-                ErrorHandling.error( "Returning null: cannot resolve reference to LXP: " + this.toString() );
-                return null;
-            }
-        }
-
-        return reference;
     }
 
     private T getCachedObjectReference(IStore store) throws StoreException {

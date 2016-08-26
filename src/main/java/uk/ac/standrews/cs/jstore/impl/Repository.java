@@ -10,7 +10,12 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
+
+import static uk.ac.standrews.cs.jstore.impl.DirectoryBackedBucket.createBucket;
+import static uk.ac.standrews.cs.jstore.interfaces.BucketKind.DIRECTORYBACKED;
 
 /**
  * A Collection of buckets identified by a file path representing its root.
@@ -22,6 +27,8 @@ public class Repository implements IRepository {
     private final File repo_directory;
     private final String name;
 
+    private final Map<String,IBucket> bucket_cache;
+
     public Repository(final Path base_path, String name) throws RepositoryException {
 
         if( ! legal_name( name ) ) {
@@ -30,6 +37,7 @@ public class Repository implements IRepository {
         this.name = name;
         this.repo_path = base_path + File.separator + name;
         repo_directory = new File(repo_path);
+        bucket_cache = new HashMap<String,IBucket>();
 
         if (!repo_directory.exists()) {  // only if the repo doesn't exist - try and make the directory
 
@@ -45,40 +53,52 @@ public class Repository implements IRepository {
     }
 
     public IBucket makeBucket(final String name, BucketKind kind) throws RepositoryException {
+        IBucket bucket = null;
         switch (kind) {
             case DIRECTORYBACKED: {
-                return DirectoryBackedBucket.createBucket(name, this, kind);
+                bucket = DirectoryBackedBucket.createBucket(name, this, kind);
+                break;
             }
             case INDIRECT: {
-                return DirectoryBackedIndirectBucket.createBucket(name, this, kind);
+                 bucket =  createBucket(name, this, kind);
+                break;
             }
             case INDEXED: {
-                return DirectoryBackedIndexedBucket.createBucket(name, this, kind);
+                bucket = createBucket(name, this, kind);
+                break;
             }
             default: {
                 throw new RepositoryException("Bucketkind: " + kind + " not recognized");
             }
         }
+        bucket_cache.put( name, bucket );
+        return bucket;
     }
 
     public <T extends ILXP> IBucket<T> makeBucket(final String name, BucketKind kind, ILXPFactory<T> tFactory) throws RepositoryException {
+        IBucket bucket = null;
         switch (kind) {
             case DIRECTORYBACKED: {
-                DirectoryBackedBucket.createBucket(name, this, kind);
-                return new DirectoryBackedBucket(name, this, tFactory, kind);
+                createBucket(name, this, kind);
+                bucket =  new DirectoryBackedBucket(name, this, tFactory, kind);
+                break;
             }
             case INDIRECT: {
-                DirectoryBackedIndirectBucket.createBucket(name, this, kind);
-                return new DirectoryBackedIndirectBucket(name, this, tFactory);
+                createBucket(name, this, kind);
+                bucket =  new DirectoryBackedIndirectBucket(name, this, tFactory);
+                break;
             }
             case INDEXED: {
-                DirectoryBackedIndexedBucket.createBucket(name, this, kind);
-                return new DirectoryBackedIndexedBucket(name, this, tFactory);
+                createBucket(name, this, kind);
+                bucket =  new DirectoryBackedIndexedBucket(name, this, tFactory);
+                break;
             }
             default: {
                 throw new RepositoryException("Bucketkind: " + kind + " not recognized");
             }
         }
+        bucket_cache.put( name, bucket );
+        return bucket;
     }
 
     @Override
@@ -105,6 +125,7 @@ public class Repository implements IRepository {
 
         try {
             FileManipulation.deleteDirectory(getBucketPath(name));
+            bucket_cache.remove(name);
 
         } catch (IOException e) {
             throw new RepositoryException("Cannot delete bucket: " + name);
@@ -114,20 +135,24 @@ public class Repository implements IRepository {
     @Override
     public <T extends ILXP> IBucket<T> getBucket(String name, ILXPFactory<T> tFactory) throws RepositoryException {
         if (bucketExists(name)) {
-            BucketKind kind = DirectoryBackedBucket.getKind(name, this);
-            switch (kind) {
-                case DIRECTORYBACKED: {
-                    IBucket bucket = new DirectoryBackedBucket(name, this, tFactory, kind);
-                    return bucket;
-                }
-                case INDIRECT: {
-                    return new DirectoryBackedIndirectBucket(name, this, tFactory);
-                }
-                case INDEXED: {
-                    return new DirectoryBackedIndexedBucket(name, this, tFactory);
-                }
-                default: {
-                    throw new RepositoryException("Bucketkind: " + kind + " not recognized");
+            if( bucket_cache.containsKey(name)) {
+                return bucket_cache.get(name);
+            } else {
+                BucketKind kind = DirectoryBackedBucket.getKind(name, this);
+                switch (kind) {
+                    case DIRECTORYBACKED: {
+                        IBucket bucket = new DirectoryBackedBucket(name, this, tFactory, kind);
+                        return bucket;
+                    }
+                    case INDIRECT: {
+                        return new DirectoryBackedIndirectBucket(name, this, tFactory);
+                    }
+                    case INDEXED: {
+                        return new DirectoryBackedIndexedBucket(name, this, tFactory);
+                    }
+                    default: {
+                        throw new RepositoryException("Bucketkind: " + kind + " not recognized");
+                    }
                 }
             }
         }
@@ -137,25 +162,35 @@ public class Repository implements IRepository {
     @Override
     public IBucket getBucket(String name) throws RepositoryException {
         if (bucketExists(name)) {
-            BucketKind kind = DirectoryBackedBucket.getKind(name, this);
-            try {
-                switch (kind) {
-                    case DIRECTORYBACKED: {
-                        IBucket bucket = new DirectoryBackedBucket(name, this, BucketKind.DIRECTORYBACKED);
-                        return bucket;
+            if( bucket_cache.containsKey(name)) {
+                return bucket_cache.get(name);
+            } else {
+                IBucket bucket = null;
+                BucketKind kind = DirectoryBackedBucket.getKind(name, this);
+                try {
+                    switch (kind) {
+                        case DIRECTORYBACKED: {
+                            bucket = new DirectoryBackedBucket(name, this, DIRECTORYBACKED);
+                            break;
+                        }
+                        case INDIRECT: {
+                            bucket = new DirectoryBackedIndirectBucket(name, this);
+                            break;
+                        }
+                        case INDEXED: {
+                            bucket = new DirectoryBackedIndexedBucket(name, this);
+                            break;
+                        }
+                        default: {
+                            throw new RepositoryException("Bucketkind: " + kind + " not recognized");
+                        }
                     }
-                    case INDIRECT: {
-                        return new DirectoryBackedIndirectBucket(name, this);
-                    }
-                    case INDEXED: {
-                        return new DirectoryBackedIndexedBucket(name, this);
-                    }
-                    default: {
-                        throw new RepositoryException("Bucketkind: " + kind + " not recognized");
-                    }
+                } catch (IOException e) {
+                    throw new RepositoryException("IO Exception accessing bucket " + name);
                 }
-            } catch (IOException e) {
-                throw new RepositoryException("IO Exception accessing bucket " + name);
+
+                bucket_cache.put( name, bucket );
+                return bucket;
             }
         }
         return null;
