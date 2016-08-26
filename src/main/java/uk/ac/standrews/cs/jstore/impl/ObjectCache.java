@@ -28,6 +28,8 @@ public class ObjectCache implements IObjectCache {
      * @param oid
      */
     public void put(long oid, IBucket bucket, ILXP tuple) {
+
+        System.out.println( "** CACHE ADD ** " + oid );
         map.put(oid, new Data(bucket, tuple));
     }
 
@@ -55,8 +57,10 @@ public class ObjectCache implements IObjectCache {
     public ILXP getObject(long oid) {
         Data d = map.get(oid);
         if (d == null) {
+            System.out.println( "** CACHE MISS ** " + oid );
             return null;
         }
+        System.out.println( "** CACHE HIT ** " + oid );
         return d.tuple;
     }
 
