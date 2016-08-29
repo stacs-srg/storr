@@ -34,7 +34,8 @@ public enum LXPBaseType implements IType {
     LONG {
         @Override
         public boolean valueConsistentWithType(Object value) {
-            return value instanceof Long;
+
+            return value instanceof Long || value instanceof Integer; // permit int<>long coorecion.
         }
     },
     DOUBLE {

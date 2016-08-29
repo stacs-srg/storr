@@ -7,7 +7,7 @@ import uk.ac.standrews.cs.jstore.impl.exceptions.KeyNotFoundException;
 import uk.ac.standrews.cs.jstore.impl.exceptions.TypeMismatchFoundException;
 
 /**
- * Interface to a OID (labeled cross product class).
+ * Interface to a LXP (labeled cross product class).
  * It provides a thin wrapper over a Map (providing name value lookup) along with identity and the ability to save and recover persistent versions (encoded in JSON).
  *
  * @author al

@@ -79,12 +79,14 @@ public class Types {
         for (String label : required_labels) {
             if (!record_keys.contains(label)) {
                 // required label not present
+                ErrorHandling.error( record_keys, " ,Label: " + label + " expected but not present" );
                 return false;
             }
             // required label is present now check the types of the keys in the record
             try {
                 Object value = record.get(label);
                 if (!ref_type.getFieldType(label).valueConsistentWithType(value)) {
+                    ErrorHandling.error( record_keys, " ,Label: " + label + " ,value: " + value + " does not match expected type: " + ref_type.getFieldType(label));
                     return false;
                 }
             } catch (KeyNotFoundException e) {

@@ -101,7 +101,7 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
 
             if (tFactory == null) { //  No java constructor specified
                 try {
-                        System.out.println( "Creating LXP in getObjectById oid:" + id );
+//                        System.out.println( "Creating LXP in getObjectById oid:" + id );
                         result = (T) (new LXP(id, new JSONReader(reader)));
                 } catch (PersistentObjectException e) {
                     ErrorHandling.error("Could not create new LXP for object with id: " + id + " in directory: " + directory );
@@ -109,7 +109,7 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
                 }
             } else {
                 try {
-                    System.out.println( "Creating T in getObjectById oid: " + id + " " + tFactory.getClass().getName() );
+//                    System.out.println( "Creating T in getObjectById oid: " + id + " " + tFactory.getClass().getName() );
                     result = tFactory.create(id, new JSONReader(reader));
                 } catch (PersistentObjectException e) {
                     ErrorHandling.error("Could not create new LXP (using factory) for object with id: " + id + " in directory: " + directory );

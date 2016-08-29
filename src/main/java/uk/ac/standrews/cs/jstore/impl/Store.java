@@ -14,7 +14,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.security.SecureRandom;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 /**
  * Created by al on 06/06/2014.
@@ -31,6 +33,8 @@ public class Store implements IStore {
     private static SecureRandom sr = new SecureRandom();
     // private int id = 1;
 
+    private final Map<String,IRepository> repo_cache;
+
     private ITransactionManager tm = null;
 
     protected Store() throws StoreException {
@@ -43,6 +47,7 @@ public class Store implements IStore {
         checkCreate(store_path);
         checkCreate(repo_path);
 
+        repo_cache = new HashMap<String,IRepository>();
         object_cache = new ObjectCache();
     }
 
@@ -69,7 +74,9 @@ public class Store implements IStore {
             throw new RepositoryException( "Illegal Repository name <" + name + ">" );
         }
         createRepository(name);
-        return getRepo(name);
+        IRepository r = getRepo(name);
+        repo_cache.put(name,r);
+        return r;
     }
 
     @Override
@@ -82,10 +89,8 @@ public class Store implements IStore {
         if (!repoExists(name)) {
             throw new RepositoryException("Bucket with " + name + "does not exist");
         }
-
         try {
             FileManipulation.deleteDirectory(getRepoPath(name));
-
         } catch (IOException e) {
             throw new RepositoryException("Cannot delete bucket: " + name);
         }
@@ -93,7 +98,17 @@ public class Store implements IStore {
 
     @Override
     public IRepository getRepo(String name) throws RepositoryException {
-        return new Repository(repo_path, name);
+        if( repoExists(name) ) {
+            if( repo_cache.containsKey(name)) {
+                return repo_cache.get(name);
+            } else {
+                IRepository r = new Repository(repo_path, name);
+                repo_cache.put(name,r);
+                return r;
+            }
+        } else {
+            return null;
+        }
     }
 
     @Override
@@ -121,6 +136,9 @@ public class Store implements IStore {
     private static long getPRN() {
 
         return prn++;
+
+        //TODO prn is commented out.
+
 //        long next_prn;
 //        do {
 //            next_prn = sr.nextLong();
