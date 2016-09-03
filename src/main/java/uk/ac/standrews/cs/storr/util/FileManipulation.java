@@ -32,7 +32,6 @@ import static org.junit.Assert.assertNull;
 /**
  * This class provides a set of utilities function over the file system to manage
  * files and directories.
- *
  * Created by al on 11/05/2014.
  */
 public class FileManipulation {
@@ -40,9 +39,9 @@ public class FileManipulation {
     public static final Charset FILE_CHARSET = Charset.forName("UTF-8");
 
     /**
-     * Delete the specified directory recursively
-     * @param directory_path
-     * @throws IOException
+     * Recursively delete the specified directory
+     * @param directory_path the path of the directory to be deleted
+     * @throws IOException if one is thrown by Java API layer
      */
     public static void deleteDirectory(final String directory_path) throws IOException {
 
@@ -50,9 +49,9 @@ public class FileManipulation {
     }
 
     /**
-     * Delete the specified directory recursively
-     * @param directory
-     * @throws IOException
+     * Recursively delete the specified directory
+     * @param directory the path of the directory to be deleted
+     * @throws IOException if one is thrown by Java API layer
      */
     public static void deleteDirectory(final Path directory) throws IOException {
 
@@ -74,6 +73,10 @@ public class FileManipulation {
         });
     }
 
+    /**
+     * @param path of the file to be created
+     * @throws IOException if one is thrown by Java IO layer
+     */
     public static void createFileIfDoesNotExist(final Path path) throws IOException {
 
         if (!Files.exists(path)) {
@@ -83,21 +86,37 @@ public class FileManipulation {
         }
     }
 
-    public static void createDirectoryIfDoesNotExist(final String directory_path) throws IOException {
+    /**
+     * @param path of the directory to be created
+     * @throws IOException if one is thrown by Java IO layer
+     */
+    public static void createDirectoryIfDoesNotExist(final String path) throws IOException {
 
-        createDirectoryIfDoesNotExist(new File(directory_path));
+        createDirectoryIfDoesNotExist(new File(path));
     }
 
+    /**
+     * @param directory of the directory to be created
+     * @throws IOException if one is thrown by Java IO layer
+     */
     public static void createDirectoryIfDoesNotExist(final File directory) throws IOException {
 
         createDirectoryIfDoesNotExist(Paths.get(directory.getAbsolutePath()));
     }
 
+    /**
+     * @param path of the directory to be created
+     * @throws IOException if one is thrown by Java IO layer
+     */
     public static void createDirectoryIfDoesNotExist(final Path path) throws IOException {
 
         Files.createDirectories(path);
     }
 
+    /**
+     * @param path of the directory to be created
+     * @throws IOException if one is thrown by Java IO layer
+     */
     public static void createParentDirectoryIfDoesNotExist(final Path path) throws IOException {
 
         Path parent_dir = path.getParent();
@@ -106,6 +125,12 @@ public class FileManipulation {
         }
     }
 
+    /**
+     * Return the directory entries in a directory
+     * @param directory the for which the entries are required
+     * @return a list of Paths for each of the entries in the directory
+     * @throws IOException if one is thrown by Java IO layer.
+     */
     public static List<Path> getDirectoryEntries(final Path directory) throws IOException {
 
         List<Path> result = new ArrayList<>();
@@ -120,6 +145,12 @@ public class FileManipulation {
         return result;
     }
 
+    /**
+     * Asserts that 2 files are the same, will fail with an {@link AssertionError} if they do not
+     * @param path1 - the first file
+     * @param path2 - the second file
+     * @throws IOException if one occurs
+     */
     public static void assertThatFilesHaveSameContent(final Path path1, final Path path2) throws IOException {
 
         try (BufferedReader reader1 = Files.newBufferedReader(path1, FILE_CHARSET);

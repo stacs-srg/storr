@@ -26,16 +26,20 @@ import static uk.ac.standrews.cs.storr.types.Types.check_structural_consistency;
 public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
 
     protected ILXPFactory<T> tFactory = null;
-    private IRepository repository;  // the repository in which the bucket is stored
-    private String name;     // the name of this bucket - used as the directory name
-    protected File directory;  // the directory implementing the bucket storage
-    private long type_label_id = -1; // not set
+    private IRepository repository;     // the repository in which the bucket is stored
+    private String name;                // the name of this bucket - used as the directory name
+    protected File directory;           // the directory implementing the bucket storage
+    private long type_label_id = -1;    // -1 == not set
     private IObjectCache objectCache;
 
     private static final String TRANSACTIONS = "TRANSACTIONS";
 
-    /*
+    /**
      * Creates a DirectoryBackedBucket with no factory - a persistent collection of ILXPs
+     * @param name - the name of the bucket to be created
+     * @param repository - the repository in which to create the bucket
+     * @param kind - the kind of Bucket to be created - see @class BucketKind
+     * @throws RepositoryException if the bucket cannot be created in the repository.
      */
     public DirectoryBackedBucket(final String name, final IRepository repository, BucketKind kind) throws RepositoryException {
         if( ! legal_name( name ) ) {
@@ -58,6 +62,14 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
     }
 
 
+    /**
+    * Creates a DirectoryBackedBucket with a factory - a persistent collection of ILXPs tied to some particular Java and store type.
+    * @param name - the name of the bucket to be created
+    * @param repository - the repository in which to create the bucket
+     * @param tFactory specifies the factory to use when importing objects from the store to Java
+    * @param kind - the kind of Bucket to be created - see @class BucketKind
+    * @throws RepositoryException if the bucket cannot be created in the repository.
+    */
     public DirectoryBackedBucket(final String name, final IRepository repository, ILXPFactory<T> tFactory, BucketKind kind) throws RepositoryException {
         this(name, repository, kind);
         this.tFactory = tFactory;

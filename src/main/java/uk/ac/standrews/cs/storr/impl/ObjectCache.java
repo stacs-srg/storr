@@ -13,7 +13,6 @@ import java.util.WeakHashMap;
  * Note that transient objects are not in this cache.
  * It maps from id to a Bucket in which the OID with that id is contained
  * All loaded and newly created OID instances are loaded into it.
- * <p/>
  */
 public class ObjectCache implements IObjectCache {
 
@@ -22,10 +21,10 @@ public class ObjectCache implements IObjectCache {
     public ObjectCache() {}
 
     /**
-     * Adds the triple to the object cache.
-     *  @param bucket
-    //     * @param result
-     * @param oid
+     * Adds the data to the object cache.
+     * @param oid of the record being added to the cache
+     * @param bucket the bucket from which the object came.
+     * @param tuple the tuple added to the cache
      */
     public void put(long oid, IBucket bucket, ILXP tuple) {
 
@@ -34,7 +33,7 @@ public class ObjectCache implements IObjectCache {
     }
 
     /**
-     * @param oid - the oid to be loooked up
+     * @param oid - the oid to be looked up
      * @return the Bucket from which the oid was loaded
      */
     public IBucket getBucket(long oid) {
@@ -64,6 +63,9 @@ public class ObjectCache implements IObjectCache {
         return d.tuple;
     }
 
+    /*
+     * This private class is used to track tuples stored in buckets
+     */
     private class Data {
         public IBucket bucket;
         public ILXP tuple;

@@ -23,6 +23,7 @@ public interface ILXP extends ILXPFactory {
      * Writes the state of the LXP to a Bucket.
      *
      * @param writer the stream to which the state is written.
+     * @throws JSONException if the record being written cannot be written to legal JSON.
      */
     void serializeToJSON(JSONWriter writer) throws JSONException;
 

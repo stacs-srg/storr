@@ -2,14 +2,11 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <!-- The common-pom parent has been temporarily removed, since it enforced a lot of
-         checks on the code and the javadocs that stopped the project from being
-         run and installed correctly -->
-    <!--<parent>-->
-        <!--<groupId>uk.ac.standrews.cs</groupId>-->
-        <!--<artifactId>common-pom</artifactId>-->
-        <!--<version>2.0-SNAPSHOT</version>-->
-    <!--</parent>-->
+    <parent>
+        <groupId>uk.ac.standrews.cs</groupId>
+        <artifactId>common-pom</artifactId>
+        <version>2.0-SNAPSHOT</version>
+    </parent>
 
     <groupId>uk.ac.standrews.cs</groupId>
     <artifactId>storr</artifactId>

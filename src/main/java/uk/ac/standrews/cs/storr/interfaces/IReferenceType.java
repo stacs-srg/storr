@@ -20,7 +20,7 @@ public interface IReferenceType extends IType {
      * @return the field type associated with the specified label
      * e.g. for a type [name: string, age: int] and the label "name" this method would return the
      * rep for @class LXPBaseType(INT).
-     * @throws KeyNotFoundException
+     * @throws KeyNotFoundException if the key is not found
      */
     public IType getFieldType(String label) throws KeyNotFoundException, TypeMismatchFoundException;
 

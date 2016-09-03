@@ -124,6 +124,9 @@ public class Store implements IStore {
 
     /******************** private and protected methods ********************/
 
+    /**
+     * @return the next free pid
+     */
     protected static long getNextFreePID() {
         return getPRN();
     }
@@ -137,7 +140,7 @@ public class Store implements IStore {
 
         return prn++;
 
-        //TODO prn is commented out.
+        //TODO prn is commented out. **********************
 
 //        long next_prn;
 //        do {

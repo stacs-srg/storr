@@ -27,9 +27,9 @@ public class DirectoryBackedIndexedBucket<T extends ILXP> extends DirectoryBacke
     /**
      * Creates a handle on a bucket.
      * Assumes that bucket has been created already using a factory - i.e. the directory already exists.
-     *
      * @param name       the name of the bucket (also used as directory name).
      * @param repository the repository in which the bucket is created.
+     * @throws RepositoryException if a RepositoryException is thrown in implementation
      */
     public DirectoryBackedIndexedBucket(final String name, final IRepository repository) throws RepositoryException {
         super(name, repository, BucketKind.INDEXED);

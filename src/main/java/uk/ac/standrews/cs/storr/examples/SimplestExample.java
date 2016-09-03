@@ -15,7 +15,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 /**
- * Created by al & simone on 26/8/2016
+ * Created by al and simone on 26/8/2016
  */
 public class SimplestExample {
 

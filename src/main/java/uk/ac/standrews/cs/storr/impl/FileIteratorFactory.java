@@ -9,6 +9,8 @@ public class FileIteratorFactory {
 
     /**
      * @param directory - the directory to iterate over
+     * @param files_wanted is true if the files in the directory should be returned
+     * @param directories_wanted is true if the directories in the directory should be returned
      * @return an iterator or null if illegal directory is past in.
      */
     public static Iterator<File> createFileIterator(final File directory, final boolean files_wanted, final boolean directories_wanted) {

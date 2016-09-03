@@ -24,11 +24,9 @@ import java.util.Date;
 
 /**
  * Provides support for various error message output.
- * <p/>
- * Based on code from the com.findnearyou package (C)
- * A. Dearle & R.Connor.
- *
- * @author Alan Dearle (al@cs.st-andrews.ac.uk)
+ * Based on code from the com.findnearyou package
+ * (C) A. Dearle and R.Connor.
+ * @author Alan Dearle (alst-andrews.ac.uk)
  * @author Graham Kirby (graham.kirby@st-andrews.ac.uk)
  */
 public final class ErrorHandling {

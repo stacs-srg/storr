@@ -17,5 +17,6 @@
     <orderEntry type="library" name="Maven: org.json:json:20121113" level="project" />
     <orderEntry type="library" name="Maven: javax.mail:mail:1.4.5" level="project" />
     <orderEntry type="library" name="Maven: javax.activation:activation:1.1" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: uk.ac.standrews.cs:common-test:test-jar:tests:1.0-SNAPSHOT" level="project" />
   </component>
 </module>

@@ -32,15 +32,11 @@ public class LXP implements ILXP {
     protected HashMap<String, Object> map;
 
     public LXP() {
-
-
         this.id = getNextFreePID();
         this.map = new HashMap<>();
     }
 
     public LXP(long object_id) {
-
-
         this.id = object_id;
         this.map = new HashMap<>();
     }
@@ -132,8 +128,6 @@ public class LXP implements ILXP {
 
     /**
      * This method writes data to a writer - typically used for persistent storage.
-     *
-     * @throws JSONException
      */
     public void serializeToJSON(JSONWriter writer) throws JSONException {
 

@@ -8,7 +8,6 @@ import java.lang.annotation.Target;
 /**
  * *
  * This Annotation is used to label a (static) fieldname as being of a base type
- * <p/>
  * Created by al on 21/11/14.
  */
 @Retention(RetentionPolicy.RUNTIME)

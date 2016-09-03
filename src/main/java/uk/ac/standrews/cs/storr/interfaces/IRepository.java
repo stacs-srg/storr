@@ -7,7 +7,6 @@ import java.util.Iterator;
 /**
  * Classes implementing this interface is used to represent repositories.
  * See further comments in @class IStore
- * <p/>
  * Created by al on 11/05/2014.
  */
 public interface IRepository {
@@ -24,10 +23,10 @@ public interface IRepository {
 
     /**
      * This method creates a new bucket that is constrained to contain OID records compatible with T.
-     *
      * @param name     - the name of the bucket to be created.
      * @param kind     - the implementation kind of the bucket - see @class BucketKind
      * @param tFactory - a factory capable of creating instances of type @class T
+     * @param <T> the (Java) type which all LXP derived objects in this bucket are expected to be of
      * @return the newly created repository
      * @throws RepositoryException if a bucket with the name previously exists or if something goes wrong.
      */
@@ -57,7 +56,8 @@ public interface IRepository {
     /**
      * @param name     - the name of the bucket being looked up
      * @param tFactory - a factory capable of specifying instances of type @class T
-     * @return the bucket with the given name, if it exists and is type compatibile
+     * @param <T> the (Java) type which all LXP derived objects in this bucket are expected to be of
+     * @return the bucket with the given name, if it exists and is type compatible
      * @throws RepositoryException if the repo does not exist or if something goes wrong.
      */
     <T extends ILXP> IBucket<T> getBucket(final String name, ILXPFactory<T> tFactory) throws RepositoryException;

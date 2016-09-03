@@ -13,7 +13,7 @@ public interface IIndexedBucket<T extends ILXP> extends IBucket<T> {
 
     /**
      * @param label - the label to add - for example "name" will add an index of names over records such as [name: string, age: int]
-     * @throws IOException
+     * @throws IOException if an IO exception occurs in the underlying implementation
      */
     void addIndex(String label) throws IOException;
 

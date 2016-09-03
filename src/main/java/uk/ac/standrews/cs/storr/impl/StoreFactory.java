@@ -17,8 +17,8 @@ public class StoreFactory {
     /**
      * Get the latest made store.
      * If no store was made, one will be created and returned.
-     * @return
-     * @throws StoreException
+     * @return the global (singleton) store
+     * @throws StoreException if something has gone wrong - this is pretty much fatal.
      */
     public static IStore getStore() throws StoreException {
 
@@ -37,8 +37,8 @@ public class StoreFactory {
 
     /**
      * Create a new store
-     * @return
-     * @throws StoreException
+     * @return the newly created (singleton) store
+     * @throws StoreException if something has gone wrong - this is pretty much fatal
      */
     public static IStore makeStore() throws StoreException {
         store = null;
@@ -47,7 +47,7 @@ public class StoreFactory {
 
     /**
      * Set the path of the store. This must be set before requesting a store.
-     * @param store_path
+     * @param store_path a path indicating where the store should be created.
      */
     public static void setStorePath( Path store_path ) {
         Store.set_store_path( store_path );

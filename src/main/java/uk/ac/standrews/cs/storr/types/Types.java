@@ -51,7 +51,7 @@ public class Types {
      * @param type_label_id the label against which the checking is to be performed
      * @param <T>           the type of the record being checked
      * @return true if the structure is consistent
-     * @throws IOException
+     * @throws IOException if one if thrown by the underlying subsystem(s)
      */
     public static <T extends ILXP> boolean check_structural_consistency(final T record, long type_label_id) throws IOException {
 
@@ -68,7 +68,6 @@ public class Types {
      * @param ref_type the type being checked against
      * @param <T>      the type of the record being checked
      * @return true if the structure is consistent
-     * @throws IOException
      */
     public static <T extends ILXP> boolean check_structural_consistency(final T record, IReferenceType ref_type) {
 

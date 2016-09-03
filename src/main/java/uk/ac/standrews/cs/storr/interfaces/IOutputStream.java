@@ -12,6 +12,7 @@ public interface IOutputStream<T extends ILXP> {
      * Add a record to the stream
      *
      * @param record - the record to be added to a stream
+     * @throws BucketException if one is thrown during the underlying bucket operations
      */
     void add(T record) throws BucketException;
 }

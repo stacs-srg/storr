@@ -15,7 +15,6 @@ import java.util.Iterator;
  * The reason this model was adopted was to be permit buckets to be clustered together into local groups.
  * For example, buckets of blocked records may be clustered together into a single repo.
  * Another example is the types repo which contains 2 different buckets used to represent different aspects of the type system.
- * <p/>
  * Created by al on 06/06/2014.
  */
 public interface IStore {
