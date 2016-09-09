@@ -1,5 +1,7 @@
 package uk.ac.standrews.cs.storr.interfaces;
 
+import uk.ac.standrews.cs.storr.impl.exceptions.NoSuitableBucketException;
+
 /**
  * Classes that implement this interface provides blocking over
  * an ILXPInputStream to makePersistent records selected into some bucket.
@@ -31,7 +33,8 @@ public interface IBlocker<T extends ILXP> {
      *
      * @param record a record to be blocked
      * @return the names of the buckets into which the record should be blocked
+     * @throws NoSuitableBucketException if a bucked cannot be determined for the record
      */
-    String[] determineBlockedBucketNamesForRecord(T record);
+    String[] determineBlockedBucketNamesForRecord(T record) throws NoSuitableBucketException;
 
 }
