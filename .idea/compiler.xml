@@ -22,11 +22,13 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="true" />
+        <module name="core" />
         <module name="storr-jetty" />
         <module name="storr-rest" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="core" target="1.7" />
       <module name="jetty" target="1.7" />
       <module name="storr" target="1.7" />
       <module name="storr-jetty" target="1.7" />

@@ -1,5 +1,7 @@
 package uk.ac.standrews.cs.storr.types;
 
+import uk.ac.standrews.cs.nds.persistence.PersistentObjectException;
+import uk.ac.standrews.cs.nds.rpc.stream.JSONReader;
 import uk.ac.standrews.cs.storr.impl.LXP;
 import uk.ac.standrews.cs.storr.impl.StoreReference;
 import uk.ac.standrews.cs.storr.impl.TypeFactory;
@@ -10,8 +12,6 @@ import uk.ac.standrews.cs.storr.interfaces.IStoreReference;
 import uk.ac.standrews.cs.storr.interfaces.IType;
 import uk.ac.standrews.cs.storr.util.ErrorHandling;
 import uk.ac.standrews.cs.storr.util.FileManipulation;
-import uk.ac.standrews.cs.nds.persistence.PersistentObjectException;
-import uk.ac.standrews.cs.nds.rpc.stream.JSONReader;
 
 import java.io.BufferedReader;
 import java.io.IOException;

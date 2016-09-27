@@ -1,39 +1,46 @@
 package uk.ac.standrews.cs.storr.impl;
 
+import uk.ac.standrews.cs.nds.util.ErrorHandling;
 import uk.ac.standrews.cs.storr.impl.exceptions.BucketException;
 import uk.ac.standrews.cs.storr.interfaces.IBucket;
 import uk.ac.standrews.cs.storr.interfaces.IInputStream;
 import uk.ac.standrews.cs.storr.interfaces.ILXP;
-import uk.ac.standrews.cs.nds.util.ErrorHandling;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
 
-public class IndexedBucketInputStream implements IInputStream {
+public class BucketBackedInputStream<T extends ILXP> implements IInputStream<T> {
 
-    private final IBucket bucket;
-    private Iterator<File> file_iterator;
+    private final IBucket<T> bucket;
+    private File directory;
 
-    public IndexedBucketInputStream(final IBucket bucket, final Iterator<File> file_iterator) throws IOException {
+    public BucketBackedInputStream(final IBucket<T> bucket, final File directory) throws IOException {
 
         this.bucket = bucket;
-        this.file_iterator = file_iterator;
+        this.directory = directory;
+
     }
 
+    public Iterator<T> iterator() {
 
-    public Iterator<ILXP> iterator() {
-        return new ILXPIterator();
+        return new ILXPIterator(directory);
     }
 
-    private class ILXPIterator implements Iterator<ILXP> {
+    private class ILXPIterator implements Iterator<T> {
+
+        private Iterator<File> file_iterator;
+
+        public ILXPIterator(File directory) {
+            file_iterator = FileIteratorFactory.createFileIterator(directory, true, false);
+        }
 
         public boolean hasNext() {
             return file_iterator.hasNext();
         }
 
         @Override
-        public ILXP next() {
+        public T next() {
 
             try {
                 return bucket.getObjectById(Long.parseLong(file_iterator.next().getName()));
