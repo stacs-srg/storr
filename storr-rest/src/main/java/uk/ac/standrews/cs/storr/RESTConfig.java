@@ -8,7 +8,7 @@ import uk.ac.standrews.cs.storr.json.JacksonProvider;
  */
 public class RESTConfig {
 
-    private final static String REST_PACKAGE = "uk.ac.standrews.cs.storr.rest";
+    private final static String REST_PACKAGE = " uk.ac.standrews.cs.storr.rest";
 
     public ResourceConfig build() {
         return new ResourceConfig()
