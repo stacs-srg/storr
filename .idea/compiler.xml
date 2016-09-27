@@ -23,16 +23,15 @@
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="true" />
         <module name="core" />
-        <module name="storr-jetty" />
-        <module name="storr-rest" />
+        <module name="jetty" />
+        <module name="rest" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="core" target="1.7" />
       <module name="jetty" target="1.7" />
+      <module name="rest" target="1.7" />
       <module name="storr" target="1.7" />
-      <module name="storr-jetty" target="1.7" />
-      <module name="storr-rest" target="1.7" />
     </bytecodeTargetLevel>
   </component>
 </project>
