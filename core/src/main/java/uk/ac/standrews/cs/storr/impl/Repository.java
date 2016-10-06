@@ -59,11 +59,11 @@ public class Repository implements IRepository {
                 break;
             }
             case INDIRECT: {
-                bucket =  createBucket(name, this, kind);
+                bucket =  DirectoryBackedIndirectBucket.createBucket(name, this, kind);
                 break;
             }
             case INDEXED: {
-                bucket = createBucket(name, this, kind);
+                bucket = DirectoryBackedIndexedBucket.createBucket(name, this, kind);
                 break;
             }
             default: {
