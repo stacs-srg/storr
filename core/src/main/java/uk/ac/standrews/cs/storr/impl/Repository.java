@@ -14,8 +14,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import static uk.ac.standrews.cs.storr.impl.DirectoryBackedBucket.createBucket;
-
 /**
  * A Collection of buckets identified by a file path representing its root.
  * Created by al on 11/05/2014.
@@ -55,15 +53,22 @@ public class Repository implements IRepository {
         IBucket bucket = null;
         switch (kind) {
             case DIRECTORYBACKED: {
-                bucket = DirectoryBackedBucket.createBucket(name, this, kind);
+                DirectoryBackedBucket.createBucket(name, this, kind);
+                bucket = new DirectoryBackedBucket(name, this, kind);
                 break;
             }
             case INDIRECT: {
-                bucket =  DirectoryBackedIndirectBucket.createBucket(name, this, kind);
-                break;
+                DirectoryBackedIndirectBucket.createBucket(name, this, kind);
+                try {
+                    bucket = new DirectoryBackedIndirectBucket(name, this);
+                    break;
+                } catch (IOException e) {
+                    throw new RepositoryException( e );
+                }
             }
             case INDEXED: {
-                bucket = DirectoryBackedIndexedBucket.createBucket(name, this, kind);
+                DirectoryBackedIndexedBucket.createBucket(name, this, kind);
+                bucket = new DirectoryBackedIndexedBucket(name, this);
                 break;
             }
             default: {
@@ -78,18 +83,18 @@ public class Repository implements IRepository {
         IBucket bucket = null;
         switch (kind) {
             case DIRECTORYBACKED: {
-                createBucket(name, this, kind);
-                bucket =  new DirectoryBackedBucket(name, this, tFactory, kind);
+                DirectoryBackedBucket.createBucket(name, this, kind);
+                bucket = new DirectoryBackedBucket(name, this, tFactory, kind);
                 break;
             }
             case INDIRECT: {
-                createBucket(name, this, kind);
-                bucket =  new DirectoryBackedIndirectBucket(name, this, tFactory);
+                DirectoryBackedIndirectBucket.createBucket(name, this, kind);
+                bucket = new DirectoryBackedIndirectBucket(name, this, tFactory);
                 break;
             }
             case INDEXED: {
-                createBucket(name, this, kind);
-                bucket =  new DirectoryBackedIndexedBucket(name, this, tFactory);
+                DirectoryBackedIndexedBucket.createBucket(name, this, kind);
+                bucket = new DirectoryBackedIndexedBucket(name, this, tFactory);
                 break;
             }
             default: {
@@ -137,7 +142,6 @@ public class Repository implements IRepository {
             if( bucket_cache.containsKey(name)) {
                 return bucket_cache.get(name);
             } else {
-                System.out.println( "########### Creating Bucket ########### " + name );
                 BucketKind kind = DirectoryBackedBucket.getKind(name, this);
                 return makeBucket( name, kind, tFactory );
             }
@@ -148,10 +152,10 @@ public class Repository implements IRepository {
     @Override
     public IBucket getBucket(String name) throws RepositoryException {
         if (bucketExists(name)) {
+
             if( bucket_cache.containsKey(name)) {
                 return bucket_cache.get(name);
             } else {
-//                System.out.println( "########### Creating Bucket ###########" + name );
                 BucketKind kind = DirectoryBackedBucket.getKind(name, this);
                 return makeBucket( name, kind );
             }
