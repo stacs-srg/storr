@@ -14,9 +14,7 @@ import uk.ac.standrews.cs.storr.types.Types;
 import uk.ac.standrews.cs.storr.util.ErrorHandling;
 
 import java.io.StringWriter;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static uk.ac.standrews.cs.storr.impl.Store.getNextFreePID;
 
@@ -66,8 +64,28 @@ public class LXP implements ILXP {
                 } else if (reader.have(JSONReader.BOOLEAN)) {
                     Boolean value = reader.booleanValue();
                     this.put(key, value);
+                } else if( reader.have(JSONReader.ARRAY)) {
+                    reader.nextSymbol(); // east the array symbol
+                    List l = new ArrayList();
+                    while( ! reader.have(JSONReader.ENDARRAY)) {
+                        if (reader.have(JSONReader.LONG)) {
+                            l.add( reader.longValue() );
+                        } else if (reader.have(JSONReader.INTEGER)) {
+                            l.add( reader.intValue() );
+                        } else if (reader.have(JSONReader.DOUBLE)) {
+                            l.add( reader.doubleValue() );
+                        } else if (reader.have(JSONReader.STRING)) {
+                            l.add( reader.stringValue() );
+                        } else if (reader.have(JSONReader.BOOLEAN)) {
+                            l.add(reader.booleanValue());
+                        } else {
+                            throw new PersistentObjectException("Unexpected type in JSON Array");
+                        }
+                    }
+                    reader.nextSymbol(); // eat the end array
+                    this.put(key, l);
                 } else {
-                    throw new PersistentObjectException("Unexpected type in JSON string");
+                    throw new PersistentObjectException("Unexpected type in JSON string: " );
                 }
             }
         } catch (JSONException e) {
@@ -212,6 +230,20 @@ public class LXP implements ILXP {
     }
 
     @Override
+    public List getList(String key) throws KeyNotFoundException, TypeMismatchFoundException {
+        if (containsKey(key)) {
+            Object result = map.get(key);
+            if (result instanceof List) {
+                return (List) result;
+            }  else {
+                throw new TypeMismatchFoundException("expected List found: " + result.getClass().getName());
+            }
+        }
+        throw new KeyNotFoundException(key);
+    }
+
+
+    @Override
     public IStoreReference getRef(String key) throws KeyNotFoundException, TypeMismatchFoundException {
         if (containsKey(key)) {
             Object result = map.get(key);
@@ -240,6 +272,12 @@ public class LXP implements ILXP {
     public void put(String key, long value) throws IllegalKeyException {
         check(key);
         map.put(key, new Long(value));
+    }
+
+    @Override
+    public void put(String key, List list) throws IllegalKeyException {
+        check(key);
+        map.put(key, list);
     }
 
     @Override
@@ -277,17 +315,29 @@ public class LXP implements ILXP {
             writer.key(key);
             Object value = entry.getValue();
 
-            if (value instanceof Double) {
-                writer.value(((Double) (value)).doubleValue());
-            } else if (value instanceof Integer) {
-                writer.value(((Integer) (value)).intValue());
-            } else if (value instanceof Boolean) {
-                writer.value(((Boolean) (value)).booleanValue());
-            } else if (value instanceof Long) {
-                writer.value(((Long) (value)).longValue());
+            if ( value instanceof List ) {
+                writer.array();
+                for( Object o : (List) value ) {
+                    writeSimpleValue( writer,o );
+                }
+                writer.endArray();
             } else {
-                writer.value(value); // default is to write a string
+                writeSimpleValue( writer, value );
             }
+        }
+    }
+
+    private void writeSimpleValue(JSONWriter writer, Object value) throws JSONException {
+        if (value instanceof Double) {
+            writer.value(((Double) (value)).doubleValue());
+        } else if (value instanceof Integer) {
+            writer.value(((Integer) (value)).intValue());
+        } else if (value instanceof Boolean) {
+            writer.value(((Boolean) (value)).booleanValue());
+        } else if (value instanceof Long) {
+            writer.value(((Long) (value)).longValue());
+        } else {
+            writer.value(value); // default is to write a string
         }
     }
 

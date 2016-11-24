@@ -87,10 +87,6 @@ public class TypeFactory {
 
     private void load_caches() {
 
-        // private HashMap<String,IReferenceType> names_to_type_cache = new HashMap<>();
-
-        // private HashMap<Integer,IReferenceType> ids_to_type_cache = new HashMap<>();
-
         try {
             Iterator<LXP> i = type_name_bucket.getInputStream().iterator();
             while (i.hasNext()) {

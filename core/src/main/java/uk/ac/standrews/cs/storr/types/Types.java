@@ -150,6 +150,10 @@ public class Types {
         if (LXPBaseType.BOOLEAN.name().toLowerCase().equals(value.toLowerCase())) {
             return LXPBaseType.BOOLEAN;
         }
+        if ( value.startsWith("[") && value.endsWith("]") ) { // it is a list type
+            String listcontents = value.substring(1,value.length()-1);
+            return LXPListType.valueOf(listcontents);
+        }
         if (TypeFactory.getInstance().containsKey(value)) {
             return TypeFactory.getInstance().typeWithname(value);
         }
@@ -168,7 +172,7 @@ public class Types {
             if (Modifier.isStatic(f.getModifiers())) {
 
                 if (f.isAnnotationPresent(LXP_SCALAR.class)) {
-                    if (f.isAnnotationPresent(LXP_REF.class)) {
+                    if (f.isAnnotationPresent(LXP_REF.class) || f.isAnnotationPresent(LXP_LIST.class) ) {
                         ErrorHandling.error("Conflicting labels: " + f.getName()); // Graham wrote this :)
                     }
                     LXP_SCALAR scalar_type = f.getAnnotation(LXP_SCALAR.class);
@@ -182,12 +186,26 @@ public class Types {
                         ErrorHandling.exceptionError(e, "Illegal key in label: " + f.getName());
                     }
                 } else if (f.isAnnotationPresent(LXP_REF.class)) {
+                    if (f.isAnnotationPresent(LXP_LIST.class) ) {
+                        ErrorHandling.error("Conflicting labels: " + f.getName()); // Graham wrote this :) and al added list :):)_
+                    }
                     LXP_REF ref_type = f.getAnnotation(LXP_REF.class);
                     String ref_type_name = ref_type.type(); // this is the name of the type that the reference refers to
                     try {
                         f.setAccessible(true);
                         String label_name = (String) f.get(null); // label name is the value of the labelled Java field!
                         type_rep.put(label_name, ref_type_name);
+                    } catch (IllegalAccessException e) {
+                        ErrorHandling.exceptionError(e, "Illegal access for label: " + f.getName());
+                    } catch (IllegalKeyException e) {
+                        ErrorHandling.exceptionError(e, "Illegal key in label: " + f.getName());
+                    }
+                } else if (f.isAnnotationPresent(LXP_LIST.class)) {
+                    LXP_LIST list_type = f.getAnnotation(LXP_LIST.class);
+                    try {
+                        f.setAccessible(true);
+                        String label_name = (String) f.get(null); // label name is the value of the labelled Java field!
+                        type_rep.put(label_name, "[" + list_type.type().name() + "]");
                     } catch (IllegalAccessException e) {
                         ErrorHandling.exceptionError(e, "Illegal access for label: " + f.getName());
                     } catch (IllegalKeyException e) {

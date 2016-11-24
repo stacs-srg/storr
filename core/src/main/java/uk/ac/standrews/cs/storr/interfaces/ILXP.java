@@ -6,6 +6,8 @@ import uk.ac.standrews.cs.storr.impl.exceptions.IllegalKeyException;
 import uk.ac.standrews.cs.storr.impl.exceptions.KeyNotFoundException;
 import uk.ac.standrews.cs.storr.impl.exceptions.TypeMismatchFoundException;
 
+import java.util.List;
+
 /**
  * Interface to a LXP (labeled cross product class).
  * It provides a thin wrapper over a Map (providing name value lookup) along with identity and the ability to save and recover persistent versions (encoded in JSON).
@@ -92,6 +94,16 @@ public interface ILXP extends ILXPFactory {
      * A getter method over labelled values in the LXP
      *
      * @param label - the label whose value is required
+     * @return the list associated with @param label
+     * @throws KeyNotFoundException       - if the tuple does not contain the key
+     * @throws TypeMismatchFoundException if the value associated with the key is not a long
+     */
+    List getList(String label) throws KeyNotFoundException, TypeMismatchFoundException;
+
+    /**
+     * A getter method over labelled values in the LXP
+     *
+     * @param label - the label whose value is required
      * @return the value associated with @param label
      * @throws KeyNotFoundException       - if the tuple does not contain the key
      * @throws TypeMismatchFoundException if the value associated with the key is not a Store reference
@@ -142,9 +154,18 @@ public interface ILXP extends ILXPFactory {
      * A setter method over labelled values in the LXP
      *
      * @param label - the label whose value is being set
+     * @param list - the list to associated with the @param label
+     */
+    void put(String label, List list) throws IllegalKeyException;
+
+    /**
+     * A setter method over labelled values in the LXP
+     *
+     * @param label - the label whose value is being set
      * @param value - the value to associated with the @param label
      */
     void put(String label, IStoreReference value) throws IllegalKeyException;
+
 
 
     /**

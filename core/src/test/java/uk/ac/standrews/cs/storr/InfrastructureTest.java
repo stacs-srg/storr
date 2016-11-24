@@ -20,6 +20,8 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -97,6 +99,27 @@ public class InfrastructureTest {
         ILXP retrievedLXP = b.getObjectById(id);
         assertEquals(retrievedLXP, lxp);
     }
+
+    @Test
+    public synchronized void testLXPListCreation() throws RepositoryException, IllegalKeyException, BucketException {
+        IBucket b = repo.getBucket(generic_bucket_name1);
+        LXP lxp = new LXP();
+        lxp.put("age", "42");
+        lxp.put("address", "home");
+        List l = new ArrayList();
+        l.add( "fish" );
+        l.add( 1 );
+        l.add( 3.12 );
+        lxp.put("mylist", l);
+        b.makePersistent(lxp);
+
+        long id = lxp.getId();
+        ILXP retrievedLXP = b.getObjectById(id);
+        assertEquals(retrievedLXP, lxp);
+        List anotherlist = retrievedLXP.getList("mylist");
+        System.out.println( "retreived list = " + anotherlist );
+    }
+
 
     @Test (expected = BucketException.class)
     public synchronized void testLXPOverwrite() throws RepositoryException, IllegalKeyException, BucketException {
