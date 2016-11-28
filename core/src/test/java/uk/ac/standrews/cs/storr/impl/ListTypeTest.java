@@ -19,6 +19,8 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+import static junit.framework.TestCase.assertTrue;
+
 /**
  * @author Al al@st-andrews.ac.uk 24-11-16
  */
@@ -122,9 +124,8 @@ public class ListTypeTest {
         assertEquals( lxp3.getId(), id );
         assertEquals( lxp3.getInt( "R_INT" ), 53 );
         List l = lxp3.getList( "R_LIST" );
-       // assertEquals( l.get(0), 99 );
-        // assertEquals( l.get(1), 88 );
-
+        assertTrue( l.get(0).equals( "{\"99\":99}" ) );
+        assertTrue( l.get(1).equals( "{\"88\":88}" ) );
 
     }
 
