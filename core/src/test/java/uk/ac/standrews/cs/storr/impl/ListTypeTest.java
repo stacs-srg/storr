@@ -19,19 +19,23 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-
 /**
- * @author Simone I. Conte "sic2@st-andrews.ac.uk"
+ * @author Al al@st-andrews.ac.uk 24-11-16
  */
 public class ListTypeTest {
 
     private static final String REPO_NAME = "repo";
-    private static String classWithListBucketName = "classWithListBucket";
+
+    private static String lxpBucketName = "lxpBucket";
+    private static String classWithListOfScalarsBucketName = "classWithListOFScalarsBucket";
+    private static String classWithListOfRefsBucketName = "classWithListOFRefsBucket";
 
     private IStore store;
     private IRepository repo;
-    private IBucket<ClassWithList> bucket;
+
+    private IBucket<LXP> lxp_bucket;
+    private IBucket<ClassWithListOfScalars> scalar_list_bucket;
+    private IBucket<ClassWithListOfRefs> ref_list_bucket;
 
     private Path tempStore;
     private String store_path = "";
@@ -48,11 +52,17 @@ public class ListTypeTest {
 
 
         TypeFactory tf = TypeFactory.getInstance();
-        IReferenceType fieldLabelsType = tf.createType(ClassWithList.class, "fieldLabels");
+        IReferenceType classwithlistofscalars_type = tf.createType(ClassWithListOfScalars.class, "classwithlistofscalars");
+        IReferenceType classwithlistofrefs_type = tf.createType(ClassWithListOfRefs.class, "classwithlistofrefs");
 
         repo = store.makeRepository(REPO_NAME);
-        FieldLabelsExemplarFactory fieldLabelsExemplarFactory = new FieldLabelsExemplarFactory(fieldLabelsType.getId());
-        bucket = repo.makeBucket(classWithListBucketName, BucketKind.DIRECTORYBACKED, fieldLabelsExemplarFactory );
+        ClassWithListOfScalarsFactory classWithListOfScalarsFactory = new ClassWithListOfScalarsFactory(classwithlistofscalars_type.getId());
+        ClassWithListOfRefsFactory classWithListOfRefsFactory = new ClassWithListOfRefsFactory(classwithlistofrefs_type.getId());
+
+        lxp_bucket = repo.makeBucket(lxpBucketName, BucketKind.DIRECTORYBACKED );
+        scalar_list_bucket = repo.makeBucket(classWithListOfScalarsBucketName, BucketKind.DIRECTORYBACKED, classWithListOfScalarsFactory );
+        ref_list_bucket = repo.makeBucket(classWithListOfRefsBucketName, BucketKind.DIRECTORYBACKED, classWithListOfRefsFactory );
+
     }
 
     @After
@@ -62,27 +72,61 @@ public class ListTypeTest {
     }
 
     @Test
-    public void checkStructuralEquivalence() throws RepositoryException, BucketException, PersistentObjectException, IOException {
+    public void checkStructuralEquivalenceWithListOfScalars() throws RepositoryException, BucketException, PersistentObjectException, IOException {
 
         List<Integer> list = new ArrayList(); list.add(99); list.add(88);
 
-        ClassWithList example = new ClassWithList( 53,list );
-        bucket.makePersistent(example);
+        ClassWithListOfScalars example = new ClassWithListOfScalars( 53,list );
+        scalar_list_bucket.makePersistent(example);
         long id = example.getId();
 
         // Now try and read back - avoid all cache etc.
 
-        Path file_path = tempStore.resolve( "REPOS" ).resolve( REPO_NAME ).resolve( classWithListBucketName ).resolve( new Long( id ).toString() );
+        Path file_path = tempStore.resolve( "REPOS" ).resolve( REPO_NAME ).resolve(classWithListOfScalarsBucketName).resolve( new Long( id ).toString() );
         BufferedReader reader = Files.newBufferedReader( file_path, FileManipulation.FILE_CHARSET );
 
         LXP lxp2 = new LXP(id, new JSONReader(reader) );
+
         assertEquals( lxp2.getId(), id );
-        assertEquals( lxp2.getInt( "ORIGINAL_ID" ), 53 );
-        List l = lxp2.getList( "MY_LIST" );
-        assertEquals( l.get(0), 99 );
-        assertEquals( l.get(1), 88 );
+        assertEquals( lxp2.getInt( "S_INT" ), 53 );
+        List l = lxp2.getList( "S_LIST" );
+        assertEquals( (int) l.get(0), 99 );
+        assertEquals( (int) l.get(1), 88 );
 
 
     }
+
+    private void assertEquals(long id, long id1) {
+    }
+
+    @Test
+    public void checkStructuralEquivalenceWithListOfRefs() throws RepositoryException, BucketException, PersistentObjectException, IOException {
+
+        LXP lxp1 = new LXP(); lxp1.put( "99", 99 ); lxp_bucket.makePersistent(lxp1);
+        long lxp1_id = lxp1.getId();
+        LXP lxp2 = new LXP(); lxp2.put( "88", 88 ); lxp_bucket.makePersistent(lxp2);
+        long lxp2_id = lxp2.getId();
+
+        List<LXP> list = new ArrayList(); list.add( lxp1 ); list.add( lxp2 );
+
+        ClassWithListOfRefs example = new ClassWithListOfRefs( 53,list );
+        ref_list_bucket.makePersistent(example);
+        long id = example.getId();
+
+        // Now try and read back - avoid all cache etc.
+
+        Path file_path = tempStore.resolve( "REPOS" ).resolve( REPO_NAME ).resolve(classWithListOfRefsBucketName).resolve( new Long( id ).toString() );
+        BufferedReader reader = Files.newBufferedReader( file_path, FileManipulation.FILE_CHARSET );
+
+        LXP lxp3 = new LXP(id, new JSONReader(reader) );
+        assertEquals( lxp3.getId(), id );
+        assertEquals( lxp3.getInt( "R_INT" ), 53 );
+        List l = lxp3.getList( "R_LIST" );
+       // assertEquals( l.get(0), 99 );
+        // assertEquals( l.get(1), 88 );
+
+
+    }
+
 
 }

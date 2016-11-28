@@ -9,16 +9,16 @@ import uk.ac.standrews.cs.storr.interfaces.ILXPFactory;
 /**
  * Created by al on 03/10/2014.
  */
-public class FieldLabelsExemplarFactory extends TFactory<ClassWithList> implements ILXPFactory<ClassWithList> {
+public class ClassWithListOfScalarsFactory extends TFactory<ClassWithListOfScalars> implements ILXPFactory<ClassWithListOfScalars> {
 
 
-    public FieldLabelsExemplarFactory(long required_label_id) {
+    public ClassWithListOfScalarsFactory(long required_label_id) {
         this.required_type_labelID = required_label_id;
     }
 
     @Override
-    public ClassWithList create(long persistent_object_id, JSONReader reader) throws PersistentObjectException, IllegalKeyException {
-        return new ClassWithList(persistent_object_id, reader);
+    public ClassWithListOfScalars create(long persistent_object_id, JSONReader reader) throws PersistentObjectException, IllegalKeyException {
+        return new ClassWithListOfScalars(persistent_object_id, reader);
     }
 
 

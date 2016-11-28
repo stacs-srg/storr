@@ -83,6 +83,7 @@ public class LXP implements ILXP {
                         }
                     }
                     reader.nextSymbol(); // eat the end array
+                    reader.nextSymbol(); // eat the comma  //<<<<<<<<<<<<<, AL IS HERE - MAY BE WRONG!! TEST AGAIN.
                     this.put(key, l);
                 } else {
                     throw new PersistentObjectException("Unexpected type in JSON string: " );

@@ -12,20 +12,20 @@ import java.util.List;
 /**
  * Created by al on 22/11/2016.
  */
-public class ClassWithList extends LXP {
+public class ClassWithListOfScalars extends LXP {
 
         @LXP_SCALAR(type = LXPBaseType.INT)
-        public static final String fieldname1 = "ORIGINAL_ID";
+        public static final String some_int = "S_INT";
 
-        @LXP_LIST(type = LXPBaseType.INT)
-        public static final String fieldname2 = "MY_LIST";
+        @LXP_LIST(basetype = LXPBaseType.INT)
+        public static final String alist = "S_LIST";
 
-        public ClassWithList(long persistent_Object_id, JSONReader reader) throws PersistentObjectException, IllegalKeyException {
+        public ClassWithListOfScalars(long persistent_Object_id, JSONReader reader) throws PersistentObjectException, IllegalKeyException {
                 super(persistent_Object_id, reader);
         }
 
-        public ClassWithList(int id, List<Integer> list ) {
-                this.put( fieldname1, id );
-                this.put( fieldname2, list );
+        public ClassWithListOfScalars(int id, List<Integer> list ) {
+                this.put( some_int, id );
+                this.put( alist, list );
         }
 }

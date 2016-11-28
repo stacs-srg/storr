@@ -13,5 +13,9 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 public @interface LXP_LIST {
-    LXPBaseType type();
+
+    public static final String UNSPECIFIED_REF_TYPE = "***UNSPECIFIED***";
+
+    String reftype() default UNSPECIFIED_REF_TYPE;
+    LXPBaseType basetype() default LXPBaseType.UNKNOWN;
 }

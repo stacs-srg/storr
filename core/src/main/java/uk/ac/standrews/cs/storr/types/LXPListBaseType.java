@@ -10,7 +10,7 @@ import java.util.List;
  * A class representing types that may be encoded above OID storage layer (optional)
  * Represents lists of base types
  */
-public enum LXPListType implements IType {
+public enum LXPListBaseType implements IType {
 
     UNKNOWN {
         @Override

@@ -152,7 +152,22 @@ public class Types {
         }
         if ( value.startsWith("[") && value.endsWith("]") ) { // it is a list type
             String listcontents = value.substring(1,value.length()-1);
-            return LXPListType.valueOf(listcontents);
+            if( LXPBaseType.STRING.name().toLowerCase().equals(listcontents.toLowerCase()) ||
+                    LXPBaseType.LONG.name().toLowerCase().equals(listcontents.toLowerCase()) ||
+                    LXPBaseType.INT.name().toLowerCase().equals(listcontents.toLowerCase()) ||
+                    LXPBaseType.DOUBLE.name().toLowerCase().equals(listcontents.toLowerCase()) ||
+                    LXPBaseType.BOOLEAN.name().toLowerCase().equals(listcontents.toLowerCase()) ) {
+                return LXPListBaseType.valueOf(listcontents);
+            } else {
+                // it may be a list of ref types
+                if (TypeFactory.getInstance().containsKey(listcontents)) {
+                    IReferenceType list_contents_type = TypeFactory.getInstance().typeWithname(listcontents);
+                    return new LXPListRefType(list_contents_type);
+                } else {
+                    ErrorHandling.error("Encountered unknown array contents: " + listcontents);
+                    return LXPBaseType.UNKNOWN;
+                }
+            }
         }
         if (TypeFactory.getInstance().containsKey(value)) {
             return TypeFactory.getInstance().typeWithname(value);
@@ -205,7 +220,19 @@ public class Types {
                     try {
                         f.setAccessible(true);
                         String label_name = (String) f.get(null); // label name is the value of the labelled Java field!
-                        type_rep.put(label_name, "[" + list_type.type().name() + "]");
+                        LXPBaseType basetype = list_type.basetype();
+                        String reftype = list_type.reftype();
+                        if( basetype == LXPBaseType.UNKNOWN && reftype.equals( LXP_LIST.UNSPECIFIED_REF_TYPE ) ) {      // none specified
+                            // no type specified by user - this is an error
+                            ErrorHandling.error("Illegal access for label: no array types specified");
+                        } else if( basetype != LXPBaseType.UNKNOWN && ! reftype.equals( LXP_LIST.UNSPECIFIED_REF_TYPE ) ) { // both specified
+                            // both base type and ref type specified by user - this is an error
+                            ErrorHandling.error("Illegal access for label: reftype and basetype for array contents specified");
+                        } else if( basetype == LXPBaseType.UNKNOWN ) {                  // Just got one specified by use - either are OK.
+                            type_rep.put(label_name, "[" + reftype + "]");              // use the ref type
+                        } else {
+                                type_rep.put(label_name, "[" + basetype.name() + "]");  // use the basetype
+                        }
                     } catch (IllegalAccessException e) {
                         ErrorHandling.exceptionError(e, "Illegal access for label: " + f.getName());
                     } catch (IllegalKeyException e) {
