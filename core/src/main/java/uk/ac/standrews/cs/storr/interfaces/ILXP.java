@@ -29,7 +29,6 @@ public interface ILXP extends ILXPFactory {
      */
     void serializeToJSON(JSONWriter writer) throws JSONException;
 
-
     /**
      * A getter method over labelled values in the LXPOID
      *
@@ -165,8 +164,6 @@ public interface ILXP extends ILXPFactory {
      * @param value - the value to associated with the @param label
      */
     void put(String label, IStoreReference value) throws IllegalKeyException;
-
-
 
     /**
      * @param label - the label to be looked up

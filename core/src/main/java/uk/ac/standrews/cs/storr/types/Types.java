@@ -113,7 +113,7 @@ public class Types {
         if (type_label_id == supplied_label_id) {
             return true;
         }
-        // if that doesn't work do structural check
+        // if that doesn't work do structural check over type reps
         try {
             IReferenceType stored_label = TypeFactory.getInstance().typeWithId(supplied_label_id);
             IReferenceType required_label = TypeFactory.getInstance().typeWithId(supplied_label_id);

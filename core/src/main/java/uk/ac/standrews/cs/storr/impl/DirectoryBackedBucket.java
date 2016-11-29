@@ -73,7 +73,10 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
     public DirectoryBackedBucket(final String name, final IRepository repository, ILXPFactory<T> tFactory, BucketKind kind) throws RepositoryException {
         this(name, repository, kind);
         this.tFactory = tFactory;
-        type_label_id = tFactory.getTypeLabel();
+        type_label_id = getTypeLabelID();
+        if( type_label_id != tFactory.getTypeLabel() ) {
+            throw new RepositoryException( "Bucket label incompatible with supplied factory: " + tFactory.getTypeLabel() + " doesn't match bucket label:" + type_label_id );
+        }
     }
 
     public static void createBucket(final String name, IRepository repository, BucketKind kind) throws RepositoryException {
@@ -94,7 +97,13 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
         }
     }
 
-    public T getObjectById(long id) throws BucketException {
+    public static void createBucket(final String name, IRepository repository, BucketKind kind, long type_label ) throws RepositoryException {
+        createBucket( name,repository,kind );
+        saveTypeLabel( name, repository, type_label );
+    }
+
+
+        public T getObjectById(long id) throws BucketException {
         T result;
 
         if (this.contains(id) && objectCache.contains(id)) {
@@ -189,9 +198,12 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
 
         if (type_label_id != -1) { // we have set a type label in this bucket there must check for consistency
 
-            if (!(check_label_consistency(record_to_check, type_label_id))) { // Keep these separate for more error precision
-                throw new BucketException("Label incompatibility");
+            if (record_to_check.containsKey(Types.LABEL)) { // if there is a label it must be correct
+                if (!(check_label_consistency(record_to_check, type_label_id))) { // check that the record label matches the bucket label - throw exception if it doesn't
+                    throw new BucketException("Label incompatibility");
+                }
             }
+            // get to here -> there is no record label on record
             try {
                 if (!check_structural_consistency(record_to_check, type_label_id)) {
                     throw new BucketException("Structural integrity incompatibility");
@@ -199,12 +211,12 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
             } catch (IOException e) {
                 throw new BucketException("I/O exception checking Structural integrity");
             }
-        } else if (record_to_check.containsKey(Types.LABEL)) { // no type label on bucket but record has a type label so check structure
-
-            try {
-                if (!check_structural_consistency(record_to_check, record_to_check.getLong(Types.LABEL))) {
-                    throw new BucketException("Structural integrity incompatibility");
-                }
+        } else // get to here and bucket has no type label on it.
+            if (record_to_check.containsKey(Types.LABEL)) { // no type label on bucket but record has a type label so check structure
+                try {
+                    if (!check_structural_consistency(record_to_check, record_to_check.getLong(Types.LABEL))) {
+                     throw new BucketException("Structural integrity incompatibility");
+                    }
             } catch (KeyNotFoundException e) {
                 // this cannot happen - label checked in if .. so .. just let it go
             } catch (IOException e) {
@@ -422,6 +434,29 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
         } catch (IOException e) {
             ErrorHandling.error("I/O Exception getting labelID");
             return -1;
+        }
+    }
+
+    private static void saveTypeLabel(String name, IRepository repository, long type_label) throws RepositoryException {
+        if( type_label == -1) {  // only write the label if it has been set.
+            return;
+        }
+
+        Path path = getBucketPath(name, repository);
+        Path typepath = path.resolve("META").resolve("TYPELABEL");
+        try {
+            FileManipulation.createFileIfDoesNotExist(typepath);
+        } catch (IOException e) {
+            throw new RepositoryException( e );
+        }
+
+        try (BufferedWriter writer = Files.newBufferedWriter(typepath, FileManipulation.FILE_CHARSET)) {
+                writer.write(String.valueOf(type_label));
+                writer.flush();
+                writer.close();
+
+        } catch (IOException e1) {
+            throw new RepositoryException( e1 );
         }
     }
 

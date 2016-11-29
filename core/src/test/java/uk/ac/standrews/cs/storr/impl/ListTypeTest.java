@@ -39,6 +39,10 @@ public class ListTypeTest {
     private IBucket<ClassWithListOfScalars> scalar_list_bucket;
     private IBucket<ClassWithListOfRefs> ref_list_bucket;
 
+    ClassWithListOfScalarsFactory classWithListOfScalarsFactory;
+    ClassWithListOfRefsFactory classWithListOfRefsFactory;
+
+
     private Path tempStore;
     private String store_path = "";
 
@@ -58,8 +62,8 @@ public class ListTypeTest {
         IReferenceType classwithlistofrefs_type = tf.createType(ClassWithListOfRefs.class, "classwithlistofrefs");
 
         repo = store.makeRepository(REPO_NAME);
-        ClassWithListOfScalarsFactory classWithListOfScalarsFactory = new ClassWithListOfScalarsFactory(classwithlistofscalars_type.getId());
-        ClassWithListOfRefsFactory classWithListOfRefsFactory = new ClassWithListOfRefsFactory(classwithlistofrefs_type.getId());
+        classWithListOfScalarsFactory = new ClassWithListOfScalarsFactory(classwithlistofscalars_type.getId());
+        classWithListOfRefsFactory = new ClassWithListOfRefsFactory(classwithlistofrefs_type.getId());
 
         lxp_bucket = repo.makeBucket(lxpBucketName, BucketKind.DIRECTORYBACKED );
         scalar_list_bucket = repo.makeBucket(classWithListOfScalarsBucketName, BucketKind.DIRECTORYBACKED, classWithListOfScalarsFactory );
@@ -111,7 +115,8 @@ public class ListTypeTest {
 
         List<LXP> list = new ArrayList(); list.add( lxp1 ); list.add( lxp2 );
 
-        ClassWithListOfRefs example = new ClassWithListOfRefs( 53,list );
+        // ClassWithListOfRefs example = new ClassWithListOfRefs( 53,list );
+        ClassWithListOfRefs example = classWithListOfRefsFactory.create( 53, list );
         ref_list_bucket.makePersistent(example);
         long id = example.getId();
 

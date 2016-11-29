@@ -83,17 +83,17 @@ public class Repository implements IRepository {
         IBucket bucket = null;
         switch (kind) {
             case DIRECTORYBACKED: {
-                DirectoryBackedBucket.createBucket(name, this, kind);
+                DirectoryBackedBucket.createBucket(name, this, kind,tFactory.getTypeLabel() );
                 bucket = new DirectoryBackedBucket(name, this, tFactory, kind);
                 break;
             }
             case INDIRECT: {
-                DirectoryBackedIndirectBucket.createBucket(name, this, kind);
+                DirectoryBackedIndirectBucket.createBucket(name, this, kind,tFactory.getTypeLabel());
                 bucket = new DirectoryBackedIndirectBucket(name, this, tFactory);
                 break;
             }
             case INDEXED: {
-                DirectoryBackedIndexedBucket.createBucket(name, this, kind);
+                DirectoryBackedIndexedBucket.createBucket(name, this, kind, tFactory.getTypeLabel());
                 bucket = new DirectoryBackedIndexedBucket(name, this, tFactory);
                 break;
             }
