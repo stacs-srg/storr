@@ -1,10 +1,9 @@
 package uk.ac.standrews.cs.storr.impl;
 
-import org.json.JSONException;
+import uk.ac.standrews.cs.nds.persistence.PersistentObjectException;
 import uk.ac.standrews.cs.storr.impl.exceptions.BucketException;
 import uk.ac.standrews.cs.storr.impl.exceptions.IllegalKeyException;
 import uk.ac.standrews.cs.storr.impl.exceptions.RepositoryException;
-import uk.ac.standrews.cs.storr.impl.exceptions.StoreException;
 import uk.ac.standrews.cs.storr.interfaces.*;
 
 import java.io.IOException;
@@ -30,8 +29,9 @@ public class DirectoryBackedIndirectBucket<T extends ILXP> extends DirectoryBack
     public void makePersistent(final T record) throws BucketException {
 
         try {
-            writeLXP(record, create_indirection(record), Paths.get(this.filePath(record.getId())));
-        } catch (IOException | JSONException | StoreException | IllegalKeyException e) {
+            // TODO delete later OLD CODE: writeLXP(record, create_indirection(record), Paths.get(this.filePath(record.getId())));
+            writeLXP((ILXP) record.getThisRef(), Paths.get(this.filePath(record.getId())));
+        } catch ( IllegalKeyException | PersistentObjectException e) {
             throw new BucketException("Error creating indirection");
         }
 

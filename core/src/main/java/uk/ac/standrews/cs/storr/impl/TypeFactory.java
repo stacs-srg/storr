@@ -55,7 +55,7 @@ public class TypeFactory {
     }
 
     public IReferenceType createType(String json_encoded_type_descriptor_file_name, String type_name) {
-        LXPReferenceType ref_type = new LXPReferenceType(json_encoded_type_descriptor_file_name);
+        LXPReferenceType ref_type = new LXPReferenceType(json_encoded_type_descriptor_file_name,type_repo, type_reps_bucket);
         do_housekeeping(type_name, ref_type);
         return ref_type;
     }

@@ -4,7 +4,9 @@ package uk.ac.standrews.cs.storr.impl;
 import uk.ac.standrews.cs.nds.persistence.PersistentObjectException;
 import uk.ac.standrews.cs.nds.rpc.stream.JSONReader;
 import uk.ac.standrews.cs.storr.impl.exceptions.IllegalKeyException;
+import uk.ac.standrews.cs.storr.interfaces.IBucket;
 import uk.ac.standrews.cs.storr.interfaces.ILXPFactory;
+import uk.ac.standrews.cs.storr.interfaces.IRepository;
 import uk.ac.standrews.cs.storr.types.Types;
 
 import java.util.List;
@@ -20,8 +22,8 @@ public class ClassWithListOfRefsFactory extends TFactory<ClassWithListOfRefs> im
     }
 
     @Override
-    public ClassWithListOfRefs create(long persistent_object_id, JSONReader reader) throws PersistentObjectException, IllegalKeyException {
-        return new ClassWithListOfRefs(persistent_object_id, reader);
+    public ClassWithListOfRefs create(long persistent_object_id, JSONReader reader, IRepository repository, IBucket bucket) throws PersistentObjectException, IllegalKeyException {
+        return new ClassWithListOfRefs(persistent_object_id, reader, repository, bucket);
     }
 
      public ClassWithListOfRefs create(int id, List<LXP> list) {

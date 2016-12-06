@@ -3,6 +3,8 @@ package uk.ac.standrews.cs.storr.impl;
 import uk.ac.standrews.cs.nds.persistence.PersistentObjectException;
 import uk.ac.standrews.cs.nds.rpc.stream.JSONReader;
 import uk.ac.standrews.cs.storr.impl.exceptions.IllegalKeyException;
+import uk.ac.standrews.cs.storr.interfaces.IBucket;
+import uk.ac.standrews.cs.storr.interfaces.IRepository;
 import uk.ac.standrews.cs.storr.types.LXPBaseType;
 import uk.ac.standrews.cs.storr.types.LXP_LIST;
 import uk.ac.standrews.cs.storr.types.LXP_SCALAR;
@@ -21,8 +23,8 @@ public class ClassWithListOfRefs extends LXP {
         public static final String alist = "R_LIST";
 
 
-        public ClassWithListOfRefs(long persistent_Object_id, JSONReader reader) throws PersistentObjectException, IllegalKeyException {
-                super(persistent_Object_id, reader);
+        public ClassWithListOfRefs(long persistent_Object_id, JSONReader reader, IRepository repository, IBucket bucket) throws PersistentObjectException, IllegalKeyException {
+                super(persistent_Object_id, reader, repository, bucket);
         }
 
         public ClassWithListOfRefs(int id, List<LXP> list ) {

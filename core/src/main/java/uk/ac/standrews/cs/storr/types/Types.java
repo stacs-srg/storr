@@ -179,6 +179,7 @@ public class Types {
     public static LXP getTypeRep(Class c) {
 
         LXP type_rep = null;
+
         type_rep = new LXP();
 
         Field[] fields = c.getDeclaredFields();

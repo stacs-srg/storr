@@ -2,6 +2,7 @@ package uk.ac.standrews.cs.storr.interfaces;
 
 import org.json.JSONException;
 import org.json.JSONWriter;
+import uk.ac.standrews.cs.nds.persistence.PersistentObjectException;
 import uk.ac.standrews.cs.storr.impl.exceptions.IllegalKeyException;
 import uk.ac.standrews.cs.storr.impl.exceptions.KeyNotFoundException;
 import uk.ac.standrews.cs.storr.impl.exceptions.TypeMismatchFoundException;
@@ -25,9 +26,10 @@ public interface ILXP extends ILXPFactory {
      * Writes the state of the LXP to a Bucket.
      *
      * @param writer the stream to which the state is written.
-     * @throws JSONException if the record being written cannot be written to legal JSON.
+     * @param repository
+     *@param bucket @throws JSONException if the record being written cannot be written to legal JSON.
      */
-    void serializeToJSON(JSONWriter writer) throws JSONException;
+    void serializeToJSON(JSONWriter writer, IRepository repository, IBucket bucket) throws JSONException;
 
     /**
      * A getter method over labelled values in the LXPOID
@@ -108,6 +110,10 @@ public interface ILXP extends ILXPFactory {
      * @throws TypeMismatchFoundException if the value associated with the key is not a Store reference
      */
     IStoreReference getRef(String label) throws KeyNotFoundException, TypeMismatchFoundException;
+
+    //------------- Putters -------------
+
+    IStoreReference getThisRef() throws PersistentObjectException;
 
     /**
      * A setter method over labelled values in the LXP

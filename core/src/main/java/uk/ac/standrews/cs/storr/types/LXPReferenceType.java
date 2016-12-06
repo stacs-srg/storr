@@ -6,10 +6,7 @@ import uk.ac.standrews.cs.storr.impl.LXP;
 import uk.ac.standrews.cs.storr.impl.StoreReference;
 import uk.ac.standrews.cs.storr.impl.TypeFactory;
 import uk.ac.standrews.cs.storr.impl.exceptions.*;
-import uk.ac.standrews.cs.storr.interfaces.ILXP;
-import uk.ac.standrews.cs.storr.interfaces.IReferenceType;
-import uk.ac.standrews.cs.storr.interfaces.IStoreReference;
-import uk.ac.standrews.cs.storr.interfaces.IType;
+import uk.ac.standrews.cs.storr.interfaces.*;
 import uk.ac.standrews.cs.storr.util.ErrorHandling;
 import uk.ac.standrews.cs.storr.util.FileManipulation;
 
@@ -27,11 +24,11 @@ public class LXPReferenceType implements IReferenceType {
 
     private ILXP typerep;
 
-    public LXPReferenceType(String json_encoded_type_descriptor_file_name) {
+    public LXPReferenceType(String json_encoded_type_descriptor_file_name, IRepository repo, IBucket bucket) {
 
         try (BufferedReader reader = Files.newBufferedReader(Paths.get(json_encoded_type_descriptor_file_name), FileManipulation.FILE_CHARSET)) {
 
-            this.typerep = new LXP(new JSONReader(reader));
+            this.typerep = new LXP(new JSONReader(reader),repo,bucket);
 
         } catch (PersistentObjectException | IOException | IllegalKeyException e) {
             ErrorHandling.exceptionError(e, "Error creating LXPReference" );

@@ -7,9 +7,7 @@ import uk.ac.standrews.cs.nds.rpc.stream.JSONReader;
 import uk.ac.standrews.cs.storr.impl.exceptions.IllegalKeyException;
 import uk.ac.standrews.cs.storr.impl.exceptions.KeyNotFoundException;
 import uk.ac.standrews.cs.storr.impl.exceptions.TypeMismatchFoundException;
-import uk.ac.standrews.cs.storr.interfaces.ILXP;
-import uk.ac.standrews.cs.storr.interfaces.IReferenceType;
-import uk.ac.standrews.cs.storr.interfaces.IStoreReference;
+import uk.ac.standrews.cs.storr.interfaces.*;
 import uk.ac.standrews.cs.storr.types.Types;
 import uk.ac.standrews.cs.storr.util.ErrorHandling;
 
@@ -28,19 +26,32 @@ public class LXP implements ILXP {
 
     private long id;
     protected HashMap<String, Object> map;
+    private IRepository repo = null;
+    private IBucket bucket = null;
 
     public LXP() {
         this.id = getNextFreePID();
         this.map = new HashMap<>();
+        // don't know the repo or the bucket.
     }
 
-    public LXP(long object_id) {
+
+    public LXP(long object_id, IRepository repository, IBucket bucket) {
         this.id = object_id;
         this.map = new HashMap<>();
+        this.repo = repository;
+        this.bucket = bucket;
+        // This constructor used when about to be filled in with values.
     }
 
-    public LXP(long object_id, JSONReader reader) throws PersistentObjectException, IllegalKeyException {
-        this(object_id);
+//    public LXP(long id, JSONReader jsonReader) {
+//        this.id = getNextFreePID();
+//        this.map = new HashMap<>();
+//    }
+
+    public LXP(long object_id, JSONReader reader, IRepository repository, IBucket bucket) throws PersistentObjectException, IllegalKeyException {
+        this(object_id, repository, bucket );
+
         try {
             reader.nextSymbol();
             reader.object();
@@ -98,14 +109,14 @@ public class LXP implements ILXP {
         }
     }
 
-    public LXP(JSONReader reader) throws PersistentObjectException, IllegalKeyException {
-        this(getNextFreePID(), reader);
+    public LXP(JSONReader reader, IRepository repository, IBucket bucket) throws PersistentObjectException, IllegalKeyException {
+        this(getNextFreePID(), reader, repository, bucket);
     }
 
     @Override
-    public ILXP create(long persistent_object_id, JSONReader reader) throws PersistentObjectException {
+    public ILXP create(long persistent_object_id, JSONReader reader, IRepository repository, IBucket bucket) throws PersistentObjectException {
         try {
-            return new LXP(persistent_object_id, reader);
+            return new LXP(persistent_object_id, reader, repository, bucket );
         } catch (IllegalKeyException e) {
             throw new PersistentObjectException("Illegal key exception");
         }
@@ -148,8 +159,10 @@ public class LXP implements ILXP {
     /**
      * This method writes data to a writer - typically used for persistent storage.
      */
-    public void serializeToJSON(JSONWriter writer) throws JSONException {
+    public void serializeToJSON(JSONWriter writer, IRepository repository, IBucket bucket) throws JSONException {
 
+        this.repo = repository;
+        this.bucket = bucket;
         writer.object();
         serializeFieldsToJSON(writer);
         writer.endObject();
@@ -258,6 +271,17 @@ public class LXP implements ILXP {
     }
 
     @Override
+    public IStoreReference getThisRef() throws PersistentObjectException {
+        if( repo == null ) {
+            throw new PersistentObjectException( "LXP stored in unkown repository");
+        }
+        if( bucket == null ) {
+            throw new PersistentObjectException( "LXP stored in unkown bucket");
+        }
+        return new StoreReference( repo, bucket, this );
+    }
+
+    @Override
     public void put(String key, String value) throws IllegalKeyException {
         check(key);
         map.put(key, value);
@@ -346,7 +370,7 @@ public class LXP implements ILXP {
 
         StringWriter sw = new StringWriter();
         try {
-            serializeToJSON(new JSONWriter(sw));
+            serializeToJSON(new JSONWriter(sw), repo, bucket);
         } catch (JSONException e) {
             ErrorHandling.error("in OID.toString()");
         }

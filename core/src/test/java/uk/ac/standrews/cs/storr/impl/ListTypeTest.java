@@ -91,7 +91,7 @@ public class ListTypeTest {
         Path file_path = tempStore.resolve( "REPOS" ).resolve( REPO_NAME ).resolve(classWithListOfScalarsBucketName).resolve( new Long( id ).toString() );
         BufferedReader reader = Files.newBufferedReader( file_path, FileManipulation.FILE_CHARSET );
 
-        LXP lxp2 = new LXP(id, new JSONReader(reader) );
+        LXP lxp2 = new LXP(id, new JSONReader(reader),repo,lxp_bucket );
 
         assertEquals( lxp2.getId(), id );
         assertEquals( lxp2.getInt( "S_INT" ), 53 );
@@ -125,7 +125,7 @@ public class ListTypeTest {
         Path file_path = tempStore.resolve( "REPOS" ).resolve( REPO_NAME ).resolve(classWithListOfRefsBucketName).resolve( new Long( id ).toString() );
         BufferedReader reader = Files.newBufferedReader( file_path, FileManipulation.FILE_CHARSET );
 
-        LXP lxp3 = new LXP(id, new JSONReader(reader) );
+        LXP lxp3 = new LXP(id, new JSONReader(reader),repo,lxp_bucket  );
         assertEquals( lxp3.getId(), id );
         assertEquals( lxp3.getInt( "R_INT" ), 53 );
         List l = lxp3.getList( "R_LIST" );

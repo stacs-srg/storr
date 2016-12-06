@@ -2,7 +2,6 @@ package uk.ac.standrews.cs.storr.interfaces;
 
 import uk.ac.standrews.cs.nds.persistence.PersistentObjectException;
 import uk.ac.standrews.cs.nds.rpc.stream.JSONReader;
-import uk.ac.standrews.cs.storr.impl.exceptions.IllegalKeyException;
 
 import java.io.IOException;
 
@@ -16,7 +15,9 @@ public interface ILXPFactory<T extends ILXP> {
     /*
      * create an instance of a <T extends ILXP> from the reader
      */
-    T create(long persistent_object_id, JSONReader reader) throws PersistentObjectException, IllegalKeyException;
+    //OLD VERSION TODO DELETE T create(long persistent_object_id, JSONReader reader) throws PersistentObjectException, IllegalKeyException;
+
+    T create(long persistent_object_id, JSONReader reader, IRepository repository, IBucket bucket) throws PersistentObjectException;
 
     /*
      * return true if the factory can create an instance with the specified label and false otherwise
