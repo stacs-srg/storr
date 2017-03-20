@@ -25,9 +25,10 @@ public class TransactionManager implements ITransactionManager {
     private HashMap<String, Transaction> map = new HashMap<>();
 
     public TransactionManager() throws RepositoryException {
-        get_repo(transaction_repo_name);
-        transaction_bucket = get_bucket(transaction_bucket_name);
-        cleanup_after_restart();
+
+        getRepo(transaction_repo_name);
+        transaction_bucket = getBucket(transaction_bucket_name);
+        cleanupAfterRestart();
     }
 
     @Override
@@ -45,6 +46,7 @@ public class TransactionManager implements ITransactionManager {
 
     @Override
     public void removeTransaction(Transaction t) {
+
         if (!t.isActive()) {
             map.remove(t.getId());
         }
@@ -59,11 +61,11 @@ public class TransactionManager implements ITransactionManager {
      * ************* Private methods ***************
      */
 
-    private void cleanup_after_restart() {
+    private void cleanupAfterRestart() {
 
-        if( clean_up_needed() ) {
+        if (cleanUpNeeded()) {
 
-            System.out.println( "Running recovery" );
+            System.out.println("Running recovery");
 
             // go through each of the records in the log
             // These are either committed or not.
@@ -88,9 +90,9 @@ public class TransactionManager implements ITransactionManager {
                     long record_id = transaction_record.getId();
 
                     try {
-                        if( transaction_record.containsKey( Transaction.LOG_KEY ) ) {
+                        if (transaction_record.containsKey(Transaction.LOG_KEY)) {
 
-                            recover_commit_record( record_id, transaction_record );
+                            recoverCommitRecord(record_id, transaction_record);
 
                         }
                     } catch (TypeMismatchFoundException | KeyNotFoundException | RepositoryException | StoreException e) {
@@ -112,11 +114,12 @@ public class TransactionManager implements ITransactionManager {
             // we don't know where they are, and they may or may not exist.
             // need to search all.
 
-            delete_all_shadows();
+            deleteAllShadows();
         }
     }
 
-    private void recover_commit_record( long commit_record_id, ILXP transaction_record ) throws KeyNotFoundException, TypeMismatchFoundException, StoreException, RepositoryException {
+    private void recoverCommitRecord(long commit_record_id, ILXP transaction_record) throws KeyNotFoundException, TypeMismatchFoundException, StoreException, RepositoryException {
+
         String updateString = transaction_record.getString(Transaction.LOG_KEY);
 
         // we need to ensure that this is well formed
@@ -151,11 +154,10 @@ public class TransactionManager implements ITransactionManager {
     }
 
     /**
-     *
-     *
      * @return true if we need to store recovery
      */
-    private boolean clean_up_needed() {
+    private boolean cleanUpNeeded() {
+
         try {
             Iterator iter = transaction_bucket.getInputStream().iterator();
             // return true if the transaction bucket contains start records or commit records.
@@ -166,33 +168,32 @@ public class TransactionManager implements ITransactionManager {
         }
     }
 
-    private void delete_all_shadows() {
-        IStore store = null;
+    private void deleteAllShadows() {
+
         try {
-            store = StoreFactory.getStore();
+            IStore store = StoreFactory.getStore();
             Iterator<IRepository> repo_iterator = store.getIterator();
-            while( repo_iterator.hasNext() ) {
+
+            while (repo_iterator.hasNext()) {
                 IRepository repo = repo_iterator.next();
                 Iterator<String> bucket_names = repo.getBucketNameIterator();
-                while( bucket_names.hasNext() ) {
+                while (bucket_names.hasNext()) {
                     String bucket_name = bucket_names.next();
                     try {
                         IBucket bucket = repo.getBucket(bucket_name);
                         bucket.tidy_up_transaction_data();
                     } catch (RepositoryException e) {
-                        ErrorHandling.error( "Cannot get bucket during recovery: " + bucket_name );
+                        ErrorHandling.error("Cannot get bucket during recovery: " + bucket_name);
                     }
-
                 }
-
             }
         } catch (StoreException e) {
-            ErrorHandling.error( "Cannot get store during recovery" );
+            ErrorHandling.error("Cannot get store during recovery");
         }
     }
 
-
     private static String replaceLast(String string, String toReplace, String replacement) {
+
         int pos = string.lastIndexOf(toReplace);
         if (pos > -1) {
             return string.substring(0, pos)
@@ -203,29 +204,27 @@ public class TransactionManager implements ITransactionManager {
         }
     }
 
-    private void get_repo(String transaction_repo_name) throws RepositoryException {
-        IStore store;
+    private void getRepo(String transaction_repo_name) throws RepositoryException {
+
         try {
-            store = StoreFactory.getStore();
+            IStore store = StoreFactory.getStore();
+
+            if (store.repoExists(transaction_repo_name)) {
+                transaction_repo = store.getRepo(transaction_repo_name);
+            } else {
+                transaction_repo = store.makeRepository(transaction_repo_name);
+            }
         } catch (StoreException e) {
             throw new RepositoryException(e);
         }
-
-        if (store.repoExists(transaction_repo_name)) {
-            transaction_repo = store.getRepo(transaction_repo_name);
-        } else {
-            ErrorHandling.error("Didn't find transaction repository creating new one called: " + transaction_repo_name);
-            transaction_repo = store.makeRepository(transaction_repo_name);
-        }
     }
 
-    private IBucket get_bucket(String bucket_name) throws RepositoryException {
+    private IBucket getBucket(String bucket_name) throws RepositoryException {
+
         if (transaction_repo.bucketExists(bucket_name)) {
             return transaction_repo.getBucket(bucket_name);
         } else {
-            ErrorHandling.error("Didn't find transactions bucket, creating a new transactions bucket called: " + bucket_name);
             return transaction_repo.makeBucket(bucket_name, BucketKind.DIRECTORYBACKED);
         }
     }
-
 }

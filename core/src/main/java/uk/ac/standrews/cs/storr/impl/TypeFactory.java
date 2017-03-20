@@ -8,7 +8,6 @@ import uk.ac.standrews.cs.storr.types.Types;
 import uk.ac.standrews.cs.storr.util.ErrorHandling;
 
 import java.util.HashMap;
-import java.util.Iterator;
 
 /**
  * Created by al on 12/09/2014.
@@ -30,9 +29,9 @@ public class TypeFactory {
     private TypeFactory() {
 
         try {
-            get_repo(type_repo_name);
-            type_reps_bucket = get_bucket(type_Rep_bucket_name);
-            type_name_bucket = get_bucket(type_names_bucket_name);
+            getRepo(type_repo_name);
+            type_reps_bucket = getBucket(type_Rep_bucket_name);
+            type_name_bucket = getBucket(type_names_bucket_name);
             load_caches();
             createAnyType();
         } catch (RepositoryException e) {
@@ -51,19 +50,19 @@ public class TypeFactory {
     private void createAnyType() {
         LXP typerep = Types.getTypeRep(LXP.class);
         LXPReferenceType lxp_type = new LXPReferenceType(typerep);
-        do_housekeeping("lxp", lxp_type);
+        doHousekeeping("lxp", lxp_type);
     }
 
     public IReferenceType createType(String json_encoded_type_descriptor_file_name, String type_name) {
-        LXPReferenceType ref_type = new LXPReferenceType(json_encoded_type_descriptor_file_name,type_repo, type_reps_bucket);
-        do_housekeeping(type_name, ref_type);
+        LXPReferenceType ref_type = new LXPReferenceType(json_encoded_type_descriptor_file_name, type_repo, type_reps_bucket);
+        doHousekeeping(type_name, ref_type);
         return ref_type;
     }
 
     public IReferenceType createType(Class c, String type_name) {
         LXP typerep = Types.getTypeRep(c);
         LXPReferenceType ref_type = new LXPReferenceType(typerep);
-        do_housekeeping(type_name, ref_type);
+        doHousekeeping(type_name, ref_type);
         return ref_type;
     }
 
@@ -88,10 +87,8 @@ public class TypeFactory {
     private void load_caches() {
 
         try {
-            Iterator<LXP> i = type_name_bucket.getInputStream().iterator();
-            while (i.hasNext()) {
-                ILXP lxp = i.next();
-                // as set up in @code namevaluepair below.
+            for (LXP lxp : (Iterable<LXP>) type_name_bucket.getInputStream()) {
+                // as set up in @code nameValuePair below.
                 String name = lxp.getString("name");
                 long type_key = lxp.getLong("key");
 
@@ -111,20 +108,24 @@ public class TypeFactory {
 
     }
 
-    private void do_housekeeping(String type_name, LXPReferenceType ref_type) {
+    private void doHousekeeping(String type_name, LXPReferenceType ref_type) {
+
         try {
             ILXP type_rep = ref_type.getRep();
-            ILXP name_value = namevaluepair(type_name, type_rep.getId());
+            ILXP name_value = nameValuePair(type_name, type_rep.getId());
             type_reps_bucket.makePersistent(type_rep);
             type_name_bucket.makePersistent(name_value);
+
         } catch (BucketException e) {
             ErrorHandling.exceptionError(e, "Bucket exception adding type " + type_name + " to types bucket");
         }
+
         names_to_type_cache.put(type_name, ref_type);
         ids_to_type_cache.put(ref_type.getId(), ref_type);
     }
 
-    private ILXP namevaluepair(String type_name, long typekey) {
+    private ILXP nameValuePair(String type_name, long typekey) {
+
         LXP lxp;
         lxp = new LXP();
         // used in load_caches above
@@ -137,29 +138,28 @@ public class TypeFactory {
         return lxp;
     }
 
-    private void get_repo(String type_repo_name) throws RepositoryException {
+    private void getRepo(String type_repo_name) throws RepositoryException {
+
         IStore store;
         try {
             store = StoreFactory.getStore();
         } catch (StoreException e) {
-            throw new RepositoryException( e );
+            throw new RepositoryException(e);
         }
 
         if (store.repoExists(type_repo_name)) {
             type_repo = store.getRepo(type_repo_name);
         } else {
-            ErrorHandling.error("Didn't find types repository creating new one called: " + type_repo_name);
             type_repo = store.makeRepository(type_repo_name);
         }
     }
 
-    private IBucket get_bucket(String bucket_name) throws RepositoryException {
+    private IBucket getBucket(String bucket_name) throws RepositoryException {
+
         if (type_repo.bucketExists(bucket_name)) {
             return type_repo.getBucket(bucket_name);
         } else {
-            ErrorHandling.error("Didn't find types bucket, creating a new types bucket called: " + bucket_name);
             return type_repo.makeBucket(bucket_name, BucketKind.DIRECTORYBACKED);
         }
     }
-
 }
