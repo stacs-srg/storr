@@ -420,7 +420,7 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
      * Tidies up transaction data that may be left over following a crash
      */
     @Override
-    public void tidy_up_transaction_data() {
+    public void tidyUpTransactionData() {
         Iterator<File> iter = FileIteratorFactory.createFileIterator(Paths.get(filePath(TRANSACTIONS)).toFile(), true, false);
         while (iter.hasNext()) {
             File f = iter.next();

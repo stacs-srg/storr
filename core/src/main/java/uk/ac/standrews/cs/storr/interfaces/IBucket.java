@@ -117,5 +117,5 @@ public interface IBucket<T extends ILXP> {
      * Used by transaction API only.
      * Tidies up transaction data that may be left over following a crash
      */
-    void tidy_up_transaction_data();
+    void tidyUpTransactionData();
 }

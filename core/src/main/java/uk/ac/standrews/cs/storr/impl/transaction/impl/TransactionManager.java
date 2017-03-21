@@ -181,7 +181,7 @@ public class TransactionManager implements ITransactionManager {
                     String bucket_name = bucket_names.next();
                     try {
                         IBucket bucket = repo.getBucket(bucket_name);
-                        bucket.tidy_up_transaction_data();
+                        bucket.tidyUpTransactionData();
                     } catch (RepositoryException e) {
                         ErrorHandling.error("Cannot get bucket during recovery: " + bucket_name);
                     }
