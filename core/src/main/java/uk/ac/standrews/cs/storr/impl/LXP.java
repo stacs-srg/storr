@@ -30,13 +30,14 @@ public class LXP implements ILXP {
     private IBucket bucket = null;
 
     public LXP() {
+
         this.id = getNextFreePID();
         this.map = new HashMap<>();
         // don't know the repo or the bucket.
     }
 
-
     public LXP(long object_id, IRepository repository, IBucket bucket) {
+
         this.id = object_id;
         this.map = new HashMap<>();
         this.repo = repository;
@@ -44,12 +45,8 @@ public class LXP implements ILXP {
         // This constructor used when about to be filled in with values.
     }
 
-//    public LXP(long id, JSONReader jsonReader) {
-//        this.id = getNextFreePID();
-//        this.map = new HashMap<>();
-//    }
-
     public LXP(long object_id, JSONReader reader, IRepository repository, IBucket bucket) throws PersistentObjectException, IllegalKeyException {
+
         this(object_id, repository, bucket );
 
         try {
@@ -121,7 +118,6 @@ public class LXP implements ILXP {
             throw new PersistentObjectException("Illegal key exception");
         }
     }
-
 
     @Override
     public boolean checkConsistentWith(long label_id) {
