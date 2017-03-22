@@ -154,7 +154,6 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
         }
         if (objectCache.contains(id)) { // the object is already in the store so write an indirection
             throw new BucketException("Record already in store: records may only exist in a single bucket");
-            // OLD CODE (TODO delete this line later): writeLXP(record, create_indirection(record), Paths.get(this.filePath(record.getId())));
         } else {
             writeLXP(record, Paths.get(this.filePath(record.getId()))); // normal object write
         }

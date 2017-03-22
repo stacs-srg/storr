@@ -143,7 +143,20 @@ public class Repository implements IRepository {
                 return bucket_cache.get(name);
             } else {
                 BucketKind kind = DirectoryBackedBucket.getKind(name, this);
-                return makeBucket( name, kind, tFactory );
+                switch (kind) {
+                    case DIRECTORYBACKED: {
+                        return new DirectoryBackedBucket(name, this, tFactory, kind);
+                    }
+                    case INDIRECT: {
+                        return new DirectoryBackedIndirectBucket(name, this, tFactory);
+                    }
+                    case INDEXED: {
+                        return new DirectoryBackedIndexedBucket(name, this, tFactory);
+                    }
+                    default: {
+                        throw new RepositoryException("Bucketkind: " + kind + " not recognized");
+                    }
+                }
             }
         }
         return null;
@@ -157,7 +170,24 @@ public class Repository implements IRepository {
                 return bucket_cache.get(name);
             } else {
                 BucketKind kind = DirectoryBackedBucket.getKind(name, this);
-                return makeBucket( name, kind );
+                switch (kind) {
+                    case DIRECTORYBACKED: {
+                        return new DirectoryBackedBucket( name, this, kind );
+                    }
+                    case INDIRECT: {
+                        try {
+                            return new DirectoryBackedIndirectBucket(name, this);
+                        } catch (IOException e) {
+                            throw new RepositoryException( e );
+                        }
+                    }
+                    case INDEXED: {
+                        return new DirectoryBackedIndexedBucket(name, this );
+                    }
+                    default: {
+                        throw new RepositoryException("Bucketkind: " + kind + " not recognized");
+                    }
+                }
             }
         }
         return null;

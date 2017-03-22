@@ -30,10 +30,14 @@ public class TypeFactory {
 
         try {
             getRepo(type_repo_name);
+            boolean type_repo_initialised_already = type_repo.bucketExists(type_Rep_bucket_name);
             type_reps_bucket = getBucket(type_Rep_bucket_name);
             type_name_bucket = getBucket(type_names_bucket_name);
             load_caches();
-            createAnyType();
+            if( ! type_repo_initialised_already ) {
+                // initialise predefined types - only 1 for now
+                createAnyType();
+            }
         } catch (RepositoryException e) {
             e.printStackTrace();
         }

@@ -131,22 +131,16 @@ public class Store implements IStore {
         return getPRN();
     }
 
-    private static long prn = 1;
-
     /**
      * @return a pseudo random positive long
      */
     private static long getPRN() {
 
-        return prn++;
-
-        //TODO prn is commented out. **********************
-
-//        long next_prn;
-//        do {
-//            next_prn = sr.nextLong();
-//        } while (next_prn <= 0);
-//        return next_prn;
+        long next_prn;
+        do {
+            next_prn = sr.nextLong();
+        } while (next_prn <= 0);
+        return next_prn;
     }
 
     private void checkCreate(Path dir) throws StoreException {
