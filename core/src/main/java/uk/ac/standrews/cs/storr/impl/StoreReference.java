@@ -28,7 +28,7 @@ public class StoreReference<T extends ILXP> extends LXP implements IStoreReferen
             this.put($INDIRECTION$, "true");
             this.put(REPOSITORY, tokens[0]);
             this.put(BUCKET, tokens[1]);
-            this.put(OID, new Long(tokens[2]));
+            this.put(OID, Long.parseLong(tokens[2]));
         } catch( ArrayIndexOutOfBoundsException | NumberFormatException e ) {
             throw new ReferenceException(e.getMessage());
         }

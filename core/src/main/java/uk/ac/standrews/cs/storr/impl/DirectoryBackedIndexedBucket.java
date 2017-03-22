@@ -12,7 +12,6 @@ import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Created by al on 03/10/2014.
@@ -87,17 +86,33 @@ public class DirectoryBackedIndexedBucket<T extends ILXP> extends DirectoryBacke
     @Override
     public void makePersistent(final T record) throws BucketException {
 
-        Set<String> keys = indexes.keySet(); // all the keys currently being indexed
-        for (String key : keys) {
+        for (Map.Entry<String, IBucketIndex> entry : indexes.entrySet()) {
+
+            String key = entry.getKey();
+            IBucketIndex index = entry.getValue();
+
             if (record.containsKey(key)) { // we are indexing this key
-                IBucketIndex index = indexes.get(key); // so getString the index
+
                 try {
                     index.add(record); // and add this record to the index for that key
                 } catch (IOException e) {
                     throw new BucketException("I/O exception adding index");
                 }
             }
+
         }
+
+//        Set<String> keys = indexes.keySet(); // all the keys currently being indexed
+//        for (String key : keys) {
+//            if (record.containsKey(key)) { // we are indexing this key
+//                IBucketIndex index = indexes.get(key); // so getString the index
+//                try {
+//                    index.add(record); // and add this record to the index for that key
+//                } catch (IOException e) {
+//                    throw new BucketException("I/O exception adding index");
+//                }
+//            }
+//        }
         super.makePersistent(record);
     }
 

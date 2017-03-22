@@ -103,7 +103,7 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
     }
 
 
-        public T getObjectById(long id) throws BucketException {
+    public T getObjectById(long id) throws BucketException {
         T result;
 
         if (this.contains(id) && objectCache.contains(id)) {
@@ -120,19 +120,15 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
 
             if (tFactory == null) { //  No java constructor specified
                 try {
-//                        System.out.println( "Creating LXP in getObjectById oid:" + id );
-                        result = (T) (new LXP(id, new JSONReader(reader),getRepository(),this));
+                    result = (T) (new LXP(id, new JSONReader(reader), getRepository(), this));
                 } catch (PersistentObjectException e) {
-                    ErrorHandling.error("Could not create new LXP for object with id: " + id + " in directory: " + directory );
-                    return null;
+                    throw new BucketException("Could not create new LXP for object with id: " + id + " in directory: " + directory);
                 }
             } else {
                 try {
-//                    System.out.println( "Creating T in getObjectById oid: " + id + " " + tFactory.getClass().getName() );
                     result = tFactory.create(id, new JSONReader(reader), this.repository, this);
                 } catch (PersistentObjectException e) {
-                    ErrorHandling.error("Could not create new LXP (using factory) for object with id: " + id + " in directory: " + directory );
-                    return null;
+                    throw new BucketException("Could not create new LXP (using factory) for object with id: " + id + " in directory: " + directory);
                 }
             }
 
@@ -140,12 +136,11 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
             if (result.containsKey(StoreReference.$INDIRECTION$)) {
                 // we have an indirection
                 // so try and load the record that the indirection record points to.
-                StoreReference<T> ref = new StoreReference<T>( result.getString( StoreReference.REPOSITORY ), result.getString( StoreReference.BUCKET ), result.getLong( StoreReference.OID ) );
-                    result = (T) ref.getReferend();
-                }
+                StoreReference<T> ref = new StoreReference<T>(result.getString(StoreReference.REPOSITORY), result.getString(StoreReference.BUCKET), result.getLong(StoreReference.OID));
+                result = (T) ref.getReferend();
+            }
         } catch (IOException e1) {
-                ErrorHandling.error("Exception creating reader for LXP with id: " + id  + " in directory: " + directory );
-                return null;
+            throw new BucketException("Exception creating reader for LXP with id: " + id + " in directory: " + directory);
         }
         objectCache.put(id, this, (LXP) result);           // Putting this call here ensures that all records that are in a bucket and loaded are in the cache
         return result;
@@ -153,21 +148,16 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
 
 
     public void makePersistent(final T record) throws BucketException {
-        //try {
-            long id = record.getId();
-            if (this.contains(id)) {
-                throw new BucketException("records may not be overwritten - use update");
-            }
-            if (objectCache.contains(id)) { // the object is already in the store so write an indirection
-                throw new BucketException( "Record already in store: records may only exist in a single bucket" );
-                // OLD CODE (TODO delete this line later): writeLXP(record, create_indirection(record), Paths.get(this.filePath(record.getId())));
-            } else {
-                writeLXP(record, Paths.get(this.filePath(record.getId()))); // normal object write
-            }
-        //}
-        // catch ( IOException | JSONException | StoreException | IllegalKeyException e) {
-        //    throw new BucketException(e);
-        //}
+        long id = record.getId();
+        if (this.contains(id)) {
+            throw new BucketException("records may not be overwritten - use update");
+        }
+        if (objectCache.contains(id)) { // the object is already in the store so write an indirection
+            throw new BucketException("Record already in store: records may only exist in a single bucket");
+            // OLD CODE (TODO delete this line later): writeLXP(record, create_indirection(record), Paths.get(this.filePath(record.getId())));
+        } else {
+            writeLXP(record, Paths.get(this.filePath(record.getId()))); // normal object write
+        }
     }
 
     @Override
@@ -193,7 +183,6 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
         }
         t.add(this, record.getId());
 
-        // OLD VERSION: TODO delete later: writeLXP(record, record, new_record_write_location); //  write to transaction log
         writeLXP(record, new_record_write_location); //  write to transaction log
     }
 
@@ -232,47 +221,13 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
         writeData( record_to_write, filepath );
     }
 
-// TODO delete later - old code.
-//    protected void writeLXP(ILXP record_to_check, ILXP record_to_write, Path filepath) throws BucketException {
-//
-//        if (type_label_id != -1) { // we have set a type label in this bucket there must check for consistency
-//
-//            if (record_to_check.containsKey(Types.LABEL)) { // if there is a label it must be correct
-//                if (!(check_label_consistency(record_to_check, type_label_id))) { // check that the record label matches the bucket label - throw exception if it doesn't
-//                    throw new BucketException("Label incompatibility");
-//                }
-//            }
-//            // get to here -> there is no record label on record
-//            try {
-//                if (!check_structural_consistency(record_to_check, type_label_id)) {
-//                    throw new BucketException("Structural integrity incompatibility");
-//                }
-//            } catch (IOException e) {
-//                throw new BucketException("I/O exception checking Structural integrity");
-//            }
-//        } else // get to here and bucket has no type label on it.
-//            if (record_to_check.containsKey(Types.LABEL)) { // no type label on bucket but record has a type label so check structure
-//                try {
-//                    if (!check_structural_consistency(record_to_check, record_to_check.getLong(Types.LABEL))) {
-//                     throw new BucketException("Structural integrity incompatibility");
-//                    }
-//            } catch (KeyNotFoundException e) {
-//                // this cannot happen - label checked in if .. so .. just let it go
-//            } catch (IOException e) {
-//                throw new BucketException("I/O exception checking consistency");
-//            } catch (TypeMismatchFoundException e) {
-//                throw new BucketException("Type mismatch checking consistency");
-//            }
-//        }
-//
-//        writeData( record_to_write, filepath );
-//    }
-
     private void writeData( ILXP record_to_write, Path filepath ) throws BucketException {
-        try (Writer writer = Files.newBufferedWriter(filepath, FileManipulation.FILE_CHARSET)) { // auto close and exception
 
-            record_to_write.serializeToJSON(new JSONWriter(writer), getRepository(), this );
+        try (Writer writer = Files.newBufferedWriter(filepath, FileManipulation.FILE_CHARSET);) { // auto close and exception
+
+            record_to_write.serializeToJSON(new JSONWriter(writer), getRepository(), this);
             objectCache.put(record_to_write.getId(), this, record_to_write);  // Putting this call here ensures that all records that are in a bucket and loaded are in the cache
+
         } catch (IOException e) {
             throw new BucketException("I/O exception writing record");
         } catch (JSONException e) {
@@ -413,7 +368,9 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
         if (!record_location.toFile().exists()) {
             throw new BucketException( "Record with id: " + oid + " does not exist" );
         }
-        record_location.toFile().delete();
+        if( ! record_location.toFile().delete() ) {
+            throw new BucketException( "Unsuccessful delete of oid: " + oid );
+        }
     }
 
     /*

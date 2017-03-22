@@ -33,6 +33,7 @@ public class LXPReferenceType implements IReferenceType {
         } catch (PersistentObjectException | IOException | IllegalKeyException e) {
             ErrorHandling.exceptionError(e, "Error creating LXPReference" );
             // at this point we are in big trouble!
+            // TODO Graham Kirby says we should throw an exception here.
         }
     }
 

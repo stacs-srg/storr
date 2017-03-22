@@ -66,7 +66,7 @@ public class ObjectCache implements IObjectCache {
     /*
      * This private class is used to track tuples stored in buckets
      */
-    private class Data {
+     static class Data {
         public IBucket bucket;
         public ILXP tuple;
 

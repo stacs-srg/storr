@@ -22,7 +22,7 @@ import static uk.ac.standrews.cs.storr.impl.Store.getNextFreePID;
  * Higher order language level types may be constructed above this basic building block.
  * LXP provides a thin wrapper over a Map (providing name value lookup) along with identity and the ability to save and recover persistent versions (encoded in JSON).
  */
-public class LXP implements ILXP {
+public class LXP implements ILXP, Comparable<LXP> {
 
     private long id;
     protected HashMap<String, Object> map;
@@ -231,7 +231,7 @@ public class LXP implements ILXP {
             if (result instanceof Long) {
                 return (Long) result;
             } else if (result instanceof Integer) {
-                return (long) new Long(((Integer) result).intValue()); // what a mess!
+                return Long.valueOf( (Integer) result );
             } else {
                 throw new TypeMismatchFoundException("expected Long found: " + result.getClass().getName());
             }
@@ -286,13 +286,13 @@ public class LXP implements ILXP {
     @Override
     public void put(String key, boolean value) throws IllegalKeyException {
         check(key);
-        map.put(key, new Boolean(value));
+        map.put(key, value);
     }
 
     @Override
     public void put(String key, long value) throws IllegalKeyException {
         check(key);
-        map.put(key, new Long(value));
+        map.put(key, value);
     }
 
     @Override
@@ -310,7 +310,7 @@ public class LXP implements ILXP {
     @Override
     public void put(String key, int value) throws IllegalKeyException {
         check(key);
-        map.put(key, new Integer(value));
+        map.put(key, value);
     }
 
     @Override
@@ -372,6 +372,23 @@ public class LXP implements ILXP {
         }
         return sw.toString();
     }
+
+    @Override
+    public int compareTo(LXP o) {
+        return Long.compare( this.getId(),o.getId() );
+    }
+
+    @Override
+    public boolean equals(Object o) {
+
+        return (o instanceof LXP) && (compareTo((LXP)o)) == 0;
+    }
+
+    @Override
+    public int hashCode() {
+        return (int)getId();
+    }
+
 
     //****** Private methods ******//
 
