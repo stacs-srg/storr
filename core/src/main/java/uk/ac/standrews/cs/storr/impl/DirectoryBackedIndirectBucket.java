@@ -29,7 +29,6 @@ public class DirectoryBackedIndirectBucket<T extends ILXP> extends DirectoryBack
     public void makePersistent(final T record) throws BucketException {
 
         try {
-            // TODO delete later OLD CODE: writeLXP(record, create_indirection(record), Paths.get(this.filePath(record.getId())));
             writeLXP((ILXP) record.getThisRef(), Paths.get(this.filePath(record.getId())));
         } catch ( IllegalKeyException | PersistentObjectException e) {
             throw new BucketException("Error creating indirection");

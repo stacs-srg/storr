@@ -15,7 +15,9 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import static uk.ac.standrews.cs.storr.types.Types.check_label_consistency;
 import static uk.ac.standrews.cs.storr.types.Types.check_structural_consistency;
@@ -33,6 +35,8 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
     protected IObjectCache objectCache;
 
     private static final String TRANSACTIONS = "TRANSACTIONS";
+    private long size = -1; // number of items in Bucket.
+    private List<Long> cached_oids = null;
 
     /**
      * Creates a DirectoryBackedBucket with no factory - a persistent collection of ILXPs
@@ -58,6 +62,12 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
 
         if (!directory.isDirectory()) {
             throw new RepositoryException("Bucket Directory: " + dir_name + " does not exist");
+        }
+        try {
+            Watcher watcher = StoreFactory.getStore().getWatcher();
+            watcher.register( directory.toPath(), this );
+        } catch (StoreException | IOException e) {
+            throw new RepositoryException("Failure to add watcher for Bucket " + name );
         }
     }
 
@@ -92,7 +102,7 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
             FileManipulation.createDirectoryIfDoesNotExist(path);
             // set up directory for transaction support...
             FileManipulation.createDirectoryIfDoesNotExist(path.resolve(TRANSACTIONS));
-        } catch (IOException e) {
+        } catch (IOException  e) {
             throw new RepositoryException(e.getMessage());
         }
     }
@@ -226,7 +236,6 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
 
             record_to_write.serializeToJSON(new JSONWriter(writer), getRepository(), this);
             objectCache.put(record_to_write.getId(), this, record_to_write);  // Putting this call here ensures that all records that are in a bucket and loaded are in the cache
-
         } catch (IOException e) {
             throw new BucketException("I/O exception writing record");
         } catch (JSONException e) {
@@ -322,6 +331,41 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
         return this.name;
     }
 
+    public long size() throws BucketException {
+        if( size == -1 ) {
+            try {
+                size = Files.list(Paths.get(directory.toString())).count();
+            } catch (IOException e) {
+                throw new BucketException( "Cannot determine size - I/O error" );
+            }
+
+        }
+        return size;
+    }
+
+    /**
+     *
+     * @return the oids of records that are in this bucket
+     */
+    public List<Long> getOids() {
+        if( cached_oids == null ) {
+            cached_oids = new ArrayList<>();
+            Iterator<File> iter = FileIteratorFactory.createFileIterator(directory, true, false);
+            while (iter.hasNext()) {
+                cached_oids.add(Long.parseLong(iter.next().getName()));
+            }
+        }
+        return cached_oids;
+    }
+
+    /**
+     * called by Watcher service
+     */
+    public void invalidateCache() {
+        size = -1;
+        cached_oids = null;
+    }
+
     /**
      * ******** Transaction support **********
      */
@@ -370,6 +414,7 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
         if( ! record_location.toFile().delete() ) {
             throw new BucketException( "Unsuccessful delete of oid: " + oid );
         }
+
     }
 
     /*
@@ -412,6 +457,30 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
 
     //******** Private methods *********
 
+    private static void saveTypeLabel(String name, IRepository repository, long type_label) throws RepositoryException {
+        if( type_label == -1) {  // only write the label if it has been set.
+            return;
+        }
+
+        Path path = getBucketPath(name, repository);
+        Path typepath = path.resolve("META").resolve("TYPELABEL");
+        try {
+            FileManipulation.createFileIfDoesNotExist(typepath);
+        } catch (IOException e) {
+            throw new RepositoryException( e );
+        }
+
+        try (BufferedWriter writer = Files.newBufferedWriter(typepath, FileManipulation.FILE_CHARSET)) {
+            writer.write(String.valueOf(type_label));
+            writer.flush();
+            writer.close();
+
+        } catch (IOException e1) {
+            throw new RepositoryException( e1 );
+        }
+    }
+
+
     private long getTypeLabelID() {
         if (type_label_id != -1) {
             return type_label_id;
@@ -429,29 +498,6 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
         } catch (IOException e) {
             ErrorHandling.error("I/O Exception getting labelID");
             return -1;
-        }
-    }
-
-    private static void saveTypeLabel(String name, IRepository repository, long type_label) throws RepositoryException {
-        if( type_label == -1) {  // only write the label if it has been set.
-            return;
-        }
-
-        Path path = getBucketPath(name, repository);
-        Path typepath = path.resolve("META").resolve("TYPELABEL");
-        try {
-            FileManipulation.createFileIfDoesNotExist(typepath);
-        } catch (IOException e) {
-            throw new RepositoryException( e );
-        }
-
-        try (BufferedWriter writer = Files.newBufferedWriter(typepath, FileManipulation.FILE_CHARSET)) {
-                writer.write(String.valueOf(type_label));
-                writer.flush();
-                writer.close();
-
-        } catch (IOException e1) {
-            throw new RepositoryException( e1 );
         }
     }
 

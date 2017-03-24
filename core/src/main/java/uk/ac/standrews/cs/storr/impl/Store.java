@@ -31,6 +31,7 @@ public class Store implements IStore {
 
     private final IObjectCache object_cache;
     private static SecureRandom sr = new SecureRandom();
+    public Watcher watcher;
     // private int id = 1;
 
     private final Map<String,IRepository> repo_cache;
@@ -49,6 +50,13 @@ public class Store implements IStore {
 
         repo_cache = new HashMap<String,IRepository>();
         object_cache = new ObjectCache();
+
+        try {
+            watcher = new Watcher();
+        } catch (IOException e1) {
+           throw new StoreException( "error starting watcher" );
+        }
+        watcher.startService();
     }
 
     public void setTransactionManager( ITransactionManager trans_manager ) throws StoreException {
@@ -121,6 +129,9 @@ public class Store implements IStore {
     public IObjectCache getObjectCache() {
         return object_cache;
     }
+
+    @Override
+    public Watcher getWatcher() { return watcher; }
 
     /******************** private and protected methods ********************/
 

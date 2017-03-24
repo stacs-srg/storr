@@ -29,21 +29,21 @@ public class BucketBackedInputStream<T extends ILXP> implements IInputStream<T> 
 
     private class ILXPIterator implements Iterator<T> {
 
-        private Iterator<File> file_iterator;
+        private Iterator<Long> oid_iterator;
 
         public ILXPIterator(File directory) {
-            file_iterator = FileIteratorFactory.createFileIterator(directory, true, false);
+            oid_iterator = bucket.getOids().iterator();
         }
 
         public boolean hasNext() {
-            return file_iterator.hasNext();
+            return oid_iterator.hasNext();
         }
 
         @Override
         public T next() {
 
             try {
-                return bucket.getObjectById(Long.parseLong(file_iterator.next().getName()));
+                return bucket.getObjectById(oid_iterator.next());
 
             } catch (BucketException e) {
                 ErrorHandling.exceptionError(e, "Exception in iterator");

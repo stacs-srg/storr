@@ -3,6 +3,8 @@ package uk.ac.standrews.cs.storr.interfaces;
 import uk.ac.standrews.cs.storr.impl.exceptions.BucketException;
 
 import java.io.IOException;
+import java.net.BindException;
+import java.util.List;
 
 /**
  * The interface for a Bucket (a repository of OID records).
@@ -66,6 +68,11 @@ public interface IBucket<T extends ILXP> {
     IOutputStream<T> getOutputStream();
 
     /**
+     * @return the oids of the records that are in this bucket
+     */
+    public List<Long> getOids();
+
+    /**
      * @return the name of the bucket
      */
     String getName();
@@ -74,6 +81,11 @@ public interface IBucket<T extends ILXP> {
      * @return the repository in which the bucket is located
      */
     IRepository getRepository();
+
+    /**
+     * Returns the number of records stored in the bucket
+     */
+    long size() throws BindException, BucketException;
 
     /**
      * A predicate to determine if a OID with the given id is located in the bucket.
@@ -118,4 +130,9 @@ public interface IBucket<T extends ILXP> {
      * Tidies up transaction data that may be left over following a crash
      */
     void tidyUpTransactionData();
+
+    /**
+     * Used to invalidate cached information when updates to underlying datastruuctures are updated
+     */
+    void invalidateCache();
 }

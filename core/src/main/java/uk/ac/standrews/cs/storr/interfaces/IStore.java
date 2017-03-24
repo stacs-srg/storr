@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.storr.interfaces;
 
+import uk.ac.standrews.cs.storr.impl.Watcher;
 import uk.ac.standrews.cs.storr.impl.exceptions.RepositoryException;
 import uk.ac.standrews.cs.storr.impl.transaction.interfaces.ITransactionManager;
 
@@ -61,4 +62,10 @@ public interface IStore {
      * @return the cache of loaded objects (in memory) in the system
      */
     IObjectCache getObjectCache();
+
+    /**
+     *
+     * @return the watcher that is watching this store instance.
+     */
+    Watcher getWatcher();
 }
