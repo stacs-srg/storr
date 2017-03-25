@@ -5,8 +5,6 @@ import uk.ac.standrews.cs.storr.impl.exceptions.StoreException;
 import uk.ac.standrews.cs.storr.impl.transaction.impl.TransactionManager;
 import uk.ac.standrews.cs.storr.interfaces.IStore;
 
-import java.io.IOError;
-import java.io.IOException;
 import java.nio.file.Path;
 
 /**

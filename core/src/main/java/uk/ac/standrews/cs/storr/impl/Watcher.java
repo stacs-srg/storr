@@ -36,7 +36,6 @@ public class Watcher {
      */
     public void register(Path dir, IBucket b) throws IOException {
         WatchKey key = dir.register(watch_service, ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY);
-        System.out.println( "registering dir path - " + dir );
         watched_buckets.put(key, b);
     }
 
@@ -44,22 +43,17 @@ public class Watcher {
      * Process all events for watched_paths queued to the watch_service
      */
     public void processEvents() {
-        System.out.println("Process events running");
         for (;;) {
-
-            System.out.println("loop");
 
             // wait for key to be signalled
             WatchKey key;
             try {
                 key = watch_service.take();
             } catch (InterruptedException x) {
-                System.out.println("InterruptedException - stopping");
                 return;
             }
 
             IBucket b = watched_buckets.get(key);
-            System.out.println("event: for bucket " + b.getName());
 
             if (b == null) {
                 ErrorHandling.error("WatchKey not recognized");
