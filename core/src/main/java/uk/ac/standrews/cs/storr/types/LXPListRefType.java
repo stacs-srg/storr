@@ -29,7 +29,7 @@ public class LXPListRefType implements IType {
                 // Need to check the contents of the list are type compatible with expected type.
                 for( Object o : list ) {
                     LXP record = (LXP) o;
-                    if (this.equals(TypeFactory.getInstance().typeWithname("lxp"))) { // if we just require an lxp don't do more structural checking.
+                    if (this.equals(TypeFactory.getInstance().typeWithName("lxp"))) { // if we just require an lxp don't do more structural checking.
                         // all Lxp types match
                         return true;
                     } else {

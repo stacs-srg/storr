@@ -70,7 +70,7 @@ public class TypeFactory {
         return ref_type;
     }
 
-    public IReferenceType typeWithname(String name) {
+    public IReferenceType typeWithName(String name) {
         return names_to_type_cache.get(name);
     }
 

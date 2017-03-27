@@ -15,7 +15,7 @@ public class StoreFactory {
     private static Store store = null;
 
     /**
-     * Get the latest made store.
+     * Get the singleton store.
      * If no store was made, one will be created and returned.
      * @return the global (singleton) store
      * @throws StoreException if something has gone wrong - this is pretty much fatal.

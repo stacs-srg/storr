@@ -161,7 +161,7 @@ public class Types {
             } else {
                 // it may be a list of ref types
                 if (TypeFactory.getInstance().containsKey(listcontents)) {
-                    IReferenceType list_contents_type = TypeFactory.getInstance().typeWithname(listcontents);
+                    IReferenceType list_contents_type = TypeFactory.getInstance().typeWithName(listcontents);
                     return new LXPListRefType(list_contents_type);
                 } else {
                     ErrorHandling.error("Encountered unknown array contents: " + listcontents);
@@ -170,7 +170,7 @@ public class Types {
             }
         }
         if (TypeFactory.getInstance().containsKey(value)) {
-            return TypeFactory.getInstance().typeWithname(value);
+            return TypeFactory.getInstance().typeWithName(value);
         }
         ErrorHandling.error("Encountered reference to type not defined: " + value);
         return LXPBaseType.UNKNOWN;
