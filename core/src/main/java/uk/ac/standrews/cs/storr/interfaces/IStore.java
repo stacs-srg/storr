@@ -59,11 +59,6 @@ public interface IStore {
     Iterator<IRepository> getIterator();
 
     /**
-     * @return the cache of loaded objects (in memory) in the system
-     */
-    IObjectCache getObjectCache();
-
-    /**
      *
      * @return the watcher that is watching this store instance.
      */

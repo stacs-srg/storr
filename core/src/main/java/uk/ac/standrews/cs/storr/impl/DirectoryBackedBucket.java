@@ -27,12 +27,13 @@ import static uk.ac.standrews.cs.storr.types.Types.check_structural_consistency;
  */
 public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
 
+    protected ObjectCache object_cache = null;
     protected ILXPFactory<T> tFactory = null;
     private IRepository repository;     // the repository in which the bucket is stored
     private String name;                // the name of this bucket - used as the directory name
     protected File directory;           // the directory implementing the bucket storage
     private long type_label_id = -1;    // -1 == not set
-    protected IObjectCache objectCache;
+    protected IObjectCache objectCache = new ObjectCache();
 
     private static final String TRANSACTIONS = "TRANSACTIONS";
     private long size = -1; // number of items in Bucket.
@@ -51,11 +52,6 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
         }
         this.name = name;
         this.repository = repository;
-        try {
-            objectCache = StoreFactory.getStore().getObjectCache();
-        } catch (StoreException e) {
-            throw new RepositoryException(e);
-        }
         String dir_name = dirPath();
         directory = new File(dir_name);
         setKind(kind);
@@ -112,19 +108,22 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
         saveTypeLabel( name, repository, type_label );
     }
 
+    //****************** Getters ******************//
+
 
     public T getObjectById(long id) throws BucketException {
         T result;
 
-        if (this.contains(id) && objectCache.contains(id)) {
-            ILXP o = objectCache.getObject(id);
-            if (o == null) {
-                ErrorHandling.error("Could not find cached object in object cache");
-            }
+        ILXP o = objectCache.getObject(id);
+        if (o != null) {
             return (T) o; // this is safe since this.contains(id) and also the cache contains the object.
         }
 
-        // get to here means it is not in the cache
+        if( ! this.contains(id) ) {
+            ErrorHandling.error("Bucket does not contain object with id: " + id );
+
+        }
+        // if we get to here, it means teh object is in the bucket but is not in the cache
 
         try (BufferedReader reader = Files.newBufferedReader(Paths.get(filePath(id)), FileManipulation.FILE_CHARSET)) {
 
@@ -156,14 +155,100 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
         return result;
     }
 
+    @Override
+    public IRepository getRepository() {
+        return this.repository;
+    }
+
+    public BucketKind getKind() {
+        return BucketKind.DIRECTORYBACKED;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public ILXPFactory<T> getFactory() {
+        return tFactory;
+    }
+
+    // Stream operations
+
+    public IInputStream<T> getInputStream() throws BucketException {
+
+        try {
+            return new BucketBackedInputStream(this, directory);
+        } catch (Exception e) {
+            ErrorHandling.error("Exception getting stream");
+            throw new BucketException(e.getMessage());
+        }
+    }
+
+    public IOutputStream<T> getOutputStream() {
+        return new BucketBackedOutputStream(this);
+    }
+
+    public static BucketKind getKind(String name, IRepository repo) {
+
+        Path meta_path = Paths.get(repo.getRepo_path(), name, "META"); // repo/bucketname/meta
+
+        if (Files.exists(meta_path.resolve(BucketKind.DIRECTORYBACKED.name()))) {
+            return BucketKind.DIRECTORYBACKED;
+        }
+        if (Files.exists(meta_path.resolve(BucketKind.INDEXED.name()))) {
+            return BucketKind.INDEXED;
+        }
+        if (Files.exists(meta_path.resolve(BucketKind.INDIRECT.name()))) {
+            return BucketKind.INDIRECT;
+        }
+        return BucketKind.UNKNOWN;
+    }
+
+    /**
+     *
+     * @return the oids of records that are in this bucket
+     */
+    public List<Long> getOids() {
+        if( cached_oids == null ) {
+            cached_oids = new ArrayList<>();
+            Iterator<File> iter = FileIteratorFactory.createFileIterator(directory, true, false);
+            while (iter.hasNext()) {
+                cached_oids.add(Long.parseLong(iter.next().getName()));
+            }
+        }
+        return cached_oids;
+    }
+
+    private long getTypeLabelID() {
+        if (type_label_id != -1) {
+            return type_label_id;
+        } // only look it up if not cached.
+
+        Path path = directory.toPath();
+        Path typepath = path.resolve("META").resolve("TYPELABEL");
+
+        try (BufferedReader reader = Files.newBufferedReader(typepath, FileManipulation.FILE_CHARSET)) {
+
+            String id_as_string = reader.readLine();
+            type_label_id = Long.parseLong(id_as_string);
+            return type_label_id;
+
+        } catch (IOException e) {
+            ErrorHandling.error("I/O Exception getting labelID");
+            return -1;
+        }
+    }
+
+
+    public IObjectCache getObjectCache() { return object_cache; }
+
+    //***********************************************************//
+
 
     public void makePersistent(final T record) throws BucketException {
         long id = record.getId();
         if (this.contains(id)) {
             throw new BucketException("records may not be overwritten - use update");
-        }
-        if (objectCache.contains(id)) { // the object is already in the store so write an indirection
-            throw new BucketException("Record already in store: records may only exist in a single bucket");
         } else {
             writeLXP(record, Paths.get(this.filePath(record.getId()))); // normal object write
         }
@@ -243,39 +328,11 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
         }
     }
 
-    @Override
-    public IRepository getRepository() {
-        return this.repository;
-    }
-
     public boolean contains(long id) {
 
         return Paths.get(filePath(id)).toFile().exists();
     }
 
-    // Stream operations
-
-    public IInputStream<T> getInputStream() throws BucketException {
-
-        try {
-            return new BucketBackedInputStream(this, directory);
-        } catch (Exception e) {
-            ErrorHandling.error("Exception getting stream");
-            throw new BucketException(e.getMessage());
-        }
-    }
-
-    public IOutputStream<T> getOutputStream() {
-        return new BucketBackedOutputStream(this);
-    }
-
-    public ILXPFactory<T> getFactory() {
-        return tFactory;
-    }
-
-    public BucketKind getKind() {
-        return BucketKind.DIRECTORYBACKED;
-    }
 
     protected void setKind(BucketKind kind) {
         Path path = directory.toPath();
@@ -286,22 +343,6 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
         } catch (IOException e) {
             ErrorHandling.error("I/O Exception setting kind");
         }
-    }
-
-    public static BucketKind getKind(String name, IRepository repo) {
-
-        Path meta_path = Paths.get(repo.getRepo_path(), name, "META"); // repo/bucketname/meta
-
-        if (Files.exists(meta_path.resolve(BucketKind.DIRECTORYBACKED.name()))) {
-            return BucketKind.DIRECTORYBACKED;
-        }
-        if (Files.exists(meta_path.resolve(BucketKind.INDEXED.name()))) {
-            return BucketKind.INDEXED;
-        }
-        if (Files.exists(meta_path.resolve(BucketKind.INDIRECT.name()))) {
-            return BucketKind.INDIRECT;
-        }
-        return BucketKind.UNKNOWN;
     }
 
     public void setTypeLabelID(long type_label_id) throws IOException {
@@ -326,11 +367,6 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
         }
     }
 
-
-    public String getName() {
-        return this.name;
-    }
-
     public long size() throws BucketException {
         if( size == -1 ) {
             try {
@@ -343,20 +379,7 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
         return size;
     }
 
-    /**
-     *
-     * @return the oids of records that are in this bucket
-     */
-    public List<Long> getOids() {
-        if( cached_oids == null ) {
-            cached_oids = new ArrayList<>();
-            Iterator<File> iter = FileIteratorFactory.createFileIterator(directory, true, false);
-            while (iter.hasNext()) {
-                cached_oids.add(Long.parseLong(iter.next().getName()));
-            }
-        }
-        return cached_oids;
-    }
+
 
     /**
      * called by Watcher service
@@ -477,27 +500,6 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
 
         } catch (IOException e1) {
             throw new RepositoryException( e1 );
-        }
-    }
-
-
-    private long getTypeLabelID() {
-        if (type_label_id != -1) {
-            return type_label_id;
-        } // only look it up if not cached.
-
-        Path path = directory.toPath();
-        Path typepath = path.resolve("META").resolve("TYPELABEL");
-
-        try (BufferedReader reader = Files.newBufferedReader(typepath, FileManipulation.FILE_CHARSET)) {
-
-            String id_as_string = reader.readLine();
-            type_label_id = Long.parseLong(id_as_string);
-            return type_label_id;
-
-        } catch (IOException e) {
-            ErrorHandling.error("I/O Exception getting labelID");
-            return -1;
         }
     }
 

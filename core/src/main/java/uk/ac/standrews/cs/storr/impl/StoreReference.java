@@ -4,8 +4,12 @@ import uk.ac.standrews.cs.storr.impl.exceptions.BucketException;
 import uk.ac.standrews.cs.storr.impl.exceptions.ReferenceException;
 import uk.ac.standrews.cs.storr.impl.exceptions.RepositoryException;
 import uk.ac.standrews.cs.storr.impl.exceptions.StoreException;
-import uk.ac.standrews.cs.storr.interfaces.*;
-import uk.ac.standrews.cs.storr.util.ErrorHandling;
+import uk.ac.standrews.cs.storr.interfaces.IBucket;
+import uk.ac.standrews.cs.storr.interfaces.ILXP;
+import uk.ac.standrews.cs.storr.interfaces.IRepository;
+import uk.ac.standrews.cs.storr.interfaces.IStoreReference;
+
+import java.lang.ref.WeakReference;
 
 /**
  * Created by al on 23/03/15.
@@ -19,6 +23,8 @@ public class StoreReference<T extends ILXP> extends LXP implements IStoreReferen
 
     private static final String SEPARATOR = "/";
 
+    private WeakReference<T> ref = null;
+
     /**
      * @param serialized - a String of form repo_name SEPARATOR bucket_name SEPARATOR oid
      */
@@ -29,38 +35,36 @@ public class StoreReference<T extends ILXP> extends LXP implements IStoreReferen
             this.put(REPOSITORY, tokens[0]);
             this.put(BUCKET, tokens[1]);
             this.put(OID, Long.parseLong(tokens[2]));
+            // don't bother looking up cache reference on demand
         } catch( ArrayIndexOutOfBoundsException | NumberFormatException e ) {
             throw new ReferenceException(e.getMessage());
         }
     }
 
-    public StoreReference( String repo_name, String bucket_name, long oid ) {
+    public StoreReference(String repo_name, String bucket_name, long oid) {
         super();
         this.put($INDIRECTION$, "true");
         this.put(REPOSITORY, repo_name );
         this.put(BUCKET, bucket_name);
         this.put(OID, oid);
+        // don't bother looking up cache reference on demand or by caller
     }
+
 
     public StoreReference( String repo_name, String bucket_name, T reference ) {
-        super();
-        this.put($INDIRECTION$, "true");
-        this.put(REPOSITORY, repo_name );
-        this.put(BUCKET, bucket_name);
-        this.put(OID, reference.getId());
-    }
-
-    public StoreReference( IRepository repo, IBucket bucket, long oid ) {
-        this(repo.getName(), bucket.getName(), oid);
+        this( repo_name, bucket_name, reference.getId() );
+        ref = new WeakReference<T>( reference );
     }
 
     public StoreReference(IRepository repo, IBucket bucket, T reference) {
-        this(repo.getName(), bucket.getName(), reference.getId());
+        this(repo.getName(), bucket.getName(), reference );
     }
 
     public StoreReference(ILXP record)  {
         this(record.getString(REPOSITORY), record.getString(BUCKET), record.getLong(OID));
+        // don't bother looking up cache reference on demand
     }
+
 
     @Override
     public String getRepoName() {
@@ -80,26 +84,17 @@ public class StoreReference<T extends ILXP> extends LXP implements IStoreReferen
     @Override
     public T getReferend() throws BucketException {
 
-        IStore store = null;
-        try {
-            store = StoreFactory.getStore();
-
-            T reference = getCachedObjectReference(store);
-
-            if (reference == null) { // didn't find object in cache
-                reference = getRepoObjectReference(store);
-
-                if (reference == null) { // still not found it.
-                    ErrorHandling.error("Returning null: cannot resolve reference to LXP: " + this.toString());
-                    return null;
-                }
+        // First see if we have a cached reference.
+        if( ref != null ) {
+            T result = ref.get();
+            if( result != null ) {
+                return result;
             }
-            return reference;
-
-        } catch (StoreException  e1) {
-            throw new BucketException(e1.getMessage());
-        } catch(RepositoryException e2) {
-            throw new BucketException(e2.getMessage());
+        }
+        try {
+            return (T) StoreFactory.getStore().getRepo(getRepoName()).getBucket(getBucketName()).getObjectById( getOid() );
+        } catch (RepositoryException | StoreException e) {
+            throw new BucketException( e );
         }
     }
 
@@ -107,11 +102,4 @@ public class StoreReference<T extends ILXP> extends LXP implements IStoreReferen
         return getRepoName() + SEPARATOR + getBucketName() + SEPARATOR + getOid();
     }
 
-    private T getCachedObjectReference(IStore store) throws StoreException {
-        return (T) store.getObjectCache().getObject(getOid());
-    }
-
-    private T getRepoObjectReference(IStore store) throws RepositoryException, BucketException {
-        return (T) store.getRepo(getRepoName()).getBucket(getBucketName()).getObjectById(getOid());
-    }
 }

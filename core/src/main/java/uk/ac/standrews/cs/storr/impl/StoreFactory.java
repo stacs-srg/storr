@@ -2,6 +2,7 @@ package uk.ac.standrews.cs.storr.impl;
 
 import uk.ac.standrews.cs.storr.impl.exceptions.RepositoryException;
 import uk.ac.standrews.cs.storr.impl.exceptions.StoreException;
+import uk.ac.standrews.cs.storr.impl.transaction.impl.TransactionManager;
 import uk.ac.standrews.cs.storr.interfaces.IStore;
 
 import java.nio.file.Path;
@@ -19,14 +20,21 @@ public class StoreFactory {
      * @return the global (singleton) store
      * @throws StoreException if something has gone wrong - this is pretty much fatal.
      */
-    synchronized public static IStore getStore() throws StoreException {
+     synchronized public static IStore getStore() throws StoreException {
 
         if (store == null) {
             try {
                 store = new Store();
             } catch (RepositoryException e) {
-                throw new StoreException( e );
+                throw new StoreException(e);
             }
+
+            try {
+                store.setTransactionManager(new TransactionManager());
+            } catch (RepositoryException e) {
+                throw new StoreException(e);
+            }
+            TypeFactory.makeTypeFactory();
         }
 
         return store;

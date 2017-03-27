@@ -3,9 +3,7 @@ package uk.ac.standrews.cs.storr.impl;
 import uk.ac.standrews.cs.nds.util.ErrorHandling;
 import uk.ac.standrews.cs.storr.impl.exceptions.RepositoryException;
 import uk.ac.standrews.cs.storr.impl.exceptions.StoreException;
-import uk.ac.standrews.cs.storr.impl.transaction.impl.TransactionManager;
 import uk.ac.standrews.cs.storr.impl.transaction.interfaces.ITransactionManager;
-import uk.ac.standrews.cs.storr.interfaces.IObjectCache;
 import uk.ac.standrews.cs.storr.interfaces.IRepository;
 import uk.ac.standrews.cs.storr.interfaces.IStore;
 import uk.ac.standrews.cs.storr.util.FileManipulation;
@@ -30,7 +28,6 @@ public class Store implements IStore {
     private static Path store_path = null;
     private final Path repo_path;
 
-    private final IObjectCache object_cache;
     private static SecureRandom sr = new SecureRandom();
     public Watcher watcher;
     // private int id = 1;
@@ -50,7 +47,6 @@ public class Store implements IStore {
         checkCreate(repo_path);
 
         repo_cache = new HashMap<String,IRepository>();
-        object_cache = new ObjectCache();
 
         try {
             watcher = new Watcher();
@@ -59,8 +55,7 @@ public class Store implements IStore {
         }
         watcher.startService();
 
-        setTransactionManager( new TransactionManager() );
-        TypeFactory.makeTypeFactory();
+
     }
 
 
@@ -122,14 +117,15 @@ public class Store implements IStore {
         return new RepoIterator(this, repo_path);
     }
 
-
-    @Override
-    public IObjectCache getObjectCache() {
-        return object_cache;
-    }
-
     @Override
     public Watcher getWatcher() { return watcher; }
+
+    public void setTransactionManager( ITransactionManager trans_manager ) throws StoreException {
+        if( tm != null ) {
+            throw new StoreException( "Transaction Manager already set" );
+        }
+        this.tm = trans_manager;
+    }
 
     /******************** private and protected methods ********************/
 
@@ -186,13 +182,6 @@ public class Store implements IStore {
         } catch (IOException e) {
             throw new RepositoryException(e.getMessage());
         }
-    }
-
-    private void setTransactionManager( ITransactionManager trans_manager ) throws StoreException {
-        if( tm != null ) {
-            throw new StoreException( "Transaction Manager already set" );
-        }
-        this.tm = trans_manager;
     }
 
     private static boolean legal_name(String name) { // TODO May want to strengthen these conditions

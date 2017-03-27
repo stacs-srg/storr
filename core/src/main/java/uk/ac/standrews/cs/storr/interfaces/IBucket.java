@@ -114,6 +114,11 @@ public interface IBucket<T extends ILXP> {
     void setTypeLabelID(long id) throws IOException;
 
     /**
+     * @return the cache of loaded objects (in memory) in the system
+     */
+    IObjectCache getObjectCache();
+
+    /**
      * Used by transaction API only.
      * @param oid - the oid to swizzle
      */
