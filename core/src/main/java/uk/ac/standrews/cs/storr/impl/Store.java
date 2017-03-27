@@ -3,6 +3,7 @@ package uk.ac.standrews.cs.storr.impl;
 import uk.ac.standrews.cs.nds.util.ErrorHandling;
 import uk.ac.standrews.cs.storr.impl.exceptions.RepositoryException;
 import uk.ac.standrews.cs.storr.impl.exceptions.StoreException;
+import uk.ac.standrews.cs.storr.impl.transaction.impl.TransactionManager;
 import uk.ac.standrews.cs.storr.impl.transaction.interfaces.ITransactionManager;
 import uk.ac.standrews.cs.storr.interfaces.IObjectCache;
 import uk.ac.standrews.cs.storr.interfaces.IRepository;
@@ -38,7 +39,7 @@ public class Store implements IStore {
 
     private ITransactionManager tm = null;
 
-    protected Store() throws StoreException {
+    protected Store() throws StoreException, RepositoryException {
 
         if( store_path == null ) {
             throw new StoreException( "Null store path specified" );
@@ -57,14 +58,11 @@ public class Store implements IStore {
            throw new StoreException( "error starting watcher" );
         }
         watcher.startService();
+
+        setTransactionManager( new TransactionManager() );
+        TypeFactory.makeTypeFactory();
     }
 
-    public void setTransactionManager( ITransactionManager trans_manager ) throws StoreException {
-        if( tm != null ) {
-            throw new StoreException( "Transaction Manager already set" );
-        }
-        this.tm = trans_manager;
-    }
 
     protected static void set_store_path( Path path ) {
         store_path = path;
@@ -188,6 +186,13 @@ public class Store implements IStore {
         } catch (IOException e) {
             throw new RepositoryException(e.getMessage());
         }
+    }
+
+    private void setTransactionManager( ITransactionManager trans_manager ) throws StoreException {
+        if( tm != null ) {
+            throw new StoreException( "Transaction Manager already set" );
+        }
+        this.tm = trans_manager;
     }
 
     private static boolean legal_name(String name) { // TODO May want to strengthen these conditions
