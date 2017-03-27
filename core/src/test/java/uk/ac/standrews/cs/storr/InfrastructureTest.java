@@ -64,7 +64,7 @@ public class InfrastructureTest {
         tempStore = Files.createTempDirectory(null);
 
         StoreFactory.setStorePath(tempStore);
-        store = StoreFactory.makeStore();
+        store = StoreFactory.getStore();
         System.out.println("STORE PATH = " + tempStore.toString() + " has been created");
 
         repo = store.makeRepository(REPO_NAME);

@@ -23,7 +23,7 @@ public class SimplestExample {
 
         Path tempStorepath = Files.createTempDirectory("/tmp/xyz");
         StoreFactory.setStorePath(tempStorepath);
-        IStore store = StoreFactory.makeStore();
+        IStore store = StoreFactory.getStore();
         IRepository repo = store.makeRepository("repo");
         IBucket b = repo.makeBucket("bucket", BucketKind.DIRECTORYBACKED);
 
