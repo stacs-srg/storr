@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static junit.framework.TestCase.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author Al al@st-andrews.ac.uk 24-11-16
@@ -52,10 +53,9 @@ public class ListTypeTest {
         tempStore = Files.createTempDirectory(null);
 
         StoreFactory.setStorePath( tempStore );
-        store = StoreFactory.getStore();
+        store = StoreFactory.makeStore();
         store_path = tempStore.toString();
         System.out.println("STORE PATH = " + store_path + " has been created");
-
 
         TypeFactory tf = TypeFactory.getInstance();
         IReferenceType classwithlistofscalars_type = tf.createType(ClassWithListOfScalars.class, "classwithlistofscalars");
@@ -100,9 +100,6 @@ public class ListTypeTest {
         assertEquals( (int) l.get(1), 88 );
 
 
-    }
-
-    private void assertEquals(long id, long id1) {
     }
 
     @Test

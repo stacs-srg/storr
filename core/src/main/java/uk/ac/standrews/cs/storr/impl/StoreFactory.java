@@ -31,13 +31,23 @@ public class StoreFactory {
 
             try {
                 store.setTransactionManager(new TransactionManager());
+                TypeFactory.makeTypeFactory();
             } catch (RepositoryException e) {
                 throw new StoreException(e);
             }
-            TypeFactory.makeTypeFactory();
         }
 
         return store;
+    }
+
+    /**
+     * Create a new store
+     * @return the newly created (singleton) store
+     * @throws StoreException if something has gone wrong - this is pretty much fatal
+     */
+    public static IStore makeStore() throws StoreException {
+        store = null;
+        return getStore();
     }
 
     /**
