@@ -4,6 +4,7 @@ import uk.ac.standrews.cs.storr.impl.exceptions.BucketException;
 
 import java.io.IOException;
 import java.net.BindException;
+import java.nio.file.Path;
 import java.util.List;
 
 /**
@@ -54,7 +55,7 @@ public interface IBucket<T extends ILXP> {
      * @param id - the id for which the file path is required, should be an id of an LXP stored in the bucket
      * @return the filepath corresponding to record with identifier id in this bucket (this is more public than it should be).
      */
-    String filePath(long id);
+    Path filePath(long id);
 
     /**
      * @return an input Stream containing all the OID records in this Bucket

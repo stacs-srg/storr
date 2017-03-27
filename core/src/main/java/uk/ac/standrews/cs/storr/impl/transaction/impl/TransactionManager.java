@@ -21,11 +21,13 @@ public class TransactionManager implements ITransactionManager {
 
     private IBucket transaction_bucket = null;
     private IRepository transaction_repo = null;
+    private IStore store;
 
     private HashMap<String, Transaction> map = new HashMap<>();
 
-    public TransactionManager() throws RepositoryException {
+    public TransactionManager(IStore store) throws RepositoryException {
 
+        this.store = store;
         getRepo(transaction_repo_name);
         transaction_bucket = getBucket(transaction_bucket_name);
         cleanupAfterRestart();
@@ -206,17 +208,17 @@ public class TransactionManager implements ITransactionManager {
 
     private void getRepo(String transaction_repo_name) throws RepositoryException {
 
-        try {
-            IStore store = StoreFactory.getStore();
+//        try {
+//            IStore store = StoreFactory.getStore();
 
             if (store.repoExists(transaction_repo_name)) {
                 transaction_repo = store.getRepo(transaction_repo_name);
             } else {
                 transaction_repo = store.makeRepository(transaction_repo_name);
             }
-        } catch (StoreException e) {
-            throw new RepositoryException(e);
-        }
+//        } catch (StoreException e) {
+//            throw new RepositoryException(e);
+//        }
     }
 
     private IBucket getBucket(String bucket_name) throws RepositoryException {

@@ -1,8 +1,6 @@
 package uk.ac.standrews.cs.storr.impl;
 
-import uk.ac.standrews.cs.storr.impl.exceptions.RepositoryException;
 import uk.ac.standrews.cs.storr.impl.exceptions.StoreException;
-import uk.ac.standrews.cs.storr.impl.transaction.impl.TransactionManager;
 import uk.ac.standrews.cs.storr.interfaces.IStore;
 
 import java.nio.file.Path;
@@ -17,44 +15,37 @@ public class StoreFactory {
     /**
      * Get the singleton store.
      * If no store was made, one will be created and returned.
+     *
      * @return the global (singleton) store
      * @throws StoreException if something has gone wrong - this is pretty much fatal.
      */
-     synchronized public static IStore getStore() throws StoreException {
+    synchronized public static IStore getStore() throws StoreException {
 
         if (store == null) {
-            try {
-                store = new Store();
-            } catch (RepositoryException e) {
-                throw new StoreException(e);
-            }
-
-            try {
-                store.setTransactionManager(new TransactionManager());
-                TypeFactory.makeTypeFactory();
-            } catch (RepositoryException e) {
-                throw new StoreException(e);
-            }
+            store = new Store();
         }
 
         return store;
     }
 
     /**
-     * Create a new store
+     * Create a new store - used by tests.
+     *
      * @return the newly created (singleton) store
      * @throws StoreException if something has gone wrong - this is pretty much fatal
      */
-    public static IStore makeStore() throws StoreException {
+    public static IStore initialiseNewStore() throws StoreException {
+
         store = null;
         return getStore();
     }
 
     /**
      * Set the path of the store. This must be set before requesting a store.
+     *
      * @param store_path a path indicating where the store should be created.
      */
-    public static void setStorePath( Path store_path ) {
-        Store.set_store_path( store_path );
+    public static void setStorePath(Path store_path) {
+        Store.set_store_path(store_path);
     }
 }

@@ -42,7 +42,7 @@ public class BucketIndex implements IBucketIndex {
         this.indexed_bucket = indexed_bucket;
     }
 
-    private void onDemandLoadContents() throws BucketException {
+    private synchronized void onDemandLoadContents() throws BucketException {
 
         if (map == null) { // not loaded yet
             // read in the indexed ids from the index file
@@ -83,7 +83,6 @@ public class BucketIndex implements IBucketIndex {
         return map.keySet();
     }
 
-
     @Override
     public List<Long> values(final String value) throws BucketException {
 
@@ -101,7 +100,7 @@ public class BucketIndex implements IBucketIndex {
         ArrayList<File> files = new ArrayList<>();
 
         for (Long i : entries) {
-            files.add(new File(indexed_bucket.filePath(i)));
+            files.add(indexed_bucket.filePath(i).toFile());
         }
 
         try {
@@ -116,7 +115,7 @@ public class BucketIndex implements IBucketIndex {
 
         onDemandLoadContents();
 
-        String value = null; // getString the value associated with the label being indexed in this index.
+        String value; // getString the value associated with the label being indexed in this index.
         try {
             value = record.getString(label);
         } catch (KeyNotFoundException e) {

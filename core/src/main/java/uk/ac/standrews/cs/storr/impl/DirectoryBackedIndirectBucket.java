@@ -7,7 +7,6 @@ import uk.ac.standrews.cs.storr.impl.exceptions.RepositoryException;
 import uk.ac.standrews.cs.storr.interfaces.*;
 
 import java.io.IOException;
-import java.nio.file.Paths;
 
 /**
  * Created by al on 03/10/2014.
@@ -29,17 +28,17 @@ public class DirectoryBackedIndirectBucket<T extends ILXP> extends DirectoryBack
     public void makePersistent(final T record) throws BucketException {
 
         try {
-            writeLXP((ILXP) record.getThisRef(), Paths.get(this.filePath(record.getId())));
+            writeLXP((ILXP) record.getThisRef(), filePath(record.getId()));
         } catch ( IllegalKeyException | PersistentObjectException e) {
             throw new BucketException("Error creating indirection");
         }
-
     }
 
     @Override
     public IInputStream<T> getInputStream() throws BucketException {
         try {
             return new BucketBackedInputStream(this, directory);
+
         } catch (IOException e) {
             throw new BucketException("I/O exception getting stream");
         }

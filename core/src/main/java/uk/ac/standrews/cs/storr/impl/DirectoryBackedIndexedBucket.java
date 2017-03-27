@@ -8,7 +8,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -26,6 +25,7 @@ public class DirectoryBackedIndexedBucket<T extends ILXP> extends DirectoryBacke
     /**
      * Creates a handle on a bucket.
      * Assumes that bucket has been created already using a factory - i.e. the directory already exists.
+     *
      * @param name       the name of the bucket (also used as directory name).
      * @param repository the repository in which the bucket is created.
      * @throws RepositoryException if a RepositoryException is thrown in implementation
@@ -50,11 +50,10 @@ public class DirectoryBackedIndexedBucket<T extends ILXP> extends DirectoryBacke
 
     private void initIndexes() throws IOException {
 
-        String dirname = dirPath();
         // Ensure that the index directory exists
-        File index = new File(dirname + File.separator + INDEX_DIR_NAME);
+        File index = dirPath().resolve(INDEX_DIR_NAME).toFile();
         if (!index.isDirectory() && !index.mkdir()) {
-            throw new IOException("Index Directory: " + dirname + " does not exist and cannot create");
+            throw new IOException("Index Directory: " + dirPath() + " does not exist and cannot create");
         }
 
         Iterator<File> iterator = FileIteratorFactory.createFileIterator(index, true, false);
@@ -67,7 +66,7 @@ public class DirectoryBackedIndexedBucket<T extends ILXP> extends DirectoryBacke
     @Override
     public void addIndex(final String label) throws IOException {
 
-        Path path = Paths.get(this.filePath(INDEX_DIR_NAME + File.separator + INDEX + label));
+        Path path = dirPath().resolve(INDEX_DIR_NAME).resolve(INDEX + label);
 
         if (Files.exists(path)) {
             throw new IOException("index exists");

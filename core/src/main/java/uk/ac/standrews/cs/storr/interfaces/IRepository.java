@@ -2,6 +2,7 @@ package uk.ac.standrews.cs.storr.interfaces;
 
 import uk.ac.standrews.cs.storr.impl.exceptions.RepositoryException;
 
+import java.nio.file.Path;
 import java.util.Iterator;
 
 /**
@@ -81,11 +82,12 @@ public interface IRepository {
     /**
      * @return the path to the repo - this is only used with in the bucket implementation.
      */
-    String getRepo_path(); // return the repo path of this repository (not intended for public use).
+    Path getRepoPath(); // return the repo path of this repository (not intended for public use).
 
     /**
      * @return the name of the repository
      */
     String getName();
 
+    IStore getStore();
 }

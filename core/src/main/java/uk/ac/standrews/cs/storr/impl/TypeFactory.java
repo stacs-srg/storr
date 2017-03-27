@@ -26,7 +26,11 @@ public class TypeFactory {
 
     private static TypeFactory instance;
 
-    private TypeFactory() {
+    private IStore store;
+
+    private TypeFactory(IStore store) {
+
+        this.store = store;
 
         try {
             getRepo(type_repo_name);
@@ -47,8 +51,8 @@ public class TypeFactory {
         return instance;
     }
 
-    public static void makeTypeFactory() {
-        instance = new TypeFactory();
+    public static void makeTypeFactory(IStore store) {
+        instance = new TypeFactory(store);
     }
 
     private void createAnyType() {
@@ -144,12 +148,12 @@ public class TypeFactory {
 
     private void getRepo(String type_repo_name) throws RepositoryException {
 
-        IStore store;
-        try {
-            store = StoreFactory.getStore();
-        } catch (StoreException e) {
-            throw new RepositoryException(e);
-        }
+//        IStore store;
+//        try {
+//            store = StoreFactory.getStore();
+//        } catch (StoreException e) {
+//            throw new RepositoryException(e);
+//        }
 
         if (store.repoExists(type_repo_name)) {
             type_repo = store.getRepo(type_repo_name);

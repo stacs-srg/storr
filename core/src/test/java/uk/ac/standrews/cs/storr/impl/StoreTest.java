@@ -35,7 +35,7 @@ public class StoreTest {
         tempStore = Files.createTempDirectory(null);
 
         StoreFactory.setStorePath( tempStore );
-        store = StoreFactory.makeStore();
+        store = StoreFactory.initialiseNewStore();
         System.out.println("STORE PATH = " + tempStore.toString() + " has been created");
 
         repo = store.makeRepository(REPO_NAME);
@@ -57,7 +57,7 @@ public class StoreTest {
     @Test
     public void checkRepositoryHasBeenCreatedTest() throws RepositoryException {
         assertTrue(store.repoExists(REPO_NAME));
-        assertEquals(repo.getRepo_path(), store.getRepo(REPO_NAME).getRepo_path());
+        assertEquals(repo.getRepoPath(), store.getRepo(REPO_NAME).getRepoPath());
     }
 
 }

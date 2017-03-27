@@ -53,7 +53,7 @@ public class ListTypeTest {
         tempStore = Files.createTempDirectory(null);
 
         StoreFactory.setStorePath( tempStore );
-        store = StoreFactory.makeStore();
+        store = StoreFactory.initialiseNewStore();
         store_path = tempStore.toString();
         System.out.println("STORE PATH = " + store_path + " has been created");
 
