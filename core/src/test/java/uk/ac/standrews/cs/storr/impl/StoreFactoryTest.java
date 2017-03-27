@@ -28,7 +28,7 @@ public class StoreFactoryTest {
         Path tempStore = Files.createTempDirectory(null);
         StoreFactory.setStorePath(tempStore);
 
-        IStore store = StoreFactory.getStore();
+        IStore store = StoreFactory.makeStore();
         assertNotNull(store);
     }
 

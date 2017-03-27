@@ -36,7 +36,7 @@ public class RepositoryTest {
         tempStore = Files.createTempDirectory(null);
 
         StoreFactory.setStorePath( tempStore );
-        store = StoreFactory.getStore();
+        store = StoreFactory.makeStore();
         System.out.println("STORE PATH = " + tempStore.toString() + " has been created");
 
         repo = store.makeRepository(REPO_NAME);
