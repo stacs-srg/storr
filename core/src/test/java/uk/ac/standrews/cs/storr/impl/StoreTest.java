@@ -29,14 +29,14 @@ public class StoreTest extends CommonTest {
     @Test
     public void deleteRepositoryTest() throws RepositoryException {
 
-        store.deleteRepo(REPO_NAME);
-        assertFalse(store.repoExists(REPO_NAME));
+        store.deleteRepository(REPO_NAME);
+        assertFalse(store.repositoryExists(REPO_NAME));
     }
 
     @Test
     public void checkRepositoryHasBeenCreatedTest() throws RepositoryException {
 
-        assertTrue(store.repoExists(REPO_NAME));
-        assertEquals(repo.getRepoPath(), store.getRepo(REPO_NAME).getRepoPath());
+        assertTrue(store.repositoryExists(REPO_NAME));
+        assertEquals(repo.getRepoPath(), store.getRepository(REPO_NAME).getRepoPath());
     }
 }

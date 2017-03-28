@@ -1,6 +1,7 @@
 package uk.ac.standrews.cs.storr.types;
 
 import uk.ac.standrews.cs.storr.impl.LXP;
+import uk.ac.standrews.cs.storr.impl.StoreFactory;
 import uk.ac.standrews.cs.storr.impl.TypeFactory;
 import uk.ac.standrews.cs.storr.impl.exceptions.IllegalKeyException;
 import uk.ac.standrews.cs.storr.impl.exceptions.KeyNotFoundException;
@@ -55,7 +56,7 @@ public class Types {
      */
     public static <T extends ILXP> boolean checkStructuralConsistency(final T record, long type_label_id) throws IOException {
 
-        IReferenceType bucket_type = TypeFactory.getInstance().typeWithId(type_label_id);
+        IReferenceType bucket_type = StoreFactory.getStore().getTypeFactory().typeWithId(type_label_id);
         return checkStructuralConsistency(record, bucket_type);
     }
 
@@ -112,8 +113,10 @@ public class Types {
 
         // if that doesn't work do structural check over type reps
         try {
-            IReferenceType stored_label = TypeFactory.getInstance().typeWithId(supplied_label_id);
-            IReferenceType required_label = TypeFactory.getInstance().typeWithId(supplied_label_id);
+            TypeFactory type_factory = StoreFactory.getStore().getTypeFactory();
+
+            IReferenceType stored_label = type_factory.typeWithId(supplied_label_id);
+            IReferenceType required_label = type_factory.typeWithId(supplied_label_id);
             Collection<String> required = required_label.getLabels();
             for (String label : required) {
                 if (required_label.getFieldType(label) != stored_label.getFieldType(label)) {
@@ -121,16 +124,14 @@ public class Types {
                 }
             }
             return true;
-        } catch (KeyNotFoundException e) {
-            // should never happen...
-            return false;
-        } catch (TypeMismatchFoundException e) {
-            // type mismatch
+        } catch (KeyNotFoundException | TypeMismatchFoundException e) {
             return false;
         }
     }
 
-    public static IType stringToType(String value) {
+    static IType stringToType(String value) {
+
+        TypeFactory type_factory = StoreFactory.getStore().getTypeFactory();
 
         if (LXPBaseType.STRING.name().toLowerCase().equals(value.toLowerCase())) {
             return LXPBaseType.STRING;
@@ -147,18 +148,18 @@ public class Types {
         if (LXPBaseType.BOOLEAN.name().toLowerCase().equals(value.toLowerCase())) {
             return LXPBaseType.BOOLEAN;
         }
-        if ( value.startsWith("[") && value.endsWith("]") ) { // it is a list type
-            String listcontents = value.substring(1,value.length()-1);
-            if( LXPBaseType.STRING.name().toLowerCase().equals(listcontents.toLowerCase()) ||
+        if (value.startsWith("[") && value.endsWith("]")) { // it is a list type
+            String listcontents = value.substring(1, value.length() - 1);
+            if (LXPBaseType.STRING.name().toLowerCase().equals(listcontents.toLowerCase()) ||
                     LXPBaseType.LONG.name().toLowerCase().equals(listcontents.toLowerCase()) ||
                     LXPBaseType.INT.name().toLowerCase().equals(listcontents.toLowerCase()) ||
                     LXPBaseType.DOUBLE.name().toLowerCase().equals(listcontents.toLowerCase()) ||
-                    LXPBaseType.BOOLEAN.name().toLowerCase().equals(listcontents.toLowerCase()) ) {
+                    LXPBaseType.BOOLEAN.name().toLowerCase().equals(listcontents.toLowerCase())) {
                 return LXPListBaseType.valueOf(listcontents);
             } else {
                 // it may be a list of ref types
-                if (TypeFactory.getInstance().containsKey(listcontents)) {
-                    IReferenceType list_contents_type = TypeFactory.getInstance().typeWithName(listcontents);
+                if (type_factory.containsKey(listcontents)) {
+                    IReferenceType list_contents_type = type_factory.getTypeWithName(listcontents);
                     return new LXPListRefType(list_contents_type);
                 } else {
                     ErrorHandling.error("Encountered unknown array contents: " + listcontents);
@@ -166,8 +167,8 @@ public class Types {
                 }
             }
         }
-        if (TypeFactory.getInstance().containsKey(value)) {
-            return TypeFactory.getInstance().typeWithName(value);
+        if (type_factory.containsKey(value)) {
+            return type_factory.getTypeWithName(value);
         }
         ErrorHandling.error("Encountered reference to type not defined: " + value);
         return LXPBaseType.UNKNOWN;
@@ -185,7 +186,7 @@ public class Types {
             if (Modifier.isStatic(f.getModifiers())) {
 
                 if (f.isAnnotationPresent(LXP_SCALAR.class)) {
-                    if (f.isAnnotationPresent(LXP_REF.class) || f.isAnnotationPresent(LXP_LIST.class) ) {
+                    if (f.isAnnotationPresent(LXP_REF.class) || f.isAnnotationPresent(LXP_LIST.class)) {
                         ErrorHandling.error("Conflicting labels: " + f.getName()); // Graham wrote this :)
                     }
                     LXP_SCALAR scalar_type = f.getAnnotation(LXP_SCALAR.class);
@@ -199,7 +200,7 @@ public class Types {
                         ErrorHandling.exceptionError(e, "Illegal key in label: " + f.getName());
                     }
                 } else if (f.isAnnotationPresent(LXP_REF.class)) {
-                    if (f.isAnnotationPresent(LXP_LIST.class) ) {
+                    if (f.isAnnotationPresent(LXP_LIST.class)) {
                         ErrorHandling.error("Conflicting labels: " + f.getName()); // Graham wrote this :) and al added list :):)_
                     }
                     LXP_REF ref_type = f.getAnnotation(LXP_REF.class);
@@ -220,16 +221,16 @@ public class Types {
                         String label_name = (String) f.get(null); // label name is the value of the labelled Java field!
                         LXPBaseType basetype = list_type.basetype();
                         String reftype = list_type.reftype();
-                        if( basetype == LXPBaseType.UNKNOWN && reftype.equals( LXP_LIST.UNSPECIFIED_REF_TYPE ) ) {      // none specified
+                        if (basetype == LXPBaseType.UNKNOWN && reftype.equals(LXP_LIST.UNSPECIFIED_REF_TYPE)) {      // none specified
                             // no type specified by user - this is an error
                             ErrorHandling.error("Illegal access for label: no array types specified");
-                        } else if( basetype != LXPBaseType.UNKNOWN && ! reftype.equals( LXP_LIST.UNSPECIFIED_REF_TYPE ) ) { // both specified
+                        } else if (basetype != LXPBaseType.UNKNOWN && !reftype.equals(LXP_LIST.UNSPECIFIED_REF_TYPE)) { // both specified
                             // both base type and ref type specified by user - this is an error
                             ErrorHandling.error("Illegal access for label: reftype and basetype for array contents specified");
-                        } else if( basetype == LXPBaseType.UNKNOWN ) {                  // Just got one specified by use - either are OK.
+                        } else if (basetype == LXPBaseType.UNKNOWN) {                  // Just got one specified by use - either are OK.
                             type_rep.put(label_name, "[" + reftype + "]");              // use the ref type
                         } else {
-                                type_rep.put(label_name, "[" + basetype.name() + "]");  // use the basetype
+                            type_rep.put(label_name, "[" + basetype.name() + "]");  // use the basetype
                         }
                     } catch (IllegalAccessException e) {
                         ErrorHandling.exceptionError(e, "Illegal access for label: " + f.getName());

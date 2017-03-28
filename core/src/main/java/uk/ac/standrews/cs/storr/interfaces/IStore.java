@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.storr.interfaces;
 
+import uk.ac.standrews.cs.storr.impl.TypeFactory;
 import uk.ac.standrews.cs.storr.impl.Watcher;
 import uk.ac.standrews.cs.storr.impl.exceptions.RepositoryException;
 import uk.ac.standrews.cs.storr.impl.transaction.interfaces.ITransactionManager;
@@ -25,6 +26,8 @@ public interface IStore {
      */
     ITransactionManager getTransactionManager();
 
+    TypeFactory getTypeFactory();
+
     /**
      * @param name - the name of the repository to be created
      * @return a new repository with the given name
@@ -36,7 +39,7 @@ public interface IStore {
      * @param name - the repo that is the subject of the enquiry.
      * @return true if a repository with the given name exists in the store.
      */
-    boolean repoExists(String name);
+    boolean repositoryExists(String name);
 
     /**
      * This method deletes the specified repository
@@ -44,14 +47,14 @@ public interface IStore {
      * @param name - the name of the repo to be deleted.
      * @throws RepositoryException - if the repo does not exist or something goes wrong
      */
-    void deleteRepo(String name) throws RepositoryException;
+    void deleteRepository(String name) throws RepositoryException;
 
     /**
      * @param name - the name of the repo being looked up
      * @return the repo with the given name, if it exists.
      * @throws RepositoryException if the repo does not exist or if something goes wrong.
      */
-    IRepository getRepo(String name) throws RepositoryException;
+    IRepository getRepository(String name) throws RepositoryException;
 
     /**
      * @return the repositories contained in the store

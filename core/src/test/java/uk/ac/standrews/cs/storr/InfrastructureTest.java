@@ -1,12 +1,8 @@
 package uk.ac.standrews.cs.storr;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
-import uk.ac.standrews.cs.storr.impl.CommonTest;
-import uk.ac.standrews.cs.storr.impl.LXP;
-import uk.ac.standrews.cs.storr.impl.StoreReference;
-import uk.ac.standrews.cs.storr.impl.TypeFactory;
+import uk.ac.standrews.cs.storr.impl.*;
 import uk.ac.standrews.cs.storr.impl.exceptions.*;
 import uk.ac.standrews.cs.storr.impl.transaction.exceptions.TransactionFailedException;
 import uk.ac.standrews.cs.storr.impl.transaction.interfaces.ITransaction;
@@ -29,8 +25,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class InfrastructureTest extends CommonTest {
-
-    private static final String REPO_NAME = "repo";
 
     private static String generic_bucket_name1 = "BUCKET1";
     private static String generic_bucket_name2 = "BUCKET2";
@@ -58,9 +52,11 @@ public class InfrastructureTest extends CommonTest {
         repo.makeBucket(generic_bucket_name2, BucketKind.DIRECTORYBACKED);
         repo.makeBucket(generic_bucket_name3, BucketKind.DIRECTORYBACKED);
 
-        personlabel = TypeFactory.getInstance().createType(PERSON_RECORD_TYPE_TEMPLATE, "Person");
-        personlabel2 = TypeFactory.getInstance().createType(PERSON_RECORD_TYPE_TEMPLATE, "Person");
-        personreftuple = TypeFactory.getInstance().createType(PERSON_REF_TUPLE_TYPE_TEMPLATE, "PersonRefTuple");
+        TypeFactory type_factory = StoreFactory.getStore().getTypeFactory();
+
+        personlabel = type_factory.createType(PERSON_RECORD_TYPE_TEMPLATE, "Person");
+        personlabel2 = type_factory.createType(PERSON_RECORD_TYPE_TEMPLATE, "Person");
+        personreftuple = type_factory.createType(PERSON_REF_TUPLE_TYPE_TEMPLATE, "PersonRefTuple");
 
         conflict_counter = new AtomicInteger(0);
         latch = new CountDownLatch(2);
@@ -494,13 +490,7 @@ public class InfrastructureTest extends CommonTest {
         assertEquals(lxp2.getString("string"), "al");
     }
 
-    @Ignore
-    @Test
-    public synchronized void illegalFieldType() {
-        // TODO need a test for illegal field label types -
-        // e.g. reference to a type that doesn't exist
-        // code needs fixed in injest if we keep it.
-    }
+    // TODO need a test for illegal field label types e.g. reference to a type that doesn't exist
 
     @Test(expected = IllegalKeyException.class)
     public synchronized void emptyStringInLabelType() throws RepositoryException, BucketException, IllegalKeyException, StoreException {

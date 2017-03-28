@@ -11,6 +11,7 @@ import java.nio.file.Path;
 public class StoreFactory {
 
     private static Store store = null;
+    private static Path store_path = null;
 
     /**
      * Get the singleton store.
@@ -22,7 +23,7 @@ public class StoreFactory {
     public static synchronized IStore getStore() throws StoreException {
 
         if (store == null) {
-            store = new Store();
+            store = new Store(store_path);
         }
 
         return store;
@@ -46,6 +47,6 @@ public class StoreFactory {
      * @param store_path a path indicating where the store should be created.
      */
     public static void setStorePath(Path store_path) {
-        Store.set_store_path(store_path);
+        StoreFactory.store_path = store_path;
     }
 }

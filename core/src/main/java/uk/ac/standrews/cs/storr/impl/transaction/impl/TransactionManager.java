@@ -146,7 +146,7 @@ public class TransactionManager implements ITransactionManager {
         for (String update_pair : updates) {
             String[] parts = update_pair.split(Transaction.UPDATE_RECORD_SEPARATOR); // a repo name, a bucket name and an oid
 
-            IRepository repo = StoreFactory.getStore().getRepo(parts[0]);
+            IRepository repo = StoreFactory.getStore().getRepository(parts[0]);
             IBucket bucket = repo.getBucket(parts[1]);
 
             Long updated_record_oid = Long.getLong(parts[2]);
@@ -211,8 +211,8 @@ public class TransactionManager implements ITransactionManager {
 //        try {
 //            IStore store = StoreFactory.getStore();
 
-            if (store.repoExists(transaction_repo_name)) {
-                transaction_repo = store.getRepo(transaction_repo_name);
+        if (store.repositoryExists(transaction_repo_name)) {
+            transaction_repo = store.getRepository(transaction_repo_name);
             } else {
                 transaction_repo = store.makeRepository(transaction_repo_name);
             }

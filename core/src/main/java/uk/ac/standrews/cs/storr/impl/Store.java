@@ -25,26 +25,22 @@ public class Store implements IStore {
 
     private final static String REPO_DIR_NAME = "REPOS";
 
-    private static Path store_path = null;
-    private final Path repo_path;
+    private final Path repository_path;
+    private final Map<String, IRepository> repository_cache;
 
     private static SecureRandom sr = new SecureRandom();
     private Watcher watcher;
-    private final Map<String, IRepository> repo_cache;
 
-    private ITransactionManager tm = null;
+    private ITransactionManager transaction_manager;
+    private TypeFactory type_factory;
 
-    Store() throws StoreException {
+    Store(Path store_path) throws StoreException {
 
-        if (store_path == null) {
-            throw new StoreException("Null store path specified");
-        }
-        this.repo_path = store_path.resolve(REPO_DIR_NAME);
+        repository_path = store_path.resolve(REPO_DIR_NAME);
+        repository_cache = new HashMap<>();
 
         checkCreate(store_path);
-        checkCreate(repo_path);
-
-        repo_cache = new HashMap<String,IRepository>();
+        checkCreate(repository_path);
 
         try {
             watcher = new Watcher();
@@ -54,28 +50,26 @@ public class Store implements IStore {
         watcher.startService();
 
         try {
-            setTransactionManager(new TransactionManager(this));
+            transaction_manager = new TransactionManager(this);
+            type_factory = new TypeFactory(this);
+
         } catch (RepositoryException e) {
             throw new StoreException(e.getMessage());
         }
-        TypeFactory.makeTypeFactory(this);
     }
 
-    private synchronized void setTransactionManager(ITransactionManager trans_manager) throws StoreException {
-        if (tm != null) {
-            throw new StoreException("Transaction Manager already set");
-        }
-        this.tm = trans_manager;
-    }
-
-
-    protected static void set_store_path(Path path) {
-        store_path = path;
-    }
+//    static void setStorePath(Path path) {
+//        store_path = path;
+//    }
 
     @Override
     public ITransactionManager getTransactionManager() {
-        return tm;
+        return transaction_manager;
+    }
+
+    @Override
+    public TypeFactory getTypeFactory() {
+        return type_factory;
     }
 
     @Override
@@ -85,20 +79,20 @@ public class Store implements IStore {
             throw new RepositoryException("Illegal Repository name <" + name + ">");
         }
         createRepository(name);
-        IRepository r = getRepo(name);
-        repo_cache.put(name, r);
+        IRepository r = getRepository(name);
+        repository_cache.put(name, r);
         return r;
     }
 
     @Override
-    public boolean repoExists(String name) {
+    public boolean repositoryExists(String name) {
 
         return Files.exists(getRepoPath(name));
     }
 
     @Override
-    public void deleteRepo(String name) throws RepositoryException {
-        if (!repoExists(name)) {
+    public void deleteRepository(String name) throws RepositoryException {
+        if (!repositoryExists(name)) {
             throw new RepositoryException("Bucket with " + name + "does not exist");
         }
         try {
@@ -109,14 +103,14 @@ public class Store implements IStore {
     }
 
     @Override
-    public IRepository getRepo(String name) throws RepositoryException {
+    public IRepository getRepository(String name) throws RepositoryException {
 
-        if (repoExists(name)) {
-            if (repo_cache.containsKey(name)) {
-                return repo_cache.get(name);
+        if (repositoryExists(name)) {
+            if (repository_cache.containsKey(name)) {
+                return repository_cache.get(name);
             } else {
-                IRepository r = new Repository(repo_path, name, this);
-                repo_cache.put(name, r);
+                IRepository r = new Repository(repository_path, name, this);
+                repository_cache.put(name, r);
                 return r;
             }
         } else {
@@ -126,7 +120,7 @@ public class Store implements IStore {
 
     @Override
     public Iterator<IRepository> getIterator() {
-        return new RepoIterator(this, repo_path);
+        return new RepoIterator(this, repository_path);
     }
 
 
@@ -176,11 +170,11 @@ public class Store implements IStore {
 
     private Path getRepoPath(final String name) {
 
-        return repo_path.resolve(name);
+        return repository_path.resolve(name);
     }
 
     private void createRepository(String name) throws RepositoryException {
-        if (repoExists(name)) {
+        if (repositoryExists(name)) {
             throw new RepositoryException("Repo: " + name + " already exists at: " + getRepoPath(name));
         }
 
@@ -218,7 +212,7 @@ public class Store implements IStore {
             String name = file_iterator.next().getName();
 
             try {
-                return store.getRepo(name);
+                return store.getRepository(name);
 
             } catch (RepositoryException e) {
                 ErrorHandling.exceptionError(e, "RepositoryException in iterator");

@@ -1,6 +1,7 @@
 package uk.ac.standrews.cs.storr.types;
 
 import uk.ac.standrews.cs.storr.impl.LXP;
+import uk.ac.standrews.cs.storr.impl.StoreFactory;
 import uk.ac.standrews.cs.storr.impl.TypeFactory;
 import uk.ac.standrews.cs.storr.interfaces.IReferenceType;
 import uk.ac.standrews.cs.storr.interfaces.IType;
@@ -21,15 +22,18 @@ public class LXPListRefType implements IType {
     }
 
     public boolean valueConsistentWithType(Object value) {
+
+        TypeFactory type_factory = StoreFactory.getStore().getTypeFactory();
+
         if (value instanceof List) {
             List list = (List) value;
             if (list.isEmpty()) {
                 return true; // cannot check contents due to type erasure - and is empty so OK.
             } else {
                 // Need to check the contents of the list are type compatible with expected type.
-                for( Object o : list ) {
+                for (Object o : list) {
                     LXP record = (LXP) o;
-                    if (this.equals(TypeFactory.getInstance().typeWithName("lxp"))) { // if we just require an lxp don't do more structural checking.
+                    if (equals(type_factory.getTypeWithName("lxp"))) { // if we just require an lxp don't do more structural checking.
                         // all Lxp types match
                         return true;
                     } else {

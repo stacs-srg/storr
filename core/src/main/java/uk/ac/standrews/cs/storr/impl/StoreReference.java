@@ -92,7 +92,7 @@ public class StoreReference<T extends ILXP> extends LXP implements IStoreReferen
             }
         }
         try {
-            return (T) StoreFactory.getStore().getRepo(getRepoName()).getBucket(getBucketName()).getObjectById( getOid() );
+            return (T) StoreFactory.getStore().getRepository(getRepoName()).getBucket(getBucketName()).getObjectById(getOid());
         } catch (RepositoryException | StoreException e) {
             throw new BucketException( e );
         }
