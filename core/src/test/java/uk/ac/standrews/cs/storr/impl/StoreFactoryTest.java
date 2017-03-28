@@ -60,5 +60,4 @@ public class StoreFactoryTest {
 
         assertEquals(store, otherStore);
     }
-
 }

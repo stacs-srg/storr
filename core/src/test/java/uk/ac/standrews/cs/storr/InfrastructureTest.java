@@ -1,25 +1,24 @@
 package uk.ac.standrews.cs.storr;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import uk.ac.standrews.cs.storr.impl.CommonTest;
 import uk.ac.standrews.cs.storr.impl.LXP;
-import uk.ac.standrews.cs.storr.impl.StoreFactory;
 import uk.ac.standrews.cs.storr.impl.StoreReference;
 import uk.ac.standrews.cs.storr.impl.TypeFactory;
 import uk.ac.standrews.cs.storr.impl.exceptions.*;
 import uk.ac.standrews.cs.storr.impl.transaction.exceptions.TransactionFailedException;
 import uk.ac.standrews.cs.storr.impl.transaction.interfaces.ITransaction;
-import uk.ac.standrews.cs.storr.interfaces.*;
+import uk.ac.standrews.cs.storr.interfaces.BucketKind;
+import uk.ac.standrews.cs.storr.interfaces.IBucket;
+import uk.ac.standrews.cs.storr.interfaces.ILXP;
+import uk.ac.standrews.cs.storr.interfaces.IReferenceType;
 import uk.ac.standrews.cs.storr.types.Types;
-import uk.ac.standrews.cs.storr.util.FileManipulation;
 import uk.ac.standrews.cs.storr.utils.Helper;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
@@ -29,10 +28,7 @@ import static junit.framework.TestCase.fail;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-/**
- * Created by al on 25/04/2014.
- */
-public class InfrastructureTest {
+public class InfrastructureTest extends CommonTest {
 
     private static final String REPO_NAME = "repo";
 
@@ -43,9 +39,6 @@ public class InfrastructureTest {
     private static String PERSON_RECORD_TYPE_TEMPLATE;
     private static String PERSON_REF_TUPLE_TYPE_TEMPLATE;
 
-    private IStore store;
-    private IRepository repo;
-
     private IReferenceType personlabel;
     private IReferenceType personlabel2;
     private IReferenceType personreftuple;
@@ -53,21 +46,13 @@ public class InfrastructureTest {
     private AtomicInteger conflict_counter;
     private CountDownLatch latch;
 
-    private Path tempStore;
-
     @Before
     public void setUp() throws RepositoryException, IOException, StoreException, URISyntaxException {
 
+        super.setUp();
+
         PERSON_RECORD_TYPE_TEMPLATE = Helper.getResourcePath("PersonRecord.jsn");
         PERSON_REF_TUPLE_TYPE_TEMPLATE = Helper.getResourcePath("PersonRefRecord.jsn");
-
-        tempStore = Files.createTempDirectory(null);
-
-        StoreFactory.setStorePath(tempStore);
-        store = StoreFactory.initialiseNewStore();
-        System.out.println("STORE PATH = " + tempStore.toString() + " has been created");
-
-        repo = store.makeRepository(REPO_NAME);
 
         repo.makeBucket(generic_bucket_name1, BucketKind.DIRECTORYBACKED);
         repo.makeBucket(generic_bucket_name2, BucketKind.DIRECTORYBACKED);
@@ -79,12 +64,6 @@ public class InfrastructureTest {
 
         conflict_counter = new AtomicInteger(0);
         latch = new CountDownLatch(2);
-    }
-
-    @After
-    public void tearDown() throws IOException {
-        FileManipulation.deleteDirectory(tempStore);
-        System.out.println("STORE PATH = " + tempStore.toString() + " has been deleted");
     }
 
     @Test
@@ -116,10 +95,7 @@ public class InfrastructureTest {
         long id = lxp.getId();
         ILXP retrievedLXP = b.getObjectById(id);
         assertEquals(retrievedLXP, lxp);
-        List anotherlist = retrievedLXP.getList("mylist");
-        System.out.println("retreived list = " + anotherlist);
     }
-
 
     @Test(expected = BucketException.class)
     public synchronized void testLXPOverwrite() throws RepositoryException, IllegalKeyException, BucketException {
@@ -127,8 +103,8 @@ public class InfrastructureTest {
         LXP lxp = new LXP();
         lxp.put("age", "42");
         lxp.put("address", "home");
-        b.makePersistent(lxp);
 
+        b.makePersistent(lxp);
         b.makePersistent(lxp);
     }
 
@@ -402,6 +378,7 @@ public class InfrastructureTest {
 
     @Test(expected = BucketException.class)
     public synchronized void testIllegalReferenceLabel2() throws RepositoryException, IllegalKeyException, IOException, BucketException {
+
         IBucket b1 = repo.getBucket(generic_bucket_name1);
         b1.setTypeLabelID(personlabel.getId());
         IBucket b2 = repo.getBucket(generic_bucket_name2);
@@ -412,14 +389,12 @@ public class InfrastructureTest {
         lxp.put("name", "al");
         lxp.put("age", 55);
         lxp.put(Types.LABEL, personlabel.getId()); // correct label
-        long person_id = lxp.getId();
 
         b1.makePersistent(lxp);
 
         LXP lxp2 = new LXP();
         b3.makePersistent(lxp2); // just stick something in bucket3
         long lxp2_id = lxp2.getId();
-
 
         LXP lxp3 = new LXP();        // correct structure
         lxp3.put("person_ref", Long.toString(lxp2_id)); // an illegal reference to this tuple - wrong reference type
@@ -429,6 +404,7 @@ public class InfrastructureTest {
 
     @Test
     public synchronized void testLegalTypedRecordInUntypedBucket() throws RepositoryException, IllegalKeyException, BucketException {
+
         IBucket b1 = repo.getBucket(generic_bucket_name1);
 
         LXP lxp = new LXP();        // incorrect structure
@@ -441,6 +417,7 @@ public class InfrastructureTest {
 
     @Test(expected = BucketException.class)
     public synchronized void testIllegalTypedRecordInUntypedBucket() throws RepositoryException, IllegalKeyException, BucketException {
+
         IBucket b1 = repo.getBucket(generic_bucket_name1);
 
         LXP lxp = new LXP();        // incorrect structure

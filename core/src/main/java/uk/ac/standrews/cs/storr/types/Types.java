@@ -31,7 +31,7 @@ public class Types {
      * @param <T>           the type of the record being checked
      * @return true if the labels are consistent
      */
-    public static <T extends ILXP> boolean check_label_consistency(final T record, long type_label_id) {
+    public static <T extends ILXP> boolean checkLabelConsistency(final T record, long type_label_id) {
 
         if (record.containsKey(Types.LABEL)) { // if there is a label it must be correct
             try {
@@ -53,12 +53,10 @@ public class Types {
      * @return true if the structure is consistent
      * @throws IOException if one if thrown by the underlying subsystem(s)
      */
-    public static <T extends ILXP> boolean check_structural_consistency(final T record, long type_label_id) throws IOException {
-
+    public static <T extends ILXP> boolean checkStructuralConsistency(final T record, long type_label_id) throws IOException {
 
         IReferenceType bucket_type = TypeFactory.getInstance().typeWithId(type_label_id);
-
-        return check_structural_consistency(record, bucket_type);
+        return checkStructuralConsistency(record, bucket_type);
     }
 
     /**
@@ -69,7 +67,7 @@ public class Types {
      * @param <T>      the type of the record being checked
      * @return true if the structure is consistent
      */
-    public static <T extends ILXP> boolean check_structural_consistency(final T record, IReferenceType ref_type) {
+    public static <T extends ILXP> boolean checkStructuralConsistency(final T record, IReferenceType ref_type) {
 
         Set<String> record_keys = record.getLabels();
 
@@ -78,28 +76,25 @@ public class Types {
         for (String label : required_labels) {
             if (!record_keys.contains(label)) {
                 // required label not present
-                ErrorHandling.error( record_keys, " ,Label: " + label + " expected but not present" );
                 return false;
             }
             // required label is present now check the types of the keys in the record
             try {
                 Object value = record.get(label);
                 if (!ref_type.getFieldType(label).valueConsistentWithType(value)) {
-                    ErrorHandling.error( record_keys, " ,Label: " + label + " ,value: " + value + " does not match expected type: " + ref_type.getFieldType(label));
+                    // label does not match expected type
                     return false;
                 }
             } catch (KeyNotFoundException e) {
-                ErrorHandling.exceptionError(e, "Label missing (illegal code path): " + label);// this cannot happpen - already tested
-                return false; // for safety
+                // should never happen...
+                return false;
             } catch (TypeMismatchFoundException e) {
-                ErrorHandling.exceptionError(e, "Type mistmatch for label: " + label + "error: " + e.getMessage());
-                return false; // for safety
+                // type mismatch
+                return false;
             }
         }
         return true; // all matched to here we are finished!
-
     }
-
 
     /**
      * Checks the TYPE LABEL is consistent with a supplied label (generally from a bucket)
@@ -109,10 +104,12 @@ public class Types {
      * @return true if the labels are consistent
      */
     public static boolean checkLabelsConsistentWith(long supplied_label_id, long type_label_id) {
+
         // do id check first
         if (type_label_id == supplied_label_id) {
             return true;
         }
+
         // if that doesn't work do structural check over type reps
         try {
             IReferenceType stored_label = TypeFactory.getInstance().typeWithId(supplied_label_id);
@@ -125,10 +122,10 @@ public class Types {
             }
             return true;
         } catch (KeyNotFoundException e) {
-            ErrorHandling.error("KeyNotFoundException - returning false");
+            // should never happen...
             return false;
         } catch (TypeMismatchFoundException e) {
-            ErrorHandling.error("Type mismatch - returning false");
+            // type mismatch
             return false;
         }
     }

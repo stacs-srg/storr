@@ -58,7 +58,7 @@ public class LXPReferenceType implements IReferenceType {
             if (this.equals(TypeFactory.getInstance().typeWithName("lxp"))) { // if we just require an lxp don't do more structural checking.
                 return true;
             } else {
-                return Types.check_structural_consistency(record, this);
+                return Types.checkStructuralConsistency(record, this);
             }
         } catch (ReferenceException | BucketException e) {
             return false;

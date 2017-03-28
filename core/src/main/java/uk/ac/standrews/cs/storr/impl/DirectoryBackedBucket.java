@@ -18,8 +18,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import static uk.ac.standrews.cs.storr.types.Types.check_label_consistency;
-import static uk.ac.standrews.cs.storr.types.Types.check_structural_consistency;
+import static uk.ac.standrews.cs.storr.types.Types.checkLabelConsistency;
 
 public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
 
@@ -302,13 +301,13 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
         if (type_label_id != -1) { // we have set a type label in this bucket there must check for consistency
 
             if (record_to_write.containsKey(Types.LABEL)) { // if there is a label it must be correct
-                if (!(check_label_consistency(record_to_write, type_label_id))) { // check that the record label matches the bucket label - throw exception if it doesn't
+                if (!(checkLabelConsistency(record_to_write, type_label_id))) { // check that the record label matches the bucket label - throw exception if it doesn't
                     throw new BucketException("Label incompatibility");
                 }
             }
             // get to here -> there is no record label on record
             try {
-                if (!check_structural_consistency(record_to_write, type_label_id)) {
+                if (!Types.checkStructuralConsistency(record_to_write, type_label_id)) {
                     throw new BucketException("Structural integrity incompatibility");
                 }
             } catch (IOException e) {
@@ -317,7 +316,7 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
         } else // get to here and bucket has no type label on it.
             if (record_to_write.containsKey(Types.LABEL)) { // no type label on bucket but record has a type label so check structure
                 try {
-                    if (!check_structural_consistency(record_to_write, record_to_write.getLong(Types.LABEL))) {
+                    if (!Types.checkStructuralConsistency(record_to_write, record_to_write.getLong(Types.LABEL))) {
                         throw new BucketException("Structural integrity incompatibility");
                     }
                 } catch (KeyNotFoundException e) {

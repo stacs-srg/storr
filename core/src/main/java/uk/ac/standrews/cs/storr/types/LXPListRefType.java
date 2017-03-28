@@ -33,7 +33,7 @@ public class LXPListRefType implements IType {
                         // all Lxp types match
                         return true;
                     } else {
-                        if( ! Types.check_structural_consistency(record, contents_type) ) {
+                        if (!Types.checkStructuralConsistency(record, contents_type)) {
                             return false;
                         }
                     }
