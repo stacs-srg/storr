@@ -34,7 +34,7 @@ public class StoreFactory {
      * @return the newly created (singleton) store
      * @throws StoreException if something has gone wrong - this is pretty much fatal
      */
-    public static IStore initialiseNewStore() throws StoreException {
+    synchronized public static IStore initialiseNewStore() throws StoreException {
 
         store = null;
         return getStore();
