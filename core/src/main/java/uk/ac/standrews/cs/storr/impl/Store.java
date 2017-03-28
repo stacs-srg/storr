@@ -24,17 +24,16 @@ import java.util.Map;
 public class Store implements IStore {
 
     private final static String REPO_DIR_NAME = "REPOS";
+    private static final SecureRandom RANDOM = new SecureRandom();
 
     private final Path repository_path;
     private final Map<String, IRepository> repository_cache;
 
-    private static SecureRandom sr = new SecureRandom();
     private Watcher watcher;
-
     private ITransactionManager transaction_manager;
     private TypeFactory type_factory;
 
-    Store(Path store_path) throws StoreException {
+    public Store(Path store_path) throws StoreException {
 
         repository_path = store_path.resolve(REPO_DIR_NAME);
         repository_cache = new HashMap<>();
@@ -44,23 +43,15 @@ public class Store implements IStore {
 
         try {
             watcher = new Watcher();
-        } catch (IOException e1) {
-            throw new StoreException("error starting watcher");
-        }
-        watcher.startService();
+            watcher.startService();
 
-        try {
             transaction_manager = new TransactionManager(this);
             type_factory = new TypeFactory(this);
 
-        } catch (RepositoryException e) {
+        } catch (IOException | RepositoryException e) {
             throw new StoreException(e.getMessage());
         }
     }
-
-//    static void setStorePath(Path path) {
-//        store_path = path;
-//    }
 
     @Override
     public ITransactionManager getTransactionManager() {
@@ -129,12 +120,12 @@ public class Store implements IStore {
         return watcher;
     }
 
-    /******************** private and protected methods ********************/
+    ////////////////// private and protected methods //////////////////
 
     /**
      * @return the next free pid
      */
-    protected static long getNextFreePID() {
+    static long getNextFreePID() {
         return getPRN();
     }
 
@@ -145,7 +136,7 @@ public class Store implements IStore {
 
         long next_prn;
         do {
-            next_prn = sr.nextLong();
+            next_prn = RANDOM.nextLong();
         } while (next_prn <= 0);
         return next_prn;
     }

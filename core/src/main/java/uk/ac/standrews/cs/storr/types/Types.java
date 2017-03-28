@@ -1,13 +1,13 @@
 package uk.ac.standrews.cs.storr.types;
 
 import uk.ac.standrews.cs.storr.impl.LXP;
-import uk.ac.standrews.cs.storr.impl.StoreFactory;
 import uk.ac.standrews.cs.storr.impl.TypeFactory;
 import uk.ac.standrews.cs.storr.impl.exceptions.IllegalKeyException;
 import uk.ac.standrews.cs.storr.impl.exceptions.KeyNotFoundException;
 import uk.ac.standrews.cs.storr.impl.exceptions.TypeMismatchFoundException;
 import uk.ac.standrews.cs.storr.interfaces.ILXP;
 import uk.ac.standrews.cs.storr.interfaces.IReferenceType;
+import uk.ac.standrews.cs.storr.interfaces.IStore;
 import uk.ac.standrews.cs.storr.interfaces.IType;
 import uk.ac.standrews.cs.storr.util.ErrorHandling;
 
@@ -32,11 +32,12 @@ public class Types {
      * @param <T>           the type of the record being checked
      * @return true if the labels are consistent
      */
-    public static <T extends ILXP> boolean checkLabelConsistency(final T record, long type_label_id) {
+    public static <T extends ILXP> boolean checkLabelConsistency(final T record, long type_label_id, IStore store) {
 
         if (record.containsKey(Types.LABEL)) { // if there is a label it must be correct
             try {
-                return Types.checkLabelsConsistentWith(record.getLong(Types.LABEL), type_label_id);
+                return checkLabelsConsistentWith(record.getLong(Types.LABEL), type_label_id, store);
+
             } catch (KeyNotFoundException | TypeMismatchFoundException e) {
                 return false; // label not there or inappropriate type
             }
@@ -54,9 +55,9 @@ public class Types {
      * @return true if the structure is consistent
      * @throws IOException if one if thrown by the underlying subsystem(s)
      */
-    public static <T extends ILXP> boolean checkStructuralConsistency(final T record, long type_label_id) throws IOException {
+    public static <T extends ILXP> boolean checkStructuralConsistency(final T record, long type_label_id, IStore store) throws IOException {
 
-        IReferenceType bucket_type = StoreFactory.getStore().getTypeFactory().typeWithId(type_label_id);
+        IReferenceType bucket_type = store.getTypeFactory().typeWithId(type_label_id);
         return checkStructuralConsistency(record, bucket_type);
     }
 
@@ -68,7 +69,7 @@ public class Types {
      * @param <T>      the type of the record being checked
      * @return true if the structure is consistent
      */
-    public static <T extends ILXP> boolean checkStructuralConsistency(final T record, IReferenceType ref_type) {
+    static <T extends ILXP> boolean checkStructuralConsistency(final T record, IReferenceType ref_type) {
 
         Set<String> record_keys = record.getLabels();
 
@@ -104,7 +105,7 @@ public class Types {
      * @param type_label_id     the label against which the checking is to be performed
      * @return true if the labels are consistent
      */
-    public static boolean checkLabelsConsistentWith(long supplied_label_id, long type_label_id) {
+    private static boolean checkLabelsConsistentWith(long supplied_label_id, long type_label_id, IStore store) {
 
         // do id check first
         if (type_label_id == supplied_label_id) {
@@ -113,7 +114,7 @@ public class Types {
 
         // if that doesn't work do structural check over type reps
         try {
-            TypeFactory type_factory = StoreFactory.getStore().getTypeFactory();
+            TypeFactory type_factory = store.getTypeFactory();
 
             IReferenceType stored_label = type_factory.typeWithId(supplied_label_id);
             IReferenceType required_label = type_factory.typeWithId(supplied_label_id);
@@ -129,9 +130,9 @@ public class Types {
         }
     }
 
-    static IType stringToType(String value) {
+    static IType stringToType(String value, IStore store) {
 
-        TypeFactory type_factory = StoreFactory.getStore().getTypeFactory();
+        TypeFactory type_factory = store.getTypeFactory();
 
         if (LXPBaseType.STRING.name().toLowerCase().equals(value.toLowerCase())) {
             return LXPBaseType.STRING;
@@ -160,7 +161,7 @@ public class Types {
                 // it may be a list of ref types
                 if (type_factory.containsKey(listcontents)) {
                     IReferenceType list_contents_type = type_factory.getTypeWithName(listcontents);
-                    return new LXPListRefType(list_contents_type);
+                    return new LXPListRefType(list_contents_type, store);
                 } else {
                     ErrorHandling.error("Encountered unknown array contents: " + listcontents);
                     return LXPBaseType.UNKNOWN;

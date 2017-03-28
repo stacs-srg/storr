@@ -19,8 +19,8 @@ import java.util.Map;
  */
 public class Repository implements IRepository {
 
-    private final Path repo_path;
-    private final File repo_directory;
+    private final Path repository_path;
+    private final File repository_directory;
     private final String name;
     private final IStore store;
 
@@ -28,24 +28,26 @@ public class Repository implements IRepository {
 
     Repository(final Path base_path, String name, IStore store) throws RepositoryException {
 
-        if (!legal_name(name)) {
+        if (!legalName(name)) {
             throw new RepositoryException("Illegal repository name <" + name + ">");
         }
+
         this.name = name;
         this.store = store;
-        repo_path = base_path.resolve(name);
-        repo_directory = repo_path.toFile();
+
+        repository_path = base_path.resolve(name);
+        repository_directory = repository_path.toFile();
         bucket_cache = new HashMap<>();
 
-        if (!repo_directory.exists()) {  // only if the repo doesn't exist - try and make the directory
+        if (!repository_directory.exists()) {  // only if the repo doesn't exist - try and make the directory
 
-            if (!repo_directory.mkdir()) {
-                throw new RepositoryException("Directory " + repo_directory.getAbsolutePath() + " does not exist and cannot be created");
+            if (!repository_directory.mkdir()) {
+                throw new RepositoryException("Directory " + repository_directory.getAbsolutePath() + " does not exist and cannot be created");
             }
 
         } else { // it does exist - check that it is a directory
-            if (!repo_directory.isDirectory()) {
-                throw new RepositoryException(repo_directory.getAbsolutePath() + " exists but is not a directory");
+            if (!repository_directory.isDirectory()) {
+                throw new RepositoryException(repository_directory.getAbsolutePath() + " exists but is not a directory");
             }
         }
     }
@@ -56,13 +58,13 @@ public class Repository implements IRepository {
         switch (kind) {
             case DIRECTORYBACKED: {
                 DirectoryBackedBucket.createBucket(name, this, kind);
-                bucket = new DirectoryBackedBucket(name, this, kind);
+                bucket = new DirectoryBackedBucket(name, this, kind, store);
                 break;
             }
             case INDIRECT: {
                 DirectoryBackedIndirectBucket.createBucket(name, this, kind);
                 try {
-                    bucket = new DirectoryBackedIndirectBucket(name, this);
+                    bucket = new DirectoryBackedIndirectBucket(name, this, store);
                     break;
                 } catch (IOException e) {
                     throw new RepositoryException(e);
@@ -70,7 +72,7 @@ public class Repository implements IRepository {
             }
             case INDEXED: {
                 DirectoryBackedIndexedBucket.createBucket(name, this, kind);
-                bucket = new DirectoryBackedIndexedBucket(name, this);
+                bucket = new DirectoryBackedIndexedBucket(name, this, store);
                 break;
             }
             default: {
@@ -83,21 +85,21 @@ public class Repository implements IRepository {
 
     public <T extends ILXP> IBucket<T> makeBucket(final String name, BucketKind kind, ILXPFactory<T> tFactory) throws RepositoryException {
 
-        IBucket bucket = null;
+        IBucket bucket;
         switch (kind) {
             case DIRECTORYBACKED: {
                 DirectoryBackedBucket.createBucket(name, this, kind, tFactory.getTypeLabel());
-                bucket = new DirectoryBackedBucket(name, this, tFactory, kind);
+                bucket = new DirectoryBackedBucket(name, this, tFactory, kind, store);
                 break;
             }
             case INDIRECT: {
                 DirectoryBackedIndirectBucket.createBucket(name, this, kind, tFactory.getTypeLabel());
-                bucket = new DirectoryBackedIndirectBucket(name, this, tFactory);
+                bucket = new DirectoryBackedIndirectBucket(name, this, tFactory, store);
                 break;
             }
             case INDEXED: {
                 DirectoryBackedIndexedBucket.createBucket(name, this, kind, tFactory.getTypeLabel());
-                bucket = new DirectoryBackedIndexedBucket(name, this, tFactory);
+                bucket = new DirectoryBackedIndexedBucket(name, this, tFactory, store);
                 break;
             }
             default: {
@@ -111,12 +113,12 @@ public class Repository implements IRepository {
     @Override
     public boolean bucketExists(final String name) {
 
-        return legal_name(name) && Files.exists(getBucketPath(name));
+        return legalName(name) && Files.exists(getBucketPath(name));
     }
 
     private Path getBucketPath(final String name) {
 
-        return repo_path.resolve(name);
+        return repository_path.resolve(name);
     }
 
     @Override
@@ -146,19 +148,18 @@ public class Repository implements IRepository {
             BucketKind kind = DirectoryBackedBucket.getKind(name, this);
             switch (kind) {
                 case DIRECTORYBACKED: {
-                    return new DirectoryBackedBucket(name, this, tFactory, kind);
+                    return new DirectoryBackedBucket(name, this, tFactory, kind, store);
                 }
                 case INDIRECT: {
-                    return new DirectoryBackedIndirectBucket(name, this, tFactory);
+                    return new DirectoryBackedIndirectBucket(name, this, tFactory, store);
                 }
                 case INDEXED: {
-                    return new DirectoryBackedIndexedBucket(name, this, tFactory);
+                    return new DirectoryBackedIndexedBucket(name, this, tFactory, store);
                 }
                 default: {
                     throw new RepositoryException("Bucketkind: " + kind + " not recognized");
                 }
             }
-
         }
         return null;
     }
@@ -173,17 +174,17 @@ public class Repository implements IRepository {
                 BucketKind kind = DirectoryBackedBucket.getKind(name, this);
                 switch (kind) {
                     case DIRECTORYBACKED: {
-                        return new DirectoryBackedBucket(name, this, kind);
+                        return new DirectoryBackedBucket(name, this, kind, store);
                     }
                     case INDIRECT: {
                         try {
-                            return new DirectoryBackedIndirectBucket(name, this);
+                            return new DirectoryBackedIndirectBucket(name, this, store);
                         } catch (IOException e) {
                             throw new RepositoryException(e);
                         }
                     }
                     case INDEXED: {
-                        return new DirectoryBackedIndexedBucket(name, this);
+                        return new DirectoryBackedIndexedBucket(name, this, store);
                     }
                     default: {
                         throw new RepositoryException("Bucketkind: " + kind + " not recognized");
@@ -197,17 +198,17 @@ public class Repository implements IRepository {
     @Override
     public BucketNamesIterator getBucketNameIterator() {
 
-        return new BucketNamesIterator(this, repo_directory);
+        return new BucketNamesIterator(this, repository_directory);
     }
 
     @Override
     public <T extends ILXP> Iterator<IBucket<T>> getIterator(ILXPFactory<T> tFactory) {
-        return new BucketIterator(this, repo_directory, tFactory);
+        return new BucketIterator(this, repository_directory, tFactory);
     }
 
     @Override
     public Path getRepoPath() {
-        return repo_path;
+        return repository_path;
     }
 
     @Override
@@ -248,7 +249,7 @@ public class Repository implements IRepository {
 
     }
 
-    private static boolean legal_name(String name) { // TODO May want to strengthen these conditions
+    static boolean legalName(String name) { // TODO May want to strengthen these conditions
         return name != null && !name.equals("");
     }
 

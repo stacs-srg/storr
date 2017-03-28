@@ -8,7 +8,8 @@ import uk.ac.standrews.cs.storr.impl.exceptions.BucketException;
 public interface IStoreReference<T extends ILXP> {
 
     public String getBucketName();
-    public String getRepoName();
+
+    public String getRepositoryName();
     public Long getOid();
     public T getReferend() throws BucketException;
 }

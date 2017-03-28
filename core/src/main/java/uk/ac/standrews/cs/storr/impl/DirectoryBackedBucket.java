@@ -24,6 +24,7 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
 
     protected ILXPFactory<T> tFactory = null;
     private final IRepository repository;     // the repository in which the bucket is stored
+    private final IStore store;               // the store
     private final String bucket_name;         // the name of this bucket - used as the directory name
     protected final File directory;           // the directory implementing the bucket storage
     private long type_label_id = -1;          // -1 == not set
@@ -39,19 +40,20 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
     /**
      * Creates a DirectoryBackedBucket with no factory - a persistent collection of ILXPs
      *
-     * @param bucket_name - the name of the bucket to be created
-     * @param repository  - the repository in which to create the bucket
-     * @param kind        - the kind of Bucket to be created - see @class BucketKind
-     * @throws RepositoryException if the bucket cannot be created in the repository.
+     * @param bucket_name the name of the bucket to be created
+     * @param repository  the repository in which to create the bucket
+     * @param kind        the kind of Bucket to be created
+     * @throws RepositoryException if the bucket cannot be created in the repository
      */
-    DirectoryBackedBucket(final String bucket_name, final IRepository repository, final BucketKind kind) throws RepositoryException {
+    DirectoryBackedBucket(final String bucket_name, final IRepository repository, final BucketKind kind, IStore store) throws RepositoryException {
 
-        if (!legalName(bucket_name)) {
+        if (!Repository.legalName(bucket_name)) {
             throw new RepositoryException("Illegal name <" + bucket_name + ">");
         }
 
         this.bucket_name = bucket_name;
         this.repository = repository;
+        this.store = store;
 
         Path dir_name = dirPath();
         directory = dir_name.toFile();
@@ -65,6 +67,7 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
         try {
             Watcher watcher = repository.getStore().getWatcher();
             watcher.register(directory.toPath(), this);
+
         } catch (IOException e) {
             throw new RepositoryException("Failure to add watcher for Bucket " + bucket_name);
         }
@@ -73,15 +76,15 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
     /**
      * Creates a DirectoryBackedBucket with a factory - a persistent collection of ILXPs tied to some particular Java and store type.
      *
-     * @param bucket_name - the name of the bucket to be created
-     * @param repository  - the repository in which to create the bucket
-     * @param tFactory    specifies the factory to use when importing objects from the store to Java
-     * @param kind        - the kind of Bucket to be created - see @class BucketKind
-     * @throws RepositoryException if the bucket cannot be created in the repository.
+     * @param bucket_name the name of the bucket to be created
+     * @param repository  the repository in which to create the bucket
+     * @param tFactory    the factory to use when importing objects from the store
+     * @param kind        the kind of Bucket to be created
+     * @throws RepositoryException if the bucket cannot be created in the repository
      */
-    DirectoryBackedBucket(final String bucket_name, final IRepository repository, ILXPFactory<T> tFactory, BucketKind kind) throws RepositoryException {
+    DirectoryBackedBucket(final String bucket_name, final IRepository repository, ILXPFactory<T> tFactory, BucketKind kind, IStore store) throws RepositoryException {
 
-        this(bucket_name, repository, kind);
+        this(bucket_name, repository, kind, store);
         this.tFactory = tFactory;
 
         type_label_id = getTypeLabelID();
@@ -92,7 +95,7 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
 
     static void createBucket(final String name, IRepository repository, BucketKind kind) throws RepositoryException {
 
-        if (!legalName(name)) {
+        if (!Repository.legalName(name)) {
             throw new RepositoryException("Illegal name <" + name + ">");
         }
         if (bucketExists(name, repository)) {
@@ -128,8 +131,8 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
             return (T) o; // this is safe since this.contains(id) and also the cache contains the object.
         }
 
-        if( ! this.contains(id) ) {
-            ErrorHandling.error("Bucket does not contain object with id: " + id );
+        if (!this.contains(id)) {
+            ErrorHandling.error("Bucket does not contain object with id: " + id);
 
         }
         // if we get to here, it means teh object is in the bucket but is not in the cache
@@ -154,7 +157,7 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
             if (result.containsKey(StoreReference.$INDIRECTION$)) {
                 // we have an indirection
                 // so try and load the record that the indirection record points to.
-                StoreReference<T> ref = new StoreReference<T>(result.getString(StoreReference.REPOSITORY), result.getString(StoreReference.BUCKET), result.getLong(StoreReference.OID));
+                StoreReference<T> ref = new StoreReference<T>(result.getString(StoreReference.REPOSITORY), result.getString(StoreReference.BUCKET), result.getLong(StoreReference.OID), store);
                 result = (T) ref.getReferend();
             }
         } catch (IOException e1) {
@@ -181,7 +184,6 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
         return tFactory;
     }
 
-
     public boolean contains(long id) {
 
         return filePath(id).toFile().exists();
@@ -203,7 +205,6 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
         return new BucketBackedOutputStream(this);
     }
 
-
     static BucketKind getKind(String bucket_name, IRepository repo) {
 
         Path meta_path = repo.getRepoPath().resolve(bucket_name).resolve(META_BUCKET_NAME); // repo/bucketname/meta
@@ -221,11 +222,11 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
     }
 
     /**
-     *
      * @return the oids of records that are in this bucket
      */
     public List<Long> getOids() {
-        if( cached_oids == null ) {
+
+        if (cached_oids == null) {
             cached_oids = new ArrayList<>();
             Iterator<File> iter = FileIteratorFactory.createFileIterator(directory, true, false);
             while (iter.hasNext()) {
@@ -236,12 +237,13 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
     }
 
     private long getTypeLabelID() {
+
         if (type_label_id != -1) {
             return type_label_id;
         } // only look it up if not cached.
 
         Path path = directory.toPath();
-        Path typepath = path.resolve("META").resolve("TYPELABEL");
+        Path typepath = path.resolve(META_BUCKET_NAME).resolve(TYPE_LABEL_FILE_NAME);
 
         try (BufferedReader reader = Files.newBufferedReader(typepath, FileManipulation.FILE_CHARSET)) {
 
@@ -255,7 +257,9 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
         }
     }
 
-    public IObjectCache getObjectCache() { return object_cache; }
+    public IObjectCache getObjectCache() {
+        return object_cache;
+    }
 
     //***********************************************************//
 
@@ -278,7 +282,7 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
         }
         Transaction t;
         try {
-            t = StoreFactory.getStore().getTransactionManager().getTransaction(Long.toString(Thread.currentThread().getId()));
+            t = store.getTransactionManager().getTransaction(Long.toString(Thread.currentThread().getId()));
         } catch (StoreException e) {
             throw new BucketException(e);
         }
@@ -301,13 +305,13 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
         if (type_label_id != -1) { // we have set a type label in this bucket there must check for consistency
 
             if (record_to_write.containsKey(Types.LABEL)) { // if there is a label it must be correct
-                if (!(checkLabelConsistency(record_to_write, type_label_id))) { // check that the record label matches the bucket label - throw exception if it doesn't
+                if (!(checkLabelConsistency(record_to_write, type_label_id, store))) { // check that the record label matches the bucket label - throw exception if it doesn't
                     throw new BucketException("Label incompatibility");
                 }
             }
             // get to here -> there is no record label on record
             try {
-                if (!Types.checkStructuralConsistency(record_to_write, type_label_id)) {
+                if (!Types.checkStructuralConsistency(record_to_write, type_label_id, store)) {
                     throw new BucketException("Structural integrity incompatibility");
                 }
             } catch (IOException e) {
@@ -316,7 +320,7 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
         } else // get to here and bucket has no type label on it.
             if (record_to_write.containsKey(Types.LABEL)) { // no type label on bucket but record has a type label so check structure
                 try {
-                    if (!Types.checkStructuralConsistency(record_to_write, record_to_write.getLong(Types.LABEL))) {
+                    if (!Types.checkStructuralConsistency(record_to_write, record_to_write.getLong(Types.LABEL), store)) {
                         throw new BucketException("Structural integrity incompatibility");
                     }
                 } catch (KeyNotFoundException e) {
@@ -516,13 +520,9 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
 
     //******** Private methods *********
 
-    private static boolean legalName(String name) { // TODO May want to strengthen these conditions
-        return name != null && !name.equals("");
-    }
-
     private static boolean bucketExists(final String name, IRepository repo) {
 
-        return legalName(name) && Files.exists(getBucketPath(name, repo));
+        return Repository.legalName(name) && Files.exists(getBucketPath(name, repo));
     }
 
     private static Path getBucketPath(final String name, IRepository repo) {

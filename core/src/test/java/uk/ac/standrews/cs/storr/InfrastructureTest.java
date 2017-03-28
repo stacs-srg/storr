@@ -2,7 +2,10 @@ package uk.ac.standrews.cs.storr;
 
 import org.junit.Before;
 import org.junit.Test;
-import uk.ac.standrews.cs.storr.impl.*;
+import uk.ac.standrews.cs.storr.impl.CommonTest;
+import uk.ac.standrews.cs.storr.impl.LXP;
+import uk.ac.standrews.cs.storr.impl.StoreReference;
+import uk.ac.standrews.cs.storr.impl.TypeFactory;
 import uk.ac.standrews.cs.storr.impl.exceptions.*;
 import uk.ac.standrews.cs.storr.impl.transaction.exceptions.TransactionFailedException;
 import uk.ac.standrews.cs.storr.impl.transaction.interfaces.ITransaction;
@@ -52,7 +55,7 @@ public class InfrastructureTest extends CommonTest {
         repository.makeBucket(generic_bucket_name2, BucketKind.DIRECTORYBACKED);
         repository.makeBucket(generic_bucket_name3, BucketKind.DIRECTORYBACKED);
 
-        TypeFactory type_factory = StoreFactory.getStore().getTypeFactory();
+        TypeFactory type_factory = store.getTypeFactory();
 
         personlabel = type_factory.createType(PERSON_RECORD_TYPE_TEMPLATE, "Person");
         personlabel2 = type_factory.createType(PERSON_RECORD_TYPE_TEMPLATE, "Person");
@@ -330,7 +333,7 @@ public class InfrastructureTest extends CommonTest {
     }
 
     @Test
-    public synchronized void testReferenceLabel() throws Exception, RepositoryException, IllegalKeyException {
+    public synchronized void testReferenceLabel() throws Exception {
         IBucket b1 = repository.getBucket(generic_bucket_name1);
         b1.setTypeLabelID(personlabel.getId());
         IBucket b2 = repository.getBucket(generic_bucket_name2);
@@ -345,26 +348,24 @@ public class InfrastructureTest extends CommonTest {
         b1.makePersistent(lxp);
 
         LXP lxp2 = new LXP();        // correct structure
-        lxp2.put("person_ref", new StoreReference<>(repository, b1, lxp));
+        lxp2.put("person_ref", new StoreReference<>(repository, b1, lxp, store));
         b2.makePersistent(lxp2);
     }
 
     @Test(expected = BucketException.class)
-    public synchronized void testIllegalReferenceLabel() throws Exception, RepositoryException, IllegalKeyException {
+    public synchronized void testIllegalReferenceLabel() throws Exception {
+
         IBucket b1 = repository.getBucket(generic_bucket_name1);
         b1.setTypeLabelID(personlabel.getId());
         IBucket b2 = repository.getBucket(generic_bucket_name2);
         b2.setTypeLabelID(personreftuple.getId());
 
-
         LXP lxp = new LXP();        // correct structure
         lxp.put("name", "al");
         lxp.put("age", 55);
         lxp.put(Types.LABEL, personlabel.getId()); // correct label
-        long person_id = lxp.getId();
 
         b1.makePersistent(lxp);
-
 
         LXP lxp2 = new LXP();        // correct structure
         lxp2.put("person_ref", Integer.toString(100)); // an illegal reference - not a legal identifier

@@ -1,9 +1,9 @@
 package uk.ac.standrews.cs.storr.types;
 
 import uk.ac.standrews.cs.storr.impl.LXP;
-import uk.ac.standrews.cs.storr.impl.StoreFactory;
 import uk.ac.standrews.cs.storr.impl.TypeFactory;
 import uk.ac.standrews.cs.storr.interfaces.IReferenceType;
+import uk.ac.standrews.cs.storr.interfaces.IStore;
 import uk.ac.standrews.cs.storr.interfaces.IType;
 
 import java.util.List;
@@ -15,15 +15,18 @@ import java.util.List;
  */
 public class LXPListRefType implements IType {
 
-    IReferenceType contents_type;  // AL IS HERE
+    private IReferenceType contents_type;  // AL IS HERE
+    private IStore store;
 
-    public LXPListRefType(IReferenceType list_contents_type) {
+    LXPListRefType(IReferenceType list_contents_type, IStore store) {
+
         this.contents_type = list_contents_type;
+        this.store = store;
     }
 
     public boolean valueConsistentWithType(Object value) {
 
-        TypeFactory type_factory = StoreFactory.getStore().getTypeFactory();
+        TypeFactory type_factory = store.getTypeFactory();
 
         if (value instanceof List) {
             List list = (List) value;
@@ -50,5 +53,3 @@ public class LXPListRefType implements IType {
         }
     }
 }
-
-

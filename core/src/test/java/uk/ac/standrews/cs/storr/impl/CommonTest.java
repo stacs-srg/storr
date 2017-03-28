@@ -28,10 +28,7 @@ public class CommonTest {
     public void setUp() throws RepositoryException, IOException, StoreException, URISyntaxException {
 
         store_path = Files.createTempDirectory(null);
-
-        StoreFactory.setStorePath(store_path);
-        StoreFactory.resetStore();
-        store = StoreFactory.getStore();
+        store = new Store(store_path);
 
         if (DEBUG) {
             System.out.println("STORE PATH = " + store_path + " has been created");

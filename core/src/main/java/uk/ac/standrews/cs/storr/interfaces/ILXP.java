@@ -182,6 +182,8 @@ public interface ILXP extends ILXPFactory {
      */
     java.util.Set<String> getLabels();
 
+    IRepository getRepository();
+
     /**
      * Associates a type with this LXP.
      * If a type is present it must be structurally compatible with the fields of the LXP

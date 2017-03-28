@@ -13,12 +13,12 @@ import java.io.IOException;
  */
 public class DirectoryBackedIndirectBucket<T extends ILXP> extends DirectoryBackedBucket<T> {
 
-    public DirectoryBackedIndirectBucket(String name, IRepository repository) throws IOException, RepositoryException {
-        super(name, repository, BucketKind.INDIRECT);
+    public DirectoryBackedIndirectBucket(String name, IRepository repository, IStore store) throws IOException, RepositoryException {
+        super(name, repository, BucketKind.INDIRECT, store);
     }
 
-    public DirectoryBackedIndirectBucket(String name, IRepository repository, ILXPFactory<T> tFactory) throws RepositoryException {
-        super(name, repository, BucketKind.INDIRECT);
+    public DirectoryBackedIndirectBucket(String name, IRepository repository, ILXPFactory<T> tFactory, IStore store) throws RepositoryException {
+        super(name, repository, BucketKind.INDIRECT, store);
     }
 
     @Override

@@ -45,7 +45,7 @@ public class ListTypeTest extends CommonTest {
 
         super.setUp();
 
-        TypeFactory tf = StoreFactory.getStore().getTypeFactory();
+        TypeFactory tf = store.getTypeFactory();
         IReferenceType classwithlistofscalars_type = tf.createType(ClassWithListOfScalars.class, "classwithlistofscalars");
         IReferenceType classwithlistofrefs_type = tf.createType(ClassWithListOfRefs.class, "classwithlistofrefs");
 

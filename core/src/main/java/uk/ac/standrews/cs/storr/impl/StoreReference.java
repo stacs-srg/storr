@@ -4,10 +4,7 @@ import uk.ac.standrews.cs.storr.impl.exceptions.BucketException;
 import uk.ac.standrews.cs.storr.impl.exceptions.ReferenceException;
 import uk.ac.standrews.cs.storr.impl.exceptions.RepositoryException;
 import uk.ac.standrews.cs.storr.impl.exceptions.StoreException;
-import uk.ac.standrews.cs.storr.interfaces.IBucket;
-import uk.ac.standrews.cs.storr.interfaces.ILXP;
-import uk.ac.standrews.cs.storr.interfaces.IRepository;
-import uk.ac.standrews.cs.storr.interfaces.IStoreReference;
+import uk.ac.standrews.cs.storr.interfaces.*;
 
 import java.lang.ref.WeakReference;
 
@@ -24,82 +21,85 @@ public class StoreReference<T extends ILXP> extends LXP implements IStoreReferen
     private static final String SEPARATOR = "/";
 
     private WeakReference<T> ref = null;
+    private IStore store;
 
     /**
      * @param serialized - a String of form repo_name SEPARATOR bucket_name SEPARATOR oid
      */
-    public StoreReference(String serialized) throws ReferenceException {
+    public StoreReference(String serialized, IStore store) throws ReferenceException {
+
+        this.store = store;
+
         try {
             String[] tokens = serialized.split(SEPARATOR);
-            this.put($INDIRECTION$, "true");
-            this.put(REPOSITORY, tokens[0]);
-            this.put(BUCKET, tokens[1]);
-            this.put(OID, Long.parseLong(tokens[2]));
+            put($INDIRECTION$, "true");
+            put(REPOSITORY, tokens[0]);
+            put(BUCKET, tokens[1]);
+            put(OID, Long.parseLong(tokens[2]));
             // don't bother looking up cache reference on demand
-        } catch( ArrayIndexOutOfBoundsException | NumberFormatException e ) {
+        } catch (ArrayIndexOutOfBoundsException | NumberFormatException e) {
             throw new ReferenceException(e.getMessage());
         }
     }
 
-    public StoreReference(String repo_name, String bucket_name, long oid) {
+    public StoreReference(String repo_name, String bucket_name, long oid, IStore store) {
+
         super();
+        this.store = store;
         this.put($INDIRECTION$, "true");
-        this.put(REPOSITORY, repo_name );
+        this.put(REPOSITORY, repo_name);
         this.put(BUCKET, bucket_name);
         this.put(OID, oid);
         // don't bother looking up cache reference on demand or by caller
     }
 
-
-    public StoreReference( String repo_name, String bucket_name, T reference ) {
-        this( repo_name, bucket_name, reference.getId() );
-        ref = new WeakReference<T>( reference );
+    public StoreReference(IRepository repo, IBucket bucket, T reference, IStore store) {
+        this(repo.getName(), bucket.getName(), reference, store);
     }
 
-    public StoreReference(IRepository repo, IBucket bucket, T reference) {
-        this(repo.getName(), bucket.getName(), reference );
+    private StoreReference(String repo_name, String bucket_name, T reference, IStore store) {
+        this(repo_name, bucket_name, reference.getId(), store);
+        ref = new WeakReference<T>(reference);
     }
 
-    public StoreReference(ILXP record)  {
-        this(record.getString(REPOSITORY), record.getString(BUCKET), record.getLong(OID));
+    public StoreReference(ILXP record, IStore store) {
+        this(record.getString(REPOSITORY), record.getString(BUCKET), record.getLong(OID), store);
         // don't bother looking up cache reference on demand
     }
 
-
     @Override
-    public String getRepoName() {
-        return this.getString(REPOSITORY);
+    public String getRepositoryName() {
+        return getString(REPOSITORY);
     }
 
     @Override
     public String getBucketName() {
-        return this.getString(BUCKET);
+        return getString(BUCKET);
     }
 
     @Override
     public Long getOid() {
-        return this.getLong(OID);
+        return getLong(OID);
     }
 
     @Override
     public T getReferend() throws BucketException {
 
         // First see if we have a cached reference.
-        if( ref != null ) {
+        if (ref != null) {
             T result = ref.get();
-            if( result != null ) {
+            if (result != null) {
                 return result;
             }
         }
         try {
-            return (T) StoreFactory.getStore().getRepository(getRepoName()).getBucket(getBucketName()).getObjectById(getOid());
+            return (T) store.getRepository(getRepositoryName()).getBucket(getBucketName()).getObjectById(getOid());
         } catch (RepositoryException | StoreException e) {
-            throw new BucketException( e );
+            throw new BucketException(e);
         }
     }
 
     public String toString() {
-        return getRepoName() + SEPARATOR + getBucketName() + SEPARATOR + getOid();
+        return getRepositoryName() + SEPARATOR + getBucketName() + SEPARATOR + getOid();
     }
-
 }

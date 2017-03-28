@@ -1,6 +1,5 @@
 package uk.ac.standrews.cs.storr.impl.transaction.impl;
 
-import uk.ac.standrews.cs.storr.impl.StoreFactory;
 import uk.ac.standrews.cs.storr.impl.exceptions.*;
 import uk.ac.standrews.cs.storr.impl.transaction.exceptions.TransactionFailedException;
 import uk.ac.standrews.cs.storr.impl.transaction.interfaces.ITransaction;
@@ -146,7 +145,7 @@ public class TransactionManager implements ITransactionManager {
         for (String update_pair : updates) {
             String[] parts = update_pair.split(Transaction.UPDATE_RECORD_SEPARATOR); // a repo name, a bucket name and an oid
 
-            IRepository repo = StoreFactory.getStore().getRepository(parts[0]);
+            IRepository repo = store.getRepository(parts[0]);
             IBucket bucket = repo.getBucket(parts[1]);
 
             Long updated_record_oid = Long.getLong(parts[2]);
@@ -173,7 +172,6 @@ public class TransactionManager implements ITransactionManager {
     private void deleteAllShadows() {
 
         try {
-            IStore store = StoreFactory.getStore();
             Iterator<IRepository> repo_iterator = store.getIterator();
 
             while (repo_iterator.hasNext()) {
@@ -208,17 +206,11 @@ public class TransactionManager implements ITransactionManager {
 
     private void getRepo(String transaction_repo_name) throws RepositoryException {
 
-//        try {
-//            IStore store = StoreFactory.getStore();
-
         if (store.repositoryExists(transaction_repo_name)) {
             transaction_repo = store.getRepository(transaction_repo_name);
-            } else {
-                transaction_repo = store.makeRepository(transaction_repo_name);
-            }
-//        } catch (StoreException e) {
-//            throw new RepositoryException(e);
-//        }
+        } else {
+            transaction_repo = store.makeRepository(transaction_repo_name);
+        }
     }
 
     private IBucket getBucket(String bucket_name) throws RepositoryException {

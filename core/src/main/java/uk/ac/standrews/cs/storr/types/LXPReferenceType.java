@@ -3,7 +3,6 @@ package uk.ac.standrews.cs.storr.types;
 import uk.ac.standrews.cs.nds.persistence.PersistentObjectException;
 import uk.ac.standrews.cs.nds.rpc.stream.JSONReader;
 import uk.ac.standrews.cs.storr.impl.LXP;
-import uk.ac.standrews.cs.storr.impl.StoreFactory;
 import uk.ac.standrews.cs.storr.impl.StoreReference;
 import uk.ac.standrews.cs.storr.impl.exceptions.*;
 import uk.ac.standrews.cs.storr.interfaces.*;
@@ -51,10 +50,11 @@ public class LXPReferenceType implements IReferenceType {
         }
 
         try {
-            IStoreReference reference = new StoreReference((String) value);
+            IStore store = typerep.getRepository().getStore();
+            IStoreReference reference = new StoreReference((String) value, store);
 
             // if we just require an lxp don't do more structural checking.
-            return equals(StoreFactory.getStore().getTypeFactory().getTypeWithName("lxp")) || Types.checkStructuralConsistency(getRecord(reference), this);
+            return equals(store.getTypeFactory().getTypeWithName("lxp")) || Types.checkStructuralConsistency(getRecord(reference), this);
 
         } catch (ReferenceException | BucketException e) {
             return false;
@@ -71,7 +71,8 @@ public class LXPReferenceType implements IReferenceType {
 
         if (typerep.containsKey(label)) {
             String value = typerep.getString(label);
-            return Types.stringToType(value);
+            return Types.stringToType(value, typerep.getRepository().getStore());
+
         } else return LXPBaseType.UNKNOWN;
     }
 

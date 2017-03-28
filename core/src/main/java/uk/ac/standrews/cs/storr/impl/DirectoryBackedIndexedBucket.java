@@ -30,8 +30,8 @@ public class DirectoryBackedIndexedBucket<T extends ILXP> extends DirectoryBacke
      * @param repository the repository in which the bucket is created.
      * @throws RepositoryException if a RepositoryException is thrown in implementation
      */
-    public DirectoryBackedIndexedBucket(final String name, final IRepository repository) throws RepositoryException {
-        super(name, repository, BucketKind.INDEXED);
+    public DirectoryBackedIndexedBucket(final String name, final IRepository repository, final IStore store) throws RepositoryException {
+        super(name, repository, BucketKind.INDEXED, store);
         try {
             initIndexes();
         } catch (IOException e) {
@@ -39,8 +39,8 @@ public class DirectoryBackedIndexedBucket<T extends ILXP> extends DirectoryBacke
         }
     }
 
-    public DirectoryBackedIndexedBucket(final String name, final IRepository repository, ILXPFactory tFactory) throws RepositoryException {
-        super(name, repository, BucketKind.INDEXED);
+    public DirectoryBackedIndexedBucket(final String name, final IRepository repository, ILXPFactory tFactory, final IStore store) throws RepositoryException {
+        super(name, repository, BucketKind.INDEXED, store);
         try {
             initIndexes();
         } catch (IOException e) {
@@ -81,7 +81,6 @@ public class DirectoryBackedIndexedBucket<T extends ILXP> extends DirectoryBacke
         return indexes.get(label);
     }
 
-
     @Override
     public void makePersistent(final T record) throws BucketException {
 
@@ -101,20 +100,8 @@ public class DirectoryBackedIndexedBucket<T extends ILXP> extends DirectoryBacke
 
         }
 
-//        Set<String> keys = indexes.keySet(); // all the keys currently being indexed
-//        for (String key : keys) {
-//            if (record.containsKey(key)) { // we are indexing this key
-//                IBucketIndex index = indexes.get(key); // so getString the index
-//                try {
-//                    index.add(record); // and add this record to the index for that key
-//                } catch (IOException e) {
-//                    throw new BucketException("I/O exception adding index");
-//                }
-//            }
-//        }
         super.makePersistent(record);
     }
-
 
     public IInputStream getInputStream() throws BucketException {
         // We already know that the type is compatible - checked in constructor.
@@ -135,6 +122,4 @@ public class DirectoryBackedIndexedBucket<T extends ILXP> extends DirectoryBacke
     public BucketKind getKind() {
         return BucketKind.INDEXED;
     }
-
-
 }

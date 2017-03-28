@@ -1,7 +1,7 @@
 package uk.ac.standrews.cs.storr.examples;
 
 import uk.ac.standrews.cs.storr.impl.LXP;
-import uk.ac.standrews.cs.storr.impl.StoreFactory;
+import uk.ac.standrews.cs.storr.impl.Store;
 import uk.ac.standrews.cs.storr.impl.exceptions.BucketException;
 import uk.ac.standrews.cs.storr.impl.exceptions.RepositoryException;
 import uk.ac.standrews.cs.storr.impl.exceptions.StoreException;
@@ -22,8 +22,7 @@ public class SimplestExample {
     public static void main() throws IOException, StoreException, RepositoryException, BucketException {
 
         Path tempStorepath = Files.createTempDirectory("/tmp/xyz");
-        StoreFactory.setStorePath(tempStorepath);
-        IStore store = StoreFactory.getStore();
+        IStore store = new Store(tempStorepath);
         IRepository repo = store.makeRepository("repo");
         IBucket b = repo.makeBucket("bucket", BucketKind.DIRECTORYBACKED);
 
@@ -32,7 +31,5 @@ public class SimplestExample {
         lxp.put("address", "home");
 
         b.makePersistent(lxp);
-
     }
 }
-
