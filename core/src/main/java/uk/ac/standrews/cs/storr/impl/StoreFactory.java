@@ -30,15 +30,11 @@ public class StoreFactory {
     }
 
     /**
-     * Create a new store - used by tests.
-     *
-     * @return the newly created (singleton) store
-     * @throws StoreException if something has gone wrong - this is pretty much fatal
+     * Resets the store - only used by tests.
      */
-    static synchronized IStore initialiseNewStore() throws StoreException {
+    static void resetStore() {
 
         store = null;
-        return getStore();
     }
 
     /**

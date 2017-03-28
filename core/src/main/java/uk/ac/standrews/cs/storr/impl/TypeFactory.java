@@ -21,11 +21,10 @@ public class TypeFactory {
     private IBucket type_reps_bucket;
     private IBucket type_name_bucket;
     private IRepository type_repository;
+    private IStore store;
 
     private HashMap<String, IReferenceType> names_to_type_cache = new HashMap<>();
     private HashMap<Long, IReferenceType> ids_to_type_cache = new HashMap<>();
-
-    private IStore store;
 
     protected TypeFactory(IStore store) throws RepositoryException {
 

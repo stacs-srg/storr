@@ -52,9 +52,9 @@ public class ListTypeTest extends CommonTest {
         classWithListOfScalarsFactory = new ClassWithListOfScalarsFactory(classwithlistofscalars_type.getId());
         classWithListOfRefsFactory = new ClassWithListOfRefsFactory(classwithlistofrefs_type.getId());
 
-        lxp_bucket = repo.makeBucket(lxpBucketName, BucketKind.DIRECTORYBACKED);
-        scalar_list_bucket = repo.makeBucket(classWithListOfScalarsBucketName, BucketKind.DIRECTORYBACKED, classWithListOfScalarsFactory);
-        ref_list_bucket = repo.makeBucket(classWithListOfRefsBucketName, BucketKind.DIRECTORYBACKED, classWithListOfRefsFactory);
+        lxp_bucket = repository.makeBucket(lxpBucketName, BucketKind.DIRECTORYBACKED);
+        scalar_list_bucket = repository.makeBucket(classWithListOfScalarsBucketName, BucketKind.DIRECTORYBACKED, classWithListOfScalarsFactory);
+        ref_list_bucket = repository.makeBucket(classWithListOfRefsBucketName, BucketKind.DIRECTORYBACKED, classWithListOfRefsFactory);
     }
 
     @Test
@@ -68,10 +68,10 @@ public class ListTypeTest extends CommonTest {
 
         // Now try and read back - avoid all cache etc.
 
-        Path file_path = tempStore.resolve("REPOS").resolve(REPO_NAME).resolve(classWithListOfScalarsBucketName).resolve(Long.toString(id));
+        Path file_path = store_path.resolve("REPOS").resolve(REPOSITORY_NAME).resolve(classWithListOfScalarsBucketName).resolve(Long.toString(id));
         BufferedReader reader = Files.newBufferedReader(file_path, FileManipulation.FILE_CHARSET);
 
-        LXP lxp2 = new LXP(id, new JSONReader(reader), repo, lxp_bucket);
+        LXP lxp2 = new LXP(id, new JSONReader(reader), repository, lxp_bucket);
 
         assertEquals(lxp2.getId(), id);
         assertEquals(lxp2.getInt("S_INT"), 53);
@@ -103,10 +103,10 @@ public class ListTypeTest extends CommonTest {
 
         // Now try and read back - avoid all cache etc.
 
-        Path file_path = tempStore.resolve("REPOS").resolve(REPO_NAME).resolve(classWithListOfRefsBucketName).resolve(new Long(id).toString());
+        Path file_path = store_path.resolve("REPOS").resolve(REPOSITORY_NAME).resolve(classWithListOfRefsBucketName).resolve(new Long(id).toString());
         BufferedReader reader = Files.newBufferedReader(file_path, FileManipulation.FILE_CHARSET);
 
-        LXP lxp3 = new LXP(id, new JSONReader(reader), repo, lxp_bucket);
+        LXP lxp3 = new LXP(id, new JSONReader(reader), repository, lxp_bucket);
         assertEquals(lxp3.getId(), id);
         assertEquals(lxp3.getInt("R_INT"), 53);
         List l = lxp3.getList("R_LIST");

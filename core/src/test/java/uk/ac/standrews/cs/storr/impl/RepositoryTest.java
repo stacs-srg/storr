@@ -16,19 +16,19 @@ public class RepositoryTest extends CommonTest {
 
     @Test
     public void createBucketTest() throws RepositoryException {
-        IBucket bucket = repo.makeBucket(generic_bucket_name1, BucketKind.DIRECTORYBACKED);
+        IBucket bucket = repository.makeBucket(generic_bucket_name1, BucketKind.DIRECTORYBACKED);
 
-        assertTrue(repo.bucketExists(generic_bucket_name1));
-        assertEquals(bucket.getName(), repo.getBucket(generic_bucket_name1).getName());
+        assertTrue(repository.bucketExists(generic_bucket_name1));
+        assertEquals(bucket.getName(), repository.getBucket(generic_bucket_name1).getName());
     }
 
     @Test
     public void deleteBucketTest() throws RepositoryException {
-        repo.makeBucket(generic_bucket_name1, BucketKind.DIRECTORYBACKED);
+        repository.makeBucket(generic_bucket_name1, BucketKind.DIRECTORYBACKED);
 
-        assertTrue(repo.bucketExists(generic_bucket_name1));
-        repo.deleteBucket(generic_bucket_name1);
+        assertTrue(repository.bucketExists(generic_bucket_name1));
+        repository.deleteBucket(generic_bucket_name1);
 
-        assertFalse(repo.bucketExists(generic_bucket_name1));
+        assertFalse(repository.bucketExists(generic_bucket_name1));
     }
 }

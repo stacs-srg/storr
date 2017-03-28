@@ -23,7 +23,7 @@ public class StoreTest extends CommonTest {
     public void setUp() throws RepositoryException, IOException, StoreException, URISyntaxException {
 
         super.setUp();
-        repo.makeBucket(generic_bucket_name1, BucketKind.DIRECTORYBACKED);
+        repository.makeBucket(generic_bucket_name1, BucketKind.DIRECTORYBACKED);
     }
 
     @Test
@@ -37,6 +37,6 @@ public class StoreTest extends CommonTest {
     public void checkRepositoryHasBeenCreatedTest() throws RepositoryException {
 
         assertTrue(store.repositoryExists(REPO_NAME));
-        assertEquals(repo.getRepoPath(), store.getRepository(REPO_NAME).getRepoPath());
+        assertEquals(repository.getRepoPath(), store.getRepository(REPO_NAME).getRepoPath());
     }
 }

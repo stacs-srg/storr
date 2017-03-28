@@ -15,37 +15,38 @@ import java.nio.file.Path;
 
 public class CommonTest {
 
-    protected static final String REPO_NAME = "repo";
+    static final String REPOSITORY_NAME = "repo";
 
     private static boolean DEBUG = false;
 
     protected IStore store;
-    protected IRepository repo;
+    protected IRepository repository;
 
-    protected Path tempStore;
+    Path store_path;
 
     @Before
     public void setUp() throws RepositoryException, IOException, StoreException, URISyntaxException {
 
-        tempStore = Files.createTempDirectory(null);
+        store_path = Files.createTempDirectory(null);
 
-        StoreFactory.setStorePath(tempStore);
-        store = StoreFactory.initialiseNewStore();
+        StoreFactory.setStorePath(store_path);
+        StoreFactory.resetStore();
+        store = StoreFactory.getStore();
 
         if (DEBUG) {
-            System.out.println("STORE PATH = " + tempStore + " has been created");
+            System.out.println("STORE PATH = " + store_path + " has been created");
         }
 
-        repo = store.makeRepository(REPO_NAME);
+        repository = store.makeRepository(REPOSITORY_NAME);
     }
 
     @After
     public void tearDown() throws IOException {
 
-        FileManipulation.deleteDirectory(tempStore);
+        FileManipulation.deleteDirectory(store_path);
 
         if (DEBUG) {
-            System.out.println("STORE PATH = " + tempStore + " has been deleted");
+            System.out.println("STORE PATH = " + store_path + " has been deleted");
         }
     }
 }
