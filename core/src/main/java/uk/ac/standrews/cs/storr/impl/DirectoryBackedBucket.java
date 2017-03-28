@@ -403,7 +403,7 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
 
         size = -1;
         cached_oids = null;
-        object_cache = new ObjectCache();
+        object_cache = new ObjectCache(); //TODO I am worried about this - there maybe extant refs to these objects in the heap. *****
     }
 
     /**
