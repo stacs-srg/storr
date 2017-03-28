@@ -50,12 +50,5 @@ public enum LXPBaseType implements IType {
             return value instanceof Boolean;
         }
     }
-//    ,
-//    OID {
-//        @Override
-//        public boolean valueConsistentWithType(Object value) {
-//            return value instanceof String;
-//        }
-//    }
 
 }

@@ -257,7 +257,7 @@ public class LXP implements ILXP, Comparable<LXP> {
         if (containsKey(key)) {
             Object result = map.get(key);
             if (result instanceof String) { // expected
-                return new StoreReference((String) result, repository.getStore());
+                return new StoreReference(repository.getStore(), (String) result);
             } else {
                 throw new TypeMismatchFoundException("expected IStoreReference found: " + result.getClass().getName());
             }
@@ -273,7 +273,7 @@ public class LXP implements ILXP, Comparable<LXP> {
         if (bucket == null) {
             throw new PersistentObjectException("LXP stored in unkown bucket");
         }
-        return new StoreReference(repository, bucket, this, repository.getStore());
+        return new StoreReference(repository.getStore(), repository, bucket, this);
     }
 
     @Override

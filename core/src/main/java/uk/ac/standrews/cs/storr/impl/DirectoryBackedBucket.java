@@ -157,7 +157,7 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
             if (result.containsKey(StoreReference.$INDIRECTION$)) {
                 // we have an indirection
                 // so try and load the record that the indirection record points to.
-                StoreReference<T> ref = new StoreReference<T>(result.getString(StoreReference.REPOSITORY), result.getString(StoreReference.BUCKET), result.getLong(StoreReference.OID), store);
+                StoreReference<T> ref = new StoreReference<T>(store, result.getString(StoreReference.REPOSITORY), result.getString(StoreReference.BUCKET), result.getLong(StoreReference.OID));
                 result = (T) ref.getReferend();
             }
         } catch (IOException e1) {
@@ -403,6 +403,7 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
 
         size = -1;
         cached_oids = null;
+        object_cache = new ObjectCache();
     }
 
     /**

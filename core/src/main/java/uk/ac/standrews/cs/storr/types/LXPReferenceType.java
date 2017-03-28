@@ -51,7 +51,7 @@ public class LXPReferenceType implements IReferenceType {
 
         try {
             IStore store = typerep.getRepository().getStore();
-            IStoreReference reference = new StoreReference((String) value, store);
+            IStoreReference reference = new StoreReference(store, (String) value);
 
             // if we just require an lxp don't do more structural checking.
             return equals(store.getTypeFactory().getTypeWithName("lxp")) || Types.checkStructuralConsistency(getRecord(reference), this);

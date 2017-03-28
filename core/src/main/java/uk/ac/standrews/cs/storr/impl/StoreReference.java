@@ -26,7 +26,7 @@ public class StoreReference<T extends ILXP> extends LXP implements IStoreReferen
     /**
      * @param serialized - a String of form repo_name SEPARATOR bucket_name SEPARATOR oid
      */
-    public StoreReference(String serialized, IStore store) throws ReferenceException {
+    public StoreReference(IStore store, String serialized) throws ReferenceException {
 
         this.store = store;
 
@@ -42,7 +42,7 @@ public class StoreReference<T extends ILXP> extends LXP implements IStoreReferen
         }
     }
 
-    public StoreReference(String repo_name, String bucket_name, long oid, IStore store) {
+    public StoreReference(IStore store, String repo_name, String bucket_name, long oid) {
 
         super();
         this.store = store;
@@ -53,17 +53,17 @@ public class StoreReference<T extends ILXP> extends LXP implements IStoreReferen
         // don't bother looking up cache reference on demand or by caller
     }
 
-    public StoreReference(IRepository repo, IBucket bucket, T reference, IStore store) {
-        this(repo.getName(), bucket.getName(), reference, store);
+    public StoreReference(IStore store, IRepository repo, IBucket bucket, T reference) {
+        this(store, repo.getName(), bucket.getName(), reference);
     }
 
-    private StoreReference(String repo_name, String bucket_name, T reference, IStore store) {
-        this(repo_name, bucket_name, reference.getId(), store);
+    private StoreReference(IStore store, String repo_name, String bucket_name, T reference) {
+        this(store, repo_name, bucket_name, reference.getId());
         ref = new WeakReference<T>(reference);
     }
 
-    public StoreReference(ILXP record, IStore store) {
-        this(record.getString(REPOSITORY), record.getString(BUCKET), record.getLong(OID), store);
+    public StoreReference(IStore store, ILXP record) {
+        this(store, record.getString(REPOSITORY), record.getString(BUCKET), record.getLong(OID));
         // don't bother looking up cache reference on demand
     }
 
