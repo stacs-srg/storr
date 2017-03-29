@@ -26,12 +26,13 @@ public class DirectoryBackedIndexedBucket<T extends ILXP> extends DirectoryBacke
      * Creates a handle on a bucket.
      * Assumes that bucket has been created already using a factory - i.e. the directory already exists.
      *
-     * @param name       the name of the bucket (also used as directory name).
      * @param repository the repository in which the bucket is created.
+     * @param bucket_name       the name of the bucket (also used as directory name).
      * @throws RepositoryException if a RepositoryException is thrown in implementation
      */
-    public DirectoryBackedIndexedBucket(final String name, final IRepository repository, final IStore store) throws RepositoryException {
-        super(name, repository, BucketKind.INDEXED, store);
+    public DirectoryBackedIndexedBucket(final IRepository repository, final String bucket_name) throws RepositoryException {
+
+        super(repository, bucket_name, BucketKind.INDEXED);
         try {
             initIndexes();
         } catch (IOException e) {
@@ -39,8 +40,9 @@ public class DirectoryBackedIndexedBucket<T extends ILXP> extends DirectoryBacke
         }
     }
 
-    public DirectoryBackedIndexedBucket(final String name, final IRepository repository, ILXPFactory tFactory, final IStore store) throws RepositoryException {
-        super(name, repository, BucketKind.INDEXED, store);
+    public DirectoryBackedIndexedBucket(final IRepository repository, final String bucket_name, ILXPFactory tFactory) throws RepositoryException {
+
+        super(repository, bucket_name, BucketKind.INDEXED, tFactory);
         try {
             initIndexes();
         } catch (IOException e) {
@@ -56,7 +58,7 @@ public class DirectoryBackedIndexedBucket<T extends ILXP> extends DirectoryBacke
             throw new IOException("Index Directory: " + dirPath() + " does not exist and cannot create");
         }
 
-        Iterator<File> iterator = FileIteratorFactory.createFileIterator(index, true, false);
+        Iterator<File> iterator = new FileIterator(index, true, false);
         while (iterator.hasNext()) {
             File next = iterator.next();
             indexes.put(next.getName(), new BucketIndex(next.getName(), next.toPath(), this));

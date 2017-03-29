@@ -52,61 +52,61 @@ public class Repository implements IRepository {
         }
     }
 
-    public IBucket makeBucket(final String name, BucketKind kind) throws RepositoryException {
+    public IBucket makeBucket(final String bucket_name, BucketKind kind) throws RepositoryException {
 
         IBucket bucket;
         switch (kind) {
             case DIRECTORYBACKED: {
-                DirectoryBackedBucket.createBucket(name, this, kind);
-                bucket = new DirectoryBackedBucket(name, this, kind, store);
+                DirectoryBackedBucket.createBucket(bucket_name, this, kind);
+                bucket = new DirectoryBackedBucket(this, bucket_name, kind);
                 break;
             }
             case INDIRECT: {
-                DirectoryBackedIndirectBucket.createBucket(name, this, kind);
+                DirectoryBackedIndirectBucket.createBucket(bucket_name, this, kind);
                 try {
-                    bucket = new DirectoryBackedIndirectBucket(name, this, store);
+                    bucket = new DirectoryBackedIndirectBucket(this, bucket_name);
                     break;
                 } catch (IOException e) {
                     throw new RepositoryException(e);
                 }
             }
             case INDEXED: {
-                DirectoryBackedIndexedBucket.createBucket(name, this, kind);
-                bucket = new DirectoryBackedIndexedBucket(name, this, store);
+                DirectoryBackedIndexedBucket.createBucket(bucket_name, this, kind);
+                bucket = new DirectoryBackedIndexedBucket(this, bucket_name);
                 break;
             }
             default: {
                 throw new RepositoryException("Bucketkind: " + kind + " not recognized");
             }
         }
-        bucket_cache.put(name, bucket);
+        bucket_cache.put(bucket_name, bucket);
         return bucket;
     }
 
-    public <T extends ILXP> IBucket<T> makeBucket(final String name, BucketKind kind, ILXPFactory<T> tFactory) throws RepositoryException {
+    public <T extends ILXP> IBucket<T> makeBucket(final String bucket_name, BucketKind kind, ILXPFactory<T> tFactory) throws RepositoryException {
 
         IBucket bucket;
         switch (kind) {
             case DIRECTORYBACKED: {
-                DirectoryBackedBucket.createBucket(name, this, kind, tFactory.getTypeLabel());
-                bucket = new DirectoryBackedBucket(name, this, tFactory, kind, store);
+                DirectoryBackedBucket.createBucket(bucket_name, this, kind, tFactory.getTypeLabel());
+                bucket = new DirectoryBackedBucket(this, bucket_name, kind, tFactory);
                 break;
             }
             case INDIRECT: {
-                DirectoryBackedIndirectBucket.createBucket(name, this, kind, tFactory.getTypeLabel());
-                bucket = new DirectoryBackedIndirectBucket(name, this, tFactory, store);
+                DirectoryBackedIndirectBucket.createBucket(bucket_name, this, kind, tFactory.getTypeLabel());
+                bucket = new DirectoryBackedIndirectBucket(this, bucket_name, tFactory);
                 break;
             }
             case INDEXED: {
-                DirectoryBackedIndexedBucket.createBucket(name, this, kind, tFactory.getTypeLabel());
-                bucket = new DirectoryBackedIndexedBucket(name, this, tFactory, store);
+                DirectoryBackedIndexedBucket.createBucket(bucket_name, this, kind, tFactory.getTypeLabel());
+                bucket = new DirectoryBackedIndexedBucket(this, bucket_name, tFactory);
                 break;
             }
             default: {
                 throw new RepositoryException("Bucketkind: " + kind + " not recognized");
             }
         }
-        bucket_cache.put(name, bucket);
+        bucket_cache.put(bucket_name, bucket);
         return bucket;
     }
 
@@ -138,23 +138,23 @@ public class Repository implements IRepository {
     }
 
     @Override
-    public <T extends ILXP> IBucket<T> getBucket(String name, ILXPFactory<T> tFactory) throws RepositoryException {
+    public <T extends ILXP> IBucket<T> getBucket(String bucket_name, ILXPFactory<T> tFactory) throws RepositoryException {
 
-        if (bucketExists(name)) {
-            if (bucket_cache.containsKey(name)) {
-                return bucket_cache.get(name);
+        if (bucketExists(bucket_name)) {
+            if (bucket_cache.containsKey(bucket_name)) {
+                return bucket_cache.get(bucket_name);
             }
 
-            BucketKind kind = DirectoryBackedBucket.getKind(name, this);
+            BucketKind kind = DirectoryBackedBucket.getKind(bucket_name, this);
             switch (kind) {
                 case DIRECTORYBACKED: {
-                    return new DirectoryBackedBucket(name, this, tFactory, kind, store);
+                    return new DirectoryBackedBucket(this, bucket_name, kind, tFactory);
                 }
                 case INDIRECT: {
-                    return new DirectoryBackedIndirectBucket(name, this, tFactory, store);
+                    return new DirectoryBackedIndirectBucket(this, bucket_name, tFactory);
                 }
                 case INDEXED: {
-                    return new DirectoryBackedIndexedBucket(name, this, tFactory, store);
+                    return new DirectoryBackedIndexedBucket(this, bucket_name, tFactory);
                 }
                 default: {
                     throw new RepositoryException("Bucketkind: " + kind + " not recognized");
@@ -165,26 +165,28 @@ public class Repository implements IRepository {
     }
 
     @Override
-    public IBucket getBucket(String name) throws RepositoryException {
-        if (bucketExists(name)) {
+    public IBucket getBucket(String bucket_name) throws RepositoryException {
 
-            if (bucket_cache.containsKey(name)) {
-                return bucket_cache.get(name);
+        if (bucketExists(bucket_name)) {
+
+            if (bucket_cache.containsKey(bucket_name)) {
+                return bucket_cache.get(bucket_name);
+
             } else {
-                BucketKind kind = DirectoryBackedBucket.getKind(name, this);
+                BucketKind kind = DirectoryBackedBucket.getKind(bucket_name, this);
                 switch (kind) {
                     case DIRECTORYBACKED: {
-                        return new DirectoryBackedBucket(name, this, kind, store);
+                        return new DirectoryBackedBucket(this, bucket_name, kind);
                     }
                     case INDIRECT: {
                         try {
-                            return new DirectoryBackedIndirectBucket(name, this, store);
+                            return new DirectoryBackedIndirectBucket(this, bucket_name);
                         } catch (IOException e) {
                             throw new RepositoryException(e);
                         }
                     }
                     case INDEXED: {
-                        return new DirectoryBackedIndexedBucket(name, this, store);
+                        return new DirectoryBackedIndexedBucket(this, bucket_name);
                     }
                     default: {
                         throw new RepositoryException("Bucketkind: " + kind + " not recognized");
@@ -230,7 +232,7 @@ public class Repository implements IRepository {
         BucketNamesIterator(final Repository repository, final File repo_directory) {
 
             this.repository = repository;
-            file_iterator = FileIteratorFactory.createFileIterator(repo_directory, false, true);
+            file_iterator = new FileIterator(repo_directory, false, true);
         }
 
         public boolean hasNext() {
@@ -262,7 +264,7 @@ public class Repository implements IRepository {
         BucketIterator(final Repository repository, final File repo_directory, ILXPFactory<T> tFactory) {
 
             this.repository = repository;
-            file_iterator = FileIteratorFactory.createFileIterator(repo_directory, false, true);
+            file_iterator = new FileIterator(repo_directory, false, true);
             this.tFactory = tFactory;
         }
 

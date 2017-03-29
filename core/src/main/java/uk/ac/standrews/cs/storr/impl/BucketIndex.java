@@ -35,7 +35,7 @@ public class BucketIndex implements IBucketIndex {
      * @param dir            - the dir holding the index
      * @param indexed_bucket - the bucket being indexed
      */
-    public BucketIndex(final String label, final Path dir, final DirectoryBackedIndexedBucket indexed_bucket) {
+    BucketIndex(final String label, final Path dir, final DirectoryBackedIndexedBucket indexed_bucket) {
 
         this.label = label; // the label being indexed
         this.dir = dir; // the path to the dir being used to hold the index
@@ -54,7 +54,7 @@ public class BucketIndex implements IBucketIndex {
             // Need to open all the files in the directory - all named with the value being indexed (NOT KEY)
             // Each contain a list of ids.
 
-            Iterator<File> files = FileIteratorFactory.createFileIterator(dir.toFile(), true, false);
+            Iterator<File> files = new FileIterator(dir.toFile(), true, false);
 
             while (files.hasNext()) {
 

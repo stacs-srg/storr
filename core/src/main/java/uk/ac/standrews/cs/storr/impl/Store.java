@@ -190,7 +190,7 @@ public class Store implements IStore {
         public RepoIterator(final IStore store, final Path repo_directory) {
 
             this.store = store;
-            file_iterator = FileIteratorFactory.createFileIterator(repo_directory.toFile(), false, true);
+            file_iterator = new FileIterator(repo_directory.toFile(), false, true);
         }
 
         public boolean hasNext() {

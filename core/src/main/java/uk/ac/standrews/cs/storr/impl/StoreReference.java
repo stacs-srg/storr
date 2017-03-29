@@ -53,8 +53,8 @@ public class StoreReference<T extends ILXP> extends LXP implements IStoreReferen
         // don't bother looking up cache reference on demand or by caller
     }
 
-    public StoreReference(IStore store, IRepository repo, IBucket bucket, T reference) {
-        this(store, repo.getName(), bucket.getName(), reference);
+    public StoreReference(IRepository repo, IBucket bucket, T reference) {
+        this(repo.getStore(), repo.getName(), bucket.getName(), reference);
     }
 
     private StoreReference(IStore store, String repo_name, String bucket_name, T reference) {

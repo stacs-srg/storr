@@ -40,12 +40,12 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
     /**
      * Creates a DirectoryBackedBucket with no factory - a persistent collection of ILXPs
      *
-     * @param bucket_name the name of the bucket to be created
      * @param repository  the repository in which to create the bucket
+     * @param bucket_name the name of the bucket to be created
      * @param kind        the kind of Bucket to be created
      * @throws RepositoryException if the bucket cannot be created in the repository
      */
-    DirectoryBackedBucket(final String bucket_name, final IRepository repository, final BucketKind kind, IStore store) throws RepositoryException {
+    protected DirectoryBackedBucket(final IRepository repository, final String bucket_name, final BucketKind kind) throws RepositoryException {
 
         if (!Repository.legalName(bucket_name)) {
             throw new RepositoryException("Illegal name <" + bucket_name + ">");
@@ -53,7 +53,7 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
 
         this.bucket_name = bucket_name;
         this.repository = repository;
-        this.store = store;
+        this.store = repository.getStore();
 
         Path dir_name = dirPath();
         directory = dir_name.toFile();
@@ -76,15 +76,16 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
     /**
      * Creates a DirectoryBackedBucket with a factory - a persistent collection of ILXPs tied to some particular Java and store type.
      *
-     * @param bucket_name the name of the bucket to be created
      * @param repository  the repository in which to create the bucket
-     * @param tFactory    the factory to use when importing objects from the store
+     * @param bucket_name the name of the bucket to be created
      * @param kind        the kind of Bucket to be created
+     * @param tFactory    the factory to use when importing objects from the store
      * @throws RepositoryException if the bucket cannot be created in the repository
      */
-    DirectoryBackedBucket(final String bucket_name, final IRepository repository, ILXPFactory<T> tFactory, BucketKind kind, IStore store) throws RepositoryException {
+    DirectoryBackedBucket(final IRepository repository, final String bucket_name, BucketKind kind, ILXPFactory<T> tFactory) throws RepositoryException {
 
-        this(bucket_name, repository, kind, store);
+        this(repository, bucket_name, kind);
+
         this.tFactory = tFactory;
 
         type_label_id = getTypeLabelID();
@@ -224,13 +225,15 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
     /**
      * @return the oids of records that are in this bucket
      */
-    public List<Long> getOids() {
+    public synchronized List<Long> getOids() {
 
         if (cached_oids == null) {
+
             cached_oids = new ArrayList<>();
-            Iterator<File> iter = FileIteratorFactory.createFileIterator(directory, true, false);
-            while (iter.hasNext()) {
-                cached_oids.add(Long.parseLong(iter.next().getName()));
+
+            Iterator<File> iterator = new FileIterator(directory, true, false);
+            while (iterator.hasNext()) {
+                cached_oids.add(Long.parseLong(iterator.next().getName()));
             }
         }
         return cached_oids;
@@ -348,7 +351,6 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
         }
     }
 
-
     private void setKind(BucketKind kind) {
 
         try {
@@ -358,7 +360,6 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
             ErrorHandling.error("I/O Exception setting kind");
         }
     }
-
 
     public void setTypeLabelID(long type_label_id) throws IOException {
 
@@ -464,9 +465,10 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
     @Override
     public void tidyUpTransactionData() {
 
-        Iterator<File> iter = FileIteratorFactory.createFileIterator(filePath(TRANSACTIONS_BUCKET_NAME).toFile(), true, false);
-        while (iter.hasNext()) {
-            File f = iter.next();
+        Iterator<File> iterator = new FileIterator(filePath(TRANSACTIONS_BUCKET_NAME).toFile(), true, false);
+
+        while (iterator.hasNext()) {
+            File f = iterator.next();
             if (!f.delete()) {
                 ErrorHandling.error("******* Transaction error: error tidying up transaction data on recovery");
             }

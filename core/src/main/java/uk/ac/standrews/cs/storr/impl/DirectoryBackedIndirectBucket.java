@@ -13,12 +13,12 @@ import java.io.IOException;
  */
 public class DirectoryBackedIndirectBucket<T extends ILXP> extends DirectoryBackedBucket<T> {
 
-    public DirectoryBackedIndirectBucket(String name, IRepository repository, IStore store) throws IOException, RepositoryException {
-        super(name, repository, BucketKind.INDIRECT, store);
+    public DirectoryBackedIndirectBucket(IRepository repository, String bucket_name) throws IOException, RepositoryException {
+        super(repository, bucket_name, BucketKind.INDIRECT);
     }
 
-    public DirectoryBackedIndirectBucket(String name, IRepository repository, ILXPFactory<T> tFactory, IStore store) throws RepositoryException {
-        super(name, repository, BucketKind.INDIRECT, store);
+    public DirectoryBackedIndirectBucket(IRepository repository, String bucket_name, ILXPFactory<T> tFactory) throws RepositoryException {
+        super(repository, bucket_name, BucketKind.INDIRECT, tFactory);
     }
 
     @Override
@@ -44,7 +44,6 @@ public class DirectoryBackedIndirectBucket<T extends ILXP> extends DirectoryBack
         }
     }
 
-
     @Override
     public IOutputStream<T> getOutputStream() {
         return new BucketBackedOutputStream(this);
@@ -54,6 +53,4 @@ public class DirectoryBackedIndirectBucket<T extends ILXP> extends DirectoryBack
     public BucketKind getKind() {
         return BucketKind.INDIRECT;
     }
-
-
 }

@@ -348,7 +348,7 @@ public class InfrastructureTest extends CommonTest {
         b1.makePersistent(lxp);
 
         LXP lxp2 = new LXP();        // correct structure
-        lxp2.put("person_ref", new StoreReference<>(store, repository, b1, lxp));
+        lxp2.put("person_ref", new StoreReference<>(repository, b1, lxp));
         b2.makePersistent(lxp2);
     }
 
@@ -394,7 +394,7 @@ public class InfrastructureTest extends CommonTest {
         long lxp2_id = lxp2.getId();
 
         LXP lxp3 = new LXP();        // correct structure
-        lxp3.put("person_ref", new StoreReference<>(store, repository, b3, lxp2)); // an illegal reference to this tuple - wrong reference type
+        lxp3.put("person_ref", new StoreReference<>(repository, b3, lxp2)); // an illegal reference to this tuple - wrong reference type
 
         b2.makePersistent(lxp3);
     }
