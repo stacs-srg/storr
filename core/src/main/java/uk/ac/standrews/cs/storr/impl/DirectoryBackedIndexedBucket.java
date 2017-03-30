@@ -30,9 +30,9 @@ public class DirectoryBackedIndexedBucket<T extends ILXP> extends DirectoryBacke
      * @param bucket_name       the name of the bucket (also used as directory name).
      * @throws RepositoryException if a RepositoryException is thrown in implementation
      */
-    public DirectoryBackedIndexedBucket(final IRepository repository, final String bucket_name) throws RepositoryException {
+    DirectoryBackedIndexedBucket(final IRepository repository, final String bucket_name, boolean create_bucket) throws RepositoryException {
 
-        super(repository, bucket_name, BucketKind.INDEXED);
+        super(repository, bucket_name, BucketKind.INDEXED, create_bucket);
         try {
             initIndexes();
         } catch (IOException e) {
@@ -40,28 +40,13 @@ public class DirectoryBackedIndexedBucket<T extends ILXP> extends DirectoryBacke
         }
     }
 
-    public DirectoryBackedIndexedBucket(final IRepository repository, final String bucket_name, ILXPFactory tFactory) throws RepositoryException {
+    DirectoryBackedIndexedBucket(final IRepository repository, final String bucket_name, ILXPFactory tFactory, boolean create_bucket) throws RepositoryException {
 
-        super(repository, bucket_name, BucketKind.INDEXED, tFactory);
+        super(repository, bucket_name, BucketKind.INDEXED, tFactory, create_bucket);
         try {
             initIndexes();
         } catch (IOException e) {
             throw new RepositoryException(e.getMessage());
-        }
-    }
-
-    private void initIndexes() throws IOException {
-
-        // Ensure that the index directory exists
-        File index = dirPath().resolve(INDEX_DIR_NAME).toFile();
-        if (!index.isDirectory() && !index.mkdir()) {
-            throw new IOException("Index Directory: " + dirPath() + " does not exist and cannot create");
-        }
-
-        Iterator<File> iterator = new FileIterator(index, true, false);
-        while (iterator.hasNext()) {
-            File next = iterator.next();
-            indexes.put(next.getName(), new BucketIndex(next.getName(), next.toPath(), this));
         }
     }
 
@@ -108,12 +93,12 @@ public class DirectoryBackedIndexedBucket<T extends ILXP> extends DirectoryBacke
     public IInputStream getInputStream() throws BucketException {
         // We already know that the type is compatible - checked in constructor.
         try {
-            return new BucketBackedInputStream(this, this.directory);
+            return new BucketBackedInputStream(this);
+
         } catch (IOException e) {
             throw new BucketException("I/O exception getting stream");
         }
     }
-
 
     public IOutputStream getOutputStream() {
         // We already know that the type is compatible - checked in constructor.
@@ -123,5 +108,20 @@ public class DirectoryBackedIndexedBucket<T extends ILXP> extends DirectoryBacke
     @Override
     public BucketKind getKind() {
         return BucketKind.INDEXED;
+    }
+
+    private void initIndexes() throws IOException {
+
+        // Ensure that the index directory exists
+        File index = dirPath().resolve(INDEX_DIR_NAME).toFile();
+        if (!index.isDirectory() && !index.mkdir()) {
+            throw new IOException("Index Directory: " + dirPath() + " does not exist and cannot create");
+        }
+
+        Iterator<File> iterator = new FileIterator(index, true, false);
+        while (iterator.hasNext()) {
+            File next = iterator.next();
+            indexes.put(next.getName(), new BucketIndex(next.getName(), next.toPath(), this));
+        }
     }
 }

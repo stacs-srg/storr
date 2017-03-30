@@ -100,7 +100,7 @@ public class Store implements IStore {
             if (repository_cache.containsKey(name)) {
                 return repository_cache.get(name);
             } else {
-                IRepository r = new Repository(repository_path, name, this);
+                IRepository r = new Repository(this, name, repository_path);
                 repository_cache.put(name, r);
                 return r;
             }

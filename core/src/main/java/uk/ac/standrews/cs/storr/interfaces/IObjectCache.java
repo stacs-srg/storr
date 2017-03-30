@@ -12,19 +12,19 @@ public interface IObjectCache {
      * @param bucket - the bucket of the registered object
      * @param tuple - the tuple to add.
      */
-    public void put(long oid, IBucket bucket, ILXP tuple);
+    void put(long oid, IBucket bucket, ILXP tuple);
 
     /**
      * @param oid - the oid to be loooked up
      * @return the Bucket from which the oid was loaded
      */
-    public IBucket getBucket(long oid);
+    IBucket getBucket(long oid);
 
     /**
      * @param oid - the oid to be loooked up
      * @return true if the oid is loaded
      */
-    public boolean contains(long oid);
+    boolean contains(long oid);
 
     /**
      * @param id - the id of the tuple to be looked up

@@ -31,7 +31,7 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
     private IObjectCache object_cache = new ObjectCache();
 
     private static final String TRANSACTIONS_BUCKET_NAME = "TRANSACTIONS";
-    private static final String META_BUCKET_NAME = "META";
+    public static final String META_BUCKET_NAME = "META";
     private static final String TYPE_LABEL_FILE_NAME = "TYPELABEL";
 
     private long size = -1; // number of items in Bucket.
@@ -45,7 +45,11 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
      * @param kind        the kind of Bucket to be created
      * @throws RepositoryException if the bucket cannot be created in the repository
      */
-    protected DirectoryBackedBucket(final IRepository repository, final String bucket_name, final BucketKind kind) throws RepositoryException {
+    protected DirectoryBackedBucket(final IRepository repository, final String bucket_name, final BucketKind kind, boolean create_bucket) throws RepositoryException {
+
+        if (create_bucket) {
+            createBucket(bucket_name, repository, kind);
+        }
 
         if (!Repository.legalName(bucket_name)) {
             throw new RepositoryException("Illegal name <" + bucket_name + ">");
@@ -82,9 +86,36 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
      * @param tFactory    the factory to use when importing objects from the store
      * @throws RepositoryException if the bucket cannot be created in the repository
      */
-    DirectoryBackedBucket(final IRepository repository, final String bucket_name, BucketKind kind, ILXPFactory<T> tFactory) throws RepositoryException {
+    DirectoryBackedBucket(final IRepository repository, final String bucket_name, BucketKind kind, ILXPFactory<T> tFactory, boolean create_bucket) throws RepositoryException {
 
-        this(repository, bucket_name, kind);
+        if (create_bucket) {
+            createBucket(bucket_name, repository, kind, tFactory.getTypeLabel());
+        }
+
+        if (!Repository.legalName(bucket_name)) {
+            throw new RepositoryException("Illegal name <" + bucket_name + ">");
+        }
+
+        this.bucket_name = bucket_name;
+        this.repository = repository;
+        this.store = repository.getStore();
+
+        Path dir_name = dirPath();
+        directory = dir_name.toFile();
+
+        if (!directory.isDirectory()) {
+            throw new RepositoryException("Bucket Directory: " + dir_name + " does not exist");
+        }
+
+        setKind(kind);
+
+        try {
+            Watcher watcher = repository.getStore().getWatcher();
+            watcher.register(directory.toPath(), this);
+
+        } catch (IOException e) {
+            throw new RepositoryException("Failure to add watcher for Bucket " + bucket_name);
+        }
 
         this.tFactory = tFactory;
 
@@ -121,7 +152,6 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
     }
 
     //****************** Getters ******************//
-
 
     public T getObjectById(long id) throws BucketException {
 
@@ -195,31 +225,15 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
     public IInputStream<T> getInputStream() throws BucketException {
 
         try {
-            return new BucketBackedInputStream(this, directory);
-        } catch (Exception e) {
-            ErrorHandling.error("Exception getting stream");
+            return new BucketBackedInputStream(this);
+
+        } catch (IOException e) {
             throw new BucketException(e.getMessage());
         }
     }
 
     public IOutputStream<T> getOutputStream() {
         return new BucketBackedOutputStream(this);
-    }
-
-    static BucketKind getKind(String bucket_name, IRepository repo) {
-
-        Path meta_path = repo.getRepoPath().resolve(bucket_name).resolve(META_BUCKET_NAME); // repo/bucketname/meta
-
-        if (Files.exists(meta_path.resolve(BucketKind.DIRECTORYBACKED.name()))) {
-            return BucketKind.DIRECTORYBACKED;
-        }
-        if (Files.exists(meta_path.resolve(BucketKind.INDEXED.name()))) {
-            return BucketKind.INDEXED;
-        }
-        if (Files.exists(meta_path.resolve(BucketKind.INDIRECT.name()))) {
-            return BucketKind.INDIRECT;
-        }
-        return BucketKind.UNKNOWN;
     }
 
     /**
@@ -344,10 +358,9 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
 
             record_to_write.serializeToJSON(new JSONWriter(writer), getRepository(), this);
             object_cache.put(record_to_write.getId(), this, record_to_write);  // Putting this call here ensures that all records that are in a bucket and loaded are in the cache
-        } catch (IOException e) {
-            throw new BucketException("I/O exception writing record");
-        } catch (JSONException e) {
-            throw new BucketException("JSON exception writing record");
+
+        } catch (IOException | JSONException e) {
+            throw new BucketException(e);
         }
     }
 
@@ -484,7 +497,7 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
     }
 
     Path dirPath() {
-        return repository.getRepoPath().resolve(bucket_name);
+        return repository.getRepositoryPath().resolve(bucket_name);
     }
 
     public Path filePath(final long id) {
@@ -530,6 +543,6 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
 
     private static Path getBucketPath(final String name, IRepository repo) {
 
-        return repo.getRepoPath().resolve(name);
+        return repo.getRepositoryPath().resolve(name);
     }
 }

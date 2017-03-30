@@ -31,9 +31,9 @@ public class BucketIndex implements IBucketIndex {
      * pre requisite: directory indicated by @param path has already been created
      * Implementation of backing file
      *
-     * @param label          - the label in the records being indexed
-     * @param dir            - the dir holding the index
-     * @param indexed_bucket - the bucket being indexed
+     * @param label          the label in the records being indexed
+     * @param dir            the dir holding the index
+     * @param indexed_bucket the bucket being indexed
      */
     BucketIndex(final String label, final Path dir, final DirectoryBackedIndexedBucket indexed_bucket) {
 

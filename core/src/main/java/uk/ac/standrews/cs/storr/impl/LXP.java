@@ -9,7 +9,6 @@ import uk.ac.standrews.cs.storr.impl.exceptions.KeyNotFoundException;
 import uk.ac.standrews.cs.storr.impl.exceptions.TypeMismatchFoundException;
 import uk.ac.standrews.cs.storr.interfaces.*;
 import uk.ac.standrews.cs.storr.types.Types;
-import uk.ac.standrews.cs.storr.util.ErrorHandling;
 
 import java.io.StringWriter;
 import java.util.*;
@@ -25,7 +24,7 @@ import static uk.ac.standrews.cs.storr.impl.Store.getNextFreePID;
 public class LXP implements ILXP, Comparable<LXP> {
 
     private long id;
-    protected HashMap<String, Object> map;
+    protected Map<String, Object> map;
     private IRepository repository = null;
     private IBucket bucket = null;
 
@@ -56,52 +55,21 @@ public class LXP implements ILXP, Comparable<LXP> {
             while (!reader.isEndOfStream()) {
 
                 String key = reader.key();
+                Object value = readValue(reader);
 
-                if (reader.have(JSONReader.LONG)) {
-                    long value = reader.longValue();
-                    this.put(key, value);
-                } else if (reader.have(JSONReader.INTEGER)) {
-                    int value = reader.intValue();
-                    this.put(key, value);
-                } else if (reader.have(JSONReader.DOUBLE)) {
-                    double value = reader.doubleValue();
-                    this.put(key, value);
-                } else if (reader.have(JSONReader.STRING)) {
-                    String value = reader.stringValue();
-                    this.put(key, value);
-                } else if (reader.have(JSONReader.BOOLEAN)) {
-                    Boolean value = reader.booleanValue();
-                    this.put(key, value);
-                } else if (reader.have(JSONReader.ARRAY)) {
-                    reader.nextSymbol(); // east the array symbol
-                    List l = new ArrayList();
-                    while (!reader.have(JSONReader.ENDARRAY)) {
-                        if (reader.have(JSONReader.LONG)) {
-                            l.add(reader.longValue());
-                        } else if (reader.have(JSONReader.INTEGER)) {
-                            l.add(reader.intValue());
-                        } else if (reader.have(JSONReader.DOUBLE)) {
-                            l.add(reader.doubleValue());
-                        } else if (reader.have(JSONReader.STRING)) {
-                            l.add(reader.stringValue());
-                        } else if (reader.have(JSONReader.BOOLEAN)) {
-                            l.add(reader.booleanValue());
-                        } else {
-                            throw new PersistentObjectException("Unexpected type in JSON Array");
-                        }
-                    }
-                    reader.nextSymbol(); // eat the end array
-                    reader.nextSymbol(); // eat the comma  //<<<<<<<<<<<<<, AL IS HERE - MAY BE WRONG!! TEST AGAIN.
-                    this.put(key, l);
+                if (value != null) {
+                    check(key);
+                    map.put(key, value);
+
                 } else {
-                    throw new PersistentObjectException("Unexpected type in JSON string: ");
+                    readArrayIfPresent(reader, key);
                 }
             }
         } catch (JSONException e) {
             if (reader.have(JSONReader.ENDOBJECT)) { // we are at the end and that is OK
                 return;
             }
-            // otherise bad stuff has happened
+            // otherwise bad stuff has happened
             throw new PersistentObjectException(e);
         }
     }
@@ -251,7 +219,6 @@ public class LXP implements ILXP, Comparable<LXP> {
         throw new KeyNotFoundException(key);
     }
 
-
     @Override
     public IStoreReference getRef(String key) throws KeyNotFoundException, TypeMismatchFoundException {
         if (containsKey(key)) {
@@ -268,10 +235,10 @@ public class LXP implements ILXP, Comparable<LXP> {
     @Override
     public IStoreReference getThisRef() throws PersistentObjectException {
         if (repository == null) {
-            throw new PersistentObjectException("LXP stored in unkown repository");
+            throw new PersistentObjectException("LXP stored in unknown repository");
         }
         if (bucket == null) {
-            throw new PersistentObjectException("LXP stored in unkown bucket");
+            throw new PersistentObjectException("LXP stored in unknown bucket");
         }
         return new StoreReference(repository, bucket, this);
     }
@@ -303,7 +270,7 @@ public class LXP implements ILXP, Comparable<LXP> {
     @Override
     public void put(String key, double value) throws IllegalKeyException {
         check(key);
-        map.put(key, new Double(value));
+        map.put(key, value);
     }
 
     @Override
@@ -328,7 +295,7 @@ public class LXP implements ILXP, Comparable<LXP> {
         return map.keySet();
     }
 
-    public void serializeFieldsToJSON(JSONWriter writer) throws JSONException {
+    private void serializeFieldsToJSON(JSONWriter writer) throws JSONException {
 
         for (Map.Entry<String, Object> entry : map.entrySet()) {
             String key = entry.getKey();
@@ -348,6 +315,7 @@ public class LXP implements ILXP, Comparable<LXP> {
     }
 
     private void writeSimpleValue(JSONWriter writer, Object value) throws JSONException {
+
         if (value instanceof Double) {
             writer.value(((Double) (value)).doubleValue());
         } else if (value instanceof Integer) {
@@ -363,13 +331,13 @@ public class LXP implements ILXP, Comparable<LXP> {
 
     public String toString() {
 
-        StringWriter sw = new StringWriter();
+        StringWriter writer = new StringWriter();
         try {
-            serializeToJSON(new JSONWriter(sw), repository, bucket);
+            serializeToJSON(new JSONWriter(writer), repository, bucket);
         } catch (JSONException e) {
-            ErrorHandling.error("in OID.toString()");
+            throw new RuntimeException(e);
         }
-        return sw.toString();
+        return writer.toString();
     }
 
     @Override
@@ -388,13 +356,57 @@ public class LXP implements ILXP, Comparable<LXP> {
         return (int) getId();
     }
 
-
     //****** Private methods ******//
-
 
     private void check(String key) throws IllegalKeyException {
         if (key == null || key.equals("")) {
             throw new IllegalKeyException("null key");
+        }
+    }
+
+    private Object readValue(JSONReader reader) throws JSONException {
+
+        if (reader.have(JSONReader.LONG)) {
+            return reader.longValue();
+        }
+        if (reader.have(JSONReader.INTEGER)) {
+            return reader.intValue();
+        }
+        if (reader.have(JSONReader.DOUBLE)) {
+            return reader.doubleValue();
+        }
+        if (reader.have(JSONReader.STRING)) {
+            return reader.stringValue();
+        }
+        if (reader.have(JSONReader.BOOLEAN)) {
+            return reader.booleanValue();
+        }
+        return null;
+    }
+
+    private void readArrayIfPresent(JSONReader reader, String key) throws JSONException, PersistentObjectException {
+
+        if (reader.have(JSONReader.ARRAY)) {
+
+            reader.nextSymbol(); // eat the array symbol
+            List list = new ArrayList();
+
+            while (!reader.have(JSONReader.ENDARRAY)) {
+
+                Object value = readValue(reader);
+
+                if (value != null) {
+                    list.add(value);
+                } else {
+                    throw new PersistentObjectException("Unexpected type in JSON Array");
+                }
+            }
+            reader.nextSymbol(); // eat the end array
+            reader.nextSymbol(); // eat the comma
+            put(key, list);
+
+        } else {
+            throw new PersistentObjectException("Unexpected type in JSON string: ");
         }
     }
 }

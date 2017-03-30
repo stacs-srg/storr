@@ -2,14 +2,10 @@ package uk.ac.standrews.cs.storr;
 
 import org.junit.Before;
 import org.junit.Test;
-import uk.ac.standrews.cs.storr.impl.CommonTest;
-import uk.ac.standrews.cs.storr.impl.LXP;
-import uk.ac.standrews.cs.storr.impl.StoreReference;
-import uk.ac.standrews.cs.storr.impl.TypeFactory;
+import uk.ac.standrews.cs.storr.impl.*;
 import uk.ac.standrews.cs.storr.impl.exceptions.*;
 import uk.ac.standrews.cs.storr.impl.transaction.exceptions.TransactionFailedException;
 import uk.ac.standrews.cs.storr.impl.transaction.interfaces.ITransaction;
-import uk.ac.standrews.cs.storr.interfaces.BucketKind;
 import uk.ac.standrews.cs.storr.interfaces.IBucket;
 import uk.ac.standrews.cs.storr.interfaces.ILXP;
 import uk.ac.standrews.cs.storr.interfaces.IReferenceType;

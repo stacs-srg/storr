@@ -1,60 +1,44 @@
 package uk.ac.standrews.cs.storr.impl;
 
-import uk.ac.standrews.cs.nds.util.ErrorHandling;
 import uk.ac.standrews.cs.storr.impl.exceptions.BucketException;
 import uk.ac.standrews.cs.storr.interfaces.IBucket;
 import uk.ac.standrews.cs.storr.interfaces.IInputStream;
 import uk.ac.standrews.cs.storr.interfaces.ILXP;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 public class BucketBackedInputStream<T extends ILXP> implements IInputStream<T> {
 
     private final IBucket<T> bucket;
-    private File directory;
 
-    public BucketBackedInputStream(final IBucket<T> bucket, final File directory) throws IOException {
+    BucketBackedInputStream(final IBucket<T> bucket) throws IOException {
 
         this.bucket = bucket;
-        this.directory = directory;
-
     }
 
     public Iterator<T> iterator() {
 
-        return new ILXPIterator(directory);
-    }
+        return new Iterator<T>() {
 
-    private class ILXPIterator implements Iterator<T> {
+            private Iterator<Long> oid_iterator = bucket.getOids().iterator();
 
-        private Iterator<Long> oid_iterator;
-
-        public ILXPIterator(File directory) {
-            oid_iterator = bucket.getOids().iterator();
-        }
-
-        public boolean hasNext() {
-            return oid_iterator.hasNext();
-        }
-
-        @Override
-        public T next() {
-
-            try {
-                return bucket.getObjectById(oid_iterator.next());
-
-            } catch (BucketException e) {
-                ErrorHandling.exceptionError(e, "Exception in iterator");
-                return null;
+            @Override
+            public boolean hasNext() {
+                return oid_iterator.hasNext();
             }
-        }
 
-        @Override
-        public void remove() {
-            ErrorHandling.error("remove called on stream - unsupported");
-            throw new UnsupportedOperationException("remove called on stream - unsupported");
-        }
+            @Override
+            public T next() {
+
+                try {
+                    return bucket.getObjectById(oid_iterator.next());
+
+                } catch (BucketException e) {
+                    throw new NoSuchElementException(e.getMessage());
+                }
+            }
+        };
     }
 }

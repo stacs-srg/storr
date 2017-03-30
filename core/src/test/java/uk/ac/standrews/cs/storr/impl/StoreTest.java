@@ -4,7 +4,6 @@ import org.junit.Before;
 import org.junit.Test;
 import uk.ac.standrews.cs.storr.impl.exceptions.RepositoryException;
 import uk.ac.standrews.cs.storr.impl.exceptions.StoreException;
-import uk.ac.standrews.cs.storr.interfaces.BucketKind;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -37,6 +36,6 @@ public class StoreTest extends CommonTest {
     public void checkRepositoryHasBeenCreatedTest() throws RepositoryException {
 
         assertTrue(store.repositoryExists(REPO_NAME));
-        assertEquals(repository.getRepoPath(), store.getRepository(REPO_NAME).getRepoPath());
+        assertEquals(repository.getRepositoryPath(), store.getRepository(REPO_NAME).getRepositoryPath());
     }
 }

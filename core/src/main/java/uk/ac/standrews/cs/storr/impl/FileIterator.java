@@ -11,8 +11,8 @@ public class FileIterator implements Iterator<File> {
 
     /**
      * @param directory          the directory to iterate over
-     * @param files_wanted       is true if the files in the directory should be returned
-     * @param directories_wanted is true if the directories in the directory should be returned
+     * @param files_wanted       true if the files in the directory should be returned
+     * @param directories_wanted true if the directories in the directory should be returned
      */
     public FileIterator(final File directory, final boolean files_wanted, final boolean directories_wanted) {
 

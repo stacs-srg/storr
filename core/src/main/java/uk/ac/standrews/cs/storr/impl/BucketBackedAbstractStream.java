@@ -10,7 +10,7 @@ public abstract class BucketBackedAbstractStream<T extends ILXP> {
 
     protected final IBucket<T> bucket;
 
-    public BucketBackedAbstractStream(final IBucket<T> bucket) {
+    BucketBackedAbstractStream(final IBucket<T> bucket) {
         this.bucket = bucket;
     }
 }

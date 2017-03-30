@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.storr.interfaces;
 
+import uk.ac.standrews.cs.storr.impl.BucketKind;
 import uk.ac.standrews.cs.storr.impl.exceptions.BucketException;
 
 import java.io.IOException;

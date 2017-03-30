@@ -2,7 +2,6 @@ package uk.ac.standrews.cs.storr.impl;
 
 import org.junit.Test;
 import uk.ac.standrews.cs.storr.impl.exceptions.RepositoryException;
-import uk.ac.standrews.cs.storr.interfaces.BucketKind;
 import uk.ac.standrews.cs.storr.interfaces.IBucket;
 
 import static org.junit.Assert.*;

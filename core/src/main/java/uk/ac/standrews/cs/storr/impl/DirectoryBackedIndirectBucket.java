@@ -8,23 +8,18 @@ import uk.ac.standrews.cs.storr.interfaces.*;
 
 import java.io.IOException;
 
-/**
- * Created by al on 03/10/2014.
- */
 public class DirectoryBackedIndirectBucket<T extends ILXP> extends DirectoryBackedBucket<T> {
 
-    public DirectoryBackedIndirectBucket(IRepository repository, String bucket_name) throws IOException, RepositoryException {
-        super(repository, bucket_name, BucketKind.INDIRECT);
+    DirectoryBackedIndirectBucket(IRepository repository, String bucket_name, boolean create_bucket) throws RepositoryException {
+        super(repository, bucket_name, BucketKind.INDIRECT, create_bucket);
     }
 
-    public DirectoryBackedIndirectBucket(IRepository repository, String bucket_name, ILXPFactory<T> tFactory) throws RepositoryException {
-        super(repository, bucket_name, BucketKind.INDIRECT, tFactory);
+    DirectoryBackedIndirectBucket(IRepository repository, String bucket_name, ILXPFactory<T> tFactory, boolean create_bucket) throws RepositoryException {
+        super(repository, bucket_name, BucketKind.INDIRECT, tFactory, create_bucket);
     }
 
     @Override
-    /**
-     * Writes an indirection record into the file system
-     */
+    // Writes an indirection record into the file system
     public void makePersistent(final T record) throws BucketException {
 
         try {
@@ -37,7 +32,7 @@ public class DirectoryBackedIndirectBucket<T extends ILXP> extends DirectoryBack
     @Override
     public IInputStream<T> getInputStream() throws BucketException {
         try {
-            return new BucketBackedInputStream(this, directory);
+            return new BucketBackedInputStream(this);
 
         } catch (IOException e) {
             throw new BucketException("I/O exception getting stream");

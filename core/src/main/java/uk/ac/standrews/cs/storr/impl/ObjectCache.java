@@ -16,20 +16,26 @@ import java.util.WeakHashMap;
  */
 public class ObjectCache implements IObjectCache {
 
-    Map<Long, Data> map = new WeakHashMap<Long, Data>();
-
-    public ObjectCache() {}
+    private final Map<Long, Data> map = new WeakHashMap<>();
 
     /**
      * Adds the data to the object cache.
-     * @param oid of the record being added to the cache
+     *
+     * @param oid    of the record being added to the cache
      * @param bucket the bucket from which the object came.
-     * @param tuple the tuple added to the cache
+     * @param tuple  the tuple added to the cache
      */
     public void put(long oid, IBucket bucket, ILXP tuple) {
 
-//        Diagnostic.trace( "** CACHE ADD ** " + oid + " tuple: " + tuple + " class: " + tuple.getClass().getName());
         map.put(oid, new Data(bucket, tuple));
+    }
+
+    /**
+     * @param oid - the oid to be looked up
+     * @return true if the oid is loaded
+     */
+    public boolean contains(long oid) {
+        return map.containsKey(oid);
     }
 
     /**
@@ -37,43 +43,29 @@ public class ObjectCache implements IObjectCache {
      * @return the Bucket from which the oid was loaded
      */
     public IBucket getBucket(long oid) {
-        Data d = map.get(oid);
-        if (d == null) {
-            return null;
-        }
-        return d.bucket;
-    }
 
-    /**
-     * @param oid - the oid to be loooked up
-     * @return true if the oid is loaded
-     */
-    public boolean contains(long oid) {
-        return map.containsKey(oid);
+        Data data = map.get(oid);
+        return data == null ? null : data.bucket;
     }
 
     @Override
     public ILXP getObject(long oid) {
-        Data d = map.get(oid);
-        if (d == null) {
-//            Diagnostic.trace( "** CACHE MISS ** " + oid );
-            return null;
-        }
-//        Diagnostic.trace( "** CACHE HIT ** " + oid + " tuple: " + d.tuple + " class: " + d.tuple.getClass().getName());
-        return d.tuple;
+
+        Data data = map.get(oid);
+        return (data == null) ? null : data.tuple;
     }
 
     /*
      * This private class is used to track tuples stored in buckets
      */
-     static class Data {
-        public IBucket bucket;
-        public ILXP tuple;
+    static class Data {
 
-        public Data(IBucket bucket, ILXP tuple) {
+        IBucket bucket;
+        ILXP tuple;
+
+        Data(IBucket bucket, ILXP tuple) {
             this.bucket = bucket;
             this.tuple = tuple;
         }
     }
-
 }

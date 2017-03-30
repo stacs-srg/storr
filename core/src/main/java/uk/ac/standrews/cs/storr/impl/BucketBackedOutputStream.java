@@ -16,8 +16,6 @@ public class BucketBackedOutputStream<T extends ILXP> extends BucketBackedAbstra
 
     @Override
     public void add(final T record) throws BucketException {
-            bucket.makePersistent(record);
-
+        bucket.makePersistent(record);
     }
-
 }
