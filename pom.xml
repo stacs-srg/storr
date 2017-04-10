@@ -3,14 +3,14 @@
     <modelVersion>4.0.0</modelVersion>
 
     <modules>
-        <module>core</module>
+        <module>storr-core</module>
         <module>storr-rest</module>
         <module>storr-jetty</module>
     </modules>
 
     <parent>
         <groupId>uk.ac.standrews.cs</groupId>
-        <artifactId>common-pom</artifactId>
+        <artifactId>common-pom-2</artifactId>
         <version>2.0-SNAPSHOT</version>
     </parent>
 
@@ -18,51 +18,21 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>storr</name>
+
     <description>JSON store</description>
-
-    <properties>
-        <jdk.version>1.8</jdk.version>
-        <maven-compiler-plugin.version>3.5.1</maven-compiler-plugin.version>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-
-        <!-- The directory on Beast where the files are deployed after a successful Jenkins build.-->
-        <repository.home>file:///data/jenkins/remote_maven_repository/</repository.home>
-    </properties>
-
-    <distributionManagement>
-        <repository>
-            <id>uk.ac.standrews.cs.jenkins.distribution.management</id>
-            <name>Jenkins Distribution Management</name>
-            <url>${repository.home}</url>
-        </repository>
-    </distributionManagement>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>${maven-compiler-plugin.version}</version>
-                <configuration>
-                    <source>${jdk.version}</source>
-                    <target>${jdk.version}</target>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
+    <url>https://stacs-srg.github.io/storr/</url>
+    <inceptionYear>2015</inceptionYear>
 
     <repositories>
+
+        <!-- Repository to which this module is deployed, and others retrieved from.                 -->
+        <!-- This has to be replicated from the parent POM so the parent POM can be found.           -->
         <repository>
             <id>uk.ac.standrews.cs.maven.repository</id>
             <name>School of Computer Science Maven Repository</name>
             <url>http://maven.cs.st-andrews.ac.uk/</url>
-            <snapshots>
-                <updatePolicy>always</updatePolicy>
-            </snapshots>
         </repository>
+
     </repositories>
-
-
 
 </project>  
