@@ -19,15 +19,15 @@ import java.nio.file.Path;
  */
 public class SimplestExample {
 
-    public static void main() throws IOException, StoreException, RepositoryException, BucketException {
+    public static void main(String[] args) throws IOException, StoreException, RepositoryException, BucketException {
 
-        Path tempStorepath = Files.createTempDirectory("/tmp/xyz");
-        IStore store = new Store(tempStorepath);
+        Path tempStorePath = Files.createTempDirectory("/tmp/xyz");
+        IStore store = new Store(tempStorePath);
         IRepository repo = store.makeRepository("repo");
         IBucket b = repo.makeBucket("bucket", BucketKind.DIRECTORYBACKED);
 
         LXP lxp = new LXP();
-        lxp.put("age", "42");
+        lxp.put("age", 42);
         lxp.put("address", "home");
 
         b.makePersistent(lxp);

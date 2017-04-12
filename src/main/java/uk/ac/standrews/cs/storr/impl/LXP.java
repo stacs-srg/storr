@@ -16,7 +16,7 @@ import java.util.*;
 import static uk.ac.standrews.cs.storr.impl.Store.getNextFreePID;
 
 /**
- * This is a labelled Cross Product (a tuple).
+ * This is a Labelled Cross Product (a tuple).
  * This is the basic unit that is stored in Buckets.
  * Higher order language level types may be constructed above this basic building block.
  * LXP provides a thin wrapper over a Map (providing name value lookup) along with identity and the ability to save and recover persistent versions (encoded in JSON).

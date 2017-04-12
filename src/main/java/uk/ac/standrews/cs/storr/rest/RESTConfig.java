@@ -1,7 +1,7 @@
-package uk.ac.standrews.cs.storr;
+package uk.ac.standrews.cs.storr.rest;
 
 import org.glassfish.jersey.server.ResourceConfig;
-import uk.ac.standrews.cs.storr.json.JacksonProvider;
+import uk.ac.standrews.cs.storr.rest.json.JacksonProvider;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"

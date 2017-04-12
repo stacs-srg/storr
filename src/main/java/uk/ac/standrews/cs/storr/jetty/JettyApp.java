@@ -3,7 +3,7 @@ package uk.ac.standrews.cs.storr.jetty;
 import org.eclipse.jetty.server.Server;
 import org.glassfish.jersey.jetty.JettyHttpContainerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
-import uk.ac.standrews.cs.storr.RESTConfig;
+import uk.ac.standrews.cs.storr.rest.RESTConfig;
 
 import javax.ws.rs.core.UriBuilder;
 import java.net.URI;

@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.storr.json;
+package uk.ac.standrews.cs.storr.rest.json;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.MapperFeature;
