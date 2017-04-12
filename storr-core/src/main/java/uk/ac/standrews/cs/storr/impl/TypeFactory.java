@@ -1,11 +1,10 @@
 package uk.ac.standrews.cs.storr.impl;
 
-
 import uk.ac.standrews.cs.storr.impl.exceptions.*;
 import uk.ac.standrews.cs.storr.interfaces.*;
 import uk.ac.standrews.cs.storr.types.LXPReferenceType;
 import uk.ac.standrews.cs.storr.types.Types;
-import uk.ac.standrews.cs.storr.util.ErrorHandling;
+import uk.ac.standrews.cs.utilities.archive.ErrorHandling;
 
 import java.util.HashMap;
 

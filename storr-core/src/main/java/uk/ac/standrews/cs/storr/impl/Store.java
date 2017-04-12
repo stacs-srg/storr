@@ -1,13 +1,12 @@
 package uk.ac.standrews.cs.storr.impl;
 
-import uk.ac.standrews.cs.nds.util.ErrorHandling;
 import uk.ac.standrews.cs.storr.impl.exceptions.RepositoryException;
 import uk.ac.standrews.cs.storr.impl.exceptions.StoreException;
 import uk.ac.standrews.cs.storr.impl.transaction.impl.TransactionManager;
 import uk.ac.standrews.cs.storr.impl.transaction.interfaces.ITransactionManager;
 import uk.ac.standrews.cs.storr.interfaces.IRepository;
 import uk.ac.standrews.cs.storr.interfaces.IStore;
-import uk.ac.standrews.cs.storr.util.FileManipulation;
+import uk.ac.standrews.cs.utilities.FileManipulation;
 
 import java.io.File;
 import java.io.IOException;
@@ -66,7 +65,7 @@ public class Store implements IStore {
     @Override
     public IRepository makeRepository(final String name) throws RepositoryException {
 
-        if (!legal_name(name)) {
+        if (!legalName(name)) {
             throw new RepositoryException("Illegal Repository name <" + name + ">");
         }
         createRepository(name);
@@ -111,7 +110,7 @@ public class Store implements IStore {
 
     @Override
     public Iterator<IRepository> getIterator() {
-        return new RepoIterator(this, repository_path);
+        return new RepositoryIterator(this, repository_path);
     }
 
 
@@ -138,6 +137,7 @@ public class Store implements IStore {
         do {
             next_prn = RANDOM.nextLong();
         } while (next_prn <= 0);
+
         return next_prn;
     }
 
@@ -165,6 +165,7 @@ public class Store implements IStore {
     }
 
     private void createRepository(String name) throws RepositoryException {
+
         if (repositoryExists(name)) {
             throw new RepositoryException("Repo: " + name + " already exists at: " + getRepoPath(name));
         }
@@ -177,17 +178,16 @@ public class Store implements IStore {
         }
     }
 
-
-    private static boolean legal_name(String name) { // TODO May want to strengthen these conditions
+    private static boolean legalName(String name) { // TODO May want to strengthen these conditions
         return name != null && !name.equals("");
     }
 
-    private static class RepoIterator implements Iterator<IRepository> {
+    private static class RepositoryIterator implements Iterator<IRepository> {
 
         private final Iterator<File> file_iterator;
         private final IStore store;
 
-        public RepoIterator(final IStore store, final Path repo_directory) {
+        public RepositoryIterator(final IStore store, final Path repo_directory) {
 
             this.store = store;
             file_iterator = new FileIterator(repo_directory.toFile(), false, true);
@@ -206,8 +206,7 @@ public class Store implements IStore {
                 return store.getRepository(name);
 
             } catch (RepositoryException e) {
-                ErrorHandling.exceptionError(e, "RepositoryException in iterator");
-                return null;
+                throw new RuntimeException("RepositoryException in iterator", e);
             }
         }
 

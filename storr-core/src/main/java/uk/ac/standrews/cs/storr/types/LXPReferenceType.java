@@ -6,8 +6,8 @@ import uk.ac.standrews.cs.storr.impl.LXP;
 import uk.ac.standrews.cs.storr.impl.StoreReference;
 import uk.ac.standrews.cs.storr.impl.exceptions.*;
 import uk.ac.standrews.cs.storr.interfaces.*;
-import uk.ac.standrews.cs.storr.util.ErrorHandling;
-import uk.ac.standrews.cs.storr.util.FileManipulation;
+import uk.ac.standrews.cs.utilities.FileManipulation;
+import uk.ac.standrews.cs.utilities.archive.ErrorHandling;
 
 import java.io.BufferedReader;
 import java.io.IOException;

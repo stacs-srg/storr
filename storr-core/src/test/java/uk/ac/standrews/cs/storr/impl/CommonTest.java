@@ -6,14 +6,14 @@ import uk.ac.standrews.cs.storr.impl.exceptions.RepositoryException;
 import uk.ac.standrews.cs.storr.impl.exceptions.StoreException;
 import uk.ac.standrews.cs.storr.interfaces.IRepository;
 import uk.ac.standrews.cs.storr.interfaces.IStore;
-import uk.ac.standrews.cs.storr.util.FileManipulation;
+import uk.ac.standrews.cs.utilities.FileManipulation;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-public class CommonTest {
+public abstract class CommonTest {
 
     static final String REPOSITORY_NAME = "repo";
 

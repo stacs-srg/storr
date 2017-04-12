@@ -1,7 +1,7 @@
 package uk.ac.standrews.cs.storr.types;
 
 import uk.ac.standrews.cs.storr.interfaces.IType;
-import uk.ac.standrews.cs.storr.util.ErrorHandling;
+import uk.ac.standrews.cs.utilities.archive.ErrorHandling;
 
 import java.util.List;
 

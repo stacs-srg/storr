@@ -7,7 +7,7 @@ import uk.ac.standrews.cs.storr.impl.exceptions.StoreException;
 import uk.ac.standrews.cs.storr.impl.transaction.exceptions.TransactionFailedException;
 import uk.ac.standrews.cs.storr.impl.transaction.interfaces.ITransaction;
 import uk.ac.standrews.cs.storr.interfaces.IBucket;
-import uk.ac.standrews.cs.storr.util.ErrorHandling;
+import uk.ac.standrews.cs.utilities.archive.ErrorHandling;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,27 +17,28 @@ import java.util.List;
  */
 public class Transaction implements ITransaction {
 
-    public static final String LOG_KEY = "LOG";
-    public static final String START_KEY = "START";
+    static final String LOG_KEY = "LOG";
+    private static final String START_KEY = "START";
 
-    public static final String START_RECORD_MARKER = "%/n";
-    public static final String END_RECORD_MARKER = "/n$";
-    public static final String UPDATE_RECORD_SEPARATOR = "|";
-    public static final String LOG_RECORD_SEPARATOR = "/n";
+    static final String START_RECORD_MARKER = "%/n";
+    static final String END_RECORD_MARKER = "/n$";
+    static final String UPDATE_RECORD_SEPARATOR = "|";
+    static final String LOG_RECORD_SEPARATOR = "/n";
 
-    private final TransactionManager tm;
+    private final TransactionManager transaction_manager;
     private final IBucket log;
     private final long start_record_id;
-    String transaction_id;
-    boolean active = true;
-    List<OverwriteRecord> updates = new ArrayList<>();
+    private final String transaction_id;
+    private boolean active = true;
+    private final List<OverwriteRecord> updates = new ArrayList<>();
 
-    public Transaction(TransactionManager tm) throws TransactionFailedException {
-        this.tm = tm;
+    Transaction(TransactionManager transaction_manager) throws TransactionFailedException {
+
+        this.transaction_manager = transaction_manager;
         transaction_id = Long.toString(Thread.currentThread().getId()); // TODO this is good enough for a single machine - need to do more work for multiple node support
-        log = tm.getLog();
+        log = transaction_manager.getLog();
         try {
-            start_record_id = write_start_record();
+            start_record_id = writeStartRecord();
         } catch (StoreException | BucketException e) {
             throw new TransactionFailedException(e.getMessage());
         }
@@ -45,20 +46,21 @@ public class Transaction implements ITransaction {
 
     @Override
     public synchronized void commit() throws TransactionFailedException {
+
         if (!active) {
             throw new TransactionFailedException("Transaction not active");
         }
-        close_transaction();
+        closeTransaction();
 
         long commit_record_id = 0;
         try {
-            commit_record_id = write_commit_record();   // Once this returns the transaction is durable
-            delete_start_record();
+            commit_record_id = writeCommitRecord();   // Once this returns the transaction is durable
+            deleteStartRecord();
         } catch (StoreException | BucketException e) {
             throw new TransactionFailedException(e);
         }
         swizzle_records();                             // over-writes the records in the store with the shadows.
-        remove_commit_record(commit_record_id);      // cleans up the log
+        removeCommitRecord(commit_record_id);      // cleans up the log
     }
 
     @Override
@@ -67,8 +69,8 @@ public class Transaction implements ITransaction {
             throw new IllegalStateException("Transaction " + getId() + " inactive");
         }
 
-        close_transaction();
-        delete_start_record();
+        closeTransaction();
+        deleteStartRecord();
         tidy_up();
     }
 
@@ -119,12 +121,12 @@ public class Transaction implements ITransaction {
      * This is a trade off - one more write and delete during a transaction versus more length recovery.
      * This could be removed and the correctness of the transaction mechanism would not be compromised.
     */
-    private long write_start_record() throws StoreException, BucketException {
+    private long writeStartRecord() throws StoreException, BucketException {
 
-        return write_xxx_record(START_KEY, transaction_id);
+        return writeXXXRecord(START_KEY, transaction_id);
     }
 
-    private void delete_start_record() {
+    private void deleteStartRecord() {
         try {
             log.delete(start_record_id);
         } catch (BucketException e) {
@@ -132,20 +134,18 @@ public class Transaction implements ITransaction {
         }
     }
 
-
     /*
      * Write a commit record to the store to support durability in the event of machine or JVM crash
      */
-    private long write_commit_record() throws StoreException, BucketException {
+    private long writeCommitRecord() throws StoreException, BucketException {
 
-        return write_xxx_record(LOG_KEY, stringify().toString());
-
+        return writeXXXRecord(LOG_KEY, stringify().toString());
     }
 
     /*
      * Write some kind of record to the store to support durability in the event of machine or JVM crash
      */
-    private long write_xxx_record(String key, String data) throws StoreException, BucketException {
+    private long writeXXXRecord(String key, String data) throws StoreException, BucketException {
 
         LXP commit_record = new LXP();
 
@@ -161,16 +161,16 @@ public class Transaction implements ITransaction {
 
     }
 
-    private void close_transaction() {
+    private void closeTransaction() {
 
         active = false;
-        tm.removeTransaction(this);
+        transaction_manager.removeTransaction(this);
     }
 
     /*
      * Remove the commit record from the store
     */
-    private void remove_commit_record(long commit_record_id) {
+    private void removeCommitRecord(long commit_record_id) {
 
         try {
             log.delete(commit_record_id);
@@ -191,6 +191,4 @@ public class Transaction implements ITransaction {
             p.bucket.swizzle(p.oid);
         }
     }
-
-
 }

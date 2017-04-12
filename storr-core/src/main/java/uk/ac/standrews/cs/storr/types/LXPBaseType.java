@@ -1,7 +1,7 @@
 package uk.ac.standrews.cs.storr.types;
 
 import uk.ac.standrews.cs.storr.interfaces.IType;
-import uk.ac.standrews.cs.storr.util.ErrorHandling;
+import uk.ac.standrews.cs.utilities.archive.ErrorHandling;
 
 /**
  * Created by al on 20/06/2014.
@@ -50,5 +50,4 @@ public enum LXPBaseType implements IType {
             return value instanceof Boolean;
         }
     }
-
 }

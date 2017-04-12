@@ -2,9 +2,6 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/core/core.iml" filepath="$PROJECT_DIR$/core/core.iml" />
-      <module fileurl="file://$PROJECT_DIR$/storr-jetty/jetty.iml" filepath="$PROJECT_DIR$/storr-jetty/jetty.iml" />
-      <module fileurl="file://$PROJECT_DIR$/storr-rest/rest.iml" filepath="$PROJECT_DIR$/storr-rest/rest.iml" />
       <module fileurl="file://$PROJECT_DIR$/storr.iml" filepath="$PROJECT_DIR$/storr.iml" />
       <module fileurl="file://$PROJECT_DIR$/storr-core/storr-core.iml" filepath="$PROJECT_DIR$/storr-core/storr-core.iml" />
       <module fileurl="file://$PROJECT_DIR$/storr-jetty/storr-jetty.iml" filepath="$PROJECT_DIR$/storr-jetty/storr-jetty.iml" />

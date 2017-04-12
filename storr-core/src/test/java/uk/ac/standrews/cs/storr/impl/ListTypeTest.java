@@ -9,7 +9,7 @@ import uk.ac.standrews.cs.storr.impl.exceptions.RepositoryException;
 import uk.ac.standrews.cs.storr.impl.exceptions.StoreException;
 import uk.ac.standrews.cs.storr.interfaces.IBucket;
 import uk.ac.standrews.cs.storr.interfaces.IReferenceType;
-import uk.ac.standrews.cs.storr.util.FileManipulation;
+import uk.ac.standrews.cs.utilities.FileManipulation;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -36,7 +36,6 @@ public class ListTypeTest extends CommonTest {
     private IBucket<ClassWithListOfScalars> scalar_list_bucket;
     private IBucket<ClassWithListOfRefs> ref_list_bucket;
 
-    private ClassWithListOfScalarsFactory classWithListOfScalarsFactory;
     private ClassWithListOfRefsFactory classWithListOfRefsFactory;
 
     @Before
@@ -48,7 +47,7 @@ public class ListTypeTest extends CommonTest {
         IReferenceType classwithlistofscalars_type = tf.createType(ClassWithListOfScalars.class, "classwithlistofscalars");
         IReferenceType classwithlistofrefs_type = tf.createType(ClassWithListOfRefs.class, "classwithlistofrefs");
 
-        classWithListOfScalarsFactory = new ClassWithListOfScalarsFactory(classwithlistofscalars_type.getId());
+        ClassWithListOfScalarsFactory classWithListOfScalarsFactory = new ClassWithListOfScalarsFactory(classwithlistofscalars_type.getId());
         classWithListOfRefsFactory = new ClassWithListOfRefsFactory(classwithlistofrefs_type.getId());
 
         lxp_bucket = repository.makeBucket(lxpBucketName, BucketKind.DIRECTORYBACKED);
@@ -102,7 +101,7 @@ public class ListTypeTest extends CommonTest {
 
         // Now try and read back - avoid all cache etc.
 
-        Path file_path = store_path.resolve("REPOS").resolve(REPOSITORY_NAME).resolve(classWithListOfRefsBucketName).resolve(new Long(id).toString());
+        Path file_path = store_path.resolve("REPOS").resolve(REPOSITORY_NAME).resolve(classWithListOfRefsBucketName).resolve(Long.toString(id));
         BufferedReader reader = Files.newBufferedReader(file_path, FileManipulation.FILE_CHARSET);
 
         LXP lxp3 = new LXP(id, new JSONReader(reader), repository, lxp_bucket);

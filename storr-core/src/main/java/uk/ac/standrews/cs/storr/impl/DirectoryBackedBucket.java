@@ -8,8 +8,8 @@ import uk.ac.standrews.cs.storr.impl.exceptions.*;
 import uk.ac.standrews.cs.storr.impl.transaction.impl.Transaction;
 import uk.ac.standrews.cs.storr.interfaces.*;
 import uk.ac.standrews.cs.storr.types.Types;
-import uk.ac.standrews.cs.storr.util.ErrorHandling;
-import uk.ac.standrews.cs.storr.util.FileManipulation;
+import uk.ac.standrews.cs.utilities.FileManipulation;
+import uk.ac.standrews.cs.utilities.archive.ErrorHandling;
 
 import java.io.*;
 import java.nio.file.Files;

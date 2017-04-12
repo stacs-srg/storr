@@ -1,7 +1,7 @@
 package uk.ac.standrews.cs.storr.impl;
 
 import uk.ac.standrews.cs.storr.interfaces.IBucket;
-import uk.ac.standrews.cs.storr.util.ErrorHandling;
+import uk.ac.standrews.cs.utilities.archive.ErrorHandling;
 
 import java.io.IOException;
 import java.nio.file.*;

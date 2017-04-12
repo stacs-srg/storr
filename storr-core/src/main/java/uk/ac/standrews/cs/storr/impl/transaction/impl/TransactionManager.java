@@ -9,7 +9,7 @@ import uk.ac.standrews.cs.storr.interfaces.IBucket;
 import uk.ac.standrews.cs.storr.interfaces.ILXP;
 import uk.ac.standrews.cs.storr.interfaces.IRepository;
 import uk.ac.standrews.cs.storr.interfaces.IStore;
-import uk.ac.standrews.cs.storr.util.ErrorHandling;
+import uk.ac.standrews.cs.utilities.archive.ErrorHandling;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -19,8 +19,8 @@ import java.util.Iterator;
  */
 public class TransactionManager implements ITransactionManager {
 
-    private static final String transaction_repo_name = "Transaction_repository";
-    private static final String transaction_bucket_name = "Transactions";
+    private static final String TRANSACTION_REPOSITORY_NAME = "Transaction_repository";
+    private static final String TRANSACTION_BUCKET_NAME = "Transactions";
 
     private IBucket transaction_bucket = null;
     private IRepository transaction_repo = null;
@@ -31,8 +31,8 @@ public class TransactionManager implements ITransactionManager {
     public TransactionManager(IStore store) throws RepositoryException {
 
         this.store = store;
-        getRepo(transaction_repo_name);
-        transaction_bucket = getBucket(transaction_bucket_name);
+        setupRepository(TRANSACTION_REPOSITORY_NAME);
+        transaction_bucket = getBucket(TRANSACTION_BUCKET_NAME);
         cleanupAfterRestart();
     }
 
@@ -208,7 +208,7 @@ public class TransactionManager implements ITransactionManager {
         }
     }
 
-    private void getRepo(String transaction_repo_name) throws RepositoryException {
+    private void setupRepository(String transaction_repo_name) throws RepositoryException {
 
         if (store.repositoryExists(transaction_repo_name)) {
             transaction_repo = store.getRepository(transaction_repo_name);
