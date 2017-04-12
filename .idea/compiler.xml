@@ -1,27 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="CompilerConfiguration">
-    <annotationProcessing>
-      <profile name="Maven default annotation processors profile" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <module name="core" />
-        <module name="jetty" />
-        <module name="rest" />
-        <module name="storr-core" />
-        <module name="storr-jetty" />
-        <module name="storr-rest" />
-      </profile>
-    </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="core" target="1.8" />
-      <module name="jetty" target="1.8" />
-      <module name="rest" target="1.8" />
       <module name="storr" target="1.8" />
-      <module name="storr-core" target="1.8" />
-      <module name="storr-jetty" target="1.8" />
-      <module name="storr-rest" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>
