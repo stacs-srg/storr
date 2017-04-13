@@ -5,8 +5,8 @@
              which uses Javadoc format, therefore causing confusion with the actual class-level
              Javadoc. This format puts a single asterix in the first line rather than two. -->
         <firstLine>/*</firstLine>
-        <beforeEachLine>*</beforeEachLine>
-        <endLine>*/</endLine>
+        <beforeEachLine> * </beforeEachLine>
+        <endLine> */</endLine>
         <firstLineDetectionPattern>(\s|\t)*/\*.*$</firstLineDetectionPattern>
         <lastLineDetectionPattern>.*\*/(\s|\t)*$</lastLineDetectionPattern>
         <allowBlankLines>false</allowBlankLines>
