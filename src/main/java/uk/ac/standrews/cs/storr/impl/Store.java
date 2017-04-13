@@ -1,3 +1,19 @@
+/*
+ * Copyright 2017 Systems Research Group, University of St Andrews:
+ * <https://github.com/stacs-srg>
+ *
+ * This file is part of the module storr.
+ *
+ * storr is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * storr is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with storr. If not, see
+ * <http://www.gnu.org/licenses/>.
+ */
 package uk.ac.standrews.cs.storr.impl;
 
 import uk.ac.standrews.cs.storr.impl.exceptions.RepositoryException;
@@ -52,6 +68,30 @@ public class Store implements IStore {
         }
     }
 
+    /**
+     * @return the next free pid
+     */
+    static long getNextFreePID() {
+        return getPRN();
+    }
+
+    /**
+     * @return a pseudo random positive long
+     */
+    private static long getPRN() {
+
+        long next_prn;
+        do {
+            next_prn = RANDOM.nextLong();
+        } while (next_prn <= 0);
+
+        return next_prn;
+    }
+
+    private static boolean legalName(String name) { // TODO May want to strengthen these conditions
+        return name != null && !name.equals("");
+    }
+
     @Override
     public ITransactionManager getTransactionManager() {
         return transaction_manager;
@@ -92,6 +132,8 @@ public class Store implements IStore {
         }
     }
 
+    ////////////////// private and protected methods //////////////////
+
     @Override
     public IRepository getRepository(String name) throws RepositoryException {
 
@@ -113,32 +155,9 @@ public class Store implements IStore {
         return new RepositoryIterator(this, repository_path);
     }
 
-
     @Override
     public Watcher getWatcher() {
         return watcher;
-    }
-
-    ////////////////// private and protected methods //////////////////
-
-    /**
-     * @return the next free pid
-     */
-    static long getNextFreePID() {
-        return getPRN();
-    }
-
-    /**
-     * @return a pseudo random positive long
-     */
-    private static long getPRN() {
-
-        long next_prn;
-        do {
-            next_prn = RANDOM.nextLong();
-        } while (next_prn <= 0);
-
-        return next_prn;
     }
 
     private void checkCreate(Path dir) throws StoreException {
@@ -176,10 +195,6 @@ public class Store implements IStore {
         } catch (IOException e) {
             throw new RepositoryException(e.getMessage());
         }
-    }
-
-    private static boolean legalName(String name) { // TODO May want to strengthen these conditions
-        return name != null && !name.equals("");
     }
 
     private static class RepositoryIterator implements Iterator<IRepository> {

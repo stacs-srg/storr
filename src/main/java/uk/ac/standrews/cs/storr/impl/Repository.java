@@ -1,3 +1,19 @@
+/*
+ * Copyright 2017 Systems Research Group, University of St Andrews:
+ * <https://github.com/stacs-srg>
+ *
+ * This file is part of the module storr.
+ *
+ * storr is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * storr is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with storr. If not, see
+ * <http://www.gnu.org/licenses/>.
+ */
 package uk.ac.standrews.cs.storr.impl;
 
 import uk.ac.standrews.cs.storr.impl.exceptions.RepositoryException;
@@ -50,6 +66,10 @@ public class Repository implements IRepository {
                 throw new RepositoryException(repository_directory.getAbsolutePath() + " exists but is not a directory");
             }
         }
+    }
+
+    static boolean legalName(String name) { // TODO May want to strengthen these conditions
+        return name != null && !name.equals("");
     }
 
     @Override
@@ -141,10 +161,6 @@ public class Repository implements IRepository {
     private Path getBucketPath(final String name) {
 
         return repository_path.resolve(name);
-    }
-
-    static boolean legalName(String name) { // TODO May want to strengthen these conditions
-        return name != null && !name.equals("");
     }
 
     private static class BucketNamesIterator implements Iterator<String> {

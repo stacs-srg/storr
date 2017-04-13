@@ -1,17 +1,18 @@
 # storr
 
-This file will contain info about this project
+A file-based record storage library.
 
 ## Usage via maven
 
 ```
 <dependency>
+    <groupId>uk.ac.standrews.cs</groupId>
     <artifactId>storr</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <packaging>pom</packaging>
 </dependency>
 ```
 
-## Examples
+## See also
 
-Find examples on how to use storr at the following [link](https://github.com/stacs-srg/storr/tree/master/src/main/java/uk/ac/standrews/cs/storr/examples).
+* [relevant Maven goals](https://github.com/stacs-srg/hub/tree/master/maven) (private)
+* [usage examples](https://github.com/stacs-srg/storr/tree/master/src/main/java/uk/ac/standrews/cs/storr/examples)
