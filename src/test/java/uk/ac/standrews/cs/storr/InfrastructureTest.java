@@ -18,6 +18,7 @@ package uk.ac.standrews.cs.storr;
 
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import uk.ac.standrews.cs.storr.impl.*;
 import uk.ac.standrews.cs.storr.impl.exceptions.*;
@@ -221,7 +222,11 @@ public class InfrastructureTest extends CommonTest {
     }
 
     @Test
+    @Ignore
     public synchronized void testTransactionConflict() throws RepositoryException, IllegalKeyException, BucketException, StoreException {
+
+        // TODO this test is broken since the fail() calls in UpdateThread won't be detected here.
+
         IBucket b = repository.getBucket(generic_bucket_name1);
 
         LXP lxp = new LXP();
@@ -242,10 +247,7 @@ public class InfrastructureTest extends CommonTest {
             e.printStackTrace();
         }
 
-        if (conflict_counter.get() != 1) {
-            System.out.println("conflict_counter = " + conflict_counter);
-            fail("Conflict counter not 1");
-        }
+        assertEquals(1,conflict_counter.get() );
     }
 
     @Test
