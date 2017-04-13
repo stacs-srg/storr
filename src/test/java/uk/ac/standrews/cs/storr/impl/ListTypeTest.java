@@ -2,11 +2,11 @@ package uk.ac.standrews.cs.storr.impl;
 
 import org.junit.Before;
 import org.junit.Test;
-import uk.ac.standrews.cs.nds.persistence.PersistentObjectException;
-import uk.ac.standrews.cs.nds.rpc.stream.JSONReader;
 import uk.ac.standrews.cs.storr.impl.exceptions.BucketException;
+import uk.ac.standrews.cs.storr.impl.exceptions.PersistentObjectException;
 import uk.ac.standrews.cs.storr.impl.exceptions.RepositoryException;
 import uk.ac.standrews.cs.storr.impl.exceptions.StoreException;
+import uk.ac.standrews.cs.storr.impl.temp.JSONReader;
 import uk.ac.standrews.cs.storr.interfaces.IBucket;
 import uk.ac.standrews.cs.storr.interfaces.IReferenceType;
 import uk.ac.standrews.cs.utilities.FileManipulation;
@@ -84,13 +84,11 @@ public class ListTypeTest extends CommonTest {
         LXP lxp1 = new LXP();
         lxp1.put("99", 99);
         lxp_bucket.makePersistent(lxp1);
-        long lxp1_id = lxp1.getId();
         LXP lxp2 = new LXP();
         lxp2.put("88", 88);
         lxp_bucket.makePersistent(lxp2);
-        long lxp2_id = lxp2.getId();
 
-        List<LXP> list = new ArrayList();
+        List<LXP> list = new ArrayList<>();
         list.add(lxp1);
         list.add(lxp2);
 

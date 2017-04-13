@@ -1,7 +1,8 @@
 package uk.ac.standrews.cs.storr.interfaces;
 
-import uk.ac.standrews.cs.nds.persistence.PersistentObjectException;
-import uk.ac.standrews.cs.nds.rpc.stream.JSONReader;
+
+import uk.ac.standrews.cs.storr.impl.exceptions.PersistentObjectException;
+import uk.ac.standrews.cs.storr.impl.temp.JSONReader;
 
 /**
  * A Factory interface that permits typed views over LXPs

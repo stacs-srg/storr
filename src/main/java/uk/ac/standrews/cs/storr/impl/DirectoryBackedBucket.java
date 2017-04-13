@@ -2,9 +2,8 @@ package uk.ac.standrews.cs.storr.impl;
 
 import org.json.JSONException;
 import org.json.JSONWriter;
-import uk.ac.standrews.cs.nds.persistence.PersistentObjectException;
-import uk.ac.standrews.cs.nds.rpc.stream.JSONReader;
 import uk.ac.standrews.cs.storr.impl.exceptions.*;
+import uk.ac.standrews.cs.storr.impl.temp.JSONReader;
 import uk.ac.standrews.cs.storr.impl.transaction.impl.Transaction;
 import uk.ac.standrews.cs.storr.interfaces.*;
 import uk.ac.standrews.cs.storr.types.Types;
@@ -22,18 +21,16 @@ import static uk.ac.standrews.cs.storr.types.Types.checkLabelConsistency;
 
 public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
 
-    protected ILXPFactory<T> tFactory = null;
+    public static final String META_BUCKET_NAME = "META";
+    private static final String TRANSACTIONS_BUCKET_NAME = "TRANSACTIONS";
+    private static final String TYPE_LABEL_FILE_NAME = "TYPELABEL";
+    protected final File directory;           // the directory implementing the bucket storage
     private final IRepository repository;     // the repository in which the bucket is stored
     private final IStore store;               // the store
     private final String bucket_name;         // the name of this bucket - used as the directory name
-    protected final File directory;           // the directory implementing the bucket storage
+    protected ILXPFactory<T> tFactory = null;
     private long type_label_id = -1;          // -1 == not set
     private IObjectCache object_cache = new ObjectCache();
-
-    private static final String TRANSACTIONS_BUCKET_NAME = "TRANSACTIONS";
-    public static final String META_BUCKET_NAME = "META";
-    private static final String TYPE_LABEL_FILE_NAME = "TYPELABEL";
-
     private long size = -1; // number of items in Bucket.
     private List<Long> cached_oids = null;
 
@@ -153,6 +150,40 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
 
     //****************** Getters ******************//
 
+    private static void saveTypeLabel(String name, IRepository repository, long type_label) throws RepositoryException {
+
+        if (type_label == -1) {  // only write the label if it has been set.
+            return;
+        }
+
+        Path path = getBucketPath(name, repository);
+        Path typepath = path.resolve(META_BUCKET_NAME).resolve(TYPE_LABEL_FILE_NAME);
+        try {
+            FileManipulation.createFileIfDoesNotExist(typepath);
+        } catch (IOException e) {
+            throw new RepositoryException(e);
+        }
+
+        try (BufferedWriter writer = Files.newBufferedWriter(typepath, FileManipulation.FILE_CHARSET)) {
+            writer.write(String.valueOf(type_label));
+            writer.flush();
+            writer.close();
+
+        } catch (IOException e1) {
+            throw new RepositoryException(e1);
+        }
+    }
+
+    private static boolean bucketExists(final String name, IRepository repo) {
+
+        return Repository.legalName(name) && Files.exists(getBucketPath(name, repo));
+    }
+
+    private static Path getBucketPath(final String name, IRepository repo) {
+
+        return repo.getRepositoryPath().resolve(name);
+    }
+
     public T getObjectById(long id) throws BucketException {
 
         T result;
@@ -207,6 +238,18 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
         return BucketKind.DIRECTORYBACKED;
     }
 
+    // Stream operations
+
+    private void setKind(BucketKind kind) {
+
+        try {
+            FileManipulation.createDirectoryIfDoesNotExist(directory.toPath().resolve(META_BUCKET_NAME).resolve(kind.name()));  // create a directory labelled with the kind in the new bucket dir
+
+        } catch (IOException e) {
+            ErrorHandling.error("I/O Exception setting kind");
+        }
+    }
+
     public String getName() {
         return bucket_name;
     }
@@ -220,8 +263,6 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
         return filePath(id).toFile().exists();
     }
 
-    // Stream operations
-
     public IInputStream<T> getInputStream() throws BucketException {
 
         try {
@@ -231,6 +272,8 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
             throw new BucketException(e.getMessage());
         }
     }
+
+    //***********************************************************//
 
     public IOutputStream<T> getOutputStream() {
         return new BucketBackedOutputStream(this);
@@ -274,11 +317,33 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
         }
     }
 
+    public void setTypeLabelID(long type_label_id) throws IOException {
+
+        if (this.type_label_id != -1) {
+            throw new IOException("Type label already set");
+        }
+        this.type_label_id = type_label_id; // cache it and keep a persistent copy of the label.
+
+        Path path = directory.toPath();
+        Path meta_path = path.resolve(META_BUCKET_NAME);
+        FileManipulation.createDirectoryIfDoesNotExist(meta_path);
+
+        Path typepath = meta_path.resolve(TYPE_LABEL_FILE_NAME);
+        if (Files.exists(typepath)) {
+            throw new IOException("Type label already set");
+        }
+        FileManipulation.createFileIfDoesNotExist((typepath));
+
+        try (BufferedWriter writer = Files.newBufferedWriter(typepath, FileManipulation.FILE_CHARSET)) {
+
+            writer.write(Long.toString(type_label_id)); // Write the id of the typelabel OID into this field.
+            writer.newLine();
+        }
+    }
+
     public IObjectCache getObjectCache() {
         return object_cache;
     }
-
-    //***********************************************************//
 
     public void makePersistent(final T record) throws BucketException {
 
@@ -361,40 +426,6 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
 
         } catch (IOException | JSONException e) {
             throw new BucketException(e);
-        }
-    }
-
-    private void setKind(BucketKind kind) {
-
-        try {
-            FileManipulation.createDirectoryIfDoesNotExist(directory.toPath().resolve(META_BUCKET_NAME).resolve(kind.name()));  // create a directory labelled with the kind in the new bucket dir
-
-        } catch (IOException e) {
-            ErrorHandling.error("I/O Exception setting kind");
-        }
-    }
-
-    public void setTypeLabelID(long type_label_id) throws IOException {
-
-        if (this.type_label_id != -1) {
-            throw new IOException("Type label already set");
-        }
-        this.type_label_id = type_label_id; // cache it and keep a persistent copy of the label.
-
-        Path path = directory.toPath();
-        Path meta_path = path.resolve(META_BUCKET_NAME);
-        FileManipulation.createDirectoryIfDoesNotExist(meta_path);
-
-        Path typepath = meta_path.resolve(TYPE_LABEL_FILE_NAME);
-        if (Files.exists(typepath)) {
-            throw new IOException("Type label already set");
-        }
-        FileManipulation.createFileIfDoesNotExist((typepath));
-
-        try (BufferedWriter writer = Files.newBufferedWriter(typepath, FileManipulation.FILE_CHARSET)) {
-
-            writer.write(Long.toString(type_label_id)); // Write the id of the typelabel OID into this field.
-            writer.newLine();
         }
     }
 
@@ -496,9 +527,13 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
         return dirPath().resolve(TRANSACTIONS_BUCKET_NAME).resolve(String.valueOf(oid));
     }
 
+    //******** Private methods *********
+
     Path dirPath() {
         return repository.getRepositoryPath().resolve(bucket_name);
     }
+
+    //******** Private methods *********
 
     public Path filePath(final long id) {
         return filePath(String.valueOf(id));
@@ -506,43 +541,5 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
 
     Path filePath(final String id) {
         return dirPath().resolve(id);
-    }
-
-    //******** Private methods *********
-
-    private static void saveTypeLabel(String name, IRepository repository, long type_label) throws RepositoryException {
-
-        if (type_label == -1) {  // only write the label if it has been set.
-            return;
-        }
-
-        Path path = getBucketPath(name, repository);
-        Path typepath = path.resolve(META_BUCKET_NAME).resolve(TYPE_LABEL_FILE_NAME);
-        try {
-            FileManipulation.createFileIfDoesNotExist(typepath);
-        } catch (IOException e) {
-            throw new RepositoryException(e);
-        }
-
-        try (BufferedWriter writer = Files.newBufferedWriter(typepath, FileManipulation.FILE_CHARSET)) {
-            writer.write(String.valueOf(type_label));
-            writer.flush();
-            writer.close();
-
-        } catch (IOException e1) {
-            throw new RepositoryException(e1);
-        }
-    }
-
-    //******** Private methods *********
-
-    private static boolean bucketExists(final String name, IRepository repo) {
-
-        return Repository.legalName(name) && Files.exists(getBucketPath(name, repo));
-    }
-
-    private static Path getBucketPath(final String name, IRepository repo) {
-
-        return repo.getRepositoryPath().resolve(name);
     }
 }

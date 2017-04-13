@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.storr;
 
+
 import org.junit.Before;
 import org.junit.Test;
 import uk.ac.standrews.cs.storr.impl.*;
@@ -10,7 +11,7 @@ import uk.ac.standrews.cs.storr.interfaces.IBucket;
 import uk.ac.standrews.cs.storr.interfaces.ILXP;
 import uk.ac.standrews.cs.storr.interfaces.IReferenceType;
 import uk.ac.standrews.cs.storr.types.Types;
-import uk.ac.standrews.cs.storr.utils.Helper;
+import uk.ac.standrews.cs.utilities.FileManipulation;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -19,18 +20,13 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static junit.framework.TestCase.fail;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class InfrastructureTest extends CommonTest {
 
     private static String generic_bucket_name1 = "BUCKET1";
     private static String generic_bucket_name2 = "BUCKET2";
     private static String generic_bucket_name3 = "BUCKET3";
-
-    private static String PERSON_RECORD_TYPE_TEMPLATE;
-    private static String PERSON_REF_TUPLE_TYPE_TEMPLATE;
 
     private IReferenceType personlabel;
     private IReferenceType personlabel2;
@@ -44,8 +40,8 @@ public class InfrastructureTest extends CommonTest {
 
         super.setUp();
 
-        PERSON_RECORD_TYPE_TEMPLATE = Helper.getResourcePath("PersonRecord.jsn");
-        PERSON_REF_TUPLE_TYPE_TEMPLATE = Helper.getResourcePath("PersonRefRecord.jsn");
+        String person_record_type_template = FileManipulation.getResourcePath(InfrastructureTest.class, "PersonRecord.jsn").toString();
+        String person_ref_type_template = FileManipulation.getResourcePath(InfrastructureTest.class, "PersonRefRecord.jsn").toString();
 
         repository.makeBucket(generic_bucket_name1, BucketKind.DIRECTORYBACKED);
         repository.makeBucket(generic_bucket_name2, BucketKind.DIRECTORYBACKED);
@@ -53,9 +49,9 @@ public class InfrastructureTest extends CommonTest {
 
         TypeFactory type_factory = store.getTypeFactory();
 
-        personlabel = type_factory.createType(PERSON_RECORD_TYPE_TEMPLATE, "Person");
-        personlabel2 = type_factory.createType(PERSON_RECORD_TYPE_TEMPLATE, "Person");
-        personreftuple = type_factory.createType(PERSON_REF_TUPLE_TYPE_TEMPLATE, "PersonRefTuple");
+        personlabel = type_factory.createType(person_record_type_template, "Person");
+        personlabel2 = type_factory.createType(person_record_type_template, "Person");
+        personreftuple = type_factory.createType(person_ref_type_template, "PersonRefTuple");
 
         conflict_counter = new AtomicInteger(0);
         latch = new CountDownLatch(2);
@@ -235,49 +231,6 @@ public class InfrastructureTest extends CommonTest {
             fail("Conflict counter not 1");
         }
     }
-
-    private class UpdateThread extends Thread {
-
-        private final long oid;
-        private final IBucket b;
-
-        public UpdateThread(IBucket b, long oid) {
-            this.b = b;
-            this.oid = oid;
-        }
-
-        public void run() {
-            ITransaction txn = null;
-            try {
-                txn = store.getTransactionManager().beginTransaction();
-            } catch (TransactionFailedException e) {
-                fail("Exception: " + e.toString());
-            }
-
-            try {
-                ILXP lxp2 = b.getObjectById(oid);
-                lxp2.put("age", "43");
-                b.update(lxp2);
-
-                // Want both threads to get to here at 'same time'.
-                latch.countDown(); // decrement
-                latch.await();    // wait for the latch to get to zero.
-
-                try {
-                    txn.commit();
-                } catch (TransactionFailedException e) {
-                    conflict_counter.incrementAndGet();
-                }
-            } catch (InterruptedException | StoreException | IllegalKeyException | BucketException e) {
-                fail("Exception: " + e.toString());
-            } finally {
-                if (txn.isActive()) {
-                    txn.rollback();
-                }
-            }
-        }
-    }
-
 
     @Test
     public synchronized void testLabelledLXP2() throws Exception {
@@ -487,8 +440,6 @@ public class InfrastructureTest extends CommonTest {
         assertEquals(lxp2.getString("string"), "al");
     }
 
-    // TODO need a test for illegal field label types e.g. reference to a type that doesn't exist
-
     @Test(expected = IllegalKeyException.class)
     public synchronized void emptyStringInLabelType() throws RepositoryException, BucketException, IllegalKeyException, StoreException {
         IBucket b = repository.getBucket(generic_bucket_name1);
@@ -496,6 +447,8 @@ public class InfrastructureTest extends CommonTest {
         lxp.put("", "fish");
         b.makePersistent(lxp);       // <<--------- write record **
     }
+
+    // TODO need a test for illegal field label types e.g. reference to a type that doesn't exist
 
     @Test(expected = IllegalKeyException.class)
     public synchronized void nullLabelType() throws RepositoryException, BucketException, IllegalKeyException, StoreException {
@@ -516,5 +469,47 @@ public class InfrastructureTest extends CommonTest {
         ILXP retrievedLXP = b.getObjectById(id);
         String retrievedString = retrievedLXP.getString("string");
         assertEquals("", retrievedString);
+    }
+
+    private class UpdateThread extends Thread {
+
+        private final long oid;
+        private final IBucket b;
+
+        public UpdateThread(IBucket b, long oid) {
+            this.b = b;
+            this.oid = oid;
+        }
+
+        public void run() {
+            ITransaction txn = null;
+            try {
+                txn = store.getTransactionManager().beginTransaction();
+            } catch (TransactionFailedException e) {
+                fail("Exception: " + e.toString());
+            }
+
+            try {
+                ILXP lxp2 = b.getObjectById(oid);
+                lxp2.put("age", "43");
+                b.update(lxp2);
+
+                // Want both threads to get to here at 'same time'.
+                latch.countDown(); // decrement
+                latch.await();    // wait for the latch to get to zero.
+
+                try {
+                    txn.commit();
+                } catch (TransactionFailedException e) {
+                    conflict_counter.incrementAndGet();
+                }
+            } catch (InterruptedException | StoreException | IllegalKeyException | BucketException e) {
+                fail("Exception: " + e.toString());
+            } finally {
+                if (txn.isActive()) {
+                    txn.rollback();
+                }
+            }
+        }
     }
 }

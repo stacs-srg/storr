@@ -2,11 +2,11 @@ package uk.ac.standrews.cs.storr.impl;
 
 import org.json.JSONException;
 import org.json.JSONWriter;
-import uk.ac.standrews.cs.nds.persistence.PersistentObjectException;
-import uk.ac.standrews.cs.nds.rpc.stream.JSONReader;
 import uk.ac.standrews.cs.storr.impl.exceptions.IllegalKeyException;
 import uk.ac.standrews.cs.storr.impl.exceptions.KeyNotFoundException;
+import uk.ac.standrews.cs.storr.impl.exceptions.PersistentObjectException;
 import uk.ac.standrews.cs.storr.impl.exceptions.TypeMismatchFoundException;
+import uk.ac.standrews.cs.storr.impl.temp.JSONReader;
 import uk.ac.standrews.cs.storr.interfaces.*;
 import uk.ac.standrews.cs.storr.types.Types;
 
@@ -23,8 +23,8 @@ import static uk.ac.standrews.cs.storr.impl.Store.getNextFreePID;
  */
 public class LXP implements ILXP, Comparable<LXP> {
 
-    private long id;
     protected Map<String, Object> map;
+    private long id;
     private IRepository repository = null;
     private IBucket bucket = null;
 
