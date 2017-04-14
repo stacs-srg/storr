@@ -35,6 +35,13 @@ import java.util.NoSuchElementException;
  */
 public class Repository implements IRepository {
 
+    private static final String ILLEGAL_CHARS_MAC = ":";
+    private static final String ILLEGAL_CHARS_LINUX = "/\0";
+    private static final String ILLEGAL_CHARS_WINDOWS = "<>:\"/\\|?\\*";
+
+    private static final String ILLEGAL_CHARS = ILLEGAL_CHARS_MAC + ILLEGAL_CHARS_LINUX + ILLEGAL_CHARS_WINDOWS;
+    private static final String LEGAL_CHARS_PATTERN = "[^" + ILLEGAL_CHARS + "]*";
+
     private final IStore store;
     private final String repository_name;
     private final Path repository_path;
@@ -44,7 +51,7 @@ public class Repository implements IRepository {
 
     Repository(IStore store, String repository_name, final Path base_path) throws RepositoryException {
 
-        if (!Helper.NameIsLegal(repository_name)) {
+        if (!repositoryNameIsLegal(repository_name)) {
             throw new RepositoryException("Illegal repository name <" + repository_name + ">");
         }
 
@@ -68,8 +75,6 @@ public class Repository implements IRepository {
         }
     }
 
-
-
     @Override
     public IBucket makeBucket(final String bucket_name, BucketKind kind) throws RepositoryException {
 
@@ -89,7 +94,7 @@ public class Repository implements IRepository {
     @Override
     public boolean bucketExists(final String name) {
 
-        return Helper.NameIsLegal(name) && Files.exists(getBucketPath(name));
+        return bucketNameIsLegal(name) && Files.exists(getBucketPath(name));
     }
 
     @Override
@@ -154,6 +159,26 @@ public class Repository implements IRepository {
     @Override
     public IStore getStore() {
         return store;
+    }
+
+    /**
+     * Check that the repository name is legal.
+     * A name is legal if:
+     * - it exists and it has at least one character
+     * - it is a valid file name for the file system
+     *
+     * TODO - consider limiting the size of the name to 31 characters for better compatability with old file systems?
+     * @param name to be checked
+     * @return true if the name is legal
+     */
+    public static boolean bucketNameIsLegal(String name) {
+
+        return name.matches(LEGAL_CHARS_PATTERN);
+    }
+
+    public static boolean repositoryNameIsLegal(String name) {
+
+        return name.matches(LEGAL_CHARS_PATTERN);
     }
 
     private Path getBucketPath(final String name) {

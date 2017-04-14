@@ -33,6 +33,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import static uk.ac.standrews.cs.storr.impl.Repository.repositoryNameIsLegal;
+
 /**
  * Created by al on 06/06/2014.
  */
@@ -101,7 +103,7 @@ public class Store implements IStore {
     @Override
     public IRepository makeRepository(final String name) throws RepositoryException {
 
-        if (!Helper.NameIsLegal(name)) {
+        if (!repositoryNameIsLegal(name)) {
             throw new RepositoryException("Illegal Repository name <" + name + ">");
         }
         createRepository(name);

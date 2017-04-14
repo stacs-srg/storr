@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import static uk.ac.standrews.cs.storr.impl.Repository.bucketNameIsLegal;
 import static uk.ac.standrews.cs.storr.types.Types.checkLabelConsistency;
 
 public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
@@ -64,7 +65,7 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
             createBucket(bucket_name, repository, kind);
         }
 
-        if (!Helper.NameIsLegal(bucket_name)) {
+        if (!bucketNameIsLegal(bucket_name)) {
             throw new RepositoryException("Illegal name <" + bucket_name + ">");
         }
 
@@ -105,7 +106,7 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
             createBucket(bucket_name, repository, kind, tFactory.getTypeLabel());
         }
 
-        if (!Helper.NameIsLegal(bucket_name)) {
+        if (!bucketNameIsLegal(bucket_name)) {
             throw new RepositoryException("Illegal name <" + bucket_name + ">");
         }
 
@@ -140,7 +141,7 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
 
     static void createBucket(final String name, IRepository repository, BucketKind kind) throws RepositoryException {
 
-        if (!Helper.NameIsLegal(name)) {
+        if (!bucketNameIsLegal(name)) {
             throw new RepositoryException("Illegal name <" + name + ">");
         }
         if (bucketExists(name, repository)) {
@@ -192,7 +193,7 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
 
     private static boolean bucketExists(final String name, IRepository repo) {
 
-        return Helper.NameIsLegal(name) && Files.exists(getBucketPath(name, repo));
+        return bucketNameIsLegal(name) && Files.exists(getBucketPath(name, repo));
     }
 
     private static Path getBucketPath(final String name, IRepository repo) {

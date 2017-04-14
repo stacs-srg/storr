@@ -18,9 +18,12 @@ package uk.ac.standrews.cs.storr.impl;
 
 import org.junit.Test;
 import uk.ac.standrews.cs.storr.impl.exceptions.RepositoryException;
-import uk.ac.standrews.cs.storr.interfaces.IBucket;
+
+import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.Assert.*;
+import static uk.ac.standrews.cs.storr.impl.Repository.bucketNameIsLegal;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -28,22 +31,37 @@ import static org.junit.Assert.*;
 public class RepositoryTest extends CommonTest {
 
     private static String generic_bucket_name1 = "BUCKET1";
+    private static List<String> LEGAL_NAMES = Arrays.asList("bucket", "a bucket");
+    private static List<String> ILLEGAL_NAMES = Arrays.asList("a: bucket","a/bucket","a<bucket","a\\bucket?");
+
 
     @Test
     public void createBucketTest() throws RepositoryException {
-        IBucket bucket = repository.makeBucket(generic_bucket_name1, BucketKind.DIRECTORYBACKED);
+
+        repository.makeBucket(generic_bucket_name1, BucketKind.DIRECTORYBACKED);
 
         assertTrue(repository.bucketExists(generic_bucket_name1));
-        assertEquals(bucket.getName(), repository.getBucket(generic_bucket_name1).getName());
+        assertEquals(generic_bucket_name1, repository.getBucket(generic_bucket_name1).getName());
     }
 
     @Test
     public void deleteBucketTest() throws RepositoryException {
-        repository.makeBucket(generic_bucket_name1, BucketKind.DIRECTORYBACKED);
 
-        assertTrue(repository.bucketExists(generic_bucket_name1));
+        repository.makeBucket(generic_bucket_name1, BucketKind.DIRECTORYBACKED);
         repository.deleteBucket(generic_bucket_name1);
 
         assertFalse(repository.bucketExists(generic_bucket_name1));
+    }
+
+    @Test
+    public void nameLegalityTest() {
+
+        for (String name : LEGAL_NAMES) {
+            assertTrue(bucketNameIsLegal(name));
+        }
+
+        for (String name : ILLEGAL_NAMES) {
+            assertFalse(bucketNameIsLegal(name));
+        }
     }
 }
