@@ -145,9 +145,8 @@ public class Store implements IStore {
                 repository_cache.put(name, r);
                 return r;
             }
-        } else {
-            return null;
         }
+        throw new RepositoryException("repository does not exist: " + name);
     }
 
     @Override
