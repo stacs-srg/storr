@@ -23,6 +23,7 @@ import uk.ac.standrews.cs.storr.impl.exceptions.BucketException;
 import uk.ac.standrews.cs.storr.impl.exceptions.RepositoryException;
 import uk.ac.standrews.cs.storr.impl.exceptions.StoreException;
 import uk.ac.standrews.cs.storr.interfaces.IBucket;
+import uk.ac.standrews.cs.storr.interfaces.ILXP;
 import uk.ac.standrews.cs.storr.interfaces.IRepository;
 import uk.ac.standrews.cs.storr.interfaces.IStore;
 
@@ -37,15 +38,24 @@ public class SimplestExample {
 
     public static void main(String[] args) throws IOException, StoreException, RepositoryException, BucketException {
 
-        Path tempStorePath = Files.createTempDirectory("/tmp/xyz");
+        Path tempStorePath = Files.createTempDirectory(null);
+        System.out.println("Store will be created in path " + tempStorePath);
+
         IStore store = new Store(tempStorePath);
         IRepository repo = store.makeRepository("repo");
-        IBucket b = repo.makeBucket("bucket", BucketKind.DIRECTORYBACKED);
+        IBucket bucket = repo.makeBucket("bucket", BucketKind.DIRECTORYBACKED);
 
         LXP lxp = new LXP();
         lxp.put("age", 42);
         lxp.put("address", "home");
 
-        b.makePersistent(lxp);
+        bucket.makePersistent(lxp);
+
+        IStore storeLoaded = new Store(tempStorePath);
+        IRepository repoLoaded = storeLoaded.getRepository("repo");
+        IBucket buckerLoaded = repoLoaded.getBucket("bucket");
+
+        ILXP retrievedLXP = buckerLoaded.getObjectById(lxp.getId());
+        System.out.println("LXP persisted correctly: " + (retrievedLXP.getInt("age") == 42 && retrievedLXP.getString("address").equals("home")));
     }
 }

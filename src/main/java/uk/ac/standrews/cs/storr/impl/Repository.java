@@ -44,7 +44,7 @@ public class Repository implements IRepository {
 
     Repository(IStore store, String repository_name, final Path base_path) throws RepositoryException {
 
-        if (!legalName(repository_name)) {
+        if (!Helper.NameIsLegal(repository_name)) {
             throw new RepositoryException("Illegal repository name <" + repository_name + ">");
         }
 
@@ -68,9 +68,7 @@ public class Repository implements IRepository {
         }
     }
 
-    static boolean legalName(String name) { // TODO May want to strengthen these conditions
-        return name != null && !name.equals("");
-    }
+
 
     @Override
     public IBucket makeBucket(final String bucket_name, BucketKind kind) throws RepositoryException {
@@ -91,7 +89,7 @@ public class Repository implements IRepository {
     @Override
     public boolean bucketExists(final String name) {
 
-        return legalName(name) && Files.exists(getBucketPath(name));
+        return Helper.NameIsLegal(name) && Files.exists(getBucketPath(name));
     }
 
     @Override

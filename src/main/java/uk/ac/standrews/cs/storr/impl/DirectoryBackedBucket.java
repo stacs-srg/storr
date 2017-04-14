@@ -64,7 +64,7 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
             createBucket(bucket_name, repository, kind);
         }
 
-        if (!Repository.legalName(bucket_name)) {
+        if (!Helper.NameIsLegal(bucket_name)) {
             throw new RepositoryException("Illegal name <" + bucket_name + ">");
         }
 
@@ -105,7 +105,7 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
             createBucket(bucket_name, repository, kind, tFactory.getTypeLabel());
         }
 
-        if (!Repository.legalName(bucket_name)) {
+        if (!Helper.NameIsLegal(bucket_name)) {
             throw new RepositoryException("Illegal name <" + bucket_name + ">");
         }
 
@@ -140,7 +140,7 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
 
     static void createBucket(final String name, IRepository repository, BucketKind kind) throws RepositoryException {
 
-        if (!Repository.legalName(name)) {
+        if (!Helper.NameIsLegal(name)) {
             throw new RepositoryException("Illegal name <" + name + ">");
         }
         if (bucketExists(name, repository)) {
@@ -192,7 +192,7 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
 
     private static boolean bucketExists(final String name, IRepository repo) {
 
-        return Repository.legalName(name) && Files.exists(getBucketPath(name, repo));
+        return Helper.NameIsLegal(name) && Files.exists(getBucketPath(name, repo));
     }
 
     private static Path getBucketPath(final String name, IRepository repo) {

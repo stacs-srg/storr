@@ -88,10 +88,6 @@ public class Store implements IStore {
         return next_prn;
     }
 
-    private static boolean legalName(String name) { // TODO May want to strengthen these conditions
-        return name != null && !name.equals("");
-    }
-
     @Override
     public ITransactionManager getTransactionManager() {
         return transaction_manager;
@@ -105,7 +101,7 @@ public class Store implements IStore {
     @Override
     public IRepository makeRepository(final String name) throws RepositoryException {
 
-        if (!legalName(name)) {
+        if (!Helper.NameIsLegal(name)) {
             throw new RepositoryException("Illegal Repository name <" + name + ">");
         }
         createRepository(name);
