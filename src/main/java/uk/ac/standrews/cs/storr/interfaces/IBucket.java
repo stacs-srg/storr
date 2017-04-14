@@ -20,7 +20,6 @@ import uk.ac.standrews.cs.storr.impl.BucketKind;
 import uk.ac.standrews.cs.storr.impl.exceptions.BucketException;
 
 import java.io.IOException;
-import java.net.BindException;
 import java.nio.file.Path;
 import java.util.List;
 
@@ -105,7 +104,7 @@ public interface IBucket<T extends ILXP> {
     /**
      * Returns the number of records stored in the bucket
      */
-    long size() throws BindException, BucketException;
+    int size() throws BucketException;
 
     /**
      * A predicate to determine if a OID with the given id is located in the bucket.

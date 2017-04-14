@@ -47,7 +47,7 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
     protected ILXPFactory<T> tFactory = null;
     private long type_label_id = -1;          // -1 == not set
     private IObjectCache object_cache = new ObjectCache();
-    private long size = -1; // number of items in Bucket.
+    private int size = -1; // number of items in Bucket.
     private List<Long> cached_oids = null;
 
     /**
@@ -445,11 +445,11 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
         }
     }
 
-    public synchronized long size() throws BucketException {
+    public synchronized int size() throws BucketException {
 
         if (size == -1) {
             try {
-                size = Files.list(directory.toPath()).count();
+                size = (int) Files.list(directory.toPath()).count();
             } catch (IOException e) {
                 throw new BucketException("Cannot determine size - I/O error");
             }
@@ -458,6 +458,7 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
     }
 
     /**
+     * `
      * called by Watcher service
      */
     public synchronized void invalidateCache() {
