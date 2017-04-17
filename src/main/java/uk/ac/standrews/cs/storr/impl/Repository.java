@@ -37,7 +37,7 @@ public class Repository implements IRepository {
 
     private static final String ILLEGAL_CHARS_MAC = ":";
     private static final String ILLEGAL_CHARS_LINUX = "/\0";
-    private static final String ILLEGAL_CHARS_WINDOWS = "<>:\"/\\|?\\*";
+    private static final String ILLEGAL_CHARS_WINDOWS = "<>:\"/\\|?*";
 
     private static final String ILLEGAL_CHARS = ILLEGAL_CHARS_MAC + ILLEGAL_CHARS_LINUX + ILLEGAL_CHARS_WINDOWS;
     private static final String LEGAL_CHARS_PATTERN = "[^" + ILLEGAL_CHARS + "]*";
