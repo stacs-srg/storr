@@ -411,7 +411,10 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
             // get to here -> there is no record label on record
             try {
                 if (!Types.checkStructuralConsistency(record_to_write, type_label_id, store)) {
-                    throw new BucketException("Structural integrity incompatibility");
+                    // Temporarily output more information, for diagnostics
+                    throw new BucketException("Structural integrity incompatibility"
+                            + "\nrecord_to_write: " + record_to_write + "\n"
+                            + "\ntype_label_id: " + type_label_id + "\n");
                 }
             } catch (IOException e) {
                 throw new BucketException("I/O exception checking Structural integrity");
