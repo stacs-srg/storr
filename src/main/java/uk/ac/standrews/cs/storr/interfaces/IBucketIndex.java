@@ -37,7 +37,7 @@ public interface IBucketIndex<T extends ILXP> {
     Set<String> keySet() throws IOException, BucketException;
 
     /**
-     * @param value - the value to ge extracted from the index (e.g. "al" from a name labelled field)
+     * @param value - the value to be extracted from the index (e.g. "al" from a name labelled field)
      * @return a stream of records which (exactly) contain the specified value.
      * @throws IOException     in the event of an IO exception
      * @throws BucketException if one is thrown during the underlying bucket operations
@@ -50,7 +50,7 @@ public interface IBucketIndex<T extends ILXP> {
      * @throws IOException     if exception is thrown during operations
      * @throws BucketException if one is thrown during the underlying bucket operations
      */
-    List<Integer> values(String value) throws IOException, BucketException;
+    List<Long> values(String value) throws IOException, BucketException;
 
     /**
      * Adds a record to the index.

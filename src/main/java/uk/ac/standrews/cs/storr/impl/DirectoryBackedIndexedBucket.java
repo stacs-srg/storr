@@ -133,10 +133,12 @@ public class DirectoryBackedIndexedBucket<T extends ILXP> extends DirectoryBacke
             throw new IOException("Index Directory: " + dirPath() + " does not exist and cannot create");
         }
 
-        Iterator<File> iterator = new FileIterator(index, true, false);
+        Iterator<File> iterator = new FileIterator(index, true, true);
         while (iterator.hasNext()) {
             File next = iterator.next();
-            indexes.put(next.getName(), new BucketIndex(next.getName(), next.toPath(), this));
+            String fullname = next.getName();  // THIS IS THE "INDEX" with the actual KEY appended - so strip the INDEX off
+            String keyname = fullname.substring( 5 );
+            indexes.put(keyname, new BucketIndex(keyname, next.toPath(), this));
         }
     }
 }

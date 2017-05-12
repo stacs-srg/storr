@@ -135,7 +135,7 @@ public class BucketIndex implements IBucketIndex {
         try {
             value = record.getString(label);
         } catch (KeyNotFoundException e) {
-            throw new BucketException("type label not found");
+            throw new BucketException("type label: " + label + " not found");
         } catch (TypeMismatchFoundException e) {
             throw new BucketException("type mismatch");
         }
