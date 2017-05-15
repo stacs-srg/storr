@@ -82,6 +82,7 @@ public class StringToLXPMapTest extends CommonTest {
         for( String key : tempkeys ) {
             ILXP value = pmap.lookup(key);
             assertTrue( value.equals( tempmap.get(key)));
+            System.out.println( "value class: " + value.getClass().toString() );
         }
 
     }
