@@ -77,14 +77,8 @@ public class StringToLXPMapTest extends CommonTest {
         Collection<String> tempkeys = tempmap.keySet();
 
         for( String key : tempkeys ) {
-            try {
                 ILXP value = pmap.lookup(key);
                 assertTrue(value.equals(tempmap.get(key)));
-                System.out.println("value class: " + value.getClass().toString());
-            } catch( TypeMismatchFoundException e ) {
-                System.out.println( "Type Exception: " + e.getMessage() );
-                throw e;
-            }
         }
 
     }
