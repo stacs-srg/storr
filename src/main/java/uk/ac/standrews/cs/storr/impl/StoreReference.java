@@ -27,7 +27,7 @@ import java.lang.ref.WeakReference;
 /**
  * Created by al on 23/03/15.
  */
-public class StoreReference<T extends ILXP> extends LXP implements IStoreReference {
+public class StoreReference<T extends ILXP> extends LXP implements IStoreReference<T> {
 
     protected final static String $INDIRECTION$ = "$INDIRECTION$";
     protected final static String REPOSITORY = "repository";

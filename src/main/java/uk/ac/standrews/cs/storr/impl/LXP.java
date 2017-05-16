@@ -239,10 +239,13 @@ public class LXP implements ILXP, Comparable<LXP> {
     public IStoreReference getRef(String key) throws KeyNotFoundException, TypeMismatchFoundException {
         if (containsKey(key)) {
             Object result = map.get(key);
+            if( result instanceof IStoreReference ) { // expected
+                return (IStoreReference) result;
+            }
             if (result instanceof String) { // expected
                 return new StoreReference(repository.getStore(), (String) result);
             } else {
-                throw new TypeMismatchFoundException("expected IStoreReference found: " + result.getClass().getName());
+                throw new TypeMismatchFoundException("expected String found: " + result.getClass().getName());
             }
         }
         throw new KeyNotFoundException(key);

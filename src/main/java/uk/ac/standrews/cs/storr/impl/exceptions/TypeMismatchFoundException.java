@@ -21,7 +21,7 @@ package uk.ac.standrews.cs.storr.impl.exceptions;
  */
 public class TypeMismatchFoundException extends RuntimeException {
     public TypeMismatchFoundException(String key) {
-        super();
+        super( key );
     }
 
 }

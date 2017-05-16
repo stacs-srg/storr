@@ -18,10 +18,7 @@ package uk.ac.standrews.cs.storr.impl;
 
 import org.junit.Before;
 import org.junit.Test;
-import uk.ac.standrews.cs.storr.impl.exceptions.BucketException;
-import uk.ac.standrews.cs.storr.impl.exceptions.PersistentObjectException;
-import uk.ac.standrews.cs.storr.impl.exceptions.RepositoryException;
-import uk.ac.standrews.cs.storr.impl.exceptions.StoreException;
+import uk.ac.standrews.cs.storr.impl.exceptions.*;
 import uk.ac.standrews.cs.storr.interfaces.IBucket;
 import uk.ac.standrews.cs.storr.interfaces.ILXP;
 import uk.ac.standrews.cs.storr.interfaces.IRepository;
@@ -80,9 +77,14 @@ public class StringToLXPMapTest extends CommonTest {
         Collection<String> tempkeys = tempmap.keySet();
 
         for( String key : tempkeys ) {
-            ILXP value = pmap.lookup(key);
-            assertTrue( value.equals( tempmap.get(key)));
-            System.out.println( "value class: " + value.getClass().toString() );
+            try {
+                ILXP value = pmap.lookup(key);
+                assertTrue(value.equals(tempmap.get(key)));
+                System.out.println("value class: " + value.getClass().toString());
+            } catch( TypeMismatchFoundException e ) {
+                System.out.println( "Type Exception: " + e.getMessage() );
+                throw e;
+            }
         }
 
     }

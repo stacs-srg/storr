@@ -37,12 +37,4 @@ public class Tuple<T extends ILXP> extends LXP {
         this( key, value.getThisRef() );
     }
 
-    public Long getKey() {
-        return Long.getLong( (String) map.get(KEY) );
-    }
-
-    public IStoreReference<T> getValue() {
-            return (IStoreReference<T>) map.get( VALUE );
-    }
-
 }

@@ -22,7 +22,7 @@ import uk.ac.standrews.cs.storr.impl.exceptions.RepositoryException;
 import uk.ac.standrews.cs.storr.interfaces.*;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Map;
 
 import static uk.ac.standrews.cs.storr.impl.BucketKind.INDEXED;
@@ -59,22 +59,23 @@ public class PersistentStringtoILXPMap<T extends ILXP> {
     }
 
 
-    public ILXP lookup(String key) throws IOException, BucketException, RepositoryException {
-        IInputStream<Tuple<T>> values = bucket.getIndex(Tuple.KEY).records(key);
-        ArrayList<Tuple<T>> list = new ArrayList();
-        for( Tuple<T> value : values ) {
-           list.add( value );
-        }
+    public T lookup(String key) throws IOException, BucketException, RepositoryException {
+        IInputStream<ILXP> values = bucket.getIndex(Tuple.KEY).records(key);
 
-        if( list.size() < 0 ) {
-            return null;
-        } else if( list.size() > 1 ) {
-            throw new IOException( "Multiple values found for key: " + key );
-        } else {
-            Tuple<T> value = list.get(0);
-            IStoreReference ref = value.getValue();
-            return ref.getReferend();
-        }
+        Iterator<ILXP> iter = values.iterator();
+
+        if( iter.hasNext() ) {
+
+            ILXP value = iter.next();
+
+            if( iter.hasNext() ) {
+                throw new IOException("Multiple values found for key: " + key);
+            }
+
+            IStoreReference ref = value.getRef(Tuple.VALUE);
+            return (T) ref.getReferend();
+
+        } else return null;
     }
 
     public void put(String key, IStoreReference<T> value) throws PersistentObjectException, BucketException {
