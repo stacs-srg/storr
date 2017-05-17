@@ -51,6 +51,7 @@ public interface IRepository {
      */
     <T extends ILXP> IBucket<T> makeBucket(final String name, BucketKind kind, ILXPFactory<T> tFactory) throws RepositoryException;
 
+
     /**
      * @param name - the bucket that is the subject of the enquiry.
      * @return true if a bucket with the given name exists in the repo.
