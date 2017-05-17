@@ -19,5 +19,6 @@ A file-based record storage library.
 
 ## See also
 
-* [relevant Maven goals](https://github.com/stacs-srg/hub/tree/master/maven) (private)
 * [usage examples](https://github.com/stacs-srg/storr/tree/master/src/main/java/uk/ac/standrews/cs/storr/examples)
+* [project website](https://stacs-srg.github.io/storr/)
+* [relevant Maven goals](https://github.com/stacs-srg/hub/tree/master/maven) (private)
