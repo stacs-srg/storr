@@ -19,10 +19,14 @@ package uk.ac.standrews.cs.storr.jetty;
 import org.eclipse.jetty.server.Server;
 import org.glassfish.jersey.jetty.JettyHttpContainerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
+import uk.ac.standrews.cs.storr.impl.Store;
+import uk.ac.standrews.cs.storr.interfaces.IStore;
 import uk.ac.standrews.cs.storr.rest.RESTConfig;
 
 import javax.ws.rs.core.UriBuilder;
 import java.net.URI;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -34,8 +38,8 @@ public class JettyApp {
     private static int serverPort;
     private static URI baseUri;
 
-    public static Server startServer() throws Exception {
-        final ResourceConfig rc = new RESTConfig().build();
+    public static Server StartServer(IStore store) throws Exception {
+        final ResourceConfig rc = new RESTConfig(store).build();
 
         baseUri = uriBuilder.port(serverPort).build();
         return JettyHttpContainerFactory.createServer(baseUri, rc);
@@ -46,6 +50,7 @@ public class JettyApp {
      *
      * The following parameters are allowed:
      * - port (default port is 9998)
+     * - store path
      * Example:
      *
      *
@@ -59,7 +64,12 @@ public class JettyApp {
             serverPort = DEFAULT_SERVER_PORT;
         }
 
-        final Server server = startServer();
+        // FIXME - make the store path passable as argument
+        Path tempStorePath = Files.createTempDirectory(null);
+        System.out.println("Store will be created in path " + tempStorePath);
+        IStore store = new Store(tempStorePath);
+
+        final Server server = StartServer(store);
 
         try {
             server.start();

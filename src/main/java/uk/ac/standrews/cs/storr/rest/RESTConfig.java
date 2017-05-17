@@ -17,6 +17,11 @@
 package uk.ac.standrews.cs.storr.rest;
 
 import org.glassfish.jersey.server.ResourceConfig;
+import uk.ac.standrews.cs.storr.impl.BucketKind;
+import uk.ac.standrews.cs.storr.impl.exceptions.RepositoryException;
+import uk.ac.standrews.cs.storr.interfaces.IBucket;
+import uk.ac.standrews.cs.storr.interfaces.IRepository;
+import uk.ac.standrews.cs.storr.interfaces.IStore;
 import uk.ac.standrews.cs.storr.rest.json.JacksonProvider;
 
 /**
@@ -24,7 +29,24 @@ import uk.ac.standrews.cs.storr.rest.json.JacksonProvider;
  */
 public class RESTConfig {
 
-    private final static String REST_PACKAGE = " uk.ac.standrews.cs.storr.rest";
+    private final static String REST_PACKAGE = " uk.ac.standrews.cs.storr.rest.api";
+
+    public static IStore store;
+    public static IRepository repo;
+    public static IBucket bucket;
+
+    public RESTConfig(IStore store) {
+        RESTConfig.store = store;
+
+        // FIXME - this is temporary (see linkage-java for examples)
+        try {
+            repo = store.makeRepository("test");
+            bucket = repo.makeBucket("bucket", BucketKind.DIRECTORYBACKED);
+        } catch (RepositoryException e) {
+            e.printStackTrace();
+        }
+
+    }
 
     public ResourceConfig build() {
         return new ResourceConfig()

@@ -1,0 +1,42 @@
+{
+	"variables": [],
+	"info": {
+		"name": "storr",
+		"_postman_id": "9c53c78c-c526-abf5-8ebd-2e9f19ec617c",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "GET ILXP Obj",
+			"request": {
+				"url": "localhost:9998/8343569263890602095",
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "CREATE ILXP Obj",
+			"request": {
+				"url": "localhost:9998/",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"number\" : 1\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}

@@ -14,7 +14,9 @@
  * You should have received a copy of the GNU General Public License along with storr. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-package uk.ac.standrews.cs.storr.rest;
+package uk.ac.standrews.cs.storr.rest.api;
+
+import uk.ac.standrews.cs.storr.rest.http.HTTPResponses;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -35,7 +37,7 @@ public class Ping {
         }
 
         String output = "Pong : " + msg;
-        return Response.status(200).entity(output).build();
+        return HTTPResponses.OK(output);
     }
 
 }
