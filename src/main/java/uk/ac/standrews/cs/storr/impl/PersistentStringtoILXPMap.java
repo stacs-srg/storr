@@ -33,8 +33,6 @@ import static uk.ac.standrews.cs.storr.impl.BucketKind.INDEXED;
 public class PersistentStringtoILXPMap<T extends ILXP> {
 
     private final DirectoryBackedIndexedBucket<Tuple<T>> bucket; // bucket used to store the map.
-    private final IRepository repository;     // the repository in which the bucket is stored
-    private final IStore store;               // the store
 
     /**
      * Creates a handle on a persistent map, implemented by an IndexedBucket
@@ -44,10 +42,11 @@ public class PersistentStringtoILXPMap<T extends ILXP> {
      * @param map_name   the name of the map/bucket (also used as directory name).
      * @throws RepositoryException if a RepositoryException is thrown in implementation
      */
-    PersistentStringtoILXPMap(final IRepository repository, final String map_name, boolean create_bucket) throws RepositoryException {
-        this.repository = repository;
-        this.store = repository.getStore();
-        bucket = new DirectoryBackedIndexedBucket(repository, map_name, create_bucket);
+    public PersistentStringtoILXPMap(final IRepository repository, final String map_name, boolean create_map) throws RepositoryException, IOException {
+        if (create_map) {
+            createMap(map_name,repository);
+        }
+        bucket = new DirectoryBackedIndexedBucket(repository, map_name, create_map);
 
     }
 

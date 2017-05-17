@@ -41,8 +41,8 @@ public class PersistentIdtoILXPMap<T extends ILXP> {
      * @param map_name   the name of the map/bucket (also used as directory name).
      * @throws RepositoryException if a RepositoryException is thrown in implementation
      */
-    PersistentIdtoILXPMap(final IRepository repository, final String map_name, boolean create_bucket) throws RepositoryException {
-        pmap = new PersistentStringtoILXPMap( repository, map_name, create_bucket );
+    PersistentIdtoILXPMap(final IRepository repository, final String map_name, boolean create_map) throws RepositoryException, IOException {
+        pmap = new PersistentStringtoILXPMap( repository, map_name, create_map );
 
     }
 

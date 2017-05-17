@@ -38,7 +38,7 @@ import java.util.Iterator;
 public interface IStore {
 
     /**
-     * @return the transaction manager associated with teh store
+     * @return the transaction manager associated with the store
      */
     ITransactionManager getTransactionManager();
 
