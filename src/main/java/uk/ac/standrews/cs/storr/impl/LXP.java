@@ -51,18 +51,8 @@ public class LXP implements ILXP, Comparable<LXP> {
         // don't know the repo or the bucket.
     }
 
-    public LXP(long object_id, IRepository repository, IBucket bucket) {
-
-        this.id = object_id;
-        this.map = new HashMap<>();
-        this.repository = repository;
-        this.bucket = bucket;
-        // This constructor used when about to be filled in with values.
-    }
-
-    public LXP(long object_id, JSONReader reader, IRepository repository, IBucket bucket) throws PersistentObjectException, IllegalKeyException {
-
-        this(object_id, repository, bucket);
+    public LXP(JSONReader reader) throws PersistentObjectException {
+        this();
 
         try {
             reader.nextSymbol();
@@ -78,6 +68,7 @@ public class LXP implements ILXP, Comparable<LXP> {
                     map.put(key, value);
 
                 } else {
+                    // FIXME - what if this is an object?
                     readArrayIfPresent(reader, key);
                 }
             }
@@ -90,7 +81,25 @@ public class LXP implements ILXP, Comparable<LXP> {
         }
     }
 
-    public LXP(JSONReader reader, IRepository repository, IBucket bucket) throws PersistentObjectException, IllegalKeyException {
+    public LXP(long object_id, IRepository repository, IBucket bucket) {
+
+        this.id = object_id;
+        this.map = new HashMap<>();
+        this.repository = repository;
+        this.bucket = bucket;
+        // This constructor used when about to be filled in with values.
+    }
+
+    public LXP(long object_id, JSONReader reader, IRepository repository, IBucket bucket) throws PersistentObjectException {
+        this(reader);
+
+        this.id = object_id;
+        this.repository = repository;
+        this.bucket = bucket;
+
+    }
+
+    public LXP(JSONReader reader, IRepository repository, IBucket bucket) throws PersistentObjectException {
         this(getNextFreePID(), reader, repository, bucket);
     }
 
@@ -403,6 +412,7 @@ public class LXP implements ILXP, Comparable<LXP> {
         return null;
     }
 
+    // TODO - this might be an array of objects
     private void readArrayIfPresent(JSONReader reader, String key) throws JSONException, PersistentObjectException {
 
         if (reader.have(JSONReader.ARRAY)) {
@@ -426,6 +436,14 @@ public class LXP implements ILXP, Comparable<LXP> {
 
         } else {
             throw new PersistentObjectException("Unexpected type in JSON string: ");
+        }
+    }
+
+    private void readObjectIfPresent(JSONReader reader, String key) {
+
+        if (reader.have(JSONReader.OBJECT)) {
+
+            // TODO
         }
     }
 }

@@ -24,9 +24,12 @@ import uk.ac.standrews.cs.storr.interfaces.IStore;
 import uk.ac.standrews.cs.storr.rest.RESTConfig;
 
 import javax.ws.rs.core.UriBuilder;
+import java.io.File;
 import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.HashMap;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -35,7 +38,7 @@ public class JettyApp {
 
     private static final int DEFAULT_SERVER_PORT = 9998;
     public static UriBuilder uriBuilder = UriBuilder.fromUri("http://0.0.0.0/");
-    private static int serverPort;
+    private static int serverPort = DEFAULT_SERVER_PORT;
     private static URI baseUri;
 
     public static Server StartServer(IStore store) throws Exception {
@@ -51,23 +54,31 @@ public class JettyApp {
      * The following parameters are allowed:
      * - port (default port is 9998)
      * - store path
-     * Example:
      *
+     * Example:
+     * port=9998 path=~/storr/
      *
      * @param args
-     * @throws Exception
+     * @throws Exception if the server or storr could not be launched successfully
      */
     public static void main(String[] args) throws Exception {
-        if (args.length > 0) {
-            serverPort = Integer.parseInt(args[0]);
-        } else {
-            serverPort = DEFAULT_SERVER_PORT;
+
+        HashMap<String, String> map = makeMap(args);
+        if (map.containsKey("port")) {
+            serverPort = Integer.parseInt(map.get("port"));
         }
 
-        // FIXME - make the store path passable as argument
-        Path tempStorePath = Files.createTempDirectory(null);
-        System.out.println("Store will be created in path " + tempStorePath);
-        IStore store = new Store(tempStorePath);
+        Path store_path;
+        if (map.containsKey("path")) {
+            store_path = Paths.get(map.get("path").replaceFirst("^~",System.getProperty("user.home")));
+            File path = new File(store_path.toString());
+            path.mkdirs();
+        } else {
+            store_path = Files.createTempDirectory(null);
+        }
+
+        System.out.println("Store will be created in path " + store_path);
+        IStore store = new Store(store_path);
 
         final Server server = StartServer(store);
 
@@ -78,5 +89,23 @@ public class JettyApp {
             server.destroy();
         }
 
+    }
+
+    // Creates map of key-value arguments
+    private static HashMap<String, String> makeMap(String[] args) {
+
+        HashMap<String, String> map = new HashMap<>();
+
+        for(String arg:args) {
+
+            if (arg.contains("=")) {
+                String key = arg.substring(0, arg.indexOf("="));
+                String value = arg.substring(arg.indexOf("=") + 1, arg.length());
+
+                map.put(key, value);
+            }
+        }
+
+        return map;
     }
 }

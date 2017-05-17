@@ -10,7 +10,7 @@
 		{
 			"name": "GET ILXP Obj",
 			"request": {
-				"url": "localhost:9998/8343569263890602095",
+				"url": "localhost:9998/aaa/bbb/5787382431310599543",
 				"method": "GET",
 				"header": [],
 				"body": {},
@@ -21,7 +21,7 @@
 		{
 			"name": "CREATE ILXP Obj",
 			"request": {
-				"url": "localhost:9998/",
+				"url": "localhost:9998/aaa/bbb",
 				"method": "POST",
 				"header": [
 					{
@@ -34,6 +34,37 @@
 					"mode": "raw",
 					"raw": "{\n\t\"number\" : 1\n}"
 				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "CREATE Complex ILXP Obj",
+			"request": {
+				"url": "localhost:9998/aaa/kk",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"glossary\": {\n        \"title\": \"example glossary\",\n        \"GlossDiv\": {\n            \"title\": \"S\",\n            \"GlossList\": {\n                \"GlossEntry\": {\n                    \"ID\": \"SGML\",\n                    \"SortAs\": \"SGML\",\n                    \"GlossTerm\": \"Standard Generalized Markup Language\",\n                    \"Acronym\": \"SGML\",\n                    \"Abbrev\": \"ISO 8879:1986\",\n                    \"GlossDef\": {\n                        \"para\": \"A meta-markup language, used to create markup languages such as DocBook.\",\n                        \"GlossSeeAlso\": [\n                            \"GML\",\n                            \"XML\"\n                        ]\n                    },\n                    \"GlossSee\": \"markup\"\n                }\n            }\n        }\n    }\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "DELETE ILXP Obj",
+			"request": {
+				"url": "localhost:9998/aaa/bbb/605655185515855346",
+				"method": "DELETE",
+				"header": [],
+				"body": {},
 				"description": ""
 			},
 			"response": []
