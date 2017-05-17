@@ -12,6 +12,11 @@ A file-based record storage library.
 </dependency>
 ```
 
+## Build and coverage status
+
+[![CircleCI](https://circleci.com/gh/stacs-srg/storr.svg?style=svg)](https://circleci.com/gh/stacs-srg/storr) [![codecov](https://codecov.io/gh/stacs-srg/storr/branch/master/graph/badge.svg)](https://codecov.io/gh/stacs-srg/storr)
+
+
 ## See also
 
 * [relevant Maven goals](https://github.com/stacs-srg/hub/tree/master/maven) (private)
