@@ -16,6 +16,10 @@
  */
 package uk.ac.standrews.cs.storr.rest.api;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import uk.ac.standrews.cs.storr.impl.BucketKind;
 import uk.ac.standrews.cs.storr.impl.LXP;
 import uk.ac.standrews.cs.storr.impl.exceptions.BucketException;
@@ -25,6 +29,7 @@ import uk.ac.standrews.cs.storr.interfaces.IBucket;
 import uk.ac.standrews.cs.storr.interfaces.ILXP;
 import uk.ac.standrews.cs.storr.interfaces.IRepository;
 import uk.ac.standrews.cs.storr.rest.http.HTTPResponses;
+import uk.ac.standrews.cs.storr.rest.http.HTTPStatus;
 import uk.ac.standrews.cs.utilities.JSONReader;
 
 import javax.ws.rs.*;
@@ -35,17 +40,33 @@ import java.io.StringReader;
 import static uk.ac.standrews.cs.storr.rest.RESTConfig.store;
 
 /**
+ * This is the actual STORR REST API.
+ *
+ * This class contains all the REST calls defined using the JAX-RS syntax (via Jersey).
+ * The REST documentation is generated using Swagger.
+ *
+ * See the following link for the swagger annotations language:
+ * @link https://github.com/swagger-api/swagger-core/wiki/Annotations-1.5.X
+ *
+ *
  * TODO - log the REST calls
- * TODO - get repo/bucket
+ * TODO - get repo/bucket contents
+ * TODO - additional operations on repo/buckets
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 @Path("/")
+@Api(value="/", description = "storr operations")
 public class Storr {
 
     @GET
     @Path("/{repo}/{bucket}/{id}")
     @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(value = "Get the ILXP object matching the given id")
+    @ApiResponses(value = {
+            @ApiResponse(code = HTTPStatus.OK, message = "ILXP JSON structure"),
+            @ApiResponse(code = HTTPStatus.INTERNAL_SERVER, message = "ILXP Not Found")
+    })
     public Response getILXP(@PathParam("repo") final String repo, @PathParam("bucket") final String buck, @PathParam("id") final String id) {
 
         try {
@@ -61,10 +82,46 @@ public class Storr {
 
     }
 
+    @GET
+    @Path("/has/{repo}/{bucket}/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(value = "Check if the ILXP object matching the given id exists")
+    @ApiResponses(value = {
+            @ApiResponse(code = HTTPStatus.OK, message = "The ILXP handle"),
+            @ApiResponse(code = HTTPStatus.NOT_FOUND, message = "The ILXP requested does not exists"),
+            @ApiResponse(code = HTTPStatus.INTERNAL_SERVER, message = "ILXP Not Found")
+    })
+    public Response hasILXP(@PathParam("repo") final String repo, @PathParam("bucket") final String buck, @PathParam("id") final String id) {
+
+        try {
+            IRepository repository = store.getRepository(repo);
+            IBucket bucket = repository.getBucket(buck);
+            boolean exists = bucket.contains(Long.parseLong(id));
+
+            if (exists) {
+                String objectHandle = objectHandle(repo, buck, id);
+                return HTTPResponses.FOUND(objectHandle);
+            } else {
+                return HTTPResponses.NOT_FOUND();
+            }
+
+        } catch (RepositoryException e) {
+            return HTTPResponses.INTERNAL_SERVER();
+        }
+
+    }
+
     @POST
     @Path("/{repo}/{bucket}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
+    @ApiOperation(value = "Creates an ILXP object for the given JSON structure at the specified repository and bucket",
+                  notes = "The ILXP object is created under the /repo/bucket/ location. If the repository and bucket do not exist, " +
+                        "then storr will attempt to create them.")
+    @ApiResponses(value = {
+            @ApiResponse(code = HTTPStatus.CREATED, message = "The ILXP handle"),
+            @ApiResponse(code = HTTPStatus.INTERNAL_SERVER, message = "The ILXP object could not be created2")
+    })
     public Response postILXP(@PathParam("repo") String repo, @PathParam("bucket") String buck, String json) {
 
         try {
@@ -76,7 +133,7 @@ public class Storr {
             LXP lxp = new LXP(reader);
             bucket.makePersistent(lxp);
 
-            String objectHandle = repo + "/" + buck + "/" + lxp.getId();
+            String objectHandle = objectHandle(repo, buck, lxp.getId());
             return HTTPResponses.CREATED(objectHandle);
 
         } catch (PersistentObjectException | RepositoryException | BucketException e) {
@@ -88,6 +145,11 @@ public class Storr {
     @DELETE
     @Path("/{repo}/{bucket}/{id}")
     @Produces(MediaType.TEXT_PLAIN)
+    @ApiOperation(value = "Deletes the ILXP object matching the /repo/bucket/id handle")
+    @ApiResponses(value = {
+            @ApiResponse(code = HTTPStatus.OK, message = "The ILXP was deleted"),
+            @ApiResponse(code = HTTPStatus.INTERNAL_SERVER, message = "The ILXP could not be deleted")
+    })
     public Response deleteILXP(@PathParam("repo") final String repo, @PathParam("bucket") final String buck, @PathParam("id") final String id) {
 
         try {
@@ -95,7 +157,7 @@ public class Storr {
             IBucket bucket = repository.getBucket(buck);
             bucket.delete(Long.parseLong(id));
 
-            String objectHandle = repo + "/" + buck + "/" + id;
+            String objectHandle = objectHandle(repo, buck, id);
             return HTTPResponses.OK("Object with handle " + objectHandle + " was deleted");
 
         } catch (BucketException | RepositoryException e) {
@@ -103,7 +165,17 @@ public class Storr {
         }
     }
 
-    // UTILITY METHODS
+    /////////////////////
+    // UTILITY METHODS //
+    /////////////////////
+
+    private String objectHandle(String repo, String buck, long id) {
+        return objectHandle(repo, buck, Long.toString(id));
+    }
+
+    private String objectHandle(String repo, String buck, String id) {
+        return "/" + repo + "/" + buck + "/" + id;
+    }
 
     private IRepository getOrMakeRepository(String repo) throws RepositoryException {
         IRepository repository;

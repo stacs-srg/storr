@@ -19,14 +19,16 @@ package uk.ac.standrews.cs.storr.rest.http;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-class HTTPStatus {
+public class HTTPStatus {
 
-    static final int OK = 200;
-    static final int CREATED = 201;
+    public static final int OK = 200;
+    public static final int CREATED = 201;
 
-    static final int BAD_REQUEST = 400;
-    static final int NOT_FOUND = 404;
+    public static final int FOUND = 302;
 
-    static final int INTERNAL_SERVER = 500;
+    public static final int BAD_REQUEST = 400;
+    public static final int NOT_FOUND = 404;
+
+    public static final int INTERNAL_SERVER = 500;
 
 }

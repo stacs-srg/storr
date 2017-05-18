@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License along with storr. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-package uk.ac.standrews.cs.storr.jetty;
+package uk.ac.standrews.cs.storr.rest.jetty;
 
 import org.eclipse.jetty.server.Server;
 import org.glassfish.jersey.jetty.JettyHttpContainerFactory;
@@ -37,14 +37,14 @@ import java.util.HashMap;
 public class JettyApp {
 
     private static final int DEFAULT_SERVER_PORT = 9998;
-    public static UriBuilder uriBuilder = UriBuilder.fromUri("http://0.0.0.0/");
+    private static UriBuilder uriBuilder = UriBuilder.fromUri("http://0.0.0.0/");
     private static int serverPort = DEFAULT_SERVER_PORT;
-    private static URI baseUri;
 
-    public static Server StartServer(IStore store) throws Exception {
+    private static Server StartServer(IStore store) throws Exception {
+
         final ResourceConfig rc = new RESTConfig(store).build();
+        URI baseUri = uriBuilder.port(serverPort).build();
 
-        baseUri = uriBuilder.port(serverPort).build();
         return JettyHttpContainerFactory.createServer(baseUri, rc);
     }
 
@@ -78,6 +78,9 @@ public class JettyApp {
         }
 
         System.out.println("Store will be created in path " + store_path);
+        System.out.println("REST API documentation available at localhost:" + serverPort +
+                "/swagger.json OR localhost:" + serverPort + "/swagger.yaml");
+
         IStore store = new Store(store_path);
 
         final Server server = StartServer(store);

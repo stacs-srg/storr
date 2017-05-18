@@ -18,7 +18,6 @@ package uk.ac.standrews.cs.storr.rest.http;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.io.InputStream;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -39,10 +38,9 @@ public class HTTPResponses {
                 .build();
     }
 
-    public static Response NOT_FOUND(String message) {
+    public static Response NOT_FOUND() {
         return Response.status(HTTPStatus.NOT_FOUND)
                 .type(MediaType.TEXT_PLAIN)
-                .entity(message)
                 .build();
     }
 
@@ -52,15 +50,20 @@ public class HTTPResponses {
                 .build();
     }
 
-    public static Response OK(InputStream inputStream) {
+    public static Response OK(String message) {
         return Response.status(HTTPStatus.OK)
-                .entity(inputStream)
-                .type(MediaType.MULTIPART_FORM_DATA) // Note - this is a general media-type. will not render on browser.
+                .entity(message)
                 .build();
     }
 
-    public static Response OK(String message) {
+    public static Response OK() {
         return Response.status(HTTPStatus.OK)
+                .build();
+    }
+
+    public static Response FOUND(String message) {
+        return Response.status(HTTPStatus.FOUND)
+                .type(MediaType.TEXT_PLAIN)
                 .entity(message)
                 .build();
     }
