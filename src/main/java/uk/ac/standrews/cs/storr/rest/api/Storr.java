@@ -37,7 +37,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.StringReader;
 
-import static uk.ac.standrews.cs.storr.rest.RESTConfig.store;
+import static uk.ac.standrews.cs.storr.rest.config.RESTConfig.store;
 
 /**
  * This is the actual STORR REST API.

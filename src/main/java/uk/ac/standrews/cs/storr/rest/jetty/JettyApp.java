@@ -21,7 +21,7 @@ import org.glassfish.jersey.jetty.JettyHttpContainerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
 import uk.ac.standrews.cs.storr.impl.Store;
 import uk.ac.standrews.cs.storr.interfaces.IStore;
-import uk.ac.standrews.cs.storr.rest.RESTConfig;
+import uk.ac.standrews.cs.storr.rest.config.RESTConfig;
 
 import javax.ws.rs.core.UriBuilder;
 import java.io.File;
@@ -42,7 +42,7 @@ public class JettyApp {
 
     private static Server StartServer(IStore store) throws Exception {
 
-        final ResourceConfig rc = new RESTConfig(store).build();
+        final ResourceConfig rc = new RESTConfig().setStorr(store);
         URI baseUri = uriBuilder.port(serverPort).build();
 
         return JettyHttpContainerFactory.createServer(baseUri, rc);
