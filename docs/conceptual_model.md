@@ -1,4 +1,4 @@
-# Concptual Model
+# Conceptual Model
 
 <img src="images/old_man_small.jpg" height="300" alt="Old man of Storr by G.Kirby">
 
