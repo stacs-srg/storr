@@ -130,7 +130,7 @@ public class Storr {
 
             JSONReader reader = new JSONReader(new StringReader(json));
 
-            LXP lxp = new LXP(reader);
+            LXP lxp = new LXP(reader, repository, bucket);
             bucket.makePersistent(lxp);
 
             String objectHandle = objectHandle(repo, buck, lxp.getId());

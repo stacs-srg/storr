@@ -18,10 +18,7 @@ package uk.ac.standrews.cs.storr.impl;
 
 import org.json.JSONException;
 import org.json.JSONWriter;
-import uk.ac.standrews.cs.storr.impl.exceptions.IllegalKeyException;
-import uk.ac.standrews.cs.storr.impl.exceptions.KeyNotFoundException;
-import uk.ac.standrews.cs.storr.impl.exceptions.PersistentObjectException;
-import uk.ac.standrews.cs.storr.impl.exceptions.TypeMismatchFoundException;
+import uk.ac.standrews.cs.storr.impl.exceptions.*;
 import uk.ac.standrews.cs.storr.interfaces.*;
 import uk.ac.standrews.cs.storr.types.Types;
 import uk.ac.standrews.cs.utilities.JSONReader;
@@ -51,36 +48,6 @@ public class LXP implements ILXP, Comparable<LXP> {
         // don't know the repo or the bucket.
     }
 
-    public LXP(JSONReader reader) throws PersistentObjectException {
-        this();
-
-        try {
-            reader.nextSymbol();
-            reader.object();
-
-            while (!reader.isEndOfStream()) {
-
-                String key = reader.key();
-                Object value = readValue(reader);
-
-                if (value != null) {
-                    check(key);
-                    map.put(key, value);
-
-                } else {
-                    // FIXME - what if this is an object?
-                    readArrayIfPresent(reader, key);
-                }
-            }
-        } catch (JSONException e) {
-            if (reader.have(JSONReader.ENDOBJECT)) { // we are at the end and that is OK
-                return;
-            }
-            // otherwise bad stuff has happened
-            throw new PersistentObjectException(e);
-        }
-    }
-
     public LXP(long object_id, IRepository repository, IBucket bucket) {
 
         this.id = object_id;
@@ -91,16 +58,28 @@ public class LXP implements ILXP, Comparable<LXP> {
     }
 
     public LXP(long object_id, JSONReader reader, IRepository repository, IBucket bucket) throws PersistentObjectException {
-        this(reader);
+        this(object_id, repository, bucket);
 
-        this.id = object_id;
-        this.repository = repository;
-        this.bucket = bucket;
-
+        readJSON(reader, true);
     }
 
     public LXP(JSONReader reader, IRepository repository, IBucket bucket) throws PersistentObjectException {
         this(getNextFreePID(), reader, repository, bucket);
+    }
+
+    /**
+     * Use this constructor to create inner references of LXP
+     *
+     * @param reader
+     * @param repository
+     * @param bucket
+     * @param isObject if false, just read the content of object; otherwise read the object
+     * @throws PersistentObjectException
+     */
+    private LXP(JSONReader reader, IRepository repository, IBucket bucket, boolean isObject) throws PersistentObjectException {
+        this(getNextFreePID(), repository, bucket);
+
+        readJSON(reader, isObject);
     }
 
     @Override
@@ -409,10 +388,56 @@ public class LXP implements ILXP, Comparable<LXP> {
         if (reader.have(JSONReader.BOOLEAN)) {
             return reader.booleanValue();
         }
+
         return null;
     }
 
-    // TODO - this might be an array of objects
+    private void readJSON(JSONReader reader, boolean isObject) throws JSONException, PersistentObjectException {
+
+        try {
+            reader.nextSymbol();
+            if (isObject) reader.object();
+
+            while (!reader.isEndOfStream()) {
+
+                String key = reader.key();
+                Object value = readValue(reader);
+
+                if (value != null) {
+                    check(key);
+                    map.put(key, value);
+
+                } else if (reader.have(JSONReader.ARRAY)) {
+                    readArrayIfPresent(reader, key);
+
+                } else if (reader.have(JSONReader.OBJECT)) {
+
+                    ILXP lxp = new LXP(reader, repository, bucket, false);
+                    bucket.makePersistent(lxp);
+
+                    IStoreReference ref = new StoreReference(repository.getStore(), repository.getName(), bucket.getName(), lxp.getId());
+                    put(key, ref);
+
+                }
+            }
+        } catch (JSONException | BucketException e) {
+            if (reader.have(JSONReader.ENDOBJECT)) { // we are at the end and that is OK
+                return;
+            }
+            // otherwise bad stuff has happened
+            throw new PersistentObjectException(e);
+        }
+
+    }
+
+    // FIXME/BUG - This method does not work if we have an array of objects
+    //
+    //    {
+    //        "glossary": [{
+    //        "title": "test title"
+    //    }]
+    //    }
+    //
     private void readArrayIfPresent(JSONReader reader, String key) throws JSONException, PersistentObjectException {
 
         if (reader.have(JSONReader.ARRAY)) {
@@ -439,11 +464,4 @@ public class LXP implements ILXP, Comparable<LXP> {
         }
     }
 
-    private void readObjectIfPresent(JSONReader reader, String key) {
-
-        if (reader.have(JSONReader.OBJECT)) {
-
-            // TODO
-        }
-    }
 }
