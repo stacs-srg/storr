@@ -408,15 +408,10 @@ public class LXP implements ILXP, Comparable<LXP> {
                     map.put(key, value);
 
                 } else if (reader.have(JSONReader.ARRAY)) {
-                    readArrayIfPresent(reader, key);
+                    readArray(reader, key);
 
                 } else if (reader.have(JSONReader.OBJECT)) {
-
-                    ILXP lxp = new LXP(reader, repository, bucket, false);
-                    bucket.makePersistent(lxp);
-
-                    IStoreReference ref = new StoreReference(repository.getStore(), repository.getName(), bucket.getName(), lxp.getId());
-                    put(key, ref);
+                    readObject(reader, key);
 
                 }
             }
@@ -430,38 +425,46 @@ public class LXP implements ILXP, Comparable<LXP> {
 
     }
 
-    // FIXME/BUG - This method does not work if we have an array of objects
-    //
-    //    {
-    //        "glossary": [{
-    //        "title": "test title"
-    //    }]
-    //    }
-    //
-    private void readArrayIfPresent(JSONReader reader, String key) throws JSONException, PersistentObjectException {
+    private void readObject(JSONReader reader, String key) throws PersistentObjectException, BucketException {
+        IStoreReference ref = makeObjectAndGetRef(reader);
+        put(key, ref);
+    }
 
-        if (reader.have(JSONReader.ARRAY)) {
+    private IStoreReference makeObjectAndGetRef(JSONReader reader) throws PersistentObjectException, BucketException {
+        ILXP lxp = new LXP(reader, repository, bucket, false);
+        bucket.makePersistent(lxp);
 
-            reader.nextSymbol(); // eat the array symbol
-            List list = new ArrayList();
+        IStoreReference ref = new StoreReference(repository.getStore(), repository.getName(), bucket.getName(), lxp.getId());
+        reader.nextSymbol();
 
-            while (!reader.have(JSONReader.ENDARRAY)) {
+        return ref;
+    }
 
-                Object value = readValue(reader);
+    private void readArray(JSONReader reader, String key) throws JSONException, PersistentObjectException, BucketException {
 
-                if (value != null) {
-                    list.add(value);
-                } else {
-                    throw new PersistentObjectException("Unexpected type in JSON Array");
-                }
+        reader.nextSymbol(); // eat the array symbol
+        List list = new ArrayList();
+
+        while (!reader.have(JSONReader.ENDARRAY)) {
+
+            Object value = readValue(reader);
+
+            if (value != null) {
+                list.add(value);
+            } else if (reader.have(JSONReader.OBJECT)) {
+                list.add(makeObjectAndGetRef(reader));
+            } else {
+                throw new PersistentObjectException("Unexpected type in JSON Array");
             }
-            reader.nextSymbol(); // eat the end array
-            reader.nextSymbol(); // eat the comma
-            put(key, list);
-
-        } else {
-            throw new PersistentObjectException("Unexpected type in JSON string: ");
         }
+        reader.nextSymbol(); // eat the end array
+
+        if (reader.have(JSONReader.COMMA)) {
+            reader.nextSymbol(); // eat the comma
+        }
+
+        put(key, list);
+
     }
 
 }
