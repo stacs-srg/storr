@@ -16,42 +16,12 @@
  */
 package uk.ac.standrews.cs.storr.rest.api;
 
-import org.glassfish.jersey.test.JerseyTest;
 import org.junit.Test;
-import uk.ac.standrews.cs.storr.impl.Store;
-import uk.ac.standrews.cs.storr.interfaces.IStore;
-import uk.ac.standrews.cs.storr.rest.config.RESTConfig;
-import uk.ac.standrews.cs.storr.rest.http.HTTPStatus;
-
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.core.Application;
-import javax.ws.rs.core.Response;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-
-import static org.junit.Assert.*;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class StorrTest extends JerseyTest {
-
-    @Override
-    protected Application configure() {
-
-        try {
-            Path store_path = Files.createTempDirectory(null);
-            IStore store = new Store(store_path);
-
-            return new RESTConfig().setStorr(store);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return null;
-    }
+public class StorrCreateILXPTest extends RESTCommonTest {
 
     @Test
     public void createBasicILXP() {
@@ -60,9 +30,27 @@ public class StorrTest extends JerseyTest {
                 "\"number\" : 1" +
                 "}";
 
-        createILXPFromJSON(data);
+        createILXPFromJSONAndTest(data);
     }
 
+    @Test
+    public void createILXPWithArray() {
+        
+        String data = "{" +
+                "\"numbers\": [1, 2, 3]" +
+                "}";
+
+        createILXPFromJSONAndTest(data);
+    }
+
+    @Test
+    public void createILXPFromJSON_0() {
+
+        String data = "{}";
+
+        createILXPFromJSONAndTest(data);
+    }
+    
     @Test
     public void createILXPFromJSON_1() {
 
@@ -76,7 +64,7 @@ public class StorrTest extends JerseyTest {
                 "    }" +
                 "}";
 
-        createILXPFromJSON(data);
+        createILXPFromJSONAndTest(data);
     }
 
     @Test
@@ -88,7 +76,7 @@ public class StorrTest extends JerseyTest {
                 "\"cars\": [\"Ford\", \"BMW\", \"Fiat\", \"Ferrari\"]" +
                 "}";
 
-        createILXPFromJSON(data);
+        createILXPFromJSONAndTest(data);
     }
 
     @Test
@@ -100,7 +88,7 @@ public class StorrTest extends JerseyTest {
                 "}]" +
                 "}";
 
-        createILXPFromJSON(data);
+        createILXPFromJSONAndTest(data);
     }
 
     @Test
@@ -144,23 +132,31 @@ public class StorrTest extends JerseyTest {
                 "  }]" +
                 "}";
 
-        createILXPFromJSON(data);
+        createILXPFromJSONAndTest(data);
     }
 
-    private void createILXPFromJSON(String JSON) {
-        Response response = target("/REPO/BUCKET")
-                .request()
-                .post(Entity.json(JSON));
+    @Test
+    public void createILXPFromJSON_5() {
 
-        assertEquals(response.getStatus(), HTTPStatus.CREATED);
+        String data = "{ \"array\" : []}";
 
-        // Handle should be: /REPO/BUCKET/long_number
-        String[] ILXPHandle = response.readEntity(String.class).split("/");
-        assertEquals(ILXPHandle.length, 4);
-        assertTrue(ILXPHandle[0].isEmpty());
-        assertEquals(ILXPHandle[1], "REPO");
-        assertEquals(ILXPHandle[2], "BUCKET");
-        assertFalse(ILXPHandle[3].isEmpty());
-
+        createILXPFromJSONAndTest(data);
     }
+
+    @Test
+    public void createILXPFail_0() {
+
+        String data = "";
+
+        createILXPFromJSONAndFailTest(data);
+    }
+
+    @Test
+    public void createILXPFail_1() {
+
+        String data = "{ \"title\" }";
+
+        createILXPFromJSONAndFailTest(data);
+    }
+
 }

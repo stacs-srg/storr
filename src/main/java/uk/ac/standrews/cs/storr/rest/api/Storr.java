@@ -65,16 +65,24 @@ public class Storr {
     @ApiOperation(value = "Get the ILXP object matching the given id")
     @ApiResponses(value = {
             @ApiResponse(code = HTTPStatus.OK, message = "ILXP JSON structure"),
+            @ApiResponse(code = HTTPStatus.NOT_FOUND, message = "The ILXP requested does not exists"),
             @ApiResponse(code = HTTPStatus.INTERNAL_SERVER, message = "ILXP Not Found")
     })
     public Response getILXP(@PathParam("repo") final String repo, @PathParam("bucket") final String buck, @PathParam("id") final String id) {
 
         try {
-            IRepository repository = store.getRepository(repo);
-            IBucket bucket = repository.getBucket(buck);
-            ILXP lxp = bucket.getObjectById(Long.parseLong(id));
+            boolean exists = exists(repo, buck, id);
 
-            return HTTPResponses.OK(lxp.toString());
+            if (exists) {
+                IRepository repository = store.getRepository(repo);
+                IBucket bucket = repository.getBucket(buck);
+                ILXP lxp = bucket.getObjectById(Long.parseLong(id));
+                return HTTPResponses.OK(lxp.toString());
+
+            } else {
+                return HTTPResponses.NOT_FOUND();
+
+            }
 
         } catch (BucketException | RepositoryException e) {
             return HTTPResponses.INTERNAL_SERVER();
@@ -85,7 +93,7 @@ public class Storr {
     @GET
     @Path("/has/{repo}/{bucket}/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(value = "Check if the ILXP object matching the given id exists")
+    @ApiOperation(value = "Check if the ILXP object with the given id exists")
     @ApiResponses(value = {
             @ApiResponse(code = HTTPStatus.OK, message = "The ILXP handle"),
             @ApiResponse(code = HTTPStatus.NOT_FOUND, message = "The ILXP requested does not exists"),
@@ -94,9 +102,7 @@ public class Storr {
     public Response hasILXP(@PathParam("repo") final String repo, @PathParam("bucket") final String buck, @PathParam("id") final String id) {
 
         try {
-            IRepository repository = store.getRepository(repo);
-            IBucket bucket = repository.getBucket(buck);
-            boolean exists = bucket.contains(Long.parseLong(id));
+            boolean exists = exists(repo, buck, id);
 
             if (exists) {
                 String objectHandle = objectHandle(repo, buck, id);
@@ -116,7 +122,7 @@ public class Storr {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
     @ApiOperation(value = "Creates an ILXP object for the given JSON structure at the specified repository and bucket",
-                  notes = "The ILXP object is created under the /repo/bucket/ location. If the repository and bucket do not exist, " +
+                  notes = "The ILXP object is created under the repo/bucket/ location. If the repository and bucket do not exist, " +
                         "then storr will attempt to create them.")
     @ApiResponses(value = {
             @ApiResponse(code = HTTPStatus.CREATED, message = "The ILXP handle"),
@@ -145,7 +151,7 @@ public class Storr {
     @DELETE
     @Path("/{repo}/{bucket}/{id}")
     @Produces(MediaType.TEXT_PLAIN)
-    @ApiOperation(value = "Deletes the ILXP object matching the /repo/bucket/id handle")
+    @ApiOperation(value = "Deletes the ILXP object matching the repo/bucket/id handle")
     @ApiResponses(value = {
             @ApiResponse(code = HTTPStatus.OK, message = "The ILXP was deleted"),
             @ApiResponse(code = HTTPStatus.INTERNAL_SERVER, message = "The ILXP could not be deleted")
@@ -169,12 +175,23 @@ public class Storr {
     // UTILITY METHODS //
     /////////////////////
 
+    private boolean exists(final String repo, final String buck, final String id) throws RepositoryException {
+
+        if (!store.repositoryExists(repo)) return false;
+
+        IRepository repository = store.getRepository(repo);
+        if (!repository.bucketExists(buck)) return false;
+
+        IBucket bucket = repository.getBucket(buck);
+        return bucket.contains(Long.parseLong(id));
+    }
+
     private String objectHandle(String repo, String buck, long id) {
         return objectHandle(repo, buck, Long.toString(id));
     }
 
     private String objectHandle(String repo, String buck, String id) {
-        return "/" + repo + "/" + buck + "/" + id;
+        return repo + "/" + buck + "/" + id;
     }
 
     private IRepository getOrMakeRepository(String repo) throws RepositoryException {

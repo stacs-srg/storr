@@ -413,6 +413,8 @@ public class LXP implements ILXP, Comparable<LXP> {
                 } else if (reader.have(JSONReader.OBJECT)) {
                     readObject(reader, key);
 
+                } else {
+                    throw new PersistentObjectException("No matching value for the key " + key);
                 }
             }
         } catch (JSONException | BucketException e) {
