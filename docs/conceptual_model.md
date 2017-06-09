@@ -1,4 +1,4 @@
-# Conceptual Model
+# Concptual Model
 
 <img src="images/old_man_small.jpg" height="300" alt="Old man of Storr by G.Kirby">
 
@@ -26,6 +26,11 @@ the [*Store*](https://quicksilver.host.cs.st-andrews.ac.uk/apidocs/storr/uk/ac/s
 The tuples that are stored in a Storr database are stored within buckets
 
 This structure was created to permit structuring without the introduction of too much complexity.
-Storr was originally created to store Birth, Death and Marriage records.
-In our test system we had two sets of these - one from the isle of Skye and another from Kilmarnock.
-To support such a setup we might create two repositories callled *Skye* and *Kilmarnock* each of which would contain three buckets: *Births*, *Deaths* and *Marriages*.
+Storr was originally created to store Birth, Death and Marriage records in the [Digitising Scotland project](https://digitisingscotland.cs.st-andrews.ac.uk).
+As an example of the use of Storr, in our test system we had two sets of records - one from the *Isle of Skye* and another from *Kilmarnock*.
+To support such a setup we created two repositories called *Skye* and *Kilmarnock* respectively each of which would contain three buckets, each containing the *Birth*, *Death* and *Marriage* records.
+An initialised Storr store to support this structure would look like this:
+
+<img src="images/bdm.jpg" height="300" alt="Example Store usage">
+
+
