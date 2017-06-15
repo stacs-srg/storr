@@ -37,17 +37,9 @@ public class DirectoryBackedIndexedBucket<T extends ILXP> extends DirectoryBacke
     private static final String INDEX_DIR_NAME = "INDICES";
     private Map<String, IBucketIndex> indexes = new HashMap<>();
 
-    /**
-     * Creates a handle on a bucket.
-     * Assumes that bucket has been created already using a factory - i.e. the directory already exists.
-     *
-     * @param repository  the repository in which the bucket is created.
-     * @param bucket_name the name of the bucket (also used as directory name).
-     * @throws RepositoryException if a RepositoryException is thrown in implementation
-     */
-    DirectoryBackedIndexedBucket(final IRepository repository, final String bucket_name, boolean create_bucket) throws RepositoryException {
+    protected DirectoryBackedIndexedBucket(final IRepository repository, final String bucket_name,  BucketKind kind, boolean create_bucket) throws RepositoryException {
 
-        super(repository, bucket_name, BucketKind.INDEXED, create_bucket);
+        super(repository, bucket_name, kind, create_bucket);
         try {
             initIndexes();
         } catch (IOException e) {
@@ -55,14 +47,33 @@ public class DirectoryBackedIndexedBucket<T extends ILXP> extends DirectoryBacke
         }
     }
 
-    DirectoryBackedIndexedBucket(final IRepository repository, final String bucket_name, ILXPFactory tFactory, boolean create_bucket) throws RepositoryException {
+    protected DirectoryBackedIndexedBucket(final IRepository repository, final String bucket_name, BucketKind kind, ILXPFactory tFactory, boolean create_bucket) throws RepositoryException {
 
-        super(repository, bucket_name, BucketKind.INDEXED, tFactory, create_bucket);
+        super(repository, bucket_name, kind, tFactory, create_bucket);
         try {
             initIndexes();
         } catch (IOException e) {
             throw new RepositoryException(e.getMessage());
         }
+    }
+
+
+    /**
+     * Creates a handle on a bucket.
+     *
+     * @param repository  the repository in which the bucket is created.
+     * @param bucket_name the name of the bucket (also used as directory name).
+     * @throws RepositoryException if a RepositoryException is thrown in implementation
+     */
+    DirectoryBackedIndexedBucket(final IRepository repository, final String bucket_name, boolean create_bucket) throws RepositoryException {
+
+        this(repository, bucket_name, BucketKind.INDEXED, create_bucket);
+
+    }
+
+    DirectoryBackedIndexedBucket(final IRepository repository, final String bucket_name, ILXPFactory tFactory, boolean create_bucket) throws RepositoryException {
+
+        this(repository, bucket_name, BucketKind.INDEXED, tFactory, create_bucket);
     }
 
     @Override

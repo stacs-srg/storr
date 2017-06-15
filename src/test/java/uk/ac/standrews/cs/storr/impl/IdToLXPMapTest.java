@@ -52,7 +52,7 @@ public class IdToLXPMapTest extends CommonTest {
 
         TypeFactory tf = store.getTypeFactory();
         IRepository testrepo = store.makeRepository("testrepo");
-        PersistentIdtoILXPMap.createMap( "testmap", testrepo );
+        new IdtoILXPMap( "testmap", testrepo, new LXPFactory(), true );
         bucket = testrepo.makeBucket( bucketName, BucketKind.DIRECTORYBACKED );
     }
 
@@ -60,7 +60,7 @@ public class IdToLXPMapTest extends CommonTest {
     public void checkXXX() throws RepositoryException, BucketException, PersistentObjectException, IOException {
 
         IRepository testrepo = store.getRepository("testrepo");
-        PersistentIdtoILXPMap pmap = new PersistentIdtoILXPMap<LXP>( testrepo,"testmap",false );
+        IdtoILXPMap pmap = new IdtoILXPMap<LXP>( "testmap", testrepo, new LXPFactory(), false );
 
         HashMap<Long, LXP> tempmap = new HashMap<Long, LXP>();
 

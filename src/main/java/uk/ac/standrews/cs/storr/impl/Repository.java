@@ -92,6 +92,18 @@ public class Repository implements IRepository {
     }
 
     @Override
+    public <T extends ILXP> IIdtoILXPMap<T> makeIdtoLXPMap(String name, ILXPFactory<T> tFactory) throws RepositoryException {
+            return new IdtoILXPMap( name, this, tFactory, true );
+
+    }
+
+    @Override
+    public <T extends ILXP> IStringtoILXPMap<T> makeStringtoLXPMap(String name, ILXPFactory<T> tFactory) throws RepositoryException {
+
+            return new StringtoILXPMap( name, this, tFactory, true );
+     }
+
+    @Override
     public boolean bucketExists(final String name) {
 
         return bucketNameIsLegal(name) && Files.exists(getBucketPath(name));
@@ -133,6 +145,18 @@ public class Repository implements IRepository {
             return bucket != null ? bucket : BucketKind.getBucket(this, bucket_name, tFactory);
         }
         throw new RepositoryException("bucket does not exist: " + bucket_name);
+    }
+
+    @Override
+    public <T extends ILXP> IIdtoILXPMap<T> getIdtoLXPMap(String name, ILXPFactory<T> tFactory) throws RepositoryException {
+
+            return new IdtoILXPMap( name, this, tFactory, false );
+    }
+
+    @Override
+    public <T extends ILXP> IStringtoILXPMap<T> getStringtoLXPMap(String name, ILXPFactory<T> tFactory) throws RepositoryException {
+
+            return new StringtoILXPMap( name, this, tFactory, false );
     }
 
     @Override

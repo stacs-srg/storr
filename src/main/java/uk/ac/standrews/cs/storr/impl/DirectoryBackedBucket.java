@@ -80,7 +80,9 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
             throw new RepositoryException("Bucket Directory: " + dir_name + " does not exist");
         }
 
-        setKind(kind);
+        if( ! checkKind(bucket_name, repository, kind) ) {
+            throw new RepositoryException("Bucket kind mismatch: " + bucket_name + "not of kind: " + kind.name() );
+        }
 
         try {
             Watcher watcher = repository.getStore().getWatcher();
@@ -121,7 +123,7 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
             throw new RepositoryException("Bucket Directory: " + dir_name + " does not exist");
         }
 
-        setKind(kind);
+        checkKind(bucket_name, repository, kind);
 
         try {
             Watcher watcher = repository.getStore().getWatcher();
@@ -153,6 +155,8 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
             FileManipulation.createDirectoryIfDoesNotExist(path);
             // set up directory for transaction support...
             FileManipulation.createDirectoryIfDoesNotExist(path.resolve(TRANSACTIONS_BUCKET_NAME));
+
+            setKind(path, kind);
 
         } catch (IOException e) {
             throw new RepositoryException(e.getMessage());
@@ -257,14 +261,26 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
 
     // Stream operations
 
-    private void setKind(BucketKind kind) {
+    private static void setKind(Path path, BucketKind kind) {
 
         try {
-            FileManipulation.createDirectoryIfDoesNotExist(directory.toPath().resolve(META_BUCKET_NAME).resolve(kind.name()));  // create a directory labelled with the kind in the new bucket dir
+            FileManipulation.createDirectoryIfDoesNotExist(path.resolve(META_BUCKET_NAME).resolve(kind.name()));  // create a directory labelled with the kind in the new bucket dir
 
         } catch (IOException e) {
             ErrorHandling.error("I/O Exception setting kind");
         }
+    }
+
+    /**
+     *
+     * @param name - the name of this bucket
+     * @param repository - the repo the bucket is in
+     * @param kind - the expected kind of the bucket
+     * @return true if the bucket is of that kind
+     */
+    private static boolean checkKind(String name, IRepository repository, BucketKind kind) {
+        Path path = getBucketPath(name, repository);
+        return Files.exists( path.resolve(META_BUCKET_NAME).resolve(kind.name()));
     }
 
     public String getName() {

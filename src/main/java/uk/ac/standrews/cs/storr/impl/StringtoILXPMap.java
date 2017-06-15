@@ -25,12 +25,10 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.Map;
 
-import static uk.ac.standrews.cs.storr.impl.BucketKind.INDEXED;
-
 /**
  * Created by al on 27/04/2017.
  */
-public class PersistentStringtoILXPMap<T extends ILXP> {
+public class StringtoILXPMap<T extends ILXP> implements IStringtoILXPMap<T> {
 
     private final DirectoryBackedIndexedBucket<Tuple<T>> bucket; // bucket used to store the map.
 
@@ -40,24 +38,20 @@ public class PersistentStringtoILXPMap<T extends ILXP> {
      *
      * @param repository the repository in which the bucket is created.
      * @param map_name   the name of the map/bucket (also used as directory name).
+     * @param tFactory
      * @throws RepositoryException if a RepositoryException is thrown in implementation
      */
-    public PersistentStringtoILXPMap(final IRepository repository, final String map_name, boolean create_map) throws RepositoryException, IOException {
-        if (create_map) {
-            createMap(map_name,repository);
-        }
-        bucket = new DirectoryBackedIndexedBucket(repository, map_name, create_map);
+    public StringtoILXPMap(final String map_name, final IRepository repository, ILXPFactory<T> tFactory, boolean create_map) throws RepositoryException {
+        this( map_name, repository, BucketKind.STRINGMAP, tFactory, create_map );
+    }
+
+    protected StringtoILXPMap(final String map_name, final IRepository repository, BucketKind kind, ILXPFactory<T> tFactory, boolean create_map) throws RepositoryException {
+
+            bucket = new DirectoryBackedMapBucket(repository, map_name, kind, tFactory, create_map);
 
     }
 
-    static void createMap(final String name, IRepository repository) throws RepositoryException, IOException {
-
-        DirectoryBackedIndexedBucket.createBucket(name, repository, INDEXED);
-        IIndexedBucket bucket = new DirectoryBackedIndexedBucket(repository, name, false);
-        bucket.addIndex(Tuple.KEY);
-    }
-
-
+    @Override
     public T lookup(String key) throws IOException, BucketException, RepositoryException {
         IInputStream<ILXP> values = bucket.getIndex(Tuple.KEY).records(key);
 
@@ -77,14 +71,17 @@ public class PersistentStringtoILXPMap<T extends ILXP> {
         } else return null;
     }
 
+    @Override
     public void put(String key, IStoreReference<T> value) throws PersistentObjectException, BucketException {
         bucket.makePersistent( new Tuple<T>( key, value ) );
     }
 
+    @Override
     public void injestRefMapValues(Map<Long, StoreReference<T>> map) {
 
     }
 
+    @Override
     public void injestMap(Map<Long, T> map) {
 
     }

@@ -19,9 +19,7 @@ package uk.ac.standrews.cs.storr.impl;
 import uk.ac.standrews.cs.storr.impl.exceptions.BucketException;
 import uk.ac.standrews.cs.storr.impl.exceptions.PersistentObjectException;
 import uk.ac.standrews.cs.storr.impl.exceptions.RepositoryException;
-import uk.ac.standrews.cs.storr.interfaces.ILXP;
-import uk.ac.standrews.cs.storr.interfaces.IRepository;
-import uk.ac.standrews.cs.storr.interfaces.IStoreReference;
+import uk.ac.standrews.cs.storr.interfaces.*;
 
 import java.io.IOException;
 import java.util.Map;
@@ -29,9 +27,9 @@ import java.util.Map;
 /**
  * Created by al on 27/04/2017.
  */
-public class PersistentIdtoILXPMap<T extends ILXP> {
+public class IdtoILXPMap<T extends ILXP> implements IIdtoILXPMap<T> {
 
-    private final PersistentStringtoILXPMap pmap;
+    private final StringtoILXPMap pmap;
 
     /**
      * Creates a handle on a persistent map, implemented by an IndexedBucket
@@ -39,32 +37,31 @@ public class PersistentIdtoILXPMap<T extends ILXP> {
      *
      * @param repository the repository in which the bucket is created.
      * @param map_name   the name of the map/bucket (also used as directory name).
+     * @param tFactory
      * @throws RepositoryException if a RepositoryException is thrown in implementation
      */
-    PersistentIdtoILXPMap(final IRepository repository, final String map_name, boolean create_map) throws RepositoryException, IOException {
-        pmap = new PersistentStringtoILXPMap( repository, map_name, create_map );
+    IdtoILXPMap(final String map_name, final IRepository repository, ILXPFactory<T> tFactory, boolean create_map) throws RepositoryException {
+        pmap = new StringtoILXPMap( map_name, repository, BucketKind.IDMAP, tFactory, create_map );
 
     }
 
-    static void createMap(final String name, IRepository repository) throws RepositoryException, IOException {
-
-        PersistentStringtoILXPMap.createMap(name,repository);
-    }
-
-
+    @Override
     public ILXP lookup(Long id) throws IOException, BucketException, RepositoryException {
 
         return pmap.lookup( id.toString() );
     }
 
+    @Override
     public void put(Long key, IStoreReference<T> value) throws PersistentObjectException, BucketException {
         pmap.put( key.toString(), value );
     }
 
+    @Override
     public void injestRefMapValues(Map<Long, StoreReference<T>> map) {
 
     }
 
+    @Override
     public void injestMap(Map<Long, T> map) {
 
     }

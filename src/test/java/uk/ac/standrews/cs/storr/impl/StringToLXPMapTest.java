@@ -49,15 +49,15 @@ public class StringToLXPMapTest extends CommonTest {
 
         TypeFactory tf = store.getTypeFactory();
         IRepository testrepo = store.makeRepository("testrepo");
-        PersistentIdtoILXPMap.createMap( "testmap", testrepo );
+        new StringtoILXPMap( "testmap", testrepo, new LXPFactory(), true );
         bucket = testrepo.makeBucket( bucketName, BucketKind.DIRECTORYBACKED );
     }
 
     @Test
-    public void checkXXX() throws RepositoryException, BucketException, PersistentObjectException, IOException {
+    public void stringToLXPMapTest() throws RepositoryException, BucketException, PersistentObjectException, IOException {
 
         IRepository testrepo = store.getRepository("testrepo");
-        PersistentStringtoILXPMap pmap = new PersistentStringtoILXPMap<LXP>( testrepo,"testmap",false );
+        StringtoILXPMap pmap = new StringtoILXPMap<LXP>( "testmap", testrepo, new LXPFactory(), false );
 
         HashMap<String, LXP> tempmap = new HashMap();
 

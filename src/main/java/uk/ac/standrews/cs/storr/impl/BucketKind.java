@@ -35,6 +35,8 @@ public enum BucketKind {
     UNKNOWN, // an error case
     DIRECTORYBACKED,
     INDIRECT,
+    IDMAP,
+    STRINGMAP,
     INDEXED;
 
     public static IBucket getBucket(Repository repository, String bucket_name) throws RepositoryException {
@@ -107,6 +109,12 @@ public enum BucketKind {
         }
         if (Files.exists(meta_path.resolve(INDIRECT.name()))) {
             return INDIRECT;
+        }
+        if (Files.exists(meta_path.resolve(IDMAP.name()))) {
+            return IDMAP;
+        }
+        if (Files.exists(meta_path.resolve(STRINGMAP.name()))) {
+            return STRINGMAP;
         }
         throw new RepositoryException("invalid bucket kind");
     }
