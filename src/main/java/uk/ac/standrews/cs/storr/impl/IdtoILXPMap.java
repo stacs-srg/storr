@@ -30,6 +30,7 @@ import java.util.Map;
 public class IdtoILXPMap<T extends ILXP> implements IIdtoILXPMap<T> {
 
     private final StringtoILXPMap pmap;
+    private final IRepository repository;
 
     /**
      * Creates a handle on a persistent map, implemented by an IndexedBucket
@@ -42,7 +43,7 @@ public class IdtoILXPMap<T extends ILXP> implements IIdtoILXPMap<T> {
      */
     IdtoILXPMap(final String map_name, final IRepository repository, ILXPFactory<T> tFactory, boolean create_map) throws RepositoryException {
         pmap = new StringtoILXPMap( map_name, repository, BucketKind.IDMAP, tFactory, create_map );
-
+        this.repository = repository;
     }
 
     @Override
@@ -57,14 +58,20 @@ public class IdtoILXPMap<T extends ILXP> implements IIdtoILXPMap<T> {
     }
 
     @Override
-    public void injestRefMapValues(Map<Long, StoreReference<T>> map) {
-
+    public void injestRefMap(Map<Long, StoreReference<T>> map) throws BucketException, PersistentObjectException {
+        for (Map.Entry<Long, StoreReference<T>> entry : map.entrySet()) {
+            put( entry.getKey(), entry.getValue() );
+        }
     }
+
 
     @Override
-    public void injestMap(Map<Long, T> map) {
-
+    public void injestMap(Map<Long, T> map) throws BucketException, PersistentObjectException {
+        for (Map.Entry<Long,T> entry : map.entrySet()) {
+            put( entry.getKey(), new StoreReference<T>( repository.getStore(), entry.getValue() ) );
+        }
     }
+
 
 
 }

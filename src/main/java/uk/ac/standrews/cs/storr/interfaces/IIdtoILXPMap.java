@@ -16,7 +16,7 @@ public interface IIdtoILXPMap<T extends ILXP> {
 
     void put(Long key, IStoreReference<T> value) throws PersistentObjectException, BucketException;
 
-    void injestRefMapValues(Map<Long, StoreReference<T>> map);
+    void injestRefMap(Map<Long, StoreReference<T>> map) throws PersistentObjectException, BucketException;
 
-    void injestMap(Map<Long, T> map);
+    void injestMap(Map<Long, T> map) throws PersistentObjectException, BucketException;
 }

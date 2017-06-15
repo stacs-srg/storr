@@ -31,6 +31,7 @@ import java.util.Map;
 public class StringtoILXPMap<T extends ILXP> implements IStringtoILXPMap<T> {
 
     private final DirectoryBackedIndexedBucket<Tuple<T>> bucket; // bucket used to store the map.
+    private final IRepository repository;
 
     /**
      * Creates a handle on a persistent map, implemented by an IndexedBucket
@@ -48,7 +49,7 @@ public class StringtoILXPMap<T extends ILXP> implements IStringtoILXPMap<T> {
     protected StringtoILXPMap(final String map_name, final IRepository repository, BucketKind kind, ILXPFactory<T> tFactory, boolean create_map) throws RepositoryException {
 
             bucket = new DirectoryBackedMapBucket(repository, map_name, kind, tFactory, create_map);
-
+            this.repository = repository;
     }
 
     @Override
@@ -77,13 +78,18 @@ public class StringtoILXPMap<T extends ILXP> implements IStringtoILXPMap<T> {
     }
 
     @Override
-    public void injestRefMapValues(Map<Long, StoreReference<T>> map) {
+    public void injestRefMap(Map<String, StoreReference<T>> map) throws BucketException, PersistentObjectException {
+        for (Map.Entry<String, StoreReference<T>> entry : map.entrySet()) {
+            put( entry.getKey(), entry.getValue() );
+        }
 
     }
 
     @Override
-    public void injestMap(Map<Long, T> map) {
-
+    public void injestMap(Map<String, T> map) throws BucketException, PersistentObjectException {
+        for (Map.Entry<String,T> entry : map.entrySet()) {
+            put( entry.getKey(), new StoreReference<T>( repository.getStore(), entry.getValue() ) );
+        }
     }
 
 

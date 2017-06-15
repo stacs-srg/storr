@@ -16,7 +16,7 @@ public interface IStringtoILXPMap<T extends ILXP> {
 
     void put(String key, IStoreReference<T> value) throws PersistentObjectException, BucketException;
 
-    void injestRefMapValues(Map<Long, StoreReference<T>> map);
+    void injestRefMap(Map<String, StoreReference<T>> map) throws PersistentObjectException, BucketException;
 
-    void injestMap(Map<Long, T> map);
+    void injestMap(Map<String, T> map) throws PersistentObjectException, BucketException;
 }
