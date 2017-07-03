@@ -89,7 +89,8 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
             watcher.register(directory.toPath(), this);
 
         } catch (IOException e) {
-            throw new RepositoryException("Failure to add watcher for Bucket " + bucket_name);
+            e.printStackTrace();
+            throw new RepositoryException("(1) Failure to add watcher for Bucket " + bucket_name);
         }
     }
 
@@ -130,7 +131,8 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
             watcher.register(directory.toPath(), this);
 
         } catch (IOException e) {
-            throw new RepositoryException("Failure to add watcher for Bucket " + bucket_name);
+            e.printStackTrace();
+            throw new RepositoryException("(2) Failure to add watcher for Bucket " + bucket_name);
         }
 
         this.tFactory = tFactory;
