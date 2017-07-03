@@ -61,7 +61,7 @@ public enum BucketKind {
         return retrieveBucket(repository, bucket_name, tFactory, kind, true);
     }
 
-    private static IBucket retrieveBucket(Repository repository, String bucket_name, BucketKind kind, boolean create_bucket) throws RepositoryException {
+    private static <T extends ILXP> IBucket retrieveBucket(Repository repository, String bucket_name, BucketKind kind, boolean create_bucket) throws RepositoryException {
 
         switch (kind) {
 
@@ -76,7 +76,7 @@ public enum BucketKind {
             }
         }
 
-        throw new RepositoryException("invalid bucket kind");
+        throw new RepositoryException("Invalid bucket kind");
     }
 
     private static <T extends ILXP> IBucket retrieveBucket(Repository repository, String bucket_name, ILXPFactory<T> tFactory, BucketKind kind, boolean create_bucket) throws RepositoryException {
@@ -84,17 +84,17 @@ public enum BucketKind {
         switch (kind) {
 
             case DIRECTORYBACKED: {
-                return new DirectoryBackedBucket(repository, bucket_name, kind, tFactory, create_bucket);
+                return new DirectoryBackedBucket<>(repository, bucket_name, kind, tFactory, create_bucket);
             }
             case INDIRECT: {
-                return new DirectoryBackedIndirectBucket(repository, bucket_name, tFactory, create_bucket);
+                return new DirectoryBackedIndirectBucket<>(repository, bucket_name, tFactory, create_bucket);
             }
             case INDEXED: {
                 return new DirectoryBackedIndexedBucket(repository, bucket_name, tFactory, create_bucket);
             }
         }
 
-        throw new RepositoryException("invalid bucket kind");
+        throw new RepositoryException("Invalid bucket kind");
     }
 
     private static BucketKind getKind(IRepository repository, String bucket_name) throws RepositoryException {
@@ -116,6 +116,7 @@ public enum BucketKind {
         if (Files.exists(meta_path.resolve(STRINGMAP.name()))) {
             return STRINGMAP;
         }
-        throw new RepositoryException("invalid bucket kind");
+
+        throw new RepositoryException("Invalid bucket kind");
     }
 }

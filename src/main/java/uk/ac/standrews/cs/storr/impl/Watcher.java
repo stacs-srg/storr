@@ -39,7 +39,7 @@ public class Watcher {
      */
     Watcher() throws IOException { // Path dir) throws IOException {
         this.watch_service = FileSystems.getDefault().newWatchService();
-        this.watched_buckets = new HashMap<WatchKey, IBucket>();
+        this.watched_buckets = new HashMap<>();
     }
 
     @SuppressWarnings("unchecked")
@@ -59,7 +59,7 @@ public class Watcher {
      * Process all events for watched_paths queued to the watch_service
      */
     public void processEvents() {
-        for (; ; ) {
+        for (;;) {
 
             // wait for key to be signalled
             WatchKey key;
@@ -88,11 +88,7 @@ public class Watcher {
 
     public void startService() {
         // start the Watcher monitor
-        Thread t = new Thread(new Runnable() {
-            public void run() {
-                processEvents();
-            }
-        });
+        Thread t = new Thread(this::processEvents);
         t.setDaemon(true);
         t.start();
     }

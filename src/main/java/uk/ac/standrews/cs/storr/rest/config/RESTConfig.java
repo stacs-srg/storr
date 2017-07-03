@@ -42,7 +42,7 @@ public class RESTConfig extends ResourceConfig {
         beanConfig.setBasePath("/");
         beanConfig.setResourcePackage(REST_PACKAGE);
         beanConfig.setTitle("storr API");
-        beanConfig.setDescription("This REST API exposes the basic functionalities of storr. " +
+        beanConfig.setDescription("This REST API exposes the basic functions of storr. " +
                 "storr is a NoSQL store intended to provide easy storage of arbitrary tuples");
         beanConfig.setScan(true);
         beanConfig.setPrettyPrint(true);

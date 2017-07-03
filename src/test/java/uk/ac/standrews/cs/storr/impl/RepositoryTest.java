@@ -34,7 +34,6 @@ public class RepositoryTest extends CommonTest {
     private static List<String> LEGAL_NAMES = Arrays.asList("bucket", "a bucket");
     private static List<String> ILLEGAL_NAMES = Arrays.asList("a: bucket","a/bucket","a<bucket","a\\bucket?");
 
-
     @Test
     public void createBucketTest() throws RepositoryException {
 

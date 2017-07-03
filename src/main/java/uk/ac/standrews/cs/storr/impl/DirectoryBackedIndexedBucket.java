@@ -119,7 +119,7 @@ public class DirectoryBackedIndexedBucket<T extends ILXP> extends DirectoryBacke
     public IInputStream getInputStream() throws BucketException {
         // We already know that the type is compatible - checked in constructor.
         try {
-            return new BucketBackedInputStream(this);
+            return new BucketBackedInputStream<>(this);
 
         } catch (IOException e) {
             throw new BucketException("I/O exception getting stream");
@@ -128,7 +128,7 @@ public class DirectoryBackedIndexedBucket<T extends ILXP> extends DirectoryBacke
 
     public IOutputStream getOutputStream() {
         // We already know that the type is compatible - checked in constructor.
-        return new BucketBackedOutputStream(this);
+        return new BucketBackedOutputStream<>(this);
     }
 
     @Override

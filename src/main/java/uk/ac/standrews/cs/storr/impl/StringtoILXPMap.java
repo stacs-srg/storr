@@ -48,7 +48,7 @@ public class StringtoILXPMap<T extends ILXP> implements IStringtoILXPMap<T> {
 
     protected StringtoILXPMap(final String map_name, final IRepository repository, BucketKind kind, ILXPFactory<T> tFactory, boolean create_map) throws RepositoryException {
 
-            bucket = new DirectoryBackedMapBucket(repository, map_name, kind, tFactory, create_map);
+            bucket = new DirectoryBackedMapBucket<>(repository, map_name, kind, tFactory, create_map);
             this.repository = repository;
     }
 

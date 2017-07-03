@@ -29,7 +29,7 @@ import java.util.Map;
  */
 public class IdtoILXPMap<T extends ILXP> implements IIdtoILXPMap<T> {
 
-    private final StringtoILXPMap pmap;
+    private final StringtoILXPMap<T> pmap;
     private final IRepository repository;
 
     /**
@@ -42,7 +42,7 @@ public class IdtoILXPMap<T extends ILXP> implements IIdtoILXPMap<T> {
      * @throws RepositoryException if a RepositoryException is thrown in implementation
      */
     IdtoILXPMap(final String map_name, final IRepository repository, ILXPFactory<T> tFactory, boolean create_map) throws RepositoryException {
-        pmap = new StringtoILXPMap( map_name, repository, BucketKind.IDMAP, tFactory, create_map );
+        pmap = new StringtoILXPMap<>( map_name, repository, BucketKind.IDMAP, tFactory, create_map );
         this.repository = repository;
     }
 

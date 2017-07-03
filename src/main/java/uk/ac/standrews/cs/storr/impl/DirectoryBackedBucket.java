@@ -84,14 +84,7 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
             throw new RepositoryException("Bucket kind mismatch: " + bucket_name + "not of kind: " + kind.name() );
         }
 
-        try {
-            Watcher watcher = repository.getStore().getWatcher();
-            watcher.register(directory.toPath(), this);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw new RepositoryException("(1) Failure to add watcher for Bucket " + bucket_name);
-        }
+        watchBucket(repository);
     }
 
     /**
@@ -126,14 +119,7 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
 
         checkKind(bucket_name, repository, kind);
 
-        try {
-            Watcher watcher = repository.getStore().getWatcher();
-            watcher.register(directory.toPath(), this);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw new RepositoryException("(2) Failure to add watcher for Bucket " + bucket_name);
-        }
+        watchBucket(repository);
 
         this.tFactory = tFactory;
 
@@ -143,7 +129,7 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
         }
     }
 
-    static void createBucket(final String name, IRepository repository, BucketKind kind) throws RepositoryException {
+    private static void createBucket(final String name, IRepository repository, BucketKind kind) throws RepositoryException {
 
         if (!bucketNameIsLegal(name)) {
             throw new RepositoryException("Illegal name <" + name + ">");
@@ -165,7 +151,7 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
         }
     }
 
-    static void createBucket(final String name, IRepository repository, BucketKind kind, long type_label) throws RepositoryException {
+    private static void createBucket(final String name, IRepository repository, BucketKind kind, long type_label) throws RepositoryException {
 
         createBucket(name, repository, kind);
         saveTypeLabel(name, repository, type_label);
@@ -285,6 +271,17 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
         return Files.exists( path.resolve(META_BUCKET_NAME).resolve(kind.name()));
     }
 
+    private void watchBucket(IRepository repository) throws RepositoryException {
+        try {
+            Watcher watcher = repository.getStore().getWatcher();
+            watcher.register(directory.toPath(), this);
+
+        } catch (IOException e) {
+            throw new RepositoryException("Failure to add watcher for Bucket " + bucket_name);
+        }
+
+    }
+
     public String getName() {
         return bucket_name;
     }
@@ -301,7 +298,7 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
     public IInputStream<T> getInputStream() throws BucketException {
 
         try {
-            return new BucketBackedInputStream(this);
+            return new BucketBackedInputStream<>(this);
 
         } catch (IOException e) {
             throw new BucketException(e.getMessage());
@@ -311,7 +308,7 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
     //***********************************************************//
 
     public IOutputStream<T> getOutputStream() {
-        return new BucketBackedOutputStream(this);
+        return new BucketBackedOutputStream<>(this);
     }
 
     /**
@@ -578,7 +575,7 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
         return filePath(String.valueOf(id));
     }
 
-    Path filePath(final String id) {
+    private Path filePath(final String id) {
         return dirPath().resolve(id);
     }
 }

@@ -48,7 +48,7 @@ public class DirectoryBackedIndirectBucket<T extends ILXP> extends DirectoryBack
     @Override
     public IInputStream<T> getInputStream() throws BucketException {
         try {
-            return new BucketBackedInputStream(this);
+            return new BucketBackedInputStream<>(this);
 
         } catch (IOException e) {
             throw new BucketException("I/O exception getting stream");
@@ -57,7 +57,7 @@ public class DirectoryBackedIndirectBucket<T extends ILXP> extends DirectoryBack
 
     @Override
     public IOutputStream<T> getOutputStream() {
-        return new BucketBackedOutputStream(this);
+        return new BucketBackedOutputStream<>(this);
     }
 
     @Override

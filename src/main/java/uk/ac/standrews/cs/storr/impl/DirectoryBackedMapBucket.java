@@ -64,7 +64,7 @@ public class DirectoryBackedMapBucket<T extends ILXP> extends DirectoryBackedInd
         }
     }
 
-    public long getMapType() {
+    private long getMapType() {
 
         if (map_type_label_id != -1) {
             return map_type_label_id;
