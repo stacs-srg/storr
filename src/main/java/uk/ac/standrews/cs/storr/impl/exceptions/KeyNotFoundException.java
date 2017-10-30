@@ -21,6 +21,6 @@ package uk.ac.standrews.cs.storr.impl.exceptions;
  */
 public class KeyNotFoundException extends RuntimeException {
     public KeyNotFoundException(String key) {
-        super();
+        super("Key not found: " + key);
     }
 }
