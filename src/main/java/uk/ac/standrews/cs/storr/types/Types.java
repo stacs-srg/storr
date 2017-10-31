@@ -94,6 +94,7 @@ public class Types {
         for (String label : required_labels) {
             if (!record_keys.contains(label)) {
                 // required label not present
+                ErrorHandling.error( "required label " + label + " not present in record " + record );
                 return false;
             }
             // required label is present now check the types of the keys in the record
@@ -101,6 +102,7 @@ public class Types {
                 Object value = record.get(label);
                 if (!ref_type.getFieldType(label).valueConsistentWithType(value)) {
                     // label does not match expected type
+                    ErrorHandling.error( "label " + label + " type " + ref_type.getFieldType(label) + " inconsistent with " + value + "in record " + record );
                     return false;
                 }
             } catch (KeyNotFoundException e) {

@@ -68,7 +68,7 @@ public class IdtoILXPMap<T extends ILXP> implements IIdtoILXPMap<T> {
     @Override
     public void injestMap(Map<Long, T> map) throws BucketException, PersistentObjectException {
         for (Map.Entry<Long,T> entry : map.entrySet()) {
-            put( entry.getKey(), new StoreReference<T>( repository.getStore(), entry.getValue() ) );
+            put( entry.getKey(), entry.getValue().getThisRef() );
         }
     }
 

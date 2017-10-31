@@ -309,7 +309,7 @@ public class LXP implements ILXP, Comparable<LXP> {
             writer.key(key);
             Object value = entry.getValue();
 
-            if (value instanceof List) {
+            if (value instanceof ArrayList) {
                 writer.array();
                 for (Object o : (List) value) {
                     writeSimpleValue(writer, o);
@@ -383,7 +383,7 @@ public class LXP implements ILXP, Comparable<LXP> {
             return reader.doubleValue();
         }
         if (reader.have(JSONReader.STRING)) {
-            return reader.stringValue();
+            return reader.stringValue().intern(); // keep the Strings the same whenever possible.
         }
         if (reader.have(JSONReader.BOOLEAN)) {
             return reader.booleanValue();
@@ -400,7 +400,7 @@ public class LXP implements ILXP, Comparable<LXP> {
 
             while (!reader.isEndOfStream()) {
 
-                String key = reader.key();
+                String key = reader.key().intern(); // keep the keys identical whenever possible.
                 Object value = readValue(reader);
 
                 if (value != null) {
