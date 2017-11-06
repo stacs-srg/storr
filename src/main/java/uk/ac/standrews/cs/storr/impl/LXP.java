@@ -242,10 +242,10 @@ public class LXP implements ILXP, Comparable<LXP> {
     @Override
     public IStoreReference getThisRef() throws PersistentObjectException {
         if (repository == null) {
-            throw new PersistentObjectException("LXP stored in unknown repository");
+            throw new PersistentObjectException("LXP stored in unknown repository: " + this.toString() );
         }
         if (bucket == null) {
-            throw new PersistentObjectException("LXP stored in unknown bucket");
+            throw new PersistentObjectException("LXP stored in unknown bucket: " + this.toString() );
         }
         return new StoreReference(repository, bucket, this);
     }
