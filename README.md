@@ -25,5 +25,5 @@ A file-based record storage library.
 * [API documentation](https://quicksilver.host.cs.st-andrews.ac.uk/apidocs/storr/)
 * [project website](https://stacs-srg.github.io/storr/)
 * [usage examples](https://github.com/stacs-srg/storr/tree/master/src/main/java/uk/ac/standrews/cs/storr/examples)
-* [build server](https://beast.cs.st-andrews.ac.uk/teamcity/viewType.html?buildTypeId=Storr_Build) (private)
+* [build server](https://beast.cs.st-andrews.ac.uk/teamcity/viewType.html?buildTypeId=Storr_2_Build) (private)
 * [relevant Maven goals](https://github.com/stacs-srg/hub/tree/master/maven) (private)
