@@ -203,7 +203,8 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
         }
 
         if (!this.contains(id)) {
-            ErrorHandling.error("Bucket does not contain object with id: " + id);
+            // ErrorHandling.error("Bucket does not contain object with id: " + id);
+            throw new BucketException("Bucket does not contain id: " + id);
 
         }
         // if we get to here, it means teh object is in the bucket but is not in the cache

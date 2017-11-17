@@ -70,11 +70,15 @@ public class Store implements IStore {
         }
     }
 
+
+    static long nextFreePID = 0;
+
     /**
      * @return the next free pid
      */
-    static long getNextFreePID() {
-        return getPRN();
+    static synchronized long getNextFreePID() {
+        return nextFreePID++;
+//        return getPRN();
     }
 
     /**

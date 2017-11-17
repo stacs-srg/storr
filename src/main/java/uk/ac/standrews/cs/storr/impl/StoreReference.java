@@ -22,8 +22,6 @@ import uk.ac.standrews.cs.storr.impl.exceptions.RepositoryException;
 import uk.ac.standrews.cs.storr.impl.exceptions.StoreException;
 import uk.ac.standrews.cs.storr.interfaces.*;
 
-import java.lang.ref.WeakReference;
-
 /**
  * Created by al on 23/03/15.
  */
@@ -36,7 +34,7 @@ public class StoreReference<T extends ILXP> extends LXP implements IStoreReferen
 
     private static final String SEPARATOR = "/";
 
-    private WeakReference<T> ref = null;
+    private HardReference<T> ref = null; // TODO should be softReference???? - was WeakReference<T>
     private IStore store;
 
     /**
@@ -75,7 +73,7 @@ public class StoreReference<T extends ILXP> extends LXP implements IStoreReferen
 
     private StoreReference(IStore store, String repo_name, String bucket_name, T reference) {
         this(store, repo_name, bucket_name, reference.getId());
-        ref = new WeakReference<T>(reference);
+        ref = new HardReference<T>(reference);   // TODO was weakRef - make softRef??
     }
 
     public StoreReference(IStore store, ILXP record) {
