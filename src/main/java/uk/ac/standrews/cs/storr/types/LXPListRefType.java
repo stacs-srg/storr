@@ -16,8 +16,8 @@
  */
 package uk.ac.standrews.cs.storr.types;
 
-import uk.ac.standrews.cs.storr.impl.LXP;
 import uk.ac.standrews.cs.storr.impl.TypeFactory;
+import uk.ac.standrews.cs.storr.impl.LXP;
 import uk.ac.standrews.cs.storr.interfaces.IReferenceType;
 import uk.ac.standrews.cs.storr.interfaces.IStore;
 import uk.ac.standrews.cs.storr.interfaces.IType;
@@ -31,7 +31,7 @@ import java.util.List;
  */
 public class LXPListRefType implements IType {
 
-    private IReferenceType contents_type;  // AL IS HERE
+    private IReferenceType contents_type;
     private IStore store;
 
     LXPListRefType(IReferenceType list_contents_type, IStore store) {

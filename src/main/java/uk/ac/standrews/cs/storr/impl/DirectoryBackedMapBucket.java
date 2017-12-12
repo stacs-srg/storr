@@ -18,8 +18,6 @@ package uk.ac.standrews.cs.storr.impl;
 
 import uk.ac.standrews.cs.storr.impl.exceptions.RepositoryException;
 import uk.ac.standrews.cs.storr.interfaces.IIndexedBucket;
-import uk.ac.standrews.cs.storr.interfaces.ILXP;
-import uk.ac.standrews.cs.storr.interfaces.ILXPFactory;
 import uk.ac.standrews.cs.storr.interfaces.IRepository;
 import uk.ac.standrews.cs.utilities.FileManipulation;
 import uk.ac.standrews.cs.utilities.archive.ErrorHandling;
@@ -33,7 +31,7 @@ import java.nio.file.Path;
 /**
  * Created by al on 12/7/2017
  */
-public class DirectoryBackedMapBucket<T extends ILXP> extends DirectoryBackedIndexedBucket<T> implements IIndexedBucket<T> {
+public class DirectoryBackedMapBucket<T extends LXP> extends DirectoryBackedIndexedBucket<T> implements IIndexedBucket<T> {
 
     private static final String MAP_TYPE_LABEL_FILE_NAME = "MAPTYPELABEL";
     private long map_type_label_id = -1;          // -1 == not set
@@ -47,22 +45,38 @@ public class DirectoryBackedMapBucket<T extends ILXP> extends DirectoryBackedInd
      * @param map_name the name of the bucket (also used as directory name).
      * @throws RepositoryException if a RepositoryException is thrown in implementation
      */
-    DirectoryBackedMapBucket(final IRepository repository, final String map_name, BucketKind kind, ILXPFactory tFactory, boolean create_map) throws RepositoryException {
+    DirectoryBackedMapBucket(final IRepository repository, final String map_name, BucketKind kind, Class<T> bucketType, boolean create_map) throws RepositoryException {
 
         super(repository, map_name, kind, create_map );
+        long type_label = -1;
         if( create_map ) {
             try {
                 addIndex(Tuple.KEY);
-                setMapType( tFactory.getTypeLabel() );
+                Metadata metadata = bucketType.newInstance().getMetaData();
+                type_label = metadata.getType().getId();
+                setMapType( type_label );
             } catch (IOException e) {
                 throw new RepositoryException( e.getCause() );
+            } catch ( IllegalAccessException | InstantiationException e ) {
+                throw new RepositoryException( "Cannot invoke reflective method: getStaticMetaData 1" );
+            }
+        }  else {
+
+            try {
+                Metadata metadata = bucketType.newInstance().getMetaData(); // (Metadata) bucketType.getDeclaredMethod("getStaticMetaData").invoke(null);
+                type_label = metadata.getType().getId();
+
+                if (getMapType() != type_label) {
+                    throw new RepositoryException("Bucket label incompatible with supplied class: " + bucketType.getName() + " doesn't match field_storage type label:" + map_type_label_id);
+                }
+            }catch ( IllegalAccessException | InstantiationException e ) {
+                throw new RepositoryException( "Cannot invoke reflective method: getStaticMetaData 2" );
             }
         }
-
-        if (getMapType() != tFactory.getTypeLabel()) {
-            throw new RepositoryException("Bucket label incompatible with supplied factory: " + tFactory.getTypeLabel() + " doesn't match map type label:" + map_type_label_id);
-        }
     }
+
+
+
 
     private long getMapType() {
 
@@ -80,7 +94,7 @@ public class DirectoryBackedMapBucket<T extends ILXP> extends DirectoryBackedInd
             return map_type_label_id;
 
         } catch (IOException e) {
-            ErrorHandling.error("I/O Exception getting map type label");
+            ErrorHandling.error("I/O Exception getting field_storage type label");
             return -1;
         }
     }

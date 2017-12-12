@@ -30,9 +30,8 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 public @interface LXP_LIST {
 
-    String UNSPECIFIED_REF_TYPE = "***UNSPECIFIED***";
+    public static String UNSPECIFIED_REF_TYPE = "***UNSPECIFIED***";
 
     String reftype() default UNSPECIFIED_REF_TYPE;
-
     LXPBaseType basetype() default LXPBaseType.UNKNOWN;
 }

@@ -17,8 +17,11 @@
 package uk.ac.standrews.cs.storr.interfaces;
 
 
+import uk.ac.standrews.cs.storr.impl.LXP;
 import uk.ac.standrews.cs.storr.impl.exceptions.PersistentObjectException;
 import uk.ac.standrews.cs.utilities.JSONReader;
+
+import java.util.HashMap;
 
 /**
  * A Factory interface that permits typed views over LXPs
@@ -26,14 +29,19 @@ import uk.ac.standrews.cs.utilities.JSONReader;
  * constructing instances of some typed interface which may be passed to, for example, typed streams of objects.
  * Created by al on 22/08/2014.
  */
-public interface ILXPFactory<T extends ILXP> {
+public interface ILXPFactory<T extends LXP> {
     /*
-     * create an instance of a <T extends ILXP> from the reader
+     * create an instance of a <T extends LXP> from the reader
      */
-    T create(long persistent_object_id, JSONReader reader, IRepository repository, IBucket bucket) throws PersistentObjectException;
+    T create(long persistent_object_id, JSONReader reader, IBucket bucket) throws PersistentObjectException;
 
-    /*
-     * return the label id required by type T
+    /**
+     * @return the label id required by type T
      */
     long getTypeLabel();
+
+    /**
+     * @return the (expected to be shared) field map for this type.
+     */
+    HashMap<String,Integer> getFieldMap();
 }

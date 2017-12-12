@@ -16,6 +16,7 @@
  */
 package uk.ac.standrews.cs.storr.interfaces;
 
+import uk.ac.standrews.cs.storr.impl.LXP;
 import uk.ac.standrews.cs.storr.impl.exceptions.KeyNotFoundException;
 import uk.ac.standrews.cs.storr.impl.exceptions.TypeMismatchFoundException;
 
@@ -48,5 +49,5 @@ public interface IReferenceType extends IType {
     /**
      * @return the OID used to encode the reference type - e.g. [name: string, age: int]
      */
-    ILXP getRep();
+    LXP getRep();
 }

@@ -22,7 +22,7 @@ import uk.ac.standrews.cs.storr.impl.transaction.exceptions.TransactionFailedExc
 import uk.ac.standrews.cs.storr.impl.transaction.interfaces.ITransaction;
 import uk.ac.standrews.cs.storr.impl.transaction.interfaces.ITransactionManager;
 import uk.ac.standrews.cs.storr.interfaces.IBucket;
-import uk.ac.standrews.cs.storr.interfaces.ILXP;
+import uk.ac.standrews.cs.storr.impl.LXP;
 import uk.ac.standrews.cs.storr.interfaces.IRepository;
 import uk.ac.standrews.cs.storr.interfaces.IStore;
 import uk.ac.standrews.cs.utilities.archive.ErrorHandling;
@@ -113,17 +113,17 @@ public class TransactionManager implements ITransactionManager {
             // A. delete the shadow records
             // B. remove_commit_record(commit_record_id) (incomplete records only)
 
-            Iterator<ILXP> transaction_records;
+            Iterator<LXP> transaction_records;
 
             try {
                 transaction_records = transaction_bucket.getInputStream().iterator();
 
                 while (transaction_records.hasNext()) {
-                    ILXP transaction_record = transaction_records.next(); // this might be a commit record or a start record
+                    LXP transaction_record = transaction_records.next(); // this might be a commit record or a start record
                     long record_id = transaction_record.getId();
 
                     try {
-                        if (transaction_record.containsKey(Transaction.LOG_KEY)) {
+                        if (transaction_record.getMetaData().containsLabel(Transaction.LOG_KEY)) {
 
                             recoverCommitRecord(record_id, transaction_record);
 
@@ -151,9 +151,9 @@ public class TransactionManager implements ITransactionManager {
         }
     }
 
-    private void recoverCommitRecord(long commit_record_id, ILXP transaction_record) throws KeyNotFoundException, TypeMismatchFoundException, StoreException, RepositoryException {
+    private void recoverCommitRecord(long commit_record_id, LXP transaction_record) throws KeyNotFoundException, TypeMismatchFoundException, StoreException, RepositoryException {
 
-        String updateString = transaction_record.getString(Transaction.LOG_KEY);
+        String updateString = (String) transaction_record.get(Transaction.LOG_KEY);
 
         // we need to ensure that this is well formed
 

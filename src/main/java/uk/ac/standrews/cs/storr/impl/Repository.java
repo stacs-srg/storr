@@ -84,23 +84,23 @@ public class Repository implements IRepository {
     }
 
     @Override
-    public <T extends ILXP> IBucket<T> makeBucket(final String bucket_name, BucketKind kind, ILXPFactory<T> tFactory) throws RepositoryException {
+    public <T extends LXP> IBucket<T> makeBucket(final String bucket_name, BucketKind kind, Class<T> bucketType) throws RepositoryException {
 
-        IBucket bucket = BucketKind.createBucket(this, bucket_name, tFactory, kind);
+        IBucket bucket = BucketKind.createBucket(this, bucket_name, bucketType, kind);
         bucket_cache.put(bucket_name, bucket);
         return bucket;
     }
 
     @Override
-    public <T extends ILXP> IIdtoILXPMap<T> makeIdtoLXPMap(String name, ILXPFactory<T> tFactory) throws RepositoryException {
-            return new IdtoILXPMap( name, this, tFactory, true );
+    public <T extends LXP> IIdtoILXPMap<T> makeIdtoLXPMap(String name, Class<T> bucketType) throws RepositoryException {
+            return new IdtoILXPMap( name, this, bucketType, true );
 
     }
 
     @Override
-    public <T extends ILXP> IStringtoILXPMap<T> makeStringtoLXPMap(String name, ILXPFactory<T> tFactory) throws RepositoryException {
+    public <T extends LXP> IStringtoILXPMap<T> makeStringtoLXPMap(String name, Class<T> bucketType) throws RepositoryException {
 
-            return new StringtoILXPMap( name, this, tFactory, true );
+            return new StringtoILXPMap( name, this, bucketType, true );
      }
 
     @Override
@@ -137,26 +137,26 @@ public class Repository implements IRepository {
     }
 
     @Override
-    public <T extends ILXP> IBucket<T> getBucket(final String bucket_name, final ILXPFactory<T> tFactory) throws RepositoryException {
+    public <T extends LXP> IBucket<T> getBucket(final String bucket_name, final Class<T> bucketType) throws RepositoryException {
 
         if (bucketExists(bucket_name)) {
 
             final IBucket bucket = bucket_cache.get(bucket_name);
-            return bucket != null ? bucket : BucketKind.getBucket(this, bucket_name, tFactory);
+            return bucket != null ? bucket : BucketKind.getBucket(this, bucket_name, bucketType);
         }
         throw new RepositoryException("bucket does not exist: " + bucket_name);
     }
 
     @Override
-    public <T extends ILXP> IIdtoILXPMap<T> getIdtoLXPMap(String name, ILXPFactory<T> tFactory) throws RepositoryException {
+    public <T extends LXP> IIdtoILXPMap<T> getIdtoLXPMap(String name, Class<T> bucketType) throws RepositoryException {
 
-            return new IdtoILXPMap( name, this, tFactory, false );
+            return new IdtoILXPMap( name, this, bucketType, false );
     }
 
     @Override
-    public <T extends ILXP> IStringtoILXPMap<T> getStringtoLXPMap(String name, ILXPFactory<T> tFactory) throws RepositoryException {
+    public <T extends LXP> IStringtoILXPMap<T> getStringtoLXPMap(String name, Class<T> bucketType) throws RepositoryException {
 
-            return new StringtoILXPMap( name, this, tFactory, false );
+            return new StringtoILXPMap( name, this, bucketType, false );
     }
 
     @Override
@@ -166,8 +166,8 @@ public class Repository implements IRepository {
     }
 
     @Override
-    public <T extends ILXP> Iterator<IBucket<T>> getIterator(ILXPFactory<T> tFactory) {
-        return new BucketIterator(this, repository_directory, tFactory);
+    public <T extends LXP> Iterator<IBucket<T>> getIterator(Class<T> bucketType) {
+        return new BucketIterator(this, repository_directory, bucketType);
     }
 
     @Override
@@ -228,17 +228,17 @@ public class Repository implements IRepository {
         }
     }
 
-    private static class BucketIterator<T extends ILXP> implements Iterator<IBucket<T>> {
+    private static class BucketIterator<T extends LXP> implements Iterator<IBucket<T>> {
 
         private final Repository repository;
         private final Iterator<File> file_iterator;
-        private final ILXPFactory<T> tFactory;
+        private final Class<T> bucketType;
 
-        BucketIterator(final Repository repository, final File repository_directory, ILXPFactory<T> tFactory) {
+        BucketIterator(final Repository repository, final File repository_directory, Class<T> bucketType) {
 
             this.repository = repository;
             file_iterator = new FileIterator(repository_directory, false, true);
-            this.tFactory = tFactory;
+            this.bucketType = bucketType;
         }
 
         public boolean hasNext() {
@@ -249,7 +249,7 @@ public class Repository implements IRepository {
         public IBucket<T> next() {
 
             try {
-                return repository.getBucket(file_iterator.next().getName(), tFactory);
+                return repository.getBucket(file_iterator.next().getName(), bucketType);
 
             } catch (RepositoryException e) {
                 throw new NoSuchElementException(e.getMessage());

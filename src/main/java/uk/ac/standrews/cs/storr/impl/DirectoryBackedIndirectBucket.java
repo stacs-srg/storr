@@ -20,18 +20,20 @@ import uk.ac.standrews.cs.storr.impl.exceptions.BucketException;
 import uk.ac.standrews.cs.storr.impl.exceptions.IllegalKeyException;
 import uk.ac.standrews.cs.storr.impl.exceptions.PersistentObjectException;
 import uk.ac.standrews.cs.storr.impl.exceptions.RepositoryException;
-import uk.ac.standrews.cs.storr.interfaces.*;
+import uk.ac.standrews.cs.storr.interfaces.IInputStream;
+import uk.ac.standrews.cs.storr.interfaces.IOutputStream;
+import uk.ac.standrews.cs.storr.interfaces.IRepository;
 
 import java.io.IOException;
 
-public class DirectoryBackedIndirectBucket<T extends ILXP> extends DirectoryBackedBucket<T> {
+public class DirectoryBackedIndirectBucket<T extends LXP> extends DirectoryBackedBucket<T> {
 
     DirectoryBackedIndirectBucket(IRepository repository, String bucket_name, boolean create_bucket) throws RepositoryException {
         super(repository, bucket_name, BucketKind.INDIRECT, create_bucket);
     }
 
-    DirectoryBackedIndirectBucket(IRepository repository, String bucket_name, ILXPFactory<T> tFactory, boolean create_bucket) throws RepositoryException {
-        super(repository, bucket_name, BucketKind.INDIRECT, tFactory, create_bucket);
+    DirectoryBackedIndirectBucket(IRepository repository, String bucket_name, Class<T> bucketType, boolean create_bucket) throws RepositoryException  {
+        super(repository, bucket_name, BucketKind.INDIRECT, bucketType, create_bucket);
     }
 
     @Override
@@ -39,7 +41,7 @@ public class DirectoryBackedIndirectBucket<T extends ILXP> extends DirectoryBack
     public void makePersistent(final T record) throws BucketException {
 
         try {
-            writeLXP((ILXP) record.getThisRef(), filePath(record.getId()));
+            writeLXP((LXP) record.getThisRef(), filePath(record.getId()));
         } catch (IllegalKeyException | PersistentObjectException e) {
             throw new BucketException("Error creating indirection");
         }

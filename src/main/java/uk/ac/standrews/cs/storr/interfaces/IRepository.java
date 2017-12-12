@@ -16,6 +16,7 @@
  */
 package uk.ac.standrews.cs.storr.interfaces;
 
+import uk.ac.standrews.cs.storr.impl.LXP;
 import uk.ac.standrews.cs.storr.impl.BucketKind;
 import uk.ac.standrews.cs.storr.impl.exceptions.RepositoryException;
 
@@ -44,16 +45,16 @@ public interface IRepository {
      *
      * @param name     - the name of the bucket to be created.
      * @param kind     - the implementation kind of the bucket - see @class BucketKind
-     * @param tFactory - a factory capable of creating instances of type @class T
+     * @param bucketType - the type being used to create instances in this bucket
      * @param <T>      the (Java) type which all LXP derived objects in this bucket are expected to be of
      * @return the newly created repository
      * @throws RepositoryException if a bucket with the name previously exists or if something goes wrong.
      */
-    <T extends ILXP> IBucket<T> makeBucket(final String name, BucketKind kind, ILXPFactory<T> tFactory) throws RepositoryException;
+    <T extends LXP> IBucket<T> makeBucket(final String name, BucketKind kind, Class<T> bucketType) throws RepositoryException;
 
-    <T extends ILXP> IIdtoILXPMap<T> makeIdtoLXPMap(final String name, ILXPFactory<T> tFactory ) throws RepositoryException;
+    <T extends LXP> IIdtoILXPMap<T> makeIdtoLXPMap(final String name, Class<T> bucketType ) throws RepositoryException;
 
-    <T extends ILXP> IStringtoILXPMap<T> makeStringtoLXPMap(final String name, ILXPFactory<T> tFactory ) throws RepositoryException;
+    <T extends LXP> IStringtoILXPMap<T> makeStringtoLXPMap(final String name, Class<T> bucketType ) throws RepositoryException;
 
     /**
      * @param name - the bucket that is the subject of the enquiry.
@@ -78,30 +79,30 @@ public interface IRepository {
 
     /**
      * @param name     - the name of the bucket being looked up
-     * @param tFactory - a factory capable of specifying instances of type @class T
+     * @param bucketType - a class capable of creating instances of type @class T
      * @param <T>      the (Java) type which all LXP derived objects in this bucket are expected to be of
      * @return the bucket with the given name, if it exists and is type compatible
      * @throws RepositoryException if the bucket does not exist or if something goes wrong.
      */
-    <T extends ILXP> IBucket<T> getBucket(final String name, ILXPFactory<T> tFactory) throws RepositoryException;
+    <T extends LXP> IBucket<T> getBucket(final String name, Class<T> bucketType) throws RepositoryException;
 
     /**
-     * @param name the name of the map being looked up
-     * @param <T> the type of the domain of the map
-     * @param tFactory - a factory capable of specifying instances of type @class T
-     * @return the map with the given name, iof it exists and is type compatible.
-     * @throws RepositoryException if the map does not exist or if something goes wrong.
+     * @param name the name of the field_storage being looked up
+     * @param <T> the type of the domain of the field_storage
+     * @param bucketType - a class capable of creating instances of type @class T
+     * @return the field_storage with the given name, iof it exists and is type compatible.
+     * @throws RepositoryException if the field_storage does not exist or if something goes wrong.
      */
-    <T extends ILXP> IIdtoILXPMap<T> getIdtoLXPMap(final String name, ILXPFactory<T> tFactory ) throws RepositoryException;
+    <T extends LXP> IIdtoILXPMap<T> getIdtoLXPMap(final String name, Class<T> bucketType ) throws RepositoryException;
 
     /**
-     * @param name the name of the map being looked up
-     * @param <T> the type of the domain of the map
-     * @param tFactory - a factory capable of specifying instances of type @class T
-     * @return the map with the given name, iof it exists and is type compatible.
+     * @param name the name of the field_storage being looked up
+     * @param <T> the type of the domain of the field_storage
+     * @param bucketType - a class capable of creating instances of type @class T
+     * @return the field_storage with the given name, iof it exists and is type compatible.
      * @throws RepositoryException if the bucket does not exist or if something goes wrong.
      */
-    <T extends ILXP> IStringtoILXPMap<T> getStringtoLXPMap(final String name, ILXPFactory<T> tFactory ) throws RepositoryException;
+    <T extends LXP> IStringtoILXPMap<T> getStringtoLXPMap(final String name, Class<T> bucketType ) throws RepositoryException;
 
     /**
      * @return the names of all the buckets in the repo
@@ -112,11 +113,11 @@ public interface IRepository {
 
     /**
      * Returns an iterator over those buckets that are constrained by T.
-     * @param tFactory - specifies the type constraining the bucket.
+     * @param bucketType - specifies the type constraining the bucket.
      * @param <T>      - the type of the required bucket content types.
      * @return an iterator over the appropriate buckets.
      */
-    <T extends ILXP> Iterator<IBucket<T>> getIterator(ILXPFactory<T> tFactory);
+    <T extends LXP> Iterator<IBucket<T>> getIterator(Class<T> bucketType);
 
     /**
      * @return the path to the repo - this is only used with in the bucket implementation.

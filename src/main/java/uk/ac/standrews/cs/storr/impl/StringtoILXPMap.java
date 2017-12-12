@@ -28,45 +28,45 @@ import java.util.Map;
 /**
  * Created by al on 27/04/2017.
  */
-public class StringtoILXPMap<T extends ILXP> implements IStringtoILXPMap<T> {
+public class StringtoILXPMap<T extends LXP> implements IStringtoILXPMap<T> {
 
-    private final DirectoryBackedIndexedBucket<Tuple<T>> bucket; // bucket used to store the map.
+    private final DirectoryBackedIndexedBucket<Tuple<T>> bucket; // bucket used to store the field_storage.
     private final IRepository repository;
 
     /**
-     * Creates a handle on a persistent map, implemented by an IndexedBucket
-     * Assumes that persistent map has been created already using a factory - i.e. the directory already exists.
+     * Creates a handle on a persistent field_storage, implemented by an IndexedBucket
+     * Assumes that persistent field_storage has been created already using a factory - i.e. the directory already exists.
      *
      * @param repository the repository in which the bucket is created.
-     * @param map_name   the name of the map/bucket (also used as directory name).
-     * @param tFactory
+     * @param map_name   the name of the field_storage/bucket (also used as directory name).
+     * @param bucketType
      * @throws RepositoryException if a RepositoryException is thrown in implementation
      */
-    public StringtoILXPMap(final String map_name, final IRepository repository, ILXPFactory<T> tFactory, boolean create_map) throws RepositoryException {
-        this( map_name, repository, BucketKind.STRINGMAP, tFactory, create_map );
+    public StringtoILXPMap(final String map_name, final IRepository repository,  Class<T> bucketType, boolean create_map) throws RepositoryException {
+        this( map_name, repository, BucketKind.STRINGMAP, bucketType, create_map );
     }
 
-    protected StringtoILXPMap(final String map_name, final IRepository repository, BucketKind kind, ILXPFactory<T> tFactory, boolean create_map) throws RepositoryException {
+    protected StringtoILXPMap(final String map_name, final IRepository repository, BucketKind kind, Class<T> bucketType, boolean create_map) throws RepositoryException {
 
-            bucket = new DirectoryBackedMapBucket<>(repository, map_name, kind, tFactory, create_map);
+            bucket = new DirectoryBackedMapBucket(repository, map_name, kind, bucketType, create_map);
             this.repository = repository;
     }
 
     @Override
     public T lookup(String key) throws IOException, BucketException, RepositoryException {
-        IInputStream<ILXP> values = bucket.getIndex(Tuple.KEY).records(key);
+        IInputStream<LXP> values = bucket.getIndex(Tuple.KEY).records(key);
 
-        Iterator<ILXP> iter = values.iterator();
+        Iterator<LXP> iter = values.iterator();
 
         if( iter.hasNext() ) {
 
-            ILXP value = iter.next();
+            LXP value = iter.next();
 
             if( iter.hasNext() ) {
                 throw new IOException("Multiple values found for key: " + key);
             }
 
-            IStoreReference ref = value.getRef(Tuple.VALUE);
+            IStoreReference ref = (IStoreReference) value.get(Tuple.VALUE);
             return (T) ref.getReferend();
 
         } else return null;

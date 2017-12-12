@@ -31,7 +31,7 @@ import java.util.Map;
 /**
  * Created by al on 03/10/2014.
  */
-public class DirectoryBackedIndexedBucket<T extends ILXP> extends DirectoryBackedBucket<T> implements IIndexedBucket<T> {
+public class DirectoryBackedIndexedBucket<T extends LXP> extends DirectoryBackedBucket<T> implements IIndexedBucket<T> {
 
     private static final String INDEX = "INDEX";
     private static final String INDEX_DIR_NAME = "INDICES";
@@ -47,9 +47,9 @@ public class DirectoryBackedIndexedBucket<T extends ILXP> extends DirectoryBacke
         }
     }
 
-    protected DirectoryBackedIndexedBucket(final IRepository repository, final String bucket_name, BucketKind kind, ILXPFactory tFactory, boolean create_bucket) throws RepositoryException {
+    protected DirectoryBackedIndexedBucket(final IRepository repository, final String bucket_name, BucketKind kind, Class<T> bucketType, boolean create_bucket) throws RepositoryException {
 
-        super(repository, bucket_name, kind, tFactory, create_bucket);
+        super(repository, bucket_name, kind, bucketType, create_bucket);
         try {
             initIndexes();
         } catch (IOException e) {
@@ -71,9 +71,9 @@ public class DirectoryBackedIndexedBucket<T extends ILXP> extends DirectoryBacke
 
     }
 
-    DirectoryBackedIndexedBucket(final IRepository repository, final String bucket_name, ILXPFactory tFactory, boolean create_bucket) throws RepositoryException {
+    DirectoryBackedIndexedBucket(final IRepository repository, final String bucket_name, Class<T> bucketType, boolean create_bucket) throws RepositoryException {
 
-        this(repository, bucket_name, BucketKind.INDEXED, tFactory, create_bucket);
+        this(repository, bucket_name, BucketKind.INDEXED, bucketType, create_bucket);
     }
 
     @Override
@@ -102,7 +102,7 @@ public class DirectoryBackedIndexedBucket<T extends ILXP> extends DirectoryBacke
             String key = entry.getKey();
             IBucketIndex index = entry.getValue();
 
-            if (record.containsKey(key)) { // we are indexing this key
+            if (record.getMetaData().containsLabel(key)) { // we are indexing this key
 
                 try {
                     index.add(record); // and add this record to the index for that key

@@ -16,6 +16,8 @@
  */
 package uk.ac.standrews.cs.storr.interfaces;
 
+import uk.ac.standrews.cs.storr.impl.LXP;
+
 /**
  * This interface represents the type of the caches used to store in memory objects.
  * It permits the association between buckets, tuples and object ids to be maintained.
@@ -29,7 +31,7 @@ public interface IObjectCache {
      * @param bucket - the bucket of the registered object
      * @param tuple  - the tuple to add.
      */
-    void put(long oid, IBucket bucket, ILXP tuple);
+    void put(long oid, IBucket bucket, LXP tuple);
 
     /**
      * @param oid - the oid to be loooked up
@@ -47,5 +49,5 @@ public interface IObjectCache {
      * @param id - the id of the tuple to be looked up
      * @return the tuple with the given id if it exists in the cache and null otherwise
      */
-    ILXP getObject(long id);
+    LXP getObject(long id);
 }

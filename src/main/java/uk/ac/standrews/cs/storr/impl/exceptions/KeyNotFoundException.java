@@ -23,4 +23,8 @@ public class KeyNotFoundException extends RuntimeException {
     public KeyNotFoundException(String key) {
         super("Key not found: " + key);
     }
+
+    public KeyNotFoundException(int slot) {
+        super("Illegal slot number: " + slot);
+    }
 }

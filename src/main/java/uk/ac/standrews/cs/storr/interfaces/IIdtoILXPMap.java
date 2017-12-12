@@ -16,6 +16,7 @@
  */
 package uk.ac.standrews.cs.storr.interfaces;
 
+import uk.ac.standrews.cs.storr.impl.LXP;
 import uk.ac.standrews.cs.storr.impl.StoreReference;
 import uk.ac.standrews.cs.storr.impl.exceptions.BucketException;
 import uk.ac.standrews.cs.storr.impl.exceptions.PersistentObjectException;
@@ -27,8 +28,8 @@ import java.util.Map;
 /**
  * Created by al on 09/06/2017.
  */
-public interface IIdtoILXPMap<T extends ILXP> {
-    ILXP lookup(Long id) throws IOException, BucketException, RepositoryException;
+public interface IIdtoILXPMap<T extends LXP> {
+    LXP lookup(Long id) throws IOException, BucketException, RepositoryException;
 
     void put(Long key, IStoreReference<T> value) throws PersistentObjectException, BucketException;
 

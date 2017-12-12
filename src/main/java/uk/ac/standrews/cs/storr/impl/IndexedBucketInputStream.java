@@ -19,7 +19,6 @@ package uk.ac.standrews.cs.storr.impl;
 import uk.ac.standrews.cs.storr.impl.exceptions.BucketException;
 import uk.ac.standrews.cs.storr.interfaces.IBucket;
 import uk.ac.standrews.cs.storr.interfaces.IInputStream;
-import uk.ac.standrews.cs.storr.interfaces.ILXP;
 
 import java.io.File;
 import java.io.IOException;
@@ -37,16 +36,16 @@ public class IndexedBucketInputStream implements IInputStream {
         this.file_iterator = file_iterator;
     }
 
-    public Iterator<ILXP> iterator() {
+    public Iterator<LXP> iterator() {
 
-        return new Iterator<ILXP>() {
+        return new Iterator<LXP>() {
 
             public boolean hasNext() {
                 return file_iterator.hasNext();
             }
 
             @Override
-            public ILXP next() {
+            public LXP next() {
 
                 try {
                     return bucket.getObjectById(Long.parseLong(file_iterator.next().getName()));

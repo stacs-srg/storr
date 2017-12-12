@@ -14,26 +14,39 @@
  * You should have received a copy of the GNU General Public License along with storr. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-package uk.ac.standrews.cs.storr.impl;
 
+package uk.ac.standrews.cs.storr.impl;
 
 import uk.ac.standrews.cs.storr.impl.exceptions.PersistentObjectException;
 import uk.ac.standrews.cs.storr.interfaces.IBucket;
-import uk.ac.standrews.cs.storr.interfaces.ILXPFactory;
-import uk.ac.standrews.cs.storr.interfaces.IRepository;
+import uk.ac.standrews.cs.storr.types.LXPBaseType;
+import uk.ac.standrews.cs.storr.types.LXP_SCALAR;
 import uk.ac.standrews.cs.utilities.JSONReader;
 
 /**
- * Created by al on 03/10/2014.
+ * Created by al on 8/12/2017.
  */
-public class ClassWithListOfScalarsFactory extends TFactory<ClassWithListOfScalars> implements ILXPFactory<ClassWithListOfScalars> {
+public class SimpleLXP extends StaticLXP {
 
-    public ClassWithListOfScalarsFactory(long required_label_id) {
-        this.required_type_labelID = required_label_id;
+    static {
+        try {
+            static_md = new Metadata( SimpleLXP.class,"SimpleLXP" );
+
+        } catch (Exception e) {
+            throw new RuntimeException( e );
+        }
     }
 
-    @Override
-    public ClassWithListOfScalars create(long persistent_object_id, JSONReader reader, IRepository repository, IBucket bucket) throws PersistentObjectException {
-        return new ClassWithListOfScalars(persistent_object_id, reader, repository, bucket);
+    @LXP_SCALAR(type = LXPBaseType.INT)
+    public static int FIELD;
+
+
+    public SimpleLXP() {
+        super();
+        put( FIELD, 1);
+    }
+
+    public SimpleLXP(long persistent_object_id, JSONReader reader, IBucket bucket) throws PersistentObjectException {
+        super( persistent_object_id,reader,bucket );
     }
 }

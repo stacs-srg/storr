@@ -17,13 +17,13 @@
 package uk.ac.standrews.cs.storr.examples;
 
 import uk.ac.standrews.cs.storr.impl.BucketKind;
-import uk.ac.standrews.cs.storr.impl.LXP;
+import uk.ac.standrews.cs.storr.impl.DynamicLXP;
 import uk.ac.standrews.cs.storr.impl.Store;
 import uk.ac.standrews.cs.storr.impl.exceptions.BucketException;
 import uk.ac.standrews.cs.storr.impl.exceptions.RepositoryException;
 import uk.ac.standrews.cs.storr.impl.exceptions.StoreException;
 import uk.ac.standrews.cs.storr.interfaces.IBucket;
-import uk.ac.standrews.cs.storr.interfaces.ILXP;
+import uk.ac.standrews.cs.storr.impl.LXP;
 import uk.ac.standrews.cs.storr.interfaces.IRepository;
 import uk.ac.standrews.cs.storr.interfaces.IStore;
 
@@ -36,6 +36,9 @@ import java.nio.file.Path;
  */
 public class SimplestExample {
 
+    private static final int AGE = 0;
+    private static final int ADDRESS = 1;
+
     public static void main(String[] args) throws IOException, StoreException, RepositoryException, BucketException {
 
         Path tempStorePath = Files.createTempDirectory(null);
@@ -45,9 +48,9 @@ public class SimplestExample {
         IRepository repo = store.makeRepository("repo");
         IBucket bucket = repo.makeBucket("bucket", BucketKind.DIRECTORYBACKED);
 
-        LXP lxp = new LXP();
-        lxp.put("age", 42);
-        lxp.put("address", "home");
+        DynamicLXP lxp = new DynamicLXP();
+        lxp.put(AGE, 42);
+        lxp.put(ADDRESS, "home");
 
         bucket.makePersistent(lxp);
 
@@ -55,7 +58,7 @@ public class SimplestExample {
         IRepository repoLoaded = storeLoaded.getRepository("repo");
         IBucket buckerLoaded = repoLoaded.getBucket("bucket");
 
-        ILXP retrievedLXP = buckerLoaded.getObjectById(lxp.getId());
-        System.out.println("LXP persisted correctly: " + (retrievedLXP.getInt("age") == 42 && retrievedLXP.getString("address").equals("home")));
+        LXP retrievedLXP = buckerLoaded.getObjectById(lxp.getId());
+        System.out.println("LXP persisted correctly: " + (retrievedLXP.getInt(AGE) == 42 && retrievedLXP.getString(ADDRESS).equals("home")));
     }
 }

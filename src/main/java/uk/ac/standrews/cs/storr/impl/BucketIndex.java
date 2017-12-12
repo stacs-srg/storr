@@ -21,7 +21,6 @@ import uk.ac.standrews.cs.storr.impl.exceptions.KeyNotFoundException;
 import uk.ac.standrews.cs.storr.impl.exceptions.TypeMismatchFoundException;
 import uk.ac.standrews.cs.storr.interfaces.IBucketIndex;
 import uk.ac.standrews.cs.storr.interfaces.IInputStream;
-import uk.ac.standrews.cs.storr.interfaces.ILXP;
 
 import java.io.File;
 import java.io.IOException;
@@ -127,13 +126,13 @@ public class BucketIndex implements IBucketIndex {
     }
 
     @Override
-    public void add(final ILXP record) throws BucketException {
+    public void add(final LXP record) throws BucketException {
 
         onDemandLoadContents();
 
         String value; // getString the value associated with the label being indexed in this index.
         try {
-            value = record.getString(label);
+            value = (String) record.get(label);
         } catch (KeyNotFoundException e) {
             throw new BucketException("type label: " + label + " not found");
         } catch (TypeMismatchFoundException e) {

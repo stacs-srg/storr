@@ -16,6 +16,7 @@
  */
 package uk.ac.standrews.cs.storr.interfaces;
 
+import uk.ac.standrews.cs.storr.impl.LXP;
 import uk.ac.standrews.cs.storr.impl.exceptions.BucketException;
 
 import java.io.IOException;
@@ -27,7 +28,7 @@ import java.util.Set;
  * Instances of this class are returned by the @methods getIndex of the classes implementing the  @interface IIndexedBucket
  * Created by al on 23/05/2014.
  */
-public interface IBucketIndex<T extends ILXP> {
+public interface IBucketIndex<T extends LXP> {
 
     /**
      * @return the key set of this index

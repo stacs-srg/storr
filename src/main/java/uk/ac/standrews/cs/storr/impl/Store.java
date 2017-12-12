@@ -45,6 +45,7 @@ public class Store implements IStore {
 
     private final Path repository_path;
     private final Map<String, IRepository> repository_cache;
+    private static Store instance;
 
     private Watcher watcher;
     private ITransactionManager transaction_manager;
@@ -57,6 +58,7 @@ public class Store implements IStore {
 
         checkCreate(store_path);
         checkCreate(repository_path);
+        instance = this;
 
         try {
             watcher = new Watcher();
@@ -76,7 +78,7 @@ public class Store implements IStore {
     /**
      * @return the next free pid
      */
-    static synchronized long getNextFreePID() {
+    public static synchronized long getNextFreePID() {
         return nextFreePID++;
 //        return getPRN();
     }
@@ -92,6 +94,10 @@ public class Store implements IStore {
         } while (next_prn <= 0);
 
         return next_prn;
+    }
+
+    public synchronized static IStore getInstance() {
+        return instance;
     }
 
     @Override

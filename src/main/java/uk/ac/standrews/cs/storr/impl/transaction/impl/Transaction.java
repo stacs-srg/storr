@@ -16,7 +16,7 @@
  */
 package uk.ac.standrews.cs.storr.impl.transaction.impl;
 
-import uk.ac.standrews.cs.storr.impl.LXP;
+import uk.ac.standrews.cs.storr.impl.DynamicLXP;
 import uk.ac.standrews.cs.storr.impl.exceptions.BucketException;
 import uk.ac.standrews.cs.storr.impl.exceptions.IllegalKeyException;
 import uk.ac.standrews.cs.storr.impl.exceptions.StoreException;
@@ -34,11 +34,12 @@ import java.util.List;
 public class Transaction implements ITransaction {
 
     static final String LOG_KEY = "LOG";
+    private static final String START_KEY = "START";
+
     static final String START_RECORD_MARKER = "%/n";
     static final String END_RECORD_MARKER = "/n$";
     static final String UPDATE_RECORD_SEPARATOR = "|";
     static final String LOG_RECORD_SEPARATOR = "/n";
-    private static final String START_KEY = "START";
     private final TransactionManager transaction_manager;
     private final IBucket log;
     private final long start_record_id;
@@ -161,10 +162,10 @@ public class Transaction implements ITransaction {
      */
     private long writeXXXRecord(String key, String data) throws StoreException, BucketException {
 
-        LXP commit_record = new LXP();
+        DynamicLXP commit_record = new DynamicLXP();
 
         try {
-            commit_record.put(key, data);
+            commit_record.put(key, data);   // TODO Will be fixed when this method is added to LXP.
         } catch (IllegalKeyException e) {
             // This can not happen!
         }

@@ -16,6 +16,7 @@
  */
 package uk.ac.standrews.cs.storr.interfaces;
 
+import uk.ac.standrews.cs.storr.impl.LXP;
 import uk.ac.standrews.cs.storr.impl.BucketKind;
 import uk.ac.standrews.cs.storr.impl.exceptions.BucketException;
 
@@ -31,7 +32,7 @@ import java.util.List;
  * T getObjectById(long id) throws BucketException;
  * void makePersistent(T record) throws BucketException;
  */
-public interface IBucket<T extends ILXP> {
+public interface IBucket<T extends LXP> {
 
     /**
      * Gets the OID record with the specified id
@@ -121,9 +122,9 @@ public interface IBucket<T extends ILXP> {
     BucketKind getKind();
 
     /**
-     * @return the factory associated with the bucket if there is one and null if there is not.
+     * @return the class associated with the bucket if there is one and null if there is not.
      */
-    ILXPFactory<T> getFactory();
+    Class<T> getBucketType();
 
     /**
      * Sets the type of the bucket contents.

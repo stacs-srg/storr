@@ -94,7 +94,7 @@ public class JettyApp {
 
     }
 
-    // Creates map of key-value arguments
+    // Creates field_storage of key-value arguments
     private static HashMap<String, String> makeMap(String[] args) {
 
         HashMap<String, String> map = new HashMap<>();

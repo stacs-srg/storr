@@ -16,11 +16,13 @@
  */
 package uk.ac.standrews.cs.storr.interfaces;
 
+import uk.ac.standrews.cs.storr.impl.LXP;
+
 /**
  * Provides filtering over an ILXPInputStream to populate an ILXPOutputStream containing records selected by the predicate select.
  * Created by al on 29/04/2014.
  */
-public interface IFilter<T extends ILXP> {
+public interface IFilter<T extends LXP> {
 
     /**
      * @return the ILXPInputStream over which filtering is being performed.

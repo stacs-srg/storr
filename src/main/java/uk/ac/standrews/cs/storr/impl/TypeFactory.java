@@ -58,7 +58,7 @@ public class TypeFactory {
     }
 
     private void createAnyType() {
-        LXP typerep = Types.getTypeRep(LXP.class);
+        DynamicLXP typerep = Types.getTypeRep(StaticLXP.class);
         LXPReferenceType lxp_type = new LXPReferenceType(typerep);
         doHousekeeping("lxp", lxp_type);
     }
@@ -70,7 +70,7 @@ public class TypeFactory {
     }
 
     public IReferenceType createType(Class c, String type_name) {
-        LXP typerep = Types.getTypeRep(c);
+        DynamicLXP typerep = Types.getTypeRep(c);
         LXPReferenceType ref_type = new LXPReferenceType(typerep);
         doHousekeeping(type_name, ref_type);
         return ref_type;
@@ -97,19 +97,19 @@ public class TypeFactory {
     private void loadCaches() {
 
         try {
-            for (LXP lxp : (Iterable<LXP>) type_name_bucket.getInputStream()) {
+            for (DynamicLXP lxp : (Iterable<DynamicLXP>) type_name_bucket.getInputStream()) {
                 // as set up in @code nameValuePair below.
-                String name = lxp.getString("name");
-                long type_key = lxp.getLong("key");
+                String name = (String) lxp.get("name");
+                long type_key = (int) lxp.get("key");
 
-                ILXP type_rep = type_reps_bucket.getObjectById(type_key);
-                LXPReferenceType reference = new LXPReferenceType((LXP) (type_rep));
+                LXP type_rep = type_reps_bucket.getObjectById(type_key);
+                LXPReferenceType reference = new LXPReferenceType((DynamicLXP) (type_rep));
 
                 names_to_type_cache.put(name, reference);
                 ids_to_type_cache.put(type_key, reference);
             }
         } catch (BucketException e) {
-            ErrorHandling.exceptionError(e, "IO exception getting iterator over type name map");
+            ErrorHandling.exceptionError(e, "IO exception getting iterator over type name field_storage");
         } catch (KeyNotFoundException e) {
             ErrorHandling.exceptionError(e, "Could not find key whilst reestablising caches");
         } catch (TypeMismatchFoundException e) {
@@ -120,8 +120,8 @@ public class TypeFactory {
     private void doHousekeeping(String type_name, LXPReferenceType ref_type) {
 
         try {
-            ILXP type_rep = ref_type.getRep();
-            ILXP name_value = nameValuePair(type_name, type_rep.getId());
+            LXP type_rep = ref_type.getRep();
+            LXP name_value = nameValuePair(type_name, type_rep.getId());
             type_reps_bucket.makePersistent(type_rep);
             type_name_bucket.makePersistent(name_value);
 
@@ -133,9 +133,9 @@ public class TypeFactory {
         ids_to_type_cache.put(ref_type.getId(), ref_type);
     }
 
-    private ILXP nameValuePair(String type_name, long typekey) {
+    private LXP nameValuePair(String type_name, long typekey) {
 
-        LXP lxp = new LXP();
+        DynamicLXP lxp = new DynamicLXP();
         try {
             lxp.put("name", type_name);
             lxp.put("key", typekey);

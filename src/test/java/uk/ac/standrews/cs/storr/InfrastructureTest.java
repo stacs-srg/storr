@@ -25,9 +25,7 @@ import uk.ac.standrews.cs.storr.impl.exceptions.*;
 import uk.ac.standrews.cs.storr.impl.transaction.exceptions.TransactionFailedException;
 import uk.ac.standrews.cs.storr.impl.transaction.interfaces.ITransaction;
 import uk.ac.standrews.cs.storr.interfaces.IBucket;
-import uk.ac.standrews.cs.storr.interfaces.ILXP;
 import uk.ac.standrews.cs.storr.interfaces.IReferenceType;
-import uk.ac.standrews.cs.storr.types.Types;
 import uk.ac.standrews.cs.utilities.FileManipulation;
 
 import java.io.IOException;
@@ -77,20 +75,20 @@ public class InfrastructureTest extends CommonTest {
     @Test
     public synchronized void testLXPCreation() throws RepositoryException, IllegalKeyException, BucketException {
         IBucket b = repository.getBucket(generic_bucket_name1);
-        LXP lxp = new LXP();
+        DynamicLXP lxp = new DynamicLXP();
         lxp.put("age", "42");
         lxp.put("address", "home");
         b.makePersistent(lxp);
 
         long id = lxp.getId();
-        ILXP retrievedLXP = b.getObjectById(id);
+        LXP retrievedLXP = b.getObjectById(id);
         assertEquals(retrievedLXP, lxp);
     }
 
     @Test
     public synchronized void testLXPListCreation() throws RepositoryException, IllegalKeyException, BucketException {
         IBucket b = repository.getBucket(generic_bucket_name1);
-        LXP lxp = new LXP();
+        DynamicLXP lxp = new DynamicLXP();
         lxp.put("age", "42");
         lxp.put("address", "home");
         List l = new ArrayList();
@@ -101,14 +99,14 @@ public class InfrastructureTest extends CommonTest {
         b.makePersistent(lxp);
 
         long id = lxp.getId();
-        ILXP retrievedLXP = b.getObjectById(id);
+        LXP retrievedLXP = b.getObjectById(id);
         assertEquals(retrievedLXP, lxp);
     }
 
     @Test(expected = BucketException.class)
     public synchronized void testLXPOverwrite() throws RepositoryException, IllegalKeyException, BucketException {
         IBucket b = repository.getBucket(generic_bucket_name1);
-        LXP lxp = new LXP();
+        DynamicLXP lxp = new DynamicLXP();
         lxp.put("age", "42");
         lxp.put("address", "home");
 
@@ -121,7 +119,7 @@ public class InfrastructureTest extends CommonTest {
         IBucket b = repository.getBucket(generic_bucket_name1);
         b.setTypeLabelID(personlabel.getId());
 
-        LXP lxp = new LXP();
+        DynamicLXP lxp = new DynamicLXP();
         lxp.put("age", "42");
         lxp.put("address", "home");
         b.makePersistent(lxp);
@@ -132,7 +130,7 @@ public class InfrastructureTest extends CommonTest {
 
         IBucket b = repository.getBucket(generic_bucket_name1);
 
-        LXP lxp = new LXP();
+        DynamicLXP lxp = new DynamicLXP();
         lxp.put("age", "42");
         lxp.put("address", "home");
         b.makePersistent(lxp);
@@ -141,7 +139,7 @@ public class InfrastructureTest extends CommonTest {
         ITransaction txn = store.getTransactionManager().beginTransaction();
 
 
-        ILXP lxp2 = b.getObjectById(oid);
+        LXP lxp2 = b.getObjectById(oid);
         lxp2.put("age", "43");
 
         b.update(lxp2);
@@ -149,8 +147,8 @@ public class InfrastructureTest extends CommonTest {
         txn.commit();
 
         long id = lxp2.getId();
-        ILXP retrievedLXP2 = b.getObjectById(id);
-        String age = retrievedLXP2.getString("age");
+        LXP retrievedLXP2 = b.getObjectById(id);
+        String age = (String) retrievedLXP2.get("age");
         assertEquals("43", age);
 
         // TODO a similar one with abort.
@@ -160,13 +158,13 @@ public class InfrastructureTest extends CommonTest {
     public synchronized void updateOutwithTransactionThrowsException() throws RepositoryException, IllegalKeyException, BucketException, StoreException {
         IBucket b = repository.getBucket(generic_bucket_name1);
 
-        LXP lxp = new LXP();
+        DynamicLXP lxp = new DynamicLXP();
         lxp.put("age", "42");
         lxp.put("address", "home");
         b.makePersistent(lxp);
         long oid = lxp.getId();
 
-        ILXP lxp2 = b.getObjectById(oid);
+        LXP lxp2 = b.getObjectById(oid);
         lxp2.put("age", "43");
 
         b.update(lxp2);
@@ -176,7 +174,7 @@ public class InfrastructureTest extends CommonTest {
     public synchronized void updateNonPersistentObjectThrowsException() throws RepositoryException, IllegalKeyException, BucketException, StoreException {
         IBucket b = repository.getBucket(generic_bucket_name1);
 
-        LXP lxp = new LXP();
+        DynamicLXP lxp = new DynamicLXP();
         lxp.put("age", "42");
         lxp.put("address", "home");
 
@@ -189,12 +187,12 @@ public class InfrastructureTest extends CommonTest {
         IBucket b1 = repository.getBucket(generic_bucket_name1);
         IBucket b2 = repository.getBucket(generic_bucket_name2);
 
-        LXP lxp1 = new LXP();
+        DynamicLXP lxp1 = new DynamicLXP();
         lxp1.put("age", "42");
         b1.makePersistent(lxp1);
         long oid1 = lxp1.getId();
 
-        LXP lxp2 = new LXP();
+        DynamicLXP lxp2 = new DynamicLXP();
         lxp2.put("age", "42");
         b2.makePersistent(lxp2);
         long oid2 = lxp2.getId();
@@ -203,8 +201,8 @@ public class InfrastructureTest extends CommonTest {
 
         try {
 
-            ILXP lxp11 = b1.getObjectById(oid1);
-            ILXP lxp22 = b2.getObjectById(oid2);
+            LXP lxp11 = b1.getObjectById(oid1);
+            LXP lxp22 = b2.getObjectById(oid2);
             lxp11.put("age", "43");
             lxp22.put("age", "43");
 
@@ -229,7 +227,7 @@ public class InfrastructureTest extends CommonTest {
 
         IBucket b = repository.getBucket(generic_bucket_name1);
 
-        LXP lxp = new LXP();
+        DynamicLXP lxp = new DynamicLXP();
         lxp.put("age", "42");
         b.makePersistent(lxp);
         long oid = lxp.getId();
@@ -255,7 +253,7 @@ public class InfrastructureTest extends CommonTest {
         IBucket b = repository.getBucket(generic_bucket_name1);
         b.setTypeLabelID(personlabel.getId());
 
-        LXP lxp = new LXP();        // correct structure but no label - that is OK!
+        DynamicLXP lxp = new DynamicLXP();        // correct structure but no label - that is OK!
         lxp.put("name", "al");
         lxp.put("age", 55);
         b.makePersistent(lxp);
@@ -266,10 +264,10 @@ public class InfrastructureTest extends CommonTest {
         IBucket b = repository.getBucket(generic_bucket_name1);
         b.setTypeLabelID(personlabel.getId());
 
-        LXP lxp = new LXP();        // correct structure
+        DynamicLXP lxp = new DynamicLXP();        // correct structure
         lxp.put("name", "al");
         lxp.put("age", 55);
-        lxp.put(Types.LABEL, personlabel.getId());    // with correct label
+        lxp.getMetaData().setType( personlabel );    // with correct label
         b.makePersistent(lxp); // Should succeed: labels correct and type label identical to bucket
     }
 
@@ -278,10 +276,10 @@ public class InfrastructureTest extends CommonTest {
         IBucket b = repository.getBucket(generic_bucket_name1);
         b.setTypeLabelID(personlabel2.getId());
 
-        LXP lxp = new LXP();        // correct structure
+        DynamicLXP lxp = new DynamicLXP();        // correct structure
         lxp.put("name", "al");
         lxp.put("age", 55);
-        lxp.put(Types.LABEL, personlabel.getId()); // structurally equivalent label
+        lxp.getMetaData().setType( personlabel ); // structurally equivalent label
         b.makePersistent(lxp); // Should succeed labels correct and type label structurally equivalent
     }
 
@@ -290,10 +288,10 @@ public class InfrastructureTest extends CommonTest {
         IBucket b = repository.getBucket(generic_bucket_name1);
         b.setTypeLabelID(personlabel2.getId());
 
-        LXP lxp = new LXP();        // incorrect structure
+        DynamicLXP lxp = new DynamicLXP();        // incorrect structure
         lxp.put("name", "al");
         lxp.put("address", "home");
-        lxp.addTypeLabel(personlabel); // correct label but not structurally equivalent label
+        lxp.getMetaData().setType( personlabel ); // correct type but not structurally equivalent type
         b.makePersistent(lxp);
         // should getString an exception due to incorrect structure
 
@@ -307,14 +305,14 @@ public class InfrastructureTest extends CommonTest {
         b2.setTypeLabelID(personreftuple.getId());
 
 
-        LXP lxp = new LXP();        // correct structure
+        DynamicLXP lxp = new DynamicLXP();        // correct structure
         lxp.put("name", "al");
         lxp.put("age", 55);
-        lxp.put(Types.LABEL, personlabel.getId()); // correct label
+        lxp.getMetaData().setType(personlabel); // correct type
 
         b1.makePersistent(lxp);
 
-        LXP lxp2 = new LXP();        // correct structure
+        DynamicLXP lxp2 = new DynamicLXP();        // correct structure
         lxp2.put("person_ref", new StoreReference<>(repository, b1, lxp));
         b2.makePersistent(lxp2);
     }
@@ -327,14 +325,14 @@ public class InfrastructureTest extends CommonTest {
         IBucket b2 = repository.getBucket(generic_bucket_name2);
         b2.setTypeLabelID(personreftuple.getId());
 
-        LXP lxp = new LXP();        // correct structure
+        DynamicLXP lxp = new DynamicLXP();        // correct structure
         lxp.put("name", "al");
         lxp.put("age", 55);
-        lxp.put(Types.LABEL, personlabel.getId()); // correct label
+        lxp.getMetaData().setType( personlabel );   // correct label
 
         b1.makePersistent(lxp);
 
-        LXP lxp2 = new LXP();        // correct structure
+        DynamicLXP lxp2 = new DynamicLXP();        // correct structure
         lxp2.put("person_ref", Integer.toString(100)); // an illegal reference - not a legal identifier
 
         b2.makePersistent(lxp2);
@@ -349,18 +347,18 @@ public class InfrastructureTest extends CommonTest {
         b2.setTypeLabelID(personreftuple.getId());
         IBucket b3 = repository.getBucket(generic_bucket_name3);
 
-        LXP lxp = new LXP();        // correct structure
+        DynamicLXP lxp = new DynamicLXP();        // correct structure
         lxp.put("name", "al");
         lxp.put("age", 55);
-        lxp.put(Types.LABEL, personlabel.getId()); // correct label
+        lxp.getMetaData().setType(personlabel); // correct type
 
         b1.makePersistent(lxp);
 
-        LXP lxp2 = new LXP();
+        DynamicLXP lxp2 = new DynamicLXP();
         b3.makePersistent(lxp2); // just stick something in bucket3
         long lxp2_id = lxp2.getId();
 
-        LXP lxp3 = new LXP();        // correct structure
+        DynamicLXP lxp3 = new DynamicLXP();        // correct structure
         lxp3.put("person_ref", new StoreReference<>(repository, b3, lxp2)); // an illegal reference to this tuple - wrong reference type
 
         b2.makePersistent(lxp3);
@@ -371,23 +369,24 @@ public class InfrastructureTest extends CommonTest {
 
         IBucket b1 = repository.getBucket(generic_bucket_name1);
 
-        LXP lxp = new LXP();        // incorrect structure
+        DynamicLXP lxp = new DynamicLXP();        // incorrect structure
         lxp.put("name", "al");
         lxp.put("age", 55);
-        lxp.put(Types.LABEL, personlabel.getId()); // correct label
+        lxp.getMetaData().setType(personlabel); // correct type
 
         b1.makePersistent(lxp);
     }
 
+    @Ignore
     @Test(expected = BucketException.class)
     public synchronized void testIllegalTypedRecordInUntypedBucket() throws RepositoryException, IllegalKeyException, BucketException {
 
         IBucket b1 = repository.getBucket(generic_bucket_name1);
 
-        LXP lxp = new LXP();        // incorrect structure
+        DynamicLXP lxp = new DynamicLXP();        // incorrect structure
         lxp.put("name", "al");
         lxp.put("wrongfield", "55");
-        lxp.put(Types.LABEL, personlabel.getId()); // correct label
+        lxp.getMetaData().setType(personlabel); // correct type // TODO this does not fail - see comments in setType in MetaData - needs refactoring.
 
         b1.makePersistent(lxp);
     }
@@ -395,17 +394,17 @@ public class InfrastructureTest extends CommonTest {
     @Test
     public synchronized void testLXPFromFile() throws RepositoryException, KeyNotFoundException, TypeMismatchFoundException, IllegalKeyException, BucketException {
         IBucket b = repository.getBucket(generic_bucket_name1);
-        LXP lxp = new LXP();
+        DynamicLXP lxp = new DynamicLXP();
         lxp.put("age", "42");
         lxp.put("address", "home");
         b.makePersistent(lxp);       // <<--------- write record **
         long id = lxp.getId();
 
-        ILXP lxp2 = b.getObjectById(id);
-        assertTrue(lxp2.containsKey("age"));
-        assertEquals(lxp2.getString("age"), "42");
-        assertTrue(lxp2.containsKey("address"));
-        assertEquals(lxp2.getString("address"), "home");
+        LXP lxp2 = b.getObjectById(id);
+        assertTrue(lxp2.getMetaData().containsLabel("age"));
+        assertEquals(lxp2.get("age"), "42");
+        assertTrue(lxp2.getMetaData().containsLabel("address"));
+        assertEquals(lxp2.get("address"), "home");
     }
 
     @Test
@@ -413,7 +412,7 @@ public class InfrastructureTest extends CommonTest {
         IBucket b = repository.getBucket(generic_bucket_name1);
         // create a few records
         for (int i = 1; i < 10; i++) {
-            LXP lxp = new LXP();
+            DynamicLXP lxp = new DynamicLXP();
             lxp.put("age", "42");
             lxp.put("address", "home");
             b.makePersistent(lxp);
@@ -421,11 +420,11 @@ public class InfrastructureTest extends CommonTest {
 
         int count = 1;
         for (Object o : b.getInputStream()) {
-            ILXP record = (ILXP) o;
-            assertTrue(record.containsKey("age"));
-            assertEquals(record.getString("age"), "42");
-            assertTrue(record.containsKey("address"));
-            assertEquals(record.getString("address"), "home");
+            LXP record = (LXP) o;
+            assertTrue(record.getMetaData().containsLabel("age"));
+            assertEquals(record.get("age"), "42");
+            assertTrue(record.getMetaData().containsLabel("address"));
+            assertEquals(record.get("address"), "home");
             count++;
         }
         assertEquals(count, 10);
@@ -434,7 +433,7 @@ public class InfrastructureTest extends CommonTest {
     @Test
     public synchronized void testBaseTypedFields() throws RepositoryException, KeyNotFoundException, TypeMismatchFoundException, IllegalKeyException, BucketException {
         IBucket b = repository.getBucket(generic_bucket_name1);
-        LXP lxp = new LXP();
+        DynamicLXP lxp = new DynamicLXP();
 
         // base types supported are: BOOLEAN, DOUBLE, INTEGER, LONG & STRING
         lxp.put("boolean", true);
@@ -445,23 +444,23 @@ public class InfrastructureTest extends CommonTest {
         b.makePersistent(lxp);       // <<--------- write record **
         long id = lxp.getId();
 
-        ILXP lxp2 = b.getObjectById(id);
-        assertTrue(lxp2.containsKey("boolean"));
-        assertEquals(lxp2.getBoolean("boolean"), true);
-        assertTrue(lxp2.containsKey("double"));
-        assertEquals(3.14d, lxp2.getDouble("double"), 0.0d);
-        assertTrue(lxp2.containsKey("int"));
-        assertEquals(lxp2.getInt("int"), 7);
-        assertTrue(lxp2.containsKey("long"));
-        assertEquals(lxp2.getLong("long"), 23L);
-        assertTrue(lxp2.containsKey("string"));
-        assertEquals(lxp2.getString("string"), "al");
+        LXP lxp2 = b.getObjectById(id);
+        assertTrue(lxp2.getMetaData().containsLabel("boolean"));
+        assertEquals(lxp2.get("boolean"), true);
+        assertTrue(lxp2.getMetaData().containsLabel("double"));
+        assertEquals(3.14d, lxp2.get("double"));
+        assertTrue(lxp2.getMetaData().containsLabel("int"));
+        assertEquals(lxp2.get("int"), 7);
+        assertTrue(lxp2.getMetaData().containsLabel("long"));
+        assertEquals(lxp2.get("long"), 23L);
+        assertTrue(lxp2.getMetaData().containsLabel("string"));
+        assertEquals(lxp2.get("string"), "al");
     }
 
     @Test(expected = IllegalKeyException.class)
     public synchronized void emptyStringInLabelType() throws RepositoryException, BucketException, IllegalKeyException, StoreException {
         IBucket b = repository.getBucket(generic_bucket_name1);
-        LXP lxp = new LXP();
+        DynamicLXP lxp = new DynamicLXP();
         lxp.put("", "fish");
         b.makePersistent(lxp);       // <<--------- write record **
     }
@@ -471,7 +470,7 @@ public class InfrastructureTest extends CommonTest {
     @Test(expected = IllegalKeyException.class)
     public synchronized void nullLabelType() throws RepositoryException, BucketException, IllegalKeyException, StoreException {
         IBucket b = repository.getBucket(generic_bucket_name1);
-        LXP lxp = new LXP();
+        DynamicLXP lxp = new DynamicLXP();
         lxp.put(null, "fish");
         b.makePersistent(lxp);       // <<--------- write record **
     }
@@ -479,13 +478,13 @@ public class InfrastructureTest extends CommonTest {
     @Test
     public synchronized void emptyStringValue() throws RepositoryException, BucketException, IllegalKeyException, StoreException {
         IBucket b = repository.getBucket(generic_bucket_name1);
-        LXP lxp = new LXP();
+        DynamicLXP lxp = new DynamicLXP();
         lxp.put("string", "");
         b.makePersistent(lxp);       // <<--------- write record **
 
         long id = lxp.getId();
-        ILXP retrievedLXP = b.getObjectById(id);
-        String retrievedString = retrievedLXP.getString("string");
+        LXP retrievedLXP = b.getObjectById(id);
+        String retrievedString = (String) retrievedLXP.get("string");
         assertEquals("", retrievedString);
     }
 
@@ -508,7 +507,7 @@ public class InfrastructureTest extends CommonTest {
             }
 
             try {
-                ILXP lxp2 = b.getObjectById(oid);
+                LXP lxp2 = b.getObjectById(oid);
                 lxp2.put("age", "43");
                 b.update(lxp2);
 

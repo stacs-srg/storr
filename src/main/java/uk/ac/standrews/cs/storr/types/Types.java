@@ -16,12 +16,12 @@
  */
 package uk.ac.standrews.cs.storr.types;
 
-import uk.ac.standrews.cs.storr.impl.LXP;
+import uk.ac.standrews.cs.storr.impl.DynamicLXP;
 import uk.ac.standrews.cs.storr.impl.TypeFactory;
 import uk.ac.standrews.cs.storr.impl.exceptions.IllegalKeyException;
 import uk.ac.standrews.cs.storr.impl.exceptions.KeyNotFoundException;
 import uk.ac.standrews.cs.storr.impl.exceptions.TypeMismatchFoundException;
-import uk.ac.standrews.cs.storr.interfaces.ILXP;
+import uk.ac.standrews.cs.storr.impl.LXP;
 import uk.ac.standrews.cs.storr.interfaces.IReferenceType;
 import uk.ac.standrews.cs.storr.interfaces.IStore;
 import uk.ac.standrews.cs.storr.interfaces.IType;
@@ -41,18 +41,20 @@ public class Types {
     public static final String LABEL = "$LABEL$";
 
     /**
-     * Checks the TYPE LABEL on a record (if there is one) is consistent with a supplied label (generally from a bucket)
+     * Checks the type of a record (if there is one) is consistent with a supplied label (generally from a bucket)
      *
      * @param record        whose label is to be checked
      * @param type_label_id the label against which the checking is to be performed
      * @param <T>           the type of the record being checked
      * @return true if the labels are consistent
      */
-    public static <T extends ILXP> boolean checkLabelConsistency(final T record, long type_label_id, IStore store) {
+    public static <T extends LXP> boolean checkLabelConsistency(final T record, long type_label_id, IStore store) {
 
-        if (record.containsKey(Types.LABEL)) { // if there is a label it must be correct
+        IReferenceType type = record.getMetaData().getType();
+
+        if ( type != null ) { // if there is a type it must be correct
             try {
-                return checkLabelsConsistentWith(record.getLong(Types.LABEL), type_label_id, store);
+                return checkLabelsConsistentWith( (long) type.getId(), type_label_id, store);
 
             } catch (KeyNotFoundException | TypeMismatchFoundException e) {
                 return false; // label not there or inappropriate type
@@ -71,7 +73,7 @@ public class Types {
      * @return true if the structure is consistent
      * @throws IOException if one if thrown by the underlying subsystem(s)
      */
-    public static <T extends ILXP> boolean checkStructuralConsistency(final T record, long type_label_id, IStore store) throws IOException {
+    public static <T extends LXP> boolean checkStructuralConsistency(final T record, long type_label_id, IStore store) throws IOException {
 
         IReferenceType bucket_type = store.getTypeFactory().typeWithId(type_label_id);
         return checkStructuralConsistency(record, bucket_type);
@@ -85,21 +87,23 @@ public class Types {
      * @param <T>      the type of the record being checked
      * @return true if the structure is consistent
      */
-    static <T extends ILXP> boolean checkStructuralConsistency(final T record, IReferenceType ref_type) {
+    static <T extends LXP> boolean checkStructuralConsistency(final T record, IReferenceType ref_type) {
 
-        Set<String> record_keys = record.getLabels();
+        Set<String> record_keys = record.getMetaData().getFields();
 
         Collection<String> required_labels = ref_type.getLabels();
 
         for (String label : required_labels) {
             if (!record_keys.contains(label)) {
                 // required label not present
-                ErrorHandling.error( "required label " + label + " not present in record " + record );
+                ErrorHandling.error( "required label " + label + " not present in record " );
                 return false;
             }
             // required label is present now check the types of the keys in the record
             try {
                 Object value = record.get(label);
+
+
                 if (!ref_type.getFieldType(label).valueConsistentWithType(value)) {
                     // label does not match expected type
                     ErrorHandling.error( "label " + label + " type " + ref_type.getFieldType(label) + " inconsistent with " + value + "in record " + record );
@@ -193,11 +197,11 @@ public class Types {
         return LXPBaseType.UNKNOWN;
     }
 
-    public static LXP getTypeRep(Class c) {
+    public static DynamicLXP getTypeRep(Class c) {
 
-        LXP type_rep = null;
+        DynamicLXP type_rep = null;
 
-        type_rep = new LXP();
+        type_rep = new DynamicLXP();
 
         Field[] fields = c.getDeclaredFields();
         for (Field f : fields) {
@@ -211,10 +215,8 @@ public class Types {
                     LXP_SCALAR scalar_type = f.getAnnotation(LXP_SCALAR.class);
                     try {
                         f.setAccessible(true);
-                        String label_name = (String) f.get(null); // label name is the value of the labelled Java field!
+                        String label_name = (String) f.getName();
                         type_rep.put(label_name, scalar_type.type().name());
-                    } catch (IllegalAccessException e) {
-                        ErrorHandling.exceptionError(e, "Illegal access for label: " + f.getName());
                     } catch (IllegalKeyException e) {
                         ErrorHandling.exceptionError(e, "Illegal key in label: " + f.getName());
                     }

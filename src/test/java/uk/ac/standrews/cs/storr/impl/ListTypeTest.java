@@ -24,6 +24,7 @@ import uk.ac.standrews.cs.storr.impl.exceptions.RepositoryException;
 import uk.ac.standrews.cs.storr.impl.exceptions.StoreException;
 import uk.ac.standrews.cs.storr.interfaces.IBucket;
 import uk.ac.standrews.cs.storr.interfaces.IReferenceType;
+import uk.ac.standrews.cs.storr.interfaces.IStoreReference;
 import uk.ac.standrews.cs.utilities.FileManipulation;
 import uk.ac.standrews.cs.utilities.JSONReader;
 
@@ -36,7 +37,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -48,11 +48,9 @@ public class ListTypeTest extends CommonTest {
     private static final String classWithListOfScalarsBucketName = "classWithListOFScalarsBucket";
     private static final String classWithListOfRefsBucketName = "classWithListOFRefsBucket";
 
-    private IBucket<LXP> lxp_bucket;
+    private IBucket lxp_bucket;
     private IBucket<ClassWithListOfScalars> scalar_list_bucket;
     private IBucket<ClassWithListOfRefs> ref_list_bucket;
-
-    private ClassWithListOfRefsFactory classWithListOfRefsFactory;
 
     @Before
     public void setUp() throws RepositoryException, IOException, StoreException, URISyntaxException {
@@ -63,12 +61,9 @@ public class ListTypeTest extends CommonTest {
         IReferenceType classwithlistofscalars_type = tf.createType(ClassWithListOfScalars.class, "classwithlistofscalars");
         IReferenceType classwithlistofrefs_type = tf.createType(ClassWithListOfRefs.class, "classwithlistofrefs");
 
-        ClassWithListOfScalarsFactory classWithListOfScalarsFactory = new ClassWithListOfScalarsFactory(classwithlistofscalars_type.getId());
-        classWithListOfRefsFactory = new ClassWithListOfRefsFactory(classwithlistofrefs_type.getId());
-
         lxp_bucket = repository.makeBucket(lxpBucketName, BucketKind.DIRECTORYBACKED);
-        scalar_list_bucket = repository.makeBucket(classWithListOfScalarsBucketName, BucketKind.DIRECTORYBACKED, classWithListOfScalarsFactory);
-        ref_list_bucket = repository.makeBucket(classWithListOfRefsBucketName, BucketKind.DIRECTORYBACKED, classWithListOfRefsFactory);
+        scalar_list_bucket = repository.makeBucket(classWithListOfScalarsBucketName, BucketKind.DIRECTORYBACKED);
+        ref_list_bucket = repository.makeBucket(classWithListOfRefsBucketName, BucketKind.DIRECTORYBACKED);
     }
 
     @Test
@@ -85,31 +80,36 @@ public class ListTypeTest extends CommonTest {
         Path file_path = store_path.resolve("REPOS").resolve(REPOSITORY_NAME).resolve(classWithListOfScalarsBucketName).resolve(Long.toString(id));
         BufferedReader reader = Files.newBufferedReader(file_path, FileManipulation.FILE_CHARSET);
 
-        LXP lxp2 = new LXP(id, new JSONReader(reader), repository, lxp_bucket);
+        DynamicLXP lxp2 = new DynamicLXP(id, new JSONReader(reader), lxp_bucket);
 
-        assertEquals(lxp2.getId(), id);
-        assertEquals(lxp2.getInt("S_INT"), 53);
-        List l = lxp2.getList("S_LIST");
-        assertEquals((int) l.get(0), 99);
-        assertEquals((int) l.get(1), 88);
+        assertEquals(id, lxp2.getId());
+        assertEquals(53, (int) lxp2.get("AN_INT"));
+        List l = (List) lxp2.get("A_LIST");
+        assertEquals(99, (int) l.get(0));
+        assertEquals(88, (int) l.get(1));
     }
 
     @Test
     public void checkStructuralEquivalenceWithListOfRefs() throws RepositoryException, BucketException, PersistentObjectException, IOException {
 
-        LXP lxp1 = new LXP();
-        lxp1.put("99", 99);
+        DynamicLXP lxp1 = new DynamicLXP();
+        lxp1.put("a", 99);
         lxp_bucket.makePersistent(lxp1);
-        LXP lxp2 = new LXP();
-        lxp2.put("88", 88);
-        lxp_bucket.makePersistent(lxp2);
+        IStoreReference ref1 = lxp1.getThisRef();
 
-        List<LXP> list = new ArrayList<>();
+
+        DynamicLXP lxp2 = new DynamicLXP();
+        lxp2.put("b", 88);
+        lxp_bucket.makePersistent(lxp2);
+        IStoreReference ref2 = lxp2.getThisRef(); // <<<<<< TODO problem here with JSON EXCEPTION - if not persistent
+
+
+        List<DynamicLXP> list = new ArrayList<>();
         list.add(lxp1);
         list.add(lxp2);
 
         // ClassWithListOfRefs example = new ClassWithListOfRefs( 53,list );
-        ClassWithListOfRefs example = classWithListOfRefsFactory.create(53, list);
+        ClassWithListOfRefs example = new ClassWithListOfRefs(53, list);
         ref_list_bucket.makePersistent(example);
         long id = example.getId();
 
@@ -118,11 +118,16 @@ public class ListTypeTest extends CommonTest {
         Path file_path = store_path.resolve("REPOS").resolve(REPOSITORY_NAME).resolve(classWithListOfRefsBucketName).resolve(Long.toString(id));
         BufferedReader reader = Files.newBufferedReader(file_path, FileManipulation.FILE_CHARSET);
 
-        LXP lxp3 = new LXP(id, new JSONReader(reader), repository, lxp_bucket);
-        assertEquals(lxp3.getId(), id);
-        assertEquals(lxp3.getInt("R_INT"), 53);
-        List l = lxp3.getList("R_LIST");
-        assertTrue(l.get(0).equals("{\"99\":99}"));
-        assertTrue(l.get(1).equals("{\"88\":88}"));
+        DynamicLXP lxp3 = new DynamicLXP(id, new JSONReader(reader), lxp_bucket);
+        assertEquals(id, lxp3.getId());
+        assertEquals( 53, (int) lxp3.get("AN_INT") );
+        List l = (List) lxp3.get("A_LIST");
+
+        System.out.println( ref1 );
+        System.out.println( l.get(0) );
+        System.out.println( ref2 );
+        System.out.println( l.get(1) );
+        assertEquals(ref1, (new StoreReference( Store.getInstance(), (String) l.get(0) ) ) );
+        assertEquals(ref2, (new StoreReference( Store.getInstance(), (String) l.get(1) ) ) );
     }
 }

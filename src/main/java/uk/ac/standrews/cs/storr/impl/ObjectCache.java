@@ -17,7 +17,6 @@
 package uk.ac.standrews.cs.storr.impl;
 
 import uk.ac.standrews.cs.storr.interfaces.IBucket;
-import uk.ac.standrews.cs.storr.interfaces.ILXP;
 import uk.ac.standrews.cs.storr.interfaces.IObjectCache;
 
 import java.util.Map;
@@ -41,7 +40,7 @@ public class ObjectCache implements IObjectCache {
      * @param bucket the bucket from which the object came.
      * @param tuple  the tuple added to the cache
      */
-    public void put(long oid, IBucket bucket, ILXP tuple) {
+    public void put(long oid, IBucket bucket, LXP tuple) {
 
         map.put(oid, new Data(bucket, tuple));
     }
@@ -65,7 +64,7 @@ public class ObjectCache implements IObjectCache {
     }
 
     @Override
-    public ILXP getObject(long oid) {
+    public LXP getObject(long oid) {
 
         Data data = map.get(oid);
         return (data == null) ? null : data.tuple;
@@ -77,9 +76,9 @@ public class ObjectCache implements IObjectCache {
     static class Data {
 
         IBucket bucket;
-        ILXP tuple;
+        LXP tuple;
 
-        Data(IBucket bucket, ILXP tuple) {
+        Data(IBucket bucket, LXP tuple) {
             this.bucket = bucket;
             this.tuple = tuple;
         }

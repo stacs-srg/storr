@@ -22,19 +22,21 @@ import uk.ac.standrews.cs.storr.impl.exceptions.RepositoryException;
 import uk.ac.standrews.cs.storr.impl.exceptions.StoreException;
 import uk.ac.standrews.cs.storr.interfaces.*;
 
+import java.lang.ref.WeakReference;
+
 /**
  * Created by al on 23/03/15.
  */
-public class StoreReference<T extends ILXP> extends LXP implements IStoreReference<T> {
+public class StoreReference<T extends LXP> extends DynamicLXP implements IStoreReference<T> {
 
-    protected final static String $INDIRECTION$ = "$INDIRECTION$";
+//    protected final static String $INDIRECTION$ = "$INDIRECTION$";
     protected final static String REPOSITORY = "repository";
     protected final static String BUCKET = "bucket";
     protected final static String OID = "oid";
 
     private static final String SEPARATOR = "/";
 
-    private HardReference<T> ref = null; // TODO should be softReference???? - was WeakReference<T>
+    private WeakReference<T> ref = null;
     private IStore store;
 
     /**
@@ -46,7 +48,7 @@ public class StoreReference<T extends ILXP> extends LXP implements IStoreReferen
 
         try {
             String[] tokens = serialized.split(SEPARATOR);
-            put($INDIRECTION$, "true");
+//            put($INDIRECTION$, "true");
             put(REPOSITORY, tokens[0]);
             put(BUCKET, tokens[1]);
             put(OID, Long.parseLong(tokens[2]));
@@ -60,7 +62,6 @@ public class StoreReference<T extends ILXP> extends LXP implements IStoreReferen
 
         super();
         this.store = store;
-        this.put($INDIRECTION$, "true");
         this.put(REPOSITORY, repo_name);
         this.put(BUCKET, bucket_name);
         this.put(OID, oid);
@@ -73,27 +74,28 @@ public class StoreReference<T extends ILXP> extends LXP implements IStoreReferen
 
     private StoreReference(IStore store, String repo_name, String bucket_name, T reference) {
         this(store, repo_name, bucket_name, reference.getId());
-        ref = new HardReference<T>(reference);   // TODO was weakRef - make softRef??
+        ref = new WeakReference<T>(reference);   // TODO was weakRef - make softRef??
     }
 
-    public StoreReference(IStore store, ILXP record) {
-        this(store, record.getString(REPOSITORY), record.getString(BUCKET), record.getLong(OID));
+    public StoreReference(IStore store, LXP record) {
+
+        this(store, (String) record.get(REPOSITORY), (String) record.get(BUCKET), (long) record.get(OID));
         // don't bother looking up cache reference on demand
     }
 
     @Override
     public String getRepositoryName() {
-        return getString(REPOSITORY);
+        return (String) get(REPOSITORY);
     }
 
     @Override
     public String getBucketName() {
-        return getString(BUCKET);
+        return (String) get(BUCKET);
     }
 
     @Override
     public Long getOid() {
-        return getLong(OID);
+        return (long) get(OID);
     }
 
     @Override
@@ -110,6 +112,19 @@ public class StoreReference<T extends ILXP> extends LXP implements IStoreReferen
             return (T) store.getRepository(getRepositoryName()).getBucket(getBucketName()).getObjectById(getOid());
         } catch (RepositoryException | StoreException e) {
             throw new BucketException(e);
+        }
+    }
+
+    public boolean equals( Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if( obj instanceof StoreReference ) {
+            StoreReference sr = (StoreReference) obj;
+            return sr == this ||
+                    ( sr.getBucketName().equals( this.getBucketName() ) && sr.getRepositoryName().equals( this.getRepositoryName() ) && sr.getOid().equals( this.getOid() ) );
+        } else {
+            return false;
         }
     }
 

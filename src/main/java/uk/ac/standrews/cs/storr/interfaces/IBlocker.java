@@ -16,6 +16,7 @@
  */
 package uk.ac.standrews.cs.storr.interfaces;
 
+import uk.ac.standrews.cs.storr.impl.LXP;
 import uk.ac.standrews.cs.storr.impl.exceptions.NoSuitableBucketException;
 
 /**
@@ -23,7 +24,7 @@ import uk.ac.standrews.cs.storr.impl.exceptions.NoSuitableBucketException;
  * an ILXPInputStream to makePersistent records selected into some bucket.
  * Created by al on 29/04/2014.
  */
-public interface IBlocker<T extends ILXP> {
+public interface IBlocker<T extends LXP> {
 
     /**
      * @return the ILXPInputStream over which blocking is being performed.

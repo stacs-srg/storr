@@ -19,305 +19,451 @@ package uk.ac.standrews.cs.storr.impl;
 import org.json.JSONException;
 import org.json.JSONWriter;
 import uk.ac.standrews.cs.storr.impl.exceptions.*;
-import uk.ac.standrews.cs.storr.interfaces.*;
-import uk.ac.standrews.cs.storr.types.Types;
+import uk.ac.standrews.cs.storr.interfaces.IBucket;
+import uk.ac.standrews.cs.storr.interfaces.IRepository;
+import uk.ac.standrews.cs.storr.interfaces.IStore;
+import uk.ac.standrews.cs.storr.interfaces.IStoreReference;
 import uk.ac.standrews.cs.utilities.JSONReader;
 
-import java.io.StringWriter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 
 import static uk.ac.standrews.cs.storr.impl.Store.getNextFreePID;
 
 /**
- * This is a Labelled Cross Product (a tuple).
- * This is the basic unit that is stored in Buckets.
- * Higher order language level types may be constructed above this basic building block.
- * LXP provides a thin wrapper over a Map (providing name value lookup) along with identity and the ability to save and recover persistent versions (encoded in JSON).
+ * Abstract class for an LXP (labeled cross product class).
+ *
+ * @author al
  */
-public class LXP implements ILXP, Comparable<LXP> {
 
-    protected Map<String, Object> map;
-    private long id;
-    private IRepository repository = null;
-    private IBucket bucket = null;
+public abstract class LXP {
+
+    protected long id;
+    protected IBucket bucket = null;
+
+    private final static int INITIAL_SIZE = 5;
+    private static final int SIZE_INCREMENT = 5;
+
+    protected Metadata metadata = new Metadata();
+
+    protected Object[] field_storage = new Object[INITIAL_SIZE];   // where the data lives in the LXP.
+
+    private int next_free_slot = 0;
+
+    // Constructors
 
     public LXP() {
 
         this.id = getNextFreePID();
-        this.map = new HashMap<>();
-        // don't know the repo or the bucket.
+        // don't know the repo or the bucket
     }
 
-    public LXP(long object_id, IRepository repository, IBucket bucket) {
+    public LXP( long object_id, IBucket bucket ) {
 
         this.id = object_id;
-        this.map = new HashMap<>();
-        this.repository = repository;
         this.bucket = bucket;
+
         // This constructor used when about to be filled in with values.
     }
 
-    public LXP(long object_id, JSONReader reader, IRepository repository, IBucket bucket) throws PersistentObjectException {
-        this(object_id, repository, bucket);
-
+    public LXP( long object_id, JSONReader reader, IBucket bucket ) throws PersistentObjectException {
+        this(object_id, bucket );
         readJSON(reader, true);
     }
 
-    public LXP(JSONReader reader, IRepository repository, IBucket bucket) throws PersistentObjectException {
-        this(getNextFreePID(), reader, repository, bucket);
+    public LXP(JSONReader reader, IBucket bucket ) throws PersistentObjectException {
+        this(getNextFreePID(), reader, bucket );
     }
+
+    // Abstract methods
 
     /**
-     * Use this constructor to create inner references of LXP
+     * A constructor for the LXP
      *
-     * @param reader
-     * @param repository
-     * @param bucket
-     * @param isObject if false, just read the content of object; otherwise read the object
+     * @param persistent_object_id - the persistent object id of the object to be created
+     * @param reader - a reader which will read in the serialised object
+     * @param bucket - the bucket from which the objecyt is being read
+     * @return the LXP being read in
+     *
      * @throws PersistentObjectException
      */
-    private LXP(JSONReader reader, IRepository repository, IBucket bucket, boolean isObject) throws PersistentObjectException {
-        this(getNextFreePID(), repository, bucket);
+    public abstract LXP create(long persistent_object_id, JSONReader reader, IBucket bucket) throws PersistentObjectException;
 
-        readJSON(reader, isObject);
-    }
+    /**
+     * @return the metadata associated with the class extending LXP base.
+     * This may be static or dynamically created.
+     * Two classes are provided corresponding to the above.
+     */
+    public abstract Metadata getMetaData();
 
-    @Override
-    public ILXP create(long persistent_object_id, JSONReader reader, IRepository repository, IBucket bucket) throws PersistentObjectException {
-        try {
-            return new LXP(persistent_object_id, reader, repository, bucket);
-        } catch (IllegalKeyException e) {
-            throw new PersistentObjectException("Illegal key exception");
-        }
-    }
+    /**
+     * Checks to see if the given key is present in the lxp.
+     * Dynamic classes are at liberty to add fields if requireed.
+     * @param key - a key to be checked
+     * @throws IllegalKeyException if the key is not present or illegal
+     */
+    public abstract void check(String key) throws IllegalKeyException;
 
-    @Override
-    public IRepository getRepository() {
-        return repository;
-    }
+    // Selectors
 
-    @Override
-    public long getTypeLabel() {
-        try {
-            return getLong(Types.LABEL); // safe only one way in.
-        } catch (KeyNotFoundException | TypeMismatchFoundException e) {
-            return -1;
-        }
-    }
-
-    @Override
-    public void addTypeLabel(IReferenceType label) throws Exception {
-        if (containsKey(Types.LABEL)) {
-            throw new Exception("Type label already specified");
-        }
-        try {
-            put(Types.LABEL, label.getId());
-        } catch (IllegalKeyException e) {
-            throw new Exception("Illegal label");
-        }
-    }
-
-    @Override
+    /**
+     * @return the id of the record
+     */
     public long getId() {
-
         return id;
     }
 
     /**
-     * This method writes data to a writer - typically used for persistent storage.
+     * A getter method over labelled values in the LXPID
+     *
+     * @param slot - the slot number of the required field
+     * @return the value associated with @param label
+     * @throws KeyNotFoundException       - if the tuple does not contain the key
+     * @throws TypeMismatchFoundException if the value associated with the key is not a String
      */
-    public void serializeToJSON(JSONWriter writer, IRepository repository, IBucket bucket) throws JSONException {
+    public Object get(int slot) throws KeyNotFoundException {
+        try {
+            return field_storage[slot];
+        } catch( IndexOutOfBoundsException e ) {
+            throw new KeyNotFoundException(slot);
+        }
+    }
 
-        this.repository = repository;
+    /**
+     * A getter method over labelled values in the LXP
+     *
+     * @param slot - the slot number of the required field
+     * @return the value associated with @param label
+     * @throws KeyNotFoundException       - if the tuple does not contain the key
+     * @throws TypeMismatchFoundException if the value associated with the key is not a String
+     */
+    public String getString(int slot) throws KeyNotFoundException, TypeMismatchFoundException {
+
+        try {
+            return (String) field_storage[slot];
+        } catch (IndexOutOfBoundsException e) {
+            throw new KeyNotFoundException(slot);
+        } catch( ClassCastException e ) {
+            throw new TypeMismatchFoundException("expected String found: " + field_storage[slot].getClass().getName());
+        }
+    }
+
+    /**
+     * A getter method over labelled values in the LXP
+     *
+     * @param slot - the slot number of the required field
+     * @return the value associated with @param label
+     * @throws KeyNotFoundException       - if the tuple does not contain the key
+     * @throws TypeMismatchFoundException if the value associated with the key is not a double
+     */
+    public double getDouble(int slot) throws KeyNotFoundException, TypeMismatchFoundException {
+        try {
+            return (Double) field_storage[slot];
+        } catch (IndexOutOfBoundsException e) {
+            throw new KeyNotFoundException(slot);
+        } catch( ClassCastException e ) {
+            throw new TypeMismatchFoundException("expected double found: " + field_storage[slot].getClass().getName());
+        }
+    }
+
+    /**
+     * A getter method over labelled values in the LXP
+     *
+     * @param slot - the slot number of the required field
+     * @throws KeyNotFoundException       - if the tuple does not contain the key
+     * @throws TypeMismatchFoundException if the value associated with the key is not an integer
+     */
+    public int getInt(int slot) throws KeyNotFoundException, TypeMismatchFoundException {
+        try {
+            return (Integer) field_storage[slot];
+        } catch (IndexOutOfBoundsException e) {
+            throw new KeyNotFoundException(slot);
+        } catch( ClassCastException e ) {
+            throw new TypeMismatchFoundException("expected int found: " + field_storage[slot].getClass().getName());
+        }
+    }
+
+    /**
+     * A getter method over labelled values in the LXP
+     *
+     * @param slot - the slot number of the required field
+     * @return the value associated with @param label
+     * @throws KeyNotFoundException       - if the tuple does not contain the key
+     * @throws TypeMismatchFoundException if the value associated with the key is not a boolean
+     */
+    public boolean getBoolean(int slot) throws KeyNotFoundException, TypeMismatchFoundException {
+        try {
+            return (Boolean) field_storage[slot];
+        } catch (IndexOutOfBoundsException e) {
+            throw new KeyNotFoundException(slot);
+        } catch (ClassCastException e) {
+            throw new TypeMismatchFoundException("expected boolean found: " + field_storage[slot].getClass().getName());
+        }
+    }
+
+    /**
+     * A getter method over labelled values in the LXP
+     *
+     * @param slot - the slot number of the required field
+     * @return the value associated with @param label
+     * @throws KeyNotFoundException       - if the tuple does not contain the key
+     * @throws TypeMismatchFoundException if the value associated with the key is not a long
+     */
+    public long getLong(int slot) throws KeyNotFoundException, TypeMismatchFoundException {
+        try {
+            return (Long) field_storage[slot];
+        } catch (IndexOutOfBoundsException e) {
+            throw new KeyNotFoundException(slot);
+        } catch( ClassCastException e ) {
+            throw new TypeMismatchFoundException("expected Long found: " + field_storage[slot].getClass().getName());
+        }
+    }
+
+    /**
+     * A getter method over labelled values in the LXP
+     *
+     * @param slot - the slot number of the required field
+     * @return the list associated with @param label
+     * @throws KeyNotFoundException       - if the tuple does not contain the key
+     * @throws TypeMismatchFoundException if the value associated with the key is not a long
+     */
+    public List getList(int slot) throws KeyNotFoundException, TypeMismatchFoundException {
+        try {
+            return (List) field_storage[slot];
+        } catch (IndexOutOfBoundsException e) {
+            throw new KeyNotFoundException(slot);
+        } catch( ClassCastException e ) {
+            throw new TypeMismatchFoundException("expected String found: " + field_storage[slot].getClass().getName());
+        }
+    }
+
+    /**
+     * A getter method over labelled values in the LXP
+     *
+     * @param slot - the slot number of the required field
+     * @return the value associated with @param label
+     * @throws KeyNotFoundException       - if the tuple does not contain the key
+     * @throws TypeMismatchFoundException if the value associated with the key is not a Store reference
+     */
+    public IStoreReference getRef(int slot) throws KeyNotFoundException, TypeMismatchFoundException {
+        try {
+            return (IStoreReference) field_storage[slot];
+        } catch (IndexOutOfBoundsException e) {
+            throw new KeyNotFoundException(slot);
+        } catch( ClassCastException e ) {
+            throw new TypeMismatchFoundException("expected String found: " + field_storage[slot].getClass().getName());
+        }
+    }
+
+    /**
+     * @return a reference to teh object on which it was called.
+     * @throws PersistentObjectException
+     */
+    public IStoreReference getThisRef() throws PersistentObjectException {
+
+        if (bucket == null) {
+            throw new PersistentObjectException("LXP stored in unknown bucket: " + this.toString() );
+        }
+        return new StoreReference(bucket.getRepository(), bucket, this);
+    }
+
+    public IRepository getRepository() {
+        return bucket.getRepository();
+    }
+
+    /**
+     *
+     * @param label
+     * @return the value associated with the label supplied.
+     * @throws KeyNotFoundException if the label does not exist in the fieldmap.
+     */
+    public Object get(String label) throws KeyNotFoundException {
+
+        Integer slot = getMetaData().getSlot( label );
+        if( slot == null ) {
+            throw new KeyNotFoundException( "No field with name " + label + " in " + this.getId() );
+        }
+        return field_storage[ slot ];
+    }
+
+    //------------- Putters -------------
+
+    /**
+     * A setter method over labelled values in the LXP
+     *
+     * @param slot - the slot number of the required field
+     * @param value - the value to associated with the @param label
+     */
+    public void put(int slot, String value) throws IllegalKeyException  {
+        if( slot >= field_storage.length ) {
+            grow_storage( slot );
+        }
+        field_storage[ slot ] = value;
+    }
+
+    /**
+     * A setter method over labelled values in the LXP
+     *
+     * @param slot - the slot number of the required field
+     * @param value - the value to associated with the @param label
+     */
+    public void put(int slot, double value)  {
+        if( slot >= field_storage.length ) {
+            grow_storage( slot );
+        }
+        field_storage[ slot ] = value;
+    }
+
+    /**
+     * A setter method over labelled values in the LXP
+     *
+     * @param slot - the slot number of the required field
+     * @param value - the value to associated with the @param label
+     */
+    public void put(int slot, int value)  {
+        if( slot >= field_storage.length ) {
+            grow_storage( slot );
+        }
+        field_storage[ slot ] = value;
+    }
+
+    /**
+     * A setter method over labelled values in the LXP
+     *
+     * @param slot - the slot number of the required field
+     * @param value - the value to associated with the @param label
+     */
+    public void put(int slot, boolean value)  {
+        if( slot >= field_storage.length ) {
+            grow_storage( slot );
+        }
+        field_storage[ slot ] = value;
+    }
+    /**
+     * A setter method over labelled values in the LXP
+     *
+     * @param slot - the slot number of the required field
+     * @param value - the value to associated with the @param label
+     */
+    public void put(int slot, long value)  {
+        if( slot >= field_storage.length ) {
+            grow_storage( slot );
+        }
+        field_storage[ slot ] = value;
+    }
+
+    /**
+     * A setter method over labelled values in the LXP
+     *
+     * @param slot - the slot number of the required field
+     * @param list  - the list to associated with the @param label
+     */
+    public void put(int slot, List list)  {
+        if( slot >= field_storage.length ) {
+            grow_storage( slot );
+        }
+        field_storage[ slot ] = list;
+    }
+
+    /**
+     * A setter method over labelled values in the LXP
+     *
+     * @param slot - the slot number of the required field
+     * @param value - the value to associated with the @param label
+     */
+    public void put(int slot, IStoreReference value)  {
+        if( slot >= field_storage.length ) {
+            grow_storage( slot );
+        }
+        field_storage[ slot ] = value;
+    }
+
+    /**
+     * Associated the value supplied with the supplied key in this object.
+     * @param key - the key with which to associate a value.
+     * @param value - the value to be added to the tuple.
+     * @throws IllegalKeyException
+     */
+    public void put( String key, Object value) throws IllegalKeyException {
+        check(key);
+        field_storage[ getMetaData().getSlot(key) ] = value;
+    }
+
+
+    // Slot management
+
+    private void copy_array( int new_size ) {
+        field_storage = Arrays.copyOf(field_storage, new_size );
+    }
+
+    private void grow_storage( int requested_slot ) {
+        int new_size = Math.max( requested_slot + SIZE_INCREMENT, field_storage.length + SIZE_INCREMENT ); // Leave some space for expansion.
+        copy_array( new_size );
+    }
+
+    /**
+     * @return the first free slot in the storage array, grow the array if necessary
+     */
+    public Integer findfirstFree() {
+        if( next_free_slot >= field_storage.length ) {
+            copy_array( field_storage.length + SIZE_INCREMENT );
+        }
+        return next_free_slot++;
+
+    }
+
+    // JSON Manipulation - write methods
+
+    /**
+     * Writes the state of the LXP to a Bucket.
+     *
+     * @param writer     the stream to which the state is written.
+     * @param bucket     @throws JSONException if the record being written cannot be written to legal JSON.
+     */
+    public void serializeToJSON(JSONWriter writer, IBucket bucket) throws JSONException {
+
         this.bucket = bucket;
+        serializeToJSON( writer );
+    }
+
+    protected void serializeToJSON(JSONWriter writer) throws JSONException {
         writer.object();
         serializeFieldsToJSON(writer);
         writer.endObject();
     }
 
-    @Override
-    public Object get(String key) throws KeyNotFoundException {
-        if (containsKey(key)) {
-            return map.get(key);
-        }
-        throw new KeyNotFoundException(key);
-    }
-
-    @Override
-    public String getString(String key) throws KeyNotFoundException, TypeMismatchFoundException {
-        if (containsKey(key)) {
-            Object result = map.get(key);
-            if (result instanceof String) {
-                return (String) result;
-            } else {
-                throw new TypeMismatchFoundException("expected string found: " + result.getClass().getName());
-            }
-        }
-        throw new KeyNotFoundException(key);
-    }
-
-    @Override
-    public double getDouble(String key) throws KeyNotFoundException, TypeMismatchFoundException {
-        if (containsKey(key)) {
-            Object result = map.get(key);
-            if (result instanceof Double) {
-                return (Double) result;
-            } else {
-                throw new TypeMismatchFoundException("expected double found: " + result.getClass().getName());
-            }
-        }
-        throw new KeyNotFoundException(key);
-    }
-
-    @Override
-    public int getInt(String key) throws KeyNotFoundException, TypeMismatchFoundException {
-        if (containsKey(key)) {
-            Object result = map.get(key);
-            if (result instanceof Integer) {
-                return (Integer) result;
-            } else {
-                throw new TypeMismatchFoundException("expected integer found: " + result.getClass().getName());
-            }
-        }
-        throw new KeyNotFoundException(key);
-    }
-
-    @Override
-    public boolean getBoolean(String key) throws KeyNotFoundException, TypeMismatchFoundException {
-        if (containsKey(key)) {
-            Object result = map.get(key);
-            if (result instanceof Boolean) {
-                return (Boolean) result;
-            } else {
-                throw new TypeMismatchFoundException("expected Boolean found: " + result.getClass().getName());
-            }
-        }
-        throw new KeyNotFoundException(key);
-    }
-
-    @Override
-    public long getLong(String key) throws KeyNotFoundException, TypeMismatchFoundException {
-        if (containsKey(key)) {
-            Object result = map.get(key);
-            if (result instanceof Long) {
-                return (Long) result;
-            } else if (result instanceof Integer) {
-                return Long.valueOf((Integer) result);
-            } else {
-                throw new TypeMismatchFoundException("expected Long found: " + result.getClass().getName());
-            }
-        }
-        throw new KeyNotFoundException(key);
-    }
-
-    @Override
-    public List getList(String key) throws KeyNotFoundException, TypeMismatchFoundException {
-        if (containsKey(key)) {
-            Object result = map.get(key);
-            if (result instanceof List) {
-                return (List) result;
-            } else {
-                throw new TypeMismatchFoundException("expected List found: " + result.getClass().getName());
-            }
-        }
-        throw new KeyNotFoundException(key);
-    }
-
-    @Override
-    public IStoreReference getRef(String key) throws KeyNotFoundException, TypeMismatchFoundException {
-        if (containsKey(key)) {
-            Object result = map.get(key);
-            if( result instanceof IStoreReference ) { // expected
-                return (IStoreReference) result;
-            }
-            if (result instanceof String) { // expected
-                return new StoreReference(repository.getStore(), (String) result);
-            } else {
-                throw new TypeMismatchFoundException("expected String found: " + result.getClass().getName());
-            }
-        }
-        throw new KeyNotFoundException(key);
-    }
-
-    @Override
-    public IStoreReference getThisRef() throws PersistentObjectException {
-        if (repository == null) {
-            throw new PersistentObjectException("LXP stored in unknown repository: " + this.toString() );
-        }
-        if (bucket == null) {
-            throw new PersistentObjectException("LXP stored in unknown bucket: " + this.toString() );
-        }
-        return new StoreReference(repository, bucket, this);
-    }
-
-    @Override
-    public void put(String key, String value) throws IllegalKeyException {
-        check(key);
-        map.put(key, value);
-    }
-
-    @Override
-    public void put(String key, boolean value) throws IllegalKeyException {
-        check(key);
-        map.put(key, value);
-    }
-
-    @Override
-    public void put(String key, long value) throws IllegalKeyException {
-        check(key);
-        map.put(key, value);
-    }
-
-    @Override
-    public void put(String key, List list) throws IllegalKeyException {
-        check(key);
-        map.put(key, list);
-    }
-
-    @Override
-    public void put(String key, double value) throws IllegalKeyException {
-        check(key);
-        map.put(key, value);
-    }
-
-    @Override
-    public void put(String key, int value) throws IllegalKeyException {
-        check(key);
-        map.put(key, value);
-    }
-
-    @Override
-    public void put(String key, IStoreReference value) throws IllegalKeyException {
-        check(key);
-        map.put(key, value.toString());
-    }
-
-    @Override
-    public boolean containsKey(String key) {
-        return map.containsKey(key);
-    }
-
-    @Override
-    public Set<String> getLabels() {
-        return map.keySet();
-    }
-
     private void serializeFieldsToJSON(JSONWriter writer) throws JSONException {
 
-        for (Map.Entry<String, Object> entry : map.entrySet()) {
-            String key = entry.getKey();
+        for( int i = 0; i < getMetaData().getFieldCount(); i++ ) {
+
+            String key = getMetaData().getFieldName( i );
             writer.key(key);
-            Object value = entry.getValue();
+            Object value = field_storage[ i ];
 
             if (value instanceof ArrayList) {
                 writer.array();
                 for (Object o : (List) value) {
-                    writeSimpleValue(writer, o);
+                    if (o instanceof LXP ) {
+                        writeReference(writer, (LXP) o);
+                    } else {
+                        writeSimpleValue(writer, o);
+                    }
                 }
                 writer.endArray();
             } else {
                 writeSimpleValue(writer, value);
             }
+        }
+    }
+
+    private void writeReference( JSONWriter writer, LXP value ) {
+        try {
+            IStoreReference reference = value.getThisRef();
+            writer.value(reference.toString() );
+        } catch (PersistentObjectException e) {
+            throw new JSONException( "Cannot serialise reference" );
         }
     }
 
@@ -336,40 +482,7 @@ public class LXP implements ILXP, Comparable<LXP> {
         }
     }
 
-    public String toString() {
-
-        StringWriter writer = new StringWriter();
-        try {
-            serializeToJSON(new JSONWriter(writer), repository, bucket);
-        } catch (JSONException e) {
-            throw new RuntimeException(e);
-        }
-        return writer.toString();
-    }
-
-    @Override
-    public int compareTo(LXP o) {
-        return Long.compare(this.getId(), o.getId());
-    }
-
-    @Override
-    public boolean equals(Object o) {
-
-        return (o instanceof LXP) && (compareTo((LXP) o)) == 0;
-    }
-
-    @Override
-    public int hashCode() {
-        return (int) getId();
-    }
-
-    //****** Private methods ******//
-
-    private void check(String key) throws IllegalKeyException {
-        if (key == null || key.equals("")) {
-            throw new IllegalKeyException("null key");
-        }
-    }
+    // JSON Manipulation - read methods
 
     private Object readValue(JSONReader reader) throws JSONException {
 
@@ -392,54 +505,10 @@ public class LXP implements ILXP, Comparable<LXP> {
         return null;
     }
 
-    private void readJSON(JSONReader reader, boolean isObject) throws JSONException, PersistentObjectException {
-
-        try {
-            reader.nextSymbol();
-            if (isObject) reader.object();
-
-            while (!reader.isEndOfStream()) {
-
-                String key = reader.key().intern(); // keep the keys identical whenever possible.
-                Object value = readValue(reader);
-
-                if (value != null) {
-                    check(key);
-                    map.put(key, value);
-
-                } else if (reader.have(JSONReader.ARRAY)) {
-                    readArray(reader, key);
-
-                } else if (reader.have(JSONReader.OBJECT)) {
-                    readObject(reader, key);
-
-                } else {
-                    throw new PersistentObjectException("No matching value for the key " + key);
-                }
-            }
-        } catch (JSONException | BucketException e) {
-            if (reader.have(JSONReader.ENDOBJECT)) { // we are at the end and that is OK
-                return;
-            }
-            // otherwise bad stuff has happened
-            throw new PersistentObjectException(e);
-        }
-
-    }
 
     private void readObject(JSONReader reader, String key) throws PersistentObjectException, BucketException {
         IStoreReference ref = makeObjectAndGetRef(reader);
         put(key, ref);
-    }
-
-    private IStoreReference makeObjectAndGetRef(JSONReader reader) throws PersistentObjectException, BucketException {
-        ILXP lxp = new LXP(reader, repository, bucket, false);
-        bucket.makePersistent(lxp);
-
-        IStoreReference ref = new StoreReference(repository.getStore(), repository.getName(), bucket.getName(), lxp.getId());
-        reader.nextSymbol();
-
-        return ref;
     }
 
     private void readArray(JSONReader reader, String key) throws JSONException, PersistentObjectException, BucketException {
@@ -468,5 +537,53 @@ public class LXP implements ILXP, Comparable<LXP> {
         put(key, list);
 
     }
+
+    private IStoreReference makeObjectAndGetRef(JSONReader reader) throws PersistentObjectException, BucketException {
+        LXP lxp = new StaticLXP(reader, bucket);
+        bucket.makePersistent(lxp);
+
+        IRepository repo = bucket.getRepository();
+        IStore store = repo.getStore();
+
+        IStoreReference ref = new StoreReference(store, repo.getName(), bucket.getName(), lxp.getId());
+        reader.nextSymbol();
+
+        return ref;
+    }
+
+    private void readJSON(JSONReader reader, boolean isObject) throws JSONException, PersistentObjectException {
+
+        try {
+            reader.nextSymbol();
+            if (isObject) reader.object();
+
+            HashMap<String, Integer> field_name_to_slot = getMetaData().getFieldNamesToSlotNumbers();
+
+            while (!reader.isEndOfStream()) {
+
+                String key = reader.key().intern(); // keep the keys identical whenever possible.
+                Object value = readValue(reader);
+
+                if (value != null) {
+                    check(key);
+                    field_storage[ field_name_to_slot.get(key) ] = value;
+
+                } else if (reader.have(JSONReader.ARRAY)) {
+                    readArray(reader, key);
+
+                } else {
+                    throw new PersistentObjectException("No matching value for the key " + key);
+                }
+            }
+        } catch (JSONException | BucketException e) {
+            if (reader.have(JSONReader.ENDOBJECT)) { // we are at the end and that is OK
+                return;
+            }
+            // otherwise bad stuff has happened
+            throw new PersistentObjectException(e);
+        }
+
+    }
+
 
 }

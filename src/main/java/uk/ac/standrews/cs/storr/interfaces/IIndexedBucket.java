@@ -16,6 +16,8 @@
  */
 package uk.ac.standrews.cs.storr.interfaces;
 
+import uk.ac.standrews.cs.storr.impl.LXP;
+
 import java.io.IOException;
 
 /**
@@ -25,7 +27,7 @@ import java.io.IOException;
  * over the labels - say name and then getString the index of all people called "al".
  * Created by al on 27/05/2014.
  */
-public interface IIndexedBucket<T extends ILXP> extends IBucket<T> {
+public interface IIndexedBucket<T extends LXP> extends IBucket<T> {
 
     /**
      * @param label - the label to add - for example "name" will add an index of names over records such as [name: string, age: int]

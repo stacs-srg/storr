@@ -17,7 +17,7 @@
 package uk.ac.standrews.cs.storr.types;
 
 import uk.ac.standrews.cs.storr.impl.LXP;
-import uk.ac.standrews.cs.storr.impl.StoreReference;
+import uk.ac.standrews.cs.storr.impl.DynamicLXP;
 import uk.ac.standrews.cs.storr.impl.exceptions.*;
 import uk.ac.standrews.cs.storr.interfaces.*;
 import uk.ac.standrews.cs.utilities.FileManipulation;
@@ -36,37 +36,37 @@ import java.util.Collection;
  */
 public class LXPReferenceType implements IReferenceType {
 
-    private ILXP typerep;
+    private LXP typerep;
 
     public LXPReferenceType(String json_encoded_type_descriptor_file_name, IRepository repo, IBucket bucket) {
 
         try (BufferedReader reader = Files.newBufferedReader(Paths.get(json_encoded_type_descriptor_file_name), FileManipulation.FILE_CHARSET)) {
 
-            typerep = new LXP(new JSONReader(reader), repo, bucket);
+            typerep = new DynamicLXP(new JSONReader(reader), bucket);
 
         } catch (PersistentObjectException | IOException | IllegalKeyException e) {
             throw new ReferenceException("Error creating LXPReference: " + e.getMessage());
         }
     }
 
-    public LXPReferenceType(LXP typerep) {
+    public LXPReferenceType(DynamicLXP typerep) {
         this.typerep = typerep;
     }
 
     @Override
-    public ILXP getRep() {
+    public LXP getRep() {
         return typerep;
     }
 
     public boolean valueConsistentWithType(Object value) {
 
-        if (!(value instanceof String)) {
+        if (!(value instanceof IStoreReference)) {  // This used to say String before changes to LXP slots etc.Not sure why this ever worked!
             return false;
         }
 
         try {
             IStore store = typerep.getRepository().getStore();
-            IStoreReference reference = new StoreReference(store, (String) value);
+            IStoreReference reference = (IStoreReference) value;   // This line was changed too!
 
             // if we just require an lxp don't do more structural checking.
             return equals(store.getTypeFactory().getTypeWithName("lxp")) || Types.checkStructuralConsistency(getRecord(reference), this);
@@ -78,14 +78,14 @@ public class LXPReferenceType implements IReferenceType {
 
     @Override
     public Collection<String> getLabels() {
-        return typerep.getLabels();
+        return typerep.getMetaData().getFieldNamesToSlotNumbers().keySet();
     }
 
     @Override
     public IType getFieldType(String label) throws KeyNotFoundException, TypeMismatchFoundException {
 
-        if (typerep.containsKey(label)) {
-            String value = typerep.getString(label);
+        if (typerep.getMetaData().containsLabel(label)) {
+            String value = (String) typerep.get(label);
             return Types.stringToType(value, typerep.getRepository().getStore());
 
         } else return LXPBaseType.UNKNOWN;
@@ -95,8 +95,8 @@ public class LXPReferenceType implements IReferenceType {
         return typerep.getId();
     }
 
-    private ILXP getRecord(IStoreReference reference) throws BucketException {
-        ILXP record;
+    private LXP getRecord(IStoreReference reference) throws BucketException {
+        LXP record;
 
         try {
             record = reference.getReferend();

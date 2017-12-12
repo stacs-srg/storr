@@ -27,27 +27,27 @@ import java.util.Map;
 /**
  * Created by al on 27/04/2017.
  */
-public class IdtoILXPMap<T extends ILXP> implements IIdtoILXPMap<T> {
+public class IdtoILXPMap<T extends LXP> implements IIdtoILXPMap<T> {
 
     private final StringtoILXPMap<T> pmap;
     private final IRepository repository;
 
     /**
-     * Creates a handle on a persistent map, implemented by an IndexedBucket
-     * Assumes that persistent map has been created already using a factory - i.e. the directory already exists.
+     * Creates a handle on a persistent field_storage, implemented by an IndexedBucket
+     * Assumes that persistent field_storage has been created already using a factory - i.e. the directory already exists.
      *
      * @param repository the repository in which the bucket is created.
-     * @param map_name   the name of the map/bucket (also used as directory name).
-     * @param tFactory
+     * @param map_name   the name of the field_storage/bucket (also used as directory name).
+     * @param bucketType
      * @throws RepositoryException if a RepositoryException is thrown in implementation
      */
-    IdtoILXPMap(final String map_name, final IRepository repository, ILXPFactory<T> tFactory, boolean create_map) throws RepositoryException {
-        pmap = new StringtoILXPMap<>( map_name, repository, BucketKind.IDMAP, tFactory, create_map );
+    IdtoILXPMap(final String map_name, final IRepository repository,  Class<T> bucketType, boolean create_map) throws RepositoryException {
+        pmap = new StringtoILXPMap<>( map_name, repository, BucketKind.IDMAP, bucketType, create_map );
         this.repository = repository;
     }
 
     @Override
-    public ILXP lookup(Long id) throws IOException, BucketException, RepositoryException {
+    public LXP lookup(Long id) throws IOException, BucketException, RepositoryException {
 
         return pmap.lookup( id.toString() );
     }

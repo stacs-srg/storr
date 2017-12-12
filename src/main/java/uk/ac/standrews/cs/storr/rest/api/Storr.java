@@ -21,12 +21,12 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import uk.ac.standrews.cs.storr.impl.BucketKind;
-import uk.ac.standrews.cs.storr.impl.LXP;
+import uk.ac.standrews.cs.storr.impl.DynamicLXP;
 import uk.ac.standrews.cs.storr.impl.exceptions.BucketException;
 import uk.ac.standrews.cs.storr.impl.exceptions.PersistentObjectException;
 import uk.ac.standrews.cs.storr.impl.exceptions.RepositoryException;
 import uk.ac.standrews.cs.storr.interfaces.IBucket;
-import uk.ac.standrews.cs.storr.interfaces.ILXP;
+import uk.ac.standrews.cs.storr.impl.LXP;
 import uk.ac.standrews.cs.storr.interfaces.IRepository;
 import uk.ac.standrews.cs.storr.rest.http.HTTPResponses;
 import uk.ac.standrews.cs.storr.rest.http.HTTPStatus;
@@ -62,11 +62,11 @@ public class Storr {
     @GET
     @Path("/{repo}/{bucket}/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(value = "Get the ILXP object matching the given id")
+    @ApiOperation(value = "Get the LXP object matching the given id")
     @ApiResponses(value = {
-            @ApiResponse(code = HTTPStatus.OK, message = "ILXP JSON structure"),
-            @ApiResponse(code = HTTPStatus.NOT_FOUND, message = "The ILXP requested does not exists"),
-            @ApiResponse(code = HTTPStatus.INTERNAL_SERVER, message = "ILXP Not Found")
+            @ApiResponse(code = HTTPStatus.OK, message = "LXP JSON structure"),
+            @ApiResponse(code = HTTPStatus.NOT_FOUND, message = "The LXP requested does not exists"),
+            @ApiResponse(code = HTTPStatus.INTERNAL_SERVER, message = "LXP Not Found")
     })
     public Response getILXP(@PathParam("repo") final String repo, @PathParam("bucket") final String buck, @PathParam("id") final String id) {
 
@@ -76,7 +76,7 @@ public class Storr {
             if (exists) {
                 IRepository repository = store.getRepository(repo);
                 IBucket bucket = repository.getBucket(buck);
-                ILXP lxp = bucket.getObjectById(Long.parseLong(id));
+                LXP lxp = bucket.getObjectById(Long.parseLong(id));
                 return HTTPResponses.OK(lxp.toString());
 
             } else {
@@ -93,11 +93,11 @@ public class Storr {
     @GET
     @Path("/has/{repo}/{bucket}/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(value = "Check if the ILXP object with the given id exists")
+    @ApiOperation(value = "Check if the LXP object with the given id exists")
     @ApiResponses(value = {
-            @ApiResponse(code = HTTPStatus.OK, message = "The ILXP handle"),
-            @ApiResponse(code = HTTPStatus.NOT_FOUND, message = "The ILXP requested does not exists"),
-            @ApiResponse(code = HTTPStatus.INTERNAL_SERVER, message = "ILXP Not Found")
+            @ApiResponse(code = HTTPStatus.OK, message = "The LXP handle"),
+            @ApiResponse(code = HTTPStatus.NOT_FOUND, message = "The LXP requested does not exists"),
+            @ApiResponse(code = HTTPStatus.INTERNAL_SERVER, message = "LXP Not Found")
     })
     public Response hasILXP(@PathParam("repo") final String repo, @PathParam("bucket") final String buck, @PathParam("id") final String id) {
 
@@ -121,12 +121,12 @@ public class Storr {
     @Path("/{repo}/{bucket}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
-    @ApiOperation(value = "Creates an ILXP object for the given JSON structure at the specified repository and bucket",
-                  notes = "The ILXP object is created under the repo/bucket/ location. If the repository and bucket do not exist, " +
+    @ApiOperation(value = "Creates an LXP object for the given JSON structure at the specified repository and bucket",
+                  notes = "The LXP object is created under the repo/bucket/ location. If the repository and bucket do not exist, " +
                         "then storr will attempt to create them.")
     @ApiResponses(value = {
-            @ApiResponse(code = HTTPStatus.CREATED, message = "The ILXP handle"),
-            @ApiResponse(code = HTTPStatus.INTERNAL_SERVER, message = "The ILXP object could not be created2")
+            @ApiResponse(code = HTTPStatus.CREATED, message = "The LXP handle"),
+            @ApiResponse(code = HTTPStatus.INTERNAL_SERVER, message = "The LXP object could not be created2")
     })
     public Response postILXP(@PathParam("repo") String repo, @PathParam("bucket") String buck, String json) {
 
@@ -136,7 +136,7 @@ public class Storr {
 
             JSONReader reader = new JSONReader(new StringReader(json));
 
-            LXP lxp = new LXP(reader, repository, bucket);
+            DynamicLXP lxp = new DynamicLXP(reader, bucket);
             bucket.makePersistent(lxp);
 
             String objectHandle = objectHandle(repo, buck, lxp.getId());
@@ -151,10 +151,10 @@ public class Storr {
     @DELETE
     @Path("/{repo}/{bucket}/{id}")
     @Produces(MediaType.TEXT_PLAIN)
-    @ApiOperation(value = "Deletes the ILXP object matching the repo/bucket/id handle")
+    @ApiOperation(value = "Deletes the LXP object matching the repo/bucket/id handle")
     @ApiResponses(value = {
-            @ApiResponse(code = HTTPStatus.OK, message = "The ILXP was deleted"),
-            @ApiResponse(code = HTTPStatus.INTERNAL_SERVER, message = "The ILXP could not be deleted")
+            @ApiResponse(code = HTTPStatus.OK, message = "The LXP was deleted"),
+            @ApiResponse(code = HTTPStatus.INTERNAL_SERVER, message = "The LXP could not be deleted")
     })
     public Response deleteILXP(@PathParam("repo") final String repo, @PathParam("bucket") final String buck, @PathParam("id") final String id) {
 

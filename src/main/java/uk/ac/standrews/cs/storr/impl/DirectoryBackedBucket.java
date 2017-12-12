@@ -16,6 +16,10 @@
  */
 package uk.ac.standrews.cs.storr.impl;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 import org.json.JSONException;
 import org.json.JSONWriter;
 import uk.ac.standrews.cs.storr.impl.exceptions.*;
@@ -27,16 +31,19 @@ import uk.ac.standrews.cs.utilities.JSONReader;
 import uk.ac.standrews.cs.utilities.archive.ErrorHandling;
 
 import java.io.*;
+import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 
 import static uk.ac.standrews.cs.storr.impl.Repository.bucketNameIsLegal;
 import static uk.ac.standrews.cs.storr.types.Types.checkLabelConsistency;
 
-public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
+public class DirectoryBackedBucket<T extends LXP> implements IBucket<T> {
 
     public static final String META_BUCKET_NAME = "META";
     private static final String TRANSACTIONS_BUCKET_NAME = "TRANSACTIONS";
@@ -45,9 +52,9 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
     private final IRepository repository;     // the repository in which the bucket is stored
     private final IStore store;               // the store
     private final String bucket_name;         // the name of this bucket - used as the directory name
-    protected ILXPFactory<T> tFactory = null;
+    private Class<T> bucketType = null;       // the type of records in this bucket if not null.
     private long type_label_id = -1;          // -1 == not set
-    private IObjectCache object_cache = new ObjectCache();
+    private Cache<Long, LXP> object_cache; // = new ObjectCache();
     private int size = -1; // number of items in Bucket.
     private List<Long> cached_oids = null;
 
@@ -85,6 +92,8 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
         }
 
         watchBucket(repository);
+
+        object_cache = newCache(repository, this);
     }
 
     /**
@@ -93,18 +102,25 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
      * @param repository  the repository in which to create the bucket
      * @param bucket_name the name of the bucket to be created
      * @param kind        the kind of Bucket to be created
-     * @param tFactory    the factory to use when importing objects from the store
      * @throws RepositoryException if the bucket cannot be created in the repository
      */
-    DirectoryBackedBucket(final IRepository repository, final String bucket_name, BucketKind kind, ILXPFactory<T> tFactory, boolean create_bucket) throws RepositoryException {
+    DirectoryBackedBucket(final IRepository repository, final String bucket_name, BucketKind kind, Class<T> bucketType, boolean create_bucket) throws RepositoryException  {
+
 
         if (create_bucket) {
-            createBucket(bucket_name, repository, kind, tFactory.getTypeLabel());
+//            createBucket(bucket_name, repository, kind, tFactory.getTypeLabel());
+            try {
+                createBucket(bucket_name, repository, kind, (Long) bucketType.getDeclaredMethod("getTypeLabel").invoke(null)); /// assumes getTypeLabel is static
+            } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+               throw new RepositoryException( e );
+            }
         }
 
         if (!bucketNameIsLegal(bucket_name)) {
             throw new RepositoryException("Illegal name <" + bucket_name + ">");
         }
+
+        this.bucketType = bucketType;
 
         this.bucket_name = bucket_name;
         this.repository = repository;
@@ -120,13 +136,67 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
         checkKind(bucket_name, repository, kind);
 
         watchBucket(repository);
+        object_cache = newCache(repository, this);
 
-        this.tFactory = tFactory;
+        // this.tFactory = tFactory;
 
         type_label_id = getTypeLabelID();
-        if (type_label_id != tFactory.getTypeLabel()) {
-            throw new RepositoryException("Bucket label incompatible with supplied factory: " + tFactory.getTypeLabel() + " doesn't match bucket label:" + type_label_id);
+//        if (type_label_id != tFactory.getTypeLabel()) {
+//            throw new RepositoryException("Bucket label incompatible with supplied factory: " + tFactory.getTypeLabel() + " doesn't match bucket label:" + type_label_id);
+//        }
+    }
+
+    private LoadingCache<Long, LXP> newCache(IRepository repository, DirectoryBackedBucket<T> my_bucket) {
+        return CacheBuilder.newBuilder()
+                .maximumSize(1000)
+                .weakValues()
+                .build(
+                        new CacheLoader<Long, LXP>() {
+
+                            public LXP load(Long id) throws BucketException { // no checked exception
+                                return loader(id);
+                            }
+                        }
+                );
+    }
+
+    public LXP loader(Long id) throws BucketException { // no checked exception
+
+        LXP result;
+
+        try (BufferedReader reader = Files.newBufferedReader(filePath(id), FileManipulation.FILE_CHARSET)) {
+
+            if (bucketType == null) { //  No java constructor specified
+                try {
+                    result = (T) (new DynamicLXP(id, new JSONReader(reader), this));
+                } catch (PersistentObjectException e) {
+                    throw new BucketException("Could not create new LXP for object with id: " + id + " in directory: " + directory );
+                }
+            } else {
+                try {
+                    result = (LXP) bucketType.getDeclaredMethod("create").invoke(id, new JSONReader(reader), this);
+                }
+                // TODO - it is - how do you encode this?
+                //catch (PersistentObjectException e) {
+                // throw new BucketException("Could not create new LXP (using factory) for object with id: " + id + " in directory: " + directory);
+                // }
+                catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+                    throw new BucketException("Error in reflective call of create" );
+                }
+            }
+
+//            // Now check for indirection
+//            if (result.containsKey(StoreReference.$INDIRECTION$)) {
+//                // we have an indirection
+//                // so try and load the record that the indirection record points to.
+//                StoreReference<T> ref = new StoreReference<T>(store, (String) result.get(StoreReference.REPOSITORY), (String) result.get(StoreReference.BUCKET), (long) result.get(StoreReference.OID));
+//                result = ref.getReferend();
+//            }
+        } catch (IOException e1) {
+            throw new BucketException("Exception creating reader for LXP with id: " + id + " in directory: " + directory);
         }
+        return result;
+
     }
 
     private static void createBucket(final String name, IRepository repository, BucketKind kind) throws RepositoryException {
@@ -197,46 +267,54 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
 
         T result;
 
-        ILXP o = object_cache.getObject(id);
-        if (o != null) {
-            return (T) o; // this is safe since this.contains(id) and also the cache contains the object.
+        LXP o = null;
+        try {
+            o = object_cache.get(id,
+                        new Callable<LXP>() {
+                            public LXP call() throws BucketException {
+                                return loader(id);
+                            }
+
+                        });
+        } catch (ExecutionException e) {
+            throw new BucketException( e );
         }
+        return (T) o; // this is safe since this.contains(id) and also the cache contains the object.
 
-        if (!this.contains(id)) {
-            // ErrorHandling.error("Bucket does not contain object with id: " + id);
-            throw new BucketException("Bucket does not contain id: " + id);
 
-        }
-        // if we get to here, it means teh object is in the bucket but is not in the cache
-
-        try (BufferedReader reader = Files.newBufferedReader(filePath(id), FileManipulation.FILE_CHARSET)) {
-
-            if (tFactory == null) { //  No java constructor specified
-                try {
-                    result = (T) (new LXP(id, new JSONReader(reader), getRepository(), this));
-                } catch (PersistentObjectException e) {
-                    throw new BucketException("Could not create new LXP for object with id: " + id + " in directory: " + directory);
-                }
-            } else {
-                try {
-                    result = tFactory.create(id, new JSONReader(reader), this.repository, this);
-                } catch (PersistentObjectException e) {
-                    throw new BucketException("Could not create new LXP (using factory) for object with id: " + id + " in directory: " + directory);
-                }
-            }
-
-            // Now check for indirection
-            if (result.containsKey(StoreReference.$INDIRECTION$)) {
-                // we have an indirection
-                // so try and load the record that the indirection record points to.
-                StoreReference<T> ref = new StoreReference<T>(store, result.getString(StoreReference.REPOSITORY), result.getString(StoreReference.BUCKET), result.getLong(StoreReference.OID));
-                result = ref.getReferend();
-            }
-        } catch (IOException e1) {
-            throw new BucketException("Exception creating reader for LXP with id: " + id + " in directory: " + directory);
-        }
-        object_cache.put(id, this, result);           // Putting this call here ensures that all records that are in a bucket and loaded are in the cache
-        return result;
+//        if (!this.contains(id)) {
+//            // ErrorHandling.error("Bucket does not contain object with id: " + id);
+//            throw new BucketException("Bucket does not contain id: " + id);
+//
+//        }
+//        try (BufferedReader reader = Files.newBufferedReader(filePath(id), FileManipulation.FILE_CHARSET)) {
+//
+//            if (tFactory == null) { //  No java constructor specified
+//                try {
+//                    result = (T) (new LXP(id, new JSONReader(reader), getRepository(), this));
+//                } catch (PersistentObjectException e) {
+//                    throw new BucketException("Could not create new LXP for object with id: " + id + " in directory: " + directory);
+//                }
+//            } else {
+//                try {
+//                    result = tFactory.create(id, new JSONReader(reader), this.repository, this);
+//                } catch (PersistentObjectException e) {
+//                    throw new BucketException("Could not create new LXP (using factory) for object with id: " + id + " in directory: " + directory);
+//                }
+//            }
+//
+//            // Now check for indirection
+//            if (result.containsKey(StoreReference.$INDIRECTION$)) {
+//                // we have an indirection
+//                // so try and load the record that the indirection record points to.
+//                StoreReference<T> ref = new StoreReference<T>(store, result.getString(StoreReference.REPOSITORY), result.getString(StoreReference.BUCKET), result.getLong(StoreReference.OID));
+//                result = ref.getReferend();
+//            }
+//        } catch (IOException e1) {
+//            throw new BucketException("Exception creating reader for LXP with id: " + id + " in directory: " + directory);
+//        }
+//        object_cache.put(id, this, result);           // Putting this call here ensures that all records that are in a bucket and loaded are in the cache
+//        return result;
     }
 
     @Override
@@ -287,8 +365,8 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
         return bucket_name;
     }
 
-    public ILXPFactory<T> getFactory() {
-        return tFactory;
+    public Class<T> getBucketType() {
+        return bucketType;
     }
 
     public boolean contains(long id) {
@@ -374,8 +452,13 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
         }
     }
 
+//    public IObjectCache getObjectCache() {
+//        return object_cache;
+//    }
+
+
     public IObjectCache getObjectCache() {
-        return object_cache;
+        return null; // TODO FIX LATER - Al ****
     }
 
     public void makePersistent(final T record) throws BucketException {
@@ -415,11 +498,11 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
         writeLXP(record, new_record_write_location); //  write to transaction log
     }
 
-    void writeLXP(ILXP record_to_write, Path filepath) throws BucketException {
+    void writeLXP(LXP record_to_write, Path filepath) throws BucketException {
 
         if (type_label_id != -1) { // we have set a type label in this bucket there must check for consistency
 
-            if (record_to_write.containsKey(Types.LABEL)) { // if there is a label it must be correct
+            if (record_to_write.getMetaData().containsLabel(Types.LABEL)) { // if there is a label it must be correct
                 if (!(checkLabelConsistency(record_to_write, type_label_id, store))) { // check that the record label matches the bucket label - throw exception if it doesn't
                     throw new BucketException("Label incompatibility");
                 }
@@ -436,9 +519,9 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
                 throw new BucketException("I/O exception checking Structural integrity");
             }
         } else // get to here and bucket has no type label on it.
-            if (record_to_write.containsKey(Types.LABEL)) { // no type label on bucket but record has a type label so check structure
+            if (record_to_write.getMetaData().containsLabel(Types.LABEL)) { // no type label on bucket but record has a type label so check structure
                 try {
-                    if (!Types.checkStructuralConsistency(record_to_write, record_to_write.getLong(Types.LABEL), store)) {
+                    if (!Types.checkStructuralConsistency(record_to_write, (long) record_to_write.get(Types.LABEL), store)) {
                         throw new BucketException("Structural integrity incompatibility");
                     }
                 } catch (KeyNotFoundException e) {
@@ -453,12 +536,12 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
         writeData(record_to_write, filepath);
     }
 
-    private void writeData(ILXP record_to_write, Path filepath) throws BucketException {
+    private void writeData(LXP record_to_write, Path filepath) throws BucketException {
 
         try (Writer writer = Files.newBufferedWriter(filepath, FileManipulation.FILE_CHARSET)) { // auto close and exception
 
-            record_to_write.serializeToJSON(new JSONWriter(writer), getRepository(), this);
-            object_cache.put(record_to_write.getId(), this, record_to_write);  // Putting this call here ensures that all records that are in a bucket and loaded are in the cache
+            record_to_write.serializeToJSON(new JSONWriter(writer), this);
+            object_cache.put(record_to_write.getId(), record_to_write);  // Putting this call here ensures that all records that are in a bucket and loaded are in the cache
 
         } catch (IOException | JSONException e) {
             throw new BucketException(e);
@@ -485,7 +568,7 @@ public class DirectoryBackedBucket<T extends ILXP> implements IBucket<T> {
 
         size = -1;
         cached_oids = null;
-        object_cache = new ObjectCache(); //TODO I am worried about this - there maybe extant refs to these objects in the heap. *****
+        object_cache = newCache(repository, this); //TODO I am worried about this - there maybe extant refs to these objects in the heap. *****
     }
 
     /**

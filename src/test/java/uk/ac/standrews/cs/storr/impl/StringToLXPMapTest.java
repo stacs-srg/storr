@@ -20,7 +20,6 @@ import org.junit.Before;
 import org.junit.Test;
 import uk.ac.standrews.cs.storr.impl.exceptions.*;
 import uk.ac.standrews.cs.storr.interfaces.IBucket;
-import uk.ac.standrews.cs.storr.interfaces.ILXP;
 import uk.ac.standrews.cs.storr.interfaces.IRepository;
 
 import java.io.IOException;
@@ -40,7 +39,7 @@ public class StringToLXPMapTest extends CommonTest {
 
     private static final String bucketName = "bucket";
 
-    private IBucket<LXP> bucket;
+    private IBucket<SimpleLXP> bucket;
 
     @Before
     public void setUp() throws RepositoryException, IOException, StoreException, URISyntaxException {
@@ -49,7 +48,7 @@ public class StringToLXPMapTest extends CommonTest {
 
         TypeFactory tf = store.getTypeFactory();
         IRepository testrepo = store.makeRepository("testrepo");
-        new StringtoILXPMap( "testmap", testrepo, new LXPFactory(), true );
+        new StringtoILXPMap( "testmap", testrepo, SimpleLXP.class, true );
         bucket = testrepo.makeBucket( bucketName, BucketKind.DIRECTORYBACKED );
     }
 
@@ -57,15 +56,15 @@ public class StringToLXPMapTest extends CommonTest {
     public void stringToLXPMapTest() throws RepositoryException, BucketException, PersistentObjectException, IOException {
 
         IRepository testrepo = store.getRepository("testrepo");
-        StringtoILXPMap pmap = new StringtoILXPMap<LXP>( "testmap", testrepo, new LXPFactory(), false );
+        StringtoILXPMap pmap = new StringtoILXPMap<SimpleLXP>( "testmap", testrepo, SimpleLXP.class, false );
 
-        HashMap<String, LXP> tempmap = new HashMap();
+        HashMap<String, SimpleLXP> tempmap = new HashMap();
 
-        // create some data and put into persistent and transient map
+        // create some data and put into persistent and transient field_storage
         for (int i = 1; i < 10; i++) {
             String key = Integer.toString(i);
-            LXP lxp = new LXP();
-            lxp.put("fieldname",key );
+            SimpleLXP lxp = new SimpleLXP();
+            lxp.put("FIELD",key );
             bucket.makePersistent(lxp);
 
             pmap.put( key, lxp.getThisRef() );
@@ -77,7 +76,7 @@ public class StringToLXPMapTest extends CommonTest {
         Collection<String> tempkeys = tempmap.keySet();
 
         for( String key : tempkeys ) {
-                ILXP value = pmap.lookup(key);
+                LXP value = pmap.lookup(key);
                 assertTrue(value.equals(tempmap.get(key)));
         }
 

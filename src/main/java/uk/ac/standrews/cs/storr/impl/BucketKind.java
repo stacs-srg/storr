@@ -18,8 +18,6 @@ package uk.ac.standrews.cs.storr.impl;
 
 import uk.ac.standrews.cs.storr.impl.exceptions.RepositoryException;
 import uk.ac.standrews.cs.storr.interfaces.IBucket;
-import uk.ac.standrews.cs.storr.interfaces.ILXP;
-import uk.ac.standrews.cs.storr.interfaces.ILXPFactory;
 import uk.ac.standrews.cs.storr.interfaces.IRepository;
 
 import java.nio.file.Files;
@@ -49,19 +47,19 @@ public enum BucketKind {
         return retrieveBucket(repository, bucket_name, kind, true);
     }
 
-    public static <T extends ILXP> IBucket<T> getBucket(Repository repository, String bucket_name, ILXPFactory<T> tFactory) throws RepositoryException {
+    public static <T extends LXP> IBucket<T> getBucket(Repository repository, String bucket_name, Class<T> bucketType) throws RepositoryException {
 
         BucketKind kind = getKind(repository, bucket_name);
 
-        return retrieveBucket(repository, bucket_name, tFactory, kind, false);
+        return retrieveBucket(repository, bucket_name, bucketType, kind, false);
     }
 
-    public static <T extends ILXP> IBucket createBucket(Repository repository, String bucket_name, ILXPFactory<T> tFactory, BucketKind kind) throws RepositoryException {
+    public static <T extends LXP> IBucket createBucket(Repository repository, String bucket_name, Class<T> bucketType, BucketKind kind) throws RepositoryException {
 
-        return retrieveBucket(repository, bucket_name, tFactory, kind, true);
+        return retrieveBucket(repository, bucket_name, bucketType, kind, true);
     }
 
-    private static <T extends ILXP> IBucket retrieveBucket(Repository repository, String bucket_name, BucketKind kind, boolean create_bucket) throws RepositoryException {
+    private static <T extends LXP> IBucket retrieveBucket(Repository repository, String bucket_name, BucketKind kind, boolean create_bucket) throws RepositoryException {
 
         switch (kind) {
 
@@ -79,18 +77,18 @@ public enum BucketKind {
         throw new RepositoryException("Invalid bucket kind");
     }
 
-    private static <T extends ILXP> IBucket retrieveBucket(Repository repository, String bucket_name, ILXPFactory<T> tFactory, BucketKind kind, boolean create_bucket) throws RepositoryException {
+    private static <T extends LXP> IBucket retrieveBucket(Repository repository, String bucket_name, Class<T> bucketType, BucketKind kind, boolean create_bucket) throws RepositoryException {
 
         switch (kind) {
 
             case DIRECTORYBACKED: {
-                return new DirectoryBackedBucket<>(repository, bucket_name, kind, tFactory, create_bucket);
+                return new DirectoryBackedBucket<>(repository, bucket_name, kind, bucketType, create_bucket);
             }
             case INDIRECT: {
-                return new DirectoryBackedIndirectBucket<>(repository, bucket_name, tFactory, create_bucket);
+                return new DirectoryBackedIndirectBucket<>(repository, bucket_name, bucketType, create_bucket);
             }
             case INDEXED: {
-                return new DirectoryBackedIndexedBucket(repository, bucket_name, tFactory, create_bucket);
+                return new DirectoryBackedIndexedBucket(repository, bucket_name, kind, create_bucket);
             }
         }
 

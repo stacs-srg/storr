@@ -19,10 +19,6 @@ package uk.ac.standrews.cs.storr.impl;
 import uk.ac.standrews.cs.storr.impl.exceptions.IllegalKeyException;
 import uk.ac.standrews.cs.storr.impl.exceptions.PersistentObjectException;
 import uk.ac.standrews.cs.storr.interfaces.IBucket;
-import uk.ac.standrews.cs.storr.interfaces.IRepository;
-import uk.ac.standrews.cs.storr.types.LXPBaseType;
-import uk.ac.standrews.cs.storr.types.LXP_LIST;
-import uk.ac.standrews.cs.storr.types.LXP_SCALAR;
 import uk.ac.standrews.cs.utilities.JSONReader;
 
 import java.util.List;
@@ -30,21 +26,21 @@ import java.util.List;
 /**
  * Created by al on 22/11/2016.
  */
-public class ClassWithListOfRefs extends LXP {
-
-    @LXP_SCALAR(type = LXPBaseType.INT)
-    public static final String some_int = "R_INT";
-
-    @LXP_LIST(reftype = "lxp")
-    public static final String alist = "R_LIST";
+public class ClassWithListOfRefs extends DynamicLXP {
 
 
-    public ClassWithListOfRefs(long persistent_Object_id, JSONReader reader, IRepository repository, IBucket bucket) throws PersistentObjectException, IllegalKeyException {
-        super(persistent_Object_id, reader, repository, bucket);
+    public ClassWithListOfRefs(long persistent_Object_id, JSONReader reader, IBucket bucket ) throws PersistentObjectException, IllegalKeyException {
+        super(persistent_Object_id, reader, bucket);
     }
 
-    public ClassWithListOfRefs(int id, List<LXP> list) {
-        this.put(some_int, id);
-        this.put(alist, list);
+    public ClassWithListOfRefs(int id, List<DynamicLXP> list) {
+        this.put("AN_INT", id);
+        this.put("A_LIST", list);
     }
+
+    @Override
+    public ClassWithListOfRefs create(long persistent_object_id, JSONReader reader, IBucket bucket) throws PersistentObjectException, IllegalKeyException {
+        return new ClassWithListOfRefs(persistent_object_id, reader, bucket );
+    }
+
 }
