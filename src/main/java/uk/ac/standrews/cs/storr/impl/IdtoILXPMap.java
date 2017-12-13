@@ -27,7 +27,7 @@ import java.util.Map;
 /**
  * Created by al on 27/04/2017.
  */
-public class IdtoILXPMap<T extends LXP> implements IIdtoILXPMap<T> {
+public class IdtoILXPMap<T extends LXP> implements IIdtoLXPMap<T> {
 
     private final StringtoILXPMap<T> pmap;
     private final IRepository repository;

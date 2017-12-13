@@ -92,7 +92,7 @@ public class Repository implements IRepository {
     }
 
     @Override
-    public <T extends LXP> IIdtoILXPMap<T> makeIdtoLXPMap(String name, Class<T> bucketType) throws RepositoryException {
+    public <T extends LXP> IIdtoLXPMap<T> makeIdtoLXPMap(String name, Class<T> bucketType) throws RepositoryException {
             return new IdtoILXPMap( name, this, bucketType, true );
 
     }
@@ -148,7 +148,7 @@ public class Repository implements IRepository {
     }
 
     @Override
-    public <T extends LXP> IIdtoILXPMap<T> getIdtoLXPMap(String name, Class<T> bucketType) throws RepositoryException {
+    public <T extends LXP> IIdtoLXPMap<T> getIdtoLXPMap(String name, Class<T> bucketType) throws RepositoryException {
 
             return new IdtoILXPMap( name, this, bucketType, false );
     }

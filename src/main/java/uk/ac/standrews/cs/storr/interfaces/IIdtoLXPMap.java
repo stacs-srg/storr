@@ -28,7 +28,7 @@ import java.util.Map;
 /**
  * Created by al on 09/06/2017.
  */
-public interface IIdtoILXPMap<T extends LXP> {
+public interface IIdtoLXPMap<T extends LXP> {
     LXP lookup(Long id) throws IOException, BucketException, RepositoryException;
 
     void put(Long key, IStoreReference<T> value) throws PersistentObjectException, BucketException;

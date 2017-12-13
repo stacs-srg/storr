@@ -52,7 +52,7 @@ public interface IRepository {
      */
     <T extends LXP> IBucket<T> makeBucket(final String name, BucketKind kind, Class<T> bucketType) throws RepositoryException;
 
-    <T extends LXP> IIdtoILXPMap<T> makeIdtoLXPMap(final String name, Class<T> bucketType ) throws RepositoryException;
+    <T extends LXP> IIdtoLXPMap<T> makeIdtoLXPMap(final String name, Class<T> bucketType ) throws RepositoryException;
 
     <T extends LXP> IStringtoILXPMap<T> makeStringtoLXPMap(final String name, Class<T> bucketType ) throws RepositoryException;
 
@@ -93,7 +93,7 @@ public interface IRepository {
      * @return the field_storage with the given name, iof it exists and is type compatible.
      * @throws RepositoryException if the field_storage does not exist or if something goes wrong.
      */
-    <T extends LXP> IIdtoILXPMap<T> getIdtoLXPMap(final String name, Class<T> bucketType ) throws RepositoryException;
+    <T extends LXP> IIdtoLXPMap<T> getIdtoLXPMap(final String name, Class<T> bucketType ) throws RepositoryException;
 
     /**
      * @param name the name of the field_storage being looked up
