@@ -82,8 +82,6 @@ public class Metadata {
         }
     }
 
-
-
     // Map Getters
 
     public HashMap<String,Integer> getFieldNamesToSlotNumbers() {
@@ -106,9 +104,9 @@ public class Metadata {
         return slot_to_field_name.get(slot);
     }
 
-    public Set<String> getFields() {
-        return field_name_to_slot.keySet();
-    }
+    public Set<String> getFields() { return field_name_to_slot.keySet(); }
+
+    public Set<Integer> getSlots() { return slot_to_field_name.keySet(); }
 
     public int getFieldCount() {
         Set<String> fields = getFields();
