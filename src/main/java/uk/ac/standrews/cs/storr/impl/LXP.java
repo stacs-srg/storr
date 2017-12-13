@@ -296,7 +296,7 @@ public abstract class LXP {
      * @param slot - the slot number of the required field
      * @param value - the value to associated with the @param label
      */
-    public void put(int slot, String value) throws IllegalKeyException  {
+    public void put(int slot, String value)  {
         if( slot >= field_storage.length ) {
             grow_storage( slot );
         }
@@ -386,7 +386,7 @@ public abstract class LXP {
      * @param value - the value to be added to the tuple.
      * @throws IllegalKeyException
      */
-    public void put( String key, Object value) throws IllegalKeyException {
+    public void put( String key, Object value) {
         check(key);
         field_storage[ getMetaData().getSlot(key) ] = value;
     }
