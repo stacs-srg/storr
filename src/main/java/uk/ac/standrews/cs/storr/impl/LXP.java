@@ -270,7 +270,12 @@ public abstract class LXP {
     }
 
     public IRepository getRepository() {
-        return bucket.getRepository();
+
+        if( bucket == null ) {
+            return null;
+        } else {
+            return bucket.getRepository();
+        }
     }
 
     /**
