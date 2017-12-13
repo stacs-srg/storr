@@ -52,6 +52,7 @@ public class Metadata {
 
     private void initialiseMaps( Class c ) throws Exception {
         Field[] fields = c.getDeclaredFields();
+        int next_slot = 0;
         for (Field f : fields) {
 
             if (Modifier.isStatic(f.getModifiers())) {
@@ -60,8 +61,8 @@ public class Metadata {
                         f.isAnnotationPresent(LXP_LIST.class) ) {
                     try {
                         f.setAccessible(true);
-                        String field_name = f.getName(); // the name of the field
-                        Integer slot_value = f.getInt(null); // the value of the labelled Java field!
+                        String field_name = f.getName();   // the name of the field
+                        Integer slot_value = next_slot++;  // the next int numbered from zero      // f.getInt(null); // the value of the labelled Java field!
                         if( slot_to_field_name.containsKey( slot_value ) ) {
                             throw new Exception( "Duplicated slot value: " + slot_value );
                         }
