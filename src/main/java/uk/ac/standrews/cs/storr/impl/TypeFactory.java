@@ -100,7 +100,7 @@ public class TypeFactory {
             for (DynamicLXP lxp : (Iterable<DynamicLXP>) type_name_bucket.getInputStream()) {
                 // as set up in @code nameValuePair below.
                 String name = (String) lxp.get("name");
-                long type_key = (int) lxp.get("key");
+                long type_key = (long) lxp.get("key");
 
                 LXP type_rep = type_reps_bucket.getObjectById(type_key);
                 LXPReferenceType reference = new LXPReferenceType((DynamicLXP) (type_rep));
