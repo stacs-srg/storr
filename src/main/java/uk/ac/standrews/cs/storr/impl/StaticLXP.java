@@ -71,6 +71,8 @@ public class StaticLXP extends LXP implements Comparable<StaticLXP> {
         return static_md;
     }
 
+    public static Metadata getStaticMetadata() { return static_md; }
+
     @Override
     public void check(String key) throws IllegalKeyException {
         if (key == null || key.equals("")) {
