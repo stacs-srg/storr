@@ -67,6 +67,7 @@ public class Metadata {
                         f.setAccessible(true);
                         String field_name = f.getName();   // the name of the field
                         Integer slot_value = next_slot++;  // the next int numbered from zero      // f.getInt(null); // the value of the labelled Java field!
+                        f.setInt( null,slot_value);
                         if( slot_to_field_name.containsKey( slot_value ) ) {
                             throw new Exception( "Duplicated slot value: " + slot_value );
                         }
@@ -96,6 +97,7 @@ public class Metadata {
     public HashMap<Integer,String> getSlotNumbersToFieldNames() {
         return slot_to_field_name;
     }
+
 
     // Map Lookup methods
 
