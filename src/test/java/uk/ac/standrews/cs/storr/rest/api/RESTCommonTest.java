@@ -17,27 +17,35 @@
 package uk.ac.standrews.cs.storr.rest.api;
 
 import org.glassfish.jersey.test.JerseyTest;
+import uk.ac.standrews.cs.storr.impl.Store;
+import uk.ac.standrews.cs.storr.interfaces.IStore;
+import uk.ac.standrews.cs.storr.rest.config.RESTConfig;
+
+import javax.ws.rs.core.Application;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class RESTCommonTest extends JerseyTest {
 
-//    @Override
-//    protected Application configure() {
-//
-//        try {
-//            Path store_path = Files.createTempDirectory(null);
-//            IStore store = new Store(store_path);
-//
-//            return new RESTConfig().setStorr(store);
-//
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//
-//        return null;
-//    }
+    @Override
+    protected Application configure() {
+
+        try {
+            Path store_path = Files.createTempDirectory(null);
+            IStore store = new Store(store_path);
+
+            return new RESTConfig().setStorr(store);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
 //
 //    protected String createILXPFromJSONAndTest(String JSON) {
 //        Response response = target("/REPO/BUCKET")
