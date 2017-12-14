@@ -47,7 +47,11 @@ public class Metadata {
     public Metadata(Class c, String typename) throws Exception {
 
         initialiseMaps( c );
-        type = Store.getInstance().getTypeFactory().createType(c, typename);
+        TypeFactory tf = Store.getInstance().getTypeFactory();
+        type = tf.getTypeWithName( typename );  // if created already use that one
+        if( type == null ) {
+            type = tf.createType(c, typename);  // otherwise create it
+        }
     }
 
     private void initialiseMaps( Class c ) throws Exception {
