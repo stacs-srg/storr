@@ -179,7 +179,7 @@ public class DirectoryBackedBucket<T extends LXP> implements IBucket<T> {
                     result = (LXP) constructor.newInstance( id, new JSONReader(reader), this);
                 }
                 catch (IllegalAccessException | InvocationTargetException | InstantiationException | NoSuchMethodException e) {
-                    throw new BucketException("Error in reflective call of create" );
+                    throw new BucketException("Error in reflective constructor call: LXPs must implement constructors with the following signature: Constructor(long persistent_object_id, JSONReader reader, IBucket bucket)" );
                 }
             }
 
