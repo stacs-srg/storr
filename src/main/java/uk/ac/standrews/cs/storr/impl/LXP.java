@@ -289,6 +289,19 @@ public abstract class LXP {
      * @param slot - the slot number of the required field
      * @param value - the value to associated with the @param label
      */
+    public void put(int slot, Object value)  {
+        if( slot >= field_storage.length ) {
+            grow_storage( slot );
+        }
+        field_storage[ slot ] = value;
+    }
+
+    /**
+     * A setter method over labelled values in the LXP
+     *
+     * @param slot - the slot number of the required field
+     * @param value - the value to associated with the @param label
+     */
     public void put(int slot, String value)  {
         if( slot >= field_storage.length ) {
             grow_storage( slot );
@@ -538,7 +551,7 @@ public abstract class LXP {
 
                 if (value != null) {
                     check(key);
-                    field_storage[ field_name_to_slot.get(key) ] = value;
+                    put( field_name_to_slot.get(key),value );
 
                 } else if (reader.have(JSONReader.ARRAY)) {
                     readArray(reader, key);

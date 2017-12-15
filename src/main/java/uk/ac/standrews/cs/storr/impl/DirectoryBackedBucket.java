@@ -173,25 +173,24 @@ public class DirectoryBackedBucket<T extends LXP> implements IBucket<T> {
                     throw new BucketException("Could not create new LXP for object with id: " + id + " in directory: " + directory );
                 }
             } else {
+                Constructor<?> constructor;
                 try {
                     // result = (LXP) bucketType.getDeclaredMethod("create").invoke( id, new JSONReader(reader), this); // got rid of requirement for this method - specified constructor now defined in LXP.
-                    Constructor<?> constructor = bucketType.getConstructor( Long.class, JSONReader.class, IBucket.class );
-                    result = (LXP) constructor.newInstance( id, new JSONReader(reader), this);
+                    Class param_classes[] = new Class[] { long.class, JSONReader.class, IBucket.class };
+                    constructor = bucketType.getConstructor( param_classes );
                 }
-                catch (IllegalAccessException | InvocationTargetException | InstantiationException | NoSuchMethodException e) {
-                    throw new BucketException("Error in reflective constructor call: LXPs must implement constructors with the following signature: Constructor(long persistent_object_id, JSONReader reader, IBucket bucket)" );
+                catch ( NoSuchMethodException e ) {
+                    throw new BucketException("Error in reflective constructor call - class " + bucketType.getName() + " must implement constructors with the following signature: Constructor(long persistent_object_id, JSONReader reader, IBucket bucket)" );
                 }
-            }
+                try {
+                    result = (LXP) constructor.newInstance( id.longValue(), new JSONReader(reader), this);
+                } catch (IllegalAccessException | InstantiationException | InvocationTargetException e) {
+                    throw new BucketException("Error in reflective call of constructor in class " + bucketType.getName() + ": " + e.getMessage() );
+                }
 
-//            // Now check for indirection
-//            if (result.containsKey(StoreReference.$INDIRECTION$)) {
-//                // we have an indirection
-//                // so try and load the record that the indirection record points to.
-//                StoreReference<T> ref = new StoreReference<T>(store, (String) result.get(StoreReference.REPOSITORY), (String) result.get(StoreReference.BUCKET), (long) result.get(StoreReference.OID));
-//                result = ref.getReferend();
-//            }
-        } catch (IOException e1) {
-            throw new BucketException("Exception creating reader for LXP with id: " + id + " in directory: " + directory);
+            }
+        } catch (IOException e) {
+            throw new BucketException( "Error creating JSONReader for id: " + id + " in bucket " + bucket_name );
         }
         return result;
 
