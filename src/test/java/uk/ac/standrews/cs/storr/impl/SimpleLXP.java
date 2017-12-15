@@ -52,11 +52,6 @@ public class SimpleLXP extends StaticLXP {
     }
 
     @Override
-    public LXP create(long persistent_object_id, JSONReader reader, IBucket bucket) throws PersistentObjectException {
-        return new SimpleLXP( persistent_object_id, reader, bucket );
-    }
-
-    @Override
     public Metadata getMetaData() {
         return static_md;
     }

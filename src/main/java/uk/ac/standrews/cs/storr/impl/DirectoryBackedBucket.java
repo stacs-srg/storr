@@ -31,6 +31,7 @@ import uk.ac.standrews.cs.utilities.JSONReader;
 import uk.ac.standrews.cs.utilities.archive.ErrorHandling;
 
 import java.io.*;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -174,13 +175,11 @@ public class DirectoryBackedBucket<T extends LXP> implements IBucket<T> {
                 }
             } else {
                 try {
-                    result = (LXP) bucketType.getDeclaredMethod("create").invoke(id, new JSONReader(reader), this);
+                    // result = (LXP) bucketType.getDeclaredMethod("create").invoke( id, new JSONReader(reader), this); // got rid of requirement for this method - specified constructor now defined in LXP.
+                    Constructor<?> constructor = bucketType.getConstructor( Long.class, JSONReader.class, IBucket.class );
+                    result = (LXP) constructor.newInstance( id, new JSONReader(reader), this);
                 }
-                // TODO - it is - how do you encode this?
-                //catch (PersistentObjectException e) {
-                // throw new BucketException("Could not create new LXP (using factory) for object with id: " + id + " in directory: " + directory);
-                // }
-                catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+                catch (IllegalAccessException | InvocationTargetException | InstantiationException | NoSuchMethodException e) {
                     throw new BucketException("Error in reflective call of create" );
                 }
             }

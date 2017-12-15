@@ -50,15 +50,6 @@ public class DynamicLXP extends LXP implements Comparable<DynamicLXP> {
     }
 
     @Override
-    public LXP create(long persistent_object_id, JSONReader reader, IBucket bucket) throws PersistentObjectException {
-        try {
-            return new DynamicLXP(persistent_object_id, reader, bucket);
-        } catch (IllegalKeyException e) {
-            throw new PersistentObjectException("Illegal key exception");
-        }
-    }
-
-    @Override
     public Metadata getMetaData() {
         return metadata;
     }

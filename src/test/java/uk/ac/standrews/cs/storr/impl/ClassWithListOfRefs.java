@@ -38,9 +38,4 @@ public class ClassWithListOfRefs extends DynamicLXP {
         this.put("A_LIST", list);
     }
 
-    @Override
-    public ClassWithListOfRefs create(long persistent_object_id, JSONReader reader, IBucket bucket) throws PersistentObjectException, IllegalKeyException {
-        return new ClassWithListOfRefs(persistent_object_id, reader, bucket );
-    }
-
 }

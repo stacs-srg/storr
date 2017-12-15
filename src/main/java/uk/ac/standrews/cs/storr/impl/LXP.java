@@ -80,20 +80,8 @@ public abstract class LXP {
     // Abstract methods
 
     /**
-     * A constructor for the LXP
-     *
-     * @param persistent_object_id - the persistent object id of the object to be created
-     * @param reader - a reader which will read in the serialised object
-     * @param bucket - the bucket from which the objecyt is being read
-     * @return the LXP being read in
-     *
-     * @throws PersistentObjectException
-     */
-    public abstract LXP create(long persistent_object_id, JSONReader reader, IBucket bucket) throws PersistentObjectException;
-
-    /**
      * Checks to see if the given key is present in the lxp.
-     * Dynamic classes are at liberty to add fields if requireed.
+     * Dynamic classes are at liberty to add fields if required.
      * @param key - a key to be checked
      * @throws IllegalKeyException if the key is not present or illegal
      */
