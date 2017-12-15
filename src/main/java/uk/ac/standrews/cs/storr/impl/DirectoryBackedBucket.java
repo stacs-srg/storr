@@ -113,6 +113,12 @@ public class DirectoryBackedBucket<T extends LXP> implements IBucket<T> {
         this.store = repository.getStore();
         long class_type_label_id;
 
+        if (!bucketNameIsLegal(bucket_name)) {
+            throw new RepositoryException("Illegal name <" + bucket_name + ">");
+        }
+
+        checkKind(bucket_name, repository, kind);
+
         try {
             T instance = bucketType.newInstance(); // guarantees meta data creation.
             Metadata md = instance.getMetaData();
@@ -123,25 +129,18 @@ public class DirectoryBackedBucket<T extends LXP> implements IBucket<T> {
 
         if (create_bucket) {
             createBucket(bucket_name, repository, kind, class_type_label_id);
+            directory = dirPath().toFile(); // Dir does not exist until after this call.
             type_label_id = class_type_label_id;
-        } else
+        } else {
+            directory = dirPath().toFile(); // The dir must exist since we are not creating it, and needed for getTypeLabelID()
+            if (!directory.isDirectory()) {
+                throw new RepositoryException("Bucket Directory: " + dirPath() + " does not exist");
+            }
             type_label_id = getTypeLabelID();
             if ( type_label_id != class_type_label_id ) {
                 throw new RepositoryException("Bucket label incompatible with class: " + bucketType.getName() + " doesn't match bucket label:" + type_label_id);
+            }
         }
-
-        if (!bucketNameIsLegal(bucket_name)) {
-            throw new RepositoryException("Illegal name <" + bucket_name + ">");
-        }
-
-        Path dir_name = dirPath();
-        directory = dir_name.toFile();
-
-        if (!directory.isDirectory()) {
-            throw new RepositoryException("Bucket Directory: " + dir_name + " does not exist");
-        }
-
-        checkKind(bucket_name, repository, kind);
 
         watchBucket(repository);
         object_cache = newCache(repository, this);
