@@ -106,25 +106,32 @@ public class DirectoryBackedBucket<T extends LXP> implements IBucket<T> {
      */
     DirectoryBackedBucket(final IRepository repository, final String bucket_name, BucketKind kind, Class<T> bucketType, boolean create_bucket) throws RepositoryException  {
 
+        this.bucketType = bucketType;
+        this.bucket_name = bucket_name;
+        this.repository = repository;
+        this.store = repository.getStore();
+        long class_type_label_id;
+
+        try {
+            T instance = bucketType.newInstance(); // guarantees meta data creation.
+            Metadata md = instance.getMetaData();
+            class_type_label_id = md.getType().getId();
+        } catch (IllegalAccessException |  InstantiationException e) {
+            throw new RepositoryException( e );
+        }
 
         if (create_bucket) {
-//            createBucket(bucket_name, repository, kind, tFactory.getTypeLabel());
-            try {
-                createBucket(bucket_name, repository, kind, (Long) bucketType.getDeclaredMethod("getTypeLabel").invoke(null)); /// assumes getTypeLabel is static
-            } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-               throw new RepositoryException( e );
-            }
+            createBucket(bucket_name, repository, kind, class_type_label_id);
+            type_label_id = class_type_label_id;
+        } else
+            type_label_id = getTypeLabelID();
+            if ( type_label_id != class_type_label_id ) {
+                throw new RepositoryException("Bucket label incompatible with class: " + bucketType.getName() + " doesn't match bucket label:" + type_label_id);
         }
 
         if (!bucketNameIsLegal(bucket_name)) {
             throw new RepositoryException("Illegal name <" + bucket_name + ">");
         }
-
-        this.bucketType = bucketType;
-
-        this.bucket_name = bucket_name;
-        this.repository = repository;
-        this.store = repository.getStore();
 
         Path dir_name = dirPath();
         directory = dir_name.toFile();
@@ -137,13 +144,6 @@ public class DirectoryBackedBucket<T extends LXP> implements IBucket<T> {
 
         watchBucket(repository);
         object_cache = newCache(repository, this);
-
-        // this.tFactory = tFactory;
-
-        type_label_id = getTypeLabelID();
-//        if (type_label_id != tFactory.getTypeLabel()) {
-//            throw new RepositoryException("Bucket label incompatible with supplied factory: " + tFactory.getTypeLabel() + " doesn't match bucket label:" + type_label_id);
-//        }
     }
 
     private LoadingCache<Long, LXP> newCache(IRepository repository, DirectoryBackedBucket<T> my_bucket) {

@@ -33,9 +33,7 @@ import java.util.HashMap;
  * Higher order language level types may be constructed above this basic building block.
  * LXP provides a thin wrapper over a Map (providing name value lookup) along with identity and the ability to save and recover persistent versions (encoded in JSON).
  */
-public class StaticLXP extends LXP implements Comparable<StaticLXP> {
-
-    public static Metadata static_md;
+public abstract class StaticLXP extends LXP implements Comparable<StaticLXP> {
 
     public StaticLXP() {
         super();
@@ -51,24 +49,6 @@ public class StaticLXP extends LXP implements Comparable<StaticLXP> {
 
     public StaticLXP(JSONReader reader, IBucket bucket ) throws PersistentObjectException {
         super( reader, bucket );
-    }
-
-    @Override
-    public LXP create(long persistent_object_id, JSONReader reader, IBucket bucket) throws PersistentObjectException {
-        try {
-            return new StaticLXP(persistent_object_id, reader, bucket);
-        } catch (IllegalKeyException e) {
-            throw new PersistentObjectException("Illegal key exception");
-        }
-    }
-
-    public static void initialiseStaticMetaData( Metadata md ) {
-        static_md = md;
-    }
-
-    @Override
-    public Metadata getMetaData() {
-        return static_md;
     }
 
     @Override

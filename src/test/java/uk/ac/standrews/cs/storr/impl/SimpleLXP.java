@@ -28,6 +28,8 @@ import uk.ac.standrews.cs.utilities.JSONReader;
  */
 public class SimpleLXP extends StaticLXP {
 
+    private static Metadata static_md;
+
     static {
         try {
             static_md = new Metadata( SimpleLXP.class,"SimpleLXP" );
@@ -42,11 +44,20 @@ public class SimpleLXP extends StaticLXP {
 
 
     public SimpleLXP() {
-        super();
         put( FIELD, 1);
     }
 
     public SimpleLXP(long persistent_object_id, JSONReader reader, IBucket bucket) throws PersistentObjectException {
         super( persistent_object_id,reader,bucket );
+    }
+
+    @Override
+    public LXP create(long persistent_object_id, JSONReader reader, IBucket bucket) throws PersistentObjectException {
+        return new SimpleLXP( persistent_object_id, reader, bucket );
+    }
+
+    @Override
+    public Metadata getMetaData() {
+        return static_md;
     }
 }

@@ -228,10 +228,8 @@ public class Types {
                     String ref_type_name = ref_type.type(); // this is the name of the type that the reference refers to
                     try {
                         f.setAccessible(true);
-                        String label_name = (String) f.get(null); // label name is the value of the labelled Java field!
+                        String label_name = (String) f.getName();
                         type_rep.put(label_name, ref_type_name);
-                    } catch (IllegalAccessException e) {
-                        ErrorHandling.exceptionError(e, "Illegal access for label: " + f.getName());
                     } catch (IllegalKeyException e) {
                         ErrorHandling.exceptionError(e, "Illegal key in label: " + f.getName());
                     }
@@ -239,7 +237,7 @@ public class Types {
                     LXP_LIST list_type = f.getAnnotation(LXP_LIST.class);
                     try {
                         f.setAccessible(true);
-                        String label_name = (String) f.get(null); // label name is the value of the labelled Java field!
+                        String label_name = (String) f.getName();
                         LXPBaseType basetype = list_type.basetype();
                         String reftype = list_type.reftype();
                         if (basetype == LXPBaseType.UNKNOWN && reftype.equals(LXP_LIST.UNSPECIFIED_REF_TYPE)) {      // none specified
@@ -253,8 +251,6 @@ public class Types {
                         } else {
                             type_rep.put(label_name, "[" + basetype.name() + "]");  // use the basetype
                         }
-                    } catch (IllegalAccessException e) {
-                        ErrorHandling.exceptionError(e, "Illegal access for label: " + f.getName());
                     } catch (IllegalKeyException e) {
                         ErrorHandling.exceptionError(e, "Illegal key in label: " + f.getName());
                     }

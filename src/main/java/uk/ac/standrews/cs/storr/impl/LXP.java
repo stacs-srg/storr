@@ -21,7 +21,6 @@ import org.json.JSONWriter;
 import uk.ac.standrews.cs.storr.impl.exceptions.*;
 import uk.ac.standrews.cs.storr.interfaces.IBucket;
 import uk.ac.standrews.cs.storr.interfaces.IRepository;
-import uk.ac.standrews.cs.storr.interfaces.IStore;
 import uk.ac.standrews.cs.storr.interfaces.IStoreReference;
 import uk.ac.standrews.cs.utilities.JSONReader;
 
@@ -43,10 +42,10 @@ public abstract class LXP {
     protected long id;
     protected IBucket bucket = null;
 
+    protected Metadata metadata = new Metadata();
+
     private final static int INITIAL_SIZE = 5;
     private static final int SIZE_INCREMENT = 5;
-
-    protected Metadata metadata = new Metadata();
 
     protected Object[] field_storage = new Object[INITIAL_SIZE];   // where the data lives in the LXP.
 
@@ -57,6 +56,7 @@ public abstract class LXP {
     public LXP() {
 
         this.id = getNextFreePID();
+        this.metadata = metadata;
         // don't know the repo or the bucket
     }
 
@@ -92,19 +92,19 @@ public abstract class LXP {
     public abstract LXP create(long persistent_object_id, JSONReader reader, IBucket bucket) throws PersistentObjectException;
 
     /**
-     * @return the metadata associated with the class extending LXP base.
-     * This may be static or dynamically created.
-     * Two classes are provided corresponding to the above.
-     */
-    public abstract Metadata getMetaData();
-
-    /**
      * Checks to see if the given key is present in the lxp.
      * Dynamic classes are at liberty to add fields if requireed.
      * @param key - a key to be checked
      * @throws IllegalKeyException if the key is not present or illegal
      */
     public abstract void check(String key) throws IllegalKeyException;
+
+    /**
+     * @return the metadata associated with the class extending LXP base.
+     * This may be static or dynamically created.
+     * Two classes are provided corresponding to the above.
+     */
+    public abstract Metadata getMetaData();
 
     // Selectors
 
@@ -396,7 +396,6 @@ public abstract class LXP {
         field_storage[ getMetaData().getSlot(key) ] = value;
     }
 
-
     // Slot management
 
     private void copy_array( int new_size ) {
@@ -511,11 +510,6 @@ public abstract class LXP {
     }
 
 
-    private void readObject(JSONReader reader, String key) throws PersistentObjectException, BucketException {
-        IStoreReference ref = makeObjectAndGetRef(reader);
-        put(key, ref);
-    }
-
     private void readArray(JSONReader reader, String key) throws JSONException, PersistentObjectException, BucketException {
 
         reader.nextSymbol(); // eat the array symbol
@@ -527,8 +521,6 @@ public abstract class LXP {
 
             if (value != null) {
                 list.add(value);
-            } else if (reader.have(JSONReader.OBJECT)) {
-                list.add(makeObjectAndGetRef(reader));
             } else {
                 throw new PersistentObjectException("Unexpected type in JSON Array");
             }
@@ -541,19 +533,6 @@ public abstract class LXP {
 
         put(key, list);
 
-    }
-
-    private IStoreReference makeObjectAndGetRef(JSONReader reader) throws PersistentObjectException, BucketException {
-        LXP lxp = new StaticLXP(reader, bucket);
-        bucket.makePersistent(lxp);
-
-        IRepository repo = bucket.getRepository();
-        IStore store = repo.getStore();
-
-        IStoreReference ref = new StoreReference(store, repo.getName(), bucket.getName(), lxp.getId());
-        reader.nextSymbol();
-
-        return ref;
     }
 
     private void readJSON(JSONReader reader, boolean isObject) throws JSONException, PersistentObjectException {
