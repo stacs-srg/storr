@@ -103,10 +103,9 @@ public class Types {
             try {
                 Object value = record.get(label);
 
-
                 if (!ref_type.getFieldType(label).valueConsistentWithType(value)) {
                     // label does not match expected type
-                    ErrorHandling.error( "label " + label + " type " + ref_type.getFieldType(label) + " inconsistent with " + value + "in record " + record );
+                    ErrorHandling.error( "label " + label + " type " + ref_type.getFieldType(label) + " inconsistent with value " + value + " in record " + record );
                     return false;
                 }
             } catch (KeyNotFoundException e) {

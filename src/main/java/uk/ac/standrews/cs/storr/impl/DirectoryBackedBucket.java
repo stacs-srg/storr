@@ -549,7 +549,7 @@ public class DirectoryBackedBucket<T extends LXP> implements IBucket<T> {
 
         if (size == -1) {
             try {
-                size = (int) Files.list(directory.toPath()).count();
+                size = (int) Files.list(directory.toPath()).count() - 2; // do not count . and ..
             } catch (IOException e) {
                 throw new BucketException("Cannot determine size - I/O error");
             }

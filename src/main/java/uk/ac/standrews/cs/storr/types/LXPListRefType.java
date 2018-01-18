@@ -44,6 +44,9 @@ public class LXPListRefType implements IType {
 
         TypeFactory type_factory = store.getTypeFactory();
 
+        if( value == null ) {
+            return true; // permit all null values
+        }
         if (value instanceof List) {
             List list = (List) value;
             if (list.isEmpty()) {

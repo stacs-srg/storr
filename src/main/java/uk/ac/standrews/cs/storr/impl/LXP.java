@@ -252,7 +252,7 @@ public abstract class LXP {
     public IStoreReference getThisRef() throws PersistentObjectException {
 
         if (bucket == null) {
-            throw new PersistentObjectException("LXP stored in unknown bucket: " + this.toString() );
+            throw new PersistentObjectException("Null bucket encountered in LXP (uncommited LXP reference) : " + this.toString() );
         }
         return new StoreReference(bucket.getRepository(), bucket, this);
     }

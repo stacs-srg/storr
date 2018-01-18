@@ -60,7 +60,10 @@ public class LXPReferenceType implements IReferenceType {
 
     public boolean valueConsistentWithType(Object value) {
 
-        if (!(value instanceof IStoreReference)) {  // This used to say String before changes to LXP slots etc.Not sure why this ever worked!
+        if( value == null ) {
+            return true; // permit all null values
+        }
+        if (!(value instanceof IStoreReference)) {
             return false;
         }
 
