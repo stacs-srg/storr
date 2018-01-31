@@ -91,6 +91,4 @@ public class StringtoILXPMap<T extends LXP> implements IStringtoILXPMap<T> {
             put( entry.getKey(), new StoreReference<T>( repository.getStore(), entry.getValue() ) );
         }
     }
-
-
 }

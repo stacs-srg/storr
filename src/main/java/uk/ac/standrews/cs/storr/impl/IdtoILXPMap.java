@@ -71,7 +71,4 @@ public class IdtoILXPMap<T extends LXP> implements IIdtoLXPMap<T> {
             put( entry.getKey(), entry.getValue().getThisRef() );
         }
     }
-
-
-
 }

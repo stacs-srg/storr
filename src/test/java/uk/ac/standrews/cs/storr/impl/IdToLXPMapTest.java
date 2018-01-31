@@ -17,6 +17,7 @@
 package uk.ac.standrews.cs.storr.impl;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import uk.ac.standrews.cs.storr.impl.exceptions.BucketException;
 import uk.ac.standrews.cs.storr.impl.exceptions.PersistentObjectException;
@@ -53,6 +54,7 @@ public class IdToLXPMapTest extends CommonTest {
         bucket = testrepo.makeBucket( bucketName, BucketKind.DIRECTORYBACKED );
     }
 
+    @Ignore
     @Test
     public void checkXXX() throws RepositoryException, BucketException, PersistentObjectException, IOException {
 
