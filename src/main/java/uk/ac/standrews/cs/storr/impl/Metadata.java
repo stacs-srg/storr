@@ -54,6 +54,15 @@ public class Metadata {
         }
     }
 
+//    public Metadata( List<String> fields ) {        // manually do assignation of fields (special case for bootstrap).
+//        int next_slot = 0;
+//        for( String field_name : fields ) {
+//            Integer slot_value = next_slot++;                   // the next int numbered from zero
+//            field_name_to_slot.put( field_name,slot_value );
+//            slot_to_field_name.put( slot_value,field_name );
+//        }
+//    }
+
     private void initialiseMaps( Class c ) throws Exception {
         Field[] fields = c.getDeclaredFields();
         int next_slot = 0;

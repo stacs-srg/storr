@@ -91,4 +91,6 @@ public abstract class StaticLXP extends LXP implements Comparable<StaticLXP> {
         return (int) getId();
     }
 
+    public abstract Metadata getMetaData();
+
 }

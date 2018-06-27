@@ -42,7 +42,7 @@ public abstract class LXP {
     protected long id;
     protected IBucket bucket = null;
 
-    protected Metadata metadata = new Metadata();
+   protected Metadata metadata = new Metadata(); // field not used in Static LXP instances
 
     private final static int INITIAL_SIZE = 5;
     private static final int SIZE_INCREMENT = 5;
@@ -56,7 +56,6 @@ public abstract class LXP {
     public LXP() {
 
         this.id = getNextFreePID();
-        this.metadata = metadata;
         // don't know the repo or the bucket
     }
 
