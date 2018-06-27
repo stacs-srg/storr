@@ -20,19 +20,39 @@ import uk.ac.standrews.cs.storr.impl.exceptions.BucketException;
 import uk.ac.standrews.cs.storr.impl.exceptions.ReferenceException;
 import uk.ac.standrews.cs.storr.impl.exceptions.RepositoryException;
 import uk.ac.standrews.cs.storr.impl.exceptions.StoreException;
-import uk.ac.standrews.cs.storr.interfaces.*;
+import uk.ac.standrews.cs.storr.interfaces.IBucket;
+import uk.ac.standrews.cs.storr.interfaces.IRepository;
+import uk.ac.standrews.cs.storr.interfaces.IStore;
+import uk.ac.standrews.cs.storr.interfaces.IStoreReference;
+import uk.ac.standrews.cs.storr.types.LXPBaseType;
+import uk.ac.standrews.cs.storr.types.LXP_SCALAR;
 
 import java.lang.ref.WeakReference;
 
 /**
  * Created by al on 23/03/15.
  */
-public class StoreReference<T extends LXP> extends DynamicLXP implements IStoreReference<T> {
+public class StoreReference<T extends LXP> extends StaticLXP implements IStoreReference<T> {
 
-//    protected final static String $INDIRECTION$ = "$INDIRECTION$";
-    protected final static String REPOSITORY = "repository";
-    protected final static String BUCKET = "bucket";
-    protected final static String OID = "oid";
+    private static Metadata static_md;
+
+    static {
+        try {
+            static_md = new Metadata( StoreReference.class,"StoreReference" );
+
+        } catch (Exception e) {
+            throw new RuntimeException( e );
+        }
+    }
+
+    @LXP_SCALAR(type = LXPBaseType.STRING)
+    public static int REPOSITORY;
+
+    @LXP_SCALAR(type = LXPBaseType.STRING)
+    public static int BUCKET;
+
+    @LXP_SCALAR(type = LXPBaseType.LONG)
+    public static int OID;
 
     private static final String SEPARATOR = "/";
 
@@ -130,5 +150,10 @@ public class StoreReference<T extends LXP> extends DynamicLXP implements IStoreR
 
     public String toString() {
         return getRepositoryName() + SEPARATOR + getBucketName() + SEPARATOR + getOid();
+    }
+
+    @Override
+    public Metadata getMetaData() {
+        return static_md;
     }
 }
