@@ -55,16 +55,19 @@
             <artifactId>jersey-media-multipart</artifactId>
             <version>${jersey.version}</version>
         </dependency>
+
         <dependency>
             <groupId>org.glassfish.jersey.containers</groupId>
             <artifactId>jersey-container-jetty-http</artifactId>
             <version>${jersey.version}</version>
         </dependency>
+
         <dependency>
             <groupId>org.glassfish.jersey.bundles</groupId>
             <artifactId>jaxrs-ri</artifactId>
             <version>${jersey.version}</version>
         </dependency>
+
         <dependency>
             <groupId>org.glassfish.jersey.test-framework.providers</groupId>
             <artifactId>jersey-test-framework-provider-jetty</artifactId>
@@ -82,20 +85,13 @@
             <artifactId>slf4j-simple</artifactId>
             <version>${slf4j.version}</version>
         </dependency>
+
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <version>${slf4j.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.skyscreamer</groupId>
-            <artifactId>jsonassert</artifactId>
-            <version>${jsonassert.version}</version>
-            <scope>test</scope>
-        </dependency>
-
-        <!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
