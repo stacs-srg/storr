@@ -23,9 +23,7 @@ import uk.ac.standrews.cs.storr.interfaces.IBucket;
 import uk.ac.standrews.cs.utilities.JSONReader;
 
 import java.io.StringWriter;
-import java.util.HashMap;
-
-
+import java.util.Map;
 
 /**
  * This is a Labelled Cross Product (a tuple).
@@ -39,24 +37,25 @@ public abstract class StaticLXP extends LXP implements Comparable<StaticLXP> {
         super();
     }
 
-    public StaticLXP(long object_id, IBucket bucket ) {
+    public StaticLXP(final long object_id, final IBucket bucket ) {
         super( object_id, bucket);
     }
 
-    public StaticLXP(long persistent_object_id, JSONReader reader, IBucket bucket) throws PersistentObjectException {
+    public StaticLXP(final long persistent_object_id, final JSONReader reader, final IBucket bucket) throws PersistentObjectException {
         super( persistent_object_id, reader, bucket );
     }
 
-    public StaticLXP(JSONReader reader, IBucket bucket ) throws PersistentObjectException {
+    public StaticLXP(final JSONReader reader, final IBucket bucket ) throws PersistentObjectException {
         super( reader, bucket );
     }
 
     @Override
-    public void check(String key) throws IllegalKeyException {
+    public void check(final String key) throws IllegalKeyException {
+
         if (key == null || key.equals("")) {
             throw new IllegalKeyException("null key");
         }
-        HashMap<String, Integer> field_name_to_slot = getMetaData().getFieldNamesToSlotNumbers();
+        final Map<String, Integer> field_name_to_slot = getMetaData().getFieldNamesToSlotNumbers();
 
         if( ! field_name_to_slot.containsKey(key) ) {
             throw new IllegalKeyException( key );
@@ -66,22 +65,22 @@ public abstract class StaticLXP extends LXP implements Comparable<StaticLXP> {
     // Java housekeeping
 
     @Override
-    public int compareTo(StaticLXP o) {
+    public int compareTo(final StaticLXP o) {
         return Long.compare(this.getId(), o.getId());
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
 
         return (o instanceof StaticLXP) && (compareTo((StaticLXP) o)) == 0;
     }
 
     public String toString() {
 
-        StringWriter writer = new StringWriter();
+        final StringWriter writer = new StringWriter();
         try {
             serializeToJSON(new JSONWriter(writer));
-        } catch (Exception e) {
+        } catch (final Exception e) {
             throw new RuntimeException(e);
         }
         return writer.toString();
