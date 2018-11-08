@@ -38,10 +38,10 @@ public class StoreReference<T extends LXP> extends StaticLXP implements IStoreRe
 
     static {
         try {
-            static_md = new Metadata( StoreReference.class,"StoreReference" );
+            static_md = new Metadata(StoreReference.class, "StoreReference");
 
         } catch (Exception e) {
-            throw new RuntimeException( e );
+            throw new RuntimeException(e);
         }
     }
 
@@ -68,7 +68,6 @@ public class StoreReference<T extends LXP> extends StaticLXP implements IStoreRe
 
         try {
             String[] tokens = serialized.split(SEPARATOR);
-//            put($INDIRECTION$, "true");
             put(REPOSITORY, tokens[0]);
             put(BUCKET, tokens[1]);
             put(OID, Long.parseLong(tokens[2]));
@@ -135,14 +134,14 @@ public class StoreReference<T extends LXP> extends StaticLXP implements IStoreRe
         }
     }
 
-    public boolean equals( Object obj) {
+    public boolean equals(Object obj) {
         if (obj == null) {
             return false;
         }
-        if( obj instanceof StoreReference ) {
+        if (obj instanceof StoreReference) {
             StoreReference sr = (StoreReference) obj;
             return sr == this ||
-                    ( sr.getBucketName().equals( this.getBucketName() ) && sr.getRepositoryName().equals( this.getRepositoryName() ) && sr.getOid().equals( this.getOid() ) );
+                    (sr.getBucketName().equals(this.getBucketName()) && sr.getRepositoryName().equals(this.getRepositoryName()) && sr.getOid().equals(this.getOid()));
         } else {
             return false;
         }

@@ -28,7 +28,6 @@ import java.util.*;
 
 /**
  * Class to manage mappings between names and slot numbers in LXP.
- * Created by al on 24/11/17
  */
 public class Metadata {
 
@@ -39,10 +38,10 @@ public class Metadata {
     private Class metadata_class = null;
     private String type_name = null;
 
-    public Metadata() {
+    Metadata() {
     }
 
-    public Metadata(final Class metadata_class, final String type_name) {
+    Metadata(final Class metadata_class, final String type_name) {
 
         this.metadata_class = metadata_class;
         this.type_name = type_name;
@@ -75,12 +74,12 @@ public class Metadata {
                     final int slot_value = next_slot++;
                     final String field_name = field.getName();
 
+                    checkDuplicates(field_name, slot_value);
                     field.setInt(null, slot_value);
 
                     field_name_to_slot.put(field_name, slot_value);
                     slot_to_field_name.put(slot_value, field_name);
 
-                    checkDuplicates(field_name, slot_value);
 
                 } catch (final IllegalAccessException e) {
                     throw new RuntimeException("Illegal access for label: " + field.getName());
