@@ -16,7 +16,6 @@
  */
 package uk.ac.standrews.cs.storr.impl;
 
-import uk.ac.standrews.cs.storr.impl.exceptions.IllegalKeyException;
 import uk.ac.standrews.cs.storr.impl.exceptions.LXPException;
 import uk.ac.standrews.cs.storr.interfaces.IReferenceType;
 import uk.ac.standrews.cs.storr.types.LXP_LIST;
@@ -25,9 +24,7 @@ import uk.ac.standrews.cs.storr.types.LXP_SCALAR;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Class to manage mappings between names and slot numbers in LXP.
@@ -35,59 +32,88 @@ import java.util.Set;
  */
 public class Metadata {
 
-    private Map<String, Integer> field_name_to_slot = new HashMap<>();
-    private Map<Integer, String> slot_to_field_name = new HashMap<>();
+    private final Map<String, Integer> field_name_to_slot = new HashMap<>();
+    private final Map<Integer, String> slot_to_field_name = new HashMap<>();
 
     private IReferenceType type = null;
+    private Class metadata_class = null;
+    private String type_name = null;
 
     public Metadata() {
     }
 
-    public Metadata(final Class c, final String typename) throws Exception {
+    public Metadata(final Class metadata_class, final String type_name) {
 
-        initialiseMaps(c);
-        final TypeFactory tf = Store.getInstance().getTypeFactory();
-        type = tf.getTypeWithName(typename);  // if created already use that one
+        this.metadata_class = metadata_class;
+        this.type_name = type_name;
+
+        initialiseMaps(metadata_class);
+    }
+
+    private void initialiseType(final Class metadata_class) {
+
+        final TypeFactory type_factory = Store.getInstance().getTypeFactory();
+
+        type = type_factory.getTypeWithName(type_name);  // if created already use that one
         if (type == null) {
-            type = tf.createType(c, typename);  // otherwise create it
+            type = type_factory.createType(metadata_class, type_name);  // otherwise create it
         }
     }
 
-    private void initialiseMaps(final Class c) throws Exception {
+    private void initialiseMaps(final Class c) {
 
         final Field[] fields = c.getDeclaredFields();
         int next_slot = 0;
-        for (final Field f : fields) {
 
-            if (Modifier.isStatic(f.getModifiers())) {
+        for (final Field field : fields) {
 
-                if (f.isAnnotationPresent(LXP_SCALAR.class) || f.isAnnotationPresent(LXP_REF.class) ||
-                        f.isAnnotationPresent(LXP_LIST.class)) {
-                    try {
-                        f.setAccessible(true);
-                        final String field_name = f.getName();   // the name of the field
-                        final Integer slot_value = next_slot++;  // the next int numbered from zero      // f.getInt(null); // the value of the labelled Java field!
-                        f.setInt(null, slot_value);
-                        if (slot_to_field_name.containsKey(slot_value)) {
-                            throw new Exception("Duplicated slot value: " + slot_value);
-                        }
-                        if (slot_to_field_name.containsKey(field_name)) {
-                            throw new Exception("Duplicated field name: " + field_name);
-                        }
-                        field_name_to_slot.put(field_name, slot_value);
-                        slot_to_field_name.put(slot_value, field_name);
+            if (isStaticLXPField(field)) {
 
-                    } catch (final IllegalAccessException e) {
-                        throw new Exception("Illegal access for label: " + f.getName());
-                    } catch (final IllegalKeyException e) {
-                        throw new Exception("Illegal key in label: " + f.getName());
-                    }
+                try {
+                    field.setAccessible(true);
+
+                    final int slot_value = next_slot++;
+                    final String field_name = field.getName();
+
+                    field.setInt(null, slot_value);
+
+                    field_name_to_slot.put(field_name, slot_value);
+                    slot_to_field_name.put(slot_value, field_name);
+
+                    checkDuplicates(field_name, slot_value);
+
+                } catch (final IllegalAccessException e) {
+                    throw new RuntimeException("Illegal access for label: " + field.getName());
                 }
             }
         }
     }
 
-    // Map Getters
+    private void checkDuplicates(final String field_name, final int slot_value) {
+
+        if (slot_to_field_name.containsKey(slot_value)) {
+            throw new RuntimeException("Duplicated slot value: " + slot_value);
+        }
+
+        if (slot_to_field_name.containsValue(field_name)) {
+            throw new RuntimeException("Duplicated field name: " + field_name);
+        }
+    }
+
+    private static boolean isStaticLXPField(final Field field) {
+
+        return isStatic(field) && isAnnotatedAsLXP(field);
+    }
+
+    private static boolean isAnnotatedAsLXP(final Field field) {
+
+        return field.isAnnotationPresent(LXP_SCALAR.class) || field.isAnnotationPresent(LXP_REF.class) || field.isAnnotationPresent(LXP_LIST.class);
+    }
+
+    private static boolean isStatic(final Field field) {
+
+        return Modifier.isStatic(field.getModifiers());
+    }
 
     public Map<String, Integer> getFieldNamesToSlotNumbers() {
         return field_name_to_slot;
@@ -96,8 +122,6 @@ public class Metadata {
     public Map<Integer, String> getSlotNumbersToFieldNames() {
         return slot_to_field_name;
     }
-
-    // Map Lookup methods
 
     public Integer getSlot(final String field_name) {
         return field_name_to_slot.get(field_name);
@@ -112,6 +136,18 @@ public class Metadata {
         return slot_to_field_name.get(slot);
     }
 
+    public List<String> getFieldNamesInSlotOrder() {
+
+        final List<String> result = new ArrayList<>();
+
+        final int count = field_name_to_slot.keySet().size();
+        for (int i = 0; i < count; i++) {
+            result.add(slot_to_field_name.get(i));
+        }
+
+        return result;
+    }
+
     public Set<String> getFields() {
         return field_name_to_slot.keySet();
     }
@@ -122,17 +158,14 @@ public class Metadata {
 
     public int getFieldCount() {
 
-        final Set<String> fields = getFields();
-        if (fields == null) {
-            return 0;
-        } else {
-            return fields.size();
-        }
+        return field_name_to_slot.keySet().size();
     }
 
-    // Type handling
-
     public IReferenceType getType() {
+
+        if (type == null) {
+            initialiseType(metadata_class);
+        }
         return type;
     }
 
@@ -140,7 +173,7 @@ public class Metadata {
 
         if (type == null) {
             // TODO put a modified call of Types.checkStructuralConsistency() in here to ensure type compatibility.
-            // TODO need a similar call for dynamic creation of fields if tyoe ha been set.
+            // TODO need a similar call for dynamic creation of fields if type has been set.
             type = suppliedType;
         } else {
             throw new LXPException("Type already defined");
