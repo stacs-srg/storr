@@ -100,7 +100,6 @@ public class ListTypeTest extends CommonTest {
         list.add(lxp1);
         list.add(lxp2);
 
-        // ClassWithListOfRefs example = new ClassWithListOfRefs( 53,list );
         final ClassWithListOfRefs example = new ClassWithListOfRefs(53, list);
         ref_list_bucket.makePersistent(example);
         final long id = example.getId();

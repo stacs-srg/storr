@@ -41,7 +41,7 @@ public class Metadata {
     Metadata() {
     }
 
-    Metadata(final Class metadata_class, final String type_name) {
+    public Metadata(final Class metadata_class, final String type_name) {
 
         this.metadata_class = metadata_class;
         this.type_name = type_name;
