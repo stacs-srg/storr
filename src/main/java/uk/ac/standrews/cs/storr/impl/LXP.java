@@ -119,6 +119,10 @@ public abstract class LXP {
         }
     }
 
+    public int getFieldCount() {
+        return metadata.getFieldCount();
+    }
+
     /**
      * A getter method over labelled values in the LXP
      *
