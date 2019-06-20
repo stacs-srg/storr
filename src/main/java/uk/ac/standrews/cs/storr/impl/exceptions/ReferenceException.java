@@ -21,7 +21,11 @@ package uk.ac.standrews.cs.storr.impl.exceptions;
  */
 public class ReferenceException extends RuntimeException {
 
-    public ReferenceException(String key) {
-        super();
+    public ReferenceException(Throwable cause) {
+        super(cause);
+    }
+
+    public ReferenceException(String message, Throwable cause) {
+        super(message, cause);
     }
 }

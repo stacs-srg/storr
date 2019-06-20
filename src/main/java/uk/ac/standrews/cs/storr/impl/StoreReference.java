@@ -73,7 +73,7 @@ public class StoreReference<T extends LXP> extends StaticLXP implements IStoreRe
             put(OID, Long.parseLong(tokens[2]));
             // don't bother looking up cache reference on demand
         } catch (ArrayIndexOutOfBoundsException | NumberFormatException e) {
-            throw new ReferenceException(e.getMessage());
+            throw new ReferenceException(e);
         }
     }
 

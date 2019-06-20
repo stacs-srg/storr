@@ -20,7 +20,6 @@ import uk.ac.standrews.cs.storr.impl.exceptions.RepositoryException;
 import uk.ac.standrews.cs.storr.interfaces.IIndexedBucket;
 import uk.ac.standrews.cs.storr.interfaces.IRepository;
 import uk.ac.standrews.cs.utilities.FileManipulation;
-import uk.ac.standrews.cs.utilities.archive.ErrorHandling;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -41,26 +40,26 @@ public class DirectoryBackedMapBucket<T extends LXP> extends DirectoryBackedInde
      * Creates a handle on a bucket.
      * Assumes that bucket has been created already using a factory - i.e. the directory already exists.
      *
-     * @param repository  the repository in which the bucket is created.
-     * @param map_name the name of the bucket (also used as directory name).
+     * @param repository the repository in which the bucket is created.
+     * @param map_name   the name of the bucket (also used as directory name).
      * @throws RepositoryException if a RepositoryException is thrown in implementation
      */
     DirectoryBackedMapBucket(final IRepository repository, final String map_name, BucketKind kind, Class<T> bucketType, boolean create_map) throws RepositoryException {
 
-        super(repository, map_name, kind, create_map );
+        super(repository, map_name, kind, create_map);
         long type_label = -1;
-        if( create_map ) {
+        if (create_map) {
             try {
                 addIndex(Tuple.KEY);
                 Metadata metadata = bucketType.newInstance().getMetaData();
                 type_label = metadata.getType().getId();
-                setMapType( type_label );
+                setMapType(type_label);
             } catch (IOException e) {
-                throw new RepositoryException( e.getCause() );
-            } catch ( IllegalAccessException | InstantiationException e ) {
-                throw new RepositoryException( "Cannot invoke reflective method: getStaticMetaData 1" );
+                throw new RepositoryException(e.getCause());
+            } catch (IllegalAccessException | InstantiationException e) {
+                throw new RepositoryException("Cannot invoke reflective method: getStaticMetaData 1");
             }
-        }  else {
+        } else {
 
             try {
                 Metadata metadata = bucketType.newInstance().getMetaData(); // (Metadata) bucketType.getDeclaredMethod("getStaticMetaData").invoke(null);
@@ -69,14 +68,11 @@ public class DirectoryBackedMapBucket<T extends LXP> extends DirectoryBackedInde
                 if (getMapType() != type_label) {
                     throw new RepositoryException("Bucket label incompatible with supplied class: " + bucketType.getName() + " doesn't match field_storage type label:" + map_type_label_id);
                 }
-            }catch ( IllegalAccessException | InstantiationException e ) {
-                throw new RepositoryException( "Cannot invoke reflective method: getStaticMetaData 2" );
+            } catch (IllegalAccessException | InstantiationException e) {
+                throw new RepositoryException("Cannot invoke reflective method: getStaticMetaData 2");
             }
         }
     }
-
-
-
 
     private long getMapType() {
 
@@ -94,8 +90,7 @@ public class DirectoryBackedMapBucket<T extends LXP> extends DirectoryBackedInde
             return map_type_label_id;
 
         } catch (IOException e) {
-            ErrorHandling.error("I/O Exception getting field_storage type label");
-            return -1;
+            throw new RuntimeException(e);
         }
     }
 
@@ -122,6 +117,4 @@ public class DirectoryBackedMapBucket<T extends LXP> extends DirectoryBackedInde
             writer.newLine();
         }
     }
-
-
 }

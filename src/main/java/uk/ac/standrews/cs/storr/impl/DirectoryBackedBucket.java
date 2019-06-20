@@ -28,7 +28,6 @@ import uk.ac.standrews.cs.storr.interfaces.*;
 import uk.ac.standrews.cs.storr.types.Types;
 import uk.ac.standrews.cs.utilities.FileManipulation;
 import uk.ac.standrews.cs.utilities.JSONReader;
-import uk.ac.standrews.cs.utilities.archive.ErrorHandling;
 
 import java.io.*;
 import java.lang.reflect.Constructor;
@@ -38,7 +37,6 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 
 import static uk.ac.standrews.cs.storr.impl.Repository.bucketNameIsLegal;
@@ -88,8 +86,8 @@ public class DirectoryBackedBucket<T extends LXP> implements IBucket<T> {
             throw new RepositoryException("Bucket Directory: " + dir_name + " does not exist");
         }
 
-        if( ! checkKind(bucket_name, repository, kind) ) {
-            throw new RepositoryException("Bucket kind mismatch: " + bucket_name + "not of kind: " + kind.name() );
+        if (!checkKind(bucket_name, repository, kind)) {
+            throw new RepositoryException("Bucket kind mismatch: " + bucket_name + "not of kind: " + kind.name());
         }
 
         watchBucket(repository);
@@ -105,7 +103,7 @@ public class DirectoryBackedBucket<T extends LXP> implements IBucket<T> {
      * @param kind        the kind of Bucket to be created
      * @throws RepositoryException if the bucket cannot be created in the repository
      */
-    DirectoryBackedBucket(final IRepository repository, final String bucket_name, BucketKind kind, Class<T> bucketType, boolean create_bucket) throws RepositoryException  {
+    DirectoryBackedBucket(final IRepository repository, final String bucket_name, BucketKind kind, Class<T> bucketType, boolean create_bucket) throws RepositoryException {
 
         this.bucketType = bucketType;
         this.bucket_name = bucket_name;
@@ -123,8 +121,8 @@ public class DirectoryBackedBucket<T extends LXP> implements IBucket<T> {
             T instance = bucketType.newInstance(); // guarantees meta data creation.
             Metadata md = instance.getMetaData();
             class_type_label_id = md.getType().getId();
-        } catch (IllegalAccessException |  InstantiationException e) {
-            throw new RepositoryException( e );
+        } catch (IllegalAccessException | InstantiationException e) {
+            throw new RepositoryException(e);
         }
 
         if (create_bucket) {
@@ -137,63 +135,13 @@ public class DirectoryBackedBucket<T extends LXP> implements IBucket<T> {
                 throw new RepositoryException("Bucket Directory: " + dirPath() + " does not exist");
             }
             type_label_id = getTypeLabelID();
-            if ( type_label_id != class_type_label_id ) {
+            if (type_label_id != class_type_label_id) {
                 throw new RepositoryException("Bucket label incompatible with class: " + bucketType.getName() + " doesn't match bucket label:" + type_label_id);
             }
         }
 
         watchBucket(repository);
         object_cache = newCache(repository, this);
-    }
-
-    private LoadingCache<Long, LXP> newCache(IRepository repository, DirectoryBackedBucket<T> my_bucket) {
-        return CacheBuilder.newBuilder()
-                .maximumSize(1000)
-                .weakValues()
-                .build(
-                        new CacheLoader<Long, LXP>() {
-
-                            public LXP load(Long id) throws BucketException { // no checked exception
-                                return loader(id);
-                            }
-                        }
-                );
-    }
-
-    public LXP loader(Long id) throws BucketException { // no checked exception
-
-        LXP result;
-
-        try (BufferedReader reader = Files.newBufferedReader(filePath(id), FileManipulation.FILE_CHARSET)) {
-
-            if (bucketType == null) { //  No java constructor specified
-                try {
-                    result = (T) (new DynamicLXP(id, new JSONReader(reader), this));
-                } catch (PersistentObjectException e) {
-                    throw new BucketException("Could not create new LXP for object with id: " + id + " in directory: " + directory );
-                }
-            } else {
-                Constructor<?> constructor;
-                try {
-                    // result = (LXP) bucketType.getDeclaredMethod("create").invoke( id, new JSONReader(reader), this); // got rid of requirement for this method - specified constructor now defined in LXP.
-                    Class param_classes[] = new Class[] { long.class, JSONReader.class, IBucket.class };
-                    constructor = bucketType.getConstructor( param_classes );
-                }
-                catch ( NoSuchMethodException e ) {
-                    throw new BucketException("Error in reflective constructor call - class " + bucketType.getName() + " must implement constructors with the following signature: Constructor(long persistent_object_id, JSONReader reader, IBucket bucket)" );
-                }
-                try {
-                    result = (LXP) constructor.newInstance( id.longValue(), new JSONReader(reader), this);
-                } catch (IllegalAccessException | InstantiationException | InvocationTargetException e) {
-                    throw new BucketException("Error in reflective call of constructor in class " + bucketType.getName() + ": " + e.getMessage() );
-                }
-
-            }
-        } catch (IOException e) {
-            throw new BucketException( "Error creating JSONReader for id: " + id + " in bucket " + bucket_name );
-        }
-        return result;
-
     }
 
     private static void createBucket(final String name, IRepository repository, BucketKind kind) throws RepositoryException {
@@ -224,8 +172,6 @@ public class DirectoryBackedBucket<T extends LXP> implements IBucket<T> {
         saveTypeLabel(name, repository, type_label);
     }
 
-    //****************** Getters ******************//
-
     private static void saveTypeLabel(String name, IRepository repository, long type_label) throws RepositoryException {
 
         if (type_label == -1) {  // only write the label if it has been set.
@@ -255,64 +201,94 @@ public class DirectoryBackedBucket<T extends LXP> implements IBucket<T> {
         return bucketNameIsLegal(name) && Files.exists(getBucketPath(name, repo));
     }
 
+    //****************** Getters ******************//
+
     private static Path getBucketPath(final String name, IRepository repo) {
 
         return repo.getRepositoryPath().resolve(name);
     }
 
-    public T getObjectById(long id) throws BucketException {
+    private static void setKind(Path path, BucketKind kind) {
 
-        T result;
-
-        LXP o = null;
         try {
-            o = object_cache.get(id,
-                        new Callable<LXP>() {
-                            public LXP call() throws BucketException {
+            FileManipulation.createDirectoryIfDoesNotExist(path.resolve(META_BUCKET_NAME).resolve(kind.name()));  // create a directory labelled with the kind in the new bucket dir
+
+        } catch (IOException e) {
+            throw new RuntimeException("I/O Exception setting kind");
+        }
+    }
+
+    /**
+     * @param name       - the name of this bucket
+     * @param repository - the repo the bucket is in
+     * @param kind       - the expected kind of the bucket
+     * @return true if the bucket is of that kind
+     */
+    private static boolean checkKind(String name, IRepository repository, BucketKind kind) {
+        Path path = getBucketPath(name, repository);
+        return Files.exists(path.resolve(META_BUCKET_NAME).resolve(kind.name()));
+    }
+
+    private LoadingCache<Long, LXP> newCache(IRepository repository, DirectoryBackedBucket<T> my_bucket) {
+        return CacheBuilder.newBuilder()
+                .maximumSize(1000)
+                .weakValues()
+                .build(
+                        new CacheLoader<Long, LXP>() {
+
+                            public LXP load(Long id) throws BucketException { // no checked exception
                                 return loader(id);
                             }
-
-                        });
-        } catch (ExecutionException e) {
-            throw new BucketException( e );
-        }
-        return (T) o; // this is safe since this.contains(id) and also the cache contains the object.
-
-
-//        if (!this.contains(id)) {
-//            // ErrorHandling.error("Bucket does not contain object with id: " + id);
-//            throw new BucketException("Bucket does not contain id: " + id);
-//
-//        }
-//        try (BufferedReader reader = Files.newBufferedReader(filePath(id), FileManipulation.FILE_CHARSET)) {
-//
-//            if (tFactory == null) { //  No java constructor specified
-//                try {
-//                    result = (T) (new LXP(id, new JSONReader(reader), getRepository(), this));
-//                } catch (PersistentObjectException e) {
-//                    throw new BucketException("Could not create new LXP for object with id: " + id + " in directory: " + directory);
-//                }
-//            } else {
-//                try {
-//                    result = tFactory.create(id, new JSONReader(reader), this.repository, this);
-//                } catch (PersistentObjectException e) {
-//                    throw new BucketException("Could not create new LXP (using factory) for object with id: " + id + " in directory: " + directory);
-//                }
-//            }
-//
-//            // Now check for indirection
-//            if (result.containsKey(StoreReference.$INDIRECTION$)) {
-//                // we have an indirection
-//                // so try and load the record that the indirection record points to.
-//                StoreReference<T> ref = new StoreReference<T>(store, result.getString(StoreReference.REPOSITORY), result.getString(StoreReference.BUCKET), result.getLong(StoreReference.OID));
-//                result = ref.getReferend();
-//            }
-//        } catch (IOException e1) {
-//            throw new BucketException("Exception creating reader for LXP with id: " + id + " in directory: " + directory);
-//        }
-//        object_cache.put(id, this, result);           // Putting this call here ensures that all records that are in a bucket and loaded are in the cache
-//        return result;
+                        }
+                );
     }
+
+    public LXP loader(Long id) throws BucketException { // no checked exception
+
+        LXP result;
+
+        try (BufferedReader reader = Files.newBufferedReader(filePath(id), FileManipulation.FILE_CHARSET)) {
+
+            if (bucketType == null) { //  No java constructor specified
+                try {
+                    result = new DynamicLXP(id, new JSONReader(reader), this);
+                } catch (PersistentObjectException e) {
+                    throw new BucketException("Could not create new LXP for object with id: " + id + " in directory: " + directory);
+                }
+            } else {
+                Constructor<?> constructor;
+                try {
+                    // result = (LXP) bucketType.getDeclaredMethod("create").invoke( id, new JSONReader(reader), this); // got rid of requirement for this method - specified constructor now defined in LXP.
+                    Class[] param_classes = new Class[]{long.class, JSONReader.class, IBucket.class};
+                    constructor = bucketType.getConstructor(param_classes);
+                } catch (NoSuchMethodException e) {
+                    throw new BucketException("Error in reflective constructor call - class " + bucketType.getName() + " must implement constructors with the following signature: Constructor(long persistent_object_id, JSONReader reader, IBucket bucket)");
+                }
+                try {
+                    result = (LXP) constructor.newInstance(id, new JSONReader(reader), this);
+                } catch (IllegalAccessException | InstantiationException | InvocationTargetException e) {
+                    throw new BucketException("Error in reflective call of constructor in class " + bucketType.getName() + ": " + e.getMessage());
+                }
+
+            }
+        } catch (IOException e) {
+            throw new BucketException("Error creating JSONReader for id: " + id + " in bucket " + bucket_name);
+        }
+        return result;
+    }
+
+    public T getObjectById(long id) throws BucketException {
+
+        try {
+            return (T) object_cache.get(id, () -> loader(id));
+            // this is safe since this.contains(id) and also the cache contains the object.
+
+        } catch (ExecutionException e) {
+            throw new BucketException(e);
+        }
+    }
+
+    // Stream operations
 
     @Override
     public IRepository getRepository() {
@@ -323,30 +299,6 @@ public class DirectoryBackedBucket<T extends LXP> implements IBucket<T> {
         return BucketKind.DIRECTORYBACKED;
     }
 
-    // Stream operations
-
-    private static void setKind(Path path, BucketKind kind) {
-
-        try {
-            FileManipulation.createDirectoryIfDoesNotExist(path.resolve(META_BUCKET_NAME).resolve(kind.name()));  // create a directory labelled with the kind in the new bucket dir
-
-        } catch (IOException e) {
-            ErrorHandling.error("I/O Exception setting kind");
-        }
-    }
-
-    /**
-     *
-     * @param name - the name of this bucket
-     * @param repository - the repo the bucket is in
-     * @param kind - the expected kind of the bucket
-     * @return true if the bucket is of that kind
-     */
-    private static boolean checkKind(String name, IRepository repository, BucketKind kind) {
-        Path path = getBucketPath(name, repository);
-        return Files.exists( path.resolve(META_BUCKET_NAME).resolve(kind.name()));
-    }
-
     private void watchBucket(IRepository repository) throws RepositoryException {
         try {
             Watcher watcher = repository.getStore().getWatcher();
@@ -355,7 +307,6 @@ public class DirectoryBackedBucket<T extends LXP> implements IBucket<T> {
         } catch (IOException e) {
             throw new RepositoryException("Failure to add watcher for Bucket " + bucket_name);
         }
-
     }
 
     public String getName() {
@@ -420,8 +371,7 @@ public class DirectoryBackedBucket<T extends LXP> implements IBucket<T> {
             return type_label_id;
 
         } catch (IOException e) {
-            ErrorHandling.error("I/O Exception getting labelID");
-            return -1;
+            throw new RuntimeException(e);
         }
     }
 
@@ -448,11 +398,6 @@ public class DirectoryBackedBucket<T extends LXP> implements IBucket<T> {
             writer.newLine();
         }
     }
-
-//    public IObjectCache getObjectCache() {
-//        return object_cache;
-//    }
-
 
     public IObjectCache getObjectCache() {
         return null; // TODO FIX LATER - Al ****
@@ -577,22 +522,22 @@ public class DirectoryBackedBucket<T extends LXP> implements IBucket<T> {
 
         Path shadow_location = transactionsPath(oid);
         if (!shadow_location.toFile().exists()) {
-            ErrorHandling.error("******* Transaction error:Shadow file does not exist *******");
+            throw new RuntimeException("******* Transaction error:Shadow file does not exist *******");
         }
         Path primary_location = filePath(oid);
         if (!primary_location.toFile().exists()) {
-            ErrorHandling.error("******* Transaction error: Primary file does not exist *******");
+            throw new RuntimeException("******* Transaction error: Primary file does not exist *******");
         }
         if (!primary_location.toFile().delete()) {
-            ErrorHandling.error("******* Transaction error: Primary file cannot be deleted *******");
+            throw new RuntimeException("******* Transaction error: Primary file cannot be deleted *******");
         }
         try {
             Files.createLink(primary_location, shadow_location);
         } catch (IOException e) {
-            ErrorHandling.error("******* Transaction error: Primary file cannot be linked from shadow *******");
+            throw new RuntimeException("******* Transaction error: Primary file cannot be linked from shadow *******");
         }
         if (!shadow_location.toFile().delete()) {
-            ErrorHandling.error("******* Transaction error: Shadow file cannot be deleted *******");
+            throw new RuntimeException("******* Transaction error: Shadow file cannot be deleted *******");
         }
     }
 
@@ -601,10 +546,10 @@ public class DirectoryBackedBucket<T extends LXP> implements IBucket<T> {
 
         Path shadow_location = transactionsPath(oid);
         if (!shadow_location.toFile().exists()) {
-            ErrorHandling.error("******* Transaction error: Shadow file does not exist *******");
+            throw new RuntimeException("******* Transaction error: Shadow file does not exist *******");
         }
         if (!shadow_location.toFile().delete()) {
-            ErrorHandling.error("******* Transaction error: Shadow file cannot be deleted *******");
+            throw new RuntimeException("******* Transaction error: Shadow file cannot be deleted *******");
         }
     }
 
@@ -631,7 +576,7 @@ public class DirectoryBackedBucket<T extends LXP> implements IBucket<T> {
         while (iterator.hasNext()) {
             File f = iterator.next();
             if (!f.delete()) {
-                ErrorHandling.error("******* Transaction error: error tidying up transaction data on recovery");
+                throw new RuntimeException("******* Transaction error: error tidying up transaction data on recovery");
             }
         }
     }

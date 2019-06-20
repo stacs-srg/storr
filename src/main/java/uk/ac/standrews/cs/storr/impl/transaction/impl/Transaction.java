@@ -18,12 +18,10 @@ package uk.ac.standrews.cs.storr.impl.transaction.impl;
 
 import uk.ac.standrews.cs.storr.impl.DynamicLXP;
 import uk.ac.standrews.cs.storr.impl.exceptions.BucketException;
-import uk.ac.standrews.cs.storr.impl.exceptions.IllegalKeyException;
 import uk.ac.standrews.cs.storr.impl.exceptions.StoreException;
 import uk.ac.standrews.cs.storr.impl.transaction.exceptions.TransactionFailedException;
 import uk.ac.standrews.cs.storr.impl.transaction.interfaces.ITransaction;
 import uk.ac.standrews.cs.storr.interfaces.IBucket;
-import uk.ac.standrews.cs.utilities.archive.ErrorHandling;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,12 +32,11 @@ import java.util.List;
 public class Transaction implements ITransaction {
 
     static final String LOG_KEY = "LOG";
-    private static final String START_KEY = "START";
-
     static final String START_RECORD_MARKER = "%/n";
     static final String END_RECORD_MARKER = "/n$";
     static final String UPDATE_RECORD_SEPARATOR = "|";
     static final String LOG_RECORD_SEPARATOR = "/n";
+    private static final String START_KEY = "START";
     private final TransactionManager transaction_manager;
     private final IBucket log;
     private final long start_record_id;
@@ -135,7 +132,7 @@ public class Transaction implements ITransaction {
      * If there are any of these extant we go into tidy up following a JVM (re)start.
      * This is a trade off - one more write and delete during a transaction versus more length recovery.
      * This could be removed and the correctness of the transaction mechanism would not be compromised.
-    */
+     */
     private long writeStartRecord() throws StoreException, BucketException {
 
         return writeXXXRecord(START_KEY, transaction_id);
@@ -164,11 +161,7 @@ public class Transaction implements ITransaction {
 
         DynamicLXP commit_record = new DynamicLXP();
 
-        try {
-            commit_record.put(key, data);   // TODO Will be fixed when this method is added to LXP.
-        } catch (IllegalKeyException e) {
-            // This can not happen!
-        }
+        commit_record.put(key, data);   // TODO Will be fixed when this method is added to LXP.
 
         log.makePersistent(commit_record);  // Once this returns we can recover the transaction.
 
@@ -184,13 +177,13 @@ public class Transaction implements ITransaction {
 
     /*
      * Remove the commit record from the store
-    */
+     */
     private void removeCommitRecord(long commit_record_id) {
 
         try {
             log.delete(commit_record_id);
         } catch (BucketException e) {
-            ErrorHandling.error("Cannot delete transaction commit record: " + commit_record_id);
+            throw new RuntimeException("Cannot delete transaction commit record: " + commit_record_id, e);
         }
     }
 

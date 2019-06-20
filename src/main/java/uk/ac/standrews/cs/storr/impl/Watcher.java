@@ -17,7 +17,6 @@
 package uk.ac.standrews.cs.storr.impl;
 
 import uk.ac.standrews.cs.storr.interfaces.IBucket;
-import uk.ac.standrews.cs.utilities.archive.ErrorHandling;
 
 import java.io.IOException;
 import java.nio.file.*;
@@ -31,20 +30,16 @@ import static java.nio.file.StandardWatchEventKinds.*;
  * Modelled on https://docs.oracle.com/javase/tutorial/essential/io/examples/WatchDir.java
  */
 public class Watcher {
+
     private final WatchService watch_service;
     private final Map<WatchKey, IBucket> watched_buckets;
 
     /**
      * Creates a WatchService and registers the given directory
      */
-    Watcher() throws IOException { // Path dir) throws IOException {
-        this.watch_service = FileSystems.getDefault().newWatchService();
-        this.watched_buckets = new HashMap<>();
-    }
-
-    @SuppressWarnings("unchecked")
-    static <T> WatchEvent<T> cast(WatchEvent<?> event) {
-        return (WatchEvent<T>) event;
+    Watcher() throws IOException {
+        watch_service = FileSystems.getDefault().newWatchService();
+        watched_buckets = new HashMap<>();
     }
 
     /**
@@ -72,17 +67,13 @@ public class Watcher {
             IBucket b = watched_buckets.get(key);
 
             if (b == null) {
-                ErrorHandling.error("WatchKey not recognized");
-                continue;
+                throw new RuntimeException("WatchKey not recognized");
             }
 
             b.invalidateCache();
-//            for (WatchEvent<?> event: key.pollEvents()) { don't need to do this - just invalidate the cache in the bucket
-//            }
 
             // reset the key
             key.reset(); // returns a boolean which indicates if the key is valid but we are not bothered!
-
         }
     }
 

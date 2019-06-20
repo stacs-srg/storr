@@ -17,7 +17,6 @@
 package uk.ac.standrews.cs.storr.types;
 
 import uk.ac.standrews.cs.storr.interfaces.IType;
-import uk.ac.standrews.cs.utilities.archive.ErrorHandling;
 
 import java.util.List;
 
@@ -31,10 +30,7 @@ public enum LXPListBaseType implements IType {
     UNKNOWN {
         @Override
         public boolean valueConsistentWithType(Object value) {
-            ErrorHandling.error("Encountered ARRAY OF UNKNOWN type whilst checking field contents");
-            Throwable t = new Throwable("");
-            t.printStackTrace();
-            return false;
+            throw new RuntimeException("Encountered ARRAY OF UNKNOWN type whilst checking field contents");
         }
     },
     STRING {

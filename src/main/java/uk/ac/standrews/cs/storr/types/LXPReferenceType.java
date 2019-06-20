@@ -16,13 +16,12 @@
  */
 package uk.ac.standrews.cs.storr.types;
 
-import uk.ac.standrews.cs.storr.impl.LXP;
 import uk.ac.standrews.cs.storr.impl.DynamicLXP;
+import uk.ac.standrews.cs.storr.impl.LXP;
 import uk.ac.standrews.cs.storr.impl.exceptions.*;
 import uk.ac.standrews.cs.storr.interfaces.*;
 import uk.ac.standrews.cs.utilities.FileManipulation;
 import uk.ac.standrews.cs.utilities.JSONReader;
-import uk.ac.standrews.cs.utilities.archive.ErrorHandling;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -45,7 +44,7 @@ public class LXPReferenceType implements IReferenceType {
             typerep = new DynamicLXP(new JSONReader(reader), bucket);
 
         } catch (PersistentObjectException | IOException | IllegalKeyException e) {
-            throw new ReferenceException("Error creating LXPReference: " + e.getMessage());
+            throw new ReferenceException("Error creating LXPReference", e);
         }
     }
 
@@ -72,7 +71,8 @@ public class LXPReferenceType implements IReferenceType {
             IStoreReference reference = (IStoreReference) value;   // This line was changed too!
 
             // if we just require an lxp don't do more structural checking.
-            return equals(store.getTypeFactory().getTypeWithName("lxp")) || Types.checkStructuralConsistency(getRecord(reference), this);
+
+            return equals(store.getTypeFactory().getTypeWithName("lxp")) || Types.checkStructuralConsistency(reference.getReferend(), this);
 
         } catch (ReferenceException | BucketException e) {
             return false;
@@ -96,18 +96,5 @@ public class LXPReferenceType implements IReferenceType {
 
     public long getId() {
         return typerep.getId();
-    }
-
-    private LXP getRecord(IStoreReference reference) throws BucketException {
-        LXP record;
-
-        try {
-            record = reference.getReferend();
-        } catch (BucketException e) {
-            ErrorHandling.error("Did not find referenced record whilst checking type consistency");
-            throw new BucketException(e);
-        }
-
-        return record;
     }
 }
