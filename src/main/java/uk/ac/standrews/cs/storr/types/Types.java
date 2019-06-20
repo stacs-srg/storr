@@ -184,16 +184,14 @@ public class Types {
                     IReferenceType list_contents_type = type_factory.getTypeWithName(listcontents);
                     return new LXPListRefType(list_contents_type, store);
                 } else {
-                    ErrorHandling.error("Encountered unknown array contents: " + listcontents);
-                    return LXPBaseType.UNKNOWN;
+                    throw new RuntimeException("Encountered unknown array contents: " + listcontents);
                 }
             }
         }
         if (type_factory.containsKey(value)) {
             return type_factory.getTypeWithName(value);
         }
-        ErrorHandling.error("Encountered reference to type not defined: " + value);
-        return LXPBaseType.UNKNOWN;
+        throw new RuntimeException("Encountered reference to type not defined: " + value);
     }
 
     public static DynamicLXP getTypeRep(Class c) {
