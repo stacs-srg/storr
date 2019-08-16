@@ -34,6 +34,7 @@ public class Watcher {
     private final WatchService watch_service;
     private final Map<WatchKey, IBucket> watched_buckets;
     private boolean stopped = false;
+    private Thread t = null;
 
     /**
      * Creates a WatchService and registers the given directory
@@ -81,12 +82,16 @@ public class Watcher {
     public void startService() {
         stopped = false;
         // start the Watcher monitor
-        Thread t = new Thread(this::processEvents);
+        t = new Thread(this::processEvents);
         t.setDaemon(true);
         t.start();
     }
 
     public void stopService() {
+        if(t != null) {
+            t.interrupt();
+        }
+
         stopped = true;
     }
 }
