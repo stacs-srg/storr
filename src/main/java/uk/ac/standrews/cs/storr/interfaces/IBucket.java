@@ -16,8 +16,8 @@
  */
 package uk.ac.standrews.cs.storr.interfaces;
 
-import uk.ac.standrews.cs.storr.impl.LXP;
 import uk.ac.standrews.cs.storr.impl.BucketKind;
+import uk.ac.standrews.cs.storr.impl.LXP;
 import uk.ac.standrews.cs.storr.impl.exceptions.BucketException;
 
 import java.io.IOException;
@@ -77,6 +77,17 @@ public interface IBucket<T extends LXP> {
     Path filePath(long id);
 
     /**
+     * @param cache_size - set the size of the object cache being implemented by the bucket
+     * @throws Exception if the cache size if smaller than the currently set cache size (i.e. cannot loose cached information
+     */
+    void setCacheSize( int cache_size ) throws Exception;
+
+    /**
+     * @return the size of the object cache being implemented by the bucket
+     */
+    int getCacheSize();
+
+    /**
      * @return an input Stream containing all the OID records in this Bucket
      * @throws BucketException if an error occurs during the operation.
      */
@@ -107,6 +118,7 @@ public interface IBucket<T extends LXP> {
      */
     int size() throws BucketException;
 
+
     /**
      * A predicate to determine if a OID with the given id is located in the bucket.
      *
@@ -136,11 +148,6 @@ public interface IBucket<T extends LXP> {
     void setTypeLabelID(long id) throws IOException;
 
     /**
-     * @return the cache of loaded objects (in memory) in the system
-     */
-    IObjectCache getObjectCache();
-
-    /**
      * Used by transaction API only.
      *
      * @param oid - the oid to swizzle
@@ -161,7 +168,7 @@ public interface IBucket<T extends LXP> {
     void tidyUpTransactionData();
 
     /**
-     * Used to invalidate cached information when updates to underlying datastruuctures are updated
+     * Used to invalidate cached information when updates to underlying data structures are updated
      */
     void invalidateCache();
 }

@@ -56,6 +56,8 @@ public class DirectoryBackedBucket<T extends LXP> implements IBucket<T> {
     private Cache<Long, LXP> object_cache; // = new ObjectCache();
     private int size = -1; // number of items in Bucket.
     private List<Long> cached_oids = null;
+    private static final int DEFAULT_CACHE_SIZE = 10000; // almost certainly too small for serious apps.
+    private int cache_size = DEFAULT_CACHE_SIZE;
 
     /**
      * Creates a DirectoryBackedBucket with no factory - a persistent collection of ILXPs
@@ -92,7 +94,7 @@ public class DirectoryBackedBucket<T extends LXP> implements IBucket<T> {
 
         watchBucket(repository);
 
-        object_cache = newCache(repository, this);
+        object_cache = newCache(repository, DEFAULT_CACHE_SIZE, this);
     }
 
     /**
@@ -141,7 +143,70 @@ public class DirectoryBackedBucket<T extends LXP> implements IBucket<T> {
         }
 
         watchBucket(repository);
-        object_cache = newCache(repository, this);
+        object_cache = newCache(repository, DEFAULT_CACHE_SIZE, this);
+    }
+
+    public void setCacheSize( int cache_size ) throws Exception {
+        if( cache_size < object_cache.size() ) {
+            throw new Exception( "Object cache cannot be dynamically made smaller" );
+        }
+        LoadingCache<Long, LXP> new_cache = newCache(repository, cache_size, this);
+        new_cache.putAll( object_cache.asMap() );
+        this.cache_size = cache_size;
+        object_cache = new_cache;
+    }
+
+    public int getCacheSize() {
+        return cache_size;
+    }
+
+    private LoadingCache<Long, LXP> newCache(IRepository repository, int cacheSize, DirectoryBackedBucket<T> my_bucket) {
+        return CacheBuilder.newBuilder()
+                .maximumSize(cacheSize)
+                .weakValues()
+                .build(
+                        new CacheLoader<Long, LXP>() {
+
+                            public LXP load(Long id) throws BucketException { // no checked exception
+                                return loader(id);
+                            }
+                        }
+                );
+    }
+
+    public LXP loader(Long id) throws BucketException { // no checked exception
+
+        LXP result;
+
+        try (BufferedReader reader = Files.newBufferedReader(filePath(id), FileManipulation.FILE_CHARSET)) {
+
+            if (bucketType == null) { //  No java constructor specified
+                try {
+                    result = (T) (new DynamicLXP(id, new JSONReader(reader), this));
+                } catch (PersistentObjectException e) {
+                    throw new BucketException("Could not create new LXP for object with id: " + id + " in directory: " + directory );
+                }
+            } else {
+                Constructor<?> constructor;
+                try {
+                    // result = (LXP) bucketType.getDeclaredMethod("create").invoke( id, new JSONReader(reader), this); // got rid of requirement for this method - specified constructor now defined in LXP.
+                    Class param_classes[] = new Class[] { long.class, JSONReader.class, IBucket.class };
+                    constructor = bucketType.getConstructor( param_classes );
+                }
+                catch ( NoSuchMethodException e ) {
+                    throw new BucketException("Error in reflective constructor call - class " + bucketType.getName() + " must implement constructors with the following signature: Constructor(long persistent_object_id, JSONReader reader, IBucket bucket)" );
+                }
+                try {
+                    result = (LXP) constructor.newInstance( id, new JSONReader(reader), this);
+                } catch (IllegalAccessException | InstantiationException | InvocationTargetException e) {
+                    throw new BucketException("Error in reflective call of constructor in class " + bucketType.getName() + ": " + e.getMessage() );
+                }
+
+            }
+        } catch (IOException e) {
+            throw new BucketException( "Error creating JSONReader for id: " + id + " in bucket " + bucket_name );
+        }
+        return result;
     }
 
     private static void createBucket(final String name, IRepository repository, BucketKind kind) throws RepositoryException {
@@ -229,52 +294,14 @@ public class DirectoryBackedBucket<T extends LXP> implements IBucket<T> {
         return Files.exists(path.resolve(META_BUCKET_NAME).resolve(kind.name()));
     }
 
-    private LoadingCache<Long, LXP> newCache(IRepository repository, DirectoryBackedBucket<T> my_bucket) {
-        return CacheBuilder.newBuilder()
-                .maximumSize(1000)
-                .weakValues()
-                .build(
-                        new CacheLoader<Long, LXP>() {
+    private void watchBucket(IRepository repository) throws RepositoryException {
+        try {
+            Watcher watcher = repository.getStore().getWatcher();
+            watcher.register(directory.toPath(), this);
 
-                            public LXP load(Long id) throws BucketException { // no checked exception
-                                return loader(id);
-                            }
-                        }
-                );
-    }
-
-    public LXP loader(Long id) throws BucketException { // no checked exception
-
-        LXP result;
-
-        try (BufferedReader reader = Files.newBufferedReader(filePath(id), FileManipulation.FILE_CHARSET)) {
-
-            if (bucketType == null) { //  No java constructor specified
-                try {
-                    result = new DynamicLXP(id, new JSONReader(reader), this);
-                } catch (PersistentObjectException e) {
-                    throw new BucketException("Could not create new LXP for object with id: " + id + " in directory: " + directory);
-                }
-            } else {
-                Constructor<?> constructor;
-                try {
-                    // result = (LXP) bucketType.getDeclaredMethod("create").invoke( id, new JSONReader(reader), this); // got rid of requirement for this method - specified constructor now defined in LXP.
-                    Class[] param_classes = new Class[]{long.class, JSONReader.class, IBucket.class};
-                    constructor = bucketType.getConstructor(param_classes);
-                } catch (NoSuchMethodException e) {
-                    throw new BucketException("Error in reflective constructor call - class " + bucketType.getName() + " must implement constructors with the following signature: Constructor(long persistent_object_id, JSONReader reader, IBucket bucket)");
-                }
-                try {
-                    result = (LXP) constructor.newInstance(id, new JSONReader(reader), this);
-                } catch (IllegalAccessException | InstantiationException | InvocationTargetException e) {
-                    throw new BucketException("Error in reflective call of constructor in class " + bucketType.getName() + ": " + e.getMessage());
-                }
-
-            }
         } catch (IOException e) {
-            throw new BucketException("Error creating JSONReader for id: " + id + " in bucket " + bucket_name);
+            throw new RepositoryException("Failure to add watcher for Bucket " + bucket_name);
         }
-        return result;
     }
 
     public T getObjectById(long id) throws BucketException {
@@ -288,8 +315,6 @@ public class DirectoryBackedBucket<T extends LXP> implements IBucket<T> {
         }
     }
 
-    // Stream operations
-
     @Override
     public IRepository getRepository() {
         return this.repository;
@@ -297,16 +322,6 @@ public class DirectoryBackedBucket<T extends LXP> implements IBucket<T> {
 
     public BucketKind getKind() {
         return BucketKind.DIRECTORYBACKED;
-    }
-
-    private void watchBucket(IRepository repository) throws RepositoryException {
-        try {
-            Watcher watcher = repository.getStore().getWatcher();
-            watcher.register(directory.toPath(), this);
-
-        } catch (IOException e) {
-            throw new RepositoryException("Failure to add watcher for Bucket " + bucket_name);
-        }
     }
 
     public String getName() {
@@ -399,9 +414,6 @@ public class DirectoryBackedBucket<T extends LXP> implements IBucket<T> {
         }
     }
 
-    public IObjectCache getObjectCache() {
-        return null; // TODO FIX LATER - Al ****
-    }
 
     public void makePersistent(final T record) throws BucketException {
 
@@ -510,7 +522,7 @@ public class DirectoryBackedBucket<T extends LXP> implements IBucket<T> {
 
         size = -1;
         cached_oids = null;
-        object_cache = newCache(repository, this); //TODO I am worried about this - there maybe extant refs to these objects in the heap. *****
+        object_cache = newCache(repository, cache_size, this); // There may be extent references to these objects in the heap which should be invalidated.
     }
 
     /**
