@@ -29,8 +29,6 @@ import uk.ac.standrews.cs.utilities.archive.ErrorHandling;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -235,11 +233,11 @@ public class Types {
                         ErrorHandling.error("Conflicting labels: " + f.getName()); // Graham wrote this :) and al added list :):)_
                     }
                     LXP_REF ref_type = f.getAnnotation(LXP_REF.class);
-                    String ref_type_name = ref_type.type(); // this is the name of the type that the reference refers to TODO is this wrong - lost the REF?
+                    String ref_type_name = ref_type.type(); // this is the name of the type that the reference refers to
                     try {
                         f.setAccessible(true);
                         String label_name = (String) f.getName();
-                        type_rep.put(label_name, ref_type_name);
+                        type_rep.put( label_name, "STOREREF[" + ref_type_name + " ]" ); // TODO was wrong - had lost the REF? check later
                     } catch (IllegalKeyException e) {
                         ErrorHandling.exceptionError(e, "Illegal key in label: " + f.getName());
                     }
@@ -299,15 +297,16 @@ public class Types {
                         type_rep.put( label_name, "LONG" );
                     } else if( type.getName().equals( "int" ) ) {
                         type_rep.put( label_name, "INT" );
-                    } else if( IStoreReference.class.isAssignableFrom( type ) ) {
-                        ParameterizedType pt = (ParameterizedType) type.getGenericSuperclass();
-                        Type ref_type = pt.getActualTypeArguments()[0];
-                        type_rep.put(label_name, "STOREREF[" + ref_type + "]");
+                    } else if( IStoreReference.class.isAssignableFrom( type ) ) {  // Don't know how to make this tighter.
+//                        ParameterizedType pt = (ParameterizedType) type.getGenericSuperclass();
+//                        Type ref_type = pt.getActualTypeArguments()[0];
+                        type_rep.put(label_name, "STOREREF[" + type + "]");
                     } else if( List.class.isAssignableFrom( type ) ) {
-                        ParameterizedType pt = (ParameterizedType) type.getGenericSuperclass();
-                        Type paramType = pt.getActualTypeArguments()[0];
-                        String typeName = paramType.getTypeName();
-                        type_rep.put(label_name, "[" + typeName + "]");
+//                        ParameterizedType pt = (ParameterizedType) type.getGenericSuperclass();
+//                        Type paramType = pt.getActualTypeArguments()[0];
+//                        String typeName = paramType.getTypeName();
+//                        type_rep.put(label_name, "[" + typeName + "]");
+                        type_rep.put(label_name, "[" + type + "]");
                     } else {
                         throw new RuntimeException( "Unrecognised class in JPO Object: " + c.getName() );
                     }
