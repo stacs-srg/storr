@@ -78,7 +78,7 @@ public class IdToLXPMapTest extends CommonTest {
         Collection<Long> tempkeys = tempmap.keySet();
 
         for( Long key : tempkeys ) {
-            LXP value = pmap.lookup(key);
+            LXP value = (LXP) pmap.lookup(key);
             assertTrue( value.equals( tempmap.get(key)));
         }
 

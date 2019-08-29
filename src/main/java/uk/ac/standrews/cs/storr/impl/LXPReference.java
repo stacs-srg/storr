@@ -32,13 +32,13 @@ import java.lang.ref.WeakReference;
 /**
  * Created by al on 23/03/15.
  */
-public class StoreReference<T extends LXP> extends StaticLXP implements IStoreReference<T> {
+public class StoreReference<T extends PersistentObject> extends StaticLXP implements IStoreReference<T> {
 
-    private static Metadata static_md;
+    private static LXPMetadata static_md;
 
     static {
         try {
-            static_md = new Metadata(StoreReference.class, "StoreReference");
+            static_md = new LXPMetadata(StoreReference.class, "StoreReference");
 
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -152,7 +152,7 @@ public class StoreReference<T extends LXP> extends StaticLXP implements IStoreRe
     }
 
     @Override
-    public Metadata getMetaData() {
+    public LXPMetadata getMetaData() {
         return static_md;
     }
 }

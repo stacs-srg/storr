@@ -114,8 +114,8 @@ public class ListTypeTest extends CommonTest {
             assertEquals(53, (int) lxp3.get("AN_INT"));
             final List l = (List) lxp3.get("A_LIST");
 
-            assertEquals(ref1, (new StoreReference(Store.getInstance(), (String) l.get(0))));
-            assertEquals(ref2, (new StoreReference(Store.getInstance(), (String) l.get(1))));
+            assertEquals(ref1, (new LXPReference(Store.getInstance(), (String) l.get(0))));
+            assertEquals(ref2, (new LXPReference(Store.getInstance(), (String) l.get(1))));
         }
     }
 }

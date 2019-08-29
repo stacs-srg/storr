@@ -17,55 +17,82 @@
 package uk.ac.standrews.cs.storr;
 
 
-import uk.ac.standrews.cs.storr.impl.CommonTest;
+import org.junit.Before;
+import org.junit.Test;
+import uk.ac.standrews.cs.storr.impl.*;
+import uk.ac.standrews.cs.storr.impl.exceptions.BucketException;
+import uk.ac.standrews.cs.storr.impl.exceptions.IllegalKeyException;
+import uk.ac.standrews.cs.storr.impl.exceptions.RepositoryException;
+import uk.ac.standrews.cs.storr.interfaces.IBucket;
+import uk.ac.standrews.cs.storr.interfaces.IReferenceType;
+import uk.ac.standrews.cs.utilities.FileManipulation;
+
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import static org.junit.Assert.assertEquals;
 
 public class InfrastructureTest extends CommonTest {
 
-//    private static String generic_bucket_name1 = "BUCKET1";
-//    private static String generic_bucket_name2 = "BUCKET2";
-//    private static String generic_bucket_name3 = "BUCKET3";
-//
-//    private IReferenceType personlabel;
-//    private IReferenceType personlabel2;
-//    private IReferenceType personreftuple;
-//
-//    private AtomicInteger conflict_counter;
-//    private CountDownLatch latch;
-//
-//    @Before
-//    public void setUp() throws RepositoryException, IOException, StoreException, URISyntaxException {
-//
-//        super.setUp();
-//
-//        String person_record_type_template = FileManipulation.getResourcePath(InfrastructureTest.class, "PersonRecord.jsn").toString();
-//        String person_ref_type_template = FileManipulation.getResourcePath(InfrastructureTest.class, "PersonRefRecord.jsn").toString();
-//
-//        repository.makeBucket(generic_bucket_name1, BucketKind.DIRECTORYBACKED);
-//        repository.makeBucket(generic_bucket_name2, BucketKind.DIRECTORYBACKED);
-//        repository.makeBucket(generic_bucket_name3, BucketKind.DIRECTORYBACKED);
-//
-//        TypeFactory type_factory = store.getTypeFactory();
-//
-//        personlabel = type_factory.createType(person_record_type_template, "Person");
-//        personlabel2 = type_factory.createType(person_record_type_template, "Person");
-//        personreftuple = type_factory.createType(person_ref_type_template, "PersonRefTuple");
-//
-//        conflict_counter = new AtomicInteger(0);
-//        latch = new CountDownLatch(2);
-//    }
-//
-//    @Test
-//    public synchronized void testLXPCreation() throws RepositoryException, IllegalKeyException, BucketException {
-//        IBucket b = repository.getBucket(generic_bucket_name1);
-//        DynamicLXP lxp = new DynamicLXP();
-//        lxp.put("age", "42");
-//        lxp.put("address", "home");
-//        b.makePersistent(lxp);
-//
-//        long id = lxp.getId();
-//        LXP retrievedLXP = b.getObjectById(id);
-//        assertEquals(retrievedLXP, lxp);
-//    }
+    private static String generic_bucket_name1 = "BUCKET1";
+    private static String generic_bucket_name2 = "BUCKET2";
+    private static String generic_bucket_name3 = "BUCKET3";
+
+    private IReferenceType personlabel;
+    private IReferenceType personlabel2;
+    private IReferenceType personreftuple;
+
+    private AtomicInteger conflict_counter;
+    private CountDownLatch latch;
+
+    @Before
+    public void setUp() throws RepositoryException, IOException, URISyntaxException {
+
+        super.setUp();
+
+        String person_record_type_template = FileManipulation.getResourcePath(InfrastructureTest.class, "PersonRecord.jsn").toString();
+        String person_ref_type_template = FileManipulation.getResourcePath(InfrastructureTest.class, "PersonRefRecord.jsn").toString();
+
+        repository.makeBucket(generic_bucket_name1, BucketKind.DIRECTORYBACKED);
+        repository.makeBucket(generic_bucket_name2, BucketKind.DIRECTORYBACKED);
+        repository.makeBucket(generic_bucket_name3, BucketKind.DIRECTORYBACKED);
+
+        TypeFactory type_factory = store.getTypeFactory();
+
+        personlabel = type_factory.createType(person_record_type_template, "Person");
+        personlabel2 = type_factory.createType(person_record_type_template, "Person");
+        personreftuple = type_factory.createType(person_ref_type_template, "PersonRefTuple");
+
+        conflict_counter = new AtomicInteger(0);
+        latch = new CountDownLatch(2);
+    }
+
+    @Test
+    public synchronized void testLXPCreation() throws RepositoryException, IllegalKeyException, BucketException {
+        IBucket b = repository.getBucket(generic_bucket_name1);
+        DynamicLXP lxp = new DynamicLXP();
+        lxp.put("age", "42");
+        lxp.put("address", "home");
+        b.makePersistent(lxp);
+
+        long id = lxp.getId();
+        LXP retrievedLXP = (LXP) b.getObjectById(id);
+        assertEquals(retrievedLXP, lxp);
+    }
+
+    public synchronized void testJPOCreation() throws RepositoryException, IllegalKeyException, BucketException {
+        IBucket b = repository.getBucket(generic_bucket_name1);
+        Person p = new Person( 42,"home" );
+
+        b.makePersistent(p);
+
+        long id = p.getId();
+        Person ppp = (Person) b.getObjectById(id);
+        assertEquals(ppp, p);
+    }
+    
 //
 //    @Test
 //    public synchronized void testLXPListCreation() throws RepositoryException, IllegalKeyException, BucketException {
@@ -295,7 +322,7 @@ public class InfrastructureTest extends CommonTest {
 //        b1.makePersistent(lxp);
 //
 //        DynamicLXP lxp2 = new DynamicLXP();        // correct structure
-//        lxp2.put("person_ref", new StoreReference<>(repository, b1, lxp));
+//        lxp2.put("person_ref", new LXPReference<>(repository, b1, lxp));
 //        b2.makePersistent(lxp2);
 //    }
 //
@@ -341,7 +368,7 @@ public class InfrastructureTest extends CommonTest {
 //        long lxp2_id = lxp2.getId();
 //
 //        DynamicLXP lxp3 = new DynamicLXP();        // correct structure
-//        lxp3.put("person_ref", new StoreReference<>(repository, b3, lxp2)); // an illegal reference to this tuple - wrong reference type
+//        lxp3.put("person_ref", new LXPReference<>(repository, b3, lxp2)); // an illegal reference to this tuple - wrong reference type
 //
 //        b2.makePersistent(lxp3);
 //    }

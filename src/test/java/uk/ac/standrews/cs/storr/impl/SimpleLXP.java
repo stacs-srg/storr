@@ -28,11 +28,11 @@ import uk.ac.standrews.cs.utilities.JSONReader;
  */
 public class SimpleLXP extends StaticLXP {
 
-    private static Metadata static_md;
+    private static LXPMetadata static_md;
 
     static {
         try {
-            static_md = new Metadata( SimpleLXP.class,"SimpleLXP" );
+            static_md = new LXPMetadata( SimpleLXP.class,"SimpleLXP" );
 
         } catch (Exception e) {
             throw new RuntimeException( e );
@@ -52,7 +52,7 @@ public class SimpleLXP extends StaticLXP {
     }
 
     @Override
-    public Metadata getMetaData() {
+    public LXPMetadata getMetaData() {
         return static_md;
     }
 }
