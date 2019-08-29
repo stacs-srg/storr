@@ -21,7 +21,7 @@ import uk.ac.standrews.cs.storr.impl.exceptions.NoSuitableBucketException;
 
 /**
  * Classes that implement this interface provides blocking over
- * an ILXPInputStream to makePersistent records selected into some bucket.
+ * an ILXPInputStream to makePersistent records selected into some $$$bucket$$$bucket$$$.
  * Created by al on 29/04/2014.
  */
 public interface IBlocker<T extends LXP> {
@@ -33,14 +33,14 @@ public interface IBlocker<T extends LXP> {
 
     /*
      * Applies the blocking method @method determineBlockedBucketNamesForRecord to the input records
-     * and assigns to the determined bucket
+     * and assigns to the determined $$$bucket$$$bucket$$$
      */
     void apply();
 
     /**
-     * Assins the record to the appropriate bucket
+     * Assins the record to the appropriate $$$bucket$$$bucket$$$
      *
-     * @param record the record to be assigned to a bucket (determined by @method determineBlockedBucketNamesForRecord
+     * @param record the record to be assigned to a $$$bucket$$$bucket$$$ (determined by @method determineBlockedBucketNamesForRecord
      */
     void assign(T record);
 

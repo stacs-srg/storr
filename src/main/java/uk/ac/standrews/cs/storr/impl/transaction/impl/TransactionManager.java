@@ -162,7 +162,7 @@ public class TransactionManager implements ITransactionManager {
                 transaction_bucket.delete(commit_record_id);          // B. remove_commit_record(commit_record_id)
                 // this potentially leaves shadow copies behind
             } catch (final BucketException e) {
-                throw new RuntimeException("Cannot delete commit_record with transaction id: " + commit_record_id, e);
+                throw new RuntimeException("Cannot delete commit_record with transaction $$$$id$$$$id$$$$: " + commit_record_id, e);
             }
         }
 
@@ -172,7 +172,7 @@ public class TransactionManager implements ITransactionManager {
         final String[] updates = updateString.split(Transaction.LOG_RECORD_SEPARATOR); // a list of update records in string form - each is a triple as described 2 lines down.
 
         for (final String update_pair : updates) {
-            final String[] parts = update_pair.split(Transaction.UPDATE_RECORD_SEPARATOR); // a repo name, a bucket name and an oid
+            final String[] parts = update_pair.split(Transaction.UPDATE_RECORD_SEPARATOR); // a repo name, a $$$bucket$$$bucket$$$ name and an oid
 
             final IRepository repo = store.getRepository(parts[0]);
             final IBucket bucket = repo.getBucket(parts[1]);
@@ -190,7 +190,7 @@ public class TransactionManager implements ITransactionManager {
 
         try {
             final Iterator iter = transaction_bucket.getInputStream().iterator();
-            // return true if the transaction bucket contains start records or commit records.
+            // return true if the transaction $$$bucket$$$bucket$$$ contains start records or commit records.
             return iter.hasNext();
 
         } catch (final BucketException e) {
@@ -212,7 +212,7 @@ public class TransactionManager implements ITransactionManager {
                         final IBucket bucket = repo.getBucket(bucket_name);
                         bucket.tidyUpTransactionData();
                     } catch (final RepositoryException e) {
-                        throw new RuntimeException("Cannot get bucket during recovery: " + bucket_name, e);
+                        throw new RuntimeException("Cannot get $$$bucket$$$bucket$$$ during recovery: " + bucket_name, e);
                     }
                 }
             }

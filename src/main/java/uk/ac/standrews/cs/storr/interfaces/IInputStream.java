@@ -17,7 +17,7 @@
 package uk.ac.standrews.cs.storr.interfaces;
 
 
-import uk.ac.standrews.cs.storr.impl.LXP;
+import uk.ac.standrews.cs.storr.impl.PersistentObject;
 
 /**
  * Provides an input stream of labelled cross product records.
@@ -26,6 +26,6 @@ import uk.ac.standrews.cs.storr.impl.LXP;
  *
  * @author al
  */
-public interface IInputStream<T extends LXP> extends Iterable<T> {
+public interface IInputStream<T extends PersistentObject> extends Iterable<T> {
 
 }

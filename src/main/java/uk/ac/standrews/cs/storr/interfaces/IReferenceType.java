@@ -42,7 +42,7 @@ public interface IReferenceType extends IType {
     IType getFieldType(String label) throws KeyNotFoundException, TypeMismatchFoundException;
 
     /**
-     * @return the id of this typerep - this is the id of the underlying rep implementation.
+     * @return the $$$$id$$$$id$$$$ of this typerep - this is the $$$$id$$$$id$$$$ of the underlying rep implementation.
      */
     long getId();
 

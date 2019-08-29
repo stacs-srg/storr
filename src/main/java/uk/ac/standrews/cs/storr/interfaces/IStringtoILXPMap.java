@@ -17,7 +17,7 @@
 package uk.ac.standrews.cs.storr.interfaces;
 
 import uk.ac.standrews.cs.storr.impl.LXP;
-import uk.ac.standrews.cs.storr.impl.StoreReference;
+import uk.ac.standrews.cs.storr.impl.LXPReference;
 import uk.ac.standrews.cs.storr.impl.exceptions.BucketException;
 import uk.ac.standrews.cs.storr.impl.exceptions.PersistentObjectException;
 import uk.ac.standrews.cs.storr.impl.exceptions.RepositoryException;
@@ -33,7 +33,7 @@ public interface IStringtoILXPMap<T extends LXP> {
 
     void put(String key, IStoreReference<T> value) throws PersistentObjectException, BucketException;
 
-    void injestRefMap(Map<String, StoreReference<T>> map) throws PersistentObjectException, BucketException;
+    void injestRefMap(Map<String, LXPReference<T>> map) throws PersistentObjectException, BucketException;
 
     void injestMap(Map<String, T> map) throws PersistentObjectException, BucketException;
 }

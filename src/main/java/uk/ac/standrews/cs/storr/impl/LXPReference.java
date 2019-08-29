@@ -32,13 +32,13 @@ import java.lang.ref.WeakReference;
 /**
  * Created by al on 23/03/15.
  */
-public class StoreReference<T extends PersistentObject> extends StaticLXP implements IStoreReference<T> {
+public class LXPReference<T extends LXP> extends StaticLXP implements IStoreReference<T> {
 
     private static LXPMetadata static_md;
 
     static {
         try {
-            static_md = new LXPMetadata(StoreReference.class, "StoreReference");
+            static_md = new LXPMetadata(LXPReference.class, "LXPReference");
 
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -62,7 +62,7 @@ public class StoreReference<T extends PersistentObject> extends StaticLXP implem
     /**
      * @param serialized - a String of form repo_name SEPARATOR bucket_name SEPARATOR oid
      */
-    public StoreReference(IStore store, String serialized) throws ReferenceException {
+    public LXPReference(IStore store, String serialized) throws ReferenceException {
 
         this.store = store;
 
@@ -77,7 +77,7 @@ public class StoreReference<T extends PersistentObject> extends StaticLXP implem
         }
     }
 
-    public StoreReference(IStore store, String repo_name, String bucket_name, long oid) {
+    public LXPReference(IStore store, String repo_name, String bucket_name, long oid) {
 
         super();
         this.store = store;
@@ -87,16 +87,16 @@ public class StoreReference<T extends PersistentObject> extends StaticLXP implem
         // don't bother looking up cache reference on demand or by caller
     }
 
-    public StoreReference(IRepository repo, IBucket bucket, T reference) {
+    public LXPReference(IRepository repo, IBucket bucket, T reference) {
         this(repo.getStore(), repo.getName(), bucket.getName(), reference);
     }
 
-    private StoreReference(IStore store, String repo_name, String bucket_name, T reference) {
+    private LXPReference(IStore store, String repo_name, String bucket_name, T reference) {
         this(store, repo_name, bucket_name, reference.getId());
         ref = new WeakReference<T>(reference);   // TODO was weakRef - make softRef??
     }
 
-    public StoreReference(IStore store, LXP record) {
+    public LXPReference(IStore store, LXP record) {
 
         this(store, (String) record.get(REPOSITORY), (String) record.get(BUCKET), (long) record.get(OID));
         // don't bother looking up cache reference on demand
@@ -138,8 +138,8 @@ public class StoreReference<T extends PersistentObject> extends StaticLXP implem
         if (obj == null) {
             return false;
         }
-        if (obj instanceof StoreReference) {
-            StoreReference sr = (StoreReference) obj;
+        if (obj instanceof LXPReference) {
+            LXPReference sr = (LXPReference) obj;
             return sr == this ||
                     (sr.getBucketName().equals(this.getBucketName()) && sr.getRepositoryName().equals(this.getRepositoryName()) && sr.getOid().equals(this.getOid()));
         } else {

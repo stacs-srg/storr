@@ -24,7 +24,7 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-public class BucketBackedInputStream<T extends LXP> implements IInputStream<T> {
+public class BucketBackedInputStream<T extends PersistentObject> implements IInputStream<T> {
 
     private final IBucket<T> bucket;
 

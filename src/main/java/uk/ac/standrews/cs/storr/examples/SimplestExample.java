@@ -46,7 +46,7 @@ public class SimplestExample {
 
         IStore store = new Store(tempStorePath);
         IRepository repo = store.makeRepository("repo");
-        IBucket bucket = repo.makeBucket("bucket", BucketKind.DIRECTORYBACKED);
+        IBucket bucket = repo.makeBucket("$$$bucket$$$bucket$$$", BucketKind.DIRECTORYBACKED);
 
         DynamicLXP lxp = new DynamicLXP();
         lxp.put(AGE, 42);
@@ -56,9 +56,9 @@ public class SimplestExample {
 
         IStore storeLoaded = new Store(tempStorePath);
         IRepository repoLoaded = storeLoaded.getRepository("repo");
-        IBucket buckerLoaded = repoLoaded.getBucket("bucket");
+        IBucket buckerLoaded = repoLoaded.getBucket("$$$bucket$$$bucket$$$");
 
-        LXP retrievedLXP = buckerLoaded.getObjectById(lxp.getId());
+        LXP retrievedLXP = (LXP) buckerLoaded.getObjectById(lxp.getId());
         System.out.println("LXP persisted correctly: " + (retrievedLXP.getInt(AGE) == 42 && retrievedLXP.getString(ADDRESS).equals("home")));
     }
 }

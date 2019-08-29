@@ -37,11 +37,11 @@ public class DirectoryBackedMapBucket<T extends LXP> extends DirectoryBackedInde
 
 
     /**
-     * Creates a handle on a bucket.
-     * Assumes that bucket has been created already using a factory - i.e. the directory already exists.
+     * Creates a handle on a $$$bucket$$$bucket$$$.
+     * Assumes that $$$bucket$$$bucket$$$ has been created already using a factory - i.e. the directory already exists.
      *
-     * @param repository the repository in which the bucket is created.
-     * @param map_name   the name of the bucket (also used as directory name).
+     * @param repository the repository in which the $$$bucket$$$bucket$$$ is created.
+     * @param map_name   the name of the $$$bucket$$$bucket$$$ (also used as directory name).
      * @throws RepositoryException if a RepositoryException is thrown in implementation
      */
     DirectoryBackedMapBucket(final IRepository repository, final String map_name, BucketKind kind, Class<T> bucketType, boolean create_map) throws RepositoryException {
@@ -51,7 +51,7 @@ public class DirectoryBackedMapBucket<T extends LXP> extends DirectoryBackedInde
         if (create_map) {
             try {
                 addIndex(Tuple.KEY);
-                Metadata metadata = bucketType.newInstance().getMetaData();
+                LXPMetadata metadata = bucketType.newInstance().getMetaData();
                 type_label = metadata.getType().getId();
                 setMapType(type_label);
             } catch (IOException e) {
@@ -62,8 +62,8 @@ public class DirectoryBackedMapBucket<T extends LXP> extends DirectoryBackedInde
         } else {
 
             try {
-                Metadata metadata = bucketType.newInstance().getMetaData(); // (Metadata) bucketType.getDeclaredMethod("getStaticMetaData").invoke(null);
-                type_label = metadata.getType().getId();
+                LXPMetadata LXPMetadata = bucketType.newInstance().getMetaData(); // (metadata) bucketType.getDeclaredMethod("getStaticMetaData").invoke(null);
+                type_label = LXPMetadata.getType().getId();
 
                 if (getMapType() != type_label) {
                     throw new RepositoryException("Bucket label incompatible with supplied class: " + bucketType.getName() + " doesn't match field_storage type label:" + map_type_label_id);
@@ -113,7 +113,7 @@ public class DirectoryBackedMapBucket<T extends LXP> extends DirectoryBackedInde
 
         try (BufferedWriter writer = Files.newBufferedWriter(typepath, FileManipulation.FILE_CHARSET)) {
 
-            writer.write(Long.toString(type_label_id)); // Write the id of the typelabel OID into this field.
+            writer.write(Long.toString(type_label_id)); // Write the $$$$id$$$$id$$$$ of the typelabel OID into this field.
             writer.newLine();
         }
     }

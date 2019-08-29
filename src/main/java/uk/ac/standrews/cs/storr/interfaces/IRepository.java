@@ -16,8 +16,9 @@
  */
 package uk.ac.standrews.cs.storr.interfaces;
 
-import uk.ac.standrews.cs.storr.impl.LXP;
 import uk.ac.standrews.cs.storr.impl.BucketKind;
+import uk.ac.standrews.cs.storr.impl.LXP;
+import uk.ac.standrews.cs.storr.impl.PersistentObject;
 import uk.ac.standrews.cs.storr.impl.exceptions.RepositoryException;
 
 import java.nio.file.Path;
@@ -31,60 +32,60 @@ import java.util.Iterator;
 public interface IRepository {
 
     /**
-     * This method creates a new bucket
+     * This method creates a new $$$bucket$$$bucket$$$
      *
-     * @param name - the name of the bucket to be created.
-     * @param kind - the implementation kind of the bucket - see @class BucketKind
+     * @param name - the name of the $$$bucket$$$bucket$$$ to be created.
+     * @param kind - the implementation kind of the $$$bucket$$$bucket$$$ - see @class BucketKind
      * @return the newly created repository
-     * @throws RepositoryException if a bucket with the name previously exists or if something goes wrong.
+     * @throws RepositoryException if a $$$bucket$$$bucket$$$ with the name previously exists or if something goes wrong.
      */
     IBucket makeBucket(String name, BucketKind kind) throws RepositoryException;
 
     /**
-     * This method creates a new bucket that is constrained to contain OID records compatible with T.
+     * This method creates a new $$$bucket$$$bucket$$$ that is constrained to contain OID records compatible with T.
      *
-     * @param name     - the name of the bucket to be created.
-     * @param kind     - the implementation kind of the bucket - see @class BucketKind
-     * @param bucketType - the type being used to create instances in this bucket
-     * @param <T>      the (Java) type which all LXP derived objects in this bucket are expected to be of
+     * @param name     - the name of the $$$bucket$$$bucket$$$ to be created.
+     * @param kind     - the implementation kind of the $$$bucket$$$bucket$$$ - see @class BucketKind
+     * @param bucketType - the type being used to create instances in this $$$bucket$$$bucket$$$
+     * @param <T>      the (Java) type which all LXP derived objects in this $$$bucket$$$bucket$$$ are expected to be of
      * @return the newly created repository
-     * @throws RepositoryException if a bucket with the name previously exists or if something goes wrong.
+     * @throws RepositoryException if a $$$bucket$$$bucket$$$ with the name previously exists or if something goes wrong.
      */
-    <T extends LXP> IBucket<T> makeBucket(final String name, BucketKind kind, Class<T> bucketType) throws RepositoryException;
+    <T extends PersistentObject> IBucket<T> makeBucket(final String name, BucketKind kind, Class<T> bucketType) throws RepositoryException;
 
     <T extends LXP> IIdtoLXPMap<T> makeIdtoLXPMap(final String name, Class<T> bucketType ) throws RepositoryException;
 
     <T extends LXP> IStringtoILXPMap<T> makeStringtoLXPMap(final String name, Class<T> bucketType ) throws RepositoryException;
 
     /**
-     * @param name - the bucket that is the subject of the enquiry.
-     * @return true if a bucket with the given name exists in the repo.
+     * @param name - the $$$bucket$$$bucket$$$ that is the subject of the enquiry.
+     * @return true if a $$$bucket$$$bucket$$$ with the given name exists in the repo.
      */
     boolean bucketExists(String name);
 
     /**
-     * This method deletes the specified bucket
+     * This method deletes the specified $$$bucket$$$bucket$$$
      *
-     * @param name - the name of the bucket to be deleted.
-     * @throws RepositoryException - if the bucket does not exist or something goes wrong
+     * @param name - the name of the $$$bucket$$$bucket$$$ to be deleted.
+     * @throws RepositoryException - if the $$$bucket$$$bucket$$$ does not exist or something goes wrong
      */
     void deleteBucket(String name) throws RepositoryException;
 
     /**
-     * @param name - the name of the bucket being looked up
-     * @return the bucket with the given name, if it exists.
-     * @throws RepositoryException if the bucket does not exist or if something goes wrong.
+     * @param name - the name of the $$$bucket$$$bucket$$$ being looked up
+     * @return the $$$bucket$$$bucket$$$ with the given name, if it exists.
+     * @throws RepositoryException if the $$$bucket$$$bucket$$$ does not exist or if something goes wrong.
      */
     IBucket getBucket(final String name) throws RepositoryException;
 
     /**
-     * @param name     - the name of the bucket being looked up
+     * @param name     - the name of the $$$bucket$$$bucket$$$ being looked up
      * @param bucketType - a class capable of creating instances of type @class T
-     * @param <T>      the (Java) type which all LXP derived objects in this bucket are expected to be of
-     * @return the bucket with the given name, if it exists and is type compatible
-     * @throws RepositoryException if the bucket does not exist or if something goes wrong.
+     * @param <T>      the (Java) type which all LXP derived objects in this $$$bucket$$$bucket$$$ are expected to be of
+     * @return the $$$bucket$$$bucket$$$ with the given name, if it exists and is type compatible
+     * @throws RepositoryException if the $$$bucket$$$bucket$$$ does not exist or if something goes wrong.
      */
-    <T extends LXP> IBucket<T> getBucket(final String name, Class<T> bucketType) throws RepositoryException;
+    <T extends PersistentObject> IBucket<T> getBucket(final String name, Class<T> bucketType) throws RepositoryException;
 
     /**
      * @param name the name of the field_storage being looked up
@@ -100,7 +101,7 @@ public interface IRepository {
      * @param <T> the type of the domain of the field_storage
      * @param bucketType - a class capable of creating instances of type @class T
      * @return the field_storage with the given name, iof it exists and is type compatible.
-     * @throws RepositoryException if the bucket does not exist or if something goes wrong.
+     * @throws RepositoryException if the $$$bucket$$$bucket$$$ does not exist or if something goes wrong.
      */
     <T extends LXP> IStringtoILXPMap<T> getStringtoLXPMap(final String name, Class<T> bucketType ) throws RepositoryException;
 
@@ -113,14 +114,14 @@ public interface IRepository {
 
     /**
      * Returns an iterator over those buckets that are constrained by T.
-     * @param bucketType - specifies the type constraining the bucket.
-     * @param <T>      - the type of the required bucket content types.
+     * @param bucketType - specifies the type constraining the $$$bucket$$$bucket$$$.
+     * @param <T>      - the type of the required $$$bucket$$$bucket$$$ content types.
      * @return an iterator over the appropriate buckets.
      */
-    <T extends LXP> Iterator<IBucket<T>> getIterator(Class<T> bucketType);
+    <T extends PersistentObject> Iterator<IBucket<T>> getIterator(Class<T> bucketType);
 
     /**
-     * @return the path to the repo - this is only used with in the bucket implementation.
+     * @return the path to the repo - this is only used with in the $$$bucket$$$bucket$$$ implementation.
      */
     Path getRepositoryPath(); // return the repo path of this repository (not intended for public use).
 

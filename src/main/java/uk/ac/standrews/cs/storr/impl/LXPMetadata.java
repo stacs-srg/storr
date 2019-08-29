@@ -29,34 +29,21 @@ import java.util.*;
 /**
  * Class to manage mappings between names and slot numbers in LXP.
  */
-public class Metadata {
+public class LXPMetadata extends PersistentMetaData {
 
     private final Map<String, Integer> field_name_to_slot = new HashMap<>();
     private final Map<Integer, String> slot_to_field_name = new HashMap<>();
 
     private IReferenceType type = null;
-    private Class metadata_class = null;
-    private String type_name = null;
 
-    Metadata() {
+    LXPMetadata() {
+        super();
     }
 
-    public Metadata(final Class metadata_class, final String type_name) {
+    public LXPMetadata(final Class metadata_class, final String type_name) {
 
-        this.metadata_class = metadata_class;
-        this.type_name = type_name;
-
+        super(metadata_class,type_name);
         initialiseMaps(metadata_class);
-    }
-
-    private void initialiseType(final Class metadata_class) {
-
-        final TypeFactory type_factory = Store.getInstance().getTypeFactory();
-
-        type = type_factory.getTypeWithName(type_name);  // if created already use that one
-        if (type == null) {
-            type = type_factory.createType(metadata_class, type_name);  // otherwise create it
-        }
     }
 
     private void initialiseMaps(final Class c) {
@@ -158,14 +145,6 @@ public class Metadata {
     public int getFieldCount() {
 
         return field_name_to_slot.keySet().size();
-    }
-
-    public IReferenceType getType() {
-
-        if (type == null) {
-            initialiseType(metadata_class);
-        }
-        return type;
     }
 
     public void setType(final IReferenceType suppliedType) throws LXPException {

@@ -17,7 +17,7 @@
 package uk.ac.standrews.cs.storr.interfaces;
 
 import uk.ac.standrews.cs.storr.impl.BucketKind;
-import uk.ac.standrews.cs.storr.impl.LXP;
+import uk.ac.standrews.cs.storr.impl.PersistentObject;
 import uk.ac.standrews.cs.storr.impl.exceptions.BucketException;
 
 import java.io.IOException;
@@ -26,26 +26,26 @@ import java.util.List;
 
 /**
  * The interface for a Bucket (a repository of OID records).
- * Each record in the repository is identified by id.
+ * Each record in the repository is identified by $$$$id$$$$id$$$$.
  * <p>
  * Operations in this class mirror those in JDO:
- * T getObjectById(long id) throws BucketException;
+ * T getObjectById(long $$$$id$$$$id$$$$) throws BucketException;
  * void makePersistent(T record) throws BucketException;
  */
-public interface IBucket<T extends LXP> {
+public interface IBucket<T extends PersistentObject> {
 
     /**
-     * Gets the OID record with the specified id
+     * Gets the OID record with the specified $$$$id$$$$id$$$$
      *
      * @param id - the identifier of the OID record for which a reader is required.
-     * @return an OID record with the specified id, or null if the record cannot be found
+     * @return an OID record with the specified $$$$id$$$$id$$$$, or null if the record cannot be found
      * @throws BucketException if the record cannot be found or if something goes wrong.
      */
     T getObjectById(long id) throws BucketException;
 
     /**
-     * Synchronously writes the state of a record to a bucket.
-     * The id of the record is used to determine its name in the bucket.
+     * Synchronously writes the state of a record to a $$$bucket$$$bucket$$$.
+     * The $$$$id$$$$id$$$$ of the record is used to determine its name in the $$$bucket$$$bucket$$$.
      * When this operation returns data is stored resiliently.
      *
      * @param record whose state is to be written.
@@ -71,19 +71,19 @@ public interface IBucket<T extends LXP> {
     void delete(long oid) throws BucketException;
 
     /**
-     * @param id - the id for which the file path is required, should be an id of an LXP stored in the bucket
-     * @return the filepath corresponding to record with identifier id in this bucket (this is more public than it should be).
+     * @param id - the $$$$id$$$$id$$$$ for which the file path is required, should be an $$$$id$$$$id$$$$ of an LXP stored in the $$$bucket$$$bucket$$$
+     * @return the filepath corresponding to record with identifier $$$$id$$$$id$$$$ in this $$$bucket$$$bucket$$$ (this is more public than it should be).
      */
     Path filePath(long id);
 
     /**
-     * @param cache_size - set the size of the object cache being implemented by the bucket
+     * @param cache_size - set the size of the object cache being implemented by the $$$bucket$$$bucket$$$
      * @throws Exception if the cache size if smaller than the currently set cache size (i.e. cannot loose cached information
      */
     void setCacheSize( int cache_size ) throws Exception;
 
     /**
-     * @return the size of the object cache being implemented by the bucket
+     * @return the size of the object cache being implemented by the $$$bucket$$$bucket$$$
      */
     int getCacheSize();
 
@@ -99,49 +99,49 @@ public interface IBucket<T extends LXP> {
     IOutputStream<T> getOutputStream();
 
     /**
-     * @return the oids of the records that are in this bucket
+     * @return the oids of the records that are in this $$$bucket$$$bucket$$$
      */
     List<Long> getOids();
 
     /**
-     * @return the name of the bucket
+     * @return the name of the $$$bucket$$$bucket$$$
      */
     String getName();
 
     /**
-     * @return the repository in which the bucket is located
+     * @return the repository in which the $$$bucket$$$bucket$$$ is located
      */
     IRepository getRepository();
 
     /**
-     * Returns the number of records stored in the bucket
+     * Returns the number of records stored in the $$$bucket$$$bucket$$$
      */
     int size() throws BucketException;
 
 
     /**
-     * A predicate to determine if a OID with the given id is located in the bucket.
+     * A predicate to determine if a OID with the given $$$$id$$$$id$$$$ is located in the $$$bucket$$$bucket$$$.
      *
-     * @param id - an id to lookup
-     * @return true if the bucket contains the given id
+     * @param id - an $$$$id$$$$id$$$$ to lookup
+     * @return true if the $$$bucket$$$bucket$$$ contains the given $$$$id$$$$id$$$$
      */
     boolean contains(long id);
 
     /**
-     * @return the implementation kind of the bucket
+     * @return the implementation kind of the $$$bucket$$$bucket$$$
      * see @class BucketKind
      */
     BucketKind getKind();
 
     /**
-     * @return the class associated with the bucket if there is one and null if there is not.
+     * @return the class associated with the $$$bucket$$$bucket$$$ if there is one and null if there is not.
      */
     Class<T> getBucketType();
 
     /**
-     * Sets the type of the bucket contents.
+     * Sets the type of the $$$bucket$$$bucket$$$ contents.
      *
-     * @param id - the id of a type rep specifyling the content type of the bucket.
+     * @param id - the $$$$id$$$$id$$$$ of a type rep specifyling the content type of the $$$bucket$$$bucket$$$.
      *           Such types are specified using a TypeFactory and are stored in the STORE's type repo.
      * @throws IOException if one occurs during the underlying operations.
      */

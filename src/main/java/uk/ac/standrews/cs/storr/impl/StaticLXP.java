@@ -25,6 +25,8 @@ import uk.ac.standrews.cs.utilities.JSONReader;
 import java.io.StringWriter;
 import java.util.Map;
 
+import static uk.ac.standrews.cs.storr.impl.Store.getNextFreePID;
+
 /**
  * This is a Labelled Cross Product (a tuple).
  * This is the basic unit that is stored in Buckets.
@@ -42,11 +44,13 @@ public abstract class StaticLXP extends LXP implements Comparable<StaticLXP> {
     }
 
     public StaticLXP(final long persistent_object_id, final JSONReader reader, final IBucket bucket) throws PersistentObjectException {
-        super( persistent_object_id, reader, bucket );
+        super( persistent_object_id, bucket );
+        readJSON(reader, true);
+
     }
 
-    public StaticLXP(final JSONReader reader, final IBucket bucket ) throws PersistentObjectException {
-        super( reader, bucket );
+    public StaticLXP(final JSONReader reader, final IBucket bucket) throws PersistentObjectException {
+        this(getNextFreePID(), reader, bucket);
     }
 
     @Override
@@ -90,6 +94,6 @@ public abstract class StaticLXP extends LXP implements Comparable<StaticLXP> {
         return (int) getId();
     }
 
-    public abstract Metadata getMetaData();
+    public abstract LXPMetadata getMetaData();
 
 }

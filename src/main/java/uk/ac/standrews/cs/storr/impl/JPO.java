@@ -2,29 +2,27 @@
  * Copyright 2017 Systems Research Group, University of St Andrews:
  * <https://github.com/stacs-srg>
  *
- * This file is part of the module storr-expt.
+ * This file is part of the module storr.
  *
- * storr-expt is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+ * storr is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
  * License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later
  * version.
  *
- * storr-expt is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * storr is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
  * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License along with storr-expt. If not, see
+ * You should have received a copy of the GNU General Public License along with storr. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-package uk.ac.standrews.cs.storr;
+package uk.ac.standrews.cs.storr.impl;
 
 import org.apache.commons.lang.reflect.FieldUtils;
 import org.json.JSONException;
 import org.json.JSONWriter;
-import uk.ac.standrews.cs.storr.impl.PersistentObject;
-import uk.ac.standrews.cs.storr.impl.StoreReference;
 import uk.ac.standrews.cs.storr.impl.exceptions.BucketException;
 import uk.ac.standrews.cs.storr.impl.exceptions.PersistentObjectException;
 import uk.ac.standrews.cs.storr.interfaces.IBucket;
-import uk.ac.standrews.cs.storr.interfaces.IRepository;
+import uk.ac.standrews.cs.storr.interfaces.IStoreReference;
 import uk.ac.standrews.cs.utilities.JSONReader;
 
 import java.util.ArrayList;
@@ -40,30 +38,25 @@ import java.util.Random;
  */
 public abstract class JPO extends PersistentObject {
 
-    protected long id;
-    protected IBucket bucket = null;
-    protected IRepository repository = null;
-
-
     // Constructors
 
     public JPO() {
 
-        this.id = new Random().nextLong();
+        this.$$$$id$$$$id$$$$ = new Random().nextLong();
 
-        // don't know the repo or the bucket
+        // don't know the repo or the $$$bucket$$$bucket$$$
     }
 
     public JPO(final long object_id) {
 
-        this.id = object_id;
+        this.$$$$id$$$$id$$$$ = object_id;
 
         // This constructor used when about to be filled in with values.
     }
 
     public JPO(long object_id, IBucket bucket) {
         this(object_id);
-        this.bucket = bucket;
+        this.$$$bucket$$$bucket$$$ = bucket;
     }
 
     public JPO(long object_id, JSONReader reader, IBucket bucket) throws PersistentObjectException {
@@ -71,37 +64,15 @@ public abstract class JPO extends PersistentObject {
         this.readJSON(reader, true);
     }
 
-    // Abstract methods
-
-    /**
-     * @return the metadata associated with the class extending LXP base.
-     * This may be static or dynamically created.
-     * Two classes are provided corresponding to the above.
-     */
-    public abstract Metadata getMetaData();
-
     // Selectors
 
-    /**
-     * @return the id of the record
-     */
-    public long getOid() {
-        return id;
-    }
+    public abstract JPOMetadata getMetaData();
 
-    public IRepository getRepo() {
-        return repository;
-    }
-
-    public Object getBucket() {
-        return bucket;
-    }
-
-    public StoreReference getThisRef() throws PersistentObjectException {
-        if (this.bucket == null) {
-            throw new PersistentObjectException("Null bucket encountered in LXP (uncommited LXP reference) : " + this.toString());
+    public IStoreReference getThisRef() throws PersistentObjectException {
+        if (this.$$$bucket$$$bucket$$$ == null) {
+            throw new PersistentObjectException("Null $$$bucket$$$bucket$$$ encountered in LXP (uncommited LXP reference) : " + this.toString());
         } else {
-            return new StoreReference(this.bucket.getRepository(), this.bucket, this);
+            return new JPOReference(this.$$$bucket$$$bucket$$$.getRepository(), this.$$$bucket$$$bucket$$$, this);
         }
     }
 
@@ -123,16 +94,16 @@ public abstract class JPO extends PersistentObject {
      */
     public void serializeToJSON(final JSONWriter writer, IBucket bucket) throws JSONException {
 
-        this.bucket = bucket;
+        this.$$$bucket$$$bucket$$$ = bucket;
         serializeToJSON(writer);
     }
 
 
     private void serializeFieldsToJSON(final JSONWriter writer) throws JSONException {
 
-        Collection<StorrField> fields = getMetaData().getStorrFields();
+        Collection<JPOField> fields = ((JPOMetadata) getMetaData()).getStorrFields();
 
-        for (StorrField field : fields) {
+        for (JPOField field : fields) {
 
             String key = field.name;
 
@@ -176,7 +147,7 @@ public abstract class JPO extends PersistentObject {
             writer.value("null");
         } else {
             try {
-                final StoreReference reference = value.getThisRef();
+                final IStoreReference reference = value.getThisRef();
                 writer.value(reference.toString());
             } catch (final PersistentObjectException e) {
                 throw new JSONException("Cannot serialise reference");
@@ -247,7 +218,7 @@ public abstract class JPO extends PersistentObject {
     }
 
 
-    private void readJSON(final JSONReader reader, final boolean isObject) throws JSONException, PersistentObjectException {
+    void readJSON(final JSONReader reader, final boolean isObject) throws JSONException, PersistentObjectException {
 
         try {
             reader.nextSymbol();
@@ -279,9 +250,9 @@ public abstract class JPO extends PersistentObject {
 
     public void put( String key, Object value ) throws PersistentObjectException {
 
-        Metadata md = getMetaData();
+        JPOMetadata md = (JPOMetadata) getMetaData();
 
-        StorrField field = md.get(key);
+        JPOField field = md.get(key);
 
         if( field == null ) {
             throw new PersistentObjectException( "key not found: " + key );
@@ -300,7 +271,7 @@ public abstract class JPO extends PersistentObject {
             if( str_val.equals("null") ) {
                 value = null;
             } else {
-                value = new StoreReference(null, (String) value); // TODO first param is a store!
+                value = new LXPReference(null, (String) value); // TODO first param is a store!
             }
         }
         try {

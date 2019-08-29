@@ -84,7 +84,7 @@ public class Repository implements IRepository {
     }
 
     @Override
-    public <T extends LXP> IBucket<T> makeBucket(final String bucket_name, BucketKind kind, Class<T> bucketType) throws RepositoryException {
+    public <T extends PersistentObject> IBucket<T> makeBucket(final String bucket_name, BucketKind kind, Class<T> bucketType) throws RepositoryException {
 
         IBucket bucket = BucketKind.createBucket(this, bucket_name, bucketType, kind);
         bucket_cache.put(bucket_name, bucket);
@@ -121,7 +121,7 @@ public class Repository implements IRepository {
             bucket_cache.remove(name);
 
         } catch (IOException e) {
-            throw new RepositoryException("Cannot delete bucket: " + name);
+            throw new RepositoryException("Cannot delete $$$bucket$$$bucket$$$: " + name);
         }
     }
 
@@ -133,18 +133,18 @@ public class Repository implements IRepository {
             final IBucket bucket = bucket_cache.get(bucket_name);
             return bucket != null ? bucket : BucketKind.getBucket(this, bucket_name);
         }
-        throw new RepositoryException("bucket does not exist: " + bucket_name);
+        throw new RepositoryException("$$$bucket$$$bucket$$$ does not exist: " + bucket_name);
     }
 
     @Override
-    public <T extends LXP> IBucket<T> getBucket(final String bucket_name, final Class<T> bucketType) throws RepositoryException {
+    public <T extends PersistentObject> IBucket<T> getBucket(final String bucket_name, final Class<T> bucketType) throws RepositoryException {
 
         if (bucketExists(bucket_name)) {
 
             final IBucket bucket = bucket_cache.get(bucket_name);
             return bucket != null ? bucket : BucketKind.getBucket(this, bucket_name, bucketType);
         }
-        throw new RepositoryException("bucket does not exist: " + bucket_name);
+        throw new RepositoryException("$$$bucket$$$bucket$$$ does not exist: " + bucket_name);
     }
 
     @Override
@@ -166,7 +166,7 @@ public class Repository implements IRepository {
     }
 
     @Override
-    public <T extends LXP> Iterator<IBucket<T>> getIterator(Class<T> bucketType) {
+    public <T extends PersistentObject> Iterator<IBucket<T>> getIterator(Class<T> bucketType) {
         return new BucketIterator(this, repository_directory, bucketType);
     }
 

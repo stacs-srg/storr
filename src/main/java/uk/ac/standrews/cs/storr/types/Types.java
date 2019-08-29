@@ -16,21 +16,23 @@
  */
 package uk.ac.standrews.cs.storr.types;
 
-import uk.ac.standrews.cs.storr.impl.DynamicLXP;
-import uk.ac.standrews.cs.storr.impl.TypeFactory;
+import uk.ac.standrews.cs.storr.impl.*;
 import uk.ac.standrews.cs.storr.impl.exceptions.IllegalKeyException;
 import uk.ac.standrews.cs.storr.impl.exceptions.KeyNotFoundException;
 import uk.ac.standrews.cs.storr.impl.exceptions.TypeMismatchFoundException;
-import uk.ac.standrews.cs.storr.impl.LXP;
 import uk.ac.standrews.cs.storr.interfaces.IReferenceType;
 import uk.ac.standrews.cs.storr.interfaces.IStore;
+import uk.ac.standrews.cs.storr.interfaces.IStoreReference;
 import uk.ac.standrews.cs.storr.interfaces.IType;
 import uk.ac.standrews.cs.utilities.archive.ErrorHandling;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -41,7 +43,7 @@ public class Types {
     public static final String LABEL = "$LABEL$";
 
     /**
-     * Checks the type of a record (if there is one) is consistent with a supplied label (generally from a bucket)
+     * Checks the type of a record (if there is one) is consistent with a supplied label (generally from a $$$bucket$$$bucket$$$)
      *
      * @param record        whose label is to be checked
      * @param type_label_id the label against which the checking is to be performed
@@ -65,7 +67,7 @@ public class Types {
     }
 
     /**
-     * Checks that the content of a record is consistent with a supplied label (generally from a bucket)
+     * Checks that the content of a record is consistent with a supplied label (generally from a $$$bucket$$$bucket$$$)
      *
      * @param record        whose _structure is to be checked
      * @param type_label_id the label against which the checking is to be performed
@@ -80,7 +82,7 @@ public class Types {
     }
 
     /**
-     * Checks that the content of a record is consistent with a supplied label (generally from a bucket)
+     * Checks that the content of a record is consistent with a supplied label (generally from a $$$bucket$$$bucket$$$)
      *
      * @param record   whose _structure is to be checked
      * @param ref_type the type being checked against
@@ -120,7 +122,7 @@ public class Types {
     }
 
     /**
-     * Checks the TYPE LABEL is consistent with a supplied label (generally from a bucket)
+     * Checks the TYPE LABEL is consistent with a supplied label (generally from a $$$bucket$$$bucket$$$)
      *
      * @param supplied_label_id to be checked
      * @param type_label_id     the label against which the checking is to be performed
@@ -128,7 +130,7 @@ public class Types {
      */
     private static boolean checkLabelsConsistentWith(long supplied_label_id, long type_label_id, IStore store) {
 
-        // do id check first
+        // do $$$$id$$$$id$$$$ check first
         if (type_label_id == supplied_label_id) {
             return true;
         }
@@ -196,6 +198,17 @@ public class Types {
 
     public static DynamicLXP getTypeRep(Class c) {
 
+        if ( StaticLXP.class.isAssignableFrom( c ) || DynamicLXP.class.isAssignableFrom( c ) ) {
+            return getLXPTypeRep(c);
+        } else if( JPO.class.isAssignableFrom( c ) ) {
+            return getJPOType(c);
+        } else {
+            throw new RuntimeException( "Do not recognise persistent class: " + c.getName()  );
+        }
+    }
+
+
+    public static DynamicLXP getLXPTypeRep(Class c) {
         DynamicLXP type_rep = null;
 
         type_rep = new DynamicLXP();
@@ -222,7 +235,7 @@ public class Types {
                         ErrorHandling.error("Conflicting labels: " + f.getName()); // Graham wrote this :) and al added list :):)_
                     }
                     LXP_REF ref_type = f.getAnnotation(LXP_REF.class);
-                    String ref_type_name = ref_type.type(); // this is the name of the type that the reference refers to
+                    String ref_type_name = ref_type.type(); // this is the name of the type that the reference refers to TODO is this wrong - lost the REF?
                     try {
                         f.setAccessible(true);
                         String label_name = (String) f.getName();
@@ -257,4 +270,57 @@ public class Types {
         }
         return type_rep;
     }
+
+    private static DynamicLXP getJPOType(Class c) {
+        DynamicLXP type_rep = null;
+
+        type_rep = new DynamicLXP();
+
+        while( c != null ) {
+
+            final Field[] fields = c.getDeclaredFields();
+
+            for (final Field field : fields) {
+
+                field.setAccessible(true);
+
+                if(! Modifier.isStatic(field.getModifiers() ) && field.isAnnotationPresent(JPO_FIELD.class) ) {
+
+                    String label_name = field.getName();
+                    Class type = field.getType();
+
+                    // Either a scalar or a ref or an array.
+
+                    if( type.getName().equals( "java.lang.String" ) ) {  // Strings are strings (objects)!
+                        type_rep.put( label_name, "STRING" );
+                    } else if(  type.getName().equals( "double" ) ) {
+                        type_rep.put( label_name, "DOUBLE" );
+                    } else if(  type.getName().equals( "long" ) ) {
+                        type_rep.put( label_name, "LONG" );
+                    } else if( type.getName().equals( "int" ) ) {
+                        type_rep.put( label_name, "INT" );
+                    } else if( IStoreReference.class.isAssignableFrom( type ) ) {
+                        ParameterizedType pt = (ParameterizedType) type.getGenericSuperclass();
+                        Type ref_type = pt.getActualTypeArguments()[0];
+                        type_rep.put(label_name, "STOREREF[" + ref_type + "]");
+                    } else if( List.class.isAssignableFrom( type ) ) {
+                        ParameterizedType pt = (ParameterizedType) type.getGenericSuperclass();
+                        Type paramType = pt.getActualTypeArguments()[0];
+                        String typeName = paramType.getTypeName();
+                        type_rep.put(label_name, "[" + typeName + "]");
+                    } else {
+                        throw new RuntimeException( "Unrecognised class in JPO Object: " + c.getName() );
+                    }
+
+                }
+            }
+
+
+            c = c.getSuperclass(); // run up hierarchy filling in fields
+        }
+
+        return type_rep;
+    }
+
+
 }

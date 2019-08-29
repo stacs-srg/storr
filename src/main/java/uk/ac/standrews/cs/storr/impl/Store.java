@@ -132,7 +132,7 @@ public class Store implements IStore {
         try {
             FileManipulation.deleteDirectory(getRepoPath(name));
         } catch (IOException e) {
-            throw new RepositoryException("Cannot delete bucket: " + name);
+            throw new RepositoryException("Cannot delete $$$bucket$$$bucket$$$: " + name);
         }
     }
 

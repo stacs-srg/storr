@@ -25,10 +25,10 @@ import uk.ac.standrews.cs.storr.impl.LXP;
  */
 public interface IObjectCache {
     /**
-     * Adds the bucket X oid tuple to the object cache.
+     * Adds the $$$bucket$$$bucket$$$ X oid tuple to the object cache.
      *
-     * @param oid    - the object id of the registered object
-     * @param bucket - the bucket of the registered object
+     * @param oid    - the object $$$$id$$$$id$$$$ of the registered object
+     * @param bucket - the $$$bucket$$$bucket$$$ of the registered object
      * @param tuple  - the tuple to add.
      */
     void put(long oid, IBucket bucket, LXP tuple);
@@ -46,8 +46,8 @@ public interface IObjectCache {
     boolean contains(long oid);
 
     /**
-     * @param id - the id of the tuple to be looked up
-     * @return the tuple with the given id if it exists in the cache and null otherwise
+     * @param id - the $$$$id$$$$id$$$$ of the tuple to be looked up
+     * @return the tuple with the given $$$$id$$$$id$$$$ if it exists in the cache and null otherwise
      */
     LXP getObject(long id);
 }

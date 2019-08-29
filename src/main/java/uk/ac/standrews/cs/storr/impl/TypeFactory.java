@@ -107,7 +107,7 @@ public class TypeFactory {
                 final String name = (String) lxp.get("name");
                 final long type_key = (long) lxp.get("key");
 
-                final LXP type_rep = type_reps_bucket.getObjectById(type_key);
+                final LXP type_rep = (LXP) type_reps_bucket.getObjectById(type_key);
                 final LXPReferenceType reference = new LXPReferenceType((DynamicLXP) (type_rep));
 
                 names_to_type_cache.put(name, reference);
@@ -131,7 +131,7 @@ public class TypeFactory {
             type_name_bucket.makePersistent(name_value);
 
         } catch (final BucketException e) {
-            throw new RuntimeException("Bucket exception adding type " + type_name + " to types bucket", e);
+            throw new RuntimeException("Bucket exception adding type " + type_name + " to types $$$bucket$$$bucket$$$", e);
         }
 
         names_to_type_cache.put(type_name, ref_type);

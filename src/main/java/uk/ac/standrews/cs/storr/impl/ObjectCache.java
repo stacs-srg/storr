@@ -26,7 +26,7 @@ import java.util.WeakHashMap;
  * Created by al on 25/11/14.
  * This class maintains a cache of all in-memory objects that are stored in buckets
  * Note that transient objects are not in this cache.
- * It maps from id to a Bucket in which the OID with that id is contained
+ * It maps from $$$$id$$$$id$$$$ to a Bucket in which the OID with that $$$$id$$$$id$$$$ is contained
  * All loaded and newly created OID instances are loaded into it.
  */
 public class ObjectCache implements IObjectCache {
@@ -37,7 +37,7 @@ public class ObjectCache implements IObjectCache {
      * Adds the data to the object cache.
      *
      * @param oid    of the record being added to the cache
-     * @param bucket the bucket from which the object came.
+     * @param bucket the $$$bucket$$$bucket$$$ from which the object came.
      * @param tuple  the tuple added to the cache
      */
     public void put(long oid, IBucket bucket, LXP tuple) {

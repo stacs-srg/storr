@@ -41,7 +41,7 @@ import static junit.framework.TestCase.assertTrue;
 
 public class IdToLXPMapTest extends CommonTest {
 
-    private static final String bucketName = "bucket";  // Test bucket name
+    private static final String bucketName = "$$$bucket$$$bucket$$$";  // Test $$$bucket$$$bucket$$$ name
     private IBucket<SimpleLXP> bucket;
 
     @Before

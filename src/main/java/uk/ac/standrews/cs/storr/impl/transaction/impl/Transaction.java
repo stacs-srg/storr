@@ -189,7 +189,7 @@ public class Transaction implements ITransaction {
 
     private void tidy_up() {
         for (OverwriteRecord p : updates) {
-            p.bucket.cleanup(p.oid);            // get rid of shadows from bucket
+            p.bucket.cleanup(p.oid);            // get rid of shadows from $$$bucket$$$bucket$$$
             updates.remove(p);
         }
     }

@@ -30,15 +30,15 @@ import java.util.Map;
  */
 public class StringtoILXPMap<T extends LXP> implements IStringtoILXPMap<T> {
 
-    private final DirectoryBackedIndexedBucket<Tuple<T>> bucket; // bucket used to store the field_storage.
+    private final DirectoryBackedIndexedBucket<Tuple<T>> bucket; // $$$bucket$$$bucket$$$ used to store the field_storage.
     private final IRepository repository;
 
     /**
      * Creates a handle on a persistent field_storage, implemented by an IndexedBucket
      * Assumes that persistent field_storage has been created already using a factory - i.e. the directory already exists.
      *
-     * @param repository the repository in which the bucket is created.
-     * @param map_name   the name of the field_storage/bucket (also used as directory name).
+     * @param repository the repository in which the $$$bucket$$$bucket$$$ is created.
+     * @param map_name   the name of the field_storage/$$$bucket$$$bucket$$$ (also used as directory name).
      * @param bucketType
      * @throws RepositoryException if a RepositoryException is thrown in implementation
      */
@@ -78,8 +78,8 @@ public class StringtoILXPMap<T extends LXP> implements IStringtoILXPMap<T> {
     }
 
     @Override
-    public void injestRefMap(Map<String, StoreReference<T>> map) throws BucketException, PersistentObjectException {
-        for (Map.Entry<String, StoreReference<T>> entry : map.entrySet()) {
+    public void injestRefMap(Map<String, LXPReference<T>> map) throws BucketException, PersistentObjectException {
+        for (Map.Entry<String, LXPReference<T>> entry : map.entrySet()) {
             put( entry.getKey(), entry.getValue() );
         }
 
@@ -88,7 +88,7 @@ public class StringtoILXPMap<T extends LXP> implements IStringtoILXPMap<T> {
     @Override
     public void injestMap(Map<String, T> map) throws BucketException, PersistentObjectException {
         for (Map.Entry<String,T> entry : map.entrySet()) {
-            put( entry.getKey(), new StoreReference<T>( repository.getStore(), entry.getValue() ) );
+            put( entry.getKey(), new LXPReference<T>( repository.getStore(), entry.getValue() ) );
         }
     }
 }

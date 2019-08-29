@@ -33,7 +33,7 @@ public abstract class CommonTest {
 
     static final String REPOSITORY_NAME = "repo";
 
-    private static boolean DEBUG = false;
+    private static boolean DEBUG = true;
 
     protected IStore store;
     protected IRepository repository;

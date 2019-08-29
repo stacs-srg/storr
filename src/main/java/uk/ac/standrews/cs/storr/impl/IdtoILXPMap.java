@@ -19,7 +19,9 @@ package uk.ac.standrews.cs.storr.impl;
 import uk.ac.standrews.cs.storr.impl.exceptions.BucketException;
 import uk.ac.standrews.cs.storr.impl.exceptions.PersistentObjectException;
 import uk.ac.standrews.cs.storr.impl.exceptions.RepositoryException;
-import uk.ac.standrews.cs.storr.interfaces.*;
+import uk.ac.standrews.cs.storr.interfaces.IIdtoLXPMap;
+import uk.ac.standrews.cs.storr.interfaces.IRepository;
+import uk.ac.standrews.cs.storr.interfaces.IStoreReference;
 
 import java.io.IOException;
 import java.util.Map;
@@ -36,8 +38,8 @@ public class IdtoILXPMap<T extends LXP> implements IIdtoLXPMap<T> {
      * Creates a handle on a persistent field_storage, implemented by an IndexedBucket
      * Assumes that persistent field_storage has been created already using a factory - i.e. the directory already exists.
      *
-     * @param repository the repository in which the bucket is created.
-     * @param map_name   the name of the field_storage/bucket (also used as directory name).
+     * @param repository the repository in which the $$$bucket$$$bucket$$$ is created.
+     * @param map_name   the name of the field_storage/$$$bucket$$$bucket$$$ (also used as directory name).
      * @param bucketType
      * @throws RepositoryException if a RepositoryException is thrown in implementation
      */
@@ -47,7 +49,7 @@ public class IdtoILXPMap<T extends LXP> implements IIdtoLXPMap<T> {
     }
 
     @Override
-    public LXP lookup(Long id) throws IOException, BucketException, RepositoryException {
+    public PersistentObject lookup(Long id) throws IOException, BucketException, RepositoryException {
 
         return pmap.lookup( id.toString() );
     }
@@ -58,8 +60,8 @@ public class IdtoILXPMap<T extends LXP> implements IIdtoLXPMap<T> {
     }
 
     @Override
-    public void injestRefMap(Map<Long, StoreReference<T>> map) throws BucketException, PersistentObjectException {
-        for (Map.Entry<Long, StoreReference<T>> entry : map.entrySet()) {
+    public void injestRefMap(Map<Long, IStoreReference<T>> map) throws BucketException, PersistentObjectException {
+        for (Map.Entry<Long, IStoreReference<T>> entry : map.entrySet()) {
             put( entry.getKey(), entry.getValue() );
         }
     }

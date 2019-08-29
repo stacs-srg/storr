@@ -36,16 +36,16 @@ public class IndexedBucketInputStream implements IInputStream {
         this.file_iterator = file_iterator;
     }
 
-    public Iterator<LXP> iterator() {
+    public Iterator<PersistentObject> iterator() {
 
-        return new Iterator<LXP>() {
+        return new Iterator<PersistentObject>() {
 
             public boolean hasNext() {
                 return file_iterator.hasNext();
             }
 
             @Override
-            public LXP next() {
+            public PersistentObject next() {
 
                 try {
                     return bucket.getObjectById(Long.parseLong(file_iterator.next().getName()));

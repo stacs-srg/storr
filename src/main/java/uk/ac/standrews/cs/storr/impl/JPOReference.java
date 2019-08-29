@@ -2,29 +2,30 @@
  * Copyright 2017 Systems Research Group, University of St Andrews:
  * <https://github.com/stacs-srg>
  *
- * This file is part of the module storr-expt.
+ * This file is part of the module storr.
  *
- * storr-expt is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+ * storr is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
  * License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later
  * version.
  *
- * storr-expt is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * storr is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
  * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License along with storr-expt. If not, see
+ * You should have received a copy of the GNU General Public License along with storr. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-package main.java.toy.test;
+package uk.ac.standrews.cs.storr.impl;
 
 
 import uk.ac.standrews.cs.storr.impl.exceptions.ReferenceException;
 import uk.ac.standrews.cs.storr.interfaces.IBucket;
 import uk.ac.standrews.cs.storr.interfaces.IRepository;
 import uk.ac.standrews.cs.storr.interfaces.IStore;
+import uk.ac.standrews.cs.storr.interfaces.IStoreReference;
 
 import java.lang.ref.WeakReference;
 
-public class JPOReference<T extends JPO> {
+public class JPOReference<T extends JPO> implements IStoreReference<T> {
 
     private WeakReference<T> ref = null;
     private IStore store;
@@ -60,7 +61,7 @@ public class JPOReference<T extends JPO> {
     }
 
     private JPOReference(IStore store, String repo_name, String bucket_name, T reference) {
-        this(store, repo_name, bucket_name, reference.getOid());
+        this(store, repo_name, bucket_name, reference.getId());
         ref = new WeakReference<T>(reference);   // TODO was weakRef - make softRef??
     }
 

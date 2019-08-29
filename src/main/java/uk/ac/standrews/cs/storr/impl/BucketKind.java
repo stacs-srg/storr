@@ -24,8 +24,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 /**
- * Class used to represent a bucket implementation kind.
- * Each kind of bucket has a subtly different semantics/functionality
+ * Class used to represent a $$$bucket$$$bucket$$$ implementation kind.
+ * Each kind of $$$bucket$$$bucket$$$ has a subtly different semantics/functionality
  * Created by al on 01/08/2014.
  */
 public enum BucketKind {
@@ -47,19 +47,19 @@ public enum BucketKind {
         return retrieveBucket(repository, bucket_name, kind, true);
     }
 
-    public static <T extends LXP> IBucket<T> getBucket(Repository repository, String bucket_name, Class<T> bucketType) throws RepositoryException {
+    public static <T extends PersistentObject> IBucket<T> getBucket(Repository repository, String bucket_name, Class<T> bucketType) throws RepositoryException {
 
         BucketKind kind = getKind(repository, bucket_name);
 
         return retrieveBucket(repository, bucket_name, bucketType, kind, false);
     }
 
-    public static <T extends LXP> IBucket createBucket(Repository repository, String bucket_name, Class<T> bucketType, BucketKind kind) throws RepositoryException {
+    public static <T extends PersistentObject> IBucket createBucket(Repository repository, String bucket_name, Class<T> bucketType, BucketKind kind) throws RepositoryException {
 
         return retrieveBucket(repository, bucket_name, bucketType, kind, true);
     }
 
-    private static <T extends LXP> IBucket retrieveBucket(Repository repository, String bucket_name, BucketKind kind, boolean create_bucket) throws RepositoryException {
+    private static <T extends PersistentObject> IBucket retrieveBucket(Repository repository, String bucket_name, BucketKind kind, boolean create_bucket) throws RepositoryException {
 
         switch (kind) {
 
@@ -74,10 +74,10 @@ public enum BucketKind {
             }
         }
 
-        throw new RepositoryException("Invalid bucket kind");
+        throw new RepositoryException("Invalid $$$bucket$$$bucket$$$ kind");
     }
 
-    private static <T extends LXP> IBucket retrieveBucket(Repository repository, String bucket_name, Class<T> bucketType, BucketKind kind, boolean create_bucket) throws RepositoryException {
+    private static <T extends PersistentObject> IBucket retrieveBucket(Repository repository, String bucket_name, Class<T> bucketType, BucketKind kind, boolean create_bucket) throws RepositoryException {
 
         switch (kind) {
 
@@ -85,14 +85,14 @@ public enum BucketKind {
                 return new DirectoryBackedBucket<>(repository, bucket_name, kind, bucketType, create_bucket);
             }
             case INDIRECT: {
-                return new DirectoryBackedIndirectBucket<>(repository, bucket_name, bucketType, create_bucket);
+                return new DirectoryBackedIndirectBucket(repository, bucket_name, bucketType, create_bucket);
             }
             case INDEXED: {
                 return new DirectoryBackedIndexedBucket(repository, bucket_name, kind, create_bucket);
             }
         }
 
-        throw new RepositoryException("Invalid bucket kind");
+        throw new RepositoryException("Invalid $$$bucket$$$bucket$$$ kind");
     }
 
     private static BucketKind getKind(IRepository repository, String bucket_name) throws RepositoryException {
@@ -115,6 +115,6 @@ public enum BucketKind {
             return STRINGMAP;
         }
 
-        throw new RepositoryException("Invalid bucket kind");
+        throw new RepositoryException("Invalid $$$bucket$$$bucket$$$ kind");
     }
 }

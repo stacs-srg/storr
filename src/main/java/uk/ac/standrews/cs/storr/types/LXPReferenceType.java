@@ -18,6 +18,7 @@ package uk.ac.standrews.cs.storr.types;
 
 import uk.ac.standrews.cs.storr.impl.DynamicLXP;
 import uk.ac.standrews.cs.storr.impl.LXP;
+import uk.ac.standrews.cs.storr.impl.LXPReference;
 import uk.ac.standrews.cs.storr.impl.exceptions.*;
 import uk.ac.standrews.cs.storr.interfaces.*;
 import uk.ac.standrews.cs.utilities.FileManipulation;
@@ -68,7 +69,7 @@ public class LXPReferenceType implements IReferenceType {
 
         try {
             IStore store = typerep.getRepository().getStore();
-            IStoreReference reference = (IStoreReference) value;   // This line was changed too!
+            LXPReference reference = (LXPReference) value;   // This line was changed too!
 
             // if we just require an lxp don't do more structural checking.
 

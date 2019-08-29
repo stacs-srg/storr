@@ -29,19 +29,14 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import static uk.ac.standrews.cs.storr.impl.Store.getNextFreePID;
-
 /**
  * Abstract class for an LXP (labeled cross product class).
  *
  * @author al
  */
-public abstract class LXP {
+public abstract class LXP extends PersistentObject {
 
-    protected long id;
-    protected IBucket bucket = null;
-
-    Metadata metadata = new Metadata(); // field not used in Static LXP instances
+    LXPMetadata metadata = new LXPMetadata(); // field not used in Static LXP instances
 
     private final static int INITIAL_SIZE = 5;
     private static final int SIZE_INCREMENT = 5;
@@ -53,26 +48,11 @@ public abstract class LXP {
     // Constructors
 
     public LXP() {
-
-        this.id = getNextFreePID();
-        // don't know the repo or the bucket
+        super();
     }
 
-    public LXP(final long object_id, final IBucket bucket) {
-
-        this.id = object_id;
-        this.bucket = bucket;
-
-        // This constructor used when about to be filled in with values.
-    }
-
-    public LXP(final long object_id, final JSONReader reader, final IBucket bucket) throws PersistentObjectException {
-        this(object_id, bucket);
-        readJSON(reader, true);
-    }
-
-    public LXP(final JSONReader reader, final IBucket bucket) throws PersistentObjectException {
-        this(getNextFreePID(), reader, bucket);
+    public LXP(long object_id, IBucket bucket) {
+        super( object_id,bucket );
     }
 
     // Abstract methods
@@ -91,16 +71,9 @@ public abstract class LXP {
      * This may be static or dynamically created.
      * Two classes are provided corresponding to the above.
      */
-    public abstract Metadata getMetaData();
+    public abstract LXPMetadata getMetaData();
 
     // Selectors
-
-    /**
-     * @return the id of the record
-     */
-    public long getId() {
-        return id;
-    }
 
     /**
      * A getter method over labelled values in the LXPID
@@ -260,18 +233,18 @@ public abstract class LXP {
      */
     public IStoreReference getThisRef() throws PersistentObjectException {
 
-        if (bucket == null) {
-            throw new PersistentObjectException("Null bucket encountered in LXP (uncommited LXP reference) : " + toString());
+        if ($$$bucket$$$bucket$$$ == null) {
+            throw new PersistentObjectException("Null $$$bucket$$$bucket$$$ encountered in LXP (uncommited LXP reference) : " + toString());
         }
-        return new StoreReference(bucket.getRepository(), bucket, this);
+        return new LXPReference($$$bucket$$$bucket$$$.getRepository(), $$$bucket$$$bucket$$$, this);
     }
 
     public IRepository getRepository() {
 
-        if (bucket == null) {
+        if ($$$bucket$$$bucket$$$ == null) {
             return null;
         } else {
-            return bucket.getRepository();
+            return $$$bucket$$$bucket$$$.getRepository();
         }
     }
 
@@ -423,17 +396,6 @@ public abstract class LXP {
 
     // JSON Manipulation - write methods
 
-    /**
-     * Writes the state of the LXP to a Bucket.
-     *
-     * @param writer the stream to which the state is written.
-     * @param bucket @throws JSONException if the record being written cannot be written to legal JSON.
-     */
-    public void serializeToJSON(final JSONWriter writer, final IBucket bucket) throws JSONException {
-
-        this.bucket = bucket;
-        serializeToJSON(writer);
-    }
 
     void serializeToJSON(final JSONWriter writer) throws JSONException {
 
@@ -538,7 +500,7 @@ public abstract class LXP {
         put(key, list);
     }
 
-    private void readJSON(final JSONReader reader, final boolean isObject) throws JSONException, PersistentObjectException {
+    void readJSON(final JSONReader reader, final boolean isObject) throws JSONException, PersistentObjectException {
 
         try {
             reader.nextSymbol();

@@ -59,10 +59,10 @@ public class DirectoryBackedIndexedBucket<T extends LXP> extends DirectoryBacked
 
 
     /**
-     * Creates a handle on a bucket.
+     * Creates a handle on a $$$bucket$$$bucket$$$.
      *
-     * @param repository  the repository in which the bucket is created.
-     * @param bucket_name the name of the bucket (also used as directory name).
+     * @param repository  the repository in which the $$$bucket$$$bucket$$$ is created.
+     * @param bucket_name the name of the $$$bucket$$$bucket$$$ (also used as directory name).
      * @throws RepositoryException if a RepositoryException is thrown in implementation
      */
     DirectoryBackedIndexedBucket(final IRepository repository, final String bucket_name, boolean create_bucket) throws RepositoryException {

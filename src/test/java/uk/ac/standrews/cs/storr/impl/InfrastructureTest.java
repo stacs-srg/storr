@@ -107,8 +107,8 @@ public class InfrastructureTest extends CommonTest {
 //        lxp.put("mylist", l);
 //        b.makePersistent(lxp);
 //
-//        long id = lxp.getId();
-//        LXP retrievedLXP = b.getObjectById(id);
+//        long $$$$id$$$$id$$$$ = lxp.getId();
+//        LXP retrievedLXP = b.getObjectById($$$$id$$$$id$$$$);
 //        assertEquals(retrievedLXP, lxp);
 //    }
 //
@@ -155,8 +155,8 @@ public class InfrastructureTest extends CommonTest {
 //
 //        txn.commit();
 //
-//        long id = lxp2.getId();
-//        LXP retrievedLXP2 = b.getObjectById(id);
+//        long $$$$id$$$$id$$$$ = lxp2.getId();
+//        LXP retrievedLXP2 = b.getObjectById($$$$id$$$$id$$$$);
 //        String age = (String) retrievedLXP2.get("age");
 //        assertEquals("43", age);
 //
@@ -277,7 +277,7 @@ public class InfrastructureTest extends CommonTest {
 //        lxp.put("name", "al");
 //        lxp.put("age", 55);
 //        lxp.getMetaData().setType( personlabel );    // with correct label
-//        b.makePersistent(lxp); // Should succeed: labels correct and type label identical to bucket
+//        b.makePersistent(lxp); // Should succeed: labels correct and type label identical to $$$bucket$$$bucket$$$
 //    }
 //
 //    @Test
@@ -407,9 +407,9 @@ public class InfrastructureTest extends CommonTest {
 //        lxp.put("age", "42");
 //        lxp.put("address", "home");
 //        b.makePersistent(lxp);       // <<--------- write record **
-//        long id = lxp.getId();
+//        long $$$$id$$$$id$$$$ = lxp.getId();
 //
-//        LXP lxp2 = b.getObjectById(id);
+//        LXP lxp2 = b.getObjectById($$$$id$$$$id$$$$);
 //        assertTrue(lxp2.getMetaData().containsLabel("age"));
 //        assertEquals(lxp2.get("age"), "42");
 //        assertTrue(lxp2.getMetaData().containsLabel("address"));
@@ -452,9 +452,9 @@ public class InfrastructureTest extends CommonTest {
 //        lxp.put("long", 23L);
 //        lxp.put("string", "al");
 //        b.makePersistent(lxp);       // <<--------- write record **
-//        long id = lxp.getId();
+//        long $$$$id$$$$id$$$$ = lxp.getId();
 //
-//        LXP lxp2 = b.getObjectById(id);
+//        LXP lxp2 = b.getObjectById($$$$id$$$$id$$$$);
 //        assertTrue(lxp2.getMetaData().containsLabel("boolean"));
 //        assertEquals(lxp2.get("boolean"), true);
 //        assertTrue(lxp2.getMetaData().containsLabel("double"));
@@ -492,8 +492,8 @@ public class InfrastructureTest extends CommonTest {
 //        lxp.put("string", "");
 //        b.makePersistent(lxp);       // <<--------- write record **
 //
-//        long id = lxp.getId();
-//        LXP retrievedLXP = b.getObjectById(id);
+//        long $$$$id$$$$id$$$$ = lxp.getId();
+//        LXP retrievedLXP = b.getObjectById($$$$id$$$$id$$$$);
 //        String retrievedString = (String) retrievedLXP.get("string");
 //        assertEquals("", retrievedString);
 //    }

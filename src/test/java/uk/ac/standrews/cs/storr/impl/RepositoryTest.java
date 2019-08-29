@@ -31,8 +31,8 @@ import static uk.ac.standrews.cs.storr.impl.Repository.bucketNameIsLegal;
 public class RepositoryTest extends CommonTest {
 
     private static String generic_bucket_name1 = "BUCKET1";
-    private static List<String> LEGAL_NAMES = Arrays.asList("bucket", "a bucket");
-    private static List<String> ILLEGAL_NAMES = Arrays.asList("a: bucket","a/bucket","a<bucket","a\\bucket?");
+    private static List<String> LEGAL_NAMES = Arrays.asList("$$$bucket$$$bucket$$$", "a $$$bucket$$$bucket$$$");
+    private static List<String> ILLEGAL_NAMES = Arrays.asList("a: $$$bucket$$$bucket$$$","a/$$$bucket$$$bucket$$$","a<$$$bucket$$$bucket$$$","a\\$$$bucket$$$bucket$$$?");
 
     @Test
     public void createBucketTest() throws RepositoryException {

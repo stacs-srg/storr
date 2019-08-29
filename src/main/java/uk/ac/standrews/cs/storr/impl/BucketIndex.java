@@ -48,7 +48,7 @@ public class BucketIndex implements IBucketIndex {
      *
      * @param label          the label in the records being indexed
      * @param dir            the dir holding the index
-     * @param indexed_bucket the bucket being indexed
+     * @param indexed_bucket the $$$bucket$$$bucket$$$ being indexed
      */
     BucketIndex(final String label, final Path dir, final DirectoryBackedIndexedBucket indexed_bucket) {
 
@@ -103,7 +103,7 @@ public class BucketIndex implements IBucketIndex {
 
         onDemandLoadContents();
 
-        return map.get(value); // list of integers which are indices into the bucket;
+        return map.get(value); // list of integers which are indices into the $$$bucket$$$bucket$$$;
     }
 
     @Override
@@ -111,7 +111,7 @@ public class BucketIndex implements IBucketIndex {
 
         onDemandLoadContents();
 
-        List<Long> entries = map.get(value); // list of integers which are indices into the bucket;
+        List<Long> entries = map.get(value); // list of integers which are indices into the $$$bucket$$$bucket$$$;
         ArrayList<File> files = new ArrayList<>();
 
         for (Long i : entries) {

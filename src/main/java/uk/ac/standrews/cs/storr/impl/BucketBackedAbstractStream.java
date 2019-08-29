@@ -21,7 +21,7 @@ import uk.ac.standrews.cs.storr.interfaces.IBucket;
 /**
  * Created by al on 28/04/2014.
  */
-public abstract class BucketBackedAbstractStream<T extends LXP> {
+public abstract class BucketBackedAbstractStream<T extends PersistentObject> {
 
     protected final IBucket<T> bucket;
 
