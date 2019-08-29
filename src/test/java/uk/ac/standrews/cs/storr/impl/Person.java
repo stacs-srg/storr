@@ -16,7 +16,10 @@
  */
 package uk.ac.standrews.cs.storr.impl;
 
+import uk.ac.standrews.cs.storr.impl.exceptions.PersistentObjectException;
+import uk.ac.standrews.cs.storr.interfaces.IBucket;
 import uk.ac.standrews.cs.storr.types.JPO_FIELD;
+import uk.ac.standrews.cs.utilities.JSONReader;
 
 public class Person extends JPO {
 
@@ -27,6 +30,10 @@ public class Person extends JPO {
     public String address;
 
     public Person() { // requirement for JPO
+    }
+
+    public Person(long id, JSONReader reader, IBucket bucket ) throws PersistentObjectException { // a requirement for JPO
+        super(id, reader, bucket);
     }
 
     public Person(int age, String address) {

@@ -37,7 +37,7 @@ public class BucketBackedInputStream<T extends PersistentObject> implements IInp
 
         return new Iterator<T>() {
 
-            private Iterator<Long> oid_iterator = bucket.getOids().iterator();
+            private Iterator<Long> oid_iterator = bucket.getOids().iterator();  //TODO Maybe slow????
 
             @Override
             public boolean hasNext() {
