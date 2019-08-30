@@ -67,7 +67,8 @@ public class ProtoTypicalJPO extends JPO {
     /* Storr support mechanism - ALL STORR JPO OBJECTS MUST HAVE THIS BOILERPLATE CODE */
 
     public ProtoTypicalJPO(long id, JSONReader reader, IBucket bucket ) throws PersistentObjectException { // a requirement for JPO
-        super(id, reader, bucket);
+        super( id, bucket );
+        readJSON(reader, true);
     }
 
     /*

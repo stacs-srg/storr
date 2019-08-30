@@ -47,13 +47,13 @@ public class DirectoryBackedBucket<T extends PersistentObject> implements IBucke
     public static final String META_BUCKET_NAME = "META";
     private static final String TRANSACTIONS_BUCKET_NAME = "TRANSACTIONS";
     private static final String TYPE_LABEL_FILE_NAME = "TYPELABEL";
-    protected final File directory;           // the directory implementing the $$$bucket$$$bucket$$$ storage
-    private final IRepository repository;     // the repository in which the $$$bucket$$$bucket$$$ is stored
+    protected final File directory;           // the directory implementing the bucket storage
+    private final IRepository repository;     // the repository in which the bucket is stored
     private final IStore store;               // the store
-    private final String bucket_name;         // the name of this $$$bucket$$$bucket$$$ - used as the directory name
-    private Class<T> bucketType = null;       // the type of records in this $$$bucket$$$bucket$$$ if not null.
+    private final String bucket_name;         // the name of this bucket - used as the directory name
+    private Class<T> bucketType = null;       // the type of records in this bucket if not null.
     private long type_label_id = -1;          // -1 == not set
-    private Cache<Long, PersistentObject> object_cache; // = new ObjectCache();
+    private Cache<Long, PersistentObject> object_cache;
     private int size = -1; // number of items in Bucket.
     private List<Long> cached_oids = null;
     private static final int DEFAULT_CACHE_SIZE = 10000; // almost certainly too small for serious apps.
@@ -62,10 +62,10 @@ public class DirectoryBackedBucket<T extends PersistentObject> implements IBucke
     /**
      * Creates a DirectoryBackedBucket with no factory - a persistent collection of ILXPs
      *
-     * @param repository  the repository in which to create the $$$bucket$$$bucket$$$
-     * @param bucket_name the name of the $$$bucket$$$bucket$$$ to be created
+     * @param repository  the repository in which to create the bucket
+     * @param bucket_name the name of the bucketto be created
      * @param kind        the kind of Bucket to be created
-     * @throws RepositoryException if the $$$bucket$$$bucket$$$ cannot be created in the repository
+     * @throws RepositoryException if the bucket cannot be created in the repository
      */
     protected DirectoryBackedBucket(final IRepository repository, final String bucket_name, final BucketKind kind, boolean create_bucket) throws RepositoryException {
 
@@ -100,10 +100,10 @@ public class DirectoryBackedBucket<T extends PersistentObject> implements IBucke
     /**
      * Creates a DirectoryBackedBucket with a factory - a persistent collection of ILXPs tied to some particular Java and store type.
      *
-     * @param repository  the repository in which to create the $$$bucket$$$bucket$$$
-     * @param bucket_name the name of the $$$bucket$$$bucket$$$ to be created
+     * @param repository  the repository in which to create the bucket 
+     * @param bucket_name the name of the bucket to be created
      * @param kind        the kind of Bucket to be created
-     * @throws RepositoryException if the $$$bucket$$$bucket$$$ cannot be created in the repository
+     * @throws RepositoryException if the bucket cannot be created in the repository
      */
     DirectoryBackedBucket(final IRepository repository, final String bucket_name, BucketKind kind, Class<T> bucketType, boolean create_bucket) throws RepositoryException {
 
@@ -138,7 +138,7 @@ public class DirectoryBackedBucket<T extends PersistentObject> implements IBucke
             }
             type_label_id = getTypeLabelID();
             if (type_label_id != class_type_label_id) {
-                throw new RepositoryException("Bucket label incompatible with class: " + bucketType.getName() + " doesn't match $$$bucket$$$bucket$$$ label:" + type_label_id);
+                throw new RepositoryException("Bucket label incompatible with class: " + bucketType.getName() + " doesn't match bucket label:" + type_label_id);
             }
         }
 
@@ -184,7 +184,7 @@ public class DirectoryBackedBucket<T extends PersistentObject> implements IBucke
                 try {
                     result = (T) (new DynamicLXP(id, new JSONReader(reader), this));
                 } catch (PersistentObjectException e) {
-                    throw new BucketException("Could not create new LXP for object with $$$$id$$$$id$$$$: " + id + " in directory: " + directory );
+                    throw new BucketException("Could not create new LXP for object with id: " + id + " in directory: " + directory );
                 }
             } else {
                 Constructor<?> constructor;
@@ -193,17 +193,17 @@ public class DirectoryBackedBucket<T extends PersistentObject> implements IBucke
                     constructor = bucketType.getConstructor( param_classes );
                 }
                 catch ( NoSuchMethodException e ) {
-                    throw new BucketException("Error in reflective constructor call - class " + bucketType.getName() + " must implement constructors with the following signature: Constructor(long persistent_object_id, JSONReader reader, IBucket $$$bucket$$$bucket$$$)" );
+                    throw new BucketException("Error in reflective constructor call - class " + bucketType.getName() + " must implement constructors with the following signature: Constructor(long persistent_object_id, JSONReader reader, IBucket bucket )" );
                 }
                 try {
-                    result = (LXP) constructor.newInstance( id, new JSONReader(reader), this);
+                    result = (PersistentObject) constructor.newInstance( id, new JSONReader(reader), this);
                 } catch (IllegalAccessException | InstantiationException | InvocationTargetException e) {
                     throw new BucketException("Error in reflective call of constructor in class " + bucketType.getName() + ": " + e.getMessage() );
                 }
 
             }
         } catch (IOException e) {
-            throw new BucketException( "Error creating JSONReader for $$$$id$$$$id$$$$: " + id + " in $$$bucket$$$bucket$$$ " + bucket_name );
+            throw new BucketException( "Error creating JSONReader for id: " + id + " in bucket " + bucket_name );
         }
         return result;
     }
@@ -275,7 +275,7 @@ public class DirectoryBackedBucket<T extends PersistentObject> implements IBucke
     private static void setKind(Path path, BucketKind kind) {
 
         try {
-            FileManipulation.createDirectoryIfDoesNotExist(path.resolve(META_BUCKET_NAME).resolve(kind.name()));  // create a directory labelled with the kind in the new $$$bucket$$$bucket$$$ dir
+            FileManipulation.createDirectoryIfDoesNotExist(path.resolve(META_BUCKET_NAME).resolve(kind.name()));  // create a directory labelled with the kind in the new bucket dir
 
         } catch (IOException e) {
             throw new RuntimeException("I/O Exception setting kind");
@@ -283,10 +283,10 @@ public class DirectoryBackedBucket<T extends PersistentObject> implements IBucke
     }
 
     /**
-     * @param name       - the name of this $$$bucket$$$bucket$$$
-     * @param repository - the repo the $$$bucket$$$bucket$$$ is in
-     * @param kind       - the expected kind of the $$$bucket$$$bucket$$$
-     * @return true if the $$$bucket$$$bucket$$$ is of that kind
+     * @param name       - the name of this bucket 
+     * @param repository - the repo the bucket is in
+     * @param kind       - the expected kind of the bucket 
+     * @return true if the bucket is of that kind
      */
     private static boolean checkKind(String name, IRepository repository, BucketKind kind) {
         Path path = getBucketPath(name, repository);
@@ -307,10 +307,10 @@ public class DirectoryBackedBucket<T extends PersistentObject> implements IBucke
 
         try {
             return (T) object_cache.get(id, () -> loader(id));
-            // this is safe since this.contains($$$$id$$$$id$$$$) and also the cache contains the object.
+            // this is safe since this.contains(id) and also the cache contains the object.
 
         } catch (ExecutionException e) {
-            throw new BucketException(e);
+            throw new BucketException( "Cannot get object by id: " + id + " Exception " + e.getMessage() );
         }
     }
 
@@ -353,7 +353,7 @@ public class DirectoryBackedBucket<T extends PersistentObject> implements IBucke
     }
 
     /**
-     * @return the oids of records that are in this $$$bucket$$$bucket$$$
+     * @return the oids of records that are in this bucket 
      */
     public synchronized List<Long> getOids() {
 
@@ -408,7 +408,7 @@ public class DirectoryBackedBucket<T extends PersistentObject> implements IBucke
 
         try (BufferedWriter writer = Files.newBufferedWriter(typepath, FileManipulation.FILE_CHARSET)) {
 
-            writer.write(Long.toString(type_label_id)); // Write the $$$$id$$$$id$$$$ of the typelabel OID into this field.
+            writer.write(Long.toString(type_label_id)); // Write the id of the typelabel OID into this field.
             writer.newLine();
         }
     }
@@ -429,7 +429,7 @@ public class DirectoryBackedBucket<T extends PersistentObject> implements IBucke
 
         long id = record.getId();
         if (!contains(id)) {
-            throw new BucketException("$$$bucket$$$bucket$$$ does not contain specified $$$$id$$$$id$$$$");
+            throw new BucketException("bucket does not contain specified id");
         }
         Transaction t;
         try {
@@ -451,7 +451,7 @@ public class DirectoryBackedBucket<T extends PersistentObject> implements IBucke
         writePersistentObject(record, new_record_write_location); //  write to transaction log
     }
 
-    void writePersistentObject(PersistentObject record_to_write, Path filepath) throws BucketException {
+    private void writePersistentObject(PersistentObject record_to_write, Path filepath) throws BucketException {
         if( record_to_write instanceof LXP ) {
             writeLXP( (LXP) record_to_write, filepath );
         } else if( record_to_write instanceof JPO ) {
@@ -459,7 +459,7 @@ public class DirectoryBackedBucket<T extends PersistentObject> implements IBucke
         }
     }
 
-    void writeJPO(JPO record_to_write, Path filepath) throws BucketException {
+    private void writeJPO(JPO record_to_write, Path filepath) throws BucketException {
         // Bucket is appropriately typed or we cannot get to here
         // Therefore just need to write the record out.
         writeData(record_to_write, filepath);
@@ -468,10 +468,10 @@ public class DirectoryBackedBucket<T extends PersistentObject> implements IBucke
 
     void writeLXP(LXP record_to_write, Path filepath) throws BucketException {
 
-        if (type_label_id != -1) { // we have set a type label in this $$$bucket$$$bucket$$$ there must check for consistency
+        if (type_label_id != -1) { // we have set a type label in this bucket there must check for consistency
 
             if (record_to_write.getMetaData().containsLabel(Types.LABEL)) { // if there is a label it must be correct
-                if (!(checkLabelConsistency(record_to_write, type_label_id, store))) { // check that the record label matches the $$$bucket$$$bucket$$$ label - throw exception if it doesn't
+                if (!(checkLabelConsistency(record_to_write, type_label_id, store))) { // check that the record label matches the bucket label - throw exception if it doesn't
                     throw new BucketException("Label incompatibility");
                 }
             }
@@ -486,8 +486,8 @@ public class DirectoryBackedBucket<T extends PersistentObject> implements IBucke
             } catch (IOException e) {
                 throw new BucketException("I/O exception checking Structural integrity");
             }
-        } else // get to here and $$$bucket$$$bucket$$$ has no type label on it.
-            if (record_to_write.getMetaData().containsLabel(Types.LABEL)) { // no type label on $$$bucket$$$bucket$$$ but record has a type label so check structure
+        } else // get to here and bucket has no type label on it.
+            if (record_to_write.getMetaData().containsLabel(Types.LABEL)) { // no type label on bucket but record has a type label so check structure
                 try {
                     if (!Types.checkStructuralConsistency(record_to_write, (long) record_to_write.get(Types.LABEL), store)) {
                         throw new BucketException("Structural integrity incompatibility");
@@ -509,7 +509,7 @@ public class DirectoryBackedBucket<T extends PersistentObject> implements IBucke
         try (Writer writer = Files.newBufferedWriter(filepath, FileManipulation.FILE_CHARSET)) { // auto close and exception
 
             record_to_write.serializeToJSON(new JSONWriter(writer), this);
-            object_cache.put(record_to_write.getId(), record_to_write);  // Putting this call here ensures that all records that are in a $$$bucket$$$bucket$$$ and loaded are in the cache
+            object_cache.put(record_to_write.getId(), record_to_write);  // Putting this call here ensures that all records that are in a bucket and loaded are in the cache
 
         } catch (IOException | JSONException e) {
             throw new BucketException(e);
@@ -584,7 +584,7 @@ public class DirectoryBackedBucket<T extends PersistentObject> implements IBucke
 
         Path record_location = filePath(oid);
         if (!record_location.toFile().exists()) {
-            throw new BucketException("Record with $$$$id$$$$id$$$$: " + oid + " does not exist");
+            throw new BucketException("Record with id: " + oid + " does not exist");
         }
         if (!record_location.toFile().delete()) {
             throw new BucketException("Unsuccessful delete of oid: " + oid);

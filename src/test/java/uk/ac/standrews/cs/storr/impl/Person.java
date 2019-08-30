@@ -33,7 +33,8 @@ public class Person extends JPO {
     }
 
     public Person(long id, JSONReader reader, IBucket bucket ) throws PersistentObjectException { // a requirement for JPO
-        super(id, reader, bucket);
+        super(id, bucket);
+        readJSON(reader, true);
     }
 
     public Person(int age, String address) {

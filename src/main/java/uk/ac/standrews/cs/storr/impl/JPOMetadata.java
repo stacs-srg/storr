@@ -56,10 +56,11 @@ public class JPOMetadata extends PersistentMetaData {
                 Class type = field.getType();
 
                 boolean is_list = List.class.isAssignableFrom( type );
-                boolean store_ref = type.equals( LXPReference.class );
+                boolean lxp_ref = type.equals( LXPReference.class );
+                boolean jpo_ref = type.equals( JPOReference.class );
 
 //                System.out.println( name + " : "+ type + " list? " + is_list + " store ref? " + store_ref);
-                jpo_fields.put( name, new JPOField( name,type,is_list,store_ref ) );
+                jpo_fields.put( name, new JPOField( name,type,is_list,lxp_ref,jpo_ref ) );
             }
         }
     }

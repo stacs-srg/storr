@@ -22,13 +22,15 @@ public class JPOField {
     public final String name;
     public final Type type;
     public final boolean isList;
-    public final boolean isStorRef;
+    public final boolean isLXPRef;
+    public final boolean isJPORef;
 
-    public JPOField(String name, Type type, boolean isList, boolean isStorRef) {
+    public JPOField(String name, Type type, boolean is_list, boolean is_lxp_ref, boolean is_jpo_ref) {
         this.name = name;
         this.type = type;
-        this.isList = isList;
-        this.isStorRef = isStorRef;
+        this.isList = is_list;
+        this.isLXPRef = is_lxp_ref;
+        this.isJPORef = is_jpo_ref;
 
     }
 }

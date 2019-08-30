@@ -114,9 +114,12 @@ public abstract class JPO extends PersistentObject {
                 throw new JSONException("Cannot access field: " + key + "," + e.getMessage());
             }
             writer.key(key);
-            if (field.isStorRef) {
-                writeReference(writer, (JPO) value);
-            } else if (field.isList) {
+            if (field.isJPORef) {
+                writeReference(writer, (JPOReference) value);
+            } else if (field.isLXPRef) {
+                writeReference(writer, (LXPReference) value);
+            }
+            else if (field.isList) {
                 writeArray(writer, value);
             } else {
                 writeSimpleValue(writer, value);
@@ -130,10 +133,16 @@ public abstract class JPO extends PersistentObject {
         } else {
             writer.array();
             for (final Object o : (List) value) {
-                if (o instanceof JPO) {
-                    writeReference(writer, (JPO) o);
-                } else {
+                try {
+                    if (o instanceof JPO) {
+                        writeReference(writer, ((JPO) o).getThisRef());
+                    } else if (o instanceof LXP) {
+                        writeReference(writer, ((LXP) o).getThisRef());
+                    } else {
+                    }
                     writeSimpleValue(writer, o);
+                } catch (PersistentObjectException e) {
+                    throw new JSONException("Cannot get reference object from array");
                 }
             }
             writer.endArray();
@@ -141,17 +150,12 @@ public abstract class JPO extends PersistentObject {
     }
 
 
-    private static void writeReference(final JSONWriter writer, final JPO value) {
+    private static void writeReference(final JSONWriter writer, final IStoreReference value) {
 
         if( value == null ) {
             writer.value("null");
         } else {
-            try {
-                final IStoreReference reference = value.getThisRef();
-                writer.value(reference.toString());
-            } catch (final PersistentObjectException e) {
-                throw new JSONException("Cannot serialise reference");
-            }
+            writer.value(value.toString());
         }
     }
 
@@ -218,7 +222,7 @@ public abstract class JPO extends PersistentObject {
     }
 
 
-    void readJSON(final JSONReader reader, final boolean isObject) throws JSONException, PersistentObjectException {
+    public void readJSON(final JSONReader reader, final boolean isObject) throws JSONException, PersistentObjectException {
 
         try {
             reader.nextSymbol();
@@ -250,7 +254,7 @@ public abstract class JPO extends PersistentObject {
 
     public void put( String key, Object value ) throws PersistentObjectException {
 
-        JPOMetadata md = (JPOMetadata) getMetaData();
+        JPOMetadata md = getMetaData();
 
         JPOField field = md.get(key);
 
@@ -262,7 +266,7 @@ public abstract class JPO extends PersistentObject {
             if( value instanceof String && ((String)value).equals("null") ) {
                 value = null;
             }
-        } else if( field.isStorRef ) {
+        } else if( field.isLXPRef || field.isJPORef ) {
             // check it is a string
             if( ! ( value instanceof  String ) ) {
                 throw new PersistentObjectException( "Encountered store reference type not String encoded");
@@ -271,7 +275,11 @@ public abstract class JPO extends PersistentObject {
             if( str_val.equals("null") ) {
                 value = null;
             } else {
-                value = new LXPReference(null, (String) value); // TODO first param is a store!
+                if( field.isLXPRef ) {
+                    value = new LXPReference(Store.getInstance(), (String) value);
+                } else {
+                    value = new JPOReference(Store.getInstance(), (String) value);
+                }
             }
         }
         try {
