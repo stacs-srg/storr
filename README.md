@@ -2,28 +2,23 @@
 
 A file-based record storage library.
 
+![Java CI with Maven](https://github.com/stacs-srg/ciesvium/workflows/Java%20CI%20with%20Maven/badge.svg)
+[![javadoc](https://javadoc.io/badge2/com.github.stacs-srg/ciesvium/javadoc.svg)](https://javadoc.io/doc/com.github.stacs-srg/ciesvium)
+[![codecov](https://codecov.io/gh/stacs-srg/ciesvium/branch/master/graph/badge.svg)](https://codecov.io/gh/stacs-srg/ciesvium)
+
 ## Usage via maven
 
 ```
-<repository>
-    <id>uk.ac.standrews.cs.maven.repository</id>
-    <name>School of Computer Science Maven Repository</name>
-    <url>https://maven.cs.st-andrews.ac.uk/</url>
-</repository>
-```
-
-```
 <dependency>
-    <groupId>uk.ac.standrews.cs</groupId>
+    <groupId>com.github.stacs-srg</groupId>
     <artifactId>storr</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.0</version>
 </dependency>
 ```
 
 ## See also
 
-* [API documentation](https://quicksilver.host.cs.st-andrews.ac.uk/apidocs/storr/)
+* [API documentation](https://javadoc.io/doc/com.github.stacs-srg/storr)
 * [project website](https://stacs-srg.github.io/storr/)
 * [usage examples](https://github.com/stacs-srg/storr/tree/master/src/main/java/uk/ac/standrews/cs/storr/examples)
-* [build server](https://beast.cs.st-andrews.ac.uk/teamcity/viewType.html?buildTypeId=Storr_2_Build) (private)
 * [relevant Maven goals](https://github.com/stacs-srg/hub/tree/master/maven) (private)

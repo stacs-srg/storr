@@ -103,6 +103,4 @@ public class DynamicLXP extends LXP implements Comparable<DynamicLXP> {
     public int hashCode() {
         return (int) getId();
     }
-
-
 }
