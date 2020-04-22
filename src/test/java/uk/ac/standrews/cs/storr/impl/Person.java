@@ -21,6 +21,8 @@ import uk.ac.standrews.cs.storr.interfaces.IBucket;
 import uk.ac.standrews.cs.storr.types.JPO_FIELD;
 import uk.ac.standrews.cs.utilities.JSONReader;
 
+import java.util.Objects;
+
 public class Person extends JPO {
 
     @JPO_FIELD
@@ -40,6 +42,20 @@ public class Person extends JPO {
     public Person(int age, String address) {
         this.age = age;
         this.address = address;
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        final Person person = (Person) o;
+        return age == person.age &&
+                Objects.equals(address, person.address);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(age, address);
     }
 
     /* Storr stuff */
