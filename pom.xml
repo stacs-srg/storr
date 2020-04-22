@@ -23,7 +23,7 @@
     <parent>
         <groupId>com.github.stacs-srg</groupId>
         <artifactId>common-pom</artifactId>
-        <version>1.0.0</version>
+        <version>1.0.1</version>
     </parent>
 
     <artifactId>storr</artifactId>
@@ -35,12 +35,6 @@
     <url>https://stacs-srg.github.io/storr/</url>
     <inceptionYear>2015</inceptionYear>
 
-    <properties>
-        <swagger.version>1.5.13</swagger.version>
-        <slf4j.version>1.7.25</slf4j.version>
-        <jsonassert.version>1.5.0</jsonassert.version>
-    </properties>
-
     <scm>
         <connection>scm:git:git://github.com/stacs-srg/storr.git</connection>
         <developerConnection>scm:git:ssh://github.com:stacs-srg/storr.git</developerConnection>
@@ -49,23 +43,19 @@
 
     <dependencies>
 
+        <!-- To check for updated versions of dependencies, run on command line:
+             mvn versions:display-dependency-updates -->
+
         <dependency>
             <groupId>com.github.stacs-srg</groupId>
             <artifactId>utilities</artifactId>
-            <version>1.0.1</version>
+            <version>1.0.3</version>
         </dependency>
 
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>23.4-jre</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-api</artifactId>
-            <version>RELEASE</version>
-            <scope>test</scope>
+            <version>29.0-jre</version>
         </dependency>
 
     </dependencies>

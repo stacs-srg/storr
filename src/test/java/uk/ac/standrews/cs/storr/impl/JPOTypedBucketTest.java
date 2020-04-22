@@ -16,63 +16,31 @@
  */
 package uk.ac.standrews.cs.storr.impl;
 
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 import uk.ac.standrews.cs.storr.impl.exceptions.BucketException;
 import uk.ac.standrews.cs.storr.impl.exceptions.IllegalKeyException;
 import uk.ac.standrews.cs.storr.impl.exceptions.RepositoryException;
 import uk.ac.standrews.cs.storr.interfaces.IBucket;
-import uk.ac.standrews.cs.storr.interfaces.IRepository;
-import uk.ac.standrews.cs.storr.interfaces.IStore;
-import uk.ac.standrews.cs.utilities.FileManipulation;
-
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 
 import static org.junit.Assert.assertEquals;
 
-public class JPOTypedBucketTest {
+public class JPOTypedBucketTest extends CommonTest {
 
-    public String generic_bucket_name1 = "JPOBucket";
-    public String REPOSITORY_NAME = "repo";
-    public boolean DEBUG = true;
-
-    public IStore store;
-    public IRepository repository;
-
-    Path store_path;
+    static final String GENERIC_BUCKET_NAME = "JPOBucket";
 
     @Test
-    public synchronized void testJPOCreation() throws RepositoryException, IllegalKeyException, BucketException, IOException {
-        store_path = Files.createTempDirectory(null);
-        store = new Store(store_path);
+    public synchronized void testJPOCreation() throws RepositoryException, IllegalKeyException, BucketException {
 
-        if (DEBUG) {
-            System.out.println("STORE PATH = " + store_path + " has been created");
-        }
+        repository.makeBucket(GENERIC_BUCKET_NAME, BucketKind.DIRECTORYBACKED, Person.class);
 
-        repository = store.makeRepository(REPOSITORY_NAME);
+        final IBucket<Person> bucket = repository.getBucket(GENERIC_BUCKET_NAME, Person.class);
 
-        try {
-            repository.makeBucket(generic_bucket_name1, BucketKind.DIRECTORYBACKED, Person.class);
-        } catch( Exception e ) {
-            System.out.println( "Exception - $$$bucket$$$bucket$$$ already exists?: " + e );
-        }
+        final Person p1 = new Person(42, "home");
 
-        IBucket<Person> b = repository.getBucket(generic_bucket_name1, Person.class);
+        bucket.makePersistent(p1);
 
-        Person p = new Person(42, "home");
-
-        b.makePersistent(p);
-
-        long id = p.getId();
-        Person ppp = (Person) b.getObjectById(id);
-        assertEquals(ppp, p);
-
-        FileManipulation.deleteDirectory(store_path);
-
-        if (DEBUG) {
-            System.out.println("STORE PATH = " + store_path + " has been deleted");
-        }
+        final long id = p1.getId();
+        final Person p2 = bucket.getObjectById(id);
+        assertEquals(p2, p1);
     }
 }
