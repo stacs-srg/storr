@@ -12,7 +12,7 @@ A file-based record storage library.
 <dependency>
     <groupId>com.github.stacs-srg</groupId>
     <artifactId>storr</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
 </dependency>
 ```
 
