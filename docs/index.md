@@ -5,8 +5,7 @@
 * [The name](name)
 * [Conceptual model](conceptual_model)
 * [Examples](examples)
-* [API documentation](https://quicksilver.host.cs.st-andrews.ac.uk/apidocs/storr/)
-* [artifacts](https://quicksilver.host.cs.st-andrews.ac.uk/artifacts/storr/)
+* [artifacts](https://repo1.maven.org/maven2/com/github/stacs-srg/storr/1.0.0/)
 
 [![javadoc](https://javadoc.io/badge2/com.github.stacs-srg/storr/javadoc.svg)](https://javadoc.io/doc/com.github.stacs-srg/storr)
 
