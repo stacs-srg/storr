@@ -23,9 +23,11 @@ import uk.ac.standrews.cs.storr.interfaces.IBucket;
 import uk.ac.standrews.cs.storr.interfaces.IStoreReference;
 import uk.ac.standrews.cs.utilities.JSONReader;
 
+import java.util.Objects;
+
 import static uk.ac.standrews.cs.storr.impl.Store.getNextFreePID;
 
-public abstract class PersistentObject {
+public abstract class PersistentObject implements Comparable<PersistentObject> {
 
     protected long $$$$id$$$$id$$$$;
     protected IBucket $$$bucket$$$bucket$$$ = null;
@@ -73,4 +75,20 @@ public abstract class PersistentObject {
      */
     public abstract PersistentMetaData getMetaData();
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof PersistentObject)) return false;
+        PersistentObject that = (PersistentObject) o;
+        return $$$$id$$$$id$$$$ == that.$$$$id$$$$id$$$$ && Objects.equals($$$bucket$$$bucket$$$, that.$$$bucket$$$bucket$$$);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash($$$$id$$$$id$$$$, $$$bucket$$$bucket$$$);
+    }
+
+    public int compareTo(final PersistentObject o) {
+        return Long.compare(this.getId(), o.getId());
+    }
 }
